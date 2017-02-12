@@ -61,6 +61,12 @@ class Supplier < ActiveRecord::Base
   validates :entity,          :presence => true
   validates :organization,    :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:supplier_code) }
+  #
+  scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
+  scope :actives, -> { where(active: true).by_code }
+
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
   after_create :should_create_shared_contact, if: :is_contact?

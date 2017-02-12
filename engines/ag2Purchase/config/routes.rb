@@ -253,9 +253,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'offer_requests/or_product_all_stocks/:product', :controller => 'offer_requests', :action => 'or_product_all_stocks'
     match 'or_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'offer_requests'
     match 'offer_requests/:id/or_product_all_stocks/:product', :controller => 'offer_requests', :action => 'or_product_all_stocks'
-    match 'offer_requests/or_generate_request', :controller => 'offer_requests', :action => 'or_generate_request'
     match 'or_generate_request/', :controller => 'offer_requests', :action => 'or_generate_request'
-    match 'offer_requests/:id/or_generate_request', :controller => 'offer_requests', :action => 'or_generate_request'
     #
     # Offers
     match 'offers/of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170210125113) do
+ActiveRecord::Schema.define(:version => 20170212082227) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -857,8 +857,6 @@ ActiveRecord::Schema.define(:version => 20170210125113) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2318,25 +2316,25 @@ ActiveRecord::Schema.define(:version => 20170210125113) do
     t.integer  "tax_type_id"
     t.integer  "manufacturer_id"
     t.string   "manufacturer_p_code"
-    t.decimal  "reference_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "last_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "average_price",                    :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "sell_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "markup",                           :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.integer  "warranty_time",       :limit => 2,                                :default => 0,   :null => false
-    t.integer  "life_time",           :limit => 2,                                :default => 0,   :null => false
-    t.boolean  "active"
+    t.decimal  "reference_price",                  :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "last_price",                       :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "average_price",                    :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "sell_price",                       :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "markup",                           :precision => 6,  :scale => 2, :default => 0.0,  :null => false
+    t.integer  "warranty_time",       :limit => 2,                                :default => 0,    :null => false
+    t.integer  "life_time",           :limit => 2,                                :default => 0,    :null => false
+    t.boolean  "active",                                                          :default => true, :null => false
     t.string   "aux_code"
     t.string   "remarks"
-    t.datetime "created_at",                                                                       :null => false
-    t.datetime "updated_at",                                                                       :null => false
+    t.datetime "created_at",                                                                        :null => false
+    t.datetime "updated_at",                                                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.decimal  "prev_last_price",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "prev_last_price",                  :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.integer  "organization_id"
   end
 
@@ -3441,8 +3439,8 @@ ActiveRecord::Schema.define(:version => 20170210125113) do
     t.string   "name"
     t.string   "supplier_code"
     t.string   "fiscal_id"
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "street_type_id"
@@ -3461,10 +3459,10 @@ ActiveRecord::Schema.define(:version => 20170210125113) do
     t.integer  "region_id"
     t.integer  "country_id"
     t.integer  "payment_method_id"
-    t.decimal  "discount_rate",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.boolean  "active"
+    t.decimal  "discount_rate",       :precision => 6,  :scale => 2, :default => 0.0,  :null => false
+    t.boolean  "active",                                             :default => true, :null => false
     t.integer  "max_orders_count",                                   :default => 0
-    t.decimal  "max_orders_sum",      :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_orders_sum",      :precision => 13, :scale => 4, :default => 0.0,  :null => false
     t.string   "contract_number"
     t.string   "remarks"
     t.integer  "entity_id"
@@ -3473,7 +3471,7 @@ ActiveRecord::Schema.define(:version => 20170210125113) do
     t.integer  "shared_contact_id"
     t.boolean  "order_authorization"
     t.integer  "ledger_account_id"
-    t.decimal  "free_shipping_sum",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "free_shipping_sum",   :precision => 13, :scale => 4, :default => 0.0,  :null => false
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"

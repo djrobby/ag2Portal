@@ -423,69 +423,92 @@ module Ag2Purchase
 
     # Generate new request using designated suppliers & families
     def or_generate_request
-      supplier = params[:supplier]
-      request = params[:request]
+      suppliers = params[:supplier]
+      families = params[:family]
       offer_date = params[:offer_date]  # YYYYMMDD
-      offer = nil
-      offer_item = nil
+      project = params[:project]
+      store = params[:store]
+      account = params[:account]
+      payment = params[:payment]
+      request = nil
+      request_item = nil
       code = ''
 
-      if request != '0'
-        offer_request = OfferRequest.find(request) rescue nil
-        offer_request_items = offer_request.offer_request_items rescue nil
-        if !offer_request.nil? && !offer_request_items.nil?
-          # Format offer_date
-          offer_date = (offer_date[0..3] + '-' + offer_date[4..5] + '-' + offer_date[6..7]).to_date
-          # Try to save new offer
-          offer = Offer.new
-          offer.offer_no = offer_no
-          offer.offer_date = offer_date
-          offer.offer_request_id = offer_request.id
-          offer.supplier_id = supplier
-          offer.payment_method_id = offer_request.payment_method_id
-          offer.created_by = current_user.id if !current_user.nil?
-          offer.discount_pct = offer_request.discount_pct
-          offer.discount = offer_request.discount
-          offer.project_id = offer_request.project_id
-          offer.store_id = offer_request.store_id
-          offer.work_order_id = offer_request.work_order_id
-          offer.charge_account_id = offer_request.charge_account_id
-          offer.organization_id = offer_request.organization_id
-          if offer.save
-            # Try to save new offer items
-            offer_request_items.each do |i|
-              offer_item = OfferItem.new
-              offer_item.offer_id = offer.id
-              offer_item.product_id = i.product_id
-              offer_item.description = i.description
-              offer_item.quantity = i.quantity
-              offer_item.price = i.price
-              offer_item.tax_type_id = i.tax_type_id
-              offer_item.created_by = current_user.id if !current_user.nil?
-              offer_item.project_id = i.project_id
-              offer_item.store_id = i.store_id
-              offer_item.work_order_id = i.work_order_id
-              offer_item.charge_account_id = i.charge_account_id
-              if !offer_item.save
-                # Can't save offer item (exit)
-                code = '$write'
-                break
-              end   # !offer_item.save?
-            end   # do |i|
+      # Parms data to array
+      suppliers = suppliers.split(",")
+      families = families.split(",")
+
+      # Format offer_date
+      offer_date = (offer_date[0..3] + '-' + offer_date[4..5] + '-' + offer_date[6..7]).to_date
+
+      # Generate new offer request
+      if (!suppliers.empty? && !families.empty?) && (project != '$' && project != '' && project != '0')
+        # Generate new offer request no.
+        code = or_next_no(project)
+        if code != '$err'
+          # Try create request
+          request = OfferRequest.new
+          request.request_no = code
+          request.request_date = offer_date
+          request.payment_method_id = payment
+          request.project_id = project
+          request.created_by = current_user.id if !current_user.nil?
+          request.store_id = store
+          request.charge_account_id = account
+          request.organization_id = Project.find(project).organization_id
+          if request.save
+            # Loop thru families
+            families.each do |f|
+              family = ProductFamily.find(f) rescue nil
+              if !family.nil?
+                family.products.actives.each do |p|
+                  # Try to save request offer item
+                  request_item = OfferRequestItem.new
+                  request_item.offer_request_id = request.id
+                  request_item.product_id = p.id
+                  request_item.description = p.main_description
+                  request_item.quantity = 1
+                  request_item.price = p.reference_price
+                  request_item.tax_type_id = p.tax_type_id
+                  request_item.created_by = current_user.id if !current_user.nil?
+                  request_item.project_id = project
+                  request_item.store_id = store
+                  request_item.charge_account_id = account
+                  if !request_item.save
+                    # Can't save item (exit)
+                    code = '$write'
+                    break
+                  end   # !request_item.save?
+                end   # family.products.each do |p|
+              end   # !family.nil?
+            end   # families.each do |f|
+            # Loop thru suppliers
+            suppliers.each do |s|
+              supplier = Supplier.find(s) rescue nil
+              if !supplier.nil?
+                # Try to save request offer supplier
+                request_item = OfferRequestSupplier.new
+                request_item.offer_request_id = request.id
+                request_item.supplier_id = supplier.id
+                if !request_item.save
+                  # Can't save supplier (exit)
+                  code = '$write'
+                  break
+                end   # !request_item.save?
+              end   # !supplier.nil?
+            end   # suppliers.each do |s|
           else
-            # Can't save offer
+            # Can't save request
             code = '$write'
-          end   # offer.save?
-        else
-          # Offer request or items not found
-          code = '$err'
-        end   # !offer_request.nil? && !offer_request_items.nil?
+          end   # request.save
+        end   # code != '$err' (else request_no invalid)
       else
-        # Offer request 0
+        # Suppliers or Families empty or Project not found
         code = '$err'
-      end   # request != '0'
+      end   # !suppliers.empty? && !families.empty?
+
       if code == ''
-        code = I18n.t("ag2_purchase.offer_requests.generate_request_ok", var: offer.id.to_s)
+        code = I18n.t("ag2_purchase.offer_requests.generate_request_ok", var: request.full_no)
       end
       @json_data = { "code" => code }
       render json: @json_data
@@ -509,7 +532,6 @@ module Ag2Purchase
       @projects = projects_dropdown if @projects.nil?
       #@work_orders = WorkOrder.limit(2)
       @work_orders = work_orders_dropdown if @work_orders.nil?
-      @families = ProductFamily.order(:family_code) if @families.nil?
 
       if !supplier.blank?
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id).where(supplier_id: supplier)
@@ -522,6 +544,13 @@ module Ag2Purchase
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      # Auto generate request
+      @families = ProductFamily.order(:family_code) if @families.nil?
+      @current_projects = Project.where(id: current_projects) if @current_projects.nil?
+      @charge_accounts = projects_charge_accounts(@current_projects) if @charge_accounts.nil?
+      @stores = projects_stores(@current_projects) if @stores.nil?
+      @payment_methods = payment_methods_dropdown if @payment_methods.nil?
 
       @search = OfferRequest.search do
         with :project_id, current_projects
@@ -769,6 +798,7 @@ module Ag2Purchase
     private
 
     def current_projects_for_index(_projects)
+      # _current_projects = Project.where(id: _projects).pluck(:id)   # One more round to DB, but shorter
       _current_projects = []
       _projects.each do |i|
         _current_projects = _current_projects << i.id
@@ -818,6 +848,39 @@ module Ag2Purchase
 
       # Returning founded stores
       _stores = Store.where(id: _array).order(:name)
+    end
+
+    # Stores belonging to projects
+    def projects_stores(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding global stores, not JIT, belonging to current company
+      if session[:company] != '0'
+        _ret = Store.where("company_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:company].to_i)
+      else
+        _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND office_id IS NULL AND supplier_id IS NULL", session[:organization].to_i) : Store.all
+      end
+      ret_array(_array, _ret, 'id')
+
+      # Adding stores belonging to current projects (projects have company and office)
+      _projects.each do |i|
+        if !i.company.blank? && !i.office.blank?
+          _ret = Store.where("(company_id = ? AND office_id = ?)", i.company_id, i.office_id)
+        elsif !i.company.blank? && i.office.blank?
+          _ret = Store.where("(company_id = ?)", i.company_id)
+        elsif i.company.blank? && !i.office.blank?
+          _ret = Store.where("(office_id = ?)", i.office_id)
+        end
+        ret_array(_array, _ret, 'id')
+      end
+
+      # Adding JIT stores
+      _ret = session[:organization] != '0' ? Store.where("organization_id = ? AND company_id IS NULL AND NOT supplier_id IS NULL", session[:organization].to_i) : Store.where("(company_id IS NULL AND NOT supplier_id IS NULL)")
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded stores
+      _ret = Store.where(id: _array).order(:name)
     end
 
     # Charge accounts belonging to projects
@@ -940,7 +1003,7 @@ module Ag2Purchase
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
     def payment_payment_methods(_organization)

@@ -52,6 +52,7 @@ class Product < ActiveRecord::Base
   scope :by_code, -> { order(:product_code) }
   #
   scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
+  scope :actives, -> { where(active: true).by_code }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

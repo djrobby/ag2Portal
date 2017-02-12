@@ -11,10 +11,14 @@
     $('#btn_accept').click(function() {
       var supplier = $('#Supplier_').val();
       if (supplier == null) supplier = "";
-      var request = $('#Request_').val();
-      if (request == null) request = "";
+      var family = $('#Family_').val();
+      if (family == null) family = "";
       var offer_date = $('#Date_').val();
-      if ((supplier == "") || (request == "") || (offer_date == "")) {
+      var project = $('#Project_ :selected').val();
+      var store = $('#Store_ :selected').val();
+      var account = $('#Account_ :selected').val();
+      var payment = $('#Payment_ :selected').val();
+      if ((supplier == "") || (family == "") || (offer_date == "") || (project == "") || (store == "") || (account == "") || (payment == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');
         return false;
@@ -24,7 +28,7 @@
       // Show message
       $("#proc_mesage").show();
       // make the POST call
-      jQuery.getJSON('or_generate_request?supplier=' + supplier + '&request=' + request + '&offer_date=' + offer_date, function(data) {
+      jQuery.getJSON('or_generate_request?supplier=' + supplier + '&family=' + family + '&offer_date=' + offer_date + '&project=' + project + '&store=' + store + '&account=' + account + '&payment=' + payment, function(data) {
         // Hide message
         $("#proc_mesage").hide();
         // AJAX refresh index table is necessary
@@ -64,6 +68,18 @@
     <!-- Request date -->
     <label for="Date_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_date") %></label>
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
+    <!-- Project -->
+    <label for="Project_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.project") %></label>
+    <%= select_tag "Project_", options_from_collection_for_select(@current_projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Store -->
+    <label for="Store_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.store") %></label>
+    <%= select_tag "Store_", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Account -->
+    <label for="Account_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.charge_account") %></label>
+    <%= select_tag "Account_", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- Payment -->
+    <label for="Payment_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.payment_method") %></label>
+    <%= select_tag "Payment_", options_from_collection_for_select(@payment_methods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field nsel2' %>
   </div>
   <div class="modal-footer">
     <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
