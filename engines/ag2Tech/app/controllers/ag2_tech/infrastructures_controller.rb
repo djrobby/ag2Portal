@@ -107,6 +107,18 @@ module Ag2Tech
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
+        if session[:company] != '0'
+          any_of do
+            with :company_id, session[:company]
+            with :company_id, nil
+          end
+        end
+        if session[:office] != '0'
+          any_of do
+            with :office_id, session[:office]
+            with :office_id, nil
+          end
+        end
         if !no.blank?
           if no.class == Array
             with :code, no

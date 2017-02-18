@@ -11,7 +11,7 @@ module Ag2Tech
                                                :ve_update_cost]
     # Helper methods for sorting
     helper_method :sort_column
-    
+
     # Update company text field at view from office select
     def ve_update_company_textfield_from_office
       office = params[:id]
@@ -22,7 +22,7 @@ module Ag2Tech
       end
       render json: @company
     end
-    
+
     # Update company & office text fields at view from organization select
     def ve_update_company_and_office_textfields_from_organization
       organization = params[:org]
@@ -38,12 +38,12 @@ module Ag2Tech
       end
       @offices_dropdown = []
       @offices.each do |i|
-        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name]
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "products" => @products }
       render json: @json_data
     end
-    
+
     # Update name text field at view from product select
     def ve_update_name_textfield_from_product
       product = params[:product]
@@ -88,30 +88,42 @@ module Ag2Tech
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
+        if session[:company] != '0'
+          any_of do
+            with :company_id, session[:company]
+            with :company_id, nil
+          end
+        end
+        if session[:office] != '0'
+          any_of do
+            with :office_id, session[:office]
+            with :office_id, nil
+          end
+        end
         order_by :registration, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @vehicles = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @vehicles }
         format.js
       end
     end
-  
+
     # GET /vehicles/1
     # GET /vehicles/1.json
     def show
       @breadcrumb = 'read'
       @vehicle = Vehicle.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @vehicle }
       end
     end
-  
+
     # GET /vehicles/new
     # GET /vehicles/new.json
     def new
@@ -120,13 +132,13 @@ module Ag2Tech
       @companies = companies_dropdown
       @offices = offices_dropdown
       @products = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @vehicle }
       end
     end
-  
+
     # GET /vehicles/1/edit
     def edit
       @breadcrumb = 'update'
@@ -135,14 +147,14 @@ module Ag2Tech
       @offices = @vehicle.organization.blank? ? offices_dropdown : offices_dropdown_edit(@vehicle.organization_id)
       @products = @vehicle.organization.blank? ? products_dropdown : @vehicle.organization.products(:product_code)
     end
-  
+
     # POST /vehicles
     # POST /vehicles.json
     def create
       @breadcrumb = 'create'
       @vehicle = Vehicle.new(params[:vehicle])
       @vehicle.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @vehicle.save
           format.html { redirect_to @vehicle, notice: crud_notice('created', @vehicle) }
@@ -156,14 +168,14 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /vehicles/1
     # PUT /vehicles/1.json
     def update
       @breadcrumb = 'update'
       @vehicle = Vehicle.find(params[:id])
       @vehicle.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @vehicle.update_attributes(params[:vehicle])
           format.html { redirect_to @vehicle,
@@ -178,7 +190,7 @@ module Ag2Tech
         end
       end
     end
-  
+
     # DELETE /vehicles/1
     # DELETE /vehicles/1.json
     def destroy
@@ -235,12 +247,12 @@ module Ag2Tech
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)      
+      _offices = Office.where(company_id: _company).order(:name)
     end
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
+    end
 
     # Sort by column
     def sort_column

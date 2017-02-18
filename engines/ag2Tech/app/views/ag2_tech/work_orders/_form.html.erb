@@ -251,12 +251,12 @@
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'client' && option != "") {
-              $("#work_order_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,11) + " " + option.name));
+              $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#work_order_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,11) + " " + option.name));
+            $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge account

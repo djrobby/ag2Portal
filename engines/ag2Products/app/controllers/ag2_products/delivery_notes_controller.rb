@@ -290,8 +290,10 @@ module Ag2Products
       @orders_dropdown = orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
+      # Clients array
+      @clients_dropdown = clients_array(@clients)
       # Setup JSON
-      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @orders_dropdown,
+      @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -822,15 +824,15 @@ module Ag2Products
     end
 
     def clients_dropdown
-      _clients = session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
+      session[:organization] != '0' ? Client.where(organization_id: session[:organization].to_i).order(:client_code) : Client.order(:client_code)
     end
 
     def offers_dropdown
-      _offers = session[:organization] != '0' ? SaleOffer.where(organization_id: session[:organization].to_i).order(:client_id, :offer_no, :id) : SaleOffer.order(:client_id, :offer_no, :id)
+      session[:organization] != '0' ? SaleOffer.where(organization_id: session[:organization].to_i).order(:client_id, :offer_no, :id) : SaleOffer.order(:client_id, :offer_no, :id)
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
     def charge_accounts_dropdown_edit(_project)
@@ -878,10 +880,18 @@ module Ag2Products
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end
 
+    def clients_array(_clients)
+      _array = []
+      _clients.each do |i|
+        _array = _array << [i.id, i.full_name_or_company_and_code]
+      end
+      _array
+    end
+
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
-        _array = _array << [i.id, i.full_no, formatted_date(i.offer_date), i.client.full_name]
+        _array = _array << [i.id, i.full_no, formatted_date(i.offer_date), i.client.full_name_or_company]
       end
       _array
     end

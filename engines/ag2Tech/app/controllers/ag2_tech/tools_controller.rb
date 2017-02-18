@@ -11,7 +11,7 @@ module Ag2Tech
                                                :tl_update_cost]
     # Helper methods for sorting
     helper_method :sort_column
-    
+
     # Update company text field at view from office select
     def tl_update_company_textfield_from_office
       office = params[:id]
@@ -22,7 +22,7 @@ module Ag2Tech
       end
       render json: @company
     end
-    
+
     # Update company & office text fields at view from organization select
     def tl_update_company_and_office_textfields_from_organization
       organization = params[:org]
@@ -38,12 +38,12 @@ module Ag2Tech
       end
       @offices_dropdown = []
       @offices.each do |i|
-        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name] 
+        @offices_dropdown = @offices_dropdown << [i.id, i.name, i.company.name]
       end
       @json_data = { "companies" => @companies, "offices" => @offices_dropdown, "products" => @products }
       render json: @json_data
     end
-    
+
     # Update name text field at view from product select
     def tl_update_name_textfield_from_product
       product = params[:product]
@@ -89,30 +89,42 @@ module Ag2Tech
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
+        if session[:company] != '0'
+          any_of do
+            with :company_id, session[:company]
+            with :company_id, nil
+          end
+        end
+        if session[:office] != '0'
+          any_of do
+            with :office_id, session[:office]
+            with :office_id, nil
+          end
+        end
         order_by :serial_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @tools = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @tools }
         format.js
       end
     end
-  
+
     # GET /tools/1
     # GET /tools/1.json
     def show
       @breadcrumb = 'read'
       @tool = Tool.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @tool }
       end
     end
-  
+
     # GET /tools/new
     # GET /tools/new.json
     def new
@@ -121,13 +133,13 @@ module Ag2Tech
       @companies = companies_dropdown
       @offices = offices_dropdown
       @products = products_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @tool }
       end
     end
-  
+
     # GET /tools/1/edit
     def edit
       @breadcrumb = 'update'
@@ -136,14 +148,14 @@ module Ag2Tech
       @offices = @tool.organization.blank? ? offices_dropdown : offices_dropdown_edit(@tool.organization_id)
       @products = @tool.organization.blank? ? products_dropdown : @tool.organization.products(:product_code)
     end
-  
+
     # POST /tools
     # POST /tools.json
     def create
       @breadcrumb = 'create'
       @tool = Tool.new(params[:tool])
       @tool.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @tool.save
           format.html { redirect_to @tool, notice: crud_notice('created', @tool) }
@@ -157,14 +169,14 @@ module Ag2Tech
         end
       end
     end
-  
+
     # PUT /tools/1
     # PUT /tools/1.json
     def update
       @breadcrumb = 'update'
       @tool = Tool.find(params[:id])
       @tool.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @tool.update_attributes(params[:tool])
           format.html { redirect_to @tool,
@@ -179,7 +191,7 @@ module Ag2Tech
         end
       end
     end
-  
+
     # DELETE /tools/1
     # DELETE /tools/1.json
     def destroy
@@ -236,12 +248,12 @@ module Ag2Tech
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)      
+      _offices = Office.where(company_id: _company).order(:name)
     end
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
-    end    
+    end
 
     # Sort by column
     def sort_column

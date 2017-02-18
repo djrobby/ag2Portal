@@ -479,10 +479,12 @@ module Ag2Tech
       @vehicles_dropdown = vehicles_array(@vehicles)
       # Work orders array
       @orders_dropdown = orders_array(@master_order)
+      # Clients array
+      @clients_dropdown = clients_array(@clients)
       # Setup JSON
       @json_data = { "project" => @projects, "woarea" => @woareas,
                      "type" => @types, "labor" => @labors, "infrastructure" => @infrastructures,
-                     "client" => @clients, "charge_account" => @charge_accounts,
+                     "client" => @clients_dropdown, "charge_account" => @charge_accounts,
                      "store" => @stores, "worker" => @workers,
                      "area" => @areas_dropdown, "product" => @products_dropdown,
                      "supplier" => @suppliers, "order" => @orders,
@@ -1655,6 +1657,14 @@ module Ag2Tech
         _required = _type.subscriber_meter.to_s
       end
       _required.blank? ? 'false' : _required
+    end
+
+    def clients_array(_clients)
+      _array = []
+      _clients.each do |i|
+        _array = _array << [i.id, i.full_name_or_company_and_code]
+      end
+      _array
     end
 
     def orders_array(_orders)
