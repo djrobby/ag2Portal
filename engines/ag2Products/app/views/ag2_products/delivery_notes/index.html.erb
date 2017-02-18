@@ -2,36 +2,173 @@
   var _thisForm = '';
   var changing = false;
 
+  function setupAllSelect2(c, p, w, a) {
+    clientsSelect2(c);
+    projectsSelect2(p);
+    wordersSelect2(w);    
+    caccountsSelect2(a);    
+  }
+
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function wordersSelect2(intialValue) {
+    $('#Order').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_work_orders",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function caccountsSelect2(intialValue) {
+    $('#Account').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_charge_accounts",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @client %>", "<%= @project %>", "<%= @work_order %>", "<%= @charge_account %>");
+
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
   }); 
 
-  $(document).ajaxStart(function() {
-    // show loader on start
-    if (changing == false) {
-      $("#div_table").html("");
-      $("#loader").show();
-    }
-  }).ajaxSuccess(function() {
+  // $(document).ajaxStart(function() {
+  //   // show loader on start
+  //   if (changing == false) {
+  //     $("#div_table").html("");
+  //     $("#loader").show();
+  //   }
+  // });
+  $(document).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
   });
 
   $(window).bind("load", function() {
+    a = "<%= dn_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
     $("#Client").select2("val", "<%= params[:Supplier] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
     $("#Account").select2("val", "<%= params[:Account] %>");
+    $("#search").val("<%= params[:search] %>");
   });
 
   jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
@@ -40,6 +177,9 @@
       $("#Order").select2("val", "");
       $("#Account").select2("val", "");
       $("#search").val("");
+      a = "<%= dn_remove_filters %>";
+      setupAllSelect2(a, a, a, a);
+      // accountsSelect2(a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -71,19 +211,21 @@
         <%= form_tag "delivery_notes", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.delivery_note.delivery_no"), nil, :class => 'form-label' %>
-        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <%= text_field_tag "No", params[:No], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_client"), nil, :class => 'form-label' %>
-        <%= select_tag "Client", options_from_collection_for_select(@clients, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%#= select_tag "Client", options_from_collection_for_select(@clients, "id", "full_name", params[:Client]), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_project"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%#= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name", params[:Order]), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Charge account -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_charge_account"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Account", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

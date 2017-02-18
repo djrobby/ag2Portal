@@ -219,6 +219,7 @@ en:
       default_message: "Please review the problems below:"
   select2:
     no_matches: "No matches found"
+    to_search: "Search criteria"
   devise:
     confirmations:
       confirmed: "Your account was successfully confirmed. You are now signed in."

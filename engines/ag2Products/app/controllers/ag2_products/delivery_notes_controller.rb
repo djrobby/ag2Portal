@@ -5,7 +5,9 @@ module Ag2Products
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:dn_totals,
+    skip_load_and_authorize_resource :only => [:dn_remove_filters,
+                                               :dn_restore_filters,
+                                               :dn_totals,
                                                :dn_update_description_prices_from_product_store,
                                                :dn_update_description_prices_from_product,
                                                :dn_update_amount_and_costs_from_price_or_quantity,
@@ -20,6 +22,8 @@ module Ag2Products
                                                :delivery_note_form_client,
                                                :delivery_notes_report,
                                                :dn_generate_no]
+
+    helper_method :dn_remove_filters, :dn_restore_filters
 
     # Update sale offer select at view from client select
     def dn_update_offer_select_from_client
@@ -353,13 +357,13 @@ module Ag2Products
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @clients = clients_dropdown if @clients.nil?
-      @projects = projects_dropdown if @projects.nil?
-      #@work_orders = projects_work_orders(@projects) if @work_orders.nil?
-      @work_orders = work_orders_dropdown if @work_orders.nil?
-      @charge_accounts = projects_charge_accounts(@projects) if @charge_accounts.nil?
+      @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -950,6 +954,25 @@ module Ag2Products
       elsif session[:Account]
         params[:Account] = session[:Account]
       end
+    end
+
+    def dn_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Client] = ""
+      params[:Project] = ""
+      params[:Order] = ""
+      params[:Account] = ""
+      return " "
+    end
+
+    def dn_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Client] = session[:Client]
+      params[:Project] = session[:Project]
+      params[:Order] = session[:Order]
+      params[:Account] = session[:Account]
     end
   end
 end

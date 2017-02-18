@@ -9,7 +9,7 @@ es:
     - vie
     - sáb
     abbr_month_names:
-    - 
+    -
     - ene
     - feb
     - mar
@@ -36,7 +36,7 @@ es:
       short: ! '%d de %b'
       long_whit_day: ! '%A %d de %B de %Y'
     month_names:
-    - 
+    -
     - Enero
     - Febrero
     - Marzo
@@ -213,6 +213,7 @@ es:
       default_message: "Revise los siguientes problemas:"
   select2:
     no_matches: "No se encontraron resultados"
+    to_search: "Criterio de búsqueda"
   devise:
     confirmations:
       confirmed: Tu cuenta ha sido satisfactoriamente confirmada.

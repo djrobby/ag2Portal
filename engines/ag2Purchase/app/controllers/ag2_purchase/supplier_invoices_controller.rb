@@ -821,6 +821,7 @@ module Ag2Purchase
           (params[:supplier_invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
           (params[:supplier_invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
           (params[:supplier_invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
+          (params[:supplier_invoice][:internal_no].to_s != @supplier_invoice.internal_no) ||
           (params[:supplier_invoice][:remarks].to_s != @supplier_invoice.remarks))
         master_changed = true
       end

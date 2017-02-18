@@ -75,6 +75,14 @@ class ChargeAccount < ActiveRecord::Base
     charge_group.blank? ? "" : charge_group.name[0,30]
   end
 
+  def office
+    project.nil? ? nil : project.office
+  end
+
+  def company
+    project.nil? ? nil : project.company
+  end
+
   #
   # Calculated fields
   #

@@ -1,4 +1,6 @@
 class EnginesController < ApplicationController
+  before_filter :set_params, :except => [:reset_filters]
+
   #
   # Resetting module (engine) session variables for filters
   #
@@ -23,6 +25,7 @@ class EnginesController < ApplicationController
     session[:WrkrOffice] = nil
     session[:Petitioner] = nil
     session[:Balance] = nil
+    session[:Client] = nil
     # Ag2Admin
     # ...
     # Ag2Directory
@@ -36,7 +39,6 @@ class EnginesController < ApplicationController
     session[:RequestType] = nil
     session[:RequestStatus] = nil
     session[:ClientInfo] = nil
-    session[:Client] = nil
     session[:Subscriber] = nil
     session[:Operation] = nil
     session[:Biller] = nil
@@ -74,5 +76,84 @@ class EnginesController < ApplicationController
     session[:Labor] = nil
 
     render json: { result: session[:letter] }
+  end
+
+  #
+  # Special search (select2)
+  #
+  # Charge accounts
+  def search_charge_accounts
+    @charge_accounts = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "(projects.company_id = #{session[:company]} OR project_id IS NULL) AND " if session[:company] != '0'
+    w = "(projects.office_id = #{session[:office]} OR project_id IS NULL) AND " if session[:office] != '0'
+    if @q != ''
+      w += "(account_code LIKE '%#{@q}%' OR charge_accounts.name LIKE '%#{@q}%')"
+      @charge_accounts = serialized(ChargeAccount.joins("LEFT JOIN projects ON projects.id=project_id").where(w).by_code,
+                                    Api::V1::ChargeAccountsSerializer)
+    end
+    render json: @charge_accounts
+  end
+
+  # Projects
+  def search_projects
+    @projects = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(project_code LIKE '%#{@q}%' OR name LIKE '%#{@q}%')"
+      @projects = serialized(Project.where(w).by_code,
+                             Api::V1::ProjectsSerializer)
+    end
+    render json: @projects
+  end
+
+  # Clients
+  def search_clients
+    @clients = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(client_code LIKE '%#{@q}%' OR last_name LIKE '%#{@q}%' OR first_name LIKE '%#{@q}%' OR company LIKE '%#{@q}%')"
+      @clients = serialized(Client.where(w).by_code,
+                            Api::V1::ClientsSerializer)
+    end
+    render json: @clients
+  end
+
+  # Work orders
+  def search_work_orders
+    @work_orders = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "projects.company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "projects.office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(order_no LIKE '%#{@q}%' OR description LIKE '%#{@q}%')"
+      @work_orders = serialized(WorkOrder.joins(:project).where(w).by_no,
+                                Api::V1::WorkOrdersSerializer)
+    end
+    render json: @work_orders
+  end
+
+  # Returns JSON list of orders
+  def serialized(_data, _serializer)
+    ActiveModel::ArraySerializer.new(_data, each_serializer: _serializer, root: false)
+  end
+
+  def set_params
+    @q = params[:q]
+    @page = params[:page]
+  end
+
+  def ret_array(_search)
+    _array = []
+    _search.each do |i|
+      _array = _array << [i.id, i.full_no]
+    end
+    _array
   end
 end

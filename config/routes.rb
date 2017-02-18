@@ -22,6 +22,12 @@ Ag2Portal::Application.routes.draw do
     match 'guide/gu_content_from_subguide/:name', :controller => 'guide', :action => 'gu_content_from_subguide'
     match 'reset_filters', :controller => 'engines', :action => 'reset_filters'
 
+    # Routes for special search (select2)
+    match 'search_charge_accounts', :controller => 'engines', :action => 'search_charge_accounts'
+    match 'search_projects', :controller => 'engines', :action => 'search_projects'
+    match 'search_clients', :controller => 'engines', :action => 'search_clients'
+    match 'search_work_orders', :controller => 'engines', :action => 'search_work_orders'
+
     # Routes for custom error pages
     get '/404', to: 'errors#file_not_found'
     get '/422', to: 'errors#unprocessable'
