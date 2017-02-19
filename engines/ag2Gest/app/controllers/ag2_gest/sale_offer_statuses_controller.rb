@@ -35,7 +35,6 @@ module Ag2Gest
     # GET /sale_offer_statuses_statuses/new
     # GET /sale_offer_statuses_statuses/new.json
     def new
-
       @breadcrumb = 'create'
       @sale_offer_status = SaleOfferStatus.new
 
@@ -57,10 +56,11 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @sale_offer_status = SaleOfferStatus.new(params[:sale_offer_status])
+      @sale_offer_status.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @sale_offer_status.save
-          format.html { redirect_to @sale_offer_status, notice: t('activerecord.attributes.sale_offer_status.create') }
+          format.html { redirect_to @sale_offer_status, notice: crud_notice('created', @sale_offer_status) }
           format.json { render json: @sale_offer_status, status: :created, location: @sale_offer_status }
         else
           format.html { render action: "new" }
@@ -74,12 +74,12 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @sale_offer_status = SaleOfferStatus.find(params[:id])
+      @sale_offer_status.updated_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @sale_offer_status.update_attributes(params[:sale_offer_status])
           format.html { redirect_to @sale_offer_status,
                         notice: (crud_notice('updated', @sale_offer_status) + "#{undo_link(@sale_offer_status)}").html_safe }
-          format.html { redirect_to @sale_offer_status, notice: t('activerecord.attributes.sale_offer_status.successfully') }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -92,7 +92,6 @@ module Ag2Gest
     # DELETE /sale_offer_statuses_statuses/1.json
     def destroy
       @sale_offer_status = SaleOfferStatus.find(params[:id])
-      @sale_offer_status.destroy
 
       respond_to do |format|
         if @sale_offer_status.destroy

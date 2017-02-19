@@ -90,7 +90,7 @@ class EnginesController < ApplicationController
     w = "(projects.office_id = #{session[:office]} OR project_id IS NULL) AND " if session[:office] != '0'
     if @q != ''
       w += "(account_code LIKE '%#{@q}%' OR charge_accounts.name LIKE '%#{@q}%')"
-      @charge_accounts = serialized(ChargeAccount.joins("LEFT JOIN projects ON projects.id=project_id").where(w).by_code,
+      @charge_accounts = serialized(ChargeAccount.g_where(w),
                                     Api::V1::ChargeAccountsSerializer)
     end
     render json: @charge_accounts
@@ -133,10 +133,29 @@ class EnginesController < ApplicationController
     w = "projects.office_id = #{session[:office]} AND " if session[:office] != '0'
     if @q != ''
       w += "(order_no LIKE '%#{@q}%' OR description LIKE '%#{@q}%')"
-      @work_orders = serialized(WorkOrder.joins(:project).where(w).by_no,
+      @work_orders = serialized(WorkOrder.g_where(w),
                                 Api::V1::WorkOrdersSerializer)
     end
     render json: @work_orders
+  end
+
+  # Contracting requests
+  def search_contracting_requests
+    @contracting_requests = []
+    w = ''
+    w = "projects.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "projects.company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "projects.office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(
+            request_no LIKE '%#{@q}%' OR
+            (supply_clients.last_name LIKE '%#{@q}%' OR supply_clients.first_name LIKE '%#{@q}%' OR supply_clients.company LIKE '%#{@q}%') OR
+            (connection_clients.last_name LIKE '%#{@q}%' OR connection_clients.first_name LIKE '%#{@q}%' OR connection_clients.company LIKE '%#{@q}%')
+            )"
+      @contracting_requests = serialized(ContractingRequest.g_where(w),
+                                Api::V1::ContractingRequestsSerializer)
+    end
+    render json: @contracting_requests
   end
 
   # Returns JSON list of orders

@@ -5,21 +5,23 @@ module Ag2Gest
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:ci_generate_no,
-                                               :ci_update_selects_from_organization,
-                                               :ci_update_offer_select_from_client,
-                                               :ci_update_selects_from_offer,
-                                               :ci_update_selects_from_project,
-                                               :ci_format_number,
-                                               :ci_format_number_4,
-                                               :ci_item_totals,
-                                               :ci_update_description_prices_from_product,
-                                               :ci_update_product_select_from_offer_item,
-                                               :ci_update_amount_from_price_or_quantity,
-                                               :ci_item_balance_check,
-                                               :ci_item_totals,
-                                               :ci_generate_invoice,
-                                               :ci_current_balance,
+    skip_load_and_authorize_resource :only => [:so_remove_filters,
+                                               :so_restore_filters,
+                                               :so_generate_no,
+                                               :so_update_selects_from_organization,
+                                               :so_update_offer_select_from_client,
+                                               :so_update_selects_from_offer,
+                                               :so_update_selects_from_project,
+                                               :so_format_number,
+                                               :so_format_number_4,
+                                               :so_item_totals,
+                                               :so_update_description_prices_from_product,
+                                               :so_update_product_select_from_offer_item,
+                                               :so_update_amount_from_price_or_quantity,
+                                               :so_item_balance_check,
+                                               :so_item_totals,
+                                               :so_generate_invoice,
+                                               :so_current_balance,
                                                :send_invoice_form,
                                                :invoice_form,
                                                :bill_create, :bill_update]
@@ -28,7 +30,57 @@ module Ag2Gest
     helper_method :cannot_edit
     # => returns client code & full name
     helper_method :client_name
+    # => index filters
+    helper_method :so_remove_filters, :so_restore_filters
 
+    # Update invoice number at view (generate_code_btn)
+    def so_generate_no
+      project = params[:project]
+
+      # Builds no, if possible
+      code = project == '$' ? '$err' : sale_offer_next_no(project)
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Update selects at view from organization
+    def so_update_selects_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
+        @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
+        @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.expenditures
+        @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
+        @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
+        @contracting_requests = @organization.blank? ? contracting_requests_dropdown : projects_contracting_requests(@projects)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @clients = clients_dropdown
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+        @contracting_requests = contracting_requests_dropdown
+        @products = products_dropdown
+      end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_orders)
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @orders_dropdown,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "contracting_request" => @contracting_requests,
+                     "product" => @products_dropdown }
+      render json: @json_data
+    end
+
+    #
+    # Default Methods
+    #
     # GET /sale_offers
     # GET /sale_offers.json
     def index
@@ -42,12 +94,14 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
+      @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @contracting_request = !request.blank? ? ContractingRequest.find(request).full_no_and_client : " "
       @status = sale_offer_statuses_dropdown if @status.nil?
-      @work_orders = work_orders_dropdown if @work_orders.nil?
-      @contracting_requests = contracting_requests_dropdown if @contracting_requests.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -55,6 +109,9 @@ module Ag2Gest
       @search = SaleOffer.search do
         with :project_id, current_projects
         fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
         if !no.blank?
           if no.class == Array
             with :offer_no, no
@@ -71,6 +128,9 @@ module Ag2Gest
         if !status.blank?
           with :sale_offer_status_id, status
         end
+        if !request.blank?
+          with :contracting_request_id, request
+        end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -86,7 +146,9 @@ module Ag2Gest
     # GET /sale_offers/1
     # GET /sale_offers/1.json
     def show
+      @breadcrumb = 'read'
       @sale_offer = SaleOffer.find(params[:id])
+      @items = @sale_offer.sale_offer_items.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb
@@ -97,6 +159,7 @@ module Ag2Gest
     # GET /sale_offers/new
     # GET /sale_offers/new.json
     def new
+      @breadcrumb = 'create'
       @sale_offer = SaleOffer.new
 
       respond_to do |format|
@@ -107,17 +170,20 @@ module Ag2Gest
 
     # GET /sale_offers/1/edit
     def edit
+      @breadcrumb = 'update'
       @sale_offer = SaleOffer.find(params[:id])
     end
 
     # POST /sale_offers
     # POST /sale_offers.json
     def create
+      @breadcrumb = 'create'
       @sale_offer = SaleOffer.new(params[:sale_offer])
+      @sale_offer.created_by = current_user.id if !current_user.nil?
 
       respond_to do |format|
         if @sale_offer.save
-          format.html { redirect_to @sale_offer, notice: t('activerecord.attributes.sale_offer.create') }
+          format.html { redirect_to @sale_offer, notice: crud_notice('created', @sale_offer) }
           format.json { render json: @sale_offer, status: :created, location: @sale_offer }
         else
           format.html { render action: "new" }
@@ -129,11 +195,13 @@ module Ag2Gest
     # PUT /sale_offers/1
     # PUT /sale_offers/1.json
     def update
+      @breadcrumb = 'update'
       @sale_offer = SaleOffer.find(params[:id])
 
       respond_to do |format|
         if @sale_offer.update_attributes(params[:sale_offer])
-          format.html { redirect_to @sale_offer, notice: t('activerecord.attributes.sale_offer.succesfully') }
+          format.html { redirect_to @sale_offer,
+                        notice: (crud_notice('updated', @sale_offer) + "#{undo_link(@sale_offer)}").html_safe }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }
@@ -146,11 +214,16 @@ module Ag2Gest
     # DELETE /sale_offers/1.json
     def destroy
       @sale_offer = SaleOffer.find(params[:id])
-      @sale_offer.destroy
 
       respond_to do |format|
-        format.html { redirect_to sale_offers_url }
-        format.json { head :no_content }
+        if @sale_offer.destroy
+          format.html { redirect_to sale_offers_url,
+                      notice: (crud_notice('destroyed', @sale_offer) + "#{undo_link(@sale_offer)}").html_safe }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to sale_offers_url, alert: "#{@sale_offer.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @sale_offer.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -164,7 +237,7 @@ module Ag2Gest
     end
 
     def client_name(_offer)
-      _name = _offer.bill.client.full_name_or_company_and_code rescue nil
+      _name = _offer.client.full_name_or_company_and_code rescue nil
       _name.blank? ? '' : _name[0,40]
     end
 
@@ -215,6 +288,39 @@ module Ag2Gest
       _projects = Project.where(id: _array).order(:project_code)
     end
 
+    # Charge accounts belonging to projects
+    def projects_charge_accounts(_projects)
+      _array = []
+      _ret = nil
+
+      # Adding charge accounts belonging to current projects
+      _ret = ChargeAccount.incomes.where(project_id: _projects)
+      ret_array(_array, _ret, 'id')
+
+      # Adding global charge accounts belonging to projects organizations
+      _sort_projects_by_organization = _projects.sort { |a,b| a.organization_id <=> b.organization_id }
+      _previous_organization = _sort_projects_by_organization.first.organization_id
+      _sort_projects_by_organization.each do |i|
+        if _previous_organization != i.organization_id
+          # when organization changes, process previous
+          _ret = ChargeAccount.incomes.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+          ret_array(_array, _ret, 'id')
+          _previous_organization = i.organization_id
+        end
+      end
+      # last organization, process previous
+      _ret = ChargeAccount.incomes.where('(project_id IS NULL AND charge_accounts.organization_id = ?)', _previous_organization)
+      ret_array(_array, _ret, 'id')
+
+      # Returning founded charge accounts
+      _ret = ChargeAccount.where(id: _array).order(:account_code)
+    end
+
+    # Contracting requests belonging to projects
+    def projects_contracting_requests(_projects)
+      ContractingRequest.where(project_id: _projects).by_no
+    end
+
     def sale_offer_statuses_dropdown
       SaleOfferStatus.all
     end
@@ -250,17 +356,17 @@ module Ag2Gest
       elsif session[:No]
         params[:No] = session[:No]
       end
-      # project
-      if params[:Project]
-        session[:Project] = params[:Project]
-      elsif session[:Project]
-        params[:Project] = session[:Project]
-      end
       # client
       if params[:Client]
         session[:Client] = params[:Client]
       elsif session[:Client]
         params[:Client] = session[:Client]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
       end
       # status
       if params[:Status]
@@ -275,11 +381,32 @@ module Ag2Gest
         params[:Order] = session[:Order]
       end
       # request
-      if params[:Period]
-        session[:Period] = params[:Period]
-      elsif session[:Period]
-        params[:Period] = session[:Period]
+      if params[:Request]
+        session[:Request] = params[:Request]
+      elsif session[:Request]
+        params[:Request] = session[:Request]
       end
+    end
+
+    def so_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Client] = ""
+      params[:Project] = ""
+      params[:Status] = ""
+      params[:Order] = ""
+      params[:Request] = ""
+      return " "
+    end
+
+    def so_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Client] = session[:Client]
+      params[:Project] = session[:Project]
+      params[:Status] = session[:Status]
+      params[:Order] = session[:Order]
+      params[:Request] = session[:Request]
     end
   end
 end

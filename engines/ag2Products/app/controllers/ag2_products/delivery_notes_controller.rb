@@ -22,7 +22,8 @@ module Ag2Products
                                                :delivery_note_form_client,
                                                :delivery_notes_report,
                                                :dn_generate_no]
-
+    # Helper methods for
+    # => index filters
     helper_method :dn_remove_filters, :dn_restore_filters
 
     # Update sale offer select at view from client select

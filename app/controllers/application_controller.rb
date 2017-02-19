@@ -733,18 +733,40 @@ end
     code
   end
 
-  # Subscriber code
-  # BAD! Must user Office, not Organization
-  def sub_next_no(organization)
+  # Sale offer no
+  def sale_offer_next_no(project)
+    year = Time.new.year
     code = ''
-    organization = organization.to_s if organization.is_a? Fixnum
-    organization = organization.rjust(4, '0')
-    last_no = Subscriber.where("subscriber_code LIKE ?", "#{organization}%").order(:subscriber_code).maximum(:subscriber_code)
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = SaleOffer.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[16..21].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+
+  # Subscriber code
+  def sub_next_no(office)
+    code = ''
+    office = office.to_s if office.is_a? Fixnum
+    office = office.rjust(4, '0')
+    last_no = Subscriber.where("subscriber_code LIKE ?", "#{office}%").order(:subscriber_code).maximum(:subscriber_code)
     if last_no.nil?
-      code = organization + '0000001'
+      code = office + '0000001'
     else
       last_no = last_no[4..10].to_i + 1
-      code = organization +  last_no.to_s.rjust(7, '0')
+      code = office +  last_no.to_s.rjust(7, '0')
     end
     code
   end

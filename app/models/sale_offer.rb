@@ -188,6 +188,7 @@ class SaleOffer < ActiveRecord::Base
     date :offer_date
     integer :organization_id
     integer :sale_offer_status_id
+    integer :contracting_request_id
     string :sort_no do
       offer_no
     end

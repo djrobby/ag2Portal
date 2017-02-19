@@ -58,7 +58,7 @@ class ContractingRequest < ActiveRecord::Base
   accepts_nested_attributes_for :contracting_request_documents
   has_one :water_supply_contract
   has_one :client, through: :entity
-  # has_one :water_connection_contracts
+  has_one :water_connection_contract
 
   has_paper_trail
 
@@ -107,7 +107,16 @@ class ContractingRequest < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:request_no) }
+  #
   scope :belongs_to_organization, -> org { joins(:project).where("projects.organization_id = ?", org).by_no }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    joins(:project)
+    .joins("LEFT JOIN (water_supply_contracts INNER JOIN clients AS supply_clients ON supply_clients.id=water_supply_contracts.client_id) ON water_supply_contracts.contracting_request_id=contracting_requests.id")
+    .joins("LEFT JOIN (water_connection_contracts INNER JOIN clients AS connection_clients ON connection_clients.id=water_connection_contracts.client_id) ON water_connection_contracts.contracting_request_id=contracting_requests.id")
+    .where(w)
+    .by_no
+  }
 
   # CALLBACKS
   after_create :to_client #create/assign client after create contracting_request
@@ -144,7 +153,7 @@ class ContractingRequest < ActiveRecord::Base
   end
 
   def entity_info
-      r_first_name.blank? ? "" : r_first_name + " " + r_last_name
+    r_first_name.blank? ? "" : r_first_name + " " + r_last_name
   end
 
   def subscriber_info_street
@@ -168,11 +177,26 @@ class ContractingRequest < ActiveRecord::Base
     _codes
   end
 
-  def full_name
-    full_no
+  def contracting_client
+    _f = nil
+    if !water_supply_contract.nil?
+      _f = water_supply_contract.client.nil? ? nil : water_supply_contract.client
+    elsif !water_connection_contract.nil?
+      _f = !water_connection_contract.client.nil? ? nil : !water_connection_contract.client
+    end
+    _f
+  end
+
+  def full_no_and_client_name
+    _f = full_no
+    _f += " " + (contracting_client.nil? ? "N/A" : contracting_client.full_name_or_company)
   end
 
   def to_label
+    full_no
+  end
+
+  def full_name
     full_no
   end
 
@@ -480,16 +504,16 @@ class ContractingRequest < ActiveRecord::Base
   end
 
   # Subscriber order no
-  def sub_next_no(organization)
+  def sub_next_no(office)
     code = ''
-    organization = organization.to_s if organization.is_a? Fixnum
-    organization = organization.rjust(4, '0')
-    last_no = Subscriber.where("subscriber_code LIKE ?", "#{organization}%").order(:subscriber_code).maximum(:subscriber_code)
+    office = office.to_s if office.is_a? Fixnum
+    office = office.rjust(4, '0')
+    last_no = Subscriber.where("subscriber_code LIKE ?", "#{office}%").order(:subscriber_code).maximum(:subscriber_code)
     if last_no.nil?
-      code = organization + '0000001'
+      code = office + '0000001'
     else
       last_no = last_no[4..10].to_i + 1
-      code = organization +  last_no.to_s.rjust(7, '0')
+      code = office +  last_no.to_s.rjust(7, '0')
     end
     code
   end

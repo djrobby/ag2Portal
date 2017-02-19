@@ -47,6 +47,12 @@ class ChargeAccount < ActiveRecord::Base
   scope :by_code, -> { order(:account_code) }
   #
   scope :belongs_to_project, -> project { where("project_id = ?", project).by_code }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    joins("LEFT JOIN projects ON projects.id=project_id")
+    .where(w)
+    .by_code
+  }
 
   before_destroy :check_for_dependent_records
 

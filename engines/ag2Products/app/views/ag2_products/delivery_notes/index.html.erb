@@ -214,14 +214,12 @@
         <%= text_field_tag "No", params[:No], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_client"), nil, :class => 'form-label' %>
-        <%#= select_tag "Client", options_from_collection_for_select(@clients, "id", "full_name", params[:Client]), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_project"), nil, :class => 'form-label-under-sel2' %>
         <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
-        <%#= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name", params[:Order]), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Charge account -->
         <%= label_tag I18n.t("ag2_products.delivery_notes.index.label_charge_account"), nil, :class => 'form-label-under-sel2' %>

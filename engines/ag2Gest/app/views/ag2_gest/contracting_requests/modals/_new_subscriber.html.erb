@@ -46,7 +46,7 @@
     <%#= f.input :gis_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:gis_id) } %>
     <%#= f.input :inhabitants, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:inhabitants) } %>
     <%#= f.input :meter_id, :as => :hidden, :input_html => { :value => @contracting_request.try(:water_supply_contract).try(:meter_id) } %>
-    <%#= f.input :subscriber_code, :as => :hidden, :input_html => { :value => sub_next_no(project.organization_id) } %>
+    <%#= f.input :subscriber_code, :as => :hidden, :input_html => { :value => sub_next_no(project.office_id) } %>
 
     <h4><%= t('activerecord.attributes.contracting_request.data_installation_meter') %></h4>
     <%= f.simple_fields_for :meter_details, @subscriber.meter_details.build do |m| %>

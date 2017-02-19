@@ -120,8 +120,12 @@ class WorkOrder < ActiveRecord::Base
   scope :belongs_to_organization_unclosed_without_suborders, -> org { where("organization_id = ? AND closed_at IS NULL AND master_order_id IS NULL", org).by_no }
   scope :belongs_to_organization_unclosed_without_this_and_suborders, -> org, this { where("organization_id = ? AND closed_at IS NULL AND id <> ? AND master_order_id IS NULL", org, this).by_no }
   scope :belongs_to_organization_unclosed_and_this, -> org, this { where("(organization_id = ? AND closed_at IS NULL) OR id = ?", org, this).by_no }
-  # by Select2 (from engines_controller)
-  scope :belongs_to_organization_q, -> org { where("organization_id = ?", org).by_no }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    joins(:project)
+    .where(w)
+    .by_no
+  }
 
   before_destroy :check_for_dependent_records
   before_save :update_status_based_on_dates

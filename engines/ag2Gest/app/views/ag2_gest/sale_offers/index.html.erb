@@ -2,15 +2,127 @@
   var _thisForm = '';
   var changing = false;
 
+  function setupAllSelect2(c, p, w, r) {
+    clientsSelect2(c);
+    projectsSelect2(p);
+    wordersSelect2(w);    
+    crequestsSelect2(r);    
+  }
+
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function wordersSelect2(intialValue) {
+    $('#Order').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_work_orders",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function crequestsSelect2(intialValue) {
+    $('#Request').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_contracting_requests",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
-    });
-    $('.nsel2').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      allowClear: true
     });
     $('.ndate_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -18,40 +130,63 @@
     }).on('changeDate', function(e){
       $('.ndate_picker').datepicker('hide');
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @client %>", "<%= @project %>", "<%= @work_order %>", "<%= @contracting_request %>");
+
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
   }); 
 
-  $(document).ajaxStart(function() {
-    // show loader on start
-    if (changing == false) {
-      $("#div_table").html("");
-      $("#loader").show();
-    }
-  }).ajaxSuccess(function() {
+  // $(document).ajaxStart(function() {
+  //   // show loader on start
+  //   if (changing == false) {
+  //     $("#div_table").html("");
+  //     $("#loader").show();
+  //   }
+  // });
+  $(document).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
   });
 
   $(window).bind("load", function() {
+    a = "<%= so_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
     $("#Client").select2("val", "<%= params[:Client] %>");
     $("#Project").select2("val", "<%= params[:Project] %>");
     $("#Status").select2("val", "<%= params[:Status] %>");
     $("#Order").select2("val", "<%= params[:Order] %>");
     $("#Request").select2("val", "<%= params[:Request] %>");
+    $("#search").val("<%= params[:search] %>");
   });
 
   jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Client").select2("val", "");
       $("#Project").select2("val", "");
-      $("#Status").select2("val", "");
+      $("#Status").val("");
       $("#Order").select2("val", "");
       $("#Request").select2("val", "");
       $("#search").val("");
+      a = "<%= so_remove_filters %>";
+      setupAllSelect2(a, a, a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -77,19 +212,19 @@
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_client"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
+        <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Project -->
-        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_project"), nil, :class => 'form-label' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_project"), nil, :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_status"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Work order -->
-        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_work_order"), nil, :class => 'form-label' %>
+        <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Contracting request -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_contracting_request"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Request", options_from_collection_for_select(@contracting_requests, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Request", params[:Request], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.sale_offers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

@@ -847,7 +847,7 @@ module Ag2Gest
       _ret = nil
 
       # Adding charge accounts belonging to current projects
-      _ret = ChargeAccount.incomes(project_id: _projects)
+      _ret = ChargeAccount.incomes.where(project_id: _projects)
       ret_array(_array, _ret, 'id')
       # _projects.each do |i|
       #   _ret = ChargeAccount.incomes(i.id)
