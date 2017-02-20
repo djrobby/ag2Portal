@@ -178,7 +178,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def total
-    taxes + taxable
+    (taxes + taxable).truncate(4)
   end
 
   def receivable

@@ -60,78 +60,82 @@ module Ag2Gest
       invoice_date = params[:pre_bill][:invoice_date]
       final_bills = []
       @pre_bills.each do |pre_bill|
-        @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
-          project_id: pre_bill.project_id,
-          # project_id: pre_bill.reading.project_id,
-          invoice_status_id: InvoiceStatus::PENDING,
-          bill_date: invoice_date,
-          subscriber_id: pre_bill.subscriber_id,
-          client_id: pre_bill.client_id,
-          last_name: pre_bill.last_name,
-          first_name: pre_bill.first_name,
-          company: pre_bill.company,
-          fiscal_id: pre_bill.fiscal_id,
-          street_type_id: pre_bill.street_type_id,
-          street_name: pre_bill.street_name,
-          street_number: pre_bill.street_number,
-          building: pre_bill.building,
-          floor: pre_bill.floor,
-          floor_office: pre_bill.floor_office,
-          zipcode_id: pre_bill.zipcode_id,
-          town_id: pre_bill.town_id,
-          province_id: pre_bill.province_id,
-          region_id: pre_bill.region_id,
-          country_id: pre_bill.country_id,
-          created_by: by_user,
-          reading_1_id: pre_bill.reading_1_id,
-          reading_2_id: pre_bill.reading_2_id,
-          organization_id: pre_bill.project.organization_id )
-        pre_bill.pre_invoices.map do |pre_invoice|
-          @invoice = Invoice.create!( invoice_no: invoice_next_no(pre_bill.project.company_id, pre_bill.project.office_id),
-            bill_id: @bill.id,
+        reading_ids_subscriber_period = pre_bill.subscriber.readings.where(billing_period_id: pre_bill.reading_2.billing_period_id).map(&:id)
+        if Bill.where(reading_2_id: reading_ids_subscriber_period).blank? and Bill.select{|b| b.bill_operation == InvoiceOperation::INVOICE and b.bill_period == pre_bill.reading_2.billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == pre_bill.subscriber_id}.blank?
+          @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
+            project_id: pre_bill.project_id,
+            # project_id: pre_bill.reading.project_id,
             invoice_status_id: InvoiceStatus::PENDING,
-            invoice_type_id: InvoiceType::WATER,
-            invoice_date: invoice_date,
-            tariff_scheme_id: pre_invoice.tariff_scheme_id,
-            payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
-            invoice_operation_id: InvoiceOperation::INVOICE,
-            billing_period_id: pre_invoice.billing_period_id,
-            consumption: pre_invoice.consumption,
-            consumption_real: pre_invoice.consumption_real,
-            consumption_estimated: pre_invoice.consumption_estimated,
-            consumption_other: pre_invoice.consumption_other,
-            biller_id: pre_invoice.biller_id,
-            discount_pct: pre_invoice.discount_pct,
-            exemption: pre_invoice.exemption,
-            charge_account_id: pre_invoice.charge_account_id,
+            bill_date: invoice_date,
+            subscriber_id: pre_bill.subscriber_id,
+            client_id: pre_bill.client_id,
+            last_name: pre_bill.last_name,
+            first_name: pre_bill.first_name,
+            company: pre_bill.company,
+            fiscal_id: pre_bill.fiscal_id,
+            street_type_id: pre_bill.street_type_id,
+            street_name: pre_bill.street_name,
+            street_number: pre_bill.street_number,
+            building: pre_bill.building,
+            floor: pre_bill.floor,
+            floor_office: pre_bill.floor_office,
+            zipcode_id: pre_bill.zipcode_id,
+            town_id: pre_bill.town_id,
+            province_id: pre_bill.province_id,
+            region_id: pre_bill.region_id,
+            country_id: pre_bill.country_id,
             created_by: by_user,
-            reading_1_date: pre_invoice.reading_1_date,
-            reading_2_date: pre_invoice.reading_2_date,
-            reading_1_index: pre_invoice.reading_1_index,
-            reading_2_index: pre_invoice.reading_2_index,
+            reading_1_id: pre_bill.reading_1_id,
+            reading_2_id: pre_bill.reading_2_id,
             organization_id: pre_bill.project.organization_id )
-          pre_invoice.pre_invoice_items.map do |pre_invoice_item|
-            InvoiceItem.create!( invoice_id: @invoice.id,
-              code: pre_invoice_item.code,
-              description: pre_invoice_item.description,
-              tariff_id: pre_invoice_item.tariff_id,
-              price:  pre_invoice_item.price,
-              quantity: pre_invoice_item.quantity,
-              tax_type_id: pre_invoice_item.tax_type_id,
-              discount_pct: pre_invoice_item.discount_pct,
-              discount: pre_invoice_item.discount,
-              product_id: pre_invoice_item.product_id,
-              subcode: pre_invoice_item.subcode,
-              measure_id: pre_invoice_item.measure_id,
-              created_by: by_user
-            )
+          pre_bill.pre_invoices.map do |pre_invoice|
+            @invoice = Invoice.create!( invoice_no: invoice_next_no(pre_bill.project.company_id, pre_bill.project.office_id),
+              bill_id: @bill.id,
+              invoice_status_id: InvoiceStatus::PENDING,
+              invoice_type_id: InvoiceType::WATER,
+              invoice_date: invoice_date,
+              tariff_scheme_id: pre_invoice.tariff_scheme_id,
+              payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
+              invoice_operation_id: InvoiceOperation::INVOICE,
+              billing_period_id: pre_invoice.billing_period_id,
+              consumption: pre_invoice.consumption,
+              consumption_real: pre_invoice.consumption_real,
+              consumption_estimated: pre_invoice.consumption_estimated,
+              consumption_other: pre_invoice.consumption_other,
+              biller_id: pre_invoice.biller_id,
+              discount_pct: pre_invoice.discount_pct,
+              exemption: pre_invoice.exemption,
+              charge_account_id: pre_invoice.charge_account_id,
+              created_by: by_user,
+              reading_1_date: pre_invoice.reading_1_date,
+              reading_2_date: pre_invoice.reading_2_date,
+              reading_1_index: pre_invoice.reading_1_index,
+              reading_2_index: pre_invoice.reading_2_index,
+              organization_id: pre_bill.project.organization_id )
+            pre_invoice.pre_invoice_items.map do |pre_invoice_item|
+              InvoiceItem.create!( invoice_id: @invoice.id,
+                code: pre_invoice_item.code,
+                description: pre_invoice_item.description,
+                tariff_id: pre_invoice_item.tariff_id,
+                price:  pre_invoice_item.price,
+                quantity: pre_invoice_item.quantity,
+                tax_type_id: pre_invoice_item.tax_type_id,
+                discount_pct: pre_invoice_item.discount_pct,
+                discount: pre_invoice_item.discount,
+                product_id: pre_invoice_item.product_id,
+                subcode: pre_invoice_item.subcode,
+                measure_id: pre_invoice_item.measure_id,
+                created_by: by_user
+              )
+            end
+            @bill.reading_2.update_attributes(bill_id: @bill.id)
+            pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
+            # add mj
+            pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
           end
-          pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
           # add mj
-          pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
+          final_bills << @bill
         end
-        # add mj
-        final_bills << @bill
       end
       # params for modal
       redirect_to pre_index_bills_path( modal: "true",
@@ -159,7 +163,7 @@ module Ag2Gest
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
 
-      subscribers = Subscriber.joins(:readings).where("subscribers.use_id IN (?) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",uses, reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO])
+      subscribers = Reading.joins(:subscriber).where("(subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",uses, reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]).select{|r| r.billable?}.map(&:subscriber).uniq
 
       subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
 

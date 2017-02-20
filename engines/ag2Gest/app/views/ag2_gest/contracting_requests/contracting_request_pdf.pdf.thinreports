@@ -181,11 +181,12 @@ report.page.values(baja_c: I18n.t("ag2_gest.contracting_requests.report.baja_c")
 									 baja_6: I18n.t("ag2_gest.contracting_requests.report.baja_6"),
 									 baja_7: I18n.t("ag2_gest.contracting_requests.report.baja_7")
 									 )
-if @contracting_request.contracting_request_type_id == 3
+if @contracting_request.contracting_request_type_id == 6
+	date = @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.strftime("%d/%m/%Y") unless @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.blank?
 	report.page.values(meter_code: @contracting_request.try(:water_supply_contract).try(:meter).try(:to_label),
 						meter_location: @contracting_request.try(:water_supply_contract).try(:meter).try(:meter_details).try(:last).try(:meter_location).try(:name),
-						baja_date: @contracting_request.created_at.strftime("%d/%m/%Y"),
-						baja_reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
+						baja_date: date,
+						baja_reading_index: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index)
 					)
 end
 

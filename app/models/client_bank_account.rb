@@ -6,7 +6,7 @@ class ClientBankAccount < ActiveRecord::Base
   belongs_to :bank
   belongs_to :bank_office
   attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
-                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id, :holder_fiscal_id, :holder_name
+                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id, :holder_fiscal_id, :holder_name, :created_by, :updated_by
 
   alias_attribute :cb, :bank_id
   alias_attribute :cs, :bank_office_id

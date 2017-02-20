@@ -64,6 +64,8 @@ es:
         consumption: "Consumo"
         ident: "Identif."
         issuer: "Emisora"
+        alert_bill: "Factura creada con exito."
+        alert_bill_error: "Error al crear factura"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

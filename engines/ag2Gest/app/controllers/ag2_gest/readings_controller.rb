@@ -143,6 +143,14 @@ module Ag2Gest
               format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
             end
           end
+        else
+          respond_to do |format|
+            if session[:return_to_subscriber].nil?
+              format.html { redirect_to @reading, alert: t('activerecord.attributes.reading.repeat') }
+            else
+              format.html { redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat') }
+            end
+          end
         end
       else
         respond_to do |format|

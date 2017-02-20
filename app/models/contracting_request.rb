@@ -327,16 +327,19 @@ class ContractingRequest < ActiveRecord::Base
       created_by: created_by,
       payment_method_id: 1
     )
-    client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: Date.today)
+    if self.contracting_request_type_id != ContractingRequestType::CANCELLATION
+      client.client_bank_accounts.where(ending_at: nil, subscriber_id: subscriber_id).update_all(ending_at: request_date, updated_by: self.created_by)
+    end
     ClientBankAccount.create(client_id: client.id,
                               bank_account_class_id: BankAccountClass::SERVICIO,
-                              starting_at: Date.today,
+                              starting_at: request_date,
                               country_id: country_id,
                               iban_dc: iban_dc,
                               bank_id: bank_id,
                               bank_office_id: bank_office_id,
                               ccc_dc: ccc_dc,
                               account_no: account_no,
+                              created_by: created_by,
                               holder_fiscal_id: client.fiscal_id,
                               holder_name: client.to_name) if data_account?
   end
@@ -390,7 +393,83 @@ class ContractingRequest < ActiveRecord::Base
     # self.update_attributes(subscriber_id: subscriber.id)
   end
 
+  def to_cancellation
+    water_supply_contract = WaterSupplyContract.new(
+                              contracting_request_id: id,
+                              client_id: client.id,
+                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
+                              meter_id: old_subscriber.water_supply_contract.meter_id,
+                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
+                              contract_date: Date.today,
+                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
+                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
+                              gis_id: old_subscriber.water_supply_contract.gis_id,
+                              remarks: old_subscriber.water_supply_contract.remarks,
+                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
+                              endowments: old_subscriber.water_supply_contract.endowments,
+                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
+                              use_id:old_subscriber.water_supply_contract.use_id,
+                              created_by: created_by,
+                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id
+                            )
+    water_supply_contract.save
+    if !client.client_bank_accounts.where(ending_at: nil).blank?
+      self.update_attributes(
+        country_id: client.client_bank_accounts.where(ending_at: nil).last.country_id,
+        iban_dc: client.client_bank_accounts.where(ending_at: nil).last.iban_dc,
+        bank_id: client.client_bank_accounts.where(ending_at: nil).last.bank_id,
+        bank_office_id: client.client_bank_accounts.where(ending_at: nil).last.bank_office_id,
+        ccc_dc: client.client_bank_accounts.where(ending_at: nil).last.ccc_dc,
+        created_by: created_by,
+        account_no: client.client_bank_accounts.where(ending_at: nil).last.account_no
+      )
+      self.save
+    end
+  end
+
+  #change_owner
   def to_subrogation
+    water_supply_contract = WaterSupplyContract.create(
+                              contracting_request_id: id,
+                              client_id: client.id,
+                              subscriber_id: old_subscriber.id,
+                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
+                              work_order_id: nil,
+                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
+                              bill_id: old_subscriber.water_supply_contract.bill_id,
+                              meter_id: old_subscriber.water_supply_contract.meter_id,
+                              contract_date: request_date,
+                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
+                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
+                              gis_id: old_subscriber.water_supply_contract.gis_id,
+                              remarks: old_subscriber.water_supply_contract.remarks,
+                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
+                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id,
+                              use_id: old_subscriber.water_supply_contract.use_id,
+                              endowments: old_subscriber.water_supply_contract.endowments,
+                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
+                              installation_date: old_subscriber.water_supply_contract.installation_date,
+                              installation_index: old_subscriber.water_supply_contract.installation_index,
+                              created_by: created_by
+                            )
+    subscriber = old_subscriber
+    subscriber.update_attributes(
+      client_id: client.id,
+      first_name: client.first_name,
+      last_name: client.last_name,
+      company: client.company,
+      fiscal_id: client.fiscal_id,
+      cellular: client.cellular,
+      email: client.email,
+      phone: client.phone,
+      fax: client.fax,
+      updated_by: created_by
+    )
+    self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
+    self.save
+  end
+
+  def to_change_ownership
     # assign water_supply_contract to the new subscriber
     # IMPORTANTE COPIAR DATOS DE UNO A UNO Y NO COGERLOS DE WaterSupplyContract
     # water_supply_contract = WaterSupplyContract.new(old_subscriber.water_supply_contract.attributes.except!("id", "created_at", "updated_at"))
@@ -400,12 +479,18 @@ class ContractingRequest < ActiveRecord::Base
                               client_id: client.id,
                               reading_route_id: old_subscriber.water_supply_contract.reading_route,
                               meter_id: old_subscriber.water_supply_contract.meter_id,
+                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
                               contract_date: Date.today,
                               reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
                               cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
                               gis_id: old_subscriber.water_supply_contract.gis_id,
                               remarks: old_subscriber.water_supply_contract.remarks,
-                              caliber_id: old_subscriber.water_supply_contract.caliber_id
+                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
+                              endowments: old_subscriber.water_supply_contract.endowments,
+                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
+                              use_id:old_subscriber.water_supply_contract.use_id,
+                              created_by: created_by,
+                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id
                             )
     water_supply_contract.save
 

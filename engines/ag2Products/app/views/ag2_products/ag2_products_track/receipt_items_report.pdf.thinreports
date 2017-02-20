@@ -28,15 +28,16 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0
+	c.use_stores page_rows: 0, page_quantity: 0, page_total: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.receipt_report.sum_rows_title"))
+		e.section.item(:sum_items_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_items"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total") + " (" + I18n.t("activerecord.attributes.receipt_note.quantity") + " - " + I18n.t("activerecord.attributes.receipt_note.total") + ")") 
 		e.section.item(:sum_rows).value(e.store.page_rows)
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
+		e.section.item(:quantity_rows).value(number_with_precision(e.store.page_quantity, precision: 2))
+		e.section.item(:total_rows).value number_with_precision(e.store.page_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 	end
 end
 
@@ -72,6 +73,11 @@ report.page.list(:default).header do |header|
 	header.item(:balance_items_c).value I18n.t("activerecord.attributes.receipt_note_item.balance")
 end
 
+  report.page.list(:default) do |list|
+  	list.store.page_quantity = @receipt_items_report.first.receipt_note.quantity
+	list.store.page_total = @receipt_items_report.first.receipt_note.taxable
+  end
+
 receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 
 
@@ -82,6 +88,8 @@ receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 				report.page.list(:default).page_break
 				report.page.list(:default) do |list|
 					list.store.page_rows = 0
+					list.store.page_quantity += i.receipt_note.quantity
+					list.store.page_total += i.receipt_note.taxable
 				end
 				receipt_number = i.receipt_note.receipt_no
 			end
@@ -89,7 +97,7 @@ receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 	report.page.list(:default).add_row do |row|
 		report.page.values receipt_no: i.receipt_note.receipt_no
 		report.page.values receipt_date: formatted_date(i.receipt_note.receipt_date) unless i.receipt_note.receipt_date.blank?
-		report.page.values supplier: i.receipt_note.supplier.full_code
+		report.page.values supplier: i.receipt_note.supplier.partial_name
 		report.page.values project: i.receipt_note.project.full_code unless i.receipt_note.project.blank?
 		report.page.values store: i.receipt_note.store.name unless i.receipt_note.store.blank?
 		report.page.values quantity: number_with_precision(i.receipt_note.quantity, precision: 2) unless i.receipt_note.quantity.blank?

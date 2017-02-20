@@ -1,42 +1,81 @@
-<div id="newAccountModal" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3><%= t('activerecord.attributes.subscriber.new_bank_account') %></h3>
-  </div>
-  <div class="modal-body">
-    <form>
-      <div class="row-fluid">
-        <div class="span7">
-          <label><%= t('activerecord.attributes.subscriber.titular_account') %>:</label>
-          <input type="text" value="" class="input-block-level">
-        </div>
-        <div class="span5">
-          <label><%= t('activerecord.attributes.subscriber.titular_id') %>:</label>
-          <input type="text" value="">
-        </div>
-      </div>
-      <div class="row-fluid">
-        <div class="span2">
-          <label><%= t('activerecord.attributes.subscriber.bank') %>:</label>
-          <input type="number" value="" class="input-block-level" maxlength="2">
-        </div>
-        <div class="span2">
-          <label><%= t('activerecord.attributes.subscriber.sucursal') %>:</label>
-          <input type="number" value="" class="input-block-level" maxlength="4">
-        </div>
-        <div class="span2">
-          <label><%= t('activerecord.attributes.subscriber.cc') %>:</label>
-          <input type="number" value="" class="input-block-level" maxlength="2">
-        </div>
-        <div class="span6">
-          <label><%= t('activerecord.attributes.subscriber.account_iban') %>:</label>
-          <input type="number" value="" class="input-block-level" maxlength="10">
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" data-dismiss="modal"><%= t('activerecord.attributes.subscriber.close') %></button>
-    <input type="submit" class="btn btn-primary" value="Crear cuenta">
-  </div>
+<script>
+$(document).ready(function() {
+  // Select2
+  $('select.custom-sel2').select2({
+    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+    allowClear: true,
+    formatSelection: function(country){
+      return '<span>' + country.text.split(' ')[0] + '</span>';
+    },
+  });
+
+  // DatePicker
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
+});
+
+jQuery(function($) {
+  // when the #client_bank_account_bank field changes
+  $("#client_bank_account_bank_id").change(function() {
+    // make a POST call and replace the content
+    var bank = $('select#client_bank_account_bank_id :selected').val();
+    if (bank == "")
+      bank = "0";
+    jQuery.getJSON('/ag2_gest/contracting_requests/update_bank_offices_from_bank/' + bank, function(data) {
+      var o = data.office;
+      $("#client_bank_account_bank_office_id").html("");
+      $("#client_bank_account_bank_office_id").select2("val", "");
+      $("#client_bank_account_bank_office_id").append($('<option></option>').val("").html(""));
+      if (!o.length) {
+        $.each(data, function(id, option) {
+          if (id == 'office' && option != "") {
+            $("#client_bank_account_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          }
+        });
+      } else {
+        $.each(o, function(id, option) {
+          $("#client_bank_account_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+        });
+      }
+    });
+    return false;
+  });
+});
+
+</script>
+
+
+
+<div id="newAccountModal" class="modal fade" style="display: none;">
+  <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'form-inline' } do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= I18n.t('ag2_gest.subscribers.client_bank_account.title') %></h3>
+    </div>
+    <div class="modal-body">
+      <%= f.input :client_id, :as => :hidden, :input_html => { :value => @subscriber.client_id } %>
+      <%= f.input :subscriber_id, :as => :hidden, :input_html => { :value => @subscriber.id } %>
+
+      <%= f.input :holder_fiscal_id, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :holder_name, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+
+      <%= f.association :bank_account_class, required: true, collection: BankAccountClass.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+
+      <%= f.input :country_id, :required => true, collection: Country.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :bank_id, :required => true, collection: Bank.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :bank_office_id, :required => true, collection: BankOffice.order(:bank_id, :code), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "10" }, :label_html => { :class => 'form-label' } %>
+    </div>
+    <div class="modal-footer">
+      <%= f.submit t("activerecord.attributes.contracting_request.accept"), :class => 'btn btn-primary' %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    </div>
+  <% end %>
 </div>

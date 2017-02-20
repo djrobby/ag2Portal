@@ -60,8 +60,8 @@
               <tr class="<%= 'text-error' if i.unpaid? %>">
                 <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
                 <td><%= i.invoice_no %></td>
-                <td><%= i.invoice_date %></td>
-                <td><%= i.payday_limit %></td>
+                <td><%= i.invoice_date.strftime("%d/%m/%Y") %></td>
+                <td><%= i.payday_limit.strftime("%d/%m/%Y") %></td>
                 <% if i.bill.try(:instalments).blank? %>
                   <td align="right"><%= number_with_precision(i.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>

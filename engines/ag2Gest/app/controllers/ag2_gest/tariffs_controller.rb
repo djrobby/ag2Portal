@@ -202,7 +202,7 @@ module Ag2Gest
                         notice: (crud_notice('updated', @tariff) + "#{undo_link(@tariff)}").html_safe }
           format.json { head :no_content }
         else
-          format.html { render action: "edit" }
+          format.html { render action: "edit", alert: @tariff.errors.messages }
           format.json { render json: @tariff.errors, status: :unprocessable_entity }
         end
       end

@@ -74,7 +74,7 @@ end
 	report.page.list(:default).add_row do |row|
 		row.item(:receipt_no).value i.receipt_no
 		row.item(:receipt_date).value formatted_date(i.receipt_date) unless i.receipt_date.blank?
-		row.item(:supplier).value i.supplier.full_code
+		row.item(:supplier).value i.supplier.partial_name
 		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
     row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?

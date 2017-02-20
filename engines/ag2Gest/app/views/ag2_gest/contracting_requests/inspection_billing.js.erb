@@ -43,15 +43,15 @@ var content = '';
       content+= '</tr>';
 
     <% invoice.tax_breakdown.each do |tax| %>
-
-      content+= '<tr class="breakdown">';
-      content+= '<td colspan="3" class="no-boder"></td>';
-      content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
-      content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
-      content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
-      content+= '<td><%= tax[2] %></td>';
-      content+= '</tr>';
-
+      <% if tax[0] != TaxType.exempt.tax %>
+        content+= '<tr class="breakdown">';
+        content+= '<td colspan="3" class="no-boder"></td>';
+        content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+        content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+        content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+        content+= '<td><%= tax[2] %></td>';
+        content+= '</tr>';
+      <% end %>
     <% end %>
 
     content+= '<tr>';

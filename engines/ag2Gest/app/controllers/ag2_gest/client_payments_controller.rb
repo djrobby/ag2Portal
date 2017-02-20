@@ -5,7 +5,7 @@ module Ag2Gest
 
     def cash_others
       invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
-      amount = params[:client_payment][:amount].to_f
+      amount = BigDecimal.new(params[:client_payment][:amount])
       payment_method = params[:client_payment][:payment_method_id]
       payment_type = payment_method.blank? ? 1 : 5
       acu = amount

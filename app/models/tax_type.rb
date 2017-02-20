@@ -1,7 +1,4 @@
 class TaxType < ActiveRecord::Base
-  # CONSTANTS
-  EXENTO = 6
-
   attr_accessible :description, :tax, :expiration,
                   :created_by, :updated_by
 

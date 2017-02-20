@@ -30,7 +30,7 @@
           <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
           <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
           <td><%= instalment.instalment %></td>
-          <td><%= instalment.payday_limit %></td>
+          <td><%= instalment.payday_limit.strftime("%d/%m/%Y") %></td>
           <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         </tr>

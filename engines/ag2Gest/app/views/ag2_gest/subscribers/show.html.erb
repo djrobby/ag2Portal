@@ -256,33 +256,33 @@
       <table class="table table-condensed table-striped shrinked stu">
         <thead>
           <tr>
-            <th><%= t('activerecord.attributes.subscriber.titular') %></th>
-            <th><%= t('activerecord.attributes.subscriber.titular_id') %></th>
-            <th><%= t('activerecord.attributes.subscriber.class') %></th>
-            <th><%= t('activerecord.attributes.subscriber.bank') %></th>
-            <th><%= t('activerecord.attributes.subscriber.sucursal') %></th>
-            <th><%= t('activerecord.attributes.subscriber.control') %></th>
-            <th><%= t('activerecord.attributes.subscriber.account_iban') %></th>
-            <th><%= t('activerecord.attributes.subscriber.ending_at') %></th>
-            <th><%= t('activerecord.attributes.subscriber.active') %></th>
+            <th><%= t "activerecord.attributes.client_bank_account.bank_account_class_id" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.holder_fiscal_id" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.holder_name" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.starting_at" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.ending_at" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.country_id" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.iban_dc" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.bank_id" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.bank_office_id" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.ccc_dc" %>:</th>
+            <th><%= t "activerecord.attributes.client_bank_account.account_no" %>:</th>
           </tr>
         </thead>
         <tbody>
           <% @subscriber_accounts.each do |client_bank_account| %>
             <tr>
-              <td><%= client_bank_account.name %></td>
-              <td><%= client_bank_account.try(:client).try(:fiscal_id) %></td>
-              <td><%= client_bank_account.try(:bank_account_class).try(:name) %></td>
-              <td><%= client_bank_account.try(:bank).try(:full_name) %></td>
-              <td><%= client_bank_account.try(:bank_office).try(:full_name) %></td>
-              <td><%= client_bank_account.try(:ccc_dc) %></td>
-              <td><%= client_bank_account.try(:account_no) %></td>
-              <td><%= client_bank_account.try(:ending_at) %></td>
-              <% if client_bank_account.ending_at.blank? %>
-                <td align="center"><i class="icon-thumbs-up"></i></td>
-              <% else %>
-                <td align="center"><i class="icon-thumbs-down"></i></td>
-              <% end %>
+              <td><%= client_bank_account.bank_account_class.name %></td>
+              <td><%= client_bank_account.holder_fiscal_id %></td>
+              <td><%= client_bank_account.holder_name %></td>
+              <td><%= client_bank_account.starting_at.strftime("%d/%m/%Y") unless client_bank_account.starting_at.blank? %></td>
+              <td><%= client_bank_account.ending_at.strftime("%d/%m/%Y") unless client_bank_account.ending_at.blank? %></td>
+              <td><%= client_bank_account.country.code %></td>
+              <td><%= client_bank_account.iban_dc %></td>
+              <td><%= client_bank_account.bank.code %></td>
+              <td><%= client_bank_account.bank_office.code %></td>
+              <td><%= client_bank_account.ccc_dc %></td>
+              <td><%= client_bank_account.account_no %></td>
             </tr>
           <% end %>
         </tbody>
@@ -313,7 +313,9 @@
   </div>
   <div class="modal-body">
     <%= simple_form_for :bills, url: simple_bill_subscriber_path(@subscriber), remote: true do |f| %>
-      <%= f.input :billing_period_id, label: 'Periodo', collection: @billing_periods, input_html: {class: "large-text-field sel2"}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :billing_period_id, label: I18n.t("ag2_gest.bills.index.billing_period_id"), collection: @billing_periods_reading, input_html: {class: "large-text-field sel2"}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
+      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
       <%= f.submit "Crear factura", class: "btn btn-primary" %>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
     <% end %>

@@ -38,6 +38,11 @@ es:
         subscriber_report: "Padrón de Abonados"
         subscriber_tec_report: "Padrón Técnico de Abonados"
         subscriber_eco_report: "Padrón Económico de Abonados"
+      client_bank_account:
+        title: "Nueva cuenta bancaria"
+        successful: "Cuenta bancaria creada correctamente"
+        failure: "Error al crear cuenta bancaria"
+        fail_assing_ending_at: "Error al cerrar la cuenta activa"
       back_to_main_page: "Volver a Abonados"
       generate_code_btn: "Código de Abonado"
       personal_info: "Información del Abonado"

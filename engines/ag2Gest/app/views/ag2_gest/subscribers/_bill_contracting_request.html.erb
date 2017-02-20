@@ -8,8 +8,8 @@
       <div class="span3 soft-padding">
         <%= bill.try(:full_no) %>
       </div>
-      <div class="span2 soft-padding">
-        <%= bill.try(:bill_date) %>
+      <div class="span2 soft-padding" align="center">
+        <%= bill.try(:bill_date).strftime("%d/%m/%Y") %>
       </div>
       <div class="span2 soft-padding">
         <%= bill.try(:bill_type).name unless bill.bill_type.blank? %>
@@ -75,6 +75,7 @@
                 <td class="black-border" align="right"><%= number_with_precision(invoice.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
               <% invoice.tax_breakdown.each do |tax| %>
+              <% if tax[0] != TaxType.exempt.tax %>
                 <tr>
                   <td colspan="4" class="no-boder"></td>
                   <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp; <%= number_with_precision(tax[1], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
@@ -82,6 +83,7 @@
                   <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
                   <td align="right"><%= tax[2] %></td>
                 </tr>
+                <% end %>
               <% end %>
               <tr>
                 <td colspan="6" class="black-border"></td>

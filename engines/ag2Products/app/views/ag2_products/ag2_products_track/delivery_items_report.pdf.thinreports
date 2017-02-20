@@ -28,13 +28,16 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0
+	c.use_stores page_rows: 0, page_quantity: 0, page_total: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.delivery_report.sum_rows_title"))
+		e.section.item(:sum_items_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_items"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total") + " (" + I18n.t("activerecord.attributes.delivery_note.quantity") + " - " + I18n.t("activerecord.attributes.delivery_note.costs") + ")") 
 		e.section.item(:sum_rows).value(e.store.page_rows)
+		e.section.item(:quantity_rows).value(number_with_precision(e.store.page_quantity, precision: 2))
+		e.section.item(:total_rows).value number_with_precision(e.store.page_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 	end
 end
 
@@ -69,6 +72,11 @@ report.page.list(:default).header do |header|
 	header.item(:balance_items_c).value I18n.t("activerecord.attributes.delivery_note_item.amount_c")
 end
 
+  report.page.list(:default) do |list|
+  	list.store.page_quantity = @delivery_items_report.first.delivery_note.quantity
+	list.store.page_total = @delivery_items_report.first.delivery_note.costs
+  end
+
 delivery_number = @delivery_items_report.first.delivery_note.delivery_no
 
 # List detail
@@ -78,6 +86,8 @@ delivery_number = @delivery_items_report.first.delivery_note.delivery_no
 				report.page.list(:default).page_break
 				report.page.list(:default) do |list|
 					list.store.page_rows = 0
+					list.store.page_quantity += i.delivery_note.quantity
+					list.store.page_total += i.delivery_note.costs
 				end
 				delivery_number = i.delivery_note.delivery_no
 			end

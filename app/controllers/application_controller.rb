@@ -772,7 +772,7 @@ end
   end
 
   def set_reading_1_to_reading(subscriber,meter,billing_period)
-    reading = meter.readings.where(meter_id: meter.id, reading_type_id: ReadingType::INSTALACION, billing_period_id: billing_period.id ,subscriber_id: subscriber.id).order(:reading_date).last
+    reading = meter.readings.where(reading_type_id: ReadingType::INSTALACION, billing_period_id: billing_period.id ,subscriber_id: subscriber.id).order(:reading_date).last
     if !reading.blank?
       return reading
     else

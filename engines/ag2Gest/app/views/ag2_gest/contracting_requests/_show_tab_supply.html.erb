@@ -14,6 +14,10 @@
     width: 880px !important;
     left: 40% !important;
   }
+  #billing-modal-cancellation{
+    width: 880px !important;
+    left: 40% !important;
+  }
   .stepwizard-step p {
           margin-top: 10px;
       }
@@ -77,7 +81,17 @@
         left: 32% !important;
       }
 
+      #billing-modal-cancellation {
+        width: 1020px !important;
+        left: 32% !important;
+      }
+
       #billing-modal td {
+        text-align: center!important;
+        width: 12%;
+      }
+
+      #billing-modal-cancellation td {
         text-align: center!important;
         width: 12%;
       }
@@ -229,6 +243,12 @@
       changeState(currentStepWizard,nextStepWizard)
     });
 
+      $("#initial-billing-cancellation").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-1"]'),
+          nextStepWizard = $('a[href="#step-3"]');
+      changeState(currentStepWizard,nextStepWizard)
+    });
+
     // ajax success for inspection_billing
     // $("#inspection-billing").bind("ajax:success", function(xhr, data, status) {
     //   var currentStepWizard = $('a[href="#step-2"]'),
@@ -256,6 +276,17 @@
       // $("#status_work_order_instalation").text(data.work_order_status.name);
     });
 
+    $("#billing-instalation-cancellation").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-3"]'),
+          nextStepWizard = $('a[href="#step-4"]');
+      changeState(currentStepWizard,nextStepWizard);
+    });
+
+    $("#new-subscriber-cancellation").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-4"]'),
+          nextStepWizard = $('a[href="#step-5"]');
+      changeState(currentStepWizard,nextStepWizard);
+    });
     // ajax success for instalation_subscriber
     $("#form_new_subscriber").bind("ajax:success", function(xhr, data, status) {
       var currentStepWizard = $('a[href="#step-4"]'),
@@ -359,12 +390,10 @@
           <a href="#step-3" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING %>>3</a>
           <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.biller') %></p>
       </div>
-      <%# if @contracting_request.contracting_request_type_id == 1 %>
         <div class="stepwizard-step">
             <a href="#step-4" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION %>>4</a>
             <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.subscriber') %></p>
         </div>
-      <%# end %>
       <div class="stepwizard-step">
           <a href="#step-5" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>>5</a>
           <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.full') %></p>
@@ -376,65 +405,77 @@
 <!-- buttons -->
 <div class="row">
   <!-- fixed buttons -->
-  <div class="span4">
+  <div class="span4" >
     <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.request')}".html_safe, contracting_request_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
-    <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank? && !@contracting_request.water_supply_contract.bill.invoices.blank?%>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill)}", target: "_blank" %>
-    <% end %>
+
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.invoice_contract_c')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bailback_bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:subscriber_id)}", target: "_blank" if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bailback_bill.blank? && !@contracting_request.water_supply_contract.bailback_bill.invoices.blank?%>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.invoice_service_c')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.unsubscribe_bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:subscriber)}", target: "_blank" if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.unsubscribe_bill.blank? && !@contracting_request.water_supply_contract.unsubscribe_bill.invoices.blank?  %>
+
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill).try(:subscriber_id)}", target: "_blank" if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank? && !@contracting_request.water_supply_contract.bill.invoices.blank? && @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION %>
   </div>
 
   <!-- step buttons -->
   <form role="form" class="simple_form form-vertical span8">
+
     <!-- step 1 -->
     <div class="setup-content" id="step-1">
       <!-- Hidden if not water_supply_contract, show when create -->
-      <%# if @contracting_request.contracting_request_type_id == 1 %>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
+        <a href="#new-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
+      <% else %>
         <a href="#new-water-supply-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
+      <% end %>
+
         <a id="initial-inspection" class="btn btn-primary nextBtn" href="<%= params[:id] %>/initial_inspection" data-remote="true" ><%= t('activerecord.attributes.contracting_request.inspection_order') %></a>
-      <%# end %>
-      <%# if @contracting_request.water_supply_contract.nil? %>
-        <!-- <a id="initial-billing" class="btn btn-primary nextBtn disabled" data-remote="true" href="#">Completa suministro</a> -->
-      <%# else %>
-        <a id="initial-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/initial_billing" data-remote="true" data-type="json" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
-        <%# if @contracting_request.contracting_request_type_id == 2 %>
-          <!-- <a id="initial-complete" class="btn btn-primary nextBtn" href="<%= params[:id] %>/initial_complete" data-remote="true" >Finalizar subrogación</a> -->
-        <%# end %>
-      <%# end %>
+
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
+        <a id="initial-billing-cancellation" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/initial_billing_cancellation" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+      <% else %>
+        <a id="initial-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/initial_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+      <% end %>
+
     </div>
+
     <!-- step 2 -->
     <div class="setup-content" id="step-2">
-    <!--   <#% if @contracting_request.work_order and @contracting_request.work_order.work_order_status_id == 1 # Nestor %>
-        <a class="btn btn-primary btn-block nextBtn disabled" href="#">Espera inspección</a> -->
-      <a href="#new-water-supply-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
-      <%# if @contracting_request.water_supply_contract.nil? %>
-        <!-- <a id="inspection-billing" class="btn btn-primary btn-block nextBtn disabled" data-remote="true" href="#">Completa suministro</a> -->
-      <%# else %>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
+        <a href="#new-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
+        <a id="inspection-billing-cancellation" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/inspection_billing_cancellation" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+      <% else %>
+        <a href="#new-water-supply-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
         <a id="inspection-billing" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/inspection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
-      <%# end %>
+      <% end %>
+
     </div>
+
     <!-- step 3 -->
     <div class="setup-content" id="step-3">
-      <%# if @contracting_request.water_supply_contract.try(:bill) %>
-        <!-- <a id="billing-instalation" class="btn btn-primary nextBtn" href="<%= params[:id] %>/billing_instalation" data-remote="true" >Orden de instalación</a> -->
-        <%# if @contracting_request.contracting_request_type_id == 1 %>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
+          <a id="billing-instalation-cancellation" href="<%= params[:id] %>/billing_instalation_cancellation" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
+
+        <a href="#billing-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_edit') %></a>
+
+      <% else %>
           <a id="billing-instalation" href="<%= params[:id] %>/billing_instalation" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
-        <%# end %>
-        <%# if @contracting_request.contracting_request_type_id == 2 %>
-          <!-- <a id="billing-complete" href="<%= params[:id] %>/billing_complete" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a> -->
-        <%# end %>
+
         <a href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_edit') %></a>
-      <%# else %>
-        <!-- <a id="billing-instalation" class="btn btn-primary btn-block disabled" href="#" >Factura pendiente</a> -->
-      <%# end %>
+      <% end %>
     </div>
+
     <!-- step 4 -->
     <div class="setup-content" id="step-4">
-      <a href="#new-subscriber" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.data_subscriber') %></a>
-      <!-- <a id="instalation-subscriber" class="btn btn-primary nextBtn disabled" href="<%= params[:id] %>/instalation_subscriber" data-remote="true" >Confirmar abonado</a> -->
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
+          <a id="new-subscriber-cancellation" href="<%= params[:id] %>/new_subscriber_cancellation" class="btn btn-primary" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
+      <% else %>
+        <a href="#new-subscriber" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.data_subscriber') %></a>
+      <% end %>
     </div>
+
     <!-- step 5 -->
     <div class="setup-content" id="step-5">
-    <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+    <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+    <% end %>
     </div>
 
   </form>
@@ -553,11 +594,13 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.inspection_order_installation') %></b></td>
+          <td>
             <% if @contracting_request.work_order %>
-              <td><%= @contracting_request.work_order.full_no %></td>
+              <%= link_to @contracting_request.work_order.full_no, ag2_tech.work_order_path(@contracting_request.work_order) %>
             <% else %>
-              <td><a id="link_work_order_inspection" href="#"></a></td>
+              <a id="link_work_order_inspection" href="#"></a>
             <% end %>
+          </td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.state_work_order') %></b></td>
@@ -639,6 +682,20 @@
               <a id="link-bill" href="#"></a>
             <% end %>
           </td>
+            <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill) %>
+            <tr>
+              <td><b><%= t('activerecord.attributes.contracting_request.invoice_contract_c') %></b></td>
+              <td>
+              <%= link_to @contracting_request.water_supply_contract.bailback_bill.full_no, bill_path(@contracting_request.water_supply_contract.bailback_bill_id) %></td>
+            </tr>
+            <% end %>
+            <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill) %>
+            <tr>
+              <td><b><%= t('activerecord.attributes.contracting_request.invoice_service_c') %></b></td>
+              <td>
+              <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, bill_path(@contracting_request.water_supply_contract.unsubscribe_bill_id) %></td>
+            </tr>
+            <% end %>
         </tr>
         <tr>
 
@@ -694,6 +751,10 @@
 
 <%= render '/ag2_gest/contracting_requests/modals/new_water_supply_contract' %>
 
+<%= render '/ag2_gest/contracting_requests/modals/new_cancellation' %>
+
 <%= render '/ag2_gest/contracting_requests/modals/new_bill' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/new_bill_cancellation' %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_subscriber' %>

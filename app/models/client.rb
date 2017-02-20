@@ -65,6 +65,10 @@ class Client < ActiveRecord::Base
     !client_bank_accounts.where(ending_at: nil).blank?
   end
 
+  def active_bank_account
+    client_bank_accounts.where(ending_at: nil).order(:starting_at).last
+  end
+
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!

@@ -102,8 +102,12 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/:id/next_status', :controller => 'contracting_requests', :action => 'next_status'
     match 'contracting_requests/:id/initial_inspection', :controller => 'contracting_requests', :action => 'initial_inspection'
     match 'contracting_requests/:id/inspection_billing', :controller => 'contracting_requests', :action => 'inspection_billing'
+    match 'contracting_requests/:id/inspection_billing_cancellation', :controller => 'contracting_requests', :action => 'inspection_billing_cancellation'
     match 'contracting_requests/:id/initial_billing', :controller => 'contracting_requests', :action => 'initial_billing'
+    match 'contracting_requests/:id/initial_billing_cancellation', :controller => 'contracting_requests', :action => 'initial_billing_cancellation'
     match 'contracting_requests/:id/billing_instalation', :controller => 'contracting_requests', :action => 'billing_instalation'
+    match 'contracting_requests/:id/billing_instalation_cancellation', :controller => 'contracting_requests', :action => 'billing_instalation_cancellation'
+    match 'contracting_requests/:id/new_subscriber_cancellation', :controller => 'contracting_requests', :action => 'new_subscriber_cancellation'
     match 'contracting_requests/:id/instalation_subscriber', :controller => 'contracting_requests', :action => 'instalation_subscriber'
     match 'contracting_requests/:id/update_bill', :controller => 'contracting_requests', :action => 'update_bill'
     match 'contracting_requests/get_caliber/:id', :controller => 'contracting_requests', :action => 'get_caliber'
@@ -173,6 +177,7 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
     match 'subscribers/:id/su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
     match 'su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
+    match 'subscribers/:id/add_bank_account', :controller => 'subscribers', :action => 'add_bank_account', :via => [:post], as: "add_bank_account"
     #
     # Commercial billing
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
@@ -241,6 +246,7 @@ Ag2Gest::Engine.routes.draw do
       get 'contracting_request_pdf', on: :member
       get 'contract_pdf', on: :member
       get 'bill', on: :member
+      get 'bill_cancellation', on: :member
       get 'biller_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member
       post 'subrogation', on: :collection

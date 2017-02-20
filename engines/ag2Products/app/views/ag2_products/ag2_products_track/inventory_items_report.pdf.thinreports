@@ -28,15 +28,15 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_rows: 0
+	c.use_stores page_rows: 0, page_quantity: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
 		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.inventory_report.sum_rows_title"))
+		e.section.item(:sum_items_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_items"))
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total") + " (" + I18n.t("activerecord.attributes.inventory_count_item.quantity") + ")") 
 		e.section.item(:sum_rows).value(e.store.page_rows)
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
+		e.section.item(:quantity_rows).value(number_with_precision(e.store.page_quantity, precision: 2))
 	end
 end
 
@@ -71,6 +71,10 @@ report.page.list(:default).header do |header|
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.inventory_count_item.quantity")
 end
 
+  report.page.list(:default) do |list|
+  	list.store.page_quantity = @inventory_items_report.first.inventory_count.quantity
+  end
+
 count_number = @inventory_items_report.first.inventory_count.count_no
 
 # List detail
@@ -80,6 +84,7 @@ count_number = @inventory_items_report.first.inventory_count.count_no
 				report.page.list(:default).page_break
 				report.page.list(:default) do |list|
 					list.store.page_rows = 0
+					list.store.page_quantity += i.inventory_count.quantity
 				end
 				count_number = i.inventory_count.count_no
 			end

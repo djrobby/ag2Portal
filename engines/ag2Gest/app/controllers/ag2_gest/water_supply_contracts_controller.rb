@@ -163,6 +163,36 @@ module Ag2Gest
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.updated_by = current_user.id if !current_user.nil?
       if @water_supply_contract.update_attributes(params[:water_supply_contract])
+        if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
+          if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
+            #lectura de retirada
+              @reading = Reading.create(
+                subscriber_id: @contracting_request.old_subscriber.id,
+                project_id: @contracting_request.project_id,
+                billing_period_id: params[:BillingPeriodForReading],
+                billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
+                reading_type_id: ReadingType::RETIRADA,
+                meter_id: @contracting_request.old_subscriber.meter_id,
+                reading_route_id: @contracting_request.old_subscriber.reading_route_id,
+                reading_sequence: @contracting_request.old_subscriber.reading_sequence,
+                reading_variant:  @contracting_request.old_subscriber.reading_variant,
+                reading_date: @contracting_request.water_supply_contract.try(:installation_date),
+                reading_index: @contracting_request.water_supply_contract.try(:installation_index),
+                reading_index_1: @contracting_request.old_subscriber.readings.last.reading_index,
+                reading_index_2: @contracting_request.old_subscriber.readings.last.reading_index_1,
+                reading_1: @contracting_request.old_subscriber.readings.last,
+                reading_2: @contracting_request.old_subscriber.readings.last.reading_1,
+                created_by: @contracting_request.try(:created_by)
+              ) 
+          else
+            @contracting_request.old_subscriber.readings.last.update_attributes(billing_period_id: params[:BillingPeriodForReading],
+                billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
+                reading_type_id: ReadingType::RETIRADA,
+                reading_date: @contracting_request.water_supply_contract.try(:installation_date),
+                reading_index: @contracting_request.water_supply_contract.try(:installation_index)
+              )
+          end
+        end
         @water_supply_contract.contracted_tariffs.destroy_all
         tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
         @water_supply_contract.tariffs << tariffs

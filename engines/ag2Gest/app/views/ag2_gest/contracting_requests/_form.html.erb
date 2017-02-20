@@ -67,30 +67,30 @@
     // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
       // make a POST call and replace the content
-      if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
-        var entity = $('#subrogation_entity_fiscal_id').val();
-      }else{
+      // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
+      //   var entity = $('#subrogation_entity_fiscal_id').val();
+      // }else{
         var entity = $('#contracting_request_entity_fiscal_id').val();
-      }
+      // }
       if (entity == "")
         entity = "0";
       jQuery.getJSON('validate_fiscal_id_textfield/' + entity, function(data) {
         if (data.fiscal_id == "$err") {
-          if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
-            $("#subrogation_entity_fiscal_id").css('color', 'red');
-            // Quick entity creation
-            if ($('#subrogation_entity_fiscal_id').val() == "")
-              $("#subrogation_entity_fiscal_id").val(data.fiscal_id);
-            if ($('#subrogation_entity_fiscal_id').val() != "$err") {
-              $('#fnt_fiscal_id').val($('#subrogation_entity_fiscal_id').val());
-            } else {
-              $('#fnt_fiscal_id').val('');
-            }
-            $("#new-entity").modal('show');
-            $('#new-entity').on('hidden', function() {
-              $('#subrogation_entity_fiscal_id').select();
-            });
-          }else{
+          // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
+          //   $("#subrogation_entity_fiscal_id").css('color', 'red');
+          //   // Quick entity creation
+          //   if ($('#subrogation_entity_fiscal_id').val() == "")
+          //     $("#subrogation_entity_fiscal_id").val(data.fiscal_id);
+          //   if ($('#subrogation_entity_fiscal_id').val() != "$err") {
+          //     $('#fnt_fiscal_id').val($('#subrogation_entity_fiscal_id').val());
+          //   } else {
+          //     $('#fnt_fiscal_id').val('');
+          //   }
+          //   $("#new-entity").modal('show');
+          //   $('#new-entity').on('hidden', function() {
+          //     $('#subrogation_entity_fiscal_id').select();
+          //   });
+          // }else{
             $("#contracting_request_entity_fiscal_id").css('color', 'red');
             // Quick entity creation
             if ($('#contracting_request_entity_fiscal_id').val() == "")
@@ -104,43 +104,43 @@
             $('#new-entity').on('hidden', function() {
               $('#contracting_request_entity_fiscal_id').select();
             });
-          }
+          // }
         }
         else {
-          if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
-            $("#subrogation-form input, #subrogation-form select").prop("disabled", false);
-            $(".subrogation_full_name").prop("disabled", true);
-            $("#subrogation_entity_id").val(data.id);
-            $(".subrogation_full_name").val(data.name);
-            $("#subrogation_entity_fiscal_id").css('color', text_field_color);
-            $("#subrogation_client_street_type_id").val(data.street_type_id);
-            $("#subrogation_client_street_name").val(data.street_name);
-            $("#subrogation_client_street_number").val(data.street_number);
-            $("#subrogation_client_building").val(data.building);
-            $("#subrogation_client_floor").val(data.floor);
-            $("#subrogation_client_floor_office").val(data.floor_office);
-            $("#subrogation_client_zipcode_id").val(data.zipcode_id);
-            $("#subrogation_client_town_id").val(data.town_id);
-            $("#subrogation_client_province_id").val(data.province_id);
-            $("#subrogation_client_zipcode_id").select2("val", data.zipcode_id);
-            $("#subrogation_client_town_id").select2("val", data.town_id);
-            $("#subrogation_client_province_id").select2("val", data.province_id);
-            $("#subrogation_client_region_id").select2("val", data.region_id);
-            $("#subrogation_client_country_id").select2("val", data.country_id);
-            $("#subrogation_client_phone").val(data.phone);
-            $("#subrogation_client_fax").val(data.fax);
-            $("#subrogation_client_cellular").val(data.cellular);
-            $("#subrogation_client_email").val(data.email);
-            if($("#contracting_request_subscriber_id").val() != ""){
-              $('#subrogation_submit_btn').show();
-            }
-          }else{
+          // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
+          //   $("#subrogation-form input, #subrogation-form select").prop("disabled", false);
+          //   $(".subrogation_full_name").prop("disabled", true);
+          //   $("#subrogation_entity_id").val(data.id);
+          //   $(".subrogation_full_name").val(data.name);
+          //   $("#subrogation_entity_fiscal_id").css('color', text_field_color);
+          //   $("#subrogation_client_street_type_id").val(data.street_type_id);
+          //   $("#subrogation_client_street_name").val(data.street_name);
+          //   $("#subrogation_client_street_number").val(data.street_number);
+          //   $("#subrogation_client_building").val(data.building);
+          //   $("#subrogation_client_floor").val(data.floor);
+          //   $("#subrogation_client_floor_office").val(data.floor_office);
+          //   $("#subrogation_client_zipcode_id").val(data.zipcode_id);
+          //   $("#subrogation_client_town_id").val(data.town_id);
+          //   $("#subrogation_client_province_id").val(data.province_id);
+          //   $("#subrogation_client_zipcode_id").select2("val", data.zipcode_id);
+          //   $("#subrogation_client_town_id").select2("val", data.town_id);
+          //   $("#subrogation_client_province_id").select2("val", data.province_id);
+          //   $("#subrogation_client_region_id").select2("val", data.region_id);
+          //   $("#subrogation_client_country_id").select2("val", data.country_id);
+          //   $("#subrogation_client_phone").val(data.phone);
+          //   $("#subrogation_client_fax").val(data.fax);
+          //   $("#subrogation_client_cellular").val(data.cellular);
+          //   $("#subrogation_client_email").val(data.email);
+          //   if($("#contracting_request_subscriber_id").val() != ""){
+          //     $('#subrogation_submit_btn').show();
+          //   }
+          // }else{
             // Fill with Entity data
             $("#contracting_request_entity_fiscal_id").val(data.fiscal_id);
             $("#contracting_request_entity_id").val(data.id);
             $(".contracting_request_full_name").val(data.name);
             $("#contracting_request_entity_street_directory_id").val($("#street_directory").val());
-            $("#contracting_request_entity_street_type_id").val(data.street_type_id);
+            $("#contracting_request_entity_street_type_id").select2("val", data.street_type_id);
             $("#contracting_request_entity_street_name").val(data.street_name);
             $("#contracting_request_entity_street_number").val(data.street_number);
             $("#contracting_request_entity_building").val(data.building);
@@ -154,7 +154,7 @@
             $("#contracting_request_entity_province_id").select2("val", data.province_id);
             $("#contracting_request_entity_region_id").select2("val", data.region_id);
             $("#contracting_request_entity_country_id").select2("val", data.country_id);
-            $("#contracting_request_client_street_type_id").val(data.street_type_id);
+            $("#contracting_request_client_street_type_id").select2("val", data.street_type_id);
             $("#contracting_request_client_street_name").val(data.street_name);
             $("#contracting_request_client_street_directory").select2("val", data.street_directory_id);
             $("#contracting_request_client_street_number").val(data.street_number);
@@ -178,7 +178,7 @@
             $('.entity-field').prop('disabled', false);
             cr_type = $('.contracting_request_type_id').select2("val")
             if(cr_type == "<%= ContractingRequestType::SUPPLY %>"){
-              $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
+              $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
               $("#contracting_request_subscriber_street_name").val(data.street_name);
               $("#s2id_contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
               // $("#contracting_request_service_point_id").select2("val", data.street_directory_id);
@@ -197,14 +197,14 @@
               $("#contracting_request_service_point_id").select2("val", data.service_point);
             }else{
               // Disable fields
-              // $(".subscriber-field").prop('disabled', true);
+              $(".subscriber-field").prop('readonly', true);
             };
 
             $('#generate_code_btn').show();
             $('#submit_btn').show();
             // Default color & focus
             $("#contracting_request_entity_fiscal_id").css('color', text_field_color);
-          }
+          //}
         }
       })
       return false;
@@ -284,7 +284,7 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_subscriber_from_service_point/' + contact, function(data) {
-        $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
+        $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
         $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory_id);
         $("#contracting_request_subscriber_street_number").val(data.street_number);
         $("#contracting_request_subscriber_building").val(data.building);
@@ -331,20 +331,22 @@
       if($('.contracting_request_type_id').select2("val") != "<%= ContractingRequestType::SUPPLY %>"){
         $("#row-old-subscriber").show();
         $("#contracting_request_subscriber_id").attr("required", "required");
-        if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
-          $('.row-service-point').hide();
-          $('.row-subscriber').hide();
+        if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
+          $(".cancellation-field").prop('readonly', true);
+          $('.row-service-point').show();
+          $('.row-subscriber').show();
           $('.row-bank-account').hide();
-          $('.row-documents').hide();
-          $('.row-buttons').hide();
-          $('.row-client').hide();
-          $('.row-entity').hide();
-          $('.row-submit').hide();
-          $('.field-project').hide();
-          $('.field-date').hide();
-          $('.field-no').hide();
-          $('#subrogation-form').show();
+          $('.row-documents').show();
+          $('.row-buttons').show();
+          $('.row-client').show();
+          $('.row-entity').show();
+          $('.row-submit').show();
+          $('.field-project').show();
+          $('.field-date').show();
+          $('.field-no').show();
+          $('#subrogation-form').hide();
         }else{
+          $(".cancellation-field").prop('readonly', false);
           $('.row-service-point').show();
           $('.row-subscriber').show();
           $('.row-bank-account').show();
@@ -359,6 +361,7 @@
           $('#subrogation-form').hide();
         }
       }else{
+        $(".cancellation-field").prop('readonly', false);
         $('.row-service-point').show();
         $('.row-subscriber').show();
         $('.row-bank-account').show();
@@ -372,9 +375,11 @@
         $('.field-no').show();
         $('#subrogation-form').hide();
         $("#row-old-subscriber").hide();
+        $("#contracting_request_entity_fiscal_id").val("");
+        $("#contracting_request_entity_fiscal_id").removeAttr("required", "required");
         $("#contracting_request_subscriber_id").select2("val", "");
         $("#contracting_request_subscriber_id").removeAttr("required", "required");
-        $("#contracting_request_subscriber_street_type_id").val("");
+        $("#contracting_request_subscriber_street_type_id").select2("val", "");
         $("#contracting_request_subscriber_street_directory_id").select2("val","");
         $("#contracting_request_subscriber_street_name").val("");
         $("#contracting_request_subscriber_street_number").val("");
@@ -419,11 +424,25 @@
       }else{
         // $('.contracting_request_type_id').prop('disabled', true);
       }
-      if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
-        $("#subrogation_subscriber_id").val(subscriber)
-      } else {
+      // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
+      //   $("#subrogation_subscriber_id").val(subscriber)
+      // } else {
         jQuery.getJSON('update_old_subscriber/' + subscriber, function(data) {
-          $("#contracting_request_subscriber_street_type_id").val(data.street_directory.street_type_id);
+          if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
+            $('#contracting_request_entity_fiscal_id').val(data.subscriber.fiscal_id);
+            $(".cancellation-field").prop('readonly', true);
+            $('.button-service-point').hide();
+            $(".subscriber-field").prop('readonly', true);
+            $(".entity-field").prop('readonly', true);
+          }else{
+            $("#contracting_request_entity_fiscal_id").val("");
+            $("#contracting_request_entity_fiscal_id").removeAttr("required", "required");
+            $(".cancellation-field").prop('readonly', false);
+            $('.button-service-point').show();
+            $(".subscriber-field").prop('readonly', true);
+            $('.entity-field').prop('disabled', false);
+          }
+          $("#contracting_request_subscriber_street_type_id").select2("val", data.street_directory.street_type_id);
           $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory.id);
           $("#contracting_request_subscriber_street_number").val(data.subscriber.street_number);
           $("#contracting_request_subscriber_building").val(data.subscriber.building);
@@ -458,7 +477,7 @@
           }
           $("#contracting_request_service_point_id").select2("val", data.subscriber.service_point_id);
         });
-      }
+      //}
       return false;
     });
 
@@ -660,7 +679,7 @@
     <%= f.input :entity_id, as: :hidden %>
     <div class="row-fluid">
       <!-- ENTITY FISCAL ID -->
-      <%= f.input :entity_fiscal_id, :required => true, :input_html => { onkeyup: "caps(this)", :class => 'mid-text-field iconify' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span12" } %>
+      <%= f.input :entity_fiscal_id, :required => true, :input_html => { onkeyup: "caps(this)", :class => 'cancellation-field mid-text-field iconify' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span12" } %>
     </div>
 
 
@@ -681,7 +700,7 @@
 
     <div class="row-fluid">
       <!-- ENTITY STREET TYPE -->
-      <%= f.association :entity_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+      <%= f.association :entity_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
       <!-- ENTITY STREET NAME -->
       <%= f.input :entity_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
       <!-- ENTITY STREET NUMBER -->
@@ -750,7 +769,7 @@
 
   <div class="row-fluid">
     <!-- CLIENT STREET TYPE -->
-    <%= f.association :client_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :client_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CLIENT STREET NAME -->
     <%= f.input :client_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- CLIENT STREET NUMBER -->
@@ -804,13 +823,15 @@
     <label class="multi-field-label-two">
     <!-- Service point search -->
       <%= label_tag I18n.t("ag2_gest.contracting_requests.label_service_point_search"), nil, :class => 'form-label' %>
-      <%= text_field_tag "ServicePoint", nil, :class => 'x-large-text-field shrinked' %>
+      <%= text_field_tag "ServicePoint", nil, :class => 'cancellation-field x-large-text-field shrinked' %>
     </label>
-    <label class="multi-field-label-two"> <%= f.input :service_point_id, collection: @service_points, :required => true, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+    <label class="multi-field-label-two"> 
+      <%= f.input :service_point_id, collection: @service_points, :required => true, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> 
+    </label>
   </div>
   <div class="row-fluid">
     <div class="span12">
-      <a href="#new-service-point" role="button" class="btn btn-primary btn-mini btn-warning" data-toggle="modal">Añadir punto de servicio</a>
+      <a href="#new-service-point" role="button" class="button-service-point btn btn-primary btn-mini btn-warning" data-toggle="modal">Añadir punto de servicio</a>
     </div>
   </div>
 </div>
@@ -832,7 +853,7 @@
 
   <div class="row-fluid">
     <!-- SUBSCRIBER STREET TYPE -->
-    <%= f.association :subscriber_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :subscriber_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- SUBSCRIBER STREET DIRECTORY -->
     <%= f.association :subscriber_street_directory, collection: StreetDirectory.by_towns(@offices.map{|o| o.town.id}).order(:street_name), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2', id: "contracting_request_subscriber_street_directory" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- SUBSCRIBER STREET NUMBER -->
@@ -929,7 +950,7 @@
 
     <div class="row-fluid">
       <!-- CLIENT STREET TYPE -->
-      <%= f.input :client_street_type_id, label: t('activerecord.attributes.contracting_request.client_street_type'), collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+      <%= f.input :client_street_type_id, label: t('activerecord.attributes.contracting_request.client_street_type'), collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
       <!-- CLIENT STREET NAME -->
       <%= f.input :client_street_name, label: t('activerecord.attributes.contracting_request.client_street_name'), :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
       <!-- CLIENT STREET NUMBER -->
