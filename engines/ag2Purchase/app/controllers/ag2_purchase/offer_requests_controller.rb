@@ -600,8 +600,8 @@ module Ag2Purchase
       if @offers.count > 0
         offer = @offers.first
         @is_approver = company_approver(offer, offer.project.company, current_user.id) ||
-                       office_approver(offer, offer.project.office, current_user.id)
-                       #(current_user.has_role? :Administrator)
+                       office_approver(offer, offer.project.office, current_user.id) ||
+                       (current_user.has_role? :Approver)
       end
 
       respond_to do |format|

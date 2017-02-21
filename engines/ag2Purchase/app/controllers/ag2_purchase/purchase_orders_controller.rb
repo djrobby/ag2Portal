@@ -718,8 +718,8 @@ module Ag2Purchase
       # Approvers
       @is_approver = company_approver(@purchase_order, @purchase_order.project.company, current_user.id) ||
                      office_approver(@purchase_order, @purchase_order.project.office, current_user.id) ||
-                     zone_approver(@purchase_order, @purchase_order.project.office.zone, current_user.id)
-                     #(current_user.has_role? :Administrator)
+                     zone_approver(@purchase_order, @purchase_order.project.office.zone, current_user.id) ||
+                     (current_user.has_role? :Approver)
       ### Can be approved by the creator when the order taxable is less than office max amount ###
       a = global_office_breakdown(@purchase_order.purchase_order_items.joins(:project).order(:office_id))
       d = a.detect { |f| (f[1] > 0 && (f[3] > f[1])) || (f[2] > 0 && (f[4] > f[2])) }

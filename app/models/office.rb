@@ -110,6 +110,20 @@ class Office < ActiveRecord::Base
     _ret
   end
 
+  searchable do
+    text :office_code, :name
+    string :office_code
+    integer :town_id
+    integer :province_id
+    integer :company_id
+    integer :organization_id do
+      company.organization_id unless (company.blank? || company.organization_id.blank?)
+    end
+    text :company_name do
+      company.name unless (company.blank? || company.name.blank?)
+    end
+  end
+
   private
 
   def check_for_dependent_records

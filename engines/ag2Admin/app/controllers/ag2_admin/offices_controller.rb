@@ -57,22 +57,32 @@ module Ag2Admin
     def index
       #      internal
       manage_filter_state
-      if !session[:organization]
-        init_oco
+      # OCO
+      init_oco if !session[:organization]
+
+      @search = Office.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        order_by sort_column, sort_direction
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
-      if session[:organization] != '0'
-        # OCO organization active
-        @offices = Office.joins(:company).where(companies: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      else
-        # OCO inactive
-        @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      end
+      @offices = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @offices }
         format.js
       end
+
+      # if session[:organization] != '0'
+      #   # OCO organization active
+      #   @offices = Office.joins(:company).where(companies: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      # else
+      #   # OCO inactive
+      #   @offices = Office.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      # end
     end
 
     # GET /offices/1
