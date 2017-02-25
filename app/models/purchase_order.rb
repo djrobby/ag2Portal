@@ -24,6 +24,8 @@ class PurchaseOrder < ActiveRecord::Base
   has_many :products, through: :purchase_order_items
   has_many :receipt_notes
   has_many :receipt_note_items
+  has_many :supplier_invoices
+  has_many :supplier_invoice_items
 
   # Nested attributes
   accepts_nested_attributes_for :purchase_order_items,

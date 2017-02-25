@@ -58,6 +58,11 @@
     $("#new_from_receipt_note").click(function() {
       $("#new-invoice-from-receipt").modal('show');
     });
+
+    // when the #new_from_purchase_order button clicked
+    $("#new_from_purchase_order").click(function() {
+      $("#new-invoice-from-order").modal('show');
+    });
   });
 </script>
 
@@ -98,6 +103,8 @@
         <% if can? :update, SupplierInvoice %>
         <button id="new_from_receipt_note" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_receipt_note") %></button>
         <br /><br />
+        <button id="new_from_purchase_order" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_purchase_order") %></button>
+        <br /><br />
         <% end %>
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
@@ -113,3 +120,5 @@
 </div><!-- /.container-fluid -->
 <!-- Modal: New supplier invoice from receipt note -->
 <%= render 'new_invoice_from_receipt' %>
+<!-- Modal: New supplier invoice from purchase order -->
+<%= render 'new_invoice_from_order' %>

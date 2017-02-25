@@ -158,6 +158,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_receipt_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_select_from_supplier'
     match 'si_update_receipt_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_select_from_supplier'
     match 'supplier_invoices/:id/si_update_receipt_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_select_from_supplier'
+    match 'supplier_invoices/si_update_order_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_order_select_from_supplier'
+    match 'si_update_order_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_order_select_from_supplier'
+    match 'supplier_invoices/:id/si_update_order_select_from_supplier/:supplier', :controller => 'supplier_invoices', :action => 'si_update_order_select_from_supplier'
     match 'supplier_invoices/si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
     match 'si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
     match 'supplier_invoices/:id/si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
@@ -200,8 +203,12 @@ Ag2Purchase::Engine.routes.draw do
     # match 'supplier_invoices/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
     # match 'si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
     # match 'supplier_invoices/:id/si_generate_invoice/:supplier/:request/:offer_no/:offer_date', :controller => 'supplier_invoices', :action => 'si_generate_invoice'
+    match 'supplier_invoices/si_generate_invoice_from_order', :controller => 'supplier_invoices', :action => 'si_generate_invoice_from_order'
+    match 'si_generate_invoice_from_order/', :controller => 'supplier_invoices', :action => 'si_generate_invoice_from_order'
+    match 'supplier_invoices/:id/si_generate_invoice_from_order', :controller => 'supplier_invoices', :action => 'si_generate_invoice_from_order'
     match 'supplier_invoices/si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     match 'si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
+    match 'si_current_balance_order/:order', :controller => 'supplier_invoices', :action => 'si_current_balance_order'
     match 'supplier_invoices/:id/si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     #
     # Offer requests

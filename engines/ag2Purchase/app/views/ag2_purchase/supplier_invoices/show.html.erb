@@ -33,7 +33,9 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.charge_account' %>:</td>
-      <td colspan="3"><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
+      <td><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.supplier_invoice.purchase_order' %>:</td>
+      <td><%= @supplier_invoice.purchase_order.full_no unless @supplier_invoice.purchase_order.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.internal_no' %>:</td>

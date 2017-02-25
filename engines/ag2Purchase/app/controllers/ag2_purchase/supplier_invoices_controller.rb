@@ -6,6 +6,7 @@ module Ag2Purchase
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:si_update_receipt_select_from_supplier,
+                                               :si_update_order_select_from_supplier,
                                                :si_update_selects_from_note,
                                                :si_update_product_select_from_note_item,
                                                :si_item_balance_check,
@@ -22,7 +23,9 @@ module Ag2Purchase
                                                :si_current_stock,
                                                :si_update_project_textfields_from_organization,
                                                :si_current_balance,
+                                               :si_current_balance_order,
                                                :si_generate_invoice,
+                                               :si_generate_invoice_from_order,
                                                :si_attachment_changed,
                                                :si_update_attachment]
     # Public attachment for drag&drop
@@ -68,6 +71,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update purchase order select at view from supplier select
+    def si_update_order_select_from_supplier
+      supplier = params[:supplier]
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @purchase_orders = @supplier.blank? ? purchase_orders_dropdown : @supplier.purchase_orders.undelivered(@supplier.organization_id, true)
+      else
+        @purchase_orders = purchase_orders_dropdown
+      end
+      # Orders array
+      @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
+      # Setup JSON
+      @json_data = { "order" => @purchase_orders_dropdown }
+      render json: @json_data
+    end
+
     # Update selects at view from receipt note
     def si_update_selects_from_note
       o = params[:o]
@@ -104,7 +123,7 @@ module Ag2Purchase
         @products = products_dropdown
       end
       # Work orders array
-      @orders_dropdown = orders_array(@work_orders)
+      @orders_dropdown = work_orders_array(@work_orders)
       # Note items array
       @note_items_dropdown = note_items_array(@note_items)
       # Products array
@@ -377,7 +396,7 @@ module Ag2Purchase
         @store = stores_dropdown
       end
       # Work orders array
-      @orders_dropdown = orders_array(@work_order)
+      @orders_dropdown = work_orders_array(@work_order)
       # Setup JSON
       @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
@@ -428,7 +447,7 @@ module Ag2Purchase
         @products = products_dropdown
       end
       # Work orders array
-      @orders_dropdown = orders_array(@work_orders)
+      @orders_dropdown = work_orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
@@ -444,6 +463,20 @@ module Ag2Purchase
       current_balance = 0
       if order != '0'
         current_balance = ReceiptNote.find(order).balance rescue 0
+      end
+      # Format numbers
+      current_balance = number_with_precision(current_balance.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "balance" => current_balance.to_s }
+      render json: @json_data
+    end
+
+    # Update purchase order balance (unbilled) text field at view from order select
+    def si_current_balance_order
+      order = params[:order]
+      current_balance = 0
+      if order != '0'
+        current_balance = PurchaseOrder.find(order).balance rescue 0
       end
       # Format numbers
       current_balance = number_with_precision(current_balance.round(4), precision: 4)
@@ -560,15 +593,122 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Generate new invoice from purchase order
+    def si_generate_invoice_from_order
+      supplier = params[:supplier]
+      orders = params[:order]
+      invoice_no = params[:offer_no]
+      invoice_date = params[:offer_date]  # YYYYMMDD
+      invoice = nil
+      invoice_item = nil
+      code = ''
+      first = true
+
+      orders = orders.split(",")
+
+      # Format offer_date
+      invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
+
+      if orders.count == 1
+        # Only one order
+        if orders[0] != '0'
+          purchase_order = PurchaseOrder.find(orders[0]) rescue nil
+          purchase_order_items = purchase_order.purchase_order_items rescue nil
+          if !purchase_order.nil? && !purchase_order_items.nil?
+            # Try to save new invoice
+            invoice = new_invoice(purchase_order, invoice_no, invoice_date)
+            # One order only: Must save purchase_order_id, work_order_id & charge_account_id
+            invoice.purchase_order_id = purchase_order.id
+            invoice.work_order_id = purchase_order.work_order_id
+            invoice.charge_account_id = purchase_order.charge_account_id
+            # One order only: Discount must be saved as well
+            invoice.discount_pct = purchase_order.discount_pct
+            invoice.discount = purchase_order.discount
+            if invoice.save
+              # Try to save new invoice items
+              purchase_order_items.each do |i|
+                if i.balance != 0 # Only items not billed yet
+                  invoice_item = new_invoice_item(invoice, i)
+                  if !invoice_item.save
+                    # Can't save invoice item (exit)
+                    code = '$write'
+                    break
+                  end   # !invoice_item.save?
+                end   # i.balance != 0
+              end   # purchase_order_items.each do |i|
+            else
+              # Can't save invoice
+              code = '$write'
+            end   # invoice.save?
+          else
+            # Purchase order or items not found
+            code = '$err'
+          end   # !purchase_order.nil? && !purchase_order_items.nil?
+        else
+          # Purchase order 0
+          code = '$err'
+        end   # orders[0] != '0'
+      else
+        # Loop thru orders and create invoice
+        orders.each do |note|
+          if note != '0'
+            purchase_order = PurchaseOrder.find(note) rescue nil
+            purchase_order_items = purchase_order.purchase_order_items rescue nil
+            if !purchase_order.nil? && !purchase_order_items.nil?
+              # If it's first order, must initialize new invoice; if not, update already initialized one
+              if first
+                invoice = new_invoice(purchase_order, invoice_no, invoice_date)
+                invoice.remarks = I18n.t("activerecord.attributes.supplier_invoice.purchase_orders") + ': ' + purchase_order.order_no
+                first = false
+              else
+                invoice.discount = invoice.discount + purchase_order.discount
+                invoice.remarks = invoice.remarks + ', ' + purchase_order.order_no
+              end
+              if invoice.save
+                # Try to save new invoice items
+                purchase_order_items.each do |i|
+                  if i.balance != 0 # Only items not billed yet
+                    invoice_item = new_invoice_item(invoice, i)
+                    if !invoice_item.save
+                      # Can't save invoice item (exit)
+                      code = '$write'
+                      break
+                    end   # !invoice_item.save?
+                  end   # i.balance != 0
+                end   # purchase_order_items.each do |i|
+              else
+                # Can't save invoice
+                code = '$write'
+                break
+              end   # invoice.save?
+            else
+              # Purchase order or items not found
+              code = '$err'
+            end   # !purchase_order.nil? && !purchase_order_items.nil?
+          else
+            # Purchase order 0
+            code = '$err'
+          end   # note != '0'
+        end   # orders.each do |note|
+      end   # orders.count == 1
+
+      if code == ''
+        code = I18n.t("ag2_purchase.supplier_invoices.generate_invoice_ok", var: invoice.id.to_s)
+      end
+
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
     # Initialize new invoice
-    def new_invoice(receipt_note, invoice_no, invoice_date)
+    def new_invoice(rnote_or_porder, invoice_no, invoice_date)
       invoice = SupplierInvoice.new
       invoice.invoice_no = invoice_no
-      invoice.supplier_id = receipt_note.supplier_id
-      invoice.payment_method_id = receipt_note.payment_method_id
+      invoice.supplier_id = rnote_or_porder.supplier_id
+      invoice.payment_method_id = rnote_or_porder.payment_method_id
       invoice.invoice_date = invoice_date
-      invoice.project_id = receipt_note.project_id
-      invoice.organization_id = receipt_note.organization_id
+      invoice.project_id = rnote_or_porder.project_id
+      invoice.organization_id = rnote_or_porder.organization_id
       invoice.created_by = current_user.id if !current_user.nil?
       return invoice
     end
@@ -576,9 +716,14 @@ module Ag2Purchase
     # Initialize new invoice item
     def new_invoice_item(invoice, i)
       invoice_item = SupplierInvoiceItem.new
+      if i.class.name == 'ReceiptNoteItem'
+        invoice_item.receipt_note_id = i.receipt_note_id
+        invoice_item.receipt_note_item_id = i.id
+      else
+        invoice_item.purchase_order_id = i.purchase_order_id
+        invoice_item.purchase_order_item_id = i.id
+      end
       invoice_item.supplier_invoice_id = invoice.id
-      invoice_item.receipt_note_id = i.receipt_note_id
-      invoice_item.receipt_note_item_id = i.id
       invoice_item.product_id = i.product_id
       invoice_item.code = i.code
       invoice_item.description = i.description
@@ -588,8 +733,12 @@ module Ag2Purchase
       invoice_item.discount = i.discount
       invoice_item.tax_type_id = i.tax_type_id
       invoice_item.work_order_id = i.work_order_id
-      invoice_item.charge_account_id = i.charge_account_id
       invoice_item.project_id = i.project_id
+      if !i.charge_account_id.blank?
+        invoice_item.charge_account_id = i.charge_account_id
+      else
+        invoice_item.charge_account_id = ChargeAccount.expenditures(i.project_id).first.id
+      end
       invoice_item.created_by = current_user.id if !current_user.nil?
       return invoice_item
     end
@@ -612,6 +761,7 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown if @suppliers.nil?
       @work_orders = work_orders_dropdown if @work_orders.nil?
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
+      @purchase_orders = purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -1048,6 +1198,14 @@ module Ag2Purchase
       _note.receipt_note_items.joins(:receipt_note_item_balance).where('receipt_note_item_balances.balance > ?', 0)
     end
 
+    def purchase_orders_dropdown
+      session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
+    end
+
+    def order_items_dropdown(_order)
+      _order.purchase_order_items.joins(:purchase_order_item_balance).where('purchase_order_item_balances.balance > ?', 0)
+    end
+
     def charge_accounts_dropdown
       session[:organization] != '0' ? ChargeAccount.expenditures.where(organization_id: session[:organization].to_i) : ChargeAccount.expenditures
     end
@@ -1109,10 +1267,32 @@ module Ag2Purchase
       _array
     end
 
-    def orders_array(_orders)
+    # Work orders array
+    def work_orders_array(_orders)
       _array = []
       _orders.each do |i|
         _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # Purchase orders array
+    def purchase_orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_no, formatted_date(i.order_date), i.supplier.full_name]
+      end
+      _array
+    end
+
+    def order_items_array(_order_items)
+      _array = []
+      _order_items.each do |i|
+        _array = _array << [ i.id, i.id.to_s + ":", i.product.full_code, i.description[0,20],
+                           (!i.quantity.blank? ? formatted_number(i.quantity, 4) : formatted_number(0, 4)),
+                           (!i.net_price.blank? ? formatted_number(i.net_price, 4) : formatted_number(0, 4)),
+                           (!i.amount.blank? ? formatted_number(i.amount, 4) : formatted_number(0, 4)),
+                           "(" + (!i.balance.blank? ? formatted_number(i.balance, 4) : formatted_number(0, 4)) + ")" ]
       end
       _array
     end
