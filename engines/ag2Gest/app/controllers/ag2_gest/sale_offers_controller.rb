@@ -70,10 +70,14 @@ module Ag2Gest
       @orders_dropdown = orders_array(@work_orders)
       # Products array
       @products_dropdown = products_array(@products)
+      # Clients array
+      @clients_dropdown = clients_array(@clients)
+      # Contracting requests array
+      @constracting_requests_dropdown = contracting_requests_array(@contracting_requests)
       # Setup JSON
-      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @orders_dropdown,
+      @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "contracting_request" => @contracting_requests,
+                     "payment_method" => @payment_methods, "contracting_request" => @constracting_requests_dropdown,
                      "product" => @products_dropdown }
       render json: @json_data
     end
@@ -161,6 +165,15 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @sale_offer = SaleOffer.new
+      @projects = projects_dropdown
+      @charge_accounts = projects_charge_accounts(@projects)
+      @clients = clients_dropdown
+      @contracting_requests = contracting_requests_dropdown
+      @payment_methods = payment_methods_dropdown
+      @work_orders = work_orders_dropdown
+      @stores = stores_dropdown
+      @status = sale_offer_statuses_dropdown if @status.nil?
+      @products = products_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -325,12 +338,64 @@ module Ag2Gest
       SaleOfferStatus.all
     end
 
+    def stores_dropdown
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+    end
+
     def work_orders_dropdown
       session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     def contracting_requests_dropdown
       session[:organization] != '0' ? ContractingRequest.belongs_to_organization(session[:organization].to_i) : ContractingRequest.by_no
+    end
+
+    def clients_dropdown
+      session[:organization] != '0' ? Client.belongs_to_organization(session[:organization].to_i) : Client.by_code
+    end
+
+    def payment_methods_dropdown
+      session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
+    end
+
+    def collection_payment_methods(_organization)
+      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
+    end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.belongs_to_organization(session[:organization].to_i) : Product.by_code
+    end
+
+    def products_array(_products)
+      _array = []
+      _products.each do |i|
+        _array = _array << [i.id, i.full_code, i.main_description[0,40]]
+      end
+      _array
+    end
+
+    def orders_array(_orders)
+      _array = []
+      _orders.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    def clients_array(_clients)
+      _array = []
+      _clients.each do |i|
+        _array = _array << [i.id, i.full_name_or_company_and_code]
+      end
+      _array
+    end
+
+    def contracting_requests_array(_requests)
+      _array = []
+      _requests.each do |i|
+        _array = _array << [i.id, i.full_no_date_client]
+      end
+      _array
     end
 
     # Returns _array from _ret table/model filled with _id attribute

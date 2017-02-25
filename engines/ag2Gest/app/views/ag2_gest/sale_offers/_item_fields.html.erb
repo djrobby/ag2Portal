@@ -9,30 +9,30 @@
     var _f = $("#fnt-product").closest('form')[0];
     // Project
     $("#fnt-project").html("");
-    $('#offer_project_id option').clone().appendTo('#fnt-project');
-    var _p = $('#offer_project_id :selected').val();
+    $('#sale_offer_project_id option').clone().appendTo('#fnt-project');
+    var _p = $('#sale_offer_project_id :selected').val();
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
     $("#fnt-work-order").html("");
-    $('#offer_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#offer_work_order_id :selected').val();
+    $('#sale_offer_work_order_id option').clone().appendTo('#fnt-work-order');
+    var _o = $('#sale_offer_work_order_id :selected').val();
     if (_o == "") _o = "0";
     $('#fnt-work-order').val(_o);
     // Charge Account
     $("#fnt-charge-account").html("");
-    $('#offer_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#offer_charge_account_id :selected').val();
+    $('#sale_offer_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    var _c = $('#sale_offer_charge_account_id :selected').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Store
     $("#fnt-store").html("");
-    $('#offer_store_id option').clone().appendTo('#fnt-store');
-    var _s = $('#offer_store_id :selected').val();
+    $('#sale_offer_store_id option').clone().appendTo('#fnt-store');
+    var _s = $('#sale_offer_store_id :selected').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
     // Supplier
-    _supplier = $('#offer_supplier_id :selected').val();
+    _supplier = $('#sale_offer_supplier_id :selected').val();
     if (_supplier == "") _supplier = "0";
     // Product
     init();
@@ -74,7 +74,7 @@
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
       //qty = qty.replace(",", ".") * 10000;
-      jQuery.getJSON('of_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
+      jQuery.getJSON('so_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
         if (data.tbl == "true") {
           $(_this).closest('tr').find('.fnt-description').val(data.description);
           $(_this).closest('tr').find('.fnt-price').val(data.price);
@@ -109,7 +109,7 @@
       var store = $('select#fnt-store :selected').val();
       if (store == "")
         store = "0";
-      jQuery.getJSON('of_current_stock/' + product + '/' + store, function(data) {
+      jQuery.getJSON('so_current_stock/' + product + '/' + store, function(data) {
         $("#current-stock").html(data.stock);
       });
       return false;
@@ -121,7 +121,7 @@
       var order = $('select#fnt-work-order :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_charge_account_from_order/' + order, function(data) {
+      jQuery.getJSON('so_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var c_id = data.charge_account_id;
@@ -168,7 +168,7 @@
       var order = $('select#fnt-project :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('so_update_charge_account_from_project/' + order, function(data) {
         var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
@@ -225,7 +225,7 @@
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_fields(_this);
+      recalculate_so_fields(_this);
       return false;
     });
 
@@ -233,7 +233,7 @@
     $("#fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_fields(_this);
+      recalculate_so_fields(_this);
       return false;
     });
 
@@ -241,7 +241,7 @@
     $("#fnt-discount-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_fields(_this);
+      recalculate_so_fields(_this);
       return false;
     });
 
@@ -249,12 +249,12 @@
     $("#fnt-discount").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_fields(_this);
+      recalculate_so_fields(_this);
       return false;
     });
 
     // Recalculate amounts & prices
-    function recalculate_of_fields(_this) {
+    function recalculate_so_fields(_this) {
       // make a POST call and replace the content
       var tbl = false;
       var price = $('#fnt-price').val();
@@ -304,7 +304,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('of_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
+      jQuery.getJSON('so_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
         if (data.tbl == "true") {
           $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
           $(_this).closest('tr').find('.fnt-price').val(data.price);
@@ -329,9 +329,9 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var o = $('select#offer_offer_request_id :selected').val();
+    var o = $('select#sale_offer_offer_request_id :selected').val();
     if (o != "" && o != "0") {
-      jQuery.getJSON('of_update_selects_from_request/' + o, function(data) {
+      jQuery.getJSON('so_update_selects_from_request/' + o, function(data) {
         var prods = data.product
         // Product
         $("#fnt-product").html("");
@@ -350,10 +350,10 @@
         }
       });
     } else {
-      var order = $('select#offer_organization_id :selected').val();
+      var order = $('select#sale_offer_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
+      jQuery.getJSON('so_update_project_textfields_from_organization/' + order, function(data) {
         var prods = data.product
         // Product
         $("#fnt-product").html("");

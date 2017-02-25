@@ -225,6 +225,14 @@ Ag2Gest::Engine.routes.draw do
     match 'commercial_billings/ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
     match 'ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
     match 'commercial_billings/:id/ci_current_balance/:order', :controller => 'commercial_billings', :action => 'ci_current_balance'
+    #
+    # Sale offers
+    match 'sale_offers/so_generate_no/:project', :controller => 'sale_offers', :action => 'so_generate_no'
+    match 'so_generate_no/:project', :controller => 'sale_offers', :action => 'so_generate_no'
+    match 'sale_offers/:id/so_generate_no/:project', :controller => 'sale_offers', :action => 'so_generate_no'
+    match 'sale_offers/so_update_selects_from_organization/:org', :controller => 'sale_offers', :action => 'so_update_selects_from_organization'
+    match 'so_update_selects_from_organization/:org', :controller => 'sale_offers', :action => 'so_update_selects_from_organization'
+    match 'sale_offers/:id/so_update_selects_from_organization/:org', :controller => 'sale_offers', :action => 'so_update_selects_from_organization'
 
     # Resources
     resources :clients

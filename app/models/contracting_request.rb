@@ -1,4 +1,6 @@
 class ContractingRequest < ActiveRecord::Base
+  include ModelsModule
+
   # RELATIONS
   belongs_to :client_country, :class_name => 'Country', :foreign_key => 'client_country_id'
   belongs_to :client_province, :class_name => 'Province', :foreign_key => 'client_province_id'
@@ -192,8 +194,16 @@ class ContractingRequest < ActiveRecord::Base
     _f += " " + (contracting_client.nil? ? "N/A" : contracting_client.full_name_or_company)
   end
 
+  def full_no_date_client
+    full_name = full_no
+    if !self.request_date.blank?
+      full_name += " " + formatted_date(self.request_date)
+    end
+    full_name += " " + (contracting_client.nil? ? "N/A" : contracting_client.full_name_or_company)
+  end
+
   def to_label
-    full_no
+    full_no_date_client
   end
 
   def full_name

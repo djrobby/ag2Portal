@@ -10,7 +10,7 @@
     });
 
     // Supplier
-    _supplier = $('#offer_supplier_id :selected').val();
+    _supplier = $('#sale_offer_supplier_id :selected').val();
     if (_supplier == "") _supplier = "0";
 
     // Trigger to display totals at table foot
@@ -28,11 +28,11 @@
       amount = parseInt(right_number(amount.toString(), 4) * 10000);
       tax = parseInt(right_number(tax.toString(), 4) * 10000);
       // Bonus
-      var discount_p = $('#offer_discount_pct').val();
+      var discount_p = $('#sale_offer_discount_pct').val();
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('of_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      jQuery.getJSON('so_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;
@@ -63,7 +63,7 @@
         store = "0";
       // Right formatted for passing as REST parameter
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('of_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
+      jQuery.getJSON('so_update_description_prices_from_product_store/' + product + '/' + qty + '/' + store + '/' + _supplier + '/' + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-description').val(data.description);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);
@@ -81,7 +81,7 @@
     $(".fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_table(_this);
+      recalculate_so_table(_this);
       return false;
     });
 
@@ -89,7 +89,7 @@
     $(".fnt-price").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_table(_this);
+      recalculate_so_table(_this);
       return false;
     });
 
@@ -97,7 +97,7 @@
     $(".fnt-discount-pct").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_table(_this);
+      recalculate_so_table(_this);
       return false;
     });
 
@@ -105,12 +105,12 @@
     $(".fnt-discount").change(function() {
       // preserve the current object
       var _this = (this);
-      recalculate_of_table(_this);
+      recalculate_so_table(_this);
       return false;
     });
     
     // Recalculate amounts & prices
-    function recalculate_of_table(_this) {
+    function recalculate_so_table(_this) {
       // make a POST call and replace the content
       var tbl = true;
       var price = $(_this).closest('tr').find('.fnt-price').val();
@@ -136,7 +136,7 @@
       qty = parseInt(right_number(qty, 4) * 10000);
       discount_p = parseInt(right_number(discount_p, 2) * 100);
       discount = parseInt(right_number(discount, 4) * 10000);
-      jQuery.getJSON('of_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
+      jQuery.getJSON('so_update_amount_from_price_or_quantity/' + price + '/' + qty + '/' + tax_type + '/' + discount_p + '/' + discount + '/' + product + "/" + tbl, function(data) {
         $(_this).closest('tr').find('.fnt-quantity').val(data.quantity);
         $(_this).closest('tr').find('.fnt-price').val(data.price);
         $(_this).closest('tr').find('.fnt-amount').val(data.amount);

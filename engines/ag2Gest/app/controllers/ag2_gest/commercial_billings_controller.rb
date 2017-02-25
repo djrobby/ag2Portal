@@ -69,10 +69,12 @@ module Ag2Gest
       end
       # Work orders array
       @orders_dropdown = orders_array(@work_orders)
+      # Clients array
+      @clients_dropdown = clients_array(@clients)
       # Products array
       @products_dropdown = products_array(@products)
       # Setup JSON
-      @json_data = { "client" => @clients, "project" => @projects, "work_order" => @orders_dropdown,
+      @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -996,6 +998,14 @@ module Ag2Gest
       _array = []
       _orders.each do |i|
         _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    def clients_array(_clients)
+      _array = []
+      _clients.each do |i|
+        _array = _array << [i.id, i.full_name_or_company_and_code]
       end
       _array
     end

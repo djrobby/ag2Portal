@@ -26,7 +26,7 @@ es:
       back_to_main_page: "Volver a Ofertas"
       generate_code_btn: "Nº de Oferta"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      code_error: "Imposible generar Nº de Oferta: No has elegido Organización."
+      no_error: "Imposible generar Nº de Oferta: No has elegido Proyecto."
       items_info: "Items de la Oferta"
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"

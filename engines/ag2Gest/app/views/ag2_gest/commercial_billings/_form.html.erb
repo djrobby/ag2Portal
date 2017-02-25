@@ -128,18 +128,18 @@
         var m = data.payment_method
         var prods = data.product
         // Client
-        $("#invoice_client_id").html("");
-        $("#invoice_client_id").select2("val", "");
-        $("#invoice_client_id").append($('<option></option>').val("").html(""));
+        $("#Client").html("");
+        $("#Client").select2("val", "");
+        $("#Client").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'client' && option != "") {
-              $("#invoice_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
+              $("#Client").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#invoice_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
+            $("#Client").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Project

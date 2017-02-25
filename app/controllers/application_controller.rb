@@ -745,7 +745,7 @@ end
       project = project_code.rjust(12, '0')
       year = year.to_s if year.is_a? Fixnum
       year = year.rjust(4, '0')
-      last_no = SaleOffer.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
+      last_no = SaleOffer.where("offer_no LIKE ?", "#{project}#{year}%").order(:offer_no).maximum(:offer_no)
       if last_no.nil?
         code = project + year + '000001'
       else

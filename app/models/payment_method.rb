@@ -25,8 +25,8 @@ class PaymentMethod < ActiveRecord::Base
   #
   scope :collections, -> { where("flow = 3 OR flow = 1").by_description }
   scope :payments, -> { where("flow = 3 OR flow = 2").by_description }
-  scope :collections_belong_to_organization, -> o { where("flow = 3 OR flow = 1 AND organization_id = ?", o).by_description }
-  scope :payments_belong_to_organization, -> o { where("flow = 3 OR flow = 2 AND organization_id = ?", o).by_description }
+  scope :collections_belong_to_organization, -> o { where("(flow = 3 OR flow = 1) AND organization_id = ?", o).by_description }
+  scope :payments_belong_to_organization, -> o { where("(flow = 3 OR flow = 2) AND organization_id = ?", o).by_description }
 
   before_destroy :check_for_dependent_records
 

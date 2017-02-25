@@ -26,18 +26,24 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
-    if ($('#offer_offer_date').val() == "") {
-      $('#offer_offer_date').datepicker('setValue', es_date(new Date()));
+    if ($('#sale_offer_offer_date').val() == "") {
+      $('#sale_offer_offer_date').datepicker('setValue', es_date(new Date()));
     }
 
     // Save default text color
-    text_field_color = $("#offer_offer_no").css('color')
+    text_field_color = $("#sale_offer_offer_no").css('color')
     
     // Initialized form variable
-    _thisForm = $("#offer_offer_no").closest('form')[0];
+    _thisForm = $("#sale_offer_offer_no").closest('form')[0];
+
+    // Icon inside text field: Generate No
+    $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_code_btn').trigger("click");
+      return false;
+    }));
 
     // Disable fields if Order# blank
-    var order = $('#offer_offer_no').val();
+    var order = $('#sale_offer_offer_no').val();
     if (order == "")
       order = "0";
     if (order == "0") {
@@ -47,12 +53,15 @@
       // Order OK: Enable
       show_new(true);
     }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
   
   jQuery(function($) {
-    // when the #offer_offer_no field changes
-    $("#offer_offer_no").change(function() {
-      var order = $('#offer_offer_no').val();
+    // when the #sale_offer_offer_no field changes
+    $("#sale_offer_offer_no").change(function() {
+      var order = $('#sale_offer_offer_no').val();
       if (order == "")
         order = "0";
       if (order == "0") {
@@ -63,16 +72,36 @@
         show_new(true);
       }
     });
-
-    // when the #offer_organization_id field changes
-    $("#offer_organization_id").change(function() {
+    
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_organization_id :selected').val();
+      var order = $('select#sale_offer_project_id :selected').val();
+      if (order == "")
+        order = "$";
+      jQuery.getJSON('so_generate_no/' + order, function(data) {
+        $("#sale_offer_offer_no").val(data.code);
+        if ($("#sale_offer_offer_no").val() == "$err") {
+          $("#sale_offer_offer_no").css('color', 'red');
+          alert('<%= I18n.t("ag2_gest.sale_offers.no_error") %>');
+          $('#sale_offer_offer_no').select();
+        } else {
+          $("#sale_offer_offer_no").css('color', text_field_color);
+          $('#sale_offer_offer_no').trigger("change");
+        }
+      });
+      return false;
+    });
+
+    // when the #sale_offer_organization_id field changes
+    $("#sale_offer_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#sale_offer_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
+      jQuery.getJSON('so_update_selects_from_organization/' + order, function(data) {
         var c = data.client;
-        var r = data.offer_request;
+        var r = data.contracting_request;
         var p = data.project;
         var w = data.work_order;
         var h = data.charge_account
@@ -80,152 +109,152 @@
         var m = data.payment_method
         var prods = data.product
         // client
-        $("#offer_client_id").html("");
-        $("#offer_client_id").select2("val", "");
-        $("#offer_client_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_client_id").html("");
+        $("#sale_offer_client_id").select2("val", "");
+        $("#sale_offer_client_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'client' && option != "") {
-              $("#offer_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
+              $("#sale_offer_client_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#offer_client_id").append($('<option></option>').val(option.id).html(option.client_code.substring(0,4) + "-" + option.client_code.substring(4,8) + "-" + option.client_code.substring(8,14) + " " + option.name));
+            $("#sale_offer_client_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
-        // Offer request
-        $("#offer_offer_request_id").html("");
-        $("#offer_offer_request_id").select2("val", "");
-        $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
+        // Contracting request
+        $("#sale_offer_contracting_request_id").html("");
+        $("#sale_offer_contracting_request_id").select2("val", "");
+        $("#sale_offer_contracting_request_id").append($('<option></option>').val("").html(""));
         if (!r.length) {
           $.each(data, function(id, option) {
             if (id == 'offer_request' && option != "") {
-              $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+              $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(r, function(id, option) {
-            $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Project
-        $("#offer_project_id").html("");
-        $("#offer_project_id").select2("val", "");
-        $("#offer_project_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_project_id").html("");
+        $("#sale_offer_project_id").select2("val", "");
+        $("#sale_offer_project_id").append($('<option></option>').val("").html(""));
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'project' && option != "") {
-              $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+              $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
           });
         }
         // Work order
-        $("#offer_work_order_id").html("");
-        $("#offer_work_order_id").select2("val", "");
-        $("#offer_work_order_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_work_order_id").html("");
+        $("#sale_offer_work_order_id").select2("val", "");
+        $("#sale_offer_work_order_id").append($('<option></option>').val("").html(""));
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+              $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge account
-        $("#offer_charge_account_id").html("");
-        $("#offer_charge_account_id").select2("val", "");
-        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_charge_account_id").html("");
+        $("#sale_offer_charge_account_id").select2("val", "");
+        $("#sale_offer_charge_account_id").append($('<option></option>').val("").html(""));
         if (!h.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(h, function(id, option) {
-            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
-        $("#offer_store_id").html("");
-        $("#offer_store_id").select2("val", "");
-        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_store_id").html("");
+        $("#sale_offer_store_id").select2("val", "");
+        $("#sale_offer_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
             if (id == 'store' && option != "") {
-              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(s, function(id, option) {
-            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
         // Payment method
-        $("#offer_payment_method_id").html("");
-        $("#offer_payment_method_id").val("");
-        $("#offer_payment_method_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_payment_method_id").html("");
+        $("#sale_offer_payment_method_id").val("");
+        $("#sale_offer_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {
             if (id == 'payment_method' && option != "") {
-              $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+              $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
             }
           });
         } else {
           $.each(m, function(id, option) {
-            $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
       });
       if (order == "0") {
-        $("#offer_project_id").val(0);
-        $("#offer_project_id").trigger("change");
+        $("#sale_offer_project_id").val(0);
+        $("#sale_offer_project_id").trigger("change");
       }
       return false;
     });
 
-    // when the #offer_client_id field changes
-    $("#offer_client_id").change(function() {
+    // when the #sale_offer_client_id field changes
+    $("#sale_offer_client_id").change(function() {
       // make a POST call and replace the content
-      var client = $('select#offer_client_id :selected').val();
+      var client = $('select#sale_offer_client_id :selected').val();
       if (client == "")
         client = "0";
-      jQuery.getJSON('of_update_request_select_from_client/' + client, function(data) {
+      jQuery.getJSON('so_update_request_select_from_client/' + client, function(data) {
         var r = data.offer_request;
-        $("#offer_offer_request_id").html("");
-        $("#offer_offer_request_id").select2("val", "");
-        $("#offer_offer_request_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_contracting_request_id").html("");
+        $("#sale_offer_contracting_request_id").select2("val", "");
+        $("#sale_offer_contracting_request_id").append($('<option></option>').val("").html(""));
         if (!r.length) {
           $.each(data, function(id, option) {
             if (id == 'offer_request' && option != "") {
-              $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+              $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
             }
           });
         } else {
           $.each(r, function(id, option) {
-            $("#offer_offer_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
           });
         }
-        //$("#offer_offer_request_id").val(data.id);
+        //$("#sale_offer_contracting_request_id").val(data.id);
       });
       return false;
     });
 
-    // when the #offer_offer_request_id field changes
-    $("#offer_offer_request_id").change(function() {
+    // when the #sale_offer_contracting_request_id field changes
+    $("#sale_offer_contracting_request_id").change(function() {
       // make a POST call and replace the content
-      var request = $('select#offer_offer_request_id :selected').val();
+      var request = $('select#sale_offer_contracting_request_id :selected').val();
       if (request == "")
         request = "0";
-      jQuery.getJSON('of_update_selects_from_request/' + request, function(data) {
+      jQuery.getJSON('so_update_selects_from_request/' + request, function(data) {
         var p = data.project;
         var w = data.work_order;
         var h = data.charge_account
@@ -238,224 +267,224 @@
         var s_id = data.store_id;
         var m_id = data.payment_method_id;
         // Project
-        $("#offer_project_id").html("");
-        $("#offer_project_id").select2("val", "");
-        $("#offer_project_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_project_id").html("");
+        $("#sale_offer_project_id").select2("val", "");
+        $("#sale_offer_project_id").append($('<option></option>').val("").html(""));
         if (!p.length) {
           $.each(data, function(id, option) {
             if (id == 'project' && option != "") {
-              $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+              $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
             }
           });
         } else {
           $.each(p, function(id, option) {
-            $("#offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
           });
         }
-        if (p_id != 0) $("#offer_project_id").select2("val", p_id);
+        if (p_id != 0) $("#sale_offer_project_id").select2("val", p_id);
         // Work order
-        $("#offer_work_order_id").html("");
-        $("#offer_work_order_id").select2("val", "");
-        $("#offer_work_order_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_work_order_id").html("");
+        $("#sale_offer_work_order_id").select2("val", "");
+        $("#sale_offer_work_order_id").append($('<option></option>').val("").html(""));
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+              $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
-        if (w_id != 0) $("#offer_work_order_id").select2("val", w_id);
+        if (w_id != 0) $("#sale_offer_work_order_id").select2("val", w_id);
         // Charge account
-        $("#offer_charge_account_id").html("");
-        $("#offer_charge_account_id").select2("val", "");
-        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_charge_account_id").html("");
+        $("#sale_offer_charge_account_id").select2("val", "");
+        $("#sale_offer_charge_account_id").append($('<option></option>').val("").html(""));
         if (!h.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(h, function(id, option) {
-            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
-        if (c_id != 0) $("#offer_charge_account_id").select2("val", c_id);
+        if (c_id != 0) $("#sale_offer_charge_account_id").select2("val", c_id);
         // Store
-        $("#offer_store_id").html("");
-        $("#offer_store_id").select2("val", "");
-        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_store_id").html("");
+        $("#sale_offer_store_id").select2("val", "");
+        $("#sale_offer_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
             if (id == 'store' && option != "") {
-              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(s, function(id, option) {
-            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        if (s_id != 0) $("#offer_store_id").select2("val", s_id);
+        if (s_id != 0) $("#sale_offer_store_id").select2("val", s_id);
         // Payment method
-        $("#offer_payment_method_id").html("");
-        $("#offer_payment_method_id").val("");
-        $("#offer_payment_method_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_payment_method_id").html("");
+        $("#sale_offer_payment_method_id").val("");
+        $("#sale_offer_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {
             if (id == 'payment_method' && option != "") {
-              $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+              $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
             }
           });
         } else {
           $.each(m, function(id, option) {
-            $("#offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
+            $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#offer_payment_method_id").val(m_id);
+        if (m_id != 0) $("#sale_offer_payment_method_id").val(m_id);
       });
       // Request not selected
       if (request == "0") {
-        $("#offer_project_id").val(0);
-        $("#offer_project_id").trigger("change");
+        $("#sale_offer_project_id").val(0);
+        $("#sale_offer_project_id").trigger("change");
       }
       //return false;
     });
 
-    // when the #offer_project_id field changes
-    $("#offer_project_id").change(function() {
+    // when the #sale_offer_project_id field changes
+    $("#sale_offer_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_project_id :selected').val();
+      var order = $('select#sale_offer_project_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('so_update_charge_account_from_project/' + order, function(data) {
         var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
         // Work Order
-        $("#offer_work_order_id").html("");
-        $("#offer_work_order_id").select2("val", "");
-        $("#offer_work_order_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_work_order_id").html("");
+        $("#sale_offer_work_order_id").select2("val", "");
+        $("#sale_offer_work_order_id").append($('<option></option>').val("").html(""));
         if (!w.length) {
           $.each(data, function(id, option) {
             if (id == 'work_order' && option != "") {
-              $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+              $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(w, function(id, option) {
-            $("#offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         // Charge Account
-        $("#offer_charge_account_id").html("");
-        $("#offer_charge_account_id").select2("val", "");
-        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_charge_account_id").html("");
+        $("#sale_offer_charge_account_id").select2("val", "");
+        $("#sale_offer_charge_account_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
         // Store
-        $("#offer_store_id").html("");
-        $("#offer_store_id").select2("val", "");
-        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_store_id").html("");
+        $("#sale_offer_store_id").select2("val", "");
+        $("#sale_offer_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
             if (id == 'store' && option != "") {
-              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(s, function(id, option) {
-            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
       });
       return false;
     });
 
-    // when the #offer_work_order_id field changes
-    $("#offer_work_order_id").change(function() {
+    // when the #sale_offer_work_order_id field changes
+    $("#sale_offer_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_work_order_id :selected').val();
+      var order = $('select#sale_offer_work_order_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('of_update_charge_account_from_order/' + order, function(data) {
+      jQuery.getJSON('so_update_charge_account_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var c_id = data.charge_account_id;
         var s_id = data.store_id;
         // Charge Account
-        $("#offer_charge_account_id").html("");
-        $("#offer_charge_account_id").select2("val", "");
-        $("#offer_charge_account_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_charge_account_id").html("");
+        $("#sale_offer_charge_account_id").select2("val", "");
+        $("#sale_offer_charge_account_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'charge_account' && option != "") {
-              $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+              $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
             }
           });
         } else {
           $.each(c, function(id, option) {
-            $("#offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
-        if (c_id != 0) $("#offer_charge_account_id").select2("val", c_id);
+        if (c_id != 0) $("#sale_offer_charge_account_id").select2("val", c_id);
         // Store
-        $("#offer_store_id").html("");
-        $("#offer_store_id").select2("val", "");
-        $("#offer_store_id").append($('<option></option>').val("").html(""));
+        $("#sale_offer_store_id").html("");
+        $("#sale_offer_store_id").select2("val", "");
+        $("#sale_offer_store_id").append($('<option></option>').val("").html(""));
         if (!s.length) {
           $.each(data, function(id, option) {
             if (id == 'store' && option != "") {
-              $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+              $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
             }
           });
         } else {
           $.each(s, function(id, option) {
-            $("#offer_store_id").append($('<option></option>').val(option.id).html(option.name));
+            $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
           });
         }
-        if (s_id != 0) $("#offer_store_id").select2("val", s_id);
+        if (s_id != 0) $("#sale_offer_store_id").select2("val", s_id);
       });
       return false;
     });
 
-    // when the #offer_discount_pct field changes
-    $("#offer_discount_pct").change(function() {
-      var num = $('#offer_discount_pct').val();
+    // when the #sale_offer_discount_pct field changes
+    $("#sale_offer_discount_pct").change(function() {
+      var num = $('#sale_offer_discount_pct').val();
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
       num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('of_format_number/' + num, function(data) {
-        $('#offer_discount_pct').val(data.num);
+      jQuery.getJSON('so_format_number/' + num, function(data) {
+        $('#sale_offer_discount_pct').val(data.num);
       });
       // Update and display totals
       $('#items-table').trigger('totals');
       return false;
     });
 
-    // when the #offer_retention_pct field changes
-    $("#offer_retention_pct").change(function() {
-      var num = $('#offer_retention_pct').val();
+    // when the #sale_offer_retention_pct field changes
+    $("#sale_offer_retention_pct").change(function() {
+      var num = $('#sale_offer_retention_pct').val();
       if (num == "")
         num = "0";
       // Right formatted for passing as REST parameter
       num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('of_format_number/' + num, function(data) {
-        $('#offer_retention_pct').val(data.num);
+      jQuery.getJSON('so_format_number/' + num, function(data) {
+        $('#sale_offer_retention_pct').val(data.num);
       });
       return false;
     });
@@ -478,10 +507,10 @@
         $(this).find('input.fnt-discount').val(discount);
       });
       // Must change decimal separator, if comma, in numeric fields
-      var num = $('#offer_discount_pct').val().replace(",", ".");
-      $('#offer_discount_pct').val(num);
-      //var num = $('#offer_retention_pct').val().replace(",", ".");
-      //$('#offer_retention_pct').val(num);
+      var num = $('#sale_offer_discount_pct').val().replace(",", ".");
+      $('#sale_offer_discount_pct').val(num);
+      //var num = $('#sale_offer_retention_pct').val().replace(",", ".");
+      //$('#sale_offer_retention_pct').val(num);
       //e.preventDefault();
     });
   });
@@ -503,12 +532,13 @@
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :offer_no, autofocus: true, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :offer_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.offer_date.strftime("%d/%m/%Y") if f.object.offer_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :offer_no, input_html: { class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :offer_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.offer_date.strftime("%d/%m/%Y") if f.object.offer_date), class: 'large-text-field date_picker' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :sale_offer_status, collection: @status, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :contracting_request, collection: @sale_offer_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :contracting_request, collection: @contracting_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %> </label>
@@ -535,5 +565,14 @@
 <!-- Remarks -->
 <%= f.input :remarks, as: :text, input_html: { class: 'x-large-text-field', rows: 3 }, label_html: { class: 'form-label' } %>
 <!-- Buttons -->
-<%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, class: 'btn-primary', id: 'submit_btn' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_gest.sale_offers.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 <% end %>
