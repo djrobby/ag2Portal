@@ -100,3 +100,15 @@ es:
       htmllink: "Ver esta factura"
       approval: "** Se requiere tu aprobación **"
       htmlapproval: "Aprueba esta factura"
+    send_invoice:
+      subject: "Nuevo Recibo/Factura de "
+      dear_client: "Estimado/a Cliente,"
+      new_invoice: "En el fichero adjunto, encontrará nuestro Recibo/Factura Nº "
+      deliver: "Este documento ha sido emitido bajo los términos y condiciones del contrato o acuerdo respectivo."
+      thanks: "Gracias."
+    send_sale_offer:
+      subject: "Nueva Oferta de "
+      dear_client: "Estimado/a Cliente,"
+      new_sale_offer: "En el fichero adjunto, encontrará nuestra Oferta Nº "
+      deliver: "Quedamos a la espera de sus comentarios."
+      thanks: "Gracias."

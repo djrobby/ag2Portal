@@ -100,3 +100,15 @@ en:
       htmllink: "Show this invoice"
       approval: "** Your approval is required **"
       htmlapproval: "Approve this invoice"
+    send_invoice:
+      subject: "New Bill/Invoice from "
+      dear_client: "Dear Client,"
+      new_invoice: "In the attached file, you will find our Bill/Invoice No. "
+      deliver: "This document has been issued under the terms and conditions of the respective contract or agreement."
+      thanks: "Thank you."
+    send_sale_offer:
+      subject: "New Sale Offer from "
+      dear_client: "Dear Client,"
+      new_sale_offer: "In the attached file, you will find our Sale Offer No. "
+      deliver: "We look forward to your comments."
+      thanks: "Thank you."

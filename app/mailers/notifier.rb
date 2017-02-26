@@ -207,6 +207,22 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_invoice(invoice, _from, _to, title, pdf)
+    @invoice = invoice
+    @from = _from
+    _subject = t("notifier.send_invoice.subject") + @invoice.bill.project.company.name
+    attachments[title] = pdf
+    mail reply_to: _from, to: _to, bcc: _from, subject: _subject
+  end
+
+  def send_sale_offer(sale_offer, _from, _to, title, pdf)
+    @sale_offer = sale_offer
+    @from = _from
+    _subject = t("notifier.send_sale_offer.subject") + @sale_offer.project.company.name
+    attachments[title] = pdf
+    mail reply_to: _from, to: _to, bcc: _from, subject: _subject
+  end
+
   #
   # Recipients based on Notifications
   # action: 1=Create 2=Update 3=Delete

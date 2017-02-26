@@ -22,12 +22,15 @@ class Client < ActiveRecord::Base
   has_many :client_payments
   has_many :invoice_debts
   has_many :water_supply_contracts
+  has_many :water_connection_contracts
   has_many :cancelled_invoices
   has_many :active_invoices
   has_many :active_supply_invoices
   has_many :invoice_bills
   has_many :invoice_credits
   has_many :invoice_rebills
+  has_many :supply_requests, :through => :water_supply_contracts, :source => :contracting_request
+  has_many :connection_requests, :through => :water_connection_contracts, :source => :contracting_request
 
   has_paper_trail
 

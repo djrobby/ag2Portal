@@ -54,6 +54,14 @@
       show_new(true);
     }
     
+    // Can't change offer no if editing
+    if ('<%= @breadcrumb %>' == "update") {
+      $('#sale_offer_offer_no').prop('readonly', true);
+    } else {
+      $('#sale_offer_offer_no').prop('readonly', false);
+      $('#sale_offer_sale_offer_status_id').val(1);
+    }
+    
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
@@ -221,150 +229,32 @@
       return false;
     });
 
-    // when the #sale_offer_client_id field changes
-    $("#sale_offer_client_id").change(function() {
-      // make a POST call and replace the content
-      var client = $('select#sale_offer_client_id :selected').val();
-      if (client == "")
-        client = "0";
-      jQuery.getJSON('so_update_request_select_from_client/' + client, function(data) {
-        var r = data.offer_request;
-        $("#sale_offer_contracting_request_id").html("");
-        $("#sale_offer_contracting_request_id").select2("val", "");
-        $("#sale_offer_contracting_request_id").append($('<option></option>').val("").html(""));
-        if (!r.length) {
-          $.each(data, function(id, option) {
-            if (id == 'offer_request' && option != "") {
-              $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
-            }
-          });
-        } else {
-          $.each(r, function(id, option) {
-            $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
-          });
-        }
-        //$("#sale_offer_contracting_request_id").val(data.id);
-      });
-      return false;
-    });
-
-    // when the #sale_offer_contracting_request_id field changes
-    $("#sale_offer_contracting_request_id").change(function() {
-      // make a POST call and replace the content
-      var request = $('select#sale_offer_contracting_request_id :selected').val();
-      if (request == "")
-        request = "0";
-      jQuery.getJSON('so_update_selects_from_request/' + request, function(data) {
-        var p = data.project;
-        var w = data.work_order;
-        var h = data.charge_account
-        var s = data.store
-        var m = data.payment_method
-        var prods = data.product
-        var p_id = data.project_id;
-        var w_id = data.work_order_id;
-        var c_id = data.charge_account_id;
-        var s_id = data.store_id;
-        var m_id = data.payment_method_id;
-        // Project
-        $("#sale_offer_project_id").html("");
-        $("#sale_offer_project_id").select2("val", "");
-        $("#sale_offer_project_id").append($('<option></option>').val("").html(""));
-        if (!p.length) {
-          $.each(data, function(id, option) {
-            if (id == 'project' && option != "") {
-              $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(p, function(id, option) {
-            $("#sale_offer_project_id").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
-          });
-        }
-        if (p_id != 0) $("#sale_offer_project_id").select2("val", p_id);
-        // Work order
-        $("#sale_offer_work_order_id").html("");
-        $("#sale_offer_work_order_id").select2("val", "");
-        $("#sale_offer_work_order_id").append($('<option></option>').val("").html(""));
-        if (!w.length) {
-          $.each(data, function(id, option) {
-            if (id == 'work_order' && option != "") {
-              $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(w, function(id, option) {
-            $("#sale_offer_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        if (w_id != 0) $("#sale_offer_work_order_id").select2("val", w_id);
-        // Charge account
-        $("#sale_offer_charge_account_id").html("");
-        $("#sale_offer_charge_account_id").select2("val", "");
-        $("#sale_offer_charge_account_id").append($('<option></option>').val("").html(""));
-        if (!h.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(h, function(id, option) {
-            $("#sale_offer_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
-        if (c_id != 0) $("#sale_offer_charge_account_id").select2("val", c_id);
-        // Store
-        $("#sale_offer_store_id").html("");
-        $("#sale_offer_store_id").select2("val", "");
-        $("#sale_offer_store_id").append($('<option></option>').val("").html(""));
-        if (!s.length) {
-          $.each(data, function(id, option) {
-            if (id == 'store' && option != "") {
-              $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
-            }
-          });
-        } else {
-          $.each(s, function(id, option) {
-            $("#sale_offer_store_id").append($('<option></option>').val(option.id).html(option.name));
-          });
-        }
-        if (s_id != 0) $("#sale_offer_store_id").select2("val", s_id);
-        // Payment method
-        $("#sale_offer_payment_method_id").html("");
-        $("#sale_offer_payment_method_id").val("");
-        $("#sale_offer_payment_method_id").append($('<option></option>').val("").html(""));
-        if (!m.length) {
-          $.each(data, function(id, option) {
-            if (id == 'payment_method' && option != "") {
-              $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
-            }
-          });
-        } else {
-          $.each(m, function(id, option) {
-            $("#sale_offer_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
-          });
-        }
-        if (m_id != 0) $("#sale_offer_payment_method_id").val(m_id);
-      });
-      // Request not selected
-      if (request == "0") {
-        $("#sale_offer_project_id").val(0);
-        $("#sale_offer_project_id").trigger("change");
-      }
-      //return false;
-    });
-
     // when the #sale_offer_project_id field changes
     $("#sale_offer_project_id").change(function() {
       // make a POST call and replace the content
       var order = $('select#sale_offer_project_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('so_update_charge_account_from_project/' + order, function(data) {
+      jQuery.getJSON('so_update_selects_from_project/' + order, function(data) {
+        var r = data.contracting_request;
         var w = data.work_order;
         var c = data.charge_account;
         var s = data.store;
+        // Contracting request
+        $("#sale_offer_contracting_request_id").html("");
+        $("#sale_offer_contracting_request_id").select2("val", "");
+        $("#sale_offer_contracting_request_id").append($('<option></option>').val("").html(""));
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer_request' && option != "") {
+              $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+            $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
         // Work Order
         $("#sale_offer_work_order_id").html("");
         $("#sale_offer_work_order_id").select2("val", "");
@@ -414,13 +304,43 @@
       return false;
     });
 
+    // when the #sale_offer_client_id field changes
+    $("#sale_offer_client_id").change(function() {
+      // make a POST call and replace the content
+      var client = $('select#sale_offer_client_id :selected').val();
+      if (client == "")
+        client = "0";
+      var order = $('select#sale_offer_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('so_update_request_select_from_client/' + client + '/' + order, function(data) {
+        var r = data.contracting_request;
+        // Contracting request
+        $("#sale_offer_contracting_request_id").html("");
+        $("#sale_offer_contracting_request_id").select2("val", "");
+        $("#sale_offer_contracting_request_id").append($('<option></option>').val("").html(""));
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer_request' && option != "") {
+              $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+            $("#sale_offer_contracting_request_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
+    });
+
     // when the #sale_offer_work_order_id field changes
     $("#sale_offer_work_order_id").change(function() {
       // make a POST call and replace the content
       var order = $('select#sale_offer_work_order_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('so_update_charge_account_from_order/' + order, function(data) {
+      jQuery.getJSON('so_update_selects_from_order/' + order, function(data) {
         var c = data.charge_account;
         var s = data.store;
         var c_id = data.charge_account_id;
@@ -473,19 +393,6 @@
       });
       // Update and display totals
       $('#items-table').trigger('totals');
-      return false;
-    });
-
-    // when the #sale_offer_retention_pct field changes
-    $("#sale_offer_retention_pct").change(function() {
-      var num = $('#sale_offer_retention_pct').val();
-      if (num == "")
-        num = "0";
-      // Right formatted for passing as REST parameter
-      num = parseInt(right_number(num, 2) * 100);
-      jQuery.getJSON('so_format_number/' + num, function(data) {
-        $('#sale_offer_retention_pct').val(data.num);
-      });
       return false;
     });
     

@@ -9,22 +9,16 @@ module Ag2Gest
                                                :so_restore_filters,
                                                :so_generate_no,
                                                :so_update_selects_from_organization,
-                                               :so_update_offer_select_from_client,
-                                               :so_update_selects_from_offer,
                                                :so_update_selects_from_project,
+                                               :so_update_request_select_from_client,
+                                               :so_update_selects_from_order,
                                                :so_format_number,
                                                :so_format_number_4,
                                                :so_item_totals,
                                                :so_update_description_prices_from_product,
-                                               :so_update_product_select_from_offer_item,
                                                :so_update_amount_from_price_or_quantity,
-                                               :so_item_balance_check,
-                                               :so_item_totals,
-                                               :so_generate_invoice,
-                                               :so_current_balance,
-                                               :send_invoice_form,
-                                               :invoice_form,
-                                               :bill_create, :bill_update]
+                                               :send_sale_offer_form,
+                                               :sale_offer_form]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
@@ -80,6 +74,227 @@ module Ag2Gest
                      "payment_method" => @payment_methods, "contracting_request" => @constracting_requests_dropdown,
                      "product" => @products_dropdown }
       render json: @json_data
+    end
+
+    # Update selects at view from organization
+    def so_update_selects_from_project
+      project = params[:project]
+      projects = projects_dropdown
+      if project != '0'
+        @project = Project.find(project)
+        @contracting_requests = @project.blank? ? projects_contracting_requests(projects) : projects_contracting_requests(@project)
+        @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
+        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
+        @store = project_stores(@project)
+      else
+        @contracting_requests = projects_contracting_requests(projects)
+        @work_order = work_orders_dropdown
+        @charge_account = projects_charge_accounts(projects)
+        @store = stores_dropdown
+      end
+      # Work orders array
+      @orders_dropdown = orders_array(@work_order)
+      # Contracting requests array
+      @constracting_requests_dropdown = contracting_requests_array(@contracting_requests)
+      # Setup JSON
+      @json_data = { "contracting_request" => @constracting_requests_dropdown, "work_order" => @orders_dropdown,
+                     "charge_account" => @charge_account, "store" => @store }
+      render json: @json_data
+    end
+
+    # Update contracting request select at view from client
+    def so_update_request_select_from_client
+      client = params[:client]
+      project = params[:project]
+      projects = projects_dropdown
+      if client != '0' && project != 0
+        @client = Client.find(client)
+        @project = Project.find(project)
+        if @project.blank?
+          @contracting_requests = @client.blank? ? projects_contracting_requests(projects) : @client.connection_requests.by_no
+        else
+          @contracting_requests = @client.blank? ? projects_contracting_requests(@project) : @client.connection_requests.belongs_to_project(@project)
+        end
+      elsif client != 0
+        @client = Client.find(client)
+        @contracting_requests = @client.blank? ? projects_contracting_requests(projects) : @client.connection_requests.by_no
+      else
+        @contracting_requests = projects_contracting_requests(projects)
+      end
+      # Contracting requests array
+      @constracting_requests_dropdown = contracting_requests_array(@contracting_requests)
+      # Setup JSON
+      @json_data = { "contracting_request" => @constracting_requests_dropdown }
+      render json: @json_data
+    end
+
+    # Update charge account and store text fields at view from work order select
+    def so_update_selects_from_order
+      order = params[:order]
+      projects = projects_dropdown
+      charge_account_id = 0
+      store_id = 0
+      if order != '0'
+        @order = WorkOrder.find(order)
+        @project = @order.project
+        @charge_account = @order.charge_account
+        charge_account_id = @charge_account.id rescue 0
+        @store = @order.store
+        store_id = @store.id rescue 0
+        if @charge_account.blank?
+          @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
+        end
+        if @store.blank?
+          @store = project_stores(@project)
+        end
+      else
+        @charge_account = projects_charge_accounts(projects)
+        @store = stores_dropdown
+      end
+      @json_data = { "charge_account" => @charge_account, "store" => @store,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id }
+      render json: @json_data
+    end
+
+    # Format numbers properly
+    def ci_format_number
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+    def ci_format_number_4
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    # Calculate and format item totals properly
+    def so_item_totals
+      qty = params[:qty].to_f / 10000
+      amount = params[:amount].to_f / 10000
+      tax = params[:tax].to_f / 10000
+      discount_p = params[:discount_p].to_f / 100
+      # Bonus
+      discount = discount_p != 0 ? amount * (discount_p / 100) : 0
+      # Taxable
+      taxable = amount - discount
+      # Taxes
+      tax = tax - (tax * (discount_p / 100)) if discount_p != 0
+      # Total
+      total = taxable + tax
+      # Format output values
+      qty = number_with_precision(qty.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      taxable = number_with_precision(taxable.round(4), precision: 4)
+      total = number_with_precision(total.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
+      render json: @json_data
+    end
+
+    # Update description and prices text fields at view from product select
+    def so_update_description_prices_from_product
+      product = params[:product]
+      tbl = params[:tbl]
+      description = ""
+      qty = 0
+      price = 0
+      discount_p = 0
+      discount = 0
+      code = ""
+      amount = 0
+      tax_type_id = 0
+      tax_type_tax = 0
+      tax = 0
+      if product != '0'
+        @product = Product.find(product)
+        # Assignment
+        description = @product.main_description[0,40]
+        qty = params[:qty].to_f / 10000
+        price = @product.sell_price
+        code = @product.product_code
+        amount = qty * (price - discount)
+        tax_type_id = @product.tax_type.id
+        tax_type_tax = @product.tax_type.tax
+        tax = amount * (tax_type_tax / 100)
+      end
+      # Format numbers
+      price = number_with_precision(price.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      # Setup JSON hash
+      @json_data = { "description" => description, "price" => price.to_s, "amount" => amount.to_s,
+                     "tax" => tax.to_s, "type" => tax_type_id,
+                     "discountp" => discount_p, "discount" => discount, "code" => code, "tbl" => tbl.to_s }
+      render json: @json_data
+    end
+
+    # Update amount and tax text fields at view (quantity or price changed)
+    def so_update_amount_from_price_or_quantity
+      price = params[:price].to_f / 10000
+      qty = params[:qty].to_f / 10000
+      tax_type = params[:tax_type].to_i
+      discount_p = params[:discount_p].to_f / 100
+      discount = params[:discount].to_f / 10000
+      product = params[:product]
+      tbl = params[:tbl]
+      if tax_type.blank? || tax_type == "0"
+        if !product.blank? && product != "0"
+          tax_type = Product.find(product).tax_type.id
+        else
+          tax_type = TaxType.where('expiration IS NULL').order('id').first.id
+        end
+      end
+      tax = TaxType.find(tax_type).tax
+      if discount_p > 0
+        discount = price * (discount_p / 100)
+      end
+      amount = qty * (price - discount)
+      tax = amount * (tax / 100)
+      qty = number_with_precision(qty.round(4), precision: 4)
+      price = number_with_precision(price.round(4), precision: 4)
+      amount = number_with_precision(amount.round(4), precision: 4)
+      tax = number_with_precision(tax.round(4), precision: 4)
+      discount_p = number_with_precision(discount_p.round(2), precision: 2)
+      discount = number_with_precision(discount.round(4), precision: 4)
+      @json_data = { "quantity" => qty.to_s, "price" => price.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
+                     "discountp" => discount_p.to_s, "discount" => discount.to_s, "tbl" => tbl.to_s }
+      render json: @json_data
+    end
+
+    #
+    # Emission Methods
+    #
+    # Email Report (jQuery)
+    def send_sale_offer_form
+      code = send_email(params[:id])
+      message = code == '$err' ? t(:send_error) : t(:send_ok)
+      @json_data = { "code" => code, "message" => message }
+      render json: @json_data
+    end
+
+    # Report form
+    def sale_offer_form
+      # Search offer & items
+      @sale_offer = SaleOffer.find(params[:id])
+      @items = @sale_offer.sale_offer_items.order('id')
+
+      title = t("activerecord.models.sale_offer.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@invoice.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
     end
 
     #
@@ -329,13 +544,48 @@ module Ag2Gest
       _ret = ChargeAccount.where(id: _array).order(:account_code)
     end
 
+    # Stores belonging to selected project
+    def project_stores(_project)
+      _array = []
+      _stores = nil
+
+      # Adding stores belonging to current project only
+      # Stores with exclusive office
+      if !_project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
+      elsif !_project.company.blank? && _project.office.blank?
+        _stores = Store.where("(company_id = ?)", _project.company.id)
+      elsif _project.company.blank? && !_project.office.blank?
+        _stores = Store.where("(office_id = ?)", _project.office.id)
+      else
+        _stores = nil
+      end
+      ret_array(_array, _stores, 'id')
+      # Stores with multiple offices
+      if !_project.office.blank?
+        _stores = StoreOffice.where("office_id = ?", _project.office.id)
+        ret_array(_array, _stores, 'store_id')
+      end
+
+      # Returning founded stores
+      _stores = Store.where(id: _array).order(:name)
+    end
+
     # Contracting requests belonging to projects
     def projects_contracting_requests(_projects)
-      ContractingRequest.where(project_id: _projects).by_no
+      ContractingRequest.is_connection_belongs_to_project(_projects)
     end
 
     def sale_offer_statuses_dropdown
       SaleOfferStatus.all
+    end
+
+    def charge_accounts_dropdown
+      session[:organization] != '0' ? ChargeAccount.incomes.where(organization_id: session[:organization].to_i) : ChargeAccount.incomes
+    end
+
+    def charge_accounts_dropdown_edit(_project)
+      ChargeAccount.incomes.where('project_id = ? OR (project_id IS NULL AND charge_accounts.organization_id = ?)', _project, _project.organization_id)
     end
 
     def stores_dropdown
@@ -347,7 +597,7 @@ module Ag2Gest
     end
 
     def contracting_requests_dropdown
-      session[:organization] != '0' ? ContractingRequest.belongs_to_organization(session[:organization].to_i) : ContractingRequest.by_no
+      session[:organization] != '0' ? ContractingRequest.is_connection_belongs_to_organization(session[:organization].to_i) : ContractingRequest.is_connection
     end
 
     def clients_dropdown
@@ -405,6 +655,31 @@ module Ag2Gest
           _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
         end
       end
+    end
+
+    # Send email to client
+    def send_email(_invoice)
+      code = '$ok'
+      from = nil
+      to = nil
+
+      # Search offer & items
+      @sale_offer = SaleOffer.find(_invoice)
+      @items = @sale_offer.sale_offer_items.order(:id)
+
+      title = t("activerecord.models.sale_offer.one") + "_" + @sale_offer.full_no + ".pdf"
+      pdf = render_to_string(filename: "#{title}", type: 'application/pdf')
+      from = !current_user.nil? ? User.find(current_user.id).email : User.find(@sale_offer.created_by).email
+      to = !@sale_offer.client.email.blank? ? @sale_offer.client.email : nil
+
+      if from.blank? || to.blank?
+        code = "$err"
+      else
+        # Send e-mail
+        Notifier.send_sale_offer(@sale_offer, from, to, title, pdf).deliver
+      end
+
+      code
     end
 
     # Keeps filter state

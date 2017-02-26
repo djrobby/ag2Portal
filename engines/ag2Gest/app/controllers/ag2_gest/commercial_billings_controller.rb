@@ -18,7 +18,6 @@ module Ag2Gest
                                                :ci_update_product_select_from_offer_item,
                                                :ci_update_amount_from_price_or_quantity,
                                                :ci_item_balance_check,
-                                               :ci_item_totals,
                                                :ci_generate_invoice,
                                                :ci_current_balance,
                                                :send_invoice_form,
@@ -310,33 +309,6 @@ module Ag2Gest
       end
       # Setup JSON
       @json_data = { "alert" => alert }
-      render json: @json_data
-    end
-
-    # Calculate and format item totals properly
-    def ci_item_totals
-      qty = params[:qty].to_f / 10000
-      amount = params[:amount].to_f / 10000
-      tax = params[:tax].to_f / 10000
-      discount_p = params[:discount_p].to_f / 100
-      # Bonus
-      discount = discount_p != 0 ? amount * (discount_p / 100) : 0
-      # Taxable
-      taxable = amount - discount
-      # Taxes
-      tax = tax - (tax * (discount_p / 100)) if discount_p != 0
-      # Total
-      total = taxable + tax
-      # Format output values
-      qty = number_with_precision(qty.round(4), precision: 4)
-      amount = number_with_precision(amount.round(4), precision: 4)
-      tax = number_with_precision(tax.round(4), precision: 4)
-      discount = number_with_precision(discount.round(4), precision: 4)
-      taxable = number_with_precision(taxable.round(4), precision: 4)
-      total = number_with_precision(total.round(4), precision: 4)
-      # Setup JSON hash
-      @json_data = { "qty" => qty.to_s, "amount" => amount.to_s, "tax" => tax.to_s,
-                     "discount" => discount.to_s, "taxable" => taxable.to_s, "total" => total.to_s }
       render json: @json_data
     end
 

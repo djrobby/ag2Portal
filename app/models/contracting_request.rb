@@ -110,7 +110,14 @@ class ContractingRequest < ActiveRecord::Base
   # Scopes
   scope :by_no, -> { order(:request_no) }
   #
+  scope :is_supply, -> { where("contracting_request_type_id <> ?", 3).by_no }
+  scope :is_connection, -> { where(contracting_request_type_id: 3).by_no }
   scope :belongs_to_organization, -> org { joins(:project).where("projects.organization_id = ?", org).by_no }
+  scope :belongs_to_project, -> p { where(project_id: p).by_no }
+  scope :is_supply_belongs_to_organization, -> org { joins(:project).where("projects.organization_id = ? AND contracting_request_type_id <> ?", org, 3).by_no }
+  scope :is_connection_belongs_to_organization, -> org { joins(:project).where("projects.organization_id = ? AND contracting_request_type_id = ?", org, 3).by_no }
+  scope :is_supply_belongs_to_project, -> p { where(project_id: p).where("contracting_request_type_id <> ?", 3).by_no }
+  scope :is_connection_belongs_to_project, -> p { where(project_id: p, contracting_request_type_id: 3).by_no }
   # generic where (eg. for Select2 from engines_controller)
   scope :g_where, -> w {
     joins(:project)
