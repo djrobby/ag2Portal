@@ -42,7 +42,8 @@
       var id = $('#id').html();
       if (id == "")
         return;
-      //window.open("offer_form.pdf?id=" + id, "_blank");
+      $("#notfound").modal('show');
+      //window.open("sale_offer_form.pdf?id=" + id, "_blank");
       return false;
     });
   });  
@@ -52,7 +53,7 @@
   <%= t(:processing) %>
 </div>
 
-<%= render '/layouts/ag2_gest/offersbreadcrumb' %>
+<%= render '/layouts/ag2_gest/saleoffersbreadcrumb' %>
 
 <h3><%=t '.title' %></h3>
 <table class="table odd_even_table">
@@ -60,42 +61,42 @@
     <tr>
       <td>Id:</td>
       <td id="id"><%= @sale_offer.id %></td>
-      <td><%=t 'activerecord.attributes.offer.offer_no' %>:</td>
-      <% if !@sale_offer.attachment.blank? %>
-      <td class="highlighted bolded"><%= @sale_offer.offer_no %><a style="margin-left: 1em;" href="#attachment"><i class="icon-paperclip-black"></i></a></td>
-      <% else %>
-      <td class="highlighted bolded"><%= @sale_offer.offer_no %></td>
-      <% end %>
+      <td><%=t 'activerecord.attributes.sale_offer.offer_no' %>:</td>
+      <td class="highlighted bolded"><%= @sale_offer.full_no %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.offer_date' %>:</td>
+      <td><%=t 'activerecord.attributes.sale_offer.offer_date' %>:</td>
       <td><%= formatted_date(@sale_offer.offer_date) unless @sale_offer.offer_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.offer.payment_method' %>:</td>
-      <td> <%= @sale_offer.payment_method.description %> </td>
+      <td><%=t 'activerecord.attributes.sale_offer.sale_offer_status' %>:</td>
+      <td> <%= @sale_offer.sale_offer_status.name unless @sale_offer.sale_offer_status.blank? %> </td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.supplier' %>:</td>
-      <td><%= @sale_offer.supplier.full_name unless @sale_offer.supplier.blank? %></td>
-      <td><%=t 'activerecord.attributes.offer.offer_request' %>:</td>
-      <td><%= @sale_offer.offer_request.full_name unless @sale_offer.offer_request.blank? %></td>
+      <td><%=t 'activerecord.attributes.sale_offer.client' %>:</td>
+      <td><%= client_name(@sale_offer) unless @sale_offer.client.blank? %></td>
+      <td><%=t 'activerecord.attributes.sale_offer.contracting_request' %>:</td>
+      <td><%= @sale_offer.contracting_request.full_name unless @sale_offer.contracting_request.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.project' %>:</td>
+      <td><%=t 'activerecord.attributes.sale_offer.payment_method' %>:</td>
+      <td colspan="3"> <%= @sale_offer.payment_method.description %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.sale_offer.project' %>:</td>
       <td><%= @sale_offer.project.full_name unless @sale_offer.project.blank? %></td>
-      <td><%=t 'activerecord.attributes.offer.work_order' %>:</td>
+      <td><%=t 'activerecord.attributes.sale_offer.work_order' %>:</td>
       <td><%= @sale_offer.work_order.full_name unless @sale_offer.work_order.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.charge_account' %>:</td>
+      <td><%=t 'activerecord.attributes.sale_offer.charge_account' %>:</td>
       <td> <%= @sale_offer.charge_account.full_name unless @sale_offer.charge_account.blank? %> </td>
-      <td><%=t 'activerecord.attributes.offer.store' %>:</td>
+      <td><%=t 'activerecord.attributes.sale_offer.store' %>:</td>
       <td> <%= @sale_offer.store.name unless @sale_offer.store.blank? %> </td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.offer.approval_date' %>:</td>
-      <td><%= formatted_timestamp(@sale_offer.approval_date.utc.getlocal) unless @sale_offer.approval_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.offer.approver' %>:</td>
-      <td id="approver"><%= @sale_offer.approver.email unless @sale_offer.approver.blank? %></td>
+      <td><%=t 'activerecord.attributes.sale_offer.approval_date' %>:</td>
+      <td><%= formatted_timestamp(@sale_offer.approval_date) unless @sale_offer.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.sale_offer.approver' %>:</td>
+      <td id="approver"><%= @sale_offer.approver unless @sale_offer.approver.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @sale_offer } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @sale_offer } %>
@@ -136,20 +137,22 @@
 <table class="table">
   <tbody>
     <tr>
-      <td style="width: 12%"><%= t :"activerecord.attributes.offer.remarks" %>:</td>
+      <td style="width: 12%"><%= t :"activerecord.attributes.sale_offer.remarks" %>:</td>
       <td style="width: 88%"><%= @sale_offer.remarks unless @sale_offer.remarks.blank? %></td>
     </tr>
   </tbody>
 </table>
 
 <% if cannot_edit(@sale_offer) %>
-<%= render partial: '/layouts/crud/new_no_br', locals: { model: SaleOffer, path: new_sale_offer_path, txt: t('ag2_gest.sale_offers.index.btn_new') } %>
+<%= render partial: '/layouts/crud/new', locals: { model: SaleOffer, path: new_sale_offer_path, txt: t('ag2_gest.sale_offers.index.btn_new') } %>
 <% else %>
-<%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+<%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: SaleOffer, update_path: edit_sale_offer_path(@sale_offer), update_txt: t('.btn_edit'),
-delete_path: @sale_offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.offer.one"), txt: @sale_offer.offer_no,
+delete_path: @sale_offer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.sale_offer.one"), txt: @sale_offer.offer_no,
 new_path: new_sale_offer_path, new_txt: t('ag2_gest.sale_offers.index.btn_new') } %>
 <% end %>
 
-<%= link_to t('ag2_gest.sale_offers.show.show_to'), @sale_offer.offer_request %> |
+<% if !@sale_offer.contracting_request.blank? %>
+<%= link_to t('ag2_gest.sale_offers.show.show_to'), @sale_offer.contracting_request %> |
+<% end %>
 <%= link_to t("ag2_gest.sale_offers.back_to_main_page"), sale_offers_path %>

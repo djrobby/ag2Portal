@@ -634,12 +634,12 @@ module Ag2Purchase
       @breadcrumb = 'update'
       @offer_request = OfferRequest.find(params[:id])
       @projects = projects_dropdown_edit(@offer_request.project)
-      @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.order(:order_no)
+      @work_orders = @offer_request.project.blank? ? work_orders_dropdown : @offer_request.project.work_orders.by_no
       @charge_accounts = work_order_charge_account(@offer_request)
       @stores = work_order_store(@offer_request)
-      @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers(:supplier_code)
+      @suppliers = @offer_request.organization.blank? ? suppliers_dropdown : @offer_request.organization.suppliers.by_code
       @payment_methods = @offer_request.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer_request.organization_id)
-      @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products(:product_code)
+      @products = @offer_request.organization.blank? ? products_dropdown : @offer_request.organization.products.by_code
     end
 
     # POST /offer_requests

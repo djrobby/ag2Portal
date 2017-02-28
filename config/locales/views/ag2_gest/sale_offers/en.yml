@@ -18,6 +18,8 @@ en:
         btn_edit: "Edit Sale Offer"
         btn_delete: "Delete Sale Offer"
         return_to: "Back to Sale Offer"
+        print: "Print"
+        show_to: "Show Contracting request"
       edit:
         title: "Edit Sale Offer"
         btn_show: "Show Sale Offer"

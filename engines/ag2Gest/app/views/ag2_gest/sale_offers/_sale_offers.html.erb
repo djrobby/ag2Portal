@@ -21,12 +21,14 @@
   </thead>
   <tbody>
     <% @sale_offers.each do |offer| %>
-    <% if !offer.approver_id.blank? %>
+    <% if offer.sale_offer_status_id == SaleOfferStatus::APPROVED %>
       <tr class="approved-tr">
+    <% elsif offer.sale_offer_status_id == SaleOfferStatus::DENIED %>
+      <tr class="denied-tr">
     <% else %>
       <tr>
     <% end %>
-      <td><%= link_to offer.offer_no, offer %></td>
+      <td><%= link_to offer.full_no, offer %></td>
       <td><%= offer.invoices.count unless offer.invoices.count == 0 %></td>
       <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
       <td><%= client_name(offer) %></td>

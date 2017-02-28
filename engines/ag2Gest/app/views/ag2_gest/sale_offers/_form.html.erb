@@ -26,6 +26,15 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+    $('.date_picker_time').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      var dt = es_date(e.date) + ' ' + es_time(e.date);
+      $(this).val(dt);
+      $('.date_picker_time').datepicker('hide');
+    });
+    // Set current offer date
     if ($('#sale_offer_offer_date').val() == "") {
       $('#sale_offer_offer_date').datepicker('setValue', es_date(new Date()));
     }
@@ -52,6 +61,13 @@
     } else {
       // Order OK: Enable
       show_new(true);
+    }
+
+    // Show or hide approval div
+    if ('<%= @approval %>' == "true") {
+      $('#approval').show();
+    } else {
+      $('#approval').hide();
     }
     
     // Can't change offer no if editing
@@ -381,6 +397,22 @@
       return false;
     });
 
+    // when the #sale_offer_sale_offer_status field changes
+    $("#sale_offer_sale_offer_status_id").change(function() {
+      var s = $('select#sale_offer_sale_offer_status_id :selected').val();
+      if (s == "") s = "0";
+      if (s == "2") {
+        jQuery.getJSON('so_update_approval_date', function(data) {
+          $('#sale_offer_approval_date').val(data.approval_date);
+        });
+        $('#approval').show();
+      } else {
+        $('#sale_offer_approval_date').val("");
+        $('#approval').hide();
+      }
+      return false;
+    });
+
     // when the #sale_offer_discount_pct field changes
     $("#sale_offer_discount_pct").change(function() {
       var num = $('#sale_offer_discount_pct').val();
@@ -448,12 +480,17 @@
   <label class="multi-field-label-two"> <%= f.association :contracting_request, collection: @contracting_requests, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<!-- Approval -->
+<div id="approval">
+  <label class="multi-field-label-two"> <%= f.input :approval_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.approval_date.strftime("%d/%m/%Y %H:%M:%S") if f.object.approval_date), class: 'large-text-field date_picker_time' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :approver, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
 <table class="form-table">

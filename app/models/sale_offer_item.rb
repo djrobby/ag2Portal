@@ -22,8 +22,8 @@ class SaleOfferItem < ActiveRecord::Base
   validates :product,         :presence => true
   validates :tax_type,        :presence => true
   validates :project,         :presence => true
-  validates :store,           :presence => true
-  validates :work_order,      :presence => true
+  # validates :store,           :presence => true
+  # validates :work_order,      :presence => true
   validates :charge_account,  :presence => true
 
   before_validation :fields_to_uppercase

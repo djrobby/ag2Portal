@@ -17,6 +17,7 @@ module Ag2Gest
                                                :so_item_totals,
                                                :so_update_description_prices_from_product,
                                                :so_update_amount_from_price_or_quantity,
+                                               :so_update_approval_date,
                                                :send_sale_offer_form,
                                                :sale_offer_form]
     # Helper methods for
@@ -269,6 +270,11 @@ module Ag2Gest
       render json: @json_data
     end
 
+    def so_update_approval_date
+      @json_data = { "approval_date" => formatted_timestamp(Time.now.utc.getlocal) }
+      render json: @json_data
+    end
+
     #
     # Emission Methods
     #
@@ -339,13 +345,16 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          fulltext client
+          with :client_id, client
         end
         if !project.blank?
           with :project_id, project
         end
         if !status.blank?
           with :sale_offer_status_id, status
+        end
+        if !order.blank?
+          with :work_order_id, order
         end
         if !request.blank?
           with :contracting_request_id, request
@@ -381,14 +390,15 @@ module Ag2Gest
       @breadcrumb = 'create'
       @sale_offer = SaleOffer.new
       @projects = projects_dropdown
-      @charge_accounts = projects_charge_accounts(@projects)
-      @clients = clients_dropdown
-      @contracting_requests = contracting_requests_dropdown
-      @payment_methods = payment_methods_dropdown
       @work_orders = work_orders_dropdown
+      @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
-      @status = sale_offer_statuses_dropdown if @status.nil?
+      @clients = clients_dropdown
+      @payment_methods = payment_methods_dropdown
+      @status = sale_offer_statuses_dropdown
       @products = products_dropdown
+      @contracting_requests = contracting_requests_dropdown
+      @approval = 'false'
 
       respond_to do |format|
         format.html # new.html.erb
@@ -400,6 +410,20 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @sale_offer = SaleOffer.find(params[:id])
+      @projects = projects_dropdown_edit(@sale_offer.project)
+      @work_orders = @sale_offer.project.blank? ? work_orders_dropdown : @sale_offer.project.work_orders.by_no
+      @charge_accounts = work_order_charge_account(@sale_offer, @projects)
+      @stores = work_order_store(@sale_offer)
+      @clients = @sale_offer.organization.blank? ? clients_dropdown : @sale_offer.organization.clients.by_code
+      @payment_methods = @sale_offer.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@sale_offer.organization_id)
+      @status = sale_offer_statuses_dropdown
+      @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
+      if @sale_offer.project.blank?
+        @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@projects) : @sale_offer.client.connection_requests.by_no
+      else
+        @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@sale_offer.project) : @sale_offer.client.connection_requests.belongs_to_project(@sale_offer.project)
+      end
+      @approval = @sale_offer.sale_offer_status_id == SaleOfferStatus::APPROVED ? 'true' : 'false'
     end
 
     # POST /sale_offers
@@ -414,6 +438,16 @@ module Ag2Gest
           format.html { redirect_to @sale_offer, notice: crud_notice('created', @sale_offer) }
           format.json { render json: @sale_offer, status: :created, location: @sale_offer }
         else
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
+          @stores = stores_dropdown
+          @clients = clients_dropdown
+          @payment_methods = payment_methods_dropdown
+          @status = sale_offer_statuses_dropdown
+          @products = products_dropdown
+          @contracting_requests = contracting_requests_dropdown
+          @approval = 'false'
           format.html { render action: "new" }
           format.json { render json: @sale_offer.errors, status: :unprocessable_entity }
         end
@@ -426,14 +460,73 @@ module Ag2Gest
       @breadcrumb = 'update'
       @sale_offer = SaleOffer.find(params[:id])
 
+      items_changed = false
+      if params[:sale_offer][:sale_offer_items_attributes]
+        params[:sale_offer][:sale_offer_items_attributes].values.each do |new_item|
+          current_item = SaleOfferItem.find(new_item[:id]) rescue nil
+          if ((current_item.nil?) || (new_item[:_destroy] != "false") ||
+             ((current_item.product_id.to_i != new_item[:product_id].to_i) ||
+              (current_item.description != new_item[:description]) ||
+              (current_item.quantity.to_f != new_item[:quantity].to_f) ||
+              (current_item.price.to_f != new_item[:price].to_f) ||
+              (current_item.discount_pct.to_f != new_item[:discount_pct].to_f) ||
+              (current_item.discount.to_f != new_item[:discount].to_f) ||
+              (current_item.tax_type_id.to_i != new_item[:tax_type_id].to_i) ||
+              (current_item.project_id.to_i != new_item[:project_id].to_i) ||
+              (current_item.work_order_id.to_i != new_item[:work_order_id].to_i) ||
+              (current_item.charge_account_id.to_i != new_item[:charge_account_id].to_i) ||
+              (current_item.store_id.to_i != new_item[:store_id].to_i)))
+            items_changed = true
+            break
+          end
+        end
+      end
+      master_changed = false
+      if ((params[:sale_offer][:organization_id].to_i != @sale_offer.organization_id.to_i) ||
+          (params[:sale_offer][:offer_no].to_s != @sale_offer.offer_no) ||
+          (params[:sale_offer][:offer_date].to_date != @sale_offer.offer_date) ||
+          (params[:sale_offer][:sale_offer_status_id].to_i != @sale_offer.sale_offer_status_id.to_i) ||
+          (params[:sale_offer][:client_id].to_i != @sale_offer.client_id.to_i) ||
+          (params[:sale_offer][:contracting_request_id].to_i != @sale_offer.contracting_request_id.to_i) ||
+          (params[:sale_offer][:payment_method_id].to_i != @sale_offer.payment_method_id.to_i) ||
+          (params[:sale_offer][:work_order_id].to_i != @sale_offer.work_order_id.to_i) ||
+          (params[:sale_offer][:charge_account_id].to_i != @sale_offer.charge_account_id.to_i) ||
+          (params[:sale_offer][:store_id].to_i != @sale_offer.store_id.to_i) ||
+          (params[:sale_offer][:discount_pct].to_f != @sale_offer.discount_pct.to_f) ||
+          (params[:sale_offer][:approval_date].to_date != @sale_offer.approval_date) ||
+          (params[:sale_offer][:approver].to_s != @sale_offer.approver) ||
+          (params[:sale_offer][:remarks].to_s != @sale_offer.remarks))
+        master_changed = true
+      end
+
       respond_to do |format|
-        if @sale_offer.update_attributes(params[:sale_offer])
-          format.html { redirect_to @sale_offer,
-                        notice: (crud_notice('updated', @sale_offer) + "#{undo_link(@sale_offer)}").html_safe }
-          format.json { head :no_content }
+        if master_changed || items_changed
+          @sale_offer.updated_by = current_user.id if !current_user.nil?
+          if @sale_offer.update_attributes(params[:sale_offer])
+            format.html { redirect_to @sale_offer,
+                          notice: (crud_notice('updated', @sale_offer) + "#{undo_link(@sale_offer)}").html_safe }
+            format.json { head :no_content }
+          else
+            @projects = projects_dropdown_edit(@sale_offer.project)
+            @work_orders = @sale_offer.project.blank? ? work_orders_dropdown : @sale_offer.project.work_orders.by_no
+            @charge_accounts = work_order_charge_account(@sale_offer, @projects)
+            @stores = work_order_store(@sale_offer)
+            @clients = @sale_offer.organization.blank? ? clients_dropdown : @sale_offer.organization.clients.by_code
+            @payment_methods = @sale_offer.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@sale_offer.organization_id)
+            @status = sale_offer_statuses_dropdown
+            @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
+            if @sale_offer.project.blank?
+              @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@projects) : @sale_offer.client.connection_requests.by_no
+            else
+              @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@sale_offer.project) : @sale_offer.client.connection_requests.belongs_to_project(@sale_offer.project)
+            end
+            @approval = @sale_offer.sale_offer_status_id == SaleOfferStatus::APPROVED ? 'true' : 'false'
+            format.html { render action: "edit" }
+            format.json { render json: @sale_offer.errors, status: :unprocessable_entity }
+          end
         else
-          format.html { render action: "edit" }
-          format.json { render json: @sale_offer.errors, status: :unprocessable_entity }
+          format.html { redirect_to @sale_offer }
+          format.json { head :no_content }
         end
       end
     end
@@ -516,6 +609,14 @@ module Ag2Gest
       _projects = Project.where(id: _array).order(:project_code)
     end
 
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
     # Charge accounts belonging to projects
     def projects_charge_accounts(_projects)
       _array = []
@@ -569,6 +670,24 @@ module Ag2Gest
 
       # Returning founded stores
       _stores = Store.where(id: _array).order(:name)
+    end
+
+    def work_order_charge_account(_offer, _projects)
+      if _offer.work_order.blank? || _offer.work_order.charge_account.blank?
+        _charge_account = _offer.project.blank? ? projects_charge_accounts(_projects) : charge_accounts_dropdown_edit(_offer.project)
+      else
+        _charge_account = ChargeAccount.where("id = ?", _offer.work_order.charge_account)
+      end
+      _charge_account
+    end
+
+    def work_order_store(_offer)
+      if _offer.work_order.blank? || _offer.work_order.store.blank?
+        _store = _offer.project.blank? ? stores_dropdown : project_stores(_offer.project)
+      else
+        _store = Store.where("id = ?", _offer.work_order.store)
+      end
+      _store
     end
 
     # Contracting requests belonging to projects

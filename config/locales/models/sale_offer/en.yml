@@ -47,3 +47,5 @@ en:
         contracting_request: "Contracting request"
         contracting_request_id: "Contracting request"
         contracting_request_c: "Contrg. Request"
+        approval_date: "Approved on"
+        approver: "Approved by"

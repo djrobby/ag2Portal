@@ -13,7 +13,8 @@ class SaleOffer < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :offer_date, :offer_no, :remarks,
                   :client_id, :payment_method_id, :sale_offer_status_id,
                   :project_id, :store_id, :work_order_id, :charge_account_id,
-                  :organization_id, :contracting_request_id
+                  :organization_id, :contracting_request_id,
+                  :approval_date, :approver
   attr_accessible :sale_offer_items_attributes
 
   has_many :sale_offer_items, dependent: :destroy
@@ -35,16 +36,20 @@ class SaleOffer < ActiveRecord::Base
 
   validates :offer_date,        :presence => true
   validates :offer_no,          :presence => true,
-                                :length => { :is => 20 },
-                                :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                :uniqueness => { :scope => :organization_id }
+                                :length => { :is => 22 },
+                                :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
+                                :uniqueness => { :scope => :project_id }
   validates :client,            :presence => true
   validates :payment_method,    :presence => true
   validates :sale_offer_status, :presence => true
   validates :project,           :presence => true
   validates :organization,      :presence => true
 
+
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :update_status_based_on_dates
+  before_save :update_dates_based_on_status
 
   def to_label
     "#{full_name}"
@@ -177,15 +182,17 @@ class SaleOffer < ActiveRecord::Base
   end
 
   searchable do
-    text :offer_no
+    text :offer_no, :approver
     string :offer_no
     integer :id
     integer :payment_method_id
     integer :project_id
+    integer :client_id
     integer :store_id
     integer :work_order_id
     integer :charge_account_id
     date :offer_date
+    date :approval_date
     integer :organization_id
     integer :sale_offer_status_id
     integer :contracting_request_id
@@ -207,5 +214,37 @@ class SaleOffer < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.sale_offer.check_for_delivery_notes'))
       return false
     end
+  end
+
+  #
+  # Before save (create & update)
+  #
+  # Status and related approval date
+  # 1->pending
+  # 2->approved
+  # 3->denied
+  #
+  # Update status
+  def update_status_based_on_dates
+    if approval_date_was.blank? && !approval_date.blank? && sale_offer_status_id < 2
+      self.sale_offer_status_id = 2
+    end
+    if !approval_date_was.blank? && approval_date.blank? && sale_offer_status_id == 2
+      self.sale_offer_status_id = 1
+    end
+    true
+  end
+
+  # Update dates
+  def update_dates_based_on_status
+    if sale_offer_status_id != sale_offer_status_id_was
+      if sale_offer_status_id == 2 && approval_date.blank?
+        self.approval_date = Time.now
+      end
+      if sale_offer_status_id == 1 && !approval_date.blank?
+        self.approval_date = nil
+      end
+    end
+    true
   end
 end

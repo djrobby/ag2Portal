@@ -1,4 +1,9 @@
 class SaleOfferStatus < ActiveRecord::Base
+  # CONSTANTS
+  PENDING = 1
+  APPROVED = 2
+  DENIED = 3
+
   attr_accessible :approval, :name, :notification
 
   has_many :sale_offers

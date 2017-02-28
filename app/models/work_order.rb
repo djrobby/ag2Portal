@@ -127,6 +127,7 @@ class WorkOrder < ActiveRecord::Base
     .by_no
   }
 
+  # Callbacks
   before_destroy :check_for_dependent_records
   before_save :update_status_based_on_dates
   before_save :update_dates_based_on_status

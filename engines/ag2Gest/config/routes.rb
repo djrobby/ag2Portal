@@ -254,6 +254,19 @@ Ag2Gest::Engine.routes.draw do
     match 'sale_offers/send_sale_offer_form/:id', :controller => 'sale_offers', :action => 'send_sale_offer_form'
     match 'send_sale_offer_form/:id', :controller => 'sale_offers', :action => 'send_sale_offer_form'
     match 'sale_offers/:id/send_sale_offer_form/:id', :controller => 'sale_offers', :action => 'send_sale_offer_form'
+    match 'sale_offers/so_update_description_prices_from_product/:product/:qty/:tbl', :controller => 'sale_offers', :action => 'so_update_description_prices_from_product'
+    match 'so_update_description_prices_from_product/:product/:qty/:tbl', :controller => 'sale_offers', :action => 'so_update_description_prices_from_product'
+    match 'sale_offers/:id/so_update_description_prices_from_product/:product/:qty/:tbl', :controller => 'sale_offers', :action => 'so_update_description_prices_from_product'
+    match 'sale_offers/so_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'sale_offers', :action => 'so_update_amount_from_price_or_quantity'
+    match 'so_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'sale_offers', :action => 'so_update_amount_from_price_or_quantity'
+    match 'sale_offers/:id/so_update_amount_from_price_or_quantity/:price/:qty/:tax_type/:discount_p/:discount/:product/:tbl', :controller => 'sale_offers', :action => 'so_update_amount_from_price_or_quantity'
+    match 'sale_offers/so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
+    match 'so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
+    match 'sale_offers/:id/so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
+
+    match 'sale_offers/so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
+    match 'so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
+    match 'sale_offers/:id/so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
 
     # Resources
     resources :clients
@@ -268,7 +281,9 @@ Ag2Gest::Engine.routes.draw do
     resources :centers
     resources :street_directories
     #
-    resources :sale_offers
+    resources :sale_offers do
+      get 'sale_offer_form', on: :collection
+    end
     resources :sale_offer_statuses
     #
     resources :contracting_requests do

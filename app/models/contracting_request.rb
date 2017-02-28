@@ -127,7 +127,7 @@ class ContractingRequest < ActiveRecord::Base
     .by_no
   }
 
-  # CALLBACKS
+  # Callbacks
   after_create :to_client #create/assign client after create contracting_request
 
   # Searchable attributes

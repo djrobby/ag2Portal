@@ -47,3 +47,5 @@ es:
         contracting_request: "Solicitud de contratación"
         contracting_request_id: "Solicitud de contratación"
         contracting_request_c: "Solicitud Cont."
+        approval_date: "Aprobada el"
+        approver: "Aprobada por"

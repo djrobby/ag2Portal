@@ -18,6 +18,8 @@ es:
         btn_edit: "Editar Oferta"
         btn_delete: "Borrar Oferta"
         return_to: "Volver a Oferta"
+        print: "Imprimir"
+        show_to: "Ver Solicitud de contratación"
       edit:
         title: "Editar Oferta de venta"
         btn_show: "Ver Oferta"
