@@ -554,22 +554,24 @@ class Ability
       can :crud, DeliveryNoteItem
       can :crud, Manufacturer
       can :crud, Measure
-      can :crud, ProductFamily
-      can :crud, ProductType
-      can :crud, Product
       can :crud, PurchaseOrder
       can :crud, PurchaseOrderItem
       can :crud, PurchaseOrderItemBalance
-      can :crud, PurchasePrice
-      can :crud, ProductCompanyPrice
       can :crud, ReceiptNote
       can :crud, ReceiptNoteItem
       can :crud, Store
-      can :crud, Stock
       #can :crud, InventoryCountType
       can :read, InventoryCountType
       can :crud, InventoryCount
       can :crud, InventoryCountItem
+      # CRUD only for Product_Manager role
+      can :read, ProductFamily
+      can :read, ProductType
+      can :read, Product
+      # Althoug it doesn't have Product_Manager role, can CRUD for update ops
+      can :crud, PurchasePrice
+      can :crud, ProductCompanyPrice
+      can :crud, Stock
     elsif user.has_role? :ag2Logistics_Guest
       can :read, DeliveryNote
       can :read, DeliveryNoteItem

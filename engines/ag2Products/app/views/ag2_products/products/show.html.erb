@@ -102,10 +102,14 @@
   </tbody>
 </table>
 
+<% if cannot_edit(@product) %>
+<%= render partial: '/layouts/crud/new_no_br', locals: { model: Product, path: new_product_path, txt: t('ag2_products.products.index.btn_new') } %>
+<% else %>
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Product, update_path: edit_product_path(@product), update_txt: t('.btn_edit'),
 delete_path: @product, delete_txt: t('.btn_delete'), msg: t("activerecord.models.product.one"), txt: @product.full_name,
 new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } %>
+<% end %>
 
 <!-- Stocks -->
 <table class="form-table">
@@ -116,7 +120,9 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
       </td>
       <td class="form-td-two right-winged">
         <%= link_to t("ag2_products.products.receipts_deliveries.title"), receipts_deliveries_products_path(id: @product), :class => 'btn btn-warning' %>
+        <% if !cannot_edit(@product) %>
         <%= render partial: '/layouts/ag2_products/productstocks', locals: { product: @product } %>
+        <% end %>        
       </td>
     </tr>
   </tbody>
@@ -146,7 +152,9 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
         <h4><%=t '.subtable_prices_title' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <% if !cannot_edit(@product) %>
         <%= render partial: '/layouts/ag2_products/productprices', locals: { product: @product } %>
+        <% end %>        
       </td>
     </tr>
   </tbody>
@@ -173,7 +181,9 @@ new_path: new_product_path, new_txt: t('ag2_products.products.index.btn_new') } 
         <h4><%=t '.subtable_wap_title' %></h4>
       </td>
       <td class="form-td-two right-winged">
+        <% if !cannot_edit(@product) %>
         <%= render partial: '/layouts/ag2_products/productcompanyprices', locals: { product: @product } %>
+        <% end %>        
       </td>
     </tr>
   </tbody>

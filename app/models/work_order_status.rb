@@ -1,4 +1,10 @@
 class WorkOrderStatus < ActiveRecord::Base
+  # CONSTANTS
+  NOSTARTED = 1
+  STARTED = 2
+  COMPLETED = 3
+  CLOSED = 4
+
   attr_accessible :name
 
   has_many :work_orders

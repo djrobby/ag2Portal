@@ -33,6 +33,10 @@ module Ag2Tech
                                                :work_order_form_empty_sm,
                                                :work_order_report,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+
     #
     # Subforms
     #
@@ -1128,6 +1132,13 @@ module Ag2Tech
     end
 
     private
+
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Work order is closed (not open)
+    def cannot_edit(_order)
+      !session[:is_administrator] && _order.work_order_status_id == WorkOrderStatus::CLOSED
+    end
 
     def current_projects_for_index(_projects)
       _current_projects = []

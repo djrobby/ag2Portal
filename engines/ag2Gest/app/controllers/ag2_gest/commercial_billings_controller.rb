@@ -738,9 +738,9 @@ module Ag2Gest
 
     # Can't edit or delete when
     # => User isn't administrator
-    # => Invoice is charged
+    # => Invoice is charged (not pending)
     def cannot_edit(_invoice)
-      !session[:is_administrator] && _invoice.invoice_statuses_id != InvoiceStatus::PENDING
+      !session[:is_administrator] && _invoice.invoice_status_id != InvoiceStatus::PENDING
     end
 
     def client_name(_invoice)

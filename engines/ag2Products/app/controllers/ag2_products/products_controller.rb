@@ -12,6 +12,10 @@ module Ag2Products
                                                :pr_update_attachment,
                                                :products_catalog_report,
                                                :receipts_deliveries]
+    # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+
     # Public attachment for drag&drop
     $attachment = nil
 
@@ -343,6 +347,13 @@ module Ag2Products
     end
 
     private
+
+    # Can't edit or delete when
+    # => User isn't Administrator
+    # => User isn't Product_Manager
+    def cannot_edit(_product)
+      !session[:is_administrator] && !(current_user.has_role? :Product_Manager)
+    end
 
     def inverse_no_search(no)
       _numbers = []

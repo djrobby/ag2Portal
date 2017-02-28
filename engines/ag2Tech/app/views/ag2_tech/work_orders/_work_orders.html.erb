@@ -55,8 +55,8 @@
       <td align="center"><%= order.started_at.strftime("%d/%m/%Y") unless order.started_at.blank? %></td>
       <td align="center"><%= order.completed_at.strftime("%d/%m/%Y") unless order.completed_at.blank? %></td>
       <td align="right"><%= number_with_precision(order.this_total_costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless order.total_costs.blank? %></td>
-      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } %> </td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => WorkOrder, :path => edit_work_order_path(order) } unless cannot_edit(order) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkOrder, :path => order, :msg => t("activerecord.models.work_order.one"), :txt => order.order_no } unless cannot_edit(order) %> </td>
     </tr>
     <% end %>
   </tbody>
