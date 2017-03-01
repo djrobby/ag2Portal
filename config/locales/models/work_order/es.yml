@@ -32,6 +32,7 @@ es:
         work_order_labor_id: "Labor"
         infrastructure: "Infraestructura"
         infrastructure_id: "Infraestructura"
+        infrastructure_report: "Infraestruc"
         created_at: "Fecha"
         started_at: "Iniciada el"
         started_at_report: "Iniciada"

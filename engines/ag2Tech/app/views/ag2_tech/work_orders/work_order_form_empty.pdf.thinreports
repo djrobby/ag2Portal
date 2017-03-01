@@ -25,7 +25,6 @@ end
 
 # New page & start
 report.start_new_page
-
 # Page header: Image block for Logo
 report.page.values company_logo: "public/" + @work_order.project.company.logo.url(:original).split("?").first unless @work_order.project.company.logo.blank?
 # Page header: Company
@@ -48,6 +47,7 @@ report.page.values client: @work_order.client.full_name unless @work_order.clien
 report.page.values area: @work_order.area.full_name unless @work_order.area.blank?
 report.page.values store: @work_order.store.name unless @work_order.store.blank?
 report.page.values charge_account: @work_order.charge_account.full_name unless @work_order.charge_account.blank?
+report.page.values infrastructure: @work_order.infrastructure.full_name unless @work_order.infrastructure.blank?
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   order_no_title: I18n.t("activerecord.attributes.work_order.order_no_report") + ":",
@@ -57,6 +57,7 @@ report.page.values(form_title: I18n.t("activerecord.models.work_order.one"),
 				   master_order_title: I18n.t("activerecord.attributes.work_order.master_order_report") + ":",
 				   description_title: I18n.t("activerecord.attributes.work_order.description") + ":",
 				   description: @work_order.description,
+           infrastructure_title: I18n.t("activerecord.attributes.work_order.infrastructure_report") + ":",
 				   project_title: I18n.t("activerecord.attributes.work_order.project") + ":",
 				   project: @work_order.project.full_name,
 				   woarea_title: I18n.t("activerecord.attributes.work_order.work_order_area") + ":",
