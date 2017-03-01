@@ -45,6 +45,8 @@ class SaleOffer < ActiveRecord::Base
   validates :project,           :presence => true
   validates :organization,      :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:offer_no) }
 
   # Callbacks
   before_destroy :check_for_dependent_records

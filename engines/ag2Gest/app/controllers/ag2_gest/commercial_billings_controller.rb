@@ -57,6 +57,7 @@ module Ag2Gest
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @sale_offers = @organization.blank? ? sale_offers_dropdown : @organization.sale_offers.by_no
       else
         @clients = clients_dropdown
         @projects = projects_dropdown
@@ -65,6 +66,7 @@ module Ag2Gest
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
+        @sale_offers = sale_offers_dropdown
       end
       # Work orders array
       @orders_dropdown = orders_array(@work_orders)
@@ -72,10 +74,13 @@ module Ag2Gest
       @clients_dropdown = clients_array(@clients)
       # Products array
       @products_dropdown = products_array(@products)
+      # Products array
+      @offers_dropdown = offers_array(@sale_offers)
       # Setup JSON
       @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products_dropdown }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
+                     "offer" => @offers_dropdown }
       render json: @json_data
     end
 
@@ -91,7 +96,7 @@ module Ag2Gest
       # Notes array
       @offers_dropdown = offers_array(@sale_offers)
       # Setup JSON
-      @json_data = { "note" => @offers_dropdown }
+      @json_data = { "offer" => @offers_dropdown }
       render json: @json_data
     end
 
@@ -941,7 +946,7 @@ module Ag2Gest
     def offers_array(_offers)
       _array = []
       _offers.each do |i|
-        _array = _array << [i.id, i.offer_no, formatted_date(i.offer_date), i.client.full_name]
+        _array = _array << [i.id, i.full_name]
       end
       _array
     end
