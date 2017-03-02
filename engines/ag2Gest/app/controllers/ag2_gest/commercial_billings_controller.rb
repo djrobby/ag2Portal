@@ -916,7 +916,7 @@ module Ag2Gest
     end
 
     def sale_offers_dropdown
-      session[:organization] != '0' ? SaleOffer.unbilled(session[:organization].to_i, true) : SaleOffer.unbilled(nil, true)
+      session[:organization] != '0' ? SaleOffer.unbilled(session[:organization].to_i, true, true) : SaleOffer.unbilled(nil, true, true)
     end
 
     def payment_methods_dropdown
