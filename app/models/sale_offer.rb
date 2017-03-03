@@ -165,15 +165,21 @@ class SaleOffer < ActiveRecord::Base
   end
 
   def self.unbilled(organization, _ordered, _only_approved)
-    w = ''
+    _w = ''
+    _wa = ''
+    _wo = ''
     if _only_approved
-      w = 'sale_offers.sale_offer_status_id=2'
+      _wa = 'sale_offers.sale_offer_status_id=2'
     end
     if !organization.blank?
+      _wo = 'sale_offers.organization_id=' + organization.to_s
+    end
+    _w = _wa + (!_wo.blank? ? (' AND ' + _wo) : _wo)
+    if !_w.blank
       if !_ordered
-        joins(:sale_offer_item_balances).where('sale_offers.organization_id = ?', organization).group('sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+        joins(:sale_offer_item_balances).where(_w).group('sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
       else
-        joins(:sale_offer_item_balances).where('sale_offers.organization_id = ?', organization).group('sale_offers.client_id, sale_offers.offer_no, sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
+        joins(:sale_offer_item_balances).where(_w).group('sale_offers.client_id, sale_offers.offer_no, sale_offers.id').having('sum(sale_offer_item_balances.balance) > ?', 0)
       end
     else
       if !_ordered
