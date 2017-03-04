@@ -34,74 +34,7 @@
     text_field_color = $("#client_client_code").css('color')
     // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
-      validate_fiscal_id();
-      // make a POST call and replace the content
-      // var client = $('#client_fiscal_id').val();
-      // if (client == "")
-      //   client = "0";
-      // jQuery.getJSON('validate_fiscal_id_textfield/' + client, function(data) {
-      //   if (data.fiscal_id == "$err") {
-      //     $("#client_fiscal_id").css('color', 'red');
-      //     //alert('<%= I18n.t("ag2_gest.clients.fiscal_error") %>');
-      //     // Quick entity creation
-      //     if ($('#client_fiscal_id').val() == "")
-      //       $("#client_fiscal_id").val(data.fiscal_id);
-      //     if ($('#client_fiscal_id').val() != "$err") {
-      //       $('#fnt_fiscal_id').val($('#client_fiscal_id').val());
-      //     } else {
-      //       $('#fnt_fiscal_id').val('');            
-      //     }
-      //     $("#new-entity").modal('show');
-      //     $('#new-entity').on('hidden', function() {
-      //       $('#client_fiscal_id').select();
-      //     });
-      //   }
-      //   else {
-      //     // Fill with Entity data
-      //     $("#client_fiscal_id").val(data.fiscal_id);
-      //     $("#client_company").val(data.company);
-      //     $("#client_first_name").val(data.first_name);
-      //     $("#client_last_name").val(data.last_name);
-      //     $("#client_entity_id").val(data.id);
-      //     $("#client_street_type_id").val(data.street_type_id);
-      //     $("#client_street_name").val(data.street_name);
-      //     $("#client_street_number").val(data.street_number);
-      //     $("#client_building").val(data.building);
-      //     $("#client_floor").val(data.floor);
-      //     $("#client_floor_office").val(data.floor_office);
-      //     $("#client_zipcode_id").select2("val", data.zipcode_id);
-      //     $("#client_town_id").select2("val", data.town_id);
-      //     $("#client_province_id").select2("val", data.province_id);
-      //     $("#client_region_id").val(data.region_id);
-      //     $("#client_country_id").val(data.country_id);
-      //     $("#client_phone").val(data.phone);
-      //     $("#client_fax").val(data.fax);
-      //     $("#client_cellular").val(data.cellular);
-      //     $("#client_email").val(data.email);
-      //     $("#client_active").prop('checked', true);
-      //     $("#client_organization_id").select2("val", data.organization_id);
-      //     // Enable fields
-      //     $('#client_client_code').prop('disabled', false);
-      //     $('#generate_code_btn').show();
-      //     $('#submit_btn').show();
-      //     if (data.entity_type == "1") {
-      //       // Type is Person
-      //       $('#client_company').prop('disabled', true);
-      //       $('#client_last_name').prop('disabled', false);
-      //       $('#client_first_name').prop('disabled', false);
-      //       $('#submit_btn').show();
-      //     } else {
-      //       // Type is Company or Other
-      //       $('#client_company').prop('disabled', false);
-      //       $('#client_last_name').prop('disabled', true);
-      //       $('#client_first_name').prop('disabled', true);
-      //       $('#submit_btn').show();
-      //     }
-      //     // Default color & focus
-      //     $("#client_fiscal_id").css('color', text_field_color);
-      //     $('#client_client_code').focus();
-      //   }
-      // });
+      cl_validate_fiscal_id();
       return false;
     }));
     $('#client_fiscal_id').focus();
@@ -254,45 +187,6 @@
       })
       return false;
     });
-
-    // when #validate_btn is clicked (BUTTON DOES NOT EXIST!)
-    $("#validate_btn").click(function() {
-      // make a POST call and replace the content
-      var client = $('#client_fiscal_id').val();
-      if (client == "")
-        client = "0";
-      jQuery.getJSON('validate_fiscal_id_textfield/' + client, function(data) {
-        $("#client_fiscal_id").val(data.fiscal_id);
-        if ($("#client_fiscal_id").val() == "$err") {
-          $("#client_fiscal_id").css('color', 'red');
-          alert('<%= I18n.t("ag2_gest.clients.fiscal_error") %>');
-          $('#client_fiscal_id').select();
-        }
-        else {
-          $("#client_entity_id").val(data.id);
-          $("#client_street_type_id").val(data.street_type_id);
-          $("#client_street_name").val(data.street_name);
-          $("#client_street_number").val(data.street_number);
-          $("#client_building").val(data.building);
-          $("#client_floor").val(data.floor);
-          $("#client_floor_office").val(data.floor_office);
-          $("#client_zipcode_id").select2("val", data.zipcode_id);
-          $("#client_town_id").select2("val", data.town_id);
-          $("#client_province_id").select2("val", data.province_id);
-          $("#client_region_id").val(data.region_id);
-          $("#client_country_id").val(data.country_id);
-          $("#client_phone").val(data.phone);
-          $("#client_fax").val(data.fax);
-          $("#client_cellular").val(data.cellular);
-          $("#client_email").val(data.email);
-          $("#client_organization_id").val(data.organization_id);
-          
-          $("#client_fiscal_id").css('color', text_field_color);
-          $('#client_client_code').focus();
-        }
-      });
-      return false;
-    });
     
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
@@ -341,21 +235,21 @@
         // $("#client_first_name").prop('disabled', false);
         // $("#client_last_name").prop('disabled', false);
         // Validate Fiscal Id
-        validate_fiscal_id();
+        cl_validate_fiscal_id();
       }
     });
   });
   
   // Code to validate Fiscal Id
-  function validate_fiscal_id() {
+  function cl_validate_fiscal_id() {
     // make a POST call and replace the content
     var client = $('#client_fiscal_id').val();
     if (client == "")
       client = "0";
-    jQuery.getJSON('validate_fiscal_id_textfield/' + client, function(data) {
+    jQuery.getJSON('cl_validate_fiscal_id_textfield/' + client, function(data) {
       if (data.fiscal_id == "$err") {
         $("#client_fiscal_id").css('color', 'red');
-        //alert('<%= I18n.t("ag2_gest.clients.fiscal_error") %>');
+        //alert('<%#= I18n.t("ag2_gest.clients.fiscal_error") %>');
         // Quick entity creation
         if ($('#client_fiscal_id').val() == "")
           $("#client_fiscal_id").val(data.fiscal_id);
@@ -370,6 +264,8 @@
         });
       }
       else {
+        // Alert if it already exists
+        if (data.code != "") alert(data.code);
         // Fill with Entity data
         $("#client_fiscal_id").val(data.fiscal_id);
         $("#client_company").val(data.company);

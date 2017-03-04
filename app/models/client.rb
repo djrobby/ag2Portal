@@ -140,7 +140,7 @@ class Client < ActiveRecord::Base
 
   def full_code
     # Client code (Organization id & sequential number) => OOOO-NNNNNNN
-    client_code.blank? ? "" : client_code[0..3] + '-' + client_code[4..10]
+    client_code.blank? || client_code == "$ERR" ? "" : client_code[0..3] + '-' + client_code[4..10]
   end
 
   def entity_first_name

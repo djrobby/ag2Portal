@@ -60,6 +60,7 @@ class Supplier < ActiveRecord::Base
   validates :payment_method,  :presence => true
   validates :entity,          :presence => true
   validates :organization,    :presence => true
+  validates :activity_ids,    :presence => true
 
   # Scopes
   scope :by_code, -> { order(:supplier_code) }
@@ -103,7 +104,7 @@ class Supplier < ActiveRecord::Base
 
   def full_code
     # Supplier code (Organization id & Main activity & sequential number) => OOOO-AAAA-NNNNNN
-    supplier_code.blank? ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
+    supplier_code.blank? || supplier_code == "$ERR" ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
   end
 
   def full_name_and_email

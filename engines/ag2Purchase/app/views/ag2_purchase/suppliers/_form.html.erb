@@ -50,61 +50,64 @@
     
     // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
-      //$(this).prev('input').val('').focus();
-      // make a POST call and replace the content
-      var supplier = $('#supplier_fiscal_id').val();
-      if (supplier == "")
-        supplier = "0";
-      jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
-        if (data.fiscal_id == "$err") {
-          $("#supplier_fiscal_id").css('color', 'red');
-          //alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
-          // Quick entity creation
-          if ($('#supplier_fiscal_id').val() == "")
-            $("#supplier_fiscal_id").val(data.fiscal_id);
-          if ($('#supplier_fiscal_id').val() != "$err") {
-            $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
-          } else {
-            $('#fnt_fiscal_id').val('');            
-          }
-          $("#new-entity").modal('show');
-          $('#new-entity').on('hidden', function() {
-            $('#supplier_fiscal_id').select();
-          });
-        }
-        else {
-          // Fill with Entity data
-          $("#supplier_fiscal_id").val(data.fiscal_id);
-          $("#supplier_name").val(data.name);
-          $("#supplier_entity_id").val(data.id);
-          $("#supplier_street_type_id").val(data.street_type_id);
-          $("#supplier_street_name").val(data.street_name);
-          $("#supplier_street_number").val(data.street_number);
-          $("#supplier_building").val(data.building);
-          $("#supplier_floor").val(data.floor);
-          $("#supplier_floor_office").val(data.floor_office);
-          $("#supplier_zipcode_id").select2("val", data.zipcode_id);
-          $("#supplier_town_id").select2("val", data.town_id);
-          $("#supplier_province_id").select2("val", data.province_id);
-          $("#supplier_region_id").val(data.region_id);
-          $("#supplier_country_id").val(data.country_id);
-          $("#supplier_phone").val(data.phone);
-          $("#supplier_fax").val(data.fax);
-          $("#supplier_cellular").val(data.cellular);
-          $("#supplier_email").val(data.email);
-          $("#supplier_active").prop('checked', true);
-          $("#supplier_organization_id").select2("val", data.organization_id);
-          //$("#supplier_organization_id").val(data.organization_id);
-          // Enable fields
-          $('#supplier_supplier_code').prop('disabled', false);
-          $('#supplier_name').prop('disabled', false);
-          $('#generate_code_btn').show();
-          $('#submit_btn').show();
-          // Default color & focus
-          $("#supplier_fiscal_id").css('color', text_field_color);
-          $('#supplier_supplier_code').focus();
-        }
-      })
+      su_validate_fiscal_id();
+      // //$(this).prev('input').val('').focus();
+      // // make a POST call and replace the content
+      // var supplier = $('#supplier_fiscal_id').val();
+      // if (supplier == "")
+      //   supplier = "0";
+      // jQuery.getJSON('su_validate_fiscal_id_textfield/' + supplier, function(data) {
+      //   if (data.fiscal_id == "$err") {
+      //     $("#supplier_fiscal_id").css('color', 'red');
+      //     //alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
+      //     // Quick entity creation
+      //     if ($('#supplier_fiscal_id').val() == "")
+      //       $("#supplier_fiscal_id").val(data.fiscal_id);
+      //     if ($('#supplier_fiscal_id').val() != "$err") {
+      //       $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
+      //     } else {
+      //       $('#fnt_fiscal_id').val('');            
+      //     }
+      //     $("#new-entity").modal('show');
+      //     $('#new-entity').on('hidden', function() {
+      //       $('#supplier_fiscal_id').select();
+      //     });
+      //   }
+      //   else {
+      //     // Alert if it already exists
+      //     if (data.code != "") alert(data.code);
+      //     // Fill with Entity data
+      //     $("#supplier_fiscal_id").val(data.fiscal_id);
+      //     $("#supplier_name").val(data.name);
+      //     $("#supplier_entity_id").val(data.id);
+      //     $("#supplier_street_type_id").val(data.street_type_id);
+      //     $("#supplier_street_name").val(data.street_name);
+      //     $("#supplier_street_number").val(data.street_number);
+      //     $("#supplier_building").val(data.building);
+      //     $("#supplier_floor").val(data.floor);
+      //     $("#supplier_floor_office").val(data.floor_office);
+      //     $("#supplier_zipcode_id").select2("val", data.zipcode_id);
+      //     $("#supplier_town_id").select2("val", data.town_id);
+      //     $("#supplier_province_id").select2("val", data.province_id);
+      //     $("#supplier_region_id").val(data.region_id);
+      //     $("#supplier_country_id").val(data.country_id);
+      //     $("#supplier_phone").val(data.phone);
+      //     $("#supplier_fax").val(data.fax);
+      //     $("#supplier_cellular").val(data.cellular);
+      //     $("#supplier_email").val(data.email);
+      //     $("#supplier_active").prop('checked', true);
+      //     $("#supplier_organization_id").select2("val", data.organization_id);
+      //     //$("#supplier_organization_id").val(data.organization_id);
+      //     // Enable fields
+      //     $('#supplier_supplier_code').prop('disabled', false);
+      //     $('#supplier_name').prop('disabled', false);
+      //     $('#generate_code_btn').show();
+      //     $('#submit_btn').show();
+      //     // Default color & focus
+      //     $("#supplier_fiscal_id").css('color', text_field_color);
+      //     $('#supplier_supplier_code').focus();
+      //   }
+      // })
       return false;
     }));
     $('#supplier_fiscal_id').focus();
@@ -246,45 +249,6 @@
       })
       return false;
     });
-
-    // when #validate_btn is clicked
-    $("#validate_btn").click(function() {
-      // make a POST call and replace the content
-      var supplier = $('#supplier_fiscal_id').val();
-      if (supplier == "")
-        supplier = "0";
-      jQuery.getJSON('validate_fiscal_id_textfield/' + supplier, function(data) {
-        $("#supplier_fiscal_id").val(data.fiscal_id);
-        if ($("#supplier_fiscal_id").val() == "$err") {
-          $("#supplier_fiscal_id").css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
-          $('#supplier_fiscal_id').select();
-        }
-        else {
-          $("#supplier_entity_id").val(data.id);
-          $("#supplier_street_type_id").val(data.street_type_id);
-          $("#supplier_street_name").val(data.street_name);
-          $("#supplier_street_number").val(data.street_number);
-          $("#supplier_building").val(data.building);
-          $("#supplier_floor").val(data.floor);
-          $("#supplier_floor_office").val(data.floor_office);
-          $("#supplier_zipcode_id").select2("val", data.zipcode_id);
-          $("#supplier_town_id").select2("val", data.town_id);
-          $("#supplier_province_id").select2("val", data.province_id);
-          $("#supplier_region_id").val(data.region_id);
-          $("#supplier_country_id").val(data.country_id);
-          $("#supplier_phone").val(data.phone);
-          $("#supplier_fax").val(data.fax);
-          $("#supplier_cellular").val(data.cellular);
-          $("#supplier_email").val(data.email);
-          $("#supplier_organization_id").val(data.organization_id);
-          
-          $("#supplier_fiscal_id").css('color', text_field_color);
-          $('#supplier_supplier_code').focus();
-        }
-      })
-      return false;
-    });
     
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
@@ -294,7 +258,7 @@
       // make a POST call and replace the content
       var activities = $('#supplier_activity_ids').val();
       //var activities = $('#checked_activities').val();
-      if (activities == "")
+      if (activities == "" || activities == null)
         activities = "$";
       var supplier = $('#supplier_organization_id').val();
       if (supplier == "")
@@ -335,6 +299,8 @@
         $('#supplier_name').prop('disabled', false);
         $('#generate_code_btn').show();
         $('#submit_btn').show();
+        // Validate Fiscal Id
+        su_validate_fiscal_id();
       }
     });
 
@@ -386,6 +352,66 @@
     $('#c_b input').click(updateTextArea);
     //updateTextArea();
   });
+  
+  // Code to validate Fiscal Id
+  function su_validate_fiscal_id() {
+    // make a POST call and replace the content
+    var supplier = $('#supplier_fiscal_id').val();
+    if (supplier == "")
+      supplier = "0";
+    jQuery.getJSON('su_validate_fiscal_id_textfield/' + supplier, function(data) {
+      if (data.fiscal_id == "$err") {
+        $("#supplier_fiscal_id").css('color', 'red');
+        //alert('<%#= I18n.t("ag2_purchase.suppliers.fiscal_error") %>');
+        // Quick entity creation
+        if ($('#supplier_fiscal_id').val() == "")
+          $("#supplier_fiscal_id").val(data.fiscal_id);
+        if ($('#supplier_fiscal_id').val() != "$err") {
+          $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
+        } else {
+          $('#fnt_fiscal_id').val('');            
+        }
+        $("#new-entity").modal('show');
+        $('#new-entity').on('hidden', function() {
+          $('#supplier_fiscal_id').select();
+        });
+      }
+      else {
+        // Alert if it already exists
+        if (data.code != "") alert(data.code);
+        // Fill with Entity data
+        $("#supplier_fiscal_id").val(data.fiscal_id);
+        $("#supplier_name").val(data.name);
+        $("#supplier_entity_id").val(data.id);
+        $("#supplier_street_type_id").val(data.street_type_id);
+        $("#supplier_street_name").val(data.street_name);
+        $("#supplier_street_number").val(data.street_number);
+        $("#supplier_building").val(data.building);
+        $("#supplier_floor").val(data.floor);
+        $("#supplier_floor_office").val(data.floor_office);
+        $("#supplier_zipcode_id").select2("val", data.zipcode_id);
+        $("#supplier_town_id").select2("val", data.town_id);
+        $("#supplier_province_id").select2("val", data.province_id);
+        $("#supplier_region_id").val(data.region_id);
+        $("#supplier_country_id").val(data.country_id);
+        $("#supplier_phone").val(data.phone);
+        $("#supplier_fax").val(data.fax);
+        $("#supplier_cellular").val(data.cellular);
+        $("#supplier_email").val(data.email);
+        $("#supplier_active").prop('checked', true);
+        $("#supplier_organization_id").select2("val", data.organization_id);
+        //$("#supplier_organization_id").val(data.organization_id);
+        // Enable fields
+        $('#supplier_supplier_code').prop('disabled', false);
+        $('#supplier_name').prop('disabled', false);
+        $('#generate_code_btn').show();
+        $('#submit_btn').show();
+        // Default color & focus
+        $("#supplier_fiscal_id").css('color', text_field_color);
+        $('#supplier_supplier_code').focus();
+      }
+    });
+  }
 </script>
 
 <%= simple_form_for @supplier, :html => {:class => 'form-vertical well' } do |f| %>
@@ -471,7 +497,7 @@
 <%= render 'accounts_table', f: f %>
 <!-- Old activities checkboxes (hidden now) -->
 <div id="c_b" class='hidden-text-field'>
-<%= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, input_html: { id: 'activities_boxes' }, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
+<%#= f.input :activity_ids, collection: Activity.order('description'), as: :check_boxes, input_html: { id: 'activities_boxes' }, label_method: lambda {|t| t.description}, label_html: { :class => 'form-label' }, item_wrapper_class: 'inline' %>
 <input id="checked_activities" type="hidden">
 <br />
 </div>

@@ -11,7 +11,7 @@ module Ag2Gest
                                                :update_region_textfield_from_province,
                                                :cl_generate_code,
                                                :et_validate_fiscal_id_textfield,
-                                               :validate_fiscal_id_textfield]
+                                               :cl_validate_fiscal_id_textfield]
     # Update payment method and ledger account text fields at view from organization select
     def cl_update_textfields_from_organization
       organization = params[:org]
@@ -94,7 +94,7 @@ module Ag2Gest
     end
 
     # Search Entity
-    def validate_fiscal_id_textfield
+    def cl_validate_fiscal_id_textfield
       id = ''
       fiscal_id = ''
       name = ''
@@ -118,6 +118,7 @@ module Ag2Gest
       email = ''
       organization_id = ''
       entity_type = ''
+      code = ''
 
       if params[:id] == '0'
         id = '$err'
@@ -159,6 +160,10 @@ module Ag2Gest
           cellular = @entity.cellular
           email = @entity.email
           organization_id = @entity.organization_id
+          # Must check if already exist
+          if !Client.find_by_fiscal_id(params[:id]).nil?
+            code = I18n.t("activerecord.errors.models.client.already_exists")
+          end
         end
       end
 
@@ -172,7 +177,7 @@ module Ag2Gest
                      "fax" => fax, "cellular" => cellular, "email" => email,
                      "organization_id" => organization_id, "company" => company,
                      "first_name" => first_name, "last_name" => last_name,
-                     "entity_type" => entity_type }
+                     "entity_type" => entity_type, "code" => code }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only

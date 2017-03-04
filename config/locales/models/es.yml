@@ -17,14 +17,17 @@ es:
             family_code:
               code_invalid: "inválido (debe ser numérico)"
         entity:
+          already_exists: "Id Fiscal de Entidad ya existe"
           attributes:
             fiscal_id:
               fiscal_invalid: "inválido (debe ser alfanumérico sin espacios ni símbolos)"
         supplier:
+          already_exists: "Id Fiscal de Proveedor ya existe"
           attributes:
             supplier_code:
               code_invalid: "inválido"
         client:
+          already_exists: "Id Fiscal de Cliente ya existe"
           attributes:
             client_code:
               code_invalid: "inválido (debe ser numérico)"

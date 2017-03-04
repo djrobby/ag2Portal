@@ -12,7 +12,7 @@ module Ag2Purchase
                                                :update_region_textfield_from_province,
                                                :su_generate_code,
                                                :et_validate_fiscal_id_textfield,
-                                               :validate_fiscal_id_textfield,
+                                               :su_validate_fiscal_id_textfield,
                                                :su_format_amount,
                                                :su_format_percentage,
                                                :su_update_office_select_from_bank,
@@ -104,7 +104,7 @@ module Ag2Purchase
     end
 
     # Search Entity
-    def validate_fiscal_id_textfield
+    def su_validate_fiscal_id_textfield
       id = ''
       fiscal_id = ''
       name = ''
@@ -124,6 +124,7 @@ module Ag2Purchase
       cellular = ''
       email = ''
       organization_id = ''
+      code = ''
 
       if params[:id] == '0'
         id = '$err'
@@ -161,6 +162,10 @@ module Ag2Purchase
           cellular = @entity.cellular
           email = @entity.email
           organization_id = @entity.organization_id
+          # Must check if already exist
+          if !Supplier.find_by_fiscal_id(params[:id]).nil?
+            code = I18n.t("activerecord.errors.models.supplier.already_exists")
+          end
         end
       end
 
@@ -172,7 +177,7 @@ module Ag2Purchase
                      "province_id" => province_id, "region_id" => region_id,
                      "country_id" => country_id, "phone" => phone,
                      "fax" => fax, "cellular" => cellular, "email" => email,
-                     "organization_id" => organization_id }
+                     "organization_id" => organization_id, "code" => code }
 
       respond_to do |format|
         format.html # validate_fiscal_id_textfield.html.erb does not exist! JSON only
@@ -237,6 +242,14 @@ module Ag2Purchase
       @offices_dropdown = bank_offices_array(@offices)
       # Setup JSON
       @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    # Check Fiscal Id
+    def su_check_fiscal_id
+      fiscal_id = params[:contact]
+      # Setup JSON
+      @json_data = { "iban" => iban }
       render json: @json_data
     end
 
