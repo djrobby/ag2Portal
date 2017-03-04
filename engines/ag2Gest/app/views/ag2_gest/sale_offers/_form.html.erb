@@ -224,7 +224,7 @@
         }
         // Payment method
         $("#sale_offer_payment_method_id").html("");
-        $("#sale_offer_payment_method_id").val("");
+        $("#sale_offer_payment_method_id").select2("val", "");
         $("#sale_offer_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {

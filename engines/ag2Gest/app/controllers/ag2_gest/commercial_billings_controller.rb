@@ -6,7 +6,9 @@ module Ag2Gest
     before_filter :authenticate_user!
     #load_and_authorize_resource (error: model class does not exist)
     # Must authorize manually for every action in this controller
-    skip_load_and_authorize_resource :only => [:ci_generate_no,
+    skip_load_and_authorize_resource :only => [:ci_remove_filters,
+                                               :ci_restore_filters,
+                                               :ci_generate_no,
                                                :ci_update_selects_from_organization,
                                                :ci_update_offer_select_from_client,
                                                :ci_update_selects_from_offer,
@@ -28,6 +30,8 @@ module Ag2Gest
     helper_method :cannot_edit
     # => returns client code & full name
     helper_method :client_name
+    # => index filters
+    helper_method :ci_remove_filters, :ci_restore_filters
 
     # Update invoice number at view (generate_code_btn)
     def ci_generate_no
@@ -89,11 +93,11 @@ module Ag2Gest
       client = params[:client]
       if client != '0'
         @client = Client.find(client)
-        @sale_offers = @client.blank? ? sale_offers_dropdown : @client.sale_offers.unbilled_balance(@client.organization_id, true)
+        @sale_offers = @client.blank? ? sale_offers_dropdown : @client.sale_offers.unbilled(@client.organization_id, true, true)
       else
         @sale_offers = sale_offers_dropdown
       end
-      # Notes array
+      # Offers array
       @offers_dropdown = offers_array(@sale_offers)
       # Setup JSON
       @json_data = { "offer" => @offers_dropdown }
@@ -157,18 +161,23 @@ module Ag2Gest
       projects = projects_dropdown
       if project != '0'
         @project = Project.find(project)
+        @sale_offers = @project.blank? ? sale_offers_dropdown : @project.sale_offers.unbilled(@project.organization_id, true, true)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
       else
+        @sale_offers = sale_offers_dropdown
         @work_order = work_orders_dropdown
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
       # Work orders array
       @orders_dropdown = orders_array(@work_order)
+      # Offers array
+      @offers_dropdown = offers_array(@sale_offers)
       # Setup JSON
-      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account,
+                      "store" => @store, "offer" => @offers_dropdown }
       render json: @json_data
     end
 
@@ -319,42 +328,41 @@ module Ag2Gest
 
     # Generate new invoice from sale offer
     def ci_generate_invoice
-      supplier = params[:supplier]
-      note = params[:request]
-      invoice_no = params[:offer_no]
+      client = params[:client]
+      offer = params[:offer]
       invoice_date = params[:offer_date]  # YYYYMMDD
       invoice = nil
       invoice_item = nil
       code = ''
 
-      if note != '0'
-        receipt_note = ReceiptNote.find(note) rescue nil
-        receipt_note_items = receipt_note.receipt_note_items rescue nil
-        if !receipt_note.nil? && !receipt_note_items.nil?
+      if offer != '0'
+        sale_offer = SaleOffer.find(offer) rescue nil
+        sale_offer_items = sale_offer.sale_offer_items rescue nil
+        if !sale_offer.nil? && !sale_offer_items.nil?
           # Format offer_date
           invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
           # Try to save new invoice
-          invoice = SupplierInvoice.new
+          invoice = Invoice.new
           invoice.invoice_no = invoice_no
-          invoice.supplier_id = receipt_note.supplier_id
-          invoice.payment_method_id = receipt_note.payment_method_id
+          invoice.client_id = sale_offer.client_id
+          invoice.payment_method_id = sale_offer.payment_method_id
           invoice.invoice_date = invoice_date
-          invoice.discount_pct = receipt_note.discount_pct
-          invoice.discount = receipt_note.discount
-          invoice.project_id = receipt_note.project_id
-          invoice.work_order_id = receipt_note.work_order_id
-          invoice.charge_account_id = receipt_note.charge_account_id
+          invoice.discount_pct = sale_offer.discount_pct
+          invoice.discount = sale_offer.discount
+          invoice.project_id = sale_offer.project_id
+          invoice.work_order_id = sale_offer.work_order_id
+          invoice.charge_account_id = sale_offer.charge_account_id
           invoice.created_by = current_user.id if !current_user.nil?
-          invoice.organization_id = receipt_note.organization_id
-          invoice.receipt_note_id = receipt_note.id
+          invoice.organization_id = sale_offer.organization_id
+          invoice.sale_offer_id = sale_offer.id
           if invoice.save
             # Try to save new invoice items
-            receipt_note_items.each do |i|
+            sale_offer_items.each do |i|
               if i.balance != 0 # Only items not billed yet
-                invoice_item = SupplierInvoiceItem.new
-                invoice_item.supplier_invoice_id = invoice.id
-                invoice_item.receipt_note_id = i.receipt_note_id
-                invoice_item.receipt_note_item_id = i.id
+                invoice_item = InvoiceItem.new
+                invoice_item.invoice_id = invoice.id
+                invoice_item.sale_offer_id = i.sale_offer_id
+                invoice_item.sale_offer_item_id = i.id
                 invoice_item.product_id = i.product_id
                 invoice_item.code = i.code
                 invoice_item.description = i.description
@@ -381,13 +389,13 @@ module Ag2Gest
         else
           # Receipt note or items not found
           code = '$err'
-        end   # !receipt_note.nil? && !receipt_note_items.nil?
+        end   # !sale_offer.nil? && !sale_offer_items.nil?
       else
         # Receipt note 0
         code = '$err'
       end   # note != '0'
       if code == ''
-        code = I18n.t("ag2_purchase.supplier_invoices.generate_invoice_ok", var: invoice.id.to_s)
+        code = I18n.t("ag2_gest.commercial_billings.generate_invoice_ok", var: invoice.invoice_no.to_s)
       end
       @json_data = { "code" => code }
       render json: @json_data
@@ -445,27 +453,24 @@ module Ag2Gest
       no = params[:No]
       project = params[:Project]
       client = params[:Client]
-      subscriber = params[:Subscriber]
       status = params[:Status]
       type = params[:Type]
       operation = params[:Operation]
       biller = params[:Biller]
-      period = params[:Period]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      # @clients = clients_dropdown if @clients.nil?
-      # @subscribers = subscribers_dropdown if @subscribers.nil?
+      @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @status = invoice_statuses_dropdown if @status.nil?
-      @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
-      @billers = billers_dropdown if @billers.nil?
-      @periods = billing_periods_dropdown if @periods.nil?
       @sale_offers = sale_offers_dropdown if @sale_offers.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @types = invoice_types_dropdown if @types.nil?
       current_types = @types.blank? ? [0] : current_types_for_index(@types)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -482,11 +487,11 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          fulltext client
+          with :client_id, client
         end
-        if !subscriber.blank?
-          fulltext subscriber
-        end
+        # if !subscriber.blank?
+        #   fulltext subscriber
+        # end
         if !project.blank?
           with :project_id, project
         end
@@ -502,10 +507,10 @@ module Ag2Gest
         if !biller.blank?
           with :biller_id, biller
         end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        order_by :sort_no, :asc
+        # if !period.blank?
+        #   with :billing_period_id, period
+        # end
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @invoices = @search.results
@@ -609,6 +614,7 @@ module Ag2Gest
                               params[:invoice][:payment_method_id].to_i)
         @invoice.bill_id = bill_id == 0 ? nil : bill_id
         @invoice.invoice_operation_id = InvoiceOperation::INVOICE
+        @invoice.biller_id = Project.find(params[:Project]).company_id
 
         # Go on
         if @invoice.save
@@ -1102,12 +1108,6 @@ module Ag2Gest
       elsif session[:Client]
         params[:Client] = session[:Client]
       end
-      # subscriber
-      if params[:Subscriber]
-        session[:Subscriber] = params[:Subscriber]
-      elsif session[:Subscriber]
-        params[:Subscriber] = session[:Subscriber]
-      end
       # status
       if params[:Status]
         session[:Status] = params[:Status]
@@ -1132,12 +1132,29 @@ module Ag2Gest
       elsif session[:Biller]
         params[:Biller] = session[:Biller]
       end
-      # period
-      if params[:Request]
-        session[:Request] = params[:Request]
-      elsif session[:Request]
-        params[:Request] = session[:Request]
-      end
+    end
+
+    def ci_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Project] = ""
+      params[:Client] = ""
+      params[:Status] = ""
+      params[:Type] = ""
+      params[:Operation] = ""
+      params[:Biller] = ""
+      return " "
+    end
+
+    def ci_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Project] = session[:Project]
+      params[:Client] = session[:Client]
+      params[:Status] = session[:Status]
+      params[:Type] = session[:Type]
+      params[:Operation] = session[:Operation]
+      params[:Biller] = session[:Biller]
     end
   end
 end

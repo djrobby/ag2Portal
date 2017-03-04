@@ -155,4 +155,7 @@ new_path: new_sale_offer_path, new_txt: t('ag2_gest.sale_offers.index.btn_new') 
 <% if !@sale_offer.contracting_request.blank? %>
 <%= link_to t('ag2_gest.sale_offers.show.show_to'), @sale_offer.contracting_request %> |
 <% end %>
+<% if !session[:return_to].nil? %>
+<%= link_to session[:return_to], session[:return_to_url] %> |
+<% end %>
 <%= link_to t("ag2_gest.sale_offers.back_to_main_page"), sale_offers_path %>

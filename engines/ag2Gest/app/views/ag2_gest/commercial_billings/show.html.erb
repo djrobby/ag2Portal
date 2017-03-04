@@ -1,4 +1,4 @@
-invoices<script>
+<script>
   $(document).ready(function() {
   });
 
@@ -36,8 +36,8 @@ invoices<script>
     <tr>
       <td><%=t 'activerecord.attributes.bill.client' %>:</td>
       <td><%= @invoice.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
-      <td><%=t 'activerecord.attributes.bill.subscriber' %>:</td>
-      <td><%= @invoice.try(:bill).try(:subscriber).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.commercial_billing.sale_offer' %>:</td>
+      <td><%= @invoice.try(:sale_offer).try(:full_no) %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.bill.project' %>:</td>
@@ -103,10 +103,17 @@ invoices<script>
 </table>
 
 <% if cannot_edit(@invoice) %>
-<%= render partial: '/layouts/crud/new_no_br', locals: { model: Invoice, path: new_commercial_billing_path, txt: t('ag2_gest.commercial_billings.index.btn_new') } %>
+<%= render partial: '/layouts/crud/new', locals: { model: Invoice, path: new_commercial_billing_path, txt: t('ag2_gest.commercial_billings.index.btn_new') } %>
 <% else %>
-<%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+<%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Invoice, update_path: edit_commercial_billing_path(@invoice), update_txt: t('.btn_edit'),
 delete_path: @invoice, delete_txt: t('.btn_delete'), msg: t("activerecord.models.commercial_billing.one"), txt: @invoice.invoice_no,
 new_path: new_commercial_billing_path, new_txt: t('ag2_gest.commercial_billings.index.btn_new') } %>
 <% end %>
+
+<% if !@invoice.sale_offer.blank? %>
+  <% session[:return_to] = I18n.t('ag2_gest.commercial_billings.show.return_to') %>
+  <% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+  <%= link_to t('ag2_gest.commercial_billings.show.show_to'), @invoice.sale_offer %> |
+<% end %>
+<%= link_to t("ag2_gest.commercial_billings.back_to_main_page"), commercial_billings_path %>

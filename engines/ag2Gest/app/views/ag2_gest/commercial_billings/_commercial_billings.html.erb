@@ -30,7 +30,7 @@
       <th><%= t 'activerecord.attributes.commercial_billing.codes' %></th>
       <th align="center"><%= t 'activerecord.attributes.commercial_billing.invoice_date' %></th>
       <th><%= t 'activerecord.attributes.commercial_billing.bill' %></th>
-      <th><%= t 'activerecord.attributes.commercial_billing.biller' %></th>
+      <th><%= t 'activerecord.attributes.commercial_billing.sale_offer' %></th>
       <th><%= t 'activerecord.attributes.bill.client' %></th>
       <th align="right"><%= t 'activerecord.attributes.commercial_billing.total' %></th>
       <th></th>
@@ -46,7 +46,7 @@
       </td>
       <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
       <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
-      <td><%= invoice.biller.name[0,30] unless invoice.biller.blank? %></td>
+      <td><%= invoice.sale_offer.full_no unless invoice.sale_offer.blank? %></td>
       <td><%= client_name(invoice) %></td>
       <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_commercial_billing_path(invoice) } unless cannot_edit(invoice) %>

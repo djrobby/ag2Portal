@@ -22,6 +22,7 @@ es:
         btn_delete: "Borrar Factura"
         return_to: "Volver a Factura"
         print: "Imprimir"
+        show_to: "Ver Oferta de venta"
       edit:
         title: "Editar Factura Comercial"
         btn_show: "Ver Factura Comercial"

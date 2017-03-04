@@ -22,6 +22,7 @@ en:
         btn_delete: "Delete Bill"
         return_to: "Volver a Bill"
         print: "Print"
+        show_to: "Show Sale offer"
       edit:
         title: "Edit Commercial Bill"
         btn_show: "Show Commercial Bill"
@@ -40,4 +41,4 @@ en:
       generate_invoice_error: "Bill can not be generated: Offer invalid."
       generate_invoice_write: "Unable to save new Bill."
       generate_invoice_ok: "Bill %{var} has been generated."
-      
+

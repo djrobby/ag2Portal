@@ -175,7 +175,7 @@
         }
         // Payment method
         $("#invoice_payment_method_id").html("");
-        $("#invoice_payment_method_id").val("");
+        $("#invoice_payment_method_id").select2("val", "");
         $("#invoice_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {
@@ -210,10 +210,10 @@
       return false;
     });
 
-    // when the #invoice_client_id field changes
-    $("#invoice_client_id").change(function() {
+    // when the #Client field changes
+    $("#Client").change(function() {
       // make a POST call and replace the content
-      var client = $('select#invoice_client_id :selected').val();
+      var client = $('select#Client :selected').val();
       if (client == "")
         client = "0";
       jQuery.getJSON('ci_update_offer_select_from_client/' + client, function(data) {
@@ -286,7 +286,7 @@
         if (c_id != 0) $("#invoice_charge_account_id").select2("val", c_id);
         // Payment method
         $("#invoice_payment_method_id").html("");
-        $("#invoice_payment_method_id").val("");
+        $("#invoice_payment_method_id").select2("val", "");
         $("#invoice_payment_method_id").append($('<option></option>').val("").html(""));
         if (!m.length) {
           $.each(data, function(id, option) {
@@ -299,7 +299,7 @@
             $("#invoice_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#invoice_payment_method_id").val(m_id);
+        if (m_id != 0) $("#invoice_payment_method_id").select2("val", m_id);
       });
       // Offer not selected
       if (o == "0") {
@@ -317,6 +317,7 @@
         order = "0";
       jQuery.getJSON('ci_update_selects_from_project/' + order, function(data) {
         var c = data.charge_account;
+        var o = data.offer
         // Charge Account
         $("#invoice_charge_account_id").html("");
         $("#invoice_charge_account_id").select2("val", "");
@@ -330,6 +331,21 @@
         } else {
           $.each(c, function(id, option) {
             $("#invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        // Sale offer
+        $("#invoice_sale_offer_id").html("");
+        $("#invoice_sale_offer_id").select2("val", "");
+        $("#invoice_sale_offer_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offer' && option != "") {
+              $("#invoice_sale_offer_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#invoice_sale_offer_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
       });

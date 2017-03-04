@@ -43,9 +43,9 @@
     // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
     $("#Client").val("<%= params[:Client] %>");
     $("#Subscriber").val("<%= params[:Subscriber] %>");
-    $("#Status").select2("val", "<%= params[:Status] %>");
-    $("#Type").select2("val", "<%= params[:Type] %>");
-    $("#Operation").select2("val", "<%= params[:Operation] %>");
+    $("#Status").val("<%= params[:Status] %>");
+    $("#Type").val("<%= params[:Type] %>");
+    $("#Operation").val("<%= params[:Operation] %>");
     $("#Biller").select2("val", "<%= params[:Biller] %>");
     $("#Period").select2("val", "<%= params[:Period] %>");
     $("#From").val("<%= params[:From] %>");
@@ -61,9 +61,9 @@
       // $("#Subscriber").select2("val", "");
       $("#Client").val("");
       $("#Subscriber").val("");
-      $("#Status").select2("val", "");
-      $("#Type").select2("val", "");
-      $("#Operation").select2("val", "");
+      $("#Status").val("");
+      $("#Type").val("");
+      $("#Operation").val("");
       $("#Biller").select2("val", "");
       $("#Period").select2("val", "");
       $("#From").val("");
@@ -113,15 +113,15 @@
         <!--<%#= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
-        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Status -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Operation -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label' %>
+        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Biller -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
         <%= select_tag "Biller", options_from_collection_for_select(@billers, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Period -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>

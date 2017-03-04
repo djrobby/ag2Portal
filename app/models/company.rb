@@ -59,6 +59,11 @@ class Company < ActiveRecord::Base
 
   validates_attachment_content_type :logo, :content_type => /\Aimage\/.*\Z/
 
+  # Scopes
+  scope :by_fiscal, -> { order(:fiscal_id) }
+  scope :by_name, -> { order(:name) }
+
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
@@ -69,6 +74,17 @@ class Company < ActiveRecord::Base
     if !self.invoice_code.blank?
       self[:invoice_code].upcase!
     end
+  end
+
+  def full_name
+    full_name = ''
+    if !fiscal_id.blank?
+      full_name += fiscal_id
+    end
+    if !name.blank?
+      full_name += (full_name.blank? ? name : " " + name)
+    end
+    full_name
   end
 
   def invoice_left_margin_complete

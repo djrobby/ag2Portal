@@ -210,7 +210,7 @@ es:
       text: 'requerido'
       mark: '*'
     error_notification:
-      default_message: "Revise los siguientes problemas:"
+      default_message: "Revisa los siguientes problemas:"
   select2:
     no_matches: "No se encontraron resultados"
     to_search: "Criterio de búsqueda"

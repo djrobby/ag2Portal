@@ -124,6 +124,19 @@ class EnginesController < ApplicationController
     render json: @clients
   end
 
+  # Companies / Billers
+  def search_companies
+    @companies = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(fiscal_id LIKE '%#{@q}%' OR name LIKE '%#{@q}%')"
+      @companies = serialized(Company.where(w).by_fiscal,
+                             Api::V1::CompaniesSerializer)
+    end
+    render json: @companies
+  end
+
   # Work orders
   def search_work_orders
     @work_orders = []
