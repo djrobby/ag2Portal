@@ -52,9 +52,13 @@
       <td><%= @invoice.try(:invoice_operation).try(:name) %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.invoice.charge_account' %>:</td>
-      <td><%= @invoice.charge_account.full_name unless @invoice.charge_account.blank? %> </td>
-      <td class="highlighted bolded"><%= t "activerecord.attributes.invoice.debt" %>:</td>
+      <td><%=t 'activerecord.attributes.commercial_billing.charge_account' %>:</td>
+      <td colspan="3"><%= @invoice.charge_account.full_name unless @invoice.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.commercial_billing.payment_method' %>:</td>
+      <td><%= @invoice.payment_method.description unless @invoice.payment_method.blank? %> </td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.commercial_billing.debt" %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@invoice.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @invoice.debt.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @invoice } %>

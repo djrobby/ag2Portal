@@ -331,6 +331,8 @@ module Ag2Gest
       client = params[:client]
       offer = params[:offer]
       invoice_date = params[:offer_date]  # YYYYMMDD
+      invoice_no = nil
+      bill_id = 0
       invoice = nil
       invoice_item = nil
       code = ''
@@ -341,59 +343,74 @@ module Ag2Gest
         if !sale_offer.nil? && !sale_offer_items.nil?
           # Format offer_date
           invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
-          # Try to save new invoice
-          invoice = Invoice.new
-          invoice.invoice_no = invoice_no
-          invoice.client_id = sale_offer.client_id
-          invoice.payment_method_id = sale_offer.payment_method_id
-          invoice.invoice_date = invoice_date
-          invoice.discount_pct = sale_offer.discount_pct
-          invoice.discount = sale_offer.discount
-          invoice.project_id = sale_offer.project_id
-          invoice.work_order_id = sale_offer.work_order_id
-          invoice.charge_account_id = sale_offer.charge_account_id
-          invoice.created_by = current_user.id if !current_user.nil?
-          invoice.organization_id = sale_offer.organization_id
-          invoice.sale_offer_id = sale_offer.id
-          if invoice.save
-            # Try to save new invoice items
-            sale_offer_items.each do |i|
-              if i.balance != 0 # Only items not billed yet
-                invoice_item = InvoiceItem.new
-                invoice_item.invoice_id = invoice.id
-                invoice_item.sale_offer_id = i.sale_offer_id
-                invoice_item.sale_offer_item_id = i.id
-                invoice_item.product_id = i.product_id
-                invoice_item.code = i.code
-                invoice_item.description = i.description
-                invoice_item.quantity = i.balance
-                invoice_item.price = i.price
-                invoice_item.discount_pct = i.discount_pct
-                invoice_item.discount = i.discount
-                invoice_item.tax_type_id = i.tax_type_id
-                invoice_item.work_order_id = i.work_order_id
-                invoice_item.charge_account_id = i.charge_account_id
-                invoice_item.created_by = current_user.id if !current_user.nil?
-                invoice_item.project_id = i.project_id
-                if !invoice_item.save
-                  # Can't save invoice item (exit)
-                  code = '$write'
-                  break
-                end   # !invoice_item.save?
-              end   # i.balance != 0
-            end   # do |i|
+          # Invoice No
+          invoice_no = commercial_bill_next_no(sale_offer.project.company_id, sale_offer.project.office_id)
+          if invoice_no != '$err'
+            # Try to save new bill
+            bill_id = bill_create(sale_offer.project_id,
+                                  sale_offer.client_id,
+                                  invoice_date,
+                                  sale_offer.payment_method_id)
+            if bill_id > 0
+              # Try to save new invoice
+              invoice = Invoice.new
+              invoice.bill_id = bill_id
+              invoice.invoice_operation_id = InvoiceOperation::INVOICE
+              invoice.invoice_status_id = InvoiceStatus::PENDING
+              invoice.invoice_type_id = InvoiceType::COMMERCIAL
+              invoice.biller_id = sale_offer.project.company_id
+              invoice.invoice_no = invoice_no
+              invoice.payment_method_id = sale_offer.payment_method_id
+              invoice.invoice_date = invoice_date
+              invoice.discount_pct = sale_offer.discount_pct
+              invoice.charge_account_id = sale_offer.charge_account_id
+              invoice.created_by = current_user.id if !current_user.nil?
+              invoice.organization_id = sale_offer.organization_id
+              invoice.sale_offer_id = sale_offer.id
+              if invoice.save
+                # Try to save new invoice items
+                sale_offer_items.each do |i|
+                  if i.unbilled_balance != 0 # Only items not billed yet
+                    invoice_item = InvoiceItem.new
+                    invoice_item.invoice_id = invoice.id
+                    invoice_item.sale_offer_id = i.sale_offer_id
+                    invoice_item.sale_offer_item_id = i.id
+                    invoice_item.product_id = i.product_id
+                    invoice_item.code = i.product.product_code
+                    invoice_item.description = i.description
+                    invoice_item.quantity = i.unbilled_balance
+                    invoice_item.price = i.price
+                    invoice_item.discount_pct = i.discount_pct
+                    invoice_item.discount = i.discount
+                    invoice_item.tax_type_id = i.tax_type_id
+                    invoice_item.created_by = current_user.id if !current_user.nil?
+                    if !invoice_item.save
+                      # Can't save invoice item (exit)
+                      code = '$write'
+                      break
+                    end   # !invoice_item.save?
+                  end   # i.unbilled_balance != 0
+                end   # do |i|
+              else
+                # Can't save invoice
+                code = '$write'
+              end   # invoice.save?
+            else
+              # Can't save bill
+              code = '$write'
+            end   # bill_id > 0
           else
-            # Can't save invoice
-            code = '$write'
-          end   # invoice.save?
+            # Invalid invoice No
+            code = '$err'
+          end   # invoice_no != '$err'
         else
-          # Receipt note or items not found
+          # Sale offer or items not found
           code = '$err'
         end   # !sale_offer.nil? && !sale_offer_items.nil?
       else
-        # Receipt note 0
+        # Sale offer 0
         code = '$err'
-      end   # note != '0'
+      end   # offer != '0'
       if code == ''
         code = I18n.t("ag2_gest.commercial_billings.generate_invoice_ok", var: invoice.invoice_no.to_s)
       end

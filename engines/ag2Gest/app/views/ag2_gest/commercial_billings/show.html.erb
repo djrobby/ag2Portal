@@ -53,7 +53,11 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.commercial_billing.charge_account' %>:</td>
-      <td><%= @invoice.charge_account.full_name unless @invoice.charge_account.blank? %> </td>
+      <td colspan="3"><%= @invoice.charge_account.full_name unless @invoice.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.commercial_billing.payment_method' %>:</td>
+      <td><%= @invoice.payment_method.description unless @invoice.payment_method.blank? %> </td>
       <td class="highlighted bolded"><%= t "activerecord.attributes.commercial_billing.debt" %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@invoice.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @invoice.debt.blank? %></td>
     </tr>
@@ -96,7 +100,7 @@
 <table class="table">
   <tbody>
     <tr>
-      <td style="width: 12%"><%= t :"activerecord.attributes.commercial_billing.remarks" %>:</td>
+      <td style="width: 12%"><%= t "activerecord.attributes.commercial_billing.remarks" %>:</td>
       <td style="width: 88%"><%= @invoice.remarks unless @invoice.remarks.blank? %></td>
     </tr>
   </tbody>
