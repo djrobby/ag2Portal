@@ -44,8 +44,27 @@ class Reading < ActiveRecord::Base
   scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
   scope :by_id_desc, -> { order('id desc') }
 
+  def self.to_csv(array)
+      attributes = [I18n.t('activerecord.attributes.reading.reading_route_id'), I18n.t('activerecord.attributes.reading.sequence'), I18n.t('activerecord.attributes.reading.subscriber'), I18n.t('activerecord.attributes.reading.address'), I18n.t('activerecord.attributes.reading.meter'), I18n.t('activerecord.attributes.reading.billing_period_2'), I18n.t('activerecord.attributes.reading.reading_2_date'), I18n.t('activerecord.attributes.reading.reading_2_index'), I18n.t('activerecord.attributes.reading.reading_days'), I18n.t('activerecord.attributes.reading.consumption_2'), I18n.t('activerecord.attributes.reading.billing_period_1'), I18n.t('activerecord.attributes.reading.reading_1_date'), I18n.t('activerecord.attributes.reading.reading_1_index'), I18n.t('activerecord.attributes.reading.billing_period_id'), I18n.t('activerecord.attributes.reading.reading_date'), I18n.t('activerecord.attributes.reading.reading'), I18n.t('activerecord.attributes.reading.reading_days'), I18n.t('activerecord.attributes.reading.consumption'), I18n.t('activerecord.report.reading.incidences') ]
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+      array.each do |reading|
+        csv << [ reading.try(:reading_route).try(:to_label),reading.reading_sequence, reading.try(:subscriber).try(:to_label), reading.try(:subscriber).try(:address_1), reading.try(:meter).try(:to_label),reading.reading_2.try(:billing_period).try(:period), reading.reading_2.try(:to_reading_date), reading.reading_2.try(:reading_index), reading.reading_2.try(:reading_days), reading.reading_2.try(:consumption_total_period), reading.reading_1.try(:billing_period).try(:period), reading.reading_1.try(:to_reading_date), reading.reading_1.try(:reading_index),reading.try(:billing_period).try(:period), reading.to_reading_date, reading.reading_index, reading.try(:reading_days), reading.try(:consumption_total_period), reading.reading_incidence_types.pluck(:name).join(", ")]
+        # csv << [ reading.try(:reading_route).try(:to_label),reading.reading_sequence, reading.try(:subscriber).try(:to_label), reading.try(:subscriber).try(:address_1), reading.try(:meter).try(:to_label), reading.try(:billing_period).try(:period),reading.reading_index_2,reading.reading_index_1,reading.reading_index,reading.consumption_total_period]
+      end
+    end
+  end
+
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
+  end
+
+  def to_reading_date
+    "#{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
+  end
+
+  def reading_days
+    ((reading_date.to_time - reading_1.reading_date.to_time)/86400).to_i  if reading_date
   end
 
   def incidences
@@ -67,7 +86,7 @@ class Reading < ActiveRecord::Base
     if bill.blank?
       Reading.where(subscriber_id: subscriber_id, billing_period_id: billing_period_id, reading_type_id: [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]).select{|r| r.bill != nil}.blank?
     else
-      !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
+      false #!Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
     end
   end
 

@@ -65,6 +65,14 @@ class Invoice < ActiveRecord::Base
   after_save :bill_status
   before_create :assign_payday_limit
 
+  def discount_zero?
+    invoice_items.map(&:discount).all?{|d| d==0}
+  end
+
+  def discount_pct_zero?
+    invoice_items.map(&:discount_pct).all?{|d| d==0}
+  end
+
   def total_by_invoice_concept(billable_concept)
     invoice_items.flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
   end

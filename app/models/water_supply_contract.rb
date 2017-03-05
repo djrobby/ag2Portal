@@ -129,39 +129,38 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation
-      old_subscriber = contracting_request.old_subscriber
-      old_contract = WaterSupplyContract.where(subscriber_id: old_subscriber)
+    old_subscriber = contracting_request.old_subscriber
+    old_contract = WaterSupplyContract.where(subscriber_id: old_subscriber).last
 
-      _array = []
-      old_contract.last.bill.invoices.first.invoice_items.each do |i|
-        _array = _array << [i.id, i.code]
-      end
-      _array
+    _array = []
+    old_contract.bill.invoices.first.invoice_items.each do |i|
+      _array = _array << [i.id, i.code]
+    end
 
-      fianza = _array.select { |u| u.include? "FIA" }
+    fianza = _array.select { |u| u.include? "FIA" }
 
-      if !fianza.blank?
+    if !fianza.blank?
         bill_cancellation = Bill.create( bill_no: bill_next_no(contracting_request.project),
                             project_id: contracting_request.project_id,
                             invoice_status_id: InvoiceStatus::PENDING,
                             bill_date: Date.today,
                             subscriber_id: subscriber_id, #nil
-                            client_id: client_id,
-                            last_name: client.last_name,
-                            first_name: client.first_name,
-                            company: client.company,
-                            fiscal_id: client.fiscal_id,
-                            street_type_id: client.street_type_id,
-                            street_name: client.street_name,
-                            street_number: client.street_number,
-                            building: client.building,
-                            floor: client.floor,
-                            floor_office: client.floor_office,
-                            zipcode_id: client.zipcode_id,
-                            town_id: client.town_id,
-                            province_id: client.province_id,
-                            region_id: client.region_id,
-                            country_id: client.country_id,
+                            client_id: old_contract.client_id,
+                            last_name: old_contract.client.last_name,
+                            first_name: old_contract.client.first_name,
+                            company: old_contract.client.company,
+                            fiscal_id: old_contract.client.fiscal_id,
+                            street_type_id: old_contract.client.street_type_id,
+                            street_name: old_contract.client.street_name,
+                            street_number: old_contract.client.street_number,
+                            building: old_contract.client.building,
+                            floor: old_contract.client.floor,
+                            floor_office: old_contract.client.floor_office,
+                            zipcode_id: old_contract.client.zipcode_id,
+                            town_id: old_contract.client.town_id,
+                            province_id: old_contract.client.province_id,
+                            region_id: old_contract.client.region_id,
+                            country_id: old_contract.client.country_id,
                             organization_id: contracting_request.project.organization_id,
                             created_by: contracting_request.try(:created_by) )
           tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
@@ -211,28 +210,31 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation_service
+    old_subscriber = contracting_request.old_subscriber
+    old_contract = WaterSupplyContract.where(subscriber_id: old_subscriber).last
+
     bill_service = Bill.create(
           bill_no: bill_next_no(contracting_request.project),
           project_id: contracting_request.project_id,
           invoice_status_id: InvoiceStatus::PENDING,
           bill_date: Date.today,
           subscriber_id: subscriber_id,
-          client_id: client_id,
-          last_name: client.last_name,
-          first_name: client.first_name,
-          company: client.company,
-          fiscal_id: client.fiscal_id,
-          street_type_id: client.street_type_id,
-          street_name: client.street_name,
-          street_number: client.street_number,
-          building: client.building,
-          floor: client.floor,
-          floor_office: client.floor_office,
-          zipcode_id: client.zipcode_id,
-          town_id: client.town_id,
-          province_id: client.province_id,
-          region_id: client.region_id,
-          country_id: client.country_id,
+          client_id: old_contract.client_id,
+          last_name: old_contract.client.last_name,
+          first_name: old_contract.client.first_name,
+          company: old_contract.client.company,
+          fiscal_id: old_contract.client.fiscal_id,
+          street_type_id: old_contract.client.street_type_id,
+          street_name: old_contract.client.street_name,
+          street_number: old_contract.client.street_number,
+          building: old_contract.client.building,
+          floor: old_contract.client.floor,
+          floor_office: old_contract.client.floor_office,
+          zipcode_id: old_contract.client.zipcode_id,
+          town_id: old_contract.client.town_id,
+          province_id: old_contract.client.province_id,
+          region_id: old_contract.client.region_id,
+          country_id: old_contract.client.country_id,
           organization_id: contracting_request.project.organization_id,
           created_by: contracting_request.try(:created_by),
           reading_1_id: contracting_request.old_subscriber.readings.last.id,

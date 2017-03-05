@@ -163,7 +163,7 @@ module Ag2Gest
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.updated_by = current_user.id if !current_user.nil?
       if @water_supply_contract.update_attributes(params[:water_supply_contract])
-        if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
+        if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
             #lectura de retirada
               @reading = Reading.create(

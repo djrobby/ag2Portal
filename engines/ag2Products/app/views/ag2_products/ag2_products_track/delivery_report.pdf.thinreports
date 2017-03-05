@@ -62,6 +62,7 @@ report.page.list(:default).header do |header|
 	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.delivery_note.delivery_date")
 	header.item(:project_c).value I18n.t("activerecord.attributes.delivery_note.project")
 	header.item(:store_c).value I18n.t("activerecord.attributes.delivery_note.store")
+	header.item(:charge_account_c).value I18n.t("activerecord.attributes.delivery_note.charge_account")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.delivery_note.quantity")
 	header.item(:total_c).value I18n.t("activerecord.attributes.delivery_note.costs")
 end
@@ -73,6 +74,7 @@ end
 		row.item(:delivery_date).value formatted_date(i.delivery_date) unless i.delivery_date.blank?
 		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
+		row.item(:charge_account).value i.charge_account.partial_name unless i.charge_account.blank?
 		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.costs.blank?
 	end

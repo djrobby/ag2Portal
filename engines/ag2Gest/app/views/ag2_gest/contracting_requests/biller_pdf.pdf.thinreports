@@ -28,15 +28,15 @@ def insert_footer(list, item, invoice) #TOTALES POR CADA INVOICE
 	end
 
 	invoice.tax_breakdown.each do |tax| 
-		
-		list.add_row do |row|
-			row.item(:loc_base).value("Base Imponible")
-			row.item(:base_imponible).value(tax[1])
-			row.item(:articulo).value("#{pluralize(tax[3], 'artículo')}")	
-			row.item(:iva).value("IVA (#{tax[0]})")
-			row.item(:total).value(tax[2])
+		if tax[0] != TaxType.exempt.tax
+			list.add_row do |row|
+				row.item(:loc_base).value("Base Imponible")
+				row.item(:base_imponible).value(tax[1])
+				row.item(:articulo).value("#{pluralize(tax[3], 'artículo')}")	
+				row.item(:iva).value("IVA (#{tax[0]})")
+				row.item(:total).value(tax[2])
+			end
 		end
-		
 	end
 
 	list.add_row do |row|

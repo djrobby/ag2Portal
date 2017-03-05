@@ -62,10 +62,12 @@ report.page.list(:default).header do |header|
 	report.page.values delivery_date_c: I18n.t("activerecord.attributes.delivery_note.delivery_date")
 	report.page.values project_c: I18n.t("activerecord.attributes.delivery_note.project")
 	report.page.values store_c: I18n.t("activerecord.attributes.delivery_note.store")
+	report.page.values charge_account_c: I18n.t("activerecord.attributes.delivery_note.charge_account")
 	report.page.values quantity_c: I18n.t("activerecord.attributes.delivery_note.quantity")
 	report.page.values total_c: I18n.t("activerecord.attributes.delivery_note.costs")
 	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.delivery_note_item.product_c")
 	header.item(:description_items_c).value I18n.t("activerecord.attributes.delivery_note_item.description_c")
+	header.item(:charge_account_items_c).value I18n.t("activerecord.attributes.delivery_note_item.charge_account")
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.delivery_note_item.quantity_c")
 	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.delivery_note_item.cost_c")
 	header.item(:amount_items_c).value I18n.t("activerecord.attributes.delivery_note_item.costs_c")
@@ -97,10 +99,12 @@ delivery_number = @delivery_items_report.first.delivery_note.delivery_no
 		report.page.values delivery_date: formatted_date(i.delivery_note.delivery_date) unless i.delivery_note.delivery_date.blank?
 		report.page.values project: i.delivery_note.project.full_code unless i.delivery_note.project.blank?
 		report.page.values store: i.delivery_note.store.name unless i.delivery_note.store.blank?
+		report.page.values charge_account: i.delivery_note.charge_account.partial_name unless i.delivery_note.charge_account.blank?
 		report.page.values quantity: number_with_precision(i.delivery_note.quantity, precision: 2) unless i.delivery_note.quantity.blank?
 		report.page.values total: number_with_precision(i.delivery_note.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.delivery_note.costs.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
+		row.item(:charge_account_items).value i.charge_account.partial_name unless i.charge_account.blank?
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
 		row.item(:net_price_items).value number_with_precision(i.cost, precision: 4)
 		row.item(:amount_items).value number_with_precision(i.costs, precision: 4)

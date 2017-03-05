@@ -463,16 +463,18 @@
             $("#contracting_request_service_point_id").html("");
             $("#contracting_request_service_point_id").select2("val", "");
             $("#contracting_request_service_point_id").append($('<option></option>').val("").html(""));
-            if (!w.length) {
-              $.each(data, function(id, option) {
-                if (id == 'service_point' && option != "") {
+            if (w != null){
+              if (!w.length) {
+                $.each(data, function(id, option) {
+                  if (id == 'service_point' && option != "") {
+                    $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
+                  }
+                });
+              } else {
+                $.each(w, function(id, option) {
                   $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
-                }
-              });
-            } else {
-              $.each(w, function(id, option) {
-                $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
-              });
+                });
+              }
             }
           }
           $("#contracting_request_service_point_id").select2("val", data.subscriber.service_point_id);
@@ -908,6 +910,9 @@
 </div>
 
 <!-- Documents -->
+<% unless @contracting_request.errors.messages[:contracting_request_document_ids].blank? %>
+  <div class="alert alert-error"><%= @contracting_request.errors.messages[:contracting_request_document_ids].join(", ") %></div>
+<% end %>
 <div class="row-fluid row-documents">
   <h4><%= t('activerecord.attributes.contracting_request.documents_gest') %></h4>
   <%= f.simple_fields_for :contracting_request_documents do |document|%>

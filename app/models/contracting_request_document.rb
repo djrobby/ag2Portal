@@ -7,4 +7,6 @@ class ContractingRequestDocument < ActiveRecord::Base
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
   has_paper_trail
+
+  validates :attachment, :contracting_request_document_type_id, :presence => true
 end

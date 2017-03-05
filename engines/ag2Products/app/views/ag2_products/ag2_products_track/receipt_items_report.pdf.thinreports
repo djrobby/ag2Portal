@@ -61,12 +61,14 @@ report.page.list(:default).header do |header|
 	report.page.values receipt_no_c: I18n.t("activerecord.attributes.receipt_note.receipt_no")
 	report.page.values receipt_date_c: I18n.t("activerecord.attributes.receipt_note.receipt_date")
 	report.page.values supplier_c: I18n.t("activerecord.attributes.receipt_note.supplier")
+	report.page.values charge_account_c: I18n.t("activerecord.attributes.receipt_note.charge_account")
 	report.page.values project_c: I18n.t("activerecord.attributes.receipt_note.project")
 	report.page.values store_c: I18n.t("activerecord.attributes.receipt_note.store")
 	report.page.values quantity_c: I18n.t("activerecord.attributes.receipt_note.quantity")
 	report.page.values total_c: I18n.t("activerecord.attributes.receipt_note.total")
 	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.receipt_note_item.product_c")
 	header.item(:description_items_c).value I18n.t("activerecord.attributes.receipt_note_item.description_c")
+	header.item(:charge_account_items_c).value I18n.t("activerecord.attributes.receipt_note_item.charge_account")
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.receipt_note_item.quantity_c")
 	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.receipt_note_item.price_c")
 	header.item(:amount_items_c).value I18n.t("activerecord.attributes.receipt_note_item.amount_c")
@@ -98,12 +100,14 @@ receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 		report.page.values receipt_no: i.receipt_note.receipt_no
 		report.page.values receipt_date: formatted_date(i.receipt_note.receipt_date) unless i.receipt_note.receipt_date.blank?
 		report.page.values supplier: i.receipt_note.supplier.partial_name
+		report.page.values charge_account: i.receipt_note.charge_account.partial_name unless i.receipt_note.charge_account.blank?
 		report.page.values project: i.receipt_note.project.full_code unless i.receipt_note.project.blank?
 		report.page.values store: i.receipt_note.store.name unless i.receipt_note.store.blank?
 		report.page.values quantity: number_with_precision(i.receipt_note.quantity, precision: 2) unless i.receipt_note.quantity.blank?
 		report.page.values total: number_with_precision(i.receipt_note.taxable, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.receipt_note.total.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
+		row.item(:charge_account_items).value i.charge_account.partial_name unless i.charge_account.blank?
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
 		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 		row.item(:amount_items).value number_with_precision(i.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")

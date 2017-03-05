@@ -136,8 +136,7 @@ a = @biller_printer.invoices.first
 		row.item(:subtotal).value  number_with_precision(a.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless a.subtotal.blank?
 	end
 	a.tax_breakdown.each do |tax|
-		if tax[0] == 0
-		else
+		if tax[0] != TaxType.exempt.tax
 			report.page.list(:default).add_row do |row|
 				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{tax[0]}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
 				row.item(:iva).value number_with_precision(tax[2], precision: 2)
@@ -236,8 +235,7 @@ var_invoice_limit = @biller_printer.invoices.second.payday_limit.strftime("%d/%m
 			row.item(:subtotal).value  number_with_precision(@biller_printer.invoices.second.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @biller_printer.invoices.second.subtotal.blank?
 		end
 		@biller_printer.invoices.second.tax_breakdown.each do |tax|
-			if tax[0] == 0
-			else
+			if tax[0] != TaxType.exempt.tax
 	 			report.page.list(:other_invoice).add_row do |row|
 					row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{tax[0]}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
 					row.item(:iva).value number_with_precision(tax[2], precision: 2)

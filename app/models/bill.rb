@@ -40,6 +40,11 @@ class Bill < ActiveRecord::Base
   validates :project,         :presence => true
   validates :client,          :presence => true
 
+  def nullable?
+    # (bill_operation == 1 or bill_operation == 3) and Invoice.where(original_invoice_id: invoices.try(:first).try(:id)).blank?
+    (bill_operation == 1 or bill_operation == 3) and reading.try(:bill_id) == id
+  end
+
   def total_by_concept(billable_concept)
     invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)
   end

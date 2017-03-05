@@ -52,7 +52,11 @@ module Ag2Gest
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
       @reading = @bill.reading_2
-      @bill_voided = void_bill(@bill)
+      if @bill.nullable?
+        @bill_voided = void_bill(@bill)
+      else
+        @bill_voided = @bill
+      end
       @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, @bill_voided.try(:invoices).try(:first).try(:payday_limit), @bill_voided.try(:invoices).try(:first).try(:invoice_date))
       # @reading.generate_pre_bill(nil,nil,3)
       Sunspot.index! [@bill]
@@ -61,6 +65,16 @@ module Ag2Gest
         order_by :created_at, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
+      @search_readings = Reading.search do
+        with :subscriber_id, params[:id]
+        # order_by :billing_period_id, :desc
+        # order_by :reading_date, :desc
+        # order_by :reading_index
+        order_by :sort_id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @subscriber_readings = @search_readings.results
       @subscriber_bills = @search_bills.results
       respond_to do |format|
         format.js { render "simple_bill" }
@@ -623,26 +637,26 @@ module Ag2Gest
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
           billing_frequency = @billing_period.billing_frequency_id
           #lectura de retirada
-        if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP && @contracting_request.old_subscriber
-            @reading = Reading.create(
-              subscriber_id: @contracting_request.old_subscriber.id,
-              project_id: @contracting_request.project_id,
-              billing_period_id: params_readings[:billing_period_id],
-              billing_frequency_id: billing_frequency,
-              reading_type_id: ReadingType::RETIRADA,
-              meter_id: @contracting_request.old_subscriber.meter_id,
-              reading_route_id: @contracting_request.old_subscriber.reading_route_id,
-              reading_sequence: @contracting_request.old_subscriber.reading_sequence,
-              reading_variant:  @contracting_request.old_subscriber.reading_variant,
-              reading_date: params_meter_details[:installation_date],
-              reading_index: params_meter_details[:installation_reading],
-              reading_index_1: @contracting_request.old_subscriber.readings.last.reading_index,
-              reading_index_2: @contracting_request.old_subscriber.readings.last.reading_index_1,
-              reading_1: @contracting_request.old_subscriber.readings.last,
-              reading_2: @contracting_request.old_subscriber.readings.last.reading_1,
-              created_by: (current_user.id if !current_user.nil?)
-            )
-          end
+        # if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP && @contracting_request.old_subscriber
+        #     @reading = Reading.create(
+        #       subscriber_id: @contracting_request.old_subscriber.id,
+        #       project_id: @contracting_request.project_id,
+        #       billing_period_id: params_readings[:billing_period_id],
+        #       billing_frequency_id: billing_frequency,
+        #       reading_type_id: ReadingType::RETIRADA,
+        #       meter_id: @contracting_request.old_subscriber.meter_id,
+        #       reading_route_id: @contracting_request.old_subscriber.reading_route_id,
+        #       reading_sequence: @contracting_request.old_subscriber.reading_sequence,
+        #       reading_variant:  @contracting_request.old_subscriber.reading_variant,
+        #       reading_date: params_meter_details[:installation_date],
+        #       reading_index: params_meter_details[:installation_reading],
+        #       reading_index_1: @contracting_request.old_subscriber.readings.last.reading_index,
+        #       reading_index_2: @contracting_request.old_subscriber.readings.last.reading_index_1,
+        #       reading_1: @contracting_request.old_subscriber.readings.last,
+        #       reading_2: @contracting_request.old_subscriber.readings.last.reading_1,
+        #       created_by: (current_user.id if !current_user.nil?)
+        #     )
+        #   end
           # lectura de instalacion
           @reading = Reading.create(
             subscriber_id: @subscriber.id,
@@ -660,7 +674,7 @@ module Ag2Gest
           )
           # CHANGE_OWNERS
           if @contracting_request.old_subscriber
-            @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, active: false, meter_id: nil)
+            @contracting_request.old_subscriber.update_attributes(ending_at: Date.today, active: false, meter_id: nil, service_point_id: nil)
             # update meter details withdrawal
             @contracting_request.old_subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
                                                                 withdrawal_reading: @contracting_request.old_subscriber.readings.last.reading_index)
@@ -682,12 +696,19 @@ module Ag2Gest
           if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id.nil?
             @contracting_request.client.client_bank_accounts.where(ending_at: nil,subscriber_id: nil).last.update_attributes(subscriber_id: @subscriber.id)
           end
+          if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id == @subscriber.id and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
+            @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by ) 
+          end
           if @meter_details.save
             @contracting_request.status_control
             if @contracting_request.save
+              @old_subscriber = @contracting_request.old_subscriber 
               @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.starting_at) if @contracting_request.water_supply_contract
               @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+              @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+              @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
               response_hash = { subscriber: @subscriber }
+              response_hash[:bill] = @contracting_request.water_supply_contract.bill
               response_hash[:reading] = @reading
               respond_to do |format|
                 format.json { render json: response_hash }
@@ -1009,6 +1030,7 @@ module Ag2Gest
             new_item.save
           end
         end
+        bill.reading.update_attributes(bill_id: nil)
         return bill_cancel
       else
         return false

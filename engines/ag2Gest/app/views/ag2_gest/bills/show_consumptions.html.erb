@@ -24,16 +24,16 @@
       <table class="table table-condensed table-striped shrinked stu">
         <thead>
           <tr>
-            <th>Ruta</th>
-            <th>Orden</th>
-            <th>Abonado</th>
-            <th>Dirección suministro</th>
-            <th>Contador</th>
-            <th>Periodo</th>
-            <th align="right">Lec. año ant.</th>
-            <th align="right">Lec. per. ant.</th>
-            <th align="right">Lectura</th>
-            <th align="right">Consumo</th>
+            <th><%= I18n.t('activerecord.attributes.reading.reading_route_id') %></th>
+            <th><%= I18n.t('activerecord.attributes.reading.sequence') %></th>
+            <th><%= I18n.t('activerecord.attributes.reading.subscriber') %></th>
+            <th><%= I18n.t('activerecord.attributes.reading.address') %></th>
+            <th><%= I18n.t('activerecord.attributes.reading.meter') %></th>
+            <th><%= I18n.t('activerecord.attributes.reading.period') %></th>
+            <th align="right"><%= I18n.t('activerecord.attributes.reading.reading_2_index') %></th>
+            <th align="right"><%= I18n.t('activerecord.attributes.reading.reading_1_index_c') %></th>
+            <th align="right"><%= I18n.t('activerecord.attributes.reading.reading') %></th>
+            <th align="right"><%= I18n.t('activerecord.attributes.reading.consumption') %></th>
           </tr>
         </thead>
         <tbody>
@@ -75,8 +75,8 @@
       </table>
     </div>
     <div class="row">
-      <a class="btn btn-warning pull-right">Exportar Google Sheets</a>
-      <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>
+      <%= link_to I18n.t('activerecord.attributes.reading.exportcsv'), show_consumptions_bills_path(subscribers: {period: params[:subscribers][:period], ids: params[:subscribers][:ids]}, format: :csv), class: "btn btn-warning pull-right" %>
+        <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>
         <%= f.input :readings, :as => :hidden, :input_html => { :value =>  @readings.map(&:id) } %>
         <%= f.button :submit, "Aplicar tarifas", :class => 'btn btn-primary' %>
       <% end %>

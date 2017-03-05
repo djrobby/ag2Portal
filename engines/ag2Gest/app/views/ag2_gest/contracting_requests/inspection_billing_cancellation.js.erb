@@ -6,7 +6,9 @@ var content = '';
 <%# @bill.invoices.each_with_index do |invoice, index| %>
 <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:invoices)  %>
     <% @contracting_request.water_supply_contract.bailback_bill.invoices.each_with_index do |invoice, index| %>
-
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
+        content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.cancellation_contract")%></h4>';
+      <% end %>
     content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_contract")%></h4>';
     content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
     content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
@@ -67,6 +69,9 @@ var content = '';
 <% end %> /*End if*/
 <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices)  %>
   <% @contracting_request.water_supply_contract.unsubscribe_bill.invoices.each_with_index do |invoice, index| %>
+  <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
+    content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.cancellation_contract")%></h4>';
+  <% end %>
     content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_service")%></h4>';
     content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
     content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
@@ -123,10 +128,73 @@ var content = '';
 
     content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
 
-    form.append(content);
+  <% end %> /*End Bill.invoices*/
+<% end %> /*End if*/
+<% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices)  %>
+    <% @contracting_request.water_supply_contract.bill.invoices.each_with_index do |invoice, index| %>
+    <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
+      content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.new_contract")%></h4>';
+    <% end %>
+    content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_contract")%></h4>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
+    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
+    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+
+    content += `<table class="table table<%= index %>">`;
+    content += `<tbody>`;
+
+    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
+
+    <% invoice.invoice_items.each_with_index do |item, index| %>
+      content+= '<tr class="in_item in_item<%= item.id %>">';
+      content+= '<td><%= item.code %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
+      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
+      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
+      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
+      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
+      content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
+      content+= '</tr>';
+
+    <% end %> /*End invoice.invoice_items*/
+
+      /*Add Subtotal etc dinamyc*/
+      content+= '<tr class="subtotal">';
+      content+= '<td colspan="6" class="no-boder"></td>';
+      content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
+      content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
+      content+= '</tr>';
+
+    <% invoice.tax_breakdown.each do |tax| %>
+      <% if tax[0] != TaxType.exempt.tax %>
+        content+= '<tr class="breakdown">';
+        content+= '<td colspan="3" class="no-boder"></td>';
+        content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+        content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+        content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+        content+= '<td><%= tax[2] %></td>';
+        content+= '</tr>';
+      <% end %>
+    <% end %>
+
+    content+= '<tr>';
+    content+= '<td colspan="6" class="black-border"></td>';
+    content+= '<td class="black-border"><b>TOTAL</b></td>';
+    content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
+    content+= '</tr>';
+
+    /*End Subtotal dinamyc*/
+
+    content += "</tbody>";
+    content += "</table>";
+
+    content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
+form.append(content);
+
 $("#billing-modal-cancellation").modal("show");
 
 $("#link-bill-cancellation").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + "<%=@bill.id%>");

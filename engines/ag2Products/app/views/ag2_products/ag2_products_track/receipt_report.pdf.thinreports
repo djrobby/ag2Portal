@@ -65,6 +65,7 @@ report.page.list(:default).header do |header|
 	header.item(:supplier_c).value I18n.t("activerecord.attributes.receipt_note.supplier")
 	header.item(:project_c).value I18n.t("activerecord.attributes.receipt_note.project")
 	header.item(:store_c).value I18n.t("activerecord.attributes.receipt_note.store")
+	header.item(:charge_account_c).value I18n.t("activerecord.attributes.receipt_note.charge_account")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.receipt_note.quantity")
 	header.item(:total_c).value I18n.t("activerecord.attributes.receipt_note.total")
 end
@@ -77,7 +78,8 @@ end
 		row.item(:supplier).value i.supplier.partial_name
 		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
-    row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
+		row.item(:charge_account).value i.charge_account.partial_name unless i.charge_account.blank?
+    	row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.taxable, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.taxable.blank?
 	end
 	# Store page subtotals

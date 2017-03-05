@@ -62,12 +62,14 @@ report.page.list(:default).header do |header|
 	report.page.values order_date_c: I18n.t("activerecord.attributes.purchase_order.order_date")
 	report.page.values order_status_c: I18n.t("activerecord.attributes.purchase_order.order_status")
 	report.page.values supplier_c: I18n.t("activerecord.attributes.purchase_order.supplier")
+	report.page.values charge_account_c: I18n.t("activerecord.attributes.purchase_order.charge_account")
 	report.page.values quantity_c: I18n.t("activerecord.attributes.purchase_order.quantity")
 	report.page.values balance_c: I18n.t("activerecord.attributes.purchase_order.balance")
 	report.page.values total_c: I18n.t("activerecord.attributes.purchase_order.total")
 	report.page.values approver_c: I18n.t("activerecord.attributes.purchase_order.approver")
 	header.item(:full_code_items_c).value I18n.t("activerecord.attributes.purchase_order_item.product_c")
 	header.item(:description_items_c).value I18n.t("activerecord.attributes.purchase_order_item.description_c")
+	header.item(:charge_account_items_c).value I18n.t("activerecord.attributes.purchase_order_item.charge_account")
 	header.item(:quantity_items_c).value I18n.t("activerecord.attributes.purchase_order_item.quantity_c")
 	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
 	header.item(:amount_items_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
@@ -109,12 +111,14 @@ order_number = @order_items_report.first.purchase_order.order_no
 		report.page.values order_date: formatted_date(i.purchase_order.order_date) unless i.purchase_order.order_date.blank?
 		report.page.values order_status: i.purchase_order.order_status.name
 		report.page.values supplier: i.purchase_order.supplier.partial_name
+		report.page.values charge_account: i.purchase_order.charge_account.partial_name unless i.purchase_order.charge_account.blank?
 		report.page.values quantity: number_with_precision(i.purchase_order.quantity, precision: 2) unless i.purchase_order.quantity.blank?
 		report.page.values balance: number_with_precision(i.purchase_order.balance, precision: 2) unless i.purchase_order.balance.blank?
 		report.page.values total: number_with_precision(i.purchase_order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.purchase_order.total.blank?
 		report.page.values approver: i.purchase_order.approver.email unless i.purchase_order.approver.blank?
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
+		row.item(:charge_account_items).value i.charge_account.partial_name unless i.charge_account.blank?
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
 		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4)
 		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)

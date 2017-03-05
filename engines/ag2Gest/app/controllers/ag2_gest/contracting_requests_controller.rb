@@ -19,6 +19,8 @@ module Ag2Gest
                                                 :show_test,
                                                 :next_status,
                                                 :initial_inspection,
+                                                :ot_cancellation,
+                                                :ot_installation,
                                                 :initial_billing,
                                                 :initial_billing_cancellation,
                                                 :inspection_billing,
@@ -209,12 +211,13 @@ module Ag2Gest
       end
     end
 
-    # Create work order inspection
-    def initial_inspection
+    # Create work order cancellation
+    def ot_cancellation
       @contracting_request = ContractingRequest.find(params[:id])
+      @water_supply_contract = @contracting_request.water_supply_contract
       # current_user_id = current_user.id if !current_user.nil?
-      if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
         @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+                                    master_order_id: @contracting_request.work_order_id,
                                     work_order_type_id: 29, #WorkOderType inspection Nestor - Baja Suministro Voluntaria G.A
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
                                     work_order_labor_id: 151, # Nestor - Baja Suministro Retirar Contador
@@ -227,7 +230,76 @@ module Ag2Gest
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
+      if @work_order.save(:validate => false)
+        @water_supply_contract.update_attributes(work_order_id: @work_order.id)
+        if @contracting_request.save
+          response_hash = { contracting_request: @contracting_request }
+          response_hash[:work_order] = @contracting_request.work_order
+          response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
+          response_hash[:work_order_cancellation] = @contracting_request.water_supply_contract.work_order
+          response_hash[:work_order_status_cancellation] = @contracting_request.water_supply_contract.work_order.work_order_status
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
       else
+        respond_to do |format|
+          format.json { render :json => { :errors => @work_order.errors.as_json }, :status => 420 }
+        end
+      end
+    end
+
+    # Create work order cancellation
+    def ot_installation
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_supply_contract = @contracting_request.water_supply_contract
+      # current_user_id = current_user.id if !current_user.nil?
+        @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+                                    master_order_id: @contracting_request.work_order_id,
+                                    work_order_type_id: 28, #WorkOderType inspection Nestor - Alta Suministro instalación contador G.A
+                                    work_order_status_id: 1, #WorkOderStatus initial Nestor
+                                    work_order_labor_id: 150, # Nestor -  Instalación Contador Alta Nueva
+                                    work_order_area_id: 3, # Nestor - Gestion de abonados
+                                    project_id: @contracting_request.project_id,
+                                    client_id: @contracting_request.client.id, # ¿¿??
+                                    description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+                                    organization_id: @contracting_request.project.organization_id,
+                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
+                                    in_charge_id: 1
+                                    # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
+                                  )
+      if @work_order.save(:validate => false)
+        @water_supply_contract.update_attributes(work_order_id: @work_order.id)
+        if @contracting_request.save
+          response_hash = { contracting_request: @contracting_request }
+          response_hash[:work_order] = @contracting_request.work_order
+          response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
+          response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order
+          response_hash[:work_order_status_installation] = @contracting_request.water_supply_contract.work_order.work_order_status
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
+      else
+        respond_to do |format|
+          format.json { render :json => { :errors => @work_order.errors.as_json }, :status => 420 }
+        end
+      end
+    end
+
+
+    # Create work order inspection
+    def initial_inspection
+      @contracting_request = ContractingRequest.find(params[:id])
+      # current_user_id = current_user.id if !current_user.nil?
         @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
                                     work_order_type_id: 25, #WorkOderType inspection Nestor - Inspección Instalación G.A
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
@@ -241,7 +313,6 @@ module Ag2Gest
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
-      end
       if @work_order.save(:validate => false)
         @contracting_request.work_order = @work_order
         @contracting_request.status_control
@@ -324,9 +395,12 @@ module Ag2Gest
     def inspection_billing_cancellation
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
-      
+
       @billcontract = @water_supply_contract.generate_bill_cancellation
       @bill = @water_supply_contract.generate_bill_cancellation_service
+      if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
+        @billchange = @water_supply_contract.generate_bill
+      end
 
       if @bill && @billcontract
         @contracting_request.status_control;
@@ -345,21 +419,6 @@ module Ag2Gest
 
     def initial_billing
       @contracting_request = ContractingRequest.find(params[:id])
-      if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
-        @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
-                                    work_order_type_id: 29, #WorkOderType inspection Nestor - Baja Suministro Voluntaria G.A
-                                    work_order_status_id: 1, #WorkOderStatus initial Nestor
-                                    work_order_labor_id: 151, # Nestor - Baja Suministro Retirar Contador
-                                    work_order_area_id: 3, # Nestor - Gestion de abonados
-                                    project_id: @contracting_request.project_id,
-                                    client_id: @contracting_request.client.id, # ¿¿??
-                                    description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
-                                    organization_id: @contracting_request.project.organization_id,
-                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
-                                    in_charge_id: 1
-                                    # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
-                                  )
-      else
         @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
                                     work_order_type_id: 25, #WorkOderType inspection Nestor - Inspección Instalación G.A
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
@@ -373,7 +432,6 @@ module Ag2Gest
                                     in_charge_id: 1
                                     # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
                                   )
-      end
       if @work_order.save(:validate => false)
         @contracting_request.work_order = @work_order;
 
@@ -404,9 +462,9 @@ module Ag2Gest
     def initial_billing_cancellation
       @contracting_request = ContractingRequest.find(params[:id])
         @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
-                                    work_order_type_id: 29, #WorkOderType inspection Nestor - Baja Suministro Voluntaria G.A
+                                    work_order_type_id: 25, #WorkOderType inspection Nestor - Inspección Instalación G.A
                                     work_order_status_id: 1, #WorkOderStatus initial Nestor
-                                    work_order_labor_id: 151, # Nestor - Baja Suministro Retirar Contador
+                                    work_order_labor_id: 132, # Nestor - Inspección de Instalación
                                     work_order_area_id: 3, # Nestor - Gestion de abonados
                                     project_id: @contracting_request.project_id,
                                     client_id: @contracting_request.client.id, # ¿¿??
@@ -423,7 +481,9 @@ module Ag2Gest
 
         @billcontract = @water_supply_contract.generate_bill_cancellation
         @bill = @water_supply_contract.generate_bill_cancellation_service
-
+        if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
+          @billchange = @water_supply_contract.generate_bill
+        end
         if @bill && @billcontract
           @contracting_request.status_control("billing");
           if @contracting_request.save
@@ -499,9 +559,11 @@ module Ag2Gest
         @contracting_request.status_control
         if @contracting_request.save
           @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
+          @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+          @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
-          # response_hash[:work_order] = @work_order
-          # response_hash[:work_order_status] = @work_order.work_order_status
+          response_hash[:bailback_bill] = @water_supply_contract.bailback_bill
+          response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill
           respond_to do |format|
             format.json { render json: response_hash }
           end
@@ -530,8 +592,6 @@ module Ag2Gest
         @contracting_request.status_control
         if @contracting_request.save
           @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.ending_at) if @contracting_request.water_supply_contract
-          @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
-          @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
           # response_hash[:work_order] = @work_order
           # response_hash[:work_order_status] = @work_order.work_order_status

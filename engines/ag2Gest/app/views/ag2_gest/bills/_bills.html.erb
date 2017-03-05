@@ -116,13 +116,15 @@
               <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
             <% invoice.tax_breakdown.each do |tax| %>
-              <tr>
-                <td colspan="5" class="no-boder"></td>
-                <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp;  <%= number_with_precision(tax[1], precision: 4, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-                <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
-                <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
-                <td align="right"><%= number_with_precision(tax[2], precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-              </tr>
+              <% if tax[0] != TaxType.exempt.tax %>
+                <tr>
+                  <td colspan="5" class="no-boder"></td>
+                  <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp;  <%= number_with_precision(tax[1], precision: 4, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+                  <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
+                  <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax[0]}%)" %></b></td>
+                  <td align="right"><%= number_with_precision(tax[2], precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                </tr>
+              <% end %>
             <% end %>
             <tr>
               <td colspan="7" class="black-border"></td>

@@ -1,6 +1,6 @@
 <%= render '/layouts/ag2_gest/billmbreadcrumb' %>
 <br>
-<%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, bill_supply_pdf_bill_path(@bill, :format => :pdf), class: "btn btn-warning pull-right", target: "_blank" %>
+<%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), class: "btn btn-warning pull-right", target: "_blank" %>
 
 <h3>Factura suministro</h3>
 <div class="row">
@@ -17,12 +17,13 @@
   </div>
 </div>
 <div class="row">
+<% if @bill.invoices.first.invoice_type_id != InvoiceType::CONTRACT %>
   <div class="span2">
     <div class="well">
       <table>
         <tr>
           <td>Lec. anterior: </td>
-          <td class="pull-right"><%= @reading.reading_index_1 %></td>
+          ·<td class="pull-right"><%= @reading.reading_index_1 %></td>
         </tr>
         <tr>
           <td>Lec. actual: </td>
@@ -41,6 +42,7 @@
       <div>Periodo: <%= @reading.billing_period.period %></div>
     </div>
   </div>
+<% end %>
   <div class="span10">
     <h4 class="text-center">Detalle</h4>
     <% @bill.invoices.each do |invoice| %>

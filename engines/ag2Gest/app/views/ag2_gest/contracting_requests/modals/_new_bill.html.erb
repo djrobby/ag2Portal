@@ -175,8 +175,16 @@
             <th><%= t("activerecord.attributes.contracting_request.price") %></th>
             <th><%= t("activerecord.attributes.contracting_request.amount") %></th>
             <th><%= t("activerecord.attributes.contracting_request.tax") %></th>
-            <th><%= t("activerecord.attributes.contracting_request.discount") %></th>
-            <th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
+            <% unless invoice.discount_zero? %>
+              <th align="right"><%= t("activerecord.attributes.contracting_request.discount") %></th>
+            <% else %>
+              <th></th>
+            <% end %>
+            <% unless invoice.discount_pct_zero? %>
+              <th align="right"><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
+            <% else %>
+              <th></th>
+            <% end %>
             <th><%= t("activerecord.attributes.contracting_request.total") %></th>
           </tr>
           <% invoice.invoice_items.each_with_index do |item, index| %>
@@ -186,8 +194,16 @@
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>
               <td class="td-amount<%= item.id %> amount"><%= item.amount %></td>
               <td><%= collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>'x-large-text-field'}) %></td>
-              <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>
-              <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>
+              <% unless invoice.discount_zero? %>
+                <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>
+              <% else %>
+                <td></td>
+              <% end %>
+              <% unless invoice.discount_pct_zero? %>
+                <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>
+              <% else %>
+                <td></td>
+              <% end %>
               <td class="total total<%= item.id %>"><%= item.total %></td>
             </tr>
           <% end %>

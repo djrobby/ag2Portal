@@ -104,6 +104,8 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/:id/inspection_billing', :controller => 'contracting_requests', :action => 'inspection_billing'
     match 'contracting_requests/:id/inspection_billing_cancellation', :controller => 'contracting_requests', :action => 'inspection_billing_cancellation'
     match 'contracting_requests/:id/initial_billing', :controller => 'contracting_requests', :action => 'initial_billing'
+    match 'contracting_requests/:id/ot_cancellation', :controller => 'contracting_requests', :action => 'ot_cancellation'
+    match 'contracting_requests/:id/ot_installation', :controller => 'contracting_requests', :action => 'ot_installation'
     match 'contracting_requests/:id/initial_billing_cancellation', :controller => 'contracting_requests', :action => 'initial_billing_cancellation'
     match 'contracting_requests/:id/billing_instalation', :controller => 'contracting_requests', :action => 'billing_instalation'
     match 'contracting_requests/:id/billing_instalation_cancellation', :controller => 'contracting_requests', :action => 'billing_instalation_cancellation'

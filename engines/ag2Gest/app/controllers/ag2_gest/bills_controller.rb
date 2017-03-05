@@ -183,6 +183,10 @@ module Ag2Gest
       subscribers.each do |subscriber|
         @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
       end
+      respond_to do |format|
+        format.html
+        format.csv { render text: Reading.to_csv(@readings) }
+      end
     end
 
     def index

@@ -50,8 +50,16 @@
               <th align="right"><%= t('activerecord.attributes.subscriber.price') %></th>
               <!-- <th><%#= t("activerecord.attributes.contracting_request.amount") %></th> -->
               <th align="right"><%= t('activerecord.attributes.subscriber.vat') %></th>
-              <th align="right"><%= t('activerecord.attributes.subscriber.desc') %></th>
-              <th align="right"><%= t('activerecord.attributes.subscriber.desc_percent') %></th>
+              <% unless invoice.discount_zero? %>
+                <th align="right"><%= t('activerecord.attributes.subscriber.desc') %></th>
+              <% else %>
+                <th></th>
+              <% end %>
+              <% unless invoice.discount_pct_zero? %>
+                <th align="right"><%= t('activerecord.attributes.subscriber.desc_percent') %></th>
+              <% else %>
+                <th></th>
+              <% end %>
               <th align="right"><%= t('activerecord.attributes.subscriber.total') %></th>
             </thead>
             <tbody>
@@ -64,8 +72,16 @@
                   <td align="right"><%= number_with_precision(item.try(:price), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <%#= item.try(:amount) %><!-- Amount -->
                   <td align="right"><%= number_with_precision(item.try(:tax_type).try(:tax) || "0", precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(item.try(:discount), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
-                  <td align="right"><%= number_with_precision(item.try(:discount_pct), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
+                  <% unless invoice.discount_zero? %>
+                    <td align="right"><%= number_with_precision(item.try(:discount), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
+                  <% else %>
+                    <td></td>
+                  <% end %>
+                  <% unless invoice.discount_pct_zero? %>
+                    <td align="right"><%= number_with_precision(item.try(:discount_pct), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>%</td>
+                  <% else %>
+                    <td></td>
+                  <% end %>
                   <td align="right"><%= number_with_precision(item.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td><!-- Total -->
                 </tr>
               <% end %>

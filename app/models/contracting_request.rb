@@ -107,6 +107,8 @@ class ContractingRequest < ActiveRecord::Base
   validates :subscriber_zipcode,          :presence => true
   # validates :subscriber_id, presence: true, if: "contracting_request_type_id==2"
 
+  validate :check_document_required?
+
   # Scopes
   scope :by_no, -> { order(:request_no) }
   #
@@ -640,7 +642,15 @@ class ContractingRequest < ActiveRecord::Base
       elsif contracting_request_status_id == ContractingRequestStatus::INSTALLATION
         self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
       end
-
     end
+  end
+
+  private
+
+  def check_document_required?
+    document_required_ids = ContractingRequestDocumentType.where(required: true).map(&:id)
+    doc_miss_id = document_required_ids - contracting_request_documents.map(&:contracting_request_document_type_id)
+    doc_miss_name = ContractingRequestDocumentType.where(id: doc_miss_id).map(&:name)
+    self.errors.add(:contracting_request_document_ids, I18n.t('activerecord.models.contracting_request.check_for_required_documents') + doc_miss_name.join(",")) unless doc_miss_name.blank?
   end
 end

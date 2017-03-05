@@ -52,13 +52,15 @@
 				<td class="black-border"><%= invoice.subtotal %></td>
 			</tr>
 			<% invoice.tax_breakdown.each do |tax| %>
-				<tr>
-					<td colspan="5" class="no-boder"></td>
-					<td class="no-boder"><b><%= t("activerecord.attributes.contracting_request.taxable") %>:</b> <%= tax[1] %></td>
-					<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
-					<td><b><%= t("activerecord.attributes.contracting_request.vat").upcase %> (<%= tax[0] %>%)</b></td>
-					<td><%= tax[2] %></td>
-				</tr>
+				<% if tax[0] != TaxType.exempt.tax %>
+					<tr>
+						<td colspan="5" class="no-boder"></td>
+						<td class="no-boder"><b><%= t("activerecord.attributes.contracting_request.taxable") %>:</b> <%= tax[1] %></td>
+						<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
+						<td><b><%= t("activerecord.attributes.contracting_request.vat").upcase %> (<%= tax[0] %>%)</b></td>
+						<td><%= tax[2] %></td>
+					</tr>
+				<% end %>
 			<% end %>
 			<tr>
 				<td colspan="7" class="black-border"></td>
