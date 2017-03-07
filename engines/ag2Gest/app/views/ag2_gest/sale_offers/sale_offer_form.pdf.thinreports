@@ -39,9 +39,8 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
 		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
 		#e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
-		# From 20160510:
 		#e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
-		e.section.item(:page_tax).value(number_with_precision(e.store.page_amount, precision: 4))
+		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
 		e.store.page_discount = 0
@@ -53,7 +52,7 @@ report.layout.config.list(:default) do |c|
 		# Display list totals
 		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.sale_offer.subtotal"))
 		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.sale_offer.bonus") + " " + number_with_precision(@sale_offer.discount_pct, precision: 2) + "%")
-		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.sale_offer.taxable_c"))
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.sale_offer.taxable"))
 		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.sale_offer.taxes"))
 		e.section.item(:total_c).value(I18n.t("activerecord.attributes.sale_offer.total").upcase)
 		e.section.item(:subtotal).value(number_with_precision(@sale_offer.subtotal, precision: 2, delimiter: delimiter))
@@ -85,21 +84,24 @@ report.page.values(company_name: @sale_offer.project.company.name,
 				   company_email: @sale_offer.project.company.email_and_website,
 				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @sale_offer.project.company.fiscal_id)
 # Page header: Possibly null values
-report.page.values request: @sale_offer.offer.offer_no unless @sale_offer.offer.blank?
+report.page.values request: @sale_offer.contracting_request.full_no unless @sale_offer.contracting_request.blank?
+report.page.values work_order: @sale_offer.work_order.to_label unless @sale_offer.work_order.blank?
+
 # Page header: Others
 report.page.values(form_title: I18n.t("activerecord.models.sale_offer.one"),
-				   offer_no_title: I18n.t("activerecord.attributes.sale_offer.order_no_report") + ":",
+				   offer_no_title: I18n.t("activerecord.attributes.sale_offer.offer_no") + ":",
 				   offer_no: @sale_offer.full_no,
-				   offer_date_title: I18n.t("activerecord.attributes.sale_offer.order_date") + ":",
-				   offer_date: @sale_offer.order_date.strftime("%d/%m/%Y"),
-				   request_title: I18n.t("activerecord.attributes.sale_offer.offer") + ":",
-				   supplier_title: I18n.t("activerecord.attributes.sale_offer.supplier"),
-				   supplier_name: @sale_offer.supplier.name,
-				   supplier_address_1: @sale_offer.supplier.address_1,
-				   supplier_address_2: @sale_offer.supplier.address_2,
-				   supplier_fiscal_id: I18n.t("activerecord.attributes.supplier.fiscal_id_c") + ": " + @sale_offer.supplier.fiscal_id,
+				   offer_date_title: I18n.t("activerecord.attributes.sale_offer.offer_date") + ":",
+				   offer_date: @sale_offer.offer_date.strftime("%d/%m/%Y"),
+				   request_title: I18n.t("activerecord.attributes.sale_offer.contracting_request_c") + ":",
+				   client_title: I18n.t("activerecord.attributes.sale_offer.client"),
+				   client_name: @sale_offer.client.to_name,
+				   client_address_1: @sale_offer.client.address_1,
+				   client_address_2: @sale_offer.client.address_2,
+				   client_fiscal_id: I18n.t("activerecord.attributes.client.fiscal_id_c") + ": " + @sale_offer.client.fiscal_id,
 				   payment_title: I18n.t("activerecord.attributes.sale_offer.payment_method"),
-				   payment_method: @sale_offer.payment_method.description)
+				   payment_method: @sale_offer.payment_method.description,
+				   work_order_title: I18n.t("activerecord.attributes.sale_offer.work_order"))
 # Page footer
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
@@ -111,70 +113,42 @@ report.page.values(printed_at: Time.now,
 # List header
 report.page.list(:default).header do |header|
 	header.item(:no_c).value "#"
-	header.item(:product_c).value I18n.t("activerecord.attributes.sale_offer_item.code")
+	header.item(:product_c).value I18n.t("activerecord.attributes.sale_offer_item.product_c")
 	header.item(:description_c).value I18n.t("activerecord.attributes.sale_offer_item.description_c")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.sale_offer_item.quantity_c")
 	header.item(:price_c).value I18n.t("activerecord.attributes.sale_offer_item.price_c")
-	header.item(:discount_c).value I18n.t("activerecord.attributes.sale_offer_item.discount_pct")
-	# Up to 20160510:
-	#header.item(:amount_c).value I18n.t("activerecord.attributes.sale_offer_item.amount_c")
-	#header.item(:tax_c).value I18n.t("activerecord.attributes.sale_offer_item.tax_c")
-	# From 20160510:
-	header.item(:amount_c).value I18n.t("activerecord.attributes.sale_offer_item.net_price_c")
-	header.item(:tax_c).value I18n.t("activerecord.attributes.sale_offer_item.amount_c")
+	header.item(:discount_c).value I18n.t("activerecord.attributes.sale_offer_item.discount_pct_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.sale_offer_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.sale_offer_item.tax_c")
 	header.item(:delivery_date_c).value I18n.t("activerecord.attributes.sale_offer_item.delivery_date")
 end
 
+
 # List detail
 no = 0
-quantity = 0
-price = 0
-net_price = 0
-factor = 1
 @items.each do |i|
 	report.page.list(:default).add_row do |row|
 		no = no + 1
 		code = ""
-		if i.code.blank?
+		if i.thing.blank?
 			code = i.product.full_code unless i.product.blank?
 		else
 			code = i.code
 		end
-		### Special to convert internal quantity & price to supplier measures ###
-		quantity = i.quantity
-		price = i.price
-		net_price = i.net_price
-		factor = 1
-		purchase_price = PurchasePrice.find_by_product_and_supplier(i.product_id, @sale_offer.supplier_id) rescue nil
-		if !purchase_price.blank?
-			factor = purchase_price.factor.blank? ? 1 : purchase_price.factor
-			quantity = quantity / factor
-			price = price * factor
-			net_price = net_price * factor
-			if i.code.blank? && !purchase_price.code.blank?
-				code = purchase_price.code
-			end
-		end
+
 		row.item(:no).value no
 		row.item(:product).value code
 		row.item(:description).value i.description unless i.description.blank?
-		row.item(:quantity).value number_with_precision(quantity, precision: 4) unless quantity.blank?
-		# Up to 20160510:
-		#row.item(:price).value number_with_precision(i.net_price, precision: 4) unless i.net_price.blank?
-		#row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
-		# Up to 20160510:
-		#row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-		#row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
-		# From 20160510:
-		row.item(:price).value number_with_precision(price, precision: 4) unless price.blank?
+		row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+		row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
 		row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
-		row.item(:amount).value number_with_precision(net_price, precision: 4) unless net_price.blank?
-		row.item(:tax).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+		row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+		row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
 		row.item(:delivery_date).value i.delivery_date.strftime("%d/%m/%Y") unless i.delivery_date.blank?
 	end
 	# Store page subtotals
     report.page.list(:default) do |list|
-		list.store.page_quantity += quantity
+		list.store.page_quantity += i.quantity
 		list.store.page_discount += i.discount
 		list.store.page_amount += i.amount
 		list.store.page_tax += i.tax

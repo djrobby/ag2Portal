@@ -74,6 +74,15 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a href="<%= reindex_path %>" class="thumbnail centered"><img src="/assets/icon/reindex.png" width="48" height="48" alt="reindex" /><h5 class="h5-narrow"><%= t :reindex_button %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= reindex_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/reindex.png" width="96" height="96" alt="reindex" /><h5 class="h5-narrow"><%= t :reindex_button %></h5></a>
+    <% else %>
+    <a href="<%= reindex_path %>" class="thumbnail centered"><img src="/assets/pict/reindex.png" width="128" height="128" alt="reindex" /><h5 class="h5-narrow"><%= t :reindex_button %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a href="<%= guides_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Guides.png" width="48" height="48" alt="ag2Guides" /><h5 class="h5-narrow"><%=t ".guides" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a href="<%= guides_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Guides.png" width="96" height="96" alt="ag2Guides" /><h5 class="h5-narrow"><%=t ".guides" %></h5></a>
@@ -81,5 +90,4 @@
     <a href="<%= guides_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Guides.png" width="128" height="128" alt="ag2Guides" /><h5 class="h5-narrow"><%=t ".guides" %></h5></a>
     <% end %>
   </li>
-  <li class="span4"></li>
 </ul><!-- /.thumbnails -->

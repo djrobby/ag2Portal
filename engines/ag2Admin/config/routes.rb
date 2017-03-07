@@ -5,6 +5,7 @@ Ag2Admin::Engine.routes.draw do
 
     # Route to config
     match 'config' => 'config#index', :as => :config
+    match 'reindex' => 'reindex#index', :as => :reindex
 
     # Routes for jQuery POSTs
     #
@@ -116,6 +117,10 @@ Ag2Admin::Engine.routes.draw do
     match 'zones/zo_update_total_and_price/:total/:price', :controller => 'zones', :action => 'zo_update_total_and_price'
     match 'zo_update_total_and_price/:total/:price', :controller => 'zones', :action => 'zo_update_total_and_price'
     match 'zones/:id/zo_update_total_and_price/:total/:price', :controller => 'zones', :action => 'zo_update_total_and_price'
+    #
+    # Reindex
+    match 'reindex/ridx_reindex', :controller => 'reindex', :action => 'ridx_reindex'
+    match 'ridx_reindex', :controller => 'reindex', :action => 'ridx_reindex'
 
     # Resources
     resources :users

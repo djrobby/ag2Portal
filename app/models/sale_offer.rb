@@ -71,7 +71,7 @@ class SaleOffer < ActiveRecord::Base
   def partial_name
     partial_name = full_no
     if !self.client.blank?
-      partial_name += " " + self.client.name[0,40]
+      partial_name += " " + self.client.full_name[0,40]
     end
     partial_name
   end
@@ -114,6 +114,10 @@ class SaleOffer < ActiveRecord::Base
 
   def total
     taxable + taxes
+  end
+
+  def tax_breakdown
+    global_tax_breakdown(sale_offer_items, true)
   end
 
   def quantity

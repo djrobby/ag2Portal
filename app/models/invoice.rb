@@ -152,7 +152,8 @@ class Invoice < ActiveRecord::Base
       tax = t[0].nil? ? 0 : TaxType.find(t[0]).tax
       sum_total = t[1].sum{|invoice_item| invoice_item.amount}
       tax_total = sum_total * (tax/100)
-      [tax, sum_total, tax_total ,t[1].count]
+      description = t[0].nil? ? 0 : TaxType.find(t[0]).description
+      [tax, sum_total, tax_total ,t[1].count, description]
     end
   end
 

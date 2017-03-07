@@ -108,17 +108,16 @@ module Ag2Gest
       end
     end
 
-
     def bill
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
-      @bill = @water_supply_contract.bill 
+      @bill = @water_supply_contract.bill
     end
 
     def bill_cancellation
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
-      @bill = @water_supply_contract.bailback_bill 
+      @bill = @water_supply_contract.bailback_bill
     end
 
     # PDF Contracting Request
@@ -162,7 +161,7 @@ module Ag2Gest
     def biller_pdf
      @contracting_request = ContractingRequest.find(params[:id])
      @water_supply_contract = @contracting_request.water_supply_contract
-     @bill = @water_supply_contract.bill || @water_supply_contract.bailback_bill 
+     @bill = @water_supply_contract.bill || @water_supply_contract.bailback_bill
      respond_to do |format|
        format.pdf {
          send_data render_to_string, filename: "SCR-#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
@@ -587,7 +586,7 @@ module Ag2Gest
         @subscriber.meter_details.last.update_attributes(withdrawal_date: Date.today ,
                                                                 withdrawal_reading: @subscriber.readings.last.reading_index)
         if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id == @subscriber.id and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
-          @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by ) 
+          @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by )
         end
         @contracting_request.status_control
         if @contracting_request.save
@@ -603,7 +602,7 @@ module Ag2Gest
             format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
           end
         end
-    end     
+    end
 
 
     # Create subscriber
@@ -1176,6 +1175,7 @@ module Ag2Gest
       @breadcrumb = 'read'
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract || WaterSupplyContract.new
+      @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3)
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = current_projects
       @projects_ids = current_projects_ids

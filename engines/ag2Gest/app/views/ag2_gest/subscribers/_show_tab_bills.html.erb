@@ -40,15 +40,19 @@
   </div>
 </div>
 
-  <div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= @subscriber_bills.sum{|b| b.total} %></h5></div>
+<!-- Total bills/invoices -->
+<div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= number_with_precision(@subscriber_bills.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
 
 <div class="row">
   <div class="span1"></div> <!-- Space for icon-plus -->
   <div class="span3">
     <b><%= t('activerecord.attributes.subscriber.receipt') %></b>
   </div>
-  <div class="span2" align="center">
-    <b><%= t('activerecord.attributes.subscriber.date_starting') %></b>
+  <div class="span1" align="center">
+    <b><%= t('activerecord.attributes.subscriber.period') %></b>
+  </div>
+  <div class="span1" align="center">
+    <b><%= t('activerecord.attributes.subscriber.date') %></b>
   </div>
   <div class="span2">
     <b><%= t('activerecord.attributes.subscriber.type') %></b>

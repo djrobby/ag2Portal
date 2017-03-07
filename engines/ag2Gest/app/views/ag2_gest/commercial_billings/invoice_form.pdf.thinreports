@@ -1,0 +1,155 @@
+if @invoice.nil?
+	return
+end
+if @items.count <= 0
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/comercial_billing_form', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_quantity: 0, page_discount: 0, page_amount: 0, page_tax: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
+		#e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
+		#e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
+		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
+		# Initialize subtotals to 0
+		e.store.page_quantity = 0
+		e.store.page_discount = 0
+		e.store.page_amount = 0
+		e.store.page_tax = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.commercial_billing.subtotal"))
+		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.commercial_billing.bonus") + " " + number_with_precision(@invoice.discount_pct, precision: 2) + "%")
+		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.commercial_billing.taxable"))
+		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.commercial_billing.taxes"))
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.commercial_billing.total").upcase)
+		e.section.item(:subtotal).value(number_with_precision(@invoice.subtotal, precision: 2, delimiter: delimiter))
+		e.section.item(:bonus).value(number_with_precision(@invoice.bonus, precision: 2, delimiter: delimiter))
+		e.section.item(:taxable).value(number_with_precision(@invoice.taxable, precision: 2, delimiter: delimiter))
+		e.section.item(:taxes).value(number_with_precision(@invoice.taxes, precision: 2, delimiter: delimiter))
+		e.section.item(:total).value(number_with_precision(@invoice.total, precision: 2, delimiter: delimiter))
+		# Display tax details
+		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.commercial_billing.tax_breakdown"))
+		@invoice.tax_breakdown.each do |tb|
+			e.section.item(:tax_list).value(tb[4] + ": " +
+											number_with_precision(tb[1], precision: 2, delimiter: delimiter) + " × " +
+											number_with_precision(tb[0], precision: 2, delimiter: delimiter) + "% = " +
+											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "\n")
+		end
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @invoice.company.logo.url(:original).split("?").first unless @invoice.company.logo.blank?
+# Page header: Company
+report.page.values(company_name: @invoice.company.name,
+				   company_address_1: @invoice.company.address_1,
+				   company_address_2: @invoice.company.address_2,
+				   company_phones: @invoice.company.phone_and_fax,
+				   company_email: @invoice.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @invoice.company.fiscal_id)
+# Page header: Possibly null values
+report.page.values bill: @invoice.bill.full_no unless @invoice.bill.blank?
+report.page.values sale_offer: @invoice.sale_offer.partial_name unless @invoice.sale_offer.blank?
+
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.invoice.one"),
+				   cb_no_title: I18n.t("activerecord.attributes.commercial_billing.invoice_no") + ":",
+				   cb_no: @invoice.full_no,
+				   cb_date_title: I18n.t("activerecord.attributes.commercial_billing.invoice_date") + ":",
+				   cb_date: @invoice.invoice_date.strftime("%d/%m/%Y"),
+				   bill_title: I18n.t("activerecord.attributes.commercial_billing.bill") + ":",
+				   client_title: I18n.t("activerecord.attributes.bill.client"),
+				   client_name: @invoice.bill.client.to_name,
+				   client_address_1: @invoice.bill.client.address_1,
+				   client_address_2: @invoice.bill.client.address_2,
+				   client_fiscal_id: I18n.t("activerecord.attributes.client.fiscal_id_c") + ": " + @invoice.bill.client.fiscal_id,
+				   payment_title: I18n.t("activerecord.attributes.commercial_billing.payment_method"),
+				   payment_method: @invoice.bill.client.payment_method.description,
+				   sale_offer_title: I18n.t("activerecord.attributes.commercial_billing.sale_offer"))
+
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.commercial_billing.remarks"),
+				   remarks: @invoice.remarks)
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:no_c).value "#"
+	header.item(:product_c).value I18n.t("activerecord.attributes.invoice_item.product_c")
+	header.item(:description_c).value I18n.t("activerecord.attributes.invoice_item.description")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.invoice_item.quantity_c")
+	header.item(:price_c).value I18n.t("activerecord.attributes.invoice_item.price_c")
+	header.item(:discount_c).value I18n.t("activerecord.attributes.invoice_item.discount_pct_c")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.invoice_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.invoice_item.tax_c")
+end
+
+
+# List detail
+no = 0
+@items.each do |i|
+	report.page.list(:default).add_row do |row|
+		no = no + 1
+		code = ""
+		if i.thing.blank?
+			code = i.product.full_code unless i.product.blank?
+		else
+			code = i.code
+		end
+
+		row.item(:no).value no
+		row.item(:product).value code
+		row.item(:description).value i.description unless i.description.blank?
+		row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
+		row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
+		row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
+		row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
+		row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.page_quantity += i.quantity
+		list.store.page_discount += i.discount
+		list.store.page_amount += i.amount
+		list.store.page_tax += i.tax
+    end
+end

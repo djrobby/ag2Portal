@@ -1,0 +1,46 @@
+<script>
+  $(document).ready(function() {
+    $("#proc_mesage").hide();
+
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+  });
+
+  jQuery(function($) {
+    // when the #reindexModel button clicked
+    $("#reindexModel").click(function() {
+      // Show message
+      $("#proc_mesage").show();
+      // Process
+      var model = $('select#Model_ :selected').val();
+      if (model == "")
+        model = "";
+      jQuery.getJSON('ridx_reindex?m=' + model, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        // Go on based on result
+        alert(data.code);
+      });
+      return false;
+    });
+  });
+</script>
+
+<div id="proc_mesage" class="alert alert-info">
+  <%= t(:processing) %>
+</div>
+
+<%= render '/layouts/ag2_admin/reindexbreadcrumb' %>
+
+<h3><%= t :reindex_button %></h3>
+
+<%= label_tag t(:model), nil, :class => 'form-label' %>
+<%= select_tag "Model_", options_for_select(@models), :prompt => "", :class => 'large-text-field sel2' %>
+<br /><br />     
+<button id="reindexModel" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :process_button %></button>
+
+<br /><br />     
+<%= link_to t("ag2_admin.notifications.index.back_to_root"), ag2_admin.config_path %>

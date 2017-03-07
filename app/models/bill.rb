@@ -42,7 +42,7 @@ class Bill < ActiveRecord::Base
 
   def nullable?
     # (bill_operation == 1 or bill_operation == 3) and Invoice.where(original_invoice_id: invoices.try(:first).try(:id)).blank?
-    (bill_operation == 1 or bill_operation == 3) and reading.try(:bill_id) == id
+    (bill_operation == 1 || bill_operation == 3) && ((!bill_type.blank? && bill_type.id == InvoiceType::WATER) ? reading.try(:bill_id) == id : true)
   end
 
   def total_by_concept(billable_concept)
@@ -61,16 +61,16 @@ class Bill < ActiveRecord::Base
     try(:invoices).try(:first).try(:billing_period_id)
   end
 
+  def bill_type
+    invoices.first.invoice_type rescue nil
+  end
+
   def to_label
     full_no
   end
 
   def reading
     reading_2
-  end
-
-  def bill_type
-    invoices.first.invoice_type rescue nil
   end
 
   def full_no

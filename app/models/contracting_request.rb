@@ -453,7 +453,7 @@ class ContractingRequest < ActiveRecord::Base
                               client_id: client.id,
                               subscriber_id: old_subscriber.id,
                               reading_route_id: old_subscriber.water_supply_contract.reading_route,
-                              work_order_id: nil,
+                              work_order_id: old_subscriber.water_supply_contract.work_order_id,
                               tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
                               bill_id: old_subscriber.water_supply_contract.bill_id,
                               meter_id: old_subscriber.water_supply_contract.meter_id,
@@ -484,6 +484,7 @@ class ContractingRequest < ActiveRecord::Base
       fax: client.fax,
       updated_by: created_by
     )
+    self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id
     self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
     self.save
   end

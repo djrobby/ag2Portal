@@ -9,11 +9,10 @@
       var id = $('#id').html();
       if (id == "")
         return;
-      //window.open("invoice_form.pdf?id=" + id, "_blank");
-      $("#notfound").modal('show');
+      window.open("invoice_form.pdf?id=" + id, "_blank");
       return false;
     });
-  });
+  });  
 </script>
 
 <%= render '/layouts/ag2_gest/cbillingsbreadcrumb' %>

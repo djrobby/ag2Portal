@@ -297,7 +297,7 @@ module Ag2Gest
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
-                     filename: "#{title}_#{@invoice.full_no}.pdf",
+                     filename: "#{title}_#{@sale_offer.full_no}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
       end
