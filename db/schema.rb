@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170228091723) do
+ActiveRecord::Schema.define(:version => 20170308095621) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1508,11 +1508,11 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.string  "invoice_no"
     t.date    "invoice_date"
     t.integer "invoice_type_id"
-    t.decimal "subtotal",          :precision => 47, :scale => 8
-    t.decimal "taxes",             :precision => 65, :scale => 20
-    t.decimal "bonus",             :precision => 57, :scale => 14
-    t.decimal "taxable",           :precision => 58, :scale => 14
-    t.decimal "total",             :precision => 65, :scale => 20
+    t.decimal "subtotal",          :precision => 47, :scale => 10
+    t.decimal "taxes",             :precision => 65, :scale => 22
+    t.decimal "bonus",             :precision => 57, :scale => 16
+    t.decimal "taxable",           :precision => 58, :scale => 16
+    t.decimal "total",             :precision => 65, :scale => 22
   end
 
   create_table "invoice_credits", :id => false, :force => true do |t|
@@ -1525,11 +1525,11 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.string  "invoice_no"
     t.date    "invoice_date"
     t.integer "invoice_type_id"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
+    t.decimal "subtotal",            :precision => 47, :scale => 10
+    t.decimal "taxes",               :precision => 65, :scale => 22
+    t.decimal "bonus",               :precision => 57, :scale => 16
+    t.decimal "taxable",             :precision => 58, :scale => 16
+    t.decimal "total",               :precision => 65, :scale => 22
     t.integer "original_invoice_id"
   end
 
@@ -1539,13 +1539,13 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.integer "client_id"
     t.integer "subscriber_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",        :precision => 47, :scale => 8
-    t.decimal "taxes",           :precision => 65, :scale => 20
-    t.decimal "bonus",           :precision => 57, :scale => 14
-    t.decimal "taxable",         :precision => 58, :scale => 14
-    t.decimal "total",           :precision => 65, :scale => 20
+    t.decimal "subtotal",        :precision => 47, :scale => 10
+    t.decimal "taxes",           :precision => 65, :scale => 22
+    t.decimal "bonus",           :precision => 57, :scale => 16
+    t.decimal "taxable",         :precision => 58, :scale => 16
+    t.decimal "total",           :precision => 65, :scale => 22
     t.decimal "paid",            :precision => 34, :scale => 4
-    t.decimal "debt",            :precision => 65, :scale => 20
+    t.decimal "debt",            :precision => 65, :scale => 22
   end
 
   create_table "invoice_items", :force => true do |t|
@@ -1557,9 +1557,9 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.string   "description"
     t.integer  "measure_id"
     t.decimal  "quantity",           :precision => 12, :scale => 4, :default => 1.0, :null => false
-    t.decimal  "price",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",              :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.decimal  "discount_pct",       :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount",           :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.integer  "tax_type_id"
     t.datetime "created_at",                                                         :null => false
     t.datetime "updated_at",                                                         :null => false
@@ -1600,11 +1600,11 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.string  "invoice_no"
     t.date    "invoice_date"
     t.integer "invoice_type_id"
-    t.decimal "subtotal",            :precision => 47, :scale => 8
-    t.decimal "taxes",               :precision => 65, :scale => 20
-    t.decimal "bonus",               :precision => 57, :scale => 14
-    t.decimal "taxable",             :precision => 58, :scale => 14
-    t.decimal "total",               :precision => 65, :scale => 20
+    t.decimal "subtotal",            :precision => 47, :scale => 10
+    t.decimal "taxes",               :precision => 65, :scale => 22
+    t.decimal "bonus",               :precision => 57, :scale => 16
+    t.decimal "taxable",             :precision => 58, :scale => 16
+    t.decimal "total",               :precision => 65, :scale => 22
     t.integer "original_invoice_id"
   end
 
@@ -2198,12 +2198,12 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.integer  "reading_2_id"
     t.integer  "reading_index_1"
     t.integer  "reading_index_2"
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
+    t.datetime "created_at",                                           :null => false
+    t.datetime "updated_at",                                           :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "lat",                  :precision => 10, :scale => 0
-    t.decimal  "lng",                  :precision => 10, :scale => 0
+    t.decimal  "lat",                  :precision => 18, :scale => 15
+    t.decimal  "lng",                  :precision => 18, :scale => 15
   end
 
   add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
@@ -2615,9 +2615,9 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.integer  "reading_sequence"
     t.string   "reading_variant"
     t.datetime "reading_date"
-    t.integer  "reading_index",                                       :default => 0, :null => false
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
+    t.integer  "reading_index",                                        :default => 0, :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "invoice_id"
@@ -2626,8 +2626,8 @@ ActiveRecord::Schema.define(:version => 20170228091723) do
     t.integer  "reading_1_id"
     t.integer  "reading_2_id"
     t.integer  "bill_id"
-    t.decimal  "lat",                  :precision => 10, :scale => 0
-    t.decimal  "lng",                  :precision => 10, :scale => 0
+    t.decimal  "lat",                  :precision => 18, :scale => 15
+    t.decimal  "lng",                  :precision => 18, :scale => 15
   end
 
   add_index "readings", ["bill_id"], :name => "index_readings_on_bill_id"
