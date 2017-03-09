@@ -75,7 +75,7 @@ en:
   process_error: "<b>¡Oh oh!</b> Your process request ended with error."
   process_ok: "Your process request completed successfully."
   process_empty: "<b>¡Oh oh!</b> Your request could not be processed."
-  reindex_error: "Your reindex request ended with error!"
+  reindex_error: "Your reindex request (%{var}) ended with error!"
   reindex_ok: "Your reindex request completed successfully."
   reindex_empty: "Your reindex request could not be processed."
   receive_meters: "Meters"

@@ -8,9 +8,13 @@ module Ag2Admin
     # Reindex model
     def ridx_reindex
       m = params[:m]
+      m = m.split(",")
       code = I18n.t(:reindex_empty)
       if m != ""
-        code = reindex_model(m)
+        m.each do |mdl|
+          code = reindex_model(mdl)
+          break if code == I18n.t(:reindex_error, var: mdl)
+        end
       end
       @json_data = { "code" => code }
       authorize! :ridx_reindex, @json_data

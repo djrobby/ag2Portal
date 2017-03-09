@@ -16,7 +16,7 @@ module Ag2Admin
       _model.singularize.camelize.constantize.index(batch_size: 1000)
       code = I18n.t(:reindex_ok)
     rescue
-      code = I18n.t(:reindex_error)
+      code = I18n.t(:reindex_error, var: _model)
     end
 
     def reindexable_models

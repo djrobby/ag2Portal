@@ -15,9 +15,8 @@
       // Show message
       $("#proc_mesage").show();
       // Process
-      var model = $('select#Model_ :selected').val();
-      if (model == "")
-        model = "";
+      var model = $('#Model_').val();
+      if (model == null) model = "";
       jQuery.getJSON('ridx_reindex?m=' + model, function(data) {
         // Hide message
         $("#proc_mesage").hide();
@@ -38,7 +37,7 @@
 <h3><%= t :reindex_button %></h3>
 
 <%= label_tag t(:model), nil, :class => 'form-label' %>
-<%= select_tag "Model_", options_for_select(@models), :prompt => "", :class => 'large-text-field sel2' %>
+<%= select_tag "Model_", options_for_select(@models), :prompt => "", :class => 'large-text-field sel2', multiple: true %>
 <br /><br />     
 <button id="reindexModel" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :process_button %></button>
 

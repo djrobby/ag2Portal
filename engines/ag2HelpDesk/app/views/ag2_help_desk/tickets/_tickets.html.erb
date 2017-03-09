@@ -21,7 +21,11 @@
   </thead>
   <tbody>
     <% @tickets.each do |ticket| %>
-    <% if ticket.ticket_status_id == 4 %>
+    <% if ticket.ticket_status_id == TicketStatus::RESOLVED %>
+      <tr class="attention-row">
+    <% elsif ticket.ticket_status_id == TicketStatus::IN_PROGRESS %>
+      <tr class="approved-tr">
+    <% elsif ticket.ticket_status_id == TicketStatus::ON_HOLD %>
       <tr class="inactive-row">
     <% else %>
       <tr>

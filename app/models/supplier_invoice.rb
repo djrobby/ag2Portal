@@ -41,7 +41,7 @@ class SupplierInvoice < ActiveRecord::Base
   validates :payment_method, :presence => true
   validates :project,        :presence => true
   validates :organization,   :presence => true
-  validates :internal_no,    :uniqueness => { :scope => :project_id }, :if => "!internal_no.blank?"
+  validates :internal_no,    :uniqueness => { :scope => :project_id }, :if => "!internal_no.nil?"
 
   before_destroy :check_for_dependent_records
   after_create :notify_on_create

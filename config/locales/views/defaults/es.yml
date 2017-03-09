@@ -75,7 +75,7 @@ es:
   process_error: "<b>¡Oh oh!</b> Tu solicitud de proceso ha finalizado con error."
   process_ok: "Tu solicitud de proceso ha finalizado correctamente."
   process_empty: "<b>¡Oh oh!</b> Tu solicitud no pudo ser procesada."
-  reindex_error: "¡Tu solicitud de reindexado ha finalizado con error!"
+  reindex_error: "¡Tu solicitud de reindexado (%{var}) ha finalizado con error!"
   reindex_ok: "Tu solicitud de reindexado ha finalizado correctamente."
   reindex_empty: "Tu solicitud de reindexado no pudo ser procesada."
   receive_meters: "Contadores"
