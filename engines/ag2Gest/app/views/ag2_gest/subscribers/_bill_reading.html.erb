@@ -56,7 +56,7 @@
                 <td><%= item.code %></td>
                 <td><%= item.subcode %></td>
                 <td align="right"><%= number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.tax_type.try(:tax), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <% unless invoice.discount_zero? %>

@@ -1,4 +1,7 @@
 <script>
+  var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
+  var tryAgain = '<%= t("should_try_again") %>';
+
 $(document).ready(function() {
   // Select2
   $('select.custom-sel2').select2({
@@ -44,6 +47,16 @@ jQuery(function($) {
     });
     return false;
   });
+  // when #check_iban_btn is clicked
+  $(".check_iban_btn").click(function() {
+    var country = $("#client_bank_account_country_id").val();
+    var dc = $("#client_bank_account_iban_dc").val();
+    var bank = $("#client_bank_account_bank_id").val();
+    var office = $("#client_bank_account_bank_office_id").val();
+    var account = $("#client_bank_account_account_no").val();
+    var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'su_check_iban');
+    return false;
+  });
 });
 
 </script>
@@ -52,30 +65,45 @@ jQuery(function($) {
 
 <div id="newAccountModal" class="modal fade" style="display: none;">
   <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'form-inline' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
-      <h3><%= I18n.t('ag2_gest.subscribers.client_bank_account.title') %></h3>
+      <h3><%= t("ag2_purchase.suppliers.add_account") %></h3>
+      <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
     </div>
     <div class="modal-body">
       <%= f.input :client_id, :as => :hidden, :input_html => { :value => @subscriber.client_id } %>
       <%= f.input :subscriber_id, :as => :hidden, :input_html => { :value => @subscriber.id } %>
 
-      <%= f.input :holder_fiscal_id, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :holder_name, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
-
       <%= f.association :bank_account_class, required: true, collection: BankAccountClass.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <%= f.input :country_id, :required => true, collection: Country.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+
+      <%= f.input :iban_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+
       <%= f.input :bank_id, :required => true, collection: Bank.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+
       <%= f.input :bank_office_id, :required => true, collection: BankOffice.order(:bank_id, :code), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "10" }, :label_html => { :class => 'form-label' } %>
+
+      <!-- <#%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %> -->
+      <%= f.input :account_no, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' } %>
+
+      <%= f.input :holder_name, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :holder_fiscal_id, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id }, :label_html => { :class => 'form-label' } %>
+
+      <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+
+
     </div>
     <div class="modal-footer">
-      <%= f.submit t("activerecord.attributes.contracting_request.accept"), :class => 'btn btn-primary' %>
+      <a class="btn btn-primary check_iban_btn" href="#"><%=t('validate') %></a>
+      <%= f.submit t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
 </div>
+
+
+
+

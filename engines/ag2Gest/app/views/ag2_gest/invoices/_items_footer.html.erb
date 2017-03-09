@@ -3,11 +3,11 @@
   <td></td>
   <td align="right"><%= t "activerecord.attributes.invoice.quantity" %> | <%= t "activerecord.attributes.invoice.subtotal" %></td>
   <td></td>
-  <td align="right"><%= number_with_precision(invoice.quantity, precision: 4) unless invoice.quantity.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.quantity.blank? %></td>
   <td></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(invoice.subtotal, precision: 4) unless invoice.subtotal.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.subtotal, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.subtotal.blank? %></td>
   <td></td>
 </tr>
 <tr>
@@ -18,9 +18,9 @@
   <td></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(invoice.bonus, precision: 4) unless invoice.bonus.blank? %></td>
-  <td align="right"><%= number_with_precision(invoice.taxable, precision: 4) unless invoice.taxable.blank? %></td>
-  <td align="right"><%= number_with_precision(invoice.taxes, precision: 4) unless invoice.taxes.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.bonus, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.bonus.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.taxable, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.taxable.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.taxes, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.taxes.blank? %></td>
 </tr>
 <tr class="totals">
   <td></td>

@@ -102,7 +102,7 @@
                 <td><%= item.code %></td>
                 <td><%= item.subcode_name %></td>
                 <td align="right"><%= number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.tax_type.try(:tax), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.discount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
@@ -163,8 +163,8 @@
       <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date)} %>
     </div>
     <div class="modal-footer">
-      <%= f.button :submit, "Confirmar facturas", :class => 'btn btn-primary' %>
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      <%= f.button :submit, "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
 </div>

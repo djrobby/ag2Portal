@@ -271,6 +271,7 @@ report.page.list(:default).header do |header|
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.invoice_item.quantity_c")
 	header.item(:price_c).value I18n.t("activerecord.attributes.invoice_item.price_c")
 	header.item(:amount_c).value I18n.t("activerecord.attributes.invoice_item.amount_c")
+	header.item(:tax_c).value I18n.t("activerecord.attributes.invoice_item.tax_c")
 end
 
 	var_concept = " "
@@ -284,8 +285,9 @@ end
 				row.item(:subcode).value item.subcode_name
 				row.item(:measure).value item.try(:measure).try(:description)
 				row.item(:quantity).value number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-				row.item(:price).value number_with_precision(item.price, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-				row.item(:amount).value number_with_precision(item.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				row.item(:price).value number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
+				row.item(:amount).value number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row.item(:tax).value item.tax_type.tax.to_s + "%" if item.tax_type.tax != TaxType.exempt.tax
 				var_concept = item.try(:description)
 			end
 		end

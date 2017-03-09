@@ -256,33 +256,24 @@
       <table class="table table-condensed table-striped shrinked stu">
         <thead>
           <tr>
-            <th><%= t "activerecord.attributes.client_bank_account.bank_account_class_id" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.holder_fiscal_id" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.holder_name" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.starting_at" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.ending_at" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.country_id" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.iban_dc" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.bank_id" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.bank_office_id" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.ccc_dc" %>:</th>
-            <th><%= t "activerecord.attributes.client_bank_account.account_no" %>:</th>
+            <th><%= t "activerecord.attributes.supplier_bank_account.bank_account_class" %></th>
+            <th><%= t "activerecord.attributes.supplier_bank_account.e_format" %></th>
+            <th><%= t "activerecord.attributes.supplier_bank_account.holder_name" %></th>
+            <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
+            <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
+            <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
           </tr>
         </thead>
         <tbody>
           <% @subscriber_accounts.each do |client_bank_account| %>
             <tr>
               <td><%= client_bank_account.bank_account_class.name %></td>
-              <td><%= client_bank_account.holder_fiscal_id %></td>
+              <td><%= client_bank_account.e_format_with_spaces %></td>
               <td><%= client_bank_account.holder_name %></td>
-              <td><%= client_bank_account.starting_at.strftime("%d/%m/%Y") unless client_bank_account.starting_at.blank? %></td>
-              <td><%= client_bank_account.ending_at.strftime("%d/%m/%Y") unless client_bank_account.ending_at.blank? %></td>
-              <td><%= client_bank_account.country.code %></td>
-              <td><%= client_bank_account.iban_dc %></td>
-              <td><%= client_bank_account.bank.code %></td>
-              <td><%= client_bank_account.bank_office.code %></td>
-              <td><%= client_bank_account.ccc_dc %></td>
-              <td><%= client_bank_account.account_no %></td>
+              <td><%= client_bank_account.holder_fiscal_id %></td>
+              <td align="center"><%= client_bank_account.starting_at.strftime("%d/%m/%Y") %></td>
+              <td align="center"><%= client_bank_account.ending_at.strftime("%d/%m/%Y") unless client_bank_account.ending_at.blank? %></td>
+            </tr>
             </tr>
           <% end %>
         </tbody>

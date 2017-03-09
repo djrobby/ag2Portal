@@ -19,7 +19,8 @@ module Ag2Gest
                                                 :subscriber_tec_report,
                                                 :subscriber_eco_report,
                                                 :rebilling,
-                                                :add_bank_account]
+                                                :add_bank_account,
+                                                :su_check_iban]
 
     def update_tariffs
       @subscriber = Subscriber.find params[:id]
@@ -81,11 +82,34 @@ module Ag2Gest
       end
     end
 
+    # Check IBAN
+    def su_check_iban
+      iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
+      # Setup JSON
+      @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
     def add_bank_account
       @subscriber = Subscriber.find(params[:id])
-      @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
-      redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
-      @client_bank_account = ClientBankAccount.new(params[:client_bank_account])
+      if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank?
+        @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
+        redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
+      end
+      @client_bank_account = ClientBankAccount.new(
+                              client_id: params[:client_bank_account][:client_id],
+                              subscriber_id: params[:client_bank_account][:subscriber_id],
+                              bank_account_class_id: params[:client_bank_account][:bank_account_class_id],
+                              starting_at: params[:client_bank_account][:starting_at],
+                              country_id: params[:client_bank_account][:country_id],
+                              iban_dc: params[:client_bank_account][:iban_dc],
+                              bank_id: params[:client_bank_account][:bank_id],
+                              bank_office_id: params[:client_bank_account][:bank_office_id],
+                              ccc_dc: params[:client_bank_account][:account_no].to_s[0..1],
+                              account_no: params[:client_bank_account][:account_no].to_s[2..11],
+                              holder_fiscal_id: params[:client_bank_account][:holder_fiscal_id],
+                              holder_name: params[:client_bank_account][:holder_name]
+                            )
       respond_to do |format|
         if @client_bank_account.save
           format.html { redirect_to @subscriber, notice: t('ag2_gest.subscribers.client_bank_account.successful') }
@@ -697,12 +721,12 @@ module Ag2Gest
             @contracting_request.client.client_bank_accounts.where(ending_at: nil,subscriber_id: nil).last.update_attributes(subscriber_id: @subscriber.id)
           end
           if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id == @subscriber.id and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
-            @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by ) 
+            @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by )
           end
           if @meter_details.save
             @contracting_request.status_control
             if @contracting_request.save
-              @old_subscriber = @contracting_request.old_subscriber 
+              @old_subscriber = @contracting_request.old_subscriber
               @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.starting_at) if @contracting_request.water_supply_contract
               @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
               @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill

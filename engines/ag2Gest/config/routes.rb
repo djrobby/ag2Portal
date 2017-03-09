@@ -180,6 +180,9 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
     match 'su_find_meter/:meter', :controller => 'subscribers', :action => 'su_find_meter'
     match 'subscribers/:id/add_bank_account', :controller => 'subscribers', :action => 'add_bank_account', :via => [:post], as: "add_bank_account"
+    match 'subscribers/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'su_check_iban'
+    match 'su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'su_check_iban'
+    match 'subscribers/:id/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'su_check_iban'
     #
     # Commercial billing
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
