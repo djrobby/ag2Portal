@@ -3,10 +3,16 @@
   var changing = false;
 
   $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   }); 
-/*
+
   $(document).ajaxStart(function() {
     // show loader on start
     if (changing == false) {
@@ -17,43 +23,19 @@
     // hide loader on success
     $("#loader").hide();
   });
-*/
+
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
-    $("#WrkrCompany").val("<%= params[:WrkrCompany] %>");
-    $("#WrkrOffice").val("<%= params[:WrkrOffice] %>");
+    $("#WrkrCompany").select2("val", "<%= params[:WrkrCompany] %>");
+    $("#WrkrOffice").select2("val", "<%= params[:WrkrOffice] %>");
   });
 
   jQuery(function($) {
-    // when the #WrkrCompany field changes
-    $("#WrkrCompany").change(function() {
-      // make a POST call and replace the content
-      var com = $('#WrkrCompany :selected').val();
-      if (com == "")
-        com = "0";
-      jQuery.getJSON('pr_update_offices_select_from_company/' + com, function(data) {
-        $("#WrkrOffice").html("");
-        //$("#WrkrOffice").select2("val", "");
-        $("#WrkrOffice").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
-        });
-      });
-      return false;
-    });
-    
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
-      $("#WrkrCompany").val("");
-      $("#WrkrOffice").val("");
-      jQuery.getJSON('pr_update_offices_select_from_company/0', function(data) {
-        $("#WrkrOffice").html("");
-        $("#WrkrOffice").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#WrkrOffice").append($('<option></option>').val(option.id).html(option.name));
-        });
-      });
+      $("#WrkrCompany").select2("val", "");
+      $("#WrkrOffice").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -87,19 +69,19 @@
         <!-- Company -->
         <%= label_tag I18n.t("ag2_tech.projects.index.label_company"), nil, :class => 'form-label' %>
         <% if session[:company] != '0' %>
-        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
-        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrCompany", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% end %>
         <!-- Office -->
-        <%= label_tag I18n.t("ag2_tech.projects.index.label_office"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_tech.projects.index.label_office"), nil, :class => 'form-label-under-sel2' %>
         <% if session[:office] != '0' %>
-        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :class => 'x-large-text-field shrinked sel2' %>
         <% else %>
-        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "WrkrOffice", options_from_collection_for_select(@offices, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <% end %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_tech.projects.index.label_others"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_tech.projects.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

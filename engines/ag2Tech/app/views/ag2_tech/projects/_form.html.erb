@@ -164,7 +164,7 @@
         var o = data.offices;
         // Companies
         $("#project_company_id").html("");
-        $("#project_company_id").val("");
+        $("#project_company_id").select2("val", "");
         $("#project_company_id").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
@@ -179,7 +179,7 @@
         }
         // Offices
         $("#project_office_id").html("");
-        $("#project_office_id").val("");
+        $("#project_office_id").select2("val", "");
         $("#project_office_id").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
@@ -290,25 +290,25 @@
 <div>
   <label class="multi-field-label-two">
     <% if session[:office] != '0' %>
-    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.offices.count > 0 %>
-    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
   </label>
   <label class="multi-field-label-two">
     <% if session[:company] != '0' %>
-    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.companies.count > 0 %>
-    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
   </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :project_code, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :project_code, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 
