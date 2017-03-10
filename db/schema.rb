@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170308095621) do
+ActiveRecord::Schema.define(:version => 20170310070222) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2198,12 +2198,13 @@ ActiveRecord::Schema.define(:version => 20170308095621) do
     t.integer  "reading_2_id"
     t.integer  "reading_index_1"
     t.integer  "reading_index_2"
-    t.datetime "created_at",                                           :null => false
-    t.datetime "updated_at",                                           :null => false
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "lat",                  :precision => 18, :scale => 15
-    t.decimal  "lng",                  :precision => 18, :scale => 15
+    t.decimal  "lat",                                      :precision => 18, :scale => 15
+    t.decimal  "lng",                                      :precision => 18, :scale => 15
+    t.binary   "image",                :limit => 16777215
   end
 
   add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
@@ -2615,9 +2616,9 @@ ActiveRecord::Schema.define(:version => 20170308095621) do
     t.integer  "reading_sequence"
     t.string   "reading_variant"
     t.datetime "reading_date"
-    t.integer  "reading_index",                                        :default => 0, :null => false
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.integer  "reading_index",                                                            :default => 0, :null => false
+    t.datetime "created_at",                                                                              :null => false
+    t.datetime "updated_at",                                                                              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "invoice_id"
@@ -2626,8 +2627,9 @@ ActiveRecord::Schema.define(:version => 20170308095621) do
     t.integer  "reading_1_id"
     t.integer  "reading_2_id"
     t.integer  "bill_id"
-    t.decimal  "lat",                  :precision => 18, :scale => 15
-    t.decimal  "lng",                  :precision => 18, :scale => 15
+    t.decimal  "lat",                                      :precision => 18, :scale => 15
+    t.decimal  "lng",                                      :precision => 18, :scale => 15
+    t.binary   "image",                :limit => 16777215
   end
 
   add_index "readings", ["bill_id"], :name => "index_readings_on_bill_id"
