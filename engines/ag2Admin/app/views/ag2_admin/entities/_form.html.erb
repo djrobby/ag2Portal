@@ -65,8 +65,8 @@
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
         $("#entity_province_id").select2("val", data.province_id);
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#entity_region_id").select2("val", data.region_id);
+        $("#entity_country_id").select2("val", data.country_id);
       })
       return false;
     });
@@ -78,8 +78,8 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#entity_region_id").select2("val", data.region_id);
+        $("#entity_country_id").select2("val", data.country_id);
       })
       return false;
     });
@@ -93,8 +93,8 @@
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
         $("#entity_town_id").select2("val", data.town_id);
         $("#entity_province_id").select2("val", data.province_id);
-        $("#entity_region_id").val(data.region_id);
-        $("#entity_country_id").val(data.country_id);
+        $("#entity_region_id").select2("val", data.region_id);
+        $("#entity_country_id").select2("val", data.country_id);
       })
       return false;
     });
@@ -106,7 +106,7 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
-        $("#entity_country_id").val(data.id);
+        $("#entity_country_id").select2("val", data.country_id);
       })
       return false;
     });
@@ -141,8 +141,15 @@
 <%= simple_form_for @entity, :html => { :class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :fiscal_id, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field iconify' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :company, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -150,13 +157,6 @@
   <label class="multi-field-label-two"> <%= f.input :last_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :first_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<% if session[:organization] != '0' %>
-<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% elsif current_user.organizations.count > 0 %>
-<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: false %>
-<% else %>
-<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
-<% end %>
 <h4><%=t 'ag2_admin.entities.personal_info' %></h4>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
@@ -182,8 +182,8 @@
   <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
