@@ -137,6 +137,7 @@ module Ag2Products
         if !tax.blank?
           with :tax_type_id, tax
         end
+        data_accessor_for(Product).include = [:product_type, :product_family]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

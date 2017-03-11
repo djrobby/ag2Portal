@@ -37,7 +37,7 @@
       <td></td>
       <% end %>
       <td><%= formatted_timestamp(ticket.created_at.utc.getlocal) %></td>
-      <td><%= User.find(ticket.created_by).email unless ticket.created_by.blank? %></td>
+      <td><%= ticket.creator.email unless ticket.created_by.blank? %></td>
       <% if ticket.ticket_status_id == 4 %>
         <td><%= ticket.ticket_subject %></td>
       <% else %>

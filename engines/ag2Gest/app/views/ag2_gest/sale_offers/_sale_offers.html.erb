@@ -29,7 +29,7 @@
       <tr>
     <% end %>
       <td><%= link_to offer.full_no, offer %></td>
-      <td><%= offer.invoices.count unless offer.invoices.count == 0 %></td>
+      <td><%= offer.invoices.size unless offer.invoices.size == 0 %></td>
       <td align="center"><%= formatted_date(offer.offer_date) unless offer.offer_date.blank? %></td>
       <td><%= client_name(offer) %></td>
       <td><%= offer.contracting_request.full_no unless offer.contracting_request.blank? %></td>

@@ -171,6 +171,19 @@ class EnginesController < ApplicationController
     render json: @contracting_requests
   end
 
+  # Suppliers
+  def search_suppliers
+    @suppliers = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(supplier_code LIKE '%#{@q}%' OR name LIKE '%#{@q}%')"
+      @suppliers = serialized(Supplier.where(w).by_code,
+                            Api::V1::SuppliersSerializer)
+    end
+    render json: @suppliers
+  end
+
   # Returns JSON list of orders
   def serialized(_data, _serializer)
     ActiveModel::ArraySerializer.new(_data, each_serializer: _serializer, root: false)

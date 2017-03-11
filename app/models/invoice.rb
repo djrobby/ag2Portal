@@ -9,7 +9,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :charge_account
   belongs_to :organization
   belongs_to :payment_method
-  belongs_to :sale_offer
+  belongs_to :sale_offer, :counter_cache => true
 
   alias_attribute :company, :biller
 
@@ -107,6 +107,10 @@ class Invoice < ActiveRecord::Base
       _aux = []
     end
     _codes
+  end
+
+  def client
+    bill.client unless (bill.blank? || bill.client.blank?)
   end
 
   #

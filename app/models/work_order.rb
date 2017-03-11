@@ -328,7 +328,7 @@ class WorkOrder < ActiveRecord::Base
 
   # Have suborders?
   def have_suborders?
-    suborders.count > 0 ? true : false
+    suborders.size > 0 ? true : false
   end
 
   # Are there unclosed linked suborders?

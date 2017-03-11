@@ -31,6 +31,8 @@ class User < ActiveRecord::Base
 
   has_many :workers # has_one when finished worker_items implementation
   has_one :technician
+  has_many :tickets, foreign_key: :created_by
+  has_many :cc_tickets, class_name: 'Ticket', foreign_key: :cc_id
 
   def to_label
     "#{name} (#{email})"

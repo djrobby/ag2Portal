@@ -65,6 +65,7 @@ module Ag2Admin
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
+        data_accessor_for(Office).include = [:company]
         order_by sort_column, sort_direction
         paginate :page => params[:page] || 1, :per_page => per_page
       end

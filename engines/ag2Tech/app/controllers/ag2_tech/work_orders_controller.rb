@@ -677,6 +677,7 @@ module Ag2Tech
         if !status.blank?
           with :work_order_status_id, status
         end
+        data_accessor_for(WorkOrder).include = [:work_order_area, :work_order_type, :work_order_status, :suborders]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

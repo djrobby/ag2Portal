@@ -119,9 +119,9 @@ module Ag2Admin
     def index
       manage_filter_state
       if session[:organization] != '0'
-        @companies = Company.where("organization_id = ?", "#{session[:organization]}").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @companies = Company.where(organization_id: session[:organization]).includes(:organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
-        @companies = Company.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @companies = Company.includes(:organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|

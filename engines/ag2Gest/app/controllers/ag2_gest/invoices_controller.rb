@@ -90,6 +90,7 @@ module Ag2Gest
             with :invoice_date, to
           end
         end
+        data_accessor_for(Invoice).include = [:invoice_type, :invoice_status, :invoice_operation, {bill: :client}, :biller]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

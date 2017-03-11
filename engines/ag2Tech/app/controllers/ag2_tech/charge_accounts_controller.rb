@@ -104,6 +104,7 @@ module Ag2Tech
         if !group.blank?
           with :charge_group_id, group
         end
+        data_accessor_for(ChargeAccount).include = [:charge_group, :project]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

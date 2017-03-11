@@ -122,6 +122,7 @@ module Ag2HelpDesk
         if !destination.blank?
           with :hd_email, destination
         end
+        data_accessor_for(Ticket).include = [:creator, :ticket_status, :technician]
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

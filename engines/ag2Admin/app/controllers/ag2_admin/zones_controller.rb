@@ -32,9 +32,9 @@ module Ag2Admin
     def index
       manage_filter_state
       if session[:organization] != '0'
-        @zones = Zone.where("organization_id = ?", "#{session[:organization]}").paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @zones = Zone.where(organization_id: session[:organization]).includes(:worker, :organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
-        @zones = Zone.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @zones = Zone.includes(:worker, :organization).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|

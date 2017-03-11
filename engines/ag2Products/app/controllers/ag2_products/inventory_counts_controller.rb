@@ -414,6 +414,7 @@ module Ag2Products
         if !type.blank?
           with :inventory_count_type_id, type
         end
+        data_accessor_for(InventoryCount).include = [:inventory_count_type, :store, :product_family]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

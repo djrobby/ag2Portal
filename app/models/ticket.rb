@@ -6,6 +6,7 @@ class Ticket < ActiveRecord::Base
   belongs_to :office
   belongs_to :organization
   belongs_to :cc, class_name: 'User'
+  belongs_to :creator, class_name: 'User', foreign_key: :created_by
   attr_accessible :assign_at, :status_changed_at, :status_changed_message, :ticket_message, :ticket_subject,
                   :ticket_category_id, :ticket_priority_id, :ticket_status_id, :technician_id, :office_id,
                   :attachment, :created_by, :updated_by, :source_ip, :hd_email, :organization_id, :cc_id

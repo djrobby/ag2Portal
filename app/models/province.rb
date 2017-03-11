@@ -6,7 +6,7 @@ class Province < ActiveRecord::Base
   validates :name,      :presence => true
   validates :ine_cpro,  :length => { :minimum => 2 }
   validates :region,    :presence => true
-                       
+
   has_many :towns
   has_many :zipcodes
   has_many :companies

@@ -582,6 +582,7 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
+        data_accessor_for(Offer).include = [:supplier, :offer_request]
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

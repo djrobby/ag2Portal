@@ -26,6 +26,7 @@ module Ag2Admin
 
       @search = Zipcode.search do
         fulltext params[:search]
+        data_accessor_for(Zipcode).include = [:town, :province]
         order_by sort_column, sort_direction
         paginate :page => params[:page] || 1, :per_page => per_page
       end

@@ -10,7 +10,7 @@ module Ag2Admin
     # GET /provinces.json
     def index
       manage_filter_state
-      @provinces = Province.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      @provinces = Province.includes(region: [:country]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb

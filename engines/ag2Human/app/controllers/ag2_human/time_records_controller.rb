@@ -42,6 +42,7 @@ module Ag2Human
         if !code.blank?
           with :timerecord_code_id, code
         end
+        data_accessor_for(TimeRecord).include = [:worker, :timerecord_type, :timerecord_code]
         order_by :timerecord_date, :desc
         order_by :timerecord_time, :desc
         paginate :page => params[:page] || 1, :per_page => per_page

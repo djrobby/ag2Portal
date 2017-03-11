@@ -31,31 +31,31 @@ module Ag2Admin
       init_oco if !session[:organization]
       if session[:organization] != '0'
         # OCO organization active
-        @areas = Area.joins(:department).where(departments: { organization_id: session[:organization] }).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @areas = Area.joins(:department).where(departments: { organization_id: session[:organization] }).includes(:worker).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
         # OCO inactive
-        @areas = Area.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @areas = Area.includes(:department, :worker).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @areas }
         format.js
       end
     end
-  
+
     # GET /areas/1
     # GET /areas/1.json
     def show
       @breadcrumb = 'read'
       @area = Area.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @area }
       end
     end
-  
+
     # GET /areas/new
     # GET /areas/new.json
     def new
@@ -63,13 +63,13 @@ module Ag2Admin
       @area = Area.new
       @departments = departments_dropdown
       @workers = workers_dropdown
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @area }
       end
     end
-  
+
     # GET /areas/1/edit
     def edit
       @breadcrumb = 'update'
@@ -77,14 +77,14 @@ module Ag2Admin
       @departments = departments_dropdown
       @workers = @area.department.blank? ? workers_dropdown : workers_by_department(@area.department)
     end
-  
+
     # POST /areas
     # POST /areas.json
     def create
       @breadcrumb = 'create'
       @area = Area.new(params[:area])
       @area.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @area.save
           format.html { redirect_to @area, notice: crud_notice('created', @area) }
@@ -97,14 +97,14 @@ module Ag2Admin
         end
       end
     end
-  
+
     # PUT /areas/1
     # PUT /areas/1.json
     def update
       @breadcrumb = 'update'
       @area = Area.find(params[:id])
       @area.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @area.update_attributes(params[:area])
           format.html { redirect_to @area,
@@ -118,7 +118,7 @@ module Ag2Admin
         end
       end
     end
-  
+
     # DELETE /areas/1
     # DELETE /areas/1.json
     def destroy
@@ -141,7 +141,7 @@ module Ag2Admin
     def sort_column
       Area.column_names.include?(params[:sort]) ? params[:sort] : "name"
     end
-    
+
     def cannot_edit(_department)
       session[:company] != '0' && (_department.company_id != session[:company].to_i && !_department.company.blank?)
     end
@@ -157,9 +157,9 @@ module Ag2Admin
         _departments = session[:organization] != '0' ? Department.where(organization_id: session[:organization].to_i).order(:name) : Department.order(:name)
       end
     end
-    
+
     def workers_by_department(_department)
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)      
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)
     end
 
     # Keeps filter state

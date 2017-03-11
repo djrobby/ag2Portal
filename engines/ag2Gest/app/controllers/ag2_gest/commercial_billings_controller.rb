@@ -527,6 +527,7 @@ module Ag2Gest
         # if !period.blank?
         #   with :billing_period_id, period
         # end
+        data_accessor_for(Invoice).include = [:invoice_type, :invoice_status, :invoice_operation, {bill: :client}, :sale_offer]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

@@ -697,6 +697,7 @@ module Ag2Products
           #   with :reception_status_id, 1
           # end
         end
+        data_accessor_for(PurchaseOrder).include = [:order_status, :supplier, :offer]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

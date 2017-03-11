@@ -5,7 +5,9 @@ module Ag2Products
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:rn_totals,
+    skip_load_and_authorize_resource :only => [:rn_remove_filters,
+                                               :rn_restore_filters,
+                                               :rn_totals,
                                                :rn_update_description_prices_from_product_store,
                                                :rn_update_description_prices_from_product,
                                                :rn_update_amount_from_price_or_quantity,
@@ -23,6 +25,10 @@ module Ag2Products
                                                :rn_attachment_changed,
                                                :rn_update_attachment,
                                                :receive_meters]
+    # Helper methods for
+    # => index filters
+    helper_method :rn_remove_filters, :rn_restore_filters
+
     # Public attachment for drag&drop
     $attachment = nil
     $attachment_changed = false
@@ -515,12 +521,13 @@ module Ag2Products
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      @suppliers = suppliers_dropdown if @suppliers.nil?
-      @work_orders = work_orders_dropdown_new if @work_orders.nil?
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @orders = orders_dropdown if @orders.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -547,6 +554,7 @@ module Ag2Products
         if !order.blank?
           with :work_order_id, order
         end
+        data_accessor_for(ReceiptNote).include = [:supplier, :project, :products]
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
@@ -1153,6 +1161,23 @@ module Ag2Products
       elsif session[:Order]
         params[:Order] = session[:Order]
       end
+    end
+
+    def rn_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Supplier] = ""
+      params[:Project] = ""
+      params[:Order] = ""
+      return " "
+    end
+
+    def rn_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Supplier] = session[:Supplier]
+      params[:Project] = session[:Project]
+      params[:Order] = session[:Order]
     end
   end
 end

@@ -167,6 +167,7 @@ module Ag2Tech
         if !office.blank?
           with :office_id, office
         end
+        data_accessor_for(Project).include = [:company, :office]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

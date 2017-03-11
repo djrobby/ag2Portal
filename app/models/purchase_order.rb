@@ -1,7 +1,7 @@
 class PurchaseOrder < ActiveRecord::Base
   include ModelsModule
 
-  belongs_to :offer
+  belongs_to :offer, :counter_cache => true
   belongs_to :supplier
   belongs_to :payment_method
   belongs_to :order_status

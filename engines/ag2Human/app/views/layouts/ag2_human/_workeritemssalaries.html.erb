@@ -1,13 +1,13 @@
 <% items.each do |item| %>
 <% first_item = true %>
 <% salaries = item.worker_salaries.order('year desc') %>
-<% if (salaries.count > 0) %>
+<% if (salaries.size > 0) %>
 <% salaries.each do |salary| %>
 <% if item.ending_at.blank? %>
 <tr>
 <% else %>
 <tr class="inactive-row">
-<% end %> <!-- end item.ending_at.blank? && salaries.count > 0 -->
+<% end %> <!-- end item.ending_at.blank? && salaries.size > 0 -->
   <% if first_item %>
   <td><%= item.id %></td>
   <td><%= item.company.name unless item.company.blank? %></td>
@@ -44,12 +44,12 @@
   <% end %> <!-- end first_item -->
 </tr>
 <% end %> <!-- end salaries.each do |salary| -->
-<% else %> <!-- else (salaries.count > 0) -->
+<% else %> <!-- else (salaries.size > 0) -->
 <% if item.ending_at.blank? %>
 <tr>
 <% else %>
 <tr class="inactive-row">
-<% end %> <!-- end item.ending_at.blank? && salaries.count <= 0 -->
+<% end %> <!-- end item.ending_at.blank? && salaries.size <= 0 -->
   <td><%= item.id %></td>
   <td><%= item.company.name unless item.company.blank? %></td>
   <td><%= item.office.name unless item.office.blank? %></td>
@@ -68,6 +68,6 @@
     <%= render :partial => '/layouts/crud/delete', :locals => { :model => WorkerItem, :path => item, :msg => I18n.t("activerecord.models.worker_item.one"), :txt => item.id.to_s + " - " + item.worker.full_name } %>
   </td>
 </tr>
-<% end %> <!-- end (salaries.count > 0) -->
+<% end %> <!-- end (salaries.size > 0) -->
 <% end %> <!-- end items.each do |item| -->
 

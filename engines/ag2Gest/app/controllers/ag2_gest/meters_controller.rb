@@ -58,6 +58,7 @@ module Ag2Gest
             with :purchase_date, to
           end
         end
+        data_accessor_for(Meter).include = [:caliber, {meter_model: :meter_brand}]
         order_by sort_column, sort_direction
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

@@ -481,6 +481,7 @@ module Ag2Gest
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
+        data_accessor_for(Subscriber).include = [:street_directory, :meter]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

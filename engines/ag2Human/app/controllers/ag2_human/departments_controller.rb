@@ -47,9 +47,9 @@ module Ag2Human
       manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
-        @departments = Department.where(organization_id: session[:organization]).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @departments = Department.where(organization_id: session[:organization]).includes(:organization, :company).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
-        @departments = Department.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @departments = Department.includes(:organization, :company).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|
@@ -157,11 +157,11 @@ module Ag2Human
     def sort_column
       Department.column_names.include?(params[:sort]) ? params[:sort] : "code"
     end
-    
+
     def cannot_edit(_company)
       session[:company] != '0' && (_company != session[:company].to_i && !_company.blank?)
     end
-    
+
     def companies_dropdown
       if session[:company] != '0'
         _companies = Company.where(id: session[:company].to_i)
@@ -169,7 +169,7 @@ module Ag2Human
         _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
       end
     end
-    
+
     def workers_dropdown
       if session[:company] != '0'
         _workers = workers_by_company(session[:company].to_i)
@@ -185,7 +185,7 @@ module Ag2Human
         _companies = _organization.companies.order(:name)
       end
     end
-    
+
     def workers_dropdown_edit(_company)
       if session[:company] != '0'
         _workers = workers_by_company(session[:company].to_i)
@@ -195,7 +195,7 @@ module Ag2Human
     end
 
     def workers_by_company(_company)
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)      
+      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
     end
 
     # Keeps filter state

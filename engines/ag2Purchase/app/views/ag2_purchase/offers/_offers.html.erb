@@ -28,7 +28,7 @@
       <tr>
     <% end %>
       <td><%= offer.id %></td>
-      <td><%= offer.purchase_orders.count unless offer.purchase_orders.count == 0 %></td>
+      <td><%= offer.purchase_orders.size unless offer.purchase_orders.size == 0 %></td>
       <td><%= link_to offer.offer_no, offer %>
         <% if !offer.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
       </td>

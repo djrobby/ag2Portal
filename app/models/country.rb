@@ -9,6 +9,7 @@ class Country < ActiveRecord::Base
   has_many :clients
   has_many :supplier_bank_accounts
   has_many :client_bank_accounts
+  has_many :provinces, through: :regions
 
   has_paper_trail
 

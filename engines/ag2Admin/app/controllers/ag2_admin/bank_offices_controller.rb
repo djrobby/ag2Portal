@@ -55,7 +55,7 @@ module Ag2Admin
     # GET /bank_offices.json
     def index
       manage_filter_state
-      @bank_offices = BankOffice.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+      @bank_offices = BankOffice.includes(:bank, :street_type, :zipcode, :town).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -63,44 +63,44 @@ module Ag2Admin
         format.js
       end
     end
-  
+
     # GET /bank_offices/1
     # GET /bank_offices/1.json
     def show
       @breadcrumb = 'read'
       @bank_office = BankOffice.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @bank_office }
       end
     end
-  
+
     # GET /bank_offices/new
     # GET /bank_offices/new.json
     def new
       @breadcrumb = 'create'
       @bank_office = BankOffice.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @bank_office }
       end
     end
-  
+
     # GET /bank_offices/1/edit
     def edit
       @breadcrumb = 'update'
       @bank_office = BankOffice.find(params[:id])
     end
-  
+
     # POST /bank_offices
     # POST /bank_offices.json
     def create
       @breadcrumb = 'create'
       @bank_office = BankOffice.new(params[:bank_office])
       @bank_office.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @bank_office.save
           format.html { redirect_to @bank_office, notice: crud_notice('created', @bank_office) }
@@ -111,14 +111,14 @@ module Ag2Admin
         end
       end
     end
-  
+
     # PUT /bank_offices/1
     # PUT /bank_offices/1.json
     def update
       @breadcrumb = 'update'
       @bank_office = BankOffice.find(params[:id])
       @bank_office.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @bank_office.update_attributes(params[:bank_office])
           format.html { redirect_to @bank_office,
@@ -130,7 +130,7 @@ module Ag2Admin
         end
       end
     end
-  
+
     # DELETE /bank_offices/1
     # DELETE /bank_offices/1.json
     def destroy

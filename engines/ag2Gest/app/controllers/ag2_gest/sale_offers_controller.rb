@@ -359,6 +359,7 @@ module Ag2Gest
         if !request.blank?
           with :contracting_request_id, request
         end
+        data_accessor_for(SaleOffer).include = [:client, :contracting_request]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

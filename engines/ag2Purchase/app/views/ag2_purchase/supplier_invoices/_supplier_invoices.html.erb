@@ -21,7 +21,7 @@
   </thead>
   <tbody>
     <% @supplier_invoices.each do |invoice| %>
-    <% if invoice.supplier_invoice_approvals.count > 0 %>
+    <% if invoice.supplier_invoice_approvals.size > 0 %>
       <tr class="approved-tr">
     <% else %>
       <tr>
