@@ -415,6 +415,7 @@ class Reading < ActiveRecord::Base
     end
   end
 
+  # Real consumption (by period)
   def consumption_total_period
     # @readings = Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).group_by(&:reading_1_id)
     readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
@@ -423,6 +424,18 @@ class Reading < ActiveRecord::Base
       total += reading[1].last.consumption
     end
     return total
+  end
+
+  # Estimated consumption
+  def estimated_consumption
+    total = 0
+    # if real consumption equals zero, try to estimate
+    if consumption_total_period == 0
+      # Only estimates if there is an incidence that requires estimating
+      if ReadingIncidence.reading_should_be_estimated(self.id)
+      end
+    end
+    total
   end
 
   searchable do

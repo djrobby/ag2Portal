@@ -83,7 +83,7 @@ class Project < ActiveRecord::Base
   end
 
   def has_analytical_plan?
-    charge_accounts.count > 0 ? true : false
+    charge_accounts.size > 0 ? true : false
   end
 
   #
