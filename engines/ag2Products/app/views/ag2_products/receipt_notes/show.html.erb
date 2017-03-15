@@ -31,7 +31,7 @@
       <td><%=t 'activerecord.attributes.receipt_note.receipt_date' %>:</td>
       <td><%= formatted_date(@receipt_note.receipt_date) unless @receipt_note.receipt_date.blank? %></td>
       <td><%=t 'activerecord.attributes.receipt_note.purchase_order' %>:</td>
-      <td><%= @receipt_note.purchase_order.order_no unless @receipt_note.purchase_order.blank? %></td>
+      <td><%= @receipt_note.purchase_order.full_no unless @receipt_note.purchase_order.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.receipt_note.supplier' %>:</td>

@@ -48,6 +48,8 @@ class PurchaseOrder < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:order_no) }
+  #
+  scope :these, -> t { where(id: t).by_no }
 
   before_destroy :check_for_dependent_records
   after_create :notify_on_create

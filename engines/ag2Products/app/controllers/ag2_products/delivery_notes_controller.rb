@@ -17,6 +17,7 @@ module Ag2Products
                                                :dn_format_number,
                                                :dn_current_stock,
                                                :dn_update_project_textfields_from_organization,
+                                               :dn_update_product_select_from_organization,
                                                :dn_item_stock_check,
                                                :delivery_note_form,
                                                :delivery_note_form_client,
@@ -300,6 +301,21 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def dn_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
     # Is quantity greater than current stock?
     # Will quantity leave stock at minimum?
     def dn_item_stock_check
@@ -434,7 +450,7 @@ module Ag2Products
       @stores = stores_dropdown
       @clients = clients_dropdown
       @payment_methods = payment_methods_dropdown
-      @products = products_dropdown
+      # @products = products_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -453,7 +469,7 @@ module Ag2Products
       @stores = work_order_store(@delivery_note)
       @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
       @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
-      @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
+      # @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
     end
 
     # POST /delivery_notes
@@ -475,7 +491,7 @@ module Ag2Products
           @stores = stores_dropdown
           @clients = clients_dropdown
           @payment_methods = payment_methods_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
         end
@@ -541,7 +557,7 @@ module Ag2Products
             @stores = work_order_store(@delivery_note)
             @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
             @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
-            @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
+            # @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
             format.html { render action: "edit" }
             format.json { render json: @delivery_note.errors, status: :unprocessable_entity }
           end

@@ -20,6 +20,7 @@ module Ag2Products
                                                :rn_format_number,
                                                :rn_current_stock,
                                                :rn_update_project_textfields_from_organization,
+                                               :rn_update_product_select_from_organization,
                                                :receipt_notes_report,
                                                :rn_generate_note,
                                                :rn_attachment_changed,
@@ -61,7 +62,6 @@ module Ag2Products
       if supplier != '0'
         @supplier = Supplier.find(supplier)
         @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.undelivered(@supplier.organization_id, true)
-        #@orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
       else
         @orders = orders_dropdown
       end
@@ -123,6 +123,22 @@ module Ag2Products
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
                      "payment_method_id" => payment_method_id, "order_item" => @order_items_dropdown }
+      render json: @json_data
+    end
+
+    # Update product select at view from organization select
+    def rn_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -596,7 +612,7 @@ module Ag2Products
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
-      @products = products_dropdown
+      # @products = products_dropdown
       @order_items = []
 
       respond_to do |format|
@@ -612,7 +628,8 @@ module Ag2Products
       $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
-      @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
+      @orders = @receipt_note.supplier.blank? ? orders_dropdown : orders_dropdown_edit(@receipt_note)
+      # @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
       @projects = projects_dropdown_edit(@receipt_note.project)
       # @work_orders = @receipt_note.project.blank? ? work_orders_dropdown : @receipt_note.project.work_orders.order(:order_no)
       @work_orders = @receipt_note.project.blank? ? work_orders_dropdown_new : work_orders_dropdown_edit(@receipt_note)
@@ -620,13 +637,12 @@ module Ag2Products
       @stores = work_order_store(@receipt_note)
       @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
       @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
-      @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
-      #@products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
-      if @order_items.blank?
-        @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
-      else
-        @products = @order_items.first.purchase_order.products.group(:product_code)
-      end
+      # @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
+      # if @order_items.blank?
+      #   @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+      # else
+      #   @products = @order_items.first.purchase_order.products.group(:product_code)
+      # end
     end
 
     # POST /receipt_notes
@@ -657,7 +673,7 @@ module Ag2Products
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           @order_items = []
           format.html { render action: "new" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
@@ -734,19 +750,20 @@ module Ag2Products
           else
             destroy_attachment
             $attachment = Attachment.new
-            @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
+            @orders = @receipt_note.supplier.blank? ? orders_dropdown : orders_dropdown_edit(@receipt_note)
+            # @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
             @projects = projects_dropdown_edit(@receipt_note.project)
             @work_orders = @receipt_note.project.blank? ? work_orders_dropdown_new : work_orders_dropdown_edit(@receipt_note)
             @charge_accounts = work_order_charge_account(@receipt_note)
             @stores = work_order_store(@receipt_note)
             @suppliers = @receipt_note.organization.blank? ? suppliers_dropdown : @receipt_note.organization.suppliers(:supplier_code)
             @payment_methods = @receipt_note.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@receipt_note.organization_id)
-            @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
-            if @order_items.blank?
-              @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
-            else
-              @products = @order_items.first.purchase_order.products.group(:product_code)
-            end
+            # @order_items = @receipt_note.purchase_order.blank? ? [] : order_items_dropdown(@receipt_note.purchase_order)
+            # if @order_items.blank?
+            #   @products = @receipt_note.organization.blank? ? products_dropdown : @receipt_note.organization.products(:product_code)
+            # else
+            #   @products = @order_items.first.purchase_order.products.group(:product_code)
+            # end
             format.html { render action: "edit" }
             format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
           end
@@ -999,12 +1016,19 @@ module Ag2Products
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
     def orders_dropdown
       session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
       #_orders = session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
+    end
+
+    def orders_dropdown_edit(_receipt_note)
+      _array = []
+      _array = _array << _receipt_note.purchase_order_id unless _receipt_note.purchase_order_id.blank?
+      ret_array(_array, _receipt_note.supplier.purchase_orders.undelivered(_receipt_note.organization_id, true), 'id')
+      PurchaseOrder.these(_array)
     end
 
     def order_items_dropdown(_order)

@@ -73,7 +73,7 @@
       var store = $('select#fnt-store :selected').val();
       if (typeof store === "undefined") {
         tbl = true;
-        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+        store = $(_this).closest('tr').find('.fnt-store').val();
       }
       if (store == "")
         store = "0";
@@ -372,7 +372,7 @@
       // balance check
       var i = $('select#fnt-purchase-order-item :selected').val();
       if (typeof i === "undefined") {
-        i = $(_this).closest('tr').find('select.fnt-purchase-order-item :selected').val();
+        i = $(_this).closest('tr').find('.fnt-purchase-order-item').val();
       }
       if (i == "")
         i = "0";
@@ -533,7 +533,7 @@
       var order = $('select#receipt_note_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('rn_update_project_textfields_from_organization/' + order, function(data) {
+      jQuery.getJSON('rn_update_product_select_from_organization/' + order, function(data) {
         var prods = data.product
         // Product
         $("#fnt-product").html("");
