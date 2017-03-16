@@ -7,13 +7,14 @@
   }); 
 </script>
 
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th><%= t('activerecord.attributes.vehicle.registration') %></th>
       <th><%= t('activerecord.attributes.vehicle.name') %></th>
       <th><%= t('activerecord.attributes.vehicle.brand') %></th>
       <th><%= t('activerecord.attributes.vehicle.model') %></th>
+      <th><%= t('activerecord.attributes.vehicle.office') %></th>
       <th align="right"><%= t('activerecord.attributes.vehicle.cost') %></th>
       <th></th>
     </tr>
@@ -25,6 +26,7 @@
       <td><%= m.name %></td>
       <td><%= m.brand unless m.brand.blank? %></td>
       <td><%= m.model unless m.model.blank? %></td>
+      <td><%= m.office.name unless m.office.blank? %></td>
       <td align="right"><%= number_with_precision(m.cost, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless m.cost.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Vehicle, :path => edit_vehicle_path(m) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Vehicle, :path => m, :msg => t("activerecord.models.vehicle.one"), :txt => m.full_name } %> </td>

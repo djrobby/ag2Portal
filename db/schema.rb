@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170311120910) do
+ActiveRecord::Schema.define(:version => 20170316143200) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3610,3 +3610,855 @@ ActiveRecord::Schema.define(:version => 20170311120910) do
   add_index "tariffs", ["tax_type_p_id"], :name => "index_tariffs_on_tax_type_p_id"
   add_index "tariffs", ["tax_type_v_id"], :name => "index_tariffs_on_tax_type_v_id"
 
+  create_table "tax_types", :force => true do |t|
+    t.string   "description"
+    t.decimal  "tax",         :precision => 6, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.date     "expiration"
+  end
+
+  create_table "technicians", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "organization_id"
+  end
+
+  add_index "technicians", ["name"], :name => "index_technicians_on_name"
+  add_index "technicians", ["organization_id", "user_id"], :name => "index_technicians_on_organization_id_and_user_id", :unique => true
+  add_index "technicians", ["organization_id"], :name => "index_technicians_on_organization_id"
+  add_index "technicians", ["user_id"], :name => "index_technicians_on_user_id"
+
+  create_table "ticket_categories", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_categories", ["name"], :name => "index_ticket_categories_on_name"
+
+  create_table "ticket_priorities", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_priorities", ["name"], :name => "index_ticket_priorities_on_name"
+
+  create_table "ticket_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "ticket_statuses", ["name"], :name => "index_ticket_statuses_on_name"
+
+  create_table "tickets", :force => true do |t|
+    t.integer  "ticket_category_id"
+    t.integer  "ticket_priority_id"
+    t.string   "ticket_subject"
+    t.string   "ticket_message",          :limit => 1000
+    t.integer  "ticket_status_id"
+    t.integer  "technician_id"
+    t.datetime "assign_at"
+    t.datetime "status_changed_at"
+    t.string   "status_changed_message"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.integer  "office_id"
+    t.string   "source_ip"
+    t.string   "hd_email"
+    t.integer  "organization_id"
+    t.integer  "cc_id"
+  end
+
+  add_index "tickets", ["assign_at"], :name => "index_tickets_on_assign_at"
+  add_index "tickets", ["created_at"], :name => "index_tickets_on_created_at"
+  add_index "tickets", ["created_by"], :name => "index_tickets_on_created_by"
+  add_index "tickets", ["office_id"], :name => "index_tickets_on_office_id"
+  add_index "tickets", ["organization_id"], :name => "index_tickets_on_organization_id"
+  add_index "tickets", ["status_changed_at"], :name => "index_tickets_on_status_changed_at"
+  add_index "tickets", ["technician_id"], :name => "index_tickets_on_technician_id"
+  add_index "tickets", ["ticket_category_id"], :name => "index_tickets_on_ticket_category_id"
+  add_index "tickets", ["ticket_priority_id"], :name => "index_tickets_on_ticket_priority_id"
+  add_index "tickets", ["ticket_status_id"], :name => "index_tickets_on_ticket_status_id"
+  add_index "tickets", ["ticket_subject"], :name => "index_tickets_on_ticket_subject"
+
+  create_table "time_records", :force => true do |t|
+    t.date     "timerecord_date"
+    t.time     "timerecord_time"
+    t.integer  "worker_id"
+    t.integer  "timerecord_type_id"
+    t.integer  "timerecord_code_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "source_ip"
+  end
+
+  add_index "time_records", ["timerecord_code_id"], :name => "index_time_records_on_timerecord_code_id"
+  add_index "time_records", ["timerecord_date"], :name => "index_time_records_on_timerecord_date"
+  add_index "time_records", ["timerecord_time"], :name => "index_time_records_on_timerecord_time"
+  add_index "time_records", ["timerecord_type_id"], :name => "index_time_records_on_timerecord_type_id"
+  add_index "time_records", ["worker_id"], :name => "index_time_records_on_worker_id"
+
+  create_table "timerecord_codes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "timerecord_codes", ["name"], :name => "index_timerecord_codes_on_name"
+
+  create_table "timerecord_reports", :force => true do |t|
+    t.integer "tr_worker_id"
+    t.date    "tr_date"
+    t.time    "tr_time_1"
+    t.integer "tr_type_id_1"
+    t.integer "tr_code_id_1"
+    t.time    "tr_time_2"
+    t.integer "tr_type_id_2"
+    t.integer "tr_code_id_2"
+    t.time    "tr_time_3"
+    t.integer "tr_type_id_3"
+    t.integer "tr_code_id_3"
+    t.time    "tr_time_4"
+    t.integer "tr_type_id_4"
+    t.integer "tr_code_id_4"
+    t.time    "tr_time_5"
+    t.integer "tr_type_id_5"
+    t.integer "tr_code_id_5"
+    t.time    "tr_time_6"
+    t.integer "tr_type_id_6"
+    t.integer "tr_code_id_6"
+    t.time    "tr_time_7"
+    t.integer "tr_type_id_7"
+    t.integer "tr_code_id_7"
+    t.time    "tr_time_8"
+    t.integer "tr_type_id_8"
+    t.integer "tr_code_id_8"
+    t.time    "tr_worked_time"
+    t.integer "tr_rec_count"
+  end
+
+  add_index "timerecord_reports", ["tr_code_id_1"], :name => "index_timerecord_reports_on_tr_code_id_1"
+  add_index "timerecord_reports", ["tr_code_id_2"], :name => "index_timerecord_reports_on_tr_code_id_2"
+  add_index "timerecord_reports", ["tr_code_id_3"], :name => "index_timerecord_reports_on_tr_code_id_3"
+  add_index "timerecord_reports", ["tr_code_id_4"], :name => "index_timerecord_reports_on_tr_code_id_4"
+  add_index "timerecord_reports", ["tr_code_id_5"], :name => "index_timerecord_reports_on_tr_code_id_5"
+  add_index "timerecord_reports", ["tr_code_id_6"], :name => "index_timerecord_reports_on_tr_code_id_6"
+  add_index "timerecord_reports", ["tr_code_id_7"], :name => "index_timerecord_reports_on_tr_code_id_7"
+  add_index "timerecord_reports", ["tr_code_id_8"], :name => "index_timerecord_reports_on_tr_code_id_8"
+  add_index "timerecord_reports", ["tr_date"], :name => "index_timerecord_reports_on_tr_date"
+  add_index "timerecord_reports", ["tr_type_id_1"], :name => "index_timerecord_reports_on_tr_type_id_1"
+  add_index "timerecord_reports", ["tr_type_id_2"], :name => "index_timerecord_reports_on_tr_type_id_2"
+  add_index "timerecord_reports", ["tr_type_id_3"], :name => "index_timerecord_reports_on_tr_type_id_3"
+  add_index "timerecord_reports", ["tr_type_id_4"], :name => "index_timerecord_reports_on_tr_type_id_4"
+  add_index "timerecord_reports", ["tr_type_id_5"], :name => "index_timerecord_reports_on_tr_type_id_5"
+  add_index "timerecord_reports", ["tr_type_id_6"], :name => "index_timerecord_reports_on_tr_type_id_6"
+  add_index "timerecord_reports", ["tr_type_id_7"], :name => "index_timerecord_reports_on_tr_type_id_7"
+  add_index "timerecord_reports", ["tr_type_id_8"], :name => "index_timerecord_reports_on_tr_type_id_8"
+  add_index "timerecord_reports", ["tr_worker_id"], :name => "index_timerecord_reports_on_tr_worker_id"
+
+  create_table "timerecord_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "timerecord_types", ["name"], :name => "index_timerecord_types_on_name"
+
+  create_table "tools", :force => true do |t|
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.string   "serial_no"
+    t.string   "brand"
+    t.string   "model"
+    t.decimal  "cost",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "tools", ["company_id"], :name => "index_tools_on_company_id"
+  add_index "tools", ["office_id"], :name => "index_tools_on_office_id"
+  add_index "tools", ["organization_id", "company_id", "office_id", "serial_no"], :name => "index_tools_on_organization_and_serial", :unique => true
+  add_index "tools", ["organization_id"], :name => "index_tools_on_organization_id"
+  add_index "tools", ["product_id"], :name => "index_tools_on_product_id"
+  add_index "tools", ["serial_no"], :name => "index_tools_on_serial_no"
+
+  create_table "towns", :force => true do |t|
+    t.string   "name"
+    t.string   "ine_cmun"
+    t.string   "ine_dc"
+    t.integer  "province_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
+  add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
+
+  create_table "users", :force => true do |t|
+    t.string   "email",                  :default => "",   :null => false
+    t.string   "encrypted_password",     :default => "",   :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.string   "name",                   :default => "",   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.boolean  "real_email",             :default => true
+    t.string   "authentication_token"
+  end
+
+  add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "users_companies", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "company_id"
+  end
+
+  add_index "users_companies", ["user_id", "company_id"], :name => "index_users_companies_on_user_id_and_company_id"
+
+  create_table "users_offices", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "office_id"
+  end
+
+  add_index "users_offices", ["user_id", "office_id"], :name => "index_users_offices_on_user_id_and_office_id"
+
+  create_table "users_organizations", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "organization_id"
+  end
+
+  add_index "users_organizations", ["user_id", "organization_id"], :name => "index_users_organizations_on_user_id_and_organization_id"
+
+  create_table "users_projects", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "project_id"
+  end
+
+  add_index "users_projects", ["user_id", "project_id"], :name => "index_users_projects_on_user_id_and_project_id"
+
+  create_table "users_roles", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+  end
+
+  add_index "users_roles", ["user_id", "role_id"], :name => "index_users_roles_on_user_id_and_role_id"
+
+  create_table "uses", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "uses", ["code"], :name => "index_uses_on_code", :unique => true
+
+  create_table "vehicles", :force => true do |t|
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "product_id"
+    t.string   "name"
+    t.string   "registration"
+    t.string   "brand"
+    t.string   "model"
+    t.decimal  "cost",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "vehicles", ["company_id"], :name => "index_vehicles_on_company_id"
+  add_index "vehicles", ["office_id"], :name => "index_vehicles_on_office_id"
+  add_index "vehicles", ["organization_id", "company_id", "office_id", "registration"], :name => "index_vehicles_on_organization_and_registration", :unique => true
+  add_index "vehicles", ["organization_id"], :name => "index_vehicles_on_organization_id"
+  add_index "vehicles", ["product_id"], :name => "index_vehicles_on_product_id"
+  add_index "vehicles", ["registration"], :name => "index_vehicles_on_registration"
+
+  create_table "versions", :force => true do |t|
+    t.string   "item_type",  :null => false
+    t.integer  "item_id",    :null => false
+    t.string   "event",      :null => false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
+
+  create_table "water_connection_contracts", :force => true do |t|
+    t.integer  "contracting_request_id"
+    t.integer  "water_connection_type_id"
+    t.date     "contract_date"
+    t.integer  "client_id"
+    t.integer  "work_order_id"
+    t.integer  "sale_offer_id"
+    t.integer  "tariff_id"
+    t.integer  "bill_id"
+    t.string   "remarks"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
+  add_index "water_connection_contracts", ["client_id"], :name => "index_water_connection_contracts_on_client_id"
+  add_index "water_connection_contracts", ["contracting_request_id"], :name => "index_water_connection_contracts_on_contracting_request_id"
+  add_index "water_connection_contracts", ["sale_offer_id"], :name => "index_water_connection_contracts_on_sale_offer_id"
+  add_index "water_connection_contracts", ["tariff_id"], :name => "index_water_connection_contracts_on_tariff_id"
+  add_index "water_connection_contracts", ["water_connection_type_id"], :name => "index_water_connection_contracts_on_water_connection_type_id"
+  add_index "water_connection_contracts", ["work_order_id"], :name => "index_water_connection_contracts_on_work_order_id"
+
+  create_table "water_connection_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "water_connections", :force => true do |t|
+    t.integer  "water_connection_type_id"
+    t.string   "code"
+    t.string   "name"
+    t.string   "gis_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "water_connections", ["gis_id"], :name => "index_water_connections_on_gis_id"
+  add_index "water_connections", ["water_connection_type_id"], :name => "index_water_connections_on_water_connection_type_id"
+
+  create_table "water_supply_contracts", :force => true do |t|
+    t.integer  "contracting_request_id"
+    t.integer  "client_id"
+    t.integer  "subscriber_id"
+    t.integer  "reading_route_id"
+    t.integer  "work_order_id"
+    t.integer  "meter_id"
+    t.integer  "tariff_scheme_id"
+    t.integer  "bill_id"
+    t.integer  "caliber_id"
+    t.date     "contract_date"
+    t.integer  "reading_sequence"
+    t.string   "cadastral_reference"
+    t.string   "gis_id"
+    t.integer  "endowments",             :limit => 2, :default => 0
+    t.integer  "inhabitants",            :limit => 2, :default => 0
+    t.date     "installation_date"
+    t.integer  "installation_index"
+    t.string   "remarks"
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "use_id"
+    t.integer  "tariff_type_id"
+    t.integer  "unsubscribe_bill_id"
+    t.integer  "bailback_bill_id"
+  end
+
+  add_index "water_supply_contracts", ["bailback_bill_id"], :name => "index_water_supply_contracts_on_bailback_bill_id"
+  add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
+  add_index "water_supply_contracts", ["caliber_id"], :name => "index_water_supply_contracts_on_caliber_id"
+  add_index "water_supply_contracts", ["client_id"], :name => "index_water_supply_contracts_on_client_id"
+  add_index "water_supply_contracts", ["contracting_request_id"], :name => "index_water_supply_contracts_on_contracting_request_id"
+  add_index "water_supply_contracts", ["meter_id"], :name => "index_water_supply_contracts_on_meter_id"
+  add_index "water_supply_contracts", ["reading_route_id"], :name => "index_water_supply_contracts_on_reading_route_id"
+  add_index "water_supply_contracts", ["subscriber_id"], :name => "index_water_supply_contracts_on_subscriber_id"
+  add_index "water_supply_contracts", ["tariff_scheme_id"], :name => "index_water_supply_contracts_on_tariff_scheme_id"
+  add_index "water_supply_contracts", ["tariff_type_id"], :name => "index_water_supply_contracts_on_tariff_type_id"
+  add_index "water_supply_contracts", ["unsubscribe_bill_id"], :name => "index_water_supply_contracts_on_unsubscribe_bill_id"
+  add_index "water_supply_contracts", ["use_id"], :name => "index_water_supply_contracts_on_use_id"
+  add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
+
+  create_table "work_order_areas", :force => true do |t|
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_order_areas", ["organization_id"], :name => "index_work_order_areas_on_organization_id"
+
+  create_table "work_order_items", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "product_id"
+    t.string   "description"
+    t.decimal  "quantity",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",                  :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",                 :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "tax_type_id"
+    t.integer  "store_id"
+    t.datetime "created_at",                                                            :null => false
+    t.datetime "updated_at",                                                            :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "charge_account_id"
+    t.integer  "delivery_note_item_id"
+  end
+
+  add_index "work_order_items", ["charge_account_id"], :name => "index_work_order_items_on_charge_account_id"
+  add_index "work_order_items", ["delivery_note_item_id"], :name => "index_work_order_items_on_delivery_note_item_id"
+  add_index "work_order_items", ["description"], :name => "index_work_order_items_on_description"
+  add_index "work_order_items", ["product_id"], :name => "index_work_order_items_on_product_id"
+  add_index "work_order_items", ["store_id"], :name => "index_work_order_items_on_store_id"
+  add_index "work_order_items", ["tax_type_id"], :name => "index_work_order_items_on_tax_type_id"
+  add_index "work_order_items", ["work_order_id"], :name => "index_work_order_items_on_work_order_id"
+
+  create_table "work_order_labors", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "organization_id"
+    t.integer  "work_order_type_id"
+    t.boolean  "subscriber_meter",   :default => false
+  end
+
+  add_index "work_order_labors", ["organization_id"], :name => "index_work_order_labors_on_organization_id"
+  add_index "work_order_labors", ["work_order_type_id"], :name => "index_work_order_labors_on_work_order_type_id"
+
+  create_table "work_order_statuses", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "work_order_subcontractors", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "supplier_id"
+    t.integer  "purchase_order_id"
+    t.decimal  "enforcement_pct",   :precision => 7, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                       :null => false
+    t.datetime "updated_at",                                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "charge_account_id"
+  end
+
+  add_index "work_order_subcontractors", ["charge_account_id"], :name => "index_work_order_subcontractors_on_charge_account_id"
+  add_index "work_order_subcontractors", ["purchase_order_id"], :name => "index_work_order_subcontractors_on_purchase_order_id"
+  add_index "work_order_subcontractors", ["supplier_id"], :name => "index_work_order_subcontractors_on_supplier_id"
+  add_index "work_order_subcontractors", ["work_order_id"], :name => "index_work_order_subcontractors_on_work_order_id"
+
+  create_table "work_order_tools", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "tool_id"
+    t.decimal  "minutes",           :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "charge_account_id"
+  end
+
+  add_index "work_order_tools", ["charge_account_id"], :name => "index_work_order_tools_on_charge_account_id"
+  add_index "work_order_tools", ["tool_id"], :name => "index_work_order_tools_on_tool_id"
+  add_index "work_order_tools", ["work_order_id"], :name => "index_work_order_tools_on_work_order_id"
+
+  create_table "work_order_type_accounts", :force => true do |t|
+    t.integer  "work_order_type_id"
+    t.integer  "project_id"
+    t.integer  "charge_account_id"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "work_order_type_accounts", ["charge_account_id"], :name => "index_work_order_type_accounts_on_charge_account_id"
+  add_index "work_order_type_accounts", ["project_id"], :name => "index_work_order_type_accounts_on_project_id"
+  add_index "work_order_type_accounts", ["work_order_type_id", "project_id", "charge_account_id"], :name => "index_wo_type_accounts_unique", :unique => true
+  add_index "work_order_type_accounts", ["work_order_type_id"], :name => "index_work_order_type_accounts_on_work_order_type_id"
+
+  create_table "work_order_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "organization_id"
+    t.integer  "charge_account_id"
+    t.integer  "work_order_area_id"
+    t.boolean  "subscriber_meter",   :default => false
+  end
+
+  add_index "work_order_types", ["charge_account_id"], :name => "index_work_order_types_on_charge_account_id"
+  add_index "work_order_types", ["organization_id"], :name => "index_work_order_types_on_organization_id"
+  add_index "work_order_types", ["work_order_area_id"], :name => "index_work_order_types_on_work_order_area_id"
+
+  create_table "work_order_vehicles", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "vehicle_id"
+    t.decimal  "distance",          :precision => 7,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "charge_account_id"
+  end
+
+  add_index "work_order_vehicles", ["charge_account_id"], :name => "index_work_order_vehicles_on_charge_account_id"
+  add_index "work_order_vehicles", ["vehicle_id"], :name => "index_work_order_vehicles_on_vehicle_id"
+  add_index "work_order_vehicles", ["work_order_id"], :name => "index_work_order_vehicles_on_work_order_id"
+
+  create_table "work_order_workers", :force => true do |t|
+    t.integer  "work_order_id"
+    t.integer  "worker_id"
+    t.decimal  "hours",             :precision => 9,  :scale => 4, :default => 0.0, :null => false
+    t.decimal  "cost",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "charge_account_id"
+  end
+
+  add_index "work_order_workers", ["charge_account_id"], :name => "index_work_order_workers_on_charge_account_id"
+  add_index "work_order_workers", ["work_order_id"], :name => "index_work_order_workers_on_work_order_id"
+  add_index "work_order_workers", ["worker_id"], :name => "index_work_order_workers_on_worker_id"
+
+  create_table "work_orders", :force => true do |t|
+    t.string   "order_no"
+    t.integer  "work_order_type_id"
+    t.integer  "work_order_status_id"
+    t.integer  "work_order_labor_id"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "closed_at"
+    t.integer  "charge_account_id"
+    t.integer  "project_id"
+    t.integer  "area_id"
+    t.integer  "store_id"
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "client_id"
+    t.string   "remarks"
+    t.string   "description"
+    t.string   "petitioner"
+    t.integer  "master_order_id"
+    t.integer  "organization_id"
+    t.integer  "in_charge_id"
+    t.datetime "reported_at"
+    t.datetime "approved_at"
+    t.datetime "certified_at"
+    t.datetime "posted_at"
+    t.string   "location"
+    t.string   "pub_record"
+    t.integer  "subscriber_id"
+    t.string   "incidences"
+    t.integer  "meter_id"
+    t.string   "meter_code"
+    t.integer  "meter_model_id"
+    t.integer  "caliber_id"
+    t.integer  "meter_owner_id"
+    t.integer  "meter_location_id"
+    t.integer  "last_reading_id"
+    t.datetime "current_reading_date"
+    t.integer  "current_reading_index"
+    t.boolean  "por_affected"
+    t.integer  "work_order_area_id"
+    t.integer  "infrastructure_id"
+    t.integer  "hours_type",            :limit => 2, :default => 0, :null => false
+  end
+
+  add_index "work_orders", ["area_id"], :name => "index_work_orders_on_area_id"
+  add_index "work_orders", ["caliber_id"], :name => "index_work_orders_on_caliber_id"
+  add_index "work_orders", ["charge_account_id"], :name => "index_work_orders_on_charge_account_id"
+  add_index "work_orders", ["client_id"], :name => "index_work_orders_on_client_id"
+  add_index "work_orders", ["completed_at"], :name => "index_work_orders_on_completed_at"
+  add_index "work_orders", ["in_charge_id"], :name => "index_work_orders_on_in_charge_id"
+  add_index "work_orders", ["infrastructure_id"], :name => "index_work_orders_on_infrastructure_id"
+  add_index "work_orders", ["last_reading_id"], :name => "index_work_orders_on_last_reading_id"
+  add_index "work_orders", ["master_order_id"], :name => "index_work_orders_on_master_order_id"
+  add_index "work_orders", ["meter_code"], :name => "index_work_orders_on_meter_code"
+  add_index "work_orders", ["meter_id"], :name => "index_work_orders_on_meter_id"
+  add_index "work_orders", ["meter_location_id"], :name => "index_work_orders_on_meter_location_id"
+  add_index "work_orders", ["meter_model_id"], :name => "index_work_orders_on_meter_model_id"
+  add_index "work_orders", ["meter_owner_id"], :name => "index_work_orders_on_meter_owner_id"
+  add_index "work_orders", ["order_no"], :name => "index_work_orders_on_order_no"
+  add_index "work_orders", ["organization_id", "order_no"], :name => "index_work_orders_on_organization_id_and_order_no", :unique => true
+  add_index "work_orders", ["organization_id"], :name => "index_work_orders_on_organization_id"
+  add_index "work_orders", ["project_id"], :name => "index_work_orders_on_project_id"
+  add_index "work_orders", ["started_at"], :name => "index_work_orders_on_started_at"
+  add_index "work_orders", ["store_id"], :name => "index_work_orders_on_store_id"
+  add_index "work_orders", ["subscriber_id"], :name => "index_work_orders_on_subscriber_id"
+  add_index "work_orders", ["work_order_area_id"], :name => "index_work_orders_on_work_order_area_id"
+  add_index "work_orders", ["work_order_labor_id"], :name => "index_work_orders_on_work_order_labor_id"
+  add_index "work_orders", ["work_order_status_id"], :name => "index_work_orders_on_work_order_status_id"
+  add_index "work_orders", ["work_order_type_id"], :name => "index_work_orders_on_work_order_type_id"
+
+  create_table "worker_items", :force => true do |t|
+    t.integer  "worker_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "professional_group_id"
+    t.integer  "collective_agreement_id"
+    t.integer  "contract_type_id"
+    t.string   "contribution_account_code"
+    t.integer  "department_id"
+    t.string   "position"
+    t.integer  "insurance_id"
+    t.string   "nomina_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.date     "issue_starting_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "worker_items", ["collective_agreement_id"], :name => "index_worker_items_on_collective_agreement_id"
+  add_index "worker_items", ["company_id"], :name => "index_worker_items_on_company_id"
+  add_index "worker_items", ["contract_type_id"], :name => "index_worker_items_on_contract_type_id"
+  add_index "worker_items", ["contribution_account_code"], :name => "index_worker_items_on_contribution_account_code"
+  add_index "worker_items", ["department_id"], :name => "index_worker_items_on_department_id"
+  add_index "worker_items", ["insurance_id"], :name => "index_worker_items_on_insurance_id"
+  add_index "worker_items", ["nomina_id"], :name => "index_worker_items_on_nomina_id"
+  add_index "worker_items", ["office_id"], :name => "index_worker_items_on_office_id"
+  add_index "worker_items", ["professional_group_id"], :name => "index_worker_items_on_professional_group_id"
+  add_index "worker_items", ["worker_id"], :name => "index_worker_items_on_worker_id"
+
+  create_table "worker_salaries", :force => true do |t|
+    t.integer  "worker_item_id"
+    t.integer  "year",                 :limit => 2
+    t.decimal  "gross_salary",                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "variable_salary",                   :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "social_security_cost",              :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "day_pct",                           :precision => 6,  :scale => 2, :default => 100.0, :null => false
+    t.boolean  "active"
+    t.datetime "created_at",                                                                          :null => false
+    t.datetime "updated_at",                                                                          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.decimal  "overtime",                          :precision => 12, :scale => 4, :default => 0.0,   :null => false
+  end
+
+  add_index "worker_salaries", ["worker_item_id"], :name => "index_worker_salaries_on_worker_item_id"
+  add_index "worker_salaries", ["year"], :name => "index_worker_salaries_on_year"
+
+  create_table "worker_salary_items", :force => true do |t|
+    t.integer  "worker_salary_id"
+    t.integer  "salary_concept_id"
+    t.decimal  "amount",            :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "worker_salary_items", ["salary_concept_id"], :name => "index_worker_salary_items_on_salary_concept_id"
+  add_index "worker_salary_items", ["worker_salary_id"], :name => "index_worker_salary_items_on_worker_salary_id"
+
+  create_table "worker_types", :force => true do |t|
+    t.string   "description"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.integer  "organization_id"
+  end
+
+  add_index "worker_types", ["organization_id"], :name => "index_worker_types_on_organization_id"
+
+  create_table "workers", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "worker_code"
+    t.string   "fiscal_id"
+    t.integer  "user_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.date     "starting_at"
+    t.date     "ending_at"
+    t.integer  "street_type_id"
+    t.string   "street_name"
+    t.string   "street_number"
+    t.string   "building"
+    t.string   "floor"
+    t.string   "floor_office"
+    t.integer  "zipcode_id"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.string   "own_phone"
+    t.string   "own_cellular"
+    t.string   "email"
+    t.datetime "created_at",                                                                 :null => false
+    t.datetime "updated_at",                                                                 :null => false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
+    t.integer  "professional_group_id"
+    t.integer  "collective_agreement_id"
+    t.integer  "degree_type_id"
+    t.integer  "contract_type_id"
+    t.date     "borned_on"
+    t.date     "issue_starting_at"
+    t.string   "affiliation_id"
+    t.string   "contribution_account_code"
+    t.string   "position"
+    t.integer  "worker_type_id"
+    t.string   "corp_phone"
+    t.string   "corp_cellular_long"
+    t.string   "corp_cellular_short"
+    t.string   "corp_extension"
+    t.integer  "department_id"
+    t.string   "nomina_id"
+    t.decimal  "gross_salary",              :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "variable_salary",           :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "remarks"
+    t.decimal  "social_security_cost",      :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.string   "education"
+    t.integer  "sex_id"
+    t.integer  "insurance_id"
+    t.integer  "organization_id"
+    t.boolean  "is_contact"
+    t.boolean  "real_email",                                               :default => true
+  end
+
+  add_index "workers", ["affiliation_id"], :name => "index_workers_on_affiliation_id"
+  add_index "workers", ["collective_agreement_id"], :name => "index_workers_on_collective_agreement_id"
+  add_index "workers", ["company_id"], :name => "index_workers_on_company_id"
+  add_index "workers", ["contract_type_id"], :name => "index_workers_on_contract_type_id"
+  add_index "workers", ["contribution_account_code"], :name => "index_workers_on_contribution_account_code"
+  add_index "workers", ["corp_cellular_long"], :name => "index_workers_on_corp_cellular_long"
+  add_index "workers", ["corp_cellular_short"], :name => "index_workers_on_corp_cellular_short"
+  add_index "workers", ["corp_extension"], :name => "index_workers_on_corp_extension"
+  add_index "workers", ["corp_phone"], :name => "index_workers_on_corp_phone"
+  add_index "workers", ["degree_type_id"], :name => "index_workers_on_degree_type_id"
+  add_index "workers", ["department_id"], :name => "index_workers_on_department_id"
+  add_index "workers", ["first_name"], :name => "index_workers_on_first_name"
+  add_index "workers", ["fiscal_id"], :name => "index_workers_on_fiscal_id"
+  add_index "workers", ["insurance_id"], :name => "index_workers_on_insurance_id"
+  add_index "workers", ["last_name"], :name => "index_workers_on_last_name"
+  add_index "workers", ["nomina_id"], :name => "index_workers_on_nomina_id"
+  add_index "workers", ["office_id"], :name => "index_workers_on_office_id"
+  add_index "workers", ["organization_id", "fiscal_id"], :name => "index_workers_on_organization_id_and_fiscal_id", :unique => true
+  add_index "workers", ["organization_id", "worker_code"], :name => "index_workers_on_organization_id_and_worker_code"
+  add_index "workers", ["organization_id"], :name => "index_workers_on_organization_id"
+  add_index "workers", ["professional_group_id"], :name => "index_workers_on_professional_group_id"
+  add_index "workers", ["province_id"], :name => "index_workers_on_province_id"
+  add_index "workers", ["sex_id"], :name => "index_workers_on_sex_id"
+  add_index "workers", ["street_type_id"], :name => "index_workers_on_street_type_id"
+  add_index "workers", ["town_id"], :name => "index_workers_on_town_id"
+  add_index "workers", ["user_id"], :name => "index_workers_on_user_id"
+  add_index "workers", ["worker_code"], :name => "index_workers_on_worker_code"
+  add_index "workers", ["worker_type_id"], :name => "index_workers_on_worker_type_id"
+  add_index "workers", ["zipcode_id"], :name => "index_workers_on_zipcode_id"
+
+  create_table "zipcodes", :force => true do |t|
+    t.string   "zipcode"
+    t.integer  "town_id"
+    t.integer  "province_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "zipcodes", ["province_id"], :name => "index_zipcodes_on_province_id"
+  add_index "zipcodes", ["town_id"], :name => "index_zipcodes_on_town_id"
+  add_index "zipcodes", ["zipcode"], :name => "index_zipcodes_on_zipcode"
+
+  create_table "zone_notifications", :force => true do |t|
+    t.integer  "zone_id"
+    t.integer  "notification_id"
+    t.integer  "user_id"
+    t.integer  "role",            :limit => 2
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "zone_notifications", ["notification_id"], :name => "index_zone_notifications_on_notification_id"
+  add_index "zone_notifications", ["role"], :name => "index_zone_notifications_on_role"
+  add_index "zone_notifications", ["user_id"], :name => "index_zone_notifications_on_user_id"
+  add_index "zone_notifications", ["zone_id"], :name => "index_zone_notifications_on_zone_id"
+
+  create_table "zones", :force => true do |t|
+    t.string   "name"
+    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "decimal",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+    t.integer  "organization_id"
+    t.integer  "worker_id"
+  end
+
+  add_index "zones", ["organization_id"], :name => "index_zones_on_organization_id"
+  add_index "zones", ["worker_id"], :name => "index_zones_on_worker_id"
+
+end
