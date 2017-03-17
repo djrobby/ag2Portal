@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170316143200) do
+ActiveRecord::Schema.define(:version => 20170317174453) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -857,8 +857,6 @@ ActiveRecord::Schema.define(:version => 20170316143200) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3159,6 +3157,11 @@ ActiveRecord::Schema.define(:version => 20170316143200) do
   add_index "subscriber_annotations", ["created_by"], :name => "index_subscriber_annotations_on_created_by"
   add_index "subscriber_annotations", ["subscriber_annotation_class_id"], :name => "index_subscriber_annotations_on_subscriber_annotation_class_id"
   add_index "subscriber_annotations", ["subscriber_id"], :name => "index_subscriber_annotations_on_subscriber_id"
+
+  create_table "subscriber_supply_addresses", :id => false, :force => true do |t|
+    t.integer "subscriber_id",  :default => 0, :null => false
+    t.text    "supply_address"
+  end
 
   create_table "subscriber_tariffs", :force => true do |t|
     t.integer  "subscriber_id"

@@ -26,6 +26,7 @@ class Subscriber < ActiveRecord::Base
   has_many :meter_details
   has_one :contracting_request
   has_one :water_supply_contract
+  has_one :subscriber_supply_address
   has_many :readings
   has_many :pre_readings
   has_many :pre_bills
@@ -171,7 +172,7 @@ class Subscriber < ActiveRecord::Base
   def address_1
     _ret = ""
     if !street_directory.blank?
-      _ret += street_directory.street_type.street_type_code.titleize + ". "
+      _ret += street_directory.street_type.street_type_code + ". "
       _ret += street_directory.street_name + " "
     end
     if !street_number.blank?
