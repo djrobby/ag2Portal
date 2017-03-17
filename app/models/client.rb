@@ -232,11 +232,14 @@ class Client < ActiveRecord::Base
 
   searchable do
     text :client_code, :full_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
-    string :client_code
+    string :client_code, :multiple => true
     string :company
     string :full_name
     string :fiscal_id
     integer :organization_id
+    string :sort_no do
+      client_code
+    end
   end
 
   # Client code

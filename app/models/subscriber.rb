@@ -222,6 +222,10 @@ class Subscriber < ActiveRecord::Base
     meter.blank? ? "" : meter.meter_code
   end
 
+  def meter_caliber
+    meter.blank? ? "" : meter.caliber_id
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -261,28 +265,32 @@ class Subscriber < ActiveRecord::Base
 
   searchable do
     text :subscriber_code, :to_label, :fiscal_id, :phone, :full_name
-    text :street_name do
-      street_directory.street_name unless street_directory.blank?
-    end
-    text :meter_code_txt do
-      meter.meter_code unless meter.blank?
-    end
-    string :supply_address do
-      address_1
+    # text :street_name do
+    #   street_directory.street_name unless street_directory.blank?
+    # end
+    # text :meter_code_txt do
+    #   meter.meter_code unless meter.blank?
+    # end
+    string :supply_address, :multiple => true do
+      subscriber_supply_address.supply_address unless (subscriber_supply_address.blank? || subscriber_supply_address.supply_address.blank?)
     end
     string :meter_code, :multiple => true do
-      meter.meter_code unless meter.blank?
+      meter_code
     end
     string :subscriber_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     string :full_name
     integer :service_point_id
     integer :meter_id
     integer :billing_frequency_id
+    integer :use_id
     integer :office_id, :multiple => true
     time :starting_at
     time :ending_at
     integer :tariff_type_id do
-      tariff_scheme.tariff_type_id
+      tariffs.tariff_type_id unless (tariffs.blank? || tariffs.tariff_type_id.blank?)
+    end
+    integer :caliber_id do
+      meter_caliber
     end
     string :sort_no do
       subscriber_code

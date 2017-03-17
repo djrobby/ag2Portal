@@ -33,6 +33,7 @@ module Ag2Gest
       session[:RequestStatus] = nil
       session[:ClientInfo] = nil
       session[:ServicePoint] = nil
+      session[:SubscriberCode] = nil
       session[:StreetName] = nil
       session[:Use] = nil
     end

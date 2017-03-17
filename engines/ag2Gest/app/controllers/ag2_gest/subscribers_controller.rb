@@ -440,7 +440,8 @@ module Ag2Gest
       subscriber_code = params[:SubscriberCode]
       street_name = params[:StreetName]
       meter = params[:Meter]
-      billing_frequency = params[:BillingFrequency]
+      caliber = params[:Caliber]
+      use = params[:Use]
       tariff_type = params[:TariffType]
       letter = params[:letter]
       # OCO
@@ -454,8 +455,8 @@ module Ag2Gest
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
-      meter = !meter.blank? && meter[0] == '%' ? inverse_meter_search(meter) : meter
-      street_name = !street_name.blank? && street_name[0] == '%' ? inverse_street_name_search(street_name) : street_name
+      meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -473,9 +474,11 @@ module Ag2Gest
           end
         end
         if !street_name.blank?
-          with(:supply_address).starting_with(street_name)
-          # fulltext street_name
-          # with :supply_address, street_name
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
         end
         if !meter.blank?
           if meter.class == Array
@@ -483,12 +486,12 @@ module Ag2Gest
           else
             with(:meter_code).starting_with(meter)
           end
-          # fulltext meter
-          # with :meter_code, meter
-          # with(:meter_code).starting_with(meter)
         end
-        if !billing_frequency.blank?
-          with :billing_frequency_id, billing_frequency
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !use.blank?
+          with :use_id, use
         end
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
@@ -1074,6 +1077,11 @@ module Ag2Gest
       end
     end
 
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
+    end
+
     def inverse_no_search(no)
       _numbers = []
       Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
@@ -1082,20 +1090,22 @@ module Ag2Gest
       _numbers = _numbers.blank? ? no : _numbers
     end
 
-    def inverse_meter_search(no)
+    def inverse_meter_search(meter)
       _numbers = []
+      no = setup_no(meter)
       Meter.where('meter_code LIKE ?', "#{no}").each do |i|
         _numbers = _numbers << i.meter_code
       end
-      _numbers = _numbers.blank? ? no : _numbers
+      _numbers = _numbers.blank? ? meter : _numbers
     end
 
-    def inverse_street_name_search(no)
+    def inverse_street_name_search(supply_address)
       _numbers = []
-      Subscriber.where('meter_code LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.address_1
+      no = setup_no(supply_address)
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.supply_address
       end
-      _numbers = _numbers.blank? ? no : _numbers
+      _numbers = _numbers.blank? ? supply_address : _numbers
     end
 
     def service_points_dropdown

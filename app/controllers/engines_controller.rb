@@ -43,6 +43,7 @@ class EnginesController < ApplicationController
     session[:Operation] = nil
     session[:Biller] = nil
     session[:ServicePoint] = nil
+    session[:SubscriberCode] = nil
     session[:StreetName] = nil
     session[:entity] = nil
     session[:Request] = nil

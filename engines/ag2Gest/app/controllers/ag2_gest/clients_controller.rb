@@ -237,7 +237,7 @@ module Ag2Gest
             with(:company).starting_with(letter)
           end
         end
-        order_by :client_code, :asc
+        order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @clients = @search.results
