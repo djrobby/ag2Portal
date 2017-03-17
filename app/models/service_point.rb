@@ -20,7 +20,8 @@ class ServicePoint < ActiveRecord::Base
 
   has_many :subscribers
 
-  validates :code,                    :presence => true
+  validates :code,                    :presence => true,
+                                      :length => { :minimum => 3 }
   validates :service_point_type,      :presence => true
   validates :service_point_location,  :presence => true
   validates :service_point_purpose,   :presence => true

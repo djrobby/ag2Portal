@@ -133,7 +133,7 @@ class Meter < ActiveRecord::Base
 
   searchable do
     text :meter_code
-    string :meter_code
+    string :meter_code, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :office_id
     integer :organization_id
     integer :meter_model_id

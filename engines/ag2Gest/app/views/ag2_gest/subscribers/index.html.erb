@@ -1,73 +1,5 @@
-<% session[:return_to_subscriber] = nil %>
-<% session[:return_to_subscriber_url] = nil %>
-<% session[:return_to_reading] = nil %>
-<% session[:return_to_reading_url] = nil %>
-<% session[:return_to] = nil %>
-<% session[:return_to] = nil %>
-
-<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
-
-<h3><%=t '.title' %></h3>
-
-<div class="container-fluid">
-  <div class="row-fluid">
-
-    <div class="span3">
-    <div class="well sidebar-nav">
-
-      <!-- Refresh -->
-      <%= link_to ag2_gest.subscribers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
-
-      <%= form_tag "subscribers", :method => 'get', :remote => true do %>
-        <!-- Code -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.subscriber_code"), nil, :class => 'form-label' %>
-        <%= text_field_tag "SubscriberCode", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
-        <!-- Street name -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.street_name"), nil, :class => 'form-label' %>
-        <%= text_field_tag "StreetName", nil, :class => 'x-large-text-field shrinked' %>
-        <!-- Meter -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Meter", nil, :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
-        <!-- BillingFrequency -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.billing_frequency"), nil, :class => 'form-label' %>
-        <%= select_tag "BillingFrequency", options_from_collection_for_select(BillingFrequency.order(:name), "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- TariffType -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "TariffType", options_from_collection_for_select(TariffType.order(:name), "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Others -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
-
-        <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
-        <!-- Remove filter -->
-        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
-      <% end %>
-
-      <!-- Report -->
-      <%= label_tag I18n.t("ag2_gest.subscribers.report.report"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
-        <br /><br />
-        <!-- Control&Tracking -->
-        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
-        <br /><br />
-      <!-- Back -->
-      <%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>
-    </div>
-
-    </div>
-
-    <div class="span9" id="div_table">
-      <%= render 'subscribers' %>
-    </div><!-- /.span9 -->
-
-  </div><!-- /.row-fluid -->
-</div><!-- /.container-fluid -->
-
-
-<script type="text/javascript">
-
-  var _thisForm = ''; //Inicia variable String empty y false
+<script>
+  var _thisForm = '';
   var changing = false;
 
   $(document).ready(function() {
@@ -85,7 +17,6 @@
 
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
-
   });
 
   $(document).ajaxStart(function() {
@@ -94,8 +25,9 @@
       $("#div_table").html("");
       $("#loader").show();
     }
-  }).ajaxSuccess(function(){
-    // hide loader on success Ya ha cargado los objects
+  });
+  $(document).ajaxSuccess(function() {
+    // hide loader on success
     $("#loader").hide();
   });
 
@@ -103,8 +35,10 @@
     $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
     $("#StreetName").val("<%= params[:StreetName] %>");
     $("#Meter").val("<%= params[:Meter] %>");
-    $("#BillingFrequency").val("<%= params[:BillingFrequency] %>");
-    $("#TariffType").val("<%= params[:TariffType] %>");
+    $("#Caliber").select2("val", "<%= params[:Caliber] %>");
+    $("#Use").select2("val", "<%= params[:Use] %>");
+    $("#TariffType").select2("val", "<%= params[:TariffType] %>");
+    $("#search").val("<%= params[:search] %>");
   });
 
   jQuery(function($) {
@@ -113,7 +47,8 @@
       $("#SubscriberCode").val("");
       $("#StreetName").val("");
       $("#Meter").val("");
-      $("#BillingFrequency").select2("val", "");
+      $("#Caliber").select2("val", "");
+      $("#Use").select2("val", "");
       $("#TariffType").select2("val", "");
       $("#search").val("");
       // no AJAX
@@ -151,3 +86,70 @@
     });
   });
 </script>
+
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
+<% session[:return_to_reading] = nil %>
+<% session[:return_to_reading_url] = nil %>
+<% session[:return_to] = nil %>
+<% session[:return_to] = nil %>
+
+<%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.subscribers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "subscribers", :method => 'get', :remote => true do %>
+          <!-- Code -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.subscriber_code"), nil, :class => 'form-label' %>
+          <%= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Street name -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
+          <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+          <!-- Meter -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
+          <%= text_field_tag "Meter", params[:Meter], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
+          <!-- Caliber -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.caliber"), nil, :class => 'form-label' %>
+          <%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "caliber"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- Use -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.use"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "Use", options_from_collection_for_select(@uses, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- TariffType -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "TariffType", options_from_collection_for_select(@tariff_types, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- Others -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+          <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+          <!-- Submit -->
+          <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+          <!-- Remove filter -->
+          <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Report -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.report.report"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
+        <br /><br />
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br />
+        <!-- Back -->
+        <%= link_to t("ag2_gest.subscribers.index.back_to_root"), ag2_gest.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9" id="div_table">
+      <%= render 'subscribers' %>
+    </div><!-- /.span9 -->
+
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+
+

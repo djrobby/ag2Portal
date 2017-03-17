@@ -70,7 +70,7 @@ en:
         subscriber_code1: "Código de identificación asignado"
         name: "Name"
         street_directory_id: "Street directory"
-        address_data: "Domicilio de suministro"
+        address_data: "Supply address"
         tariff_type_id: "Tipo de tarifa"
         starting_at: "Fecha de alta"
         ending_at: "Fecha de baja"

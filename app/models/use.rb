@@ -19,7 +19,7 @@ class Use < ActiveRecord::Base
   before_validation :fields_to_uppercase
 
   def to_label
-    "#{name} (#{code})"
+    "#{code} #{name}"
   end
 
   private

@@ -446,11 +446,16 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
+      @calibers = Caliber.by_caliber if @calibers.nil?
+      @uses = Use.by_code if @uses.nil?
+      @tariff_types = TariffType.by_code if @tariff_types.nil?
       #@service_points = service_points_dropdown if @service_points.nil?
       #@meters = meters_dropdown if @meters.nil?
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+      meter = !meter.blank? && meter[0] == '%' ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? && street_name[0] == '%' ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -468,12 +473,19 @@ module Ag2Gest
           end
         end
         if !street_name.blank?
-          fulltext street_name
-          #with :street_name, street_name
+          with(:supply_address).starting_with(street_name)
+          # fulltext street_name
+          # with :supply_address, street_name
         end
         if !meter.blank?
-          fulltext meter
-          #with :meter_code, meter
+          if meter.class == Array
+            with :meter_code, meter
+          else
+            with(:meter_code).starting_with(meter)
+          end
+          # fulltext meter
+          # with :meter_code, meter
+          # with(:meter_code).starting_with(meter)
         end
         if !billing_frequency.blank?
           with :billing_frequency_id, billing_frequency
@@ -1064,9 +1076,24 @@ module Ag2Gest
 
     def inverse_no_search(no)
       _numbers = []
-      # Add numbers found
       Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
         _numbers = _numbers << i.subscriber_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_meter_search(no)
+      _numbers = []
+      Meter.where('meter_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.meter_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_street_name_search(no)
+      _numbers = []
+      Subscriber.where('meter_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.address_1
       end
       _numbers = _numbers.blank? ? no : _numbers
     end
