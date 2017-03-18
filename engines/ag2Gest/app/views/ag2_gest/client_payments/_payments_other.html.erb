@@ -13,6 +13,7 @@
       <th>F. pago</th>
       <th align="right">Importe a cobrar</th>
       <th align="right">Total</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,9 @@
         <td><%= client_payment.payment_date.strftime("%d/%m/%Y") %></td>
         <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td align="right"><%= number_with_precision(client_payment.invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td>
+          <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(client_payment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
+        </td>
       </tr>
     <% end %>
   </tbody>

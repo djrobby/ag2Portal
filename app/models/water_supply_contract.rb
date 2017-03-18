@@ -16,6 +16,7 @@ class WaterSupplyContract < ActiveRecord::Base
   has_many :contracted_tariffs
   has_many :tariffs, through: :contracted_tariffs
 
+  attr_accessor   :meter_code_input
   attr_accessible :bill_id,                 # Contract bill for: New contracting or change of holder (to NEW subscriber)
                   :unsubscribe_bill_id,     # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
                   :bailback_bill_id,        # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)
@@ -23,7 +24,7 @@ class WaterSupplyContract < ActiveRecord::Base
                   :contracting_request_id, :endowments, :gis_id, :inhabitants,
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id, :tariff_type_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :meter_code_input
 
   def request_no
     contracting_request.request_no
@@ -237,8 +238,8 @@ class WaterSupplyContract < ActiveRecord::Base
           country_id: old_contract.client.country_id,
           organization_id: contracting_request.project.organization_id,
           created_by: contracting_request.try(:created_by),
-          reading_1_id: contracting_request.old_subscriber.readings.last.id,
-          reading_2_id: contracting_request.old_subscriber.readings.last.reading_1_id)
+          reading_1_id: contracting_request.old_subscriber.readings.last.reading_1_id,
+          reading_2_id: contracting_request.old_subscriber.readings.last.id)
         contracting_request.old_subscriber.tariffs_supply.each do |tariffs_biller|
           invoiceservice = Invoice.create(
             invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),

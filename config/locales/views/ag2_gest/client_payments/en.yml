@@ -6,6 +6,7 @@ en:
         btn_new: "New Bill Collection"
         back_to_root: "Back to ag2Gest"
         amount: "Amount"
+        payment_method_id: "Payment Method"
         receipt_no: "Lot#"
         all: "Todos"
         total: "Invoices"

@@ -111,15 +111,15 @@ $(document).ready(function () {
     $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
   });
 
-  $(".btn-others").click(function (e) {
-    $(".client_payment_payment_method_id").show();
-    $("#client_payment_payment_method_id").prop('disabled', false);
-  });
-
-  $(".btn-cash").click(function (e) {
-    $(".client_payment_payment_method_id").hide();
-    $("#client_payment_payment_method_id").prop('disabled', true);
-  });
+  // $(".btn-others").click(function (e) {
+  //   $(".client_payment_payment_method_id").show();
+  //   $("#client_payment_payment_method_id").prop('disabled', false);
+  // });
+  //
+  // $(".btn-cash").click(function (e) {
+  //   $(".client_payment_payment_method_id").hide();
+  //   $("#client_payment_payment_method_id").prop('disabled', true);
+  // });
 
   $(".checkbox-master").click(function () {
     $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
@@ -319,8 +319,8 @@ $(document).ready(function () {
           <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
           <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
           <li style="width:25%"><a href="#charged">Cobradas</a></li>
-          <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
           <li class="pull-right"><a href="#others">Otros</a></li>
+          <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
           <li class="pull-right"><a href="#banks">Bancos</a></li>
           <li class="pull-right"><a href="#cash">Caja</a></li>
         </ul>
@@ -383,7 +383,7 @@ $(document).ready(function () {
             </div>
           </div>
           <%= f.input :amount, label: I18n.t("ag2_gest.client_payments.index.amount"), as: "decimal", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, collection: PaymentMethod.all, inline_label: "Yes" %>
+          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Vuelta</label>
             <div class="controls">
@@ -413,6 +413,7 @@ $(document).ready(function () {
             </div>
           </div>
           <%= f.input :receipt_no, label: I18n.t("ag2_gest.client_payments.index.receipt_no"), as: "string", inline_label: "Yes" %>
+          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
@@ -437,6 +438,7 @@ $(document).ready(function () {
           </div>
           <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
           <%= f.input :charge, label: "Porcentaje de recargo", as: "string", inline_label: "Yes" %>
+          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>

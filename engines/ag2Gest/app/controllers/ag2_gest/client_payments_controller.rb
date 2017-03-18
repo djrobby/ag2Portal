@@ -45,10 +45,11 @@ module Ag2Gest
     def banks
       invoices = Invoice.find_all_by_id(params[:client_payment_bank][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       receipt_no = params[:client_payment_bank][:receipt_no]
+      payment_method_id = params[:client_payment_bank][:payment_method_id]
       invoice_status = InvoiceStatus::BANK
       invoices.each do |i|
         client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 2, bill_id: i.bill_id, invoice_id: i.id,
-                             payment_method_id: nil, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
+                             payment_method_id: payment_method_id, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                              payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
                              client_bank_account_id: nil, charge_account_id: i.charge_account_id)
         if client_payment.save
@@ -63,13 +64,14 @@ module Ag2Gest
       invoices = Invoice.find_all_by_id(params[:instalment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       bill = invoices.first.bill
       charge = params[:instalment][:charge].to_d
+      payment_method_id = params[:instalment][:payment_method_id]
       number_quotas = params[:instalment][:number_inst].to_i
       pct_plus = invoices.sum(&:debt) * (charge/100)
       quota_total = invoices.sum(&:debt) + pct_plus
       single_quota = (quota_total / number_quotas).round(4)
       plan = InstalmentPlan.create( instalment_no: "000000000000-000",
                       instalment_date: Date.today,
-                      payment_method_id: 1, #CAMBIAR POR ELECCION
+                      payment_method_id: payment_method_id,
                       client_id: bill.subscriber.client_id,
                       subscriber_id: bill.subscriber_id,
                       surcharge_pct: charge)

@@ -88,7 +88,7 @@ class ContractingRequest < ActiveRecord::Base
   validates :entity_town,                 :presence => true
   validates :entity_zipcode,              :presence => true
   validates :client_country,              :presence => true
-  validates :client_phone,                :presence => true
+  # validates :client_phone,                :presence => true
   validates :client_province,             :presence => true
   validates :client_region,               :presence => true
   validates :client_street_name,          :presence => true

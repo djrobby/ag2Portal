@@ -113,20 +113,20 @@ module Ag2Gest
       @caliber = @meter.blank? ? Caliber.find(params[:water_supply_contract][:caliber_id]) : @meter.try(:caliber)
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
-      @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract])
+      @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract].except(:meter_code_input))
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
         tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
         @water_supply_contract.tariffs << tariffs
-        @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
-        data_meters = Array.new
-        @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
+        # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
+        # data_meters = Array.new
+        # @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber
         response_hash[:meter] = @meter
-        response_hash[:meters_subscriber] = data_meters
+        # response_hash[:meters_subscriber] = data_meters
         response_hash[:meter_model] = @meter_model
         response_hash[:meter_brand] = @meter_brand.try(:brand)
         response_hash[:tariff_type] = @tariff_scheme.tariff_type
@@ -150,21 +150,24 @@ module Ag2Gest
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
-      @meter = Meter.find(params[:water_supply_contract][:meter_id])
+      @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.try(:caliber) || Caliber.find(params[:water_supply_contract][:caliber_id])
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.find(params[:id])
-      @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
-      data_meters = Array.new
-      @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
+      # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
+      # data_meters = Array.new
+      # @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.updated_by = current_user.id if !current_user.nil?
-      if @water_supply_contract.update_attributes(params[:water_supply_contract])
+      if @water_supply_contract.update_attributes(params[:water_supply_contract].except(:meter_code_input))
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
+            @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])
+            rdg_1 = set_reading_1_to_reading(@contracting_request.old_subscriber,@meter,@billing_period)
+            rdg_2 = set_reading_2_to_reading(@contracting_request.old_subscriber,@meter,@billing_period)
             #lectura de retirada
               @reading = Reading.create(
                 subscriber_id: @contracting_request.old_subscriber.id,
@@ -178,10 +181,10 @@ module Ag2Gest
                 reading_variant:  @contracting_request.old_subscriber.reading_variant,
                 reading_date: @contracting_request.water_supply_contract.try(:installation_date),
                 reading_index: @contracting_request.water_supply_contract.try(:installation_index),
-                reading_index_1: @contracting_request.old_subscriber.readings.last.reading_index,
-                reading_index_2: @contracting_request.old_subscriber.readings.last.reading_index_1,
-                reading_1: @contracting_request.old_subscriber.readings.last,
-                reading_2: @contracting_request.old_subscriber.readings.last.reading_1,
+                reading_index_1: rdg_1.try(:reading_index),
+                reading_index_2: rdg_2.try(:reading_index),
+                reading_1: rdg_1,
+                reading_2: rdg_2,
                 created_by: @contracting_request.try(:created_by)
               ) 
           else
@@ -200,7 +203,7 @@ module Ag2Gest
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber
         response_hash[:meter] = @meter
-        response_hash[:meters_subscriber] = data_meters
+        # response_hash[:meters_subscriber] = data_meters
         response_hash[:meter_model] = @meter_model
         response_hash[:meter_brand] = @meter_brand.try(:brand)
         response_hash[:tariff_type] = @tariff_scheme.tariff_type

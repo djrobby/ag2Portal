@@ -21,6 +21,7 @@
         <th>Limite</th>
         <th>Bonus</th>
         <th>Total</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,9 @@
           <td><%= instalment.payday_limit.strftime("%d/%m/%Y") %></td>
           <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td>
+            <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(instalment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
+          </td>
         </tr>
       <% end %>
     </tbody>

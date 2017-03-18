@@ -79,7 +79,7 @@ end
 	report.page.list(:default).add_row do |row|
 		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
 		if route_id != "Sin ruta"
-			report.page.values reading_route: i.details unless i.subscriber.reading_route.blank?
+			report.page.values reading_route: i.details unless i.subscribers.first.reading_route.blank?
 		else
 			report.page.values reading_route: "Sin ruta"
 		end

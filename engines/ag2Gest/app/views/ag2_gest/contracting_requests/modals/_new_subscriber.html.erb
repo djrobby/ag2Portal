@@ -1,3 +1,34 @@
+<style>
+label.checkbox {
+    width: 50%;
+    display: inline-block;
+}
+</style>
+<script>
+jQuery(function($) {
+  // when #input_change_meter changes
+  $("#input_change_meter").change(function() {
+    // make a POST call and replace the content
+    var meter = $('#input_change_meter').val();
+    if (meter == "")
+      meter = "$";
+    jQuery.getJSON('cr_find_meter/' + meter, function(data) {
+      $("#alert_change").html(data.alert);
+      if (data.code == "$err") {
+        $("#alert_change").css('color', 'red');
+        alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
+        $('#input_change_meter').select();
+      } else {
+        $("#alert_change").css('color', text_field_color);
+        $('#sel2_association_change').val(data.meter_id);
+      }
+    });
+    return false;
+  });
+});
+//End jQuery function, exclusive $ jQuery function
+</script>
+
 <div id="new-subscriber" class="modal fade" style="display: none;">
   <%= simple_form_for [@contracting_request, @subscriber], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_subscriber' } do |f| %>
   <div class="modal-header">
@@ -7,7 +38,10 @@
   <div class="modal-body">
 
     <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
-    <%= f.association :meter, required: true, collection: available_meters_for_subscriber(@contracting_request), selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
+
+      <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+      <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.water_supply_contract.try(:meter_id) } %>
+
     <!--
     <%# if !session[:office].blank? %>
       <%#= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}, selected: @water_supply_contract.meter_id, input_html: { class: 'x-large-text-field sel2', value: @water_supply_contract.try(:meter_id) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
@@ -61,8 +95,9 @@
 
   </div>
   <div class="modal-footer">
-    <%= f.submit t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary" %>
-    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
+    <%= f.submit t('activerecord.attributes.subscriber.accept'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary" %>
+    <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
   <% end %>
 </div>

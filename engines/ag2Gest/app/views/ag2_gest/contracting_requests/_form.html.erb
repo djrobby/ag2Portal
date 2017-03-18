@@ -333,6 +333,7 @@
         $("#contracting_request_subscriber_id").attr("required", "required");
         if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
           $(".cancellation-field").prop('readonly', true);
+          $("#contracting_request_service_point_id").attr('disabled', true);
           $('.row-service-point').show();
           $('.row-subscriber').show();
           $('.row-bank-account').hide();
@@ -454,7 +455,7 @@
           $("#contracting_request_subscriber_region_id").select2("val", data.region.id);
           $("#contracting_request_subscriber_country_id").select2("val", data.country.id);
           $("#contracting_request_subscriber_center_id").select2("val", data.subscriber.center_id);
-          $("#ServicePoint").val(data.ServicePoint);
+          // $("#ServicePoint").val(data.ServicePoint);
           var w = data.service_point;
           if (data.code == "$err") {
             alert(data.alert);
@@ -828,7 +829,7 @@
       <%= text_field_tag "ServicePoint", nil, :class => 'cancellation-field x-large-text-field shrinked' %>
     </label>
     <label class="multi-field-label-two"> 
-      <%= f.input :service_point_id, collection: @service_points, :required => true, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> 
+      <%= f.input :service_point_id, collection: @service_points, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> 
     </label>
   </div>
   <div class="row-fluid">

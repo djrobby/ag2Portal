@@ -52,18 +52,18 @@ class Meter < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   def details
-    if subscriber.blank? || subscriber.reading_route.blank?
-      "Sin ruta"
+    if subscribers.first.blank? || subscribers.first.reading_route.blank?
+      "N/A"
     else
-      subscriber.reading_route.to_label unless subscriber.reading_route.blank?
+      subscribers.first.reading_route.to_label unless subscribers.first.reading_route.blank?
     end
   end
 
   def order_route
-    if subscriber.blank? || subscriber.reading_route.blank?
+    if subscribers.first.blank? || subscribers.first.reading_route.blank?
       0
     else
-      subscriber.reading_route_id
+      subscribers.first.reading_route_id
     end
   end
 

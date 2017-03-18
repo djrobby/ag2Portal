@@ -203,6 +203,8 @@ module Ag2Gest
       end
       respond_to do |format|
         if @tariff_scheme_new.save
+          tariffs = Tariff.availables_to_project_type_document(@tariff_scheme_new.project_id,@tariff_scheme_new.tariff_type_id,2)
+          @tariff_scheme_new.tariffs << tariffs
           @tariff_scheme_old.update_attributes(ending_at: params[:init_date])
           format.html { redirect_to tariff_schemes_path, notice: t('activerecord.attributes.tariff_scheme.create') }
           format.json { render json: @tariff_scheme_new, status: :created, location: @tariff_scheme_new }

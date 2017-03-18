@@ -6,6 +6,7 @@ es:
         btn_new: "Nuevo Cobro"
         back_to_root: "Volver a ag2Gest"
         amount: "Importe"
+        payment_method_id: "Forma de pago"
         receipt_no: "Nº de remesa"
         all: "Todos"
         total: "Facturas"
