@@ -22,6 +22,7 @@ module Ag2Purchase
                                                :si_format_number,
                                                :si_current_stock,
                                                :si_update_project_textfields_from_organization,
+                                               :si_update_product_select_from_organization,
                                                :si_current_balance,
                                                :si_current_balance_order,
                                                :si_generate_invoice,
@@ -457,6 +458,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def si_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
     # Update receipt note balance (unbilled) text field at view from receipt select
     def si_current_balance
       order = params[:order]
@@ -832,8 +849,8 @@ module Ag2Purchase
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
-      @products = products_dropdown
-      @note_items = []
+      # @products = products_dropdown
+      # @note_items = []
       # Special to approvals
       @users = User.where('id = ?', current_user.id)
 
@@ -858,13 +875,12 @@ module Ag2Purchase
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
-      @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
-      #@products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
-      if @note_items.blank?
-        @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
-      else
-        @products = @note_items.first.receipt_note.products.group(:product_code)
-      end
+      # @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
+      # if @note_items.blank?
+      #   @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+      # else
+      #   @products = @note_items.first.receipt_note.products.group(:product_code)
+      # end
       # Special to approvals
       @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
       @invoice_not_yet_approved = number_with_precision(@supplier_invoice.amount_not_yet_approved.round(4), precision: 4)
@@ -902,8 +918,8 @@ module Ag2Purchase
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
-          @products = products_dropdown
-          @note_items = []
+          # @products = products_dropdown
+          # @note_items = []
           @users = User.where('id = ?', current_user.id)
           format.html { render action: "new" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
@@ -997,12 +1013,12 @@ module Ag2Purchase
             @stores = work_order_store(@supplier_invoice)
             @suppliers = suppliers_dropdown
             @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
-            @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
-            if @note_items.blank?
-              @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
-            else
-              @products = @note_items.first.receipt_note.products.group(:product_code)
-            end
+            # @note_items = @supplier_invoice.receipt_note.blank? ? [] : note_items_dropdown(@supplier_invoice.receipt_note)
+            # if @note_items.blank?
+            #   @products = @supplier_invoice.organization.blank? ? products_dropdown : @supplier_invoice.organization.products(:product_code)
+            # else
+            #   @products = @note_items.first.receipt_note.products.group(:product_code)
+            # end
             # Special to approvals
             @invoice_debt = number_with_precision(@supplier_invoice.debt.round(4), precision: 4)
             @invoice_not_yet_approved = number_with_precision(@supplier_invoice.amount_not_yet_approved.round(4), precision: 4)

@@ -102,6 +102,14 @@ class Supplier < ActiveRecord::Base
     full_name
   end
 
+  def partial_name30
+    full_name = full_code
+    if !self.name.blank?
+      full_name += " " + self.name[0,30]
+    end
+    full_name
+  end
+
   def full_code
     # Supplier code (Organization id & Main activity & sequential number) => OOOO-AAAA-NNNNNN
     supplier_code.blank? || supplier_code == "$ERR" ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]

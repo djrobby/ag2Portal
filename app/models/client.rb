@@ -109,6 +109,10 @@ class Client < ActiveRecord::Base
     full_name[0,40]
   end
 
+  def partial_name30
+    full_name[0,30]
+  end
+
   def full_name_and_code
     full_name = ""
     if !self.last_name.blank?

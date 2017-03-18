@@ -15,6 +15,7 @@ module Ag2Purchase
                                                :of_format_number_4,
                                                :of_current_stock,
                                                :of_update_project_textfields_from_organization,
+                                               :of_update_product_select_from_organization,
                                                :of_update_selects_from_request,
                                                :of_update_request_select_from_supplier,
                                                :of_generate_offer,
@@ -322,6 +323,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def of_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
     # Update selects at view from request
     def of_update_selects_from_request
       request = params[:request]
@@ -623,7 +640,7 @@ module Ag2Purchase
       @suppliers = suppliers_dropdown
       @offer_requests = offer_requests_dropdown
       @payment_methods = payment_methods_dropdown
-      @products = products_dropdown
+      # @products = products_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -645,7 +662,7 @@ module Ag2Purchase
       @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
       @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : OfferRequest.approved_and_this(@offer.organization_id, @offer.offer_request_id)
       @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
-      @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
+      # @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
     end
 
     # POST /offers
@@ -676,7 +693,7 @@ module Ag2Purchase
           @suppliers = suppliers_dropdown
           @offer_requests = offer_requests_dropdown
           @payment_methods = payment_methods_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @offer.errors, status: :unprocessable_entity }
         end
@@ -755,7 +772,7 @@ module Ag2Purchase
             @suppliers = @offer.organization.blank? ? suppliers_dropdown : @offer.organization.suppliers(:supplier_code)
             @offer_requests = @offer.organization.blank? ? offer_requests_dropdown : @offer.organization.offer_requests.approved(@offer.organization_id)
             @payment_methods = @offer.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@offer.organization_id)
-            @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
+            # @products = @offer.organization.blank? ? products_dropdown : @offer.organization.products(:product_code)
             format.html { render action: "edit" }
             format.json { render json: @offer.errors, status: :unprocessable_entity }
           end

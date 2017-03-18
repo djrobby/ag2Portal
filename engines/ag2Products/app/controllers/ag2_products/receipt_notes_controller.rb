@@ -570,7 +570,7 @@ module Ag2Products
         if !order.blank?
           with :work_order_id, order
         end
-        data_accessor_for(ReceiptNote).include = [:supplier, :project, :products]
+        data_accessor_for(ReceiptNote).include = [:supplier, :project, :products, :purchase_order]
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end
@@ -613,7 +613,7 @@ module Ag2Products
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
       # @products = products_dropdown
-      @order_items = []
+      # @order_items = []
 
       respond_to do |format|
         format.html # new.html.erb
@@ -674,7 +674,7 @@ module Ag2Products
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
           # @products = products_dropdown
-          @order_items = []
+          # @order_items = []
           format.html { render action: "new" }
           format.json { render json: @receipt_note.errors, status: :unprocessable_entity }
         end
@@ -751,7 +751,6 @@ module Ag2Products
             destroy_attachment
             $attachment = Attachment.new
             @orders = @receipt_note.supplier.blank? ? orders_dropdown : orders_dropdown_edit(@receipt_note)
-            # @orders = @receipt_note.supplier.blank? ? orders_dropdown : @receipt_note.supplier.purchase_orders.undelivered(@receipt_note.organization_id, true)
             @projects = projects_dropdown_edit(@receipt_note.project)
             @work_orders = @receipt_note.project.blank? ? work_orders_dropdown_new : work_orders_dropdown_edit(@receipt_note)
             @charge_accounts = work_order_charge_account(@receipt_note)

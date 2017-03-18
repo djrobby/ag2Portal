@@ -373,7 +373,7 @@
       // balance check
       var i = $('select#fnt-receipt-note-item :selected').val();
       if (typeof i === "undefined") {
-        i = $(_this).closest('tr').find('select.fnt-receipt-note-item :selected').val();
+        i = $(_this).closest('tr').find('.fnt-receipt-note-item').val();
       }
       if (i == "")
         i = "0";
@@ -534,7 +534,7 @@
       var order = $('select#supplier_invoice_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('si_update_project_textfields_from_organization/' + order, function(data) {
+      jQuery.getJSON('si_update_product_select_from_organization/' + order, function(data) {
         var prods = data.product
         // Product
         $("#fnt-product").html("");

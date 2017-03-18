@@ -15,6 +15,7 @@ class DeliveryNote < ActiveRecord::Base
   attr_accessible :delivery_note_items_attributes
 
   has_many :delivery_note_items, dependent: :destroy
+  has_many :products, through: :delivery_note_items
   #has_many :invoice_items
 
   # Nested attributes

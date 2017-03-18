@@ -18,6 +18,7 @@ module Ag2Purchase
                                                :po_current_stock,
                                                :po_item_stock_check,
                                                :po_update_project_textfields_from_organization,
+                                               :po_update_product_select_from_organization,
                                                :po_generate_no,
                                                :po_check_stock_and_price,
                                                :po_product_stock,
@@ -407,6 +408,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def po_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
     # Update order number at view (generate_code_btn)
     def po_generate_no
       project = params[:project]
@@ -748,7 +765,7 @@ module Ag2Purchase
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
-      @products = products_dropdown
+      # @products = products_dropdown
       #@purchase_order.purchase_order_items.build
 
       respond_to do |format|
@@ -768,7 +785,7 @@ module Ag2Purchase
       @stores = work_order_store(@purchase_order)
       @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
       @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-      @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
+      # @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
       #@work_orders = @purchase_order.work_order.blank? ? WorkOrder.order(:order_no) : WorkOrder.where('id = ?', @purchase_order.work_order)
       #@projects = @purchase_order.project.blank? ? Project.order(:project_code) : Project.where('id = ?', @purchase_order.project)
       #@charge_accounts = @purchase_order.charge_account.blank? ? ChargeAccount.order(:account_code) : ChargeAccount.where('id = ?', @purchase_order.charge_account)
@@ -795,7 +812,7 @@ module Ag2Purchase
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
         end
@@ -868,7 +885,7 @@ module Ag2Purchase
             @stores = work_order_store(@purchase_order)
             @suppliers = @purchase_order.organization.blank? ? suppliers_dropdown : @purchase_order.organization.suppliers(:supplier_code)
             @payment_methods = @purchase_order.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@purchase_order.organization_id)
-            @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
+            # @products = @purchase_order.organization.blank? ? products_dropdown : @purchase_order.organization.products(:product_code)
             format.html { render action: "edit" }
             format.json { render json: @purchase_order.errors, status: :unprocessable_entity }
           end

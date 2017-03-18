@@ -14,7 +14,7 @@
       <th><%= t 'activerecord.attributes.receipt_note.receipt_no' %></th>
       <th align="center"><%= t 'activerecord.attributes.receipt_note.receipt_date' %></th>
       <th><%= t 'activerecord.attributes.receipt_note.supplier' %></th>
-      <th><%= t 'activerecord.attributes.receipt_note.project' %></th>
+      <th><%= t 'activerecord.attributes.receipt_note.purchase_order' %></th>
       <th align="right"><%= t 'activerecord.attributes.receipt_note.total' %></th>
       <th></th>
     </tr>
@@ -34,8 +34,8 @@
         <% end %>
       </td>
       <td align="center"><%= formatted_date(note.receipt_date) unless note.receipt_date.blank? %></td>
-      <td><%= note.supplier.full_name unless note.supplier.blank? %></td>
-      <td><%= note.project.full_code unless note.project.blank? %></td>
+      <td><%= note.supplier.partial_name30 unless note.supplier.blank? %></td>
+      <td><%= note.purchase_order.full_no unless note.purchase_order.blank? %></td>
       <td align="right"><%= number_with_precision(note.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.total.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ReceiptNote, :path => edit_receipt_note_path(note) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => ReceiptNote, :path => note, :msg => t("activerecord.models.receipt_note.one"), :txt => note.receipt_no } %> </td>

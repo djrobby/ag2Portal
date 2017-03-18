@@ -151,7 +151,7 @@
       // balance check
       var i = $('select#fnt-sale-offer-item :selected').val();
       if (typeof i === "undefined") {
-        i = $(_this).closest('tr').find('select.fnt-sale-offer-item :selected').val();
+        i = $(_this).closest('tr').find('.fnt-sale-offer-item').val();
       }
       if (i == "")
         i = "0";
@@ -312,7 +312,7 @@
       var order = $('select#invoice_organization_id :selected').val();
       if (order == "")
         order = "0";
-      jQuery.getJSON('ci_update_selects_from_organization/' + order, function(data) {
+      jQuery.getJSON('ci_update_product_select_from_organization/' + order, function(data) {
         var prods = data.product
         // Product
         $("#fnt-product").html("");

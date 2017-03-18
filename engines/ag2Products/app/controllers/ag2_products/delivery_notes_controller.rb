@@ -412,7 +412,7 @@ module Ag2Products
         if !account.blank?
           with :charge_account_id, account
         end
-        data_accessor_for(DeliveryNote).include = [:client, :project]
+        data_accessor_for(DeliveryNote).include = [:client, :project, :work_order, :products]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

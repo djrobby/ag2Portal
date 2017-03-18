@@ -9,6 +9,7 @@ module Ag2Gest
                                                :so_restore_filters,
                                                :so_generate_no,
                                                :so_update_selects_from_organization,
+                                               :so_update_product_select_from_organization,
                                                :so_update_selects_from_project,
                                                :so_update_request_select_from_client,
                                                :so_update_selects_from_order,
@@ -74,6 +75,22 @@ module Ag2Gest
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "contracting_request" => @constracting_requests_dropdown,
                      "product" => @products_dropdown }
+      render json: @json_data
+    end
+
+    # Update product select at view from organization select
+    def so_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -397,7 +414,7 @@ module Ag2Gest
       @clients = clients_dropdown
       @payment_methods = payment_methods_dropdown
       @status = sale_offer_statuses_dropdown
-      @products = products_dropdown
+      # @products = products_dropdown
       @contracting_requests = contracting_requests_dropdown
       @approval = 'false'
 
@@ -418,7 +435,7 @@ module Ag2Gest
       @clients = @sale_offer.organization.blank? ? clients_dropdown : @sale_offer.organization.clients.by_code
       @payment_methods = @sale_offer.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@sale_offer.organization_id)
       @status = sale_offer_statuses_dropdown
-      @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
+      # @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
       if @sale_offer.project.blank?
         @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@projects) : @sale_offer.client.connection_requests.by_no
       else
@@ -446,7 +463,7 @@ module Ag2Gest
           @clients = clients_dropdown
           @payment_methods = payment_methods_dropdown
           @status = sale_offer_statuses_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           @contracting_requests = contracting_requests_dropdown
           @approval = 'false'
           format.html { render action: "new" }
@@ -515,7 +532,7 @@ module Ag2Gest
             @clients = @sale_offer.organization.blank? ? clients_dropdown : @sale_offer.organization.clients.by_code
             @payment_methods = @sale_offer.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@sale_offer.organization_id)
             @status = sale_offer_statuses_dropdown
-            @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
+            # @products = @sale_offer.organization.blank? ? products_dropdown : @sale_offer.organization.products.by_code
             if @sale_offer.project.blank?
               @contracting_requests = @sale_offer.client.blank? ? projects_contracting_requests(@projects) : @sale_offer.client.connection_requests.by_no
             else

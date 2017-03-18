@@ -47,6 +47,8 @@ class SaleOffer < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:offer_no) }
+  #
+  scope :these, -> t { where(id: t).by_no }
 
   # Callbacks
   before_destroy :check_for_dependent_records

@@ -325,7 +325,7 @@
     var order = $('select#sale_offer_organization_id :selected').val();
     if (order == "")
       order = "0";
-    jQuery.getJSON('so_update_selects_from_organization/' + order, function(data) {
+    jQuery.getJSON('so_update_product_select_from_organization/' + order, function(data) {
       var prods = data.product
       // Product
       $("#fnt-product").html("");

@@ -13,6 +13,7 @@ module Ag2Products
                                                :ic_approve_count,
                                                :ic_update_from_product_store,
                                                :ic_update_from_organization,
+                                               :ic_update_product_select_from_organization,
                                                :inventory_count_form,
                                                :inventory_count_form_dif,
                                                :inventory_counts_report,
@@ -349,6 +350,22 @@ module Ag2Products
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def ic_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
     def ic_products_from_organization
       organization = params[:org]
       if organization != '0'
@@ -456,7 +473,7 @@ module Ag2Products
       @stores = stores_dropdown
       @families = families_dropdown
       @products = products_dropdown
-      @products_table = products_dropdown
+      # @products_table = products_dropdown
       @types = type_dropdown(nil)
 
       respond_to do |format|
@@ -472,10 +489,10 @@ module Ag2Products
       @stores = stores_dropdown
       if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
         @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
-        @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
+        # @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
       else
         @families = ProductFamily.by_store(@inventory_count.store)
-        @products = @inventory_count.store.products.order(:product_code)
+        # @products = @inventory_count.store.products.order(:product_code)
       end
       @types = type_dropdown(@inventory_count.store)
       #@products = @products.paginate(:page => params[:page], :per_page => per_page)
@@ -495,7 +512,7 @@ module Ag2Products
         else
           @stores = stores_dropdown
           @families = families_dropdown
-          @products = products_dropdown
+          # @products = products_dropdown
           format.html { render action: "new" }
           format.json { render json: @inventory_count.errors, status: :unprocessable_entity }
         end
@@ -543,10 +560,10 @@ module Ag2Products
             @stores = stores_dropdown
             if @inventory_count.store.blank? || @inventory_count.inventory_count_type_id == 1
               @families = @inventory_count.organization.blank? ? families_dropdown : @inventory_count.organization.product_families.order(:family_code)
-              @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
+              # @products = @inventory_count.organization.blank? ? products_dropdown : @inventory_count.organization.products.order(:product_code)
             else
               @families = ProductFamily.by_store(@inventory_count.store)
-              @products = @inventory_count.store.products.order(:product_code)
+              # @products = @inventory_count.store.products.order(:product_code)
             end
             format.html { render action: "edit" }
             format.json { render json: @inventory_count.errors, status: :unprocessable_entity }

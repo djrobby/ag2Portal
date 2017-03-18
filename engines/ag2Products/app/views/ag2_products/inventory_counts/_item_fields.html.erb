@@ -119,7 +119,7 @@
     var org = $('select#inventory_count_organization_id :selected').val();
     if (org == "")
       org = "0";
-    jQuery.getJSON('ic_update_from_organization/' + org, function(data) {
+    jQuery.getJSON('ic_update_product_select_from_organization/' + org, function(data) {
       var prods = data.product
       // Product
       $("#fnt-product").html("");

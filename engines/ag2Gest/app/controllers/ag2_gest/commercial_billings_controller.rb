@@ -10,6 +10,7 @@ module Ag2Gest
                                                :ci_restore_filters,
                                                :ci_generate_no,
                                                :ci_update_selects_from_organization,
+                                               :ci_update_product_select_from_organization,
                                                :ci_update_offer_select_from_client,
                                                :ci_update_selects_from_offer,
                                                :ci_update_selects_from_project,
@@ -85,6 +86,22 @@ module Ag2Gest
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "offer" => @offers_dropdown }
+      render json: @json_data
+    end
+
+    # Update product select at view from organization select
+    def ci_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
       render json: @json_data
     end
 
@@ -574,8 +591,8 @@ module Ag2Gest
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
-      @products = products_dropdown
-      @offer_items = []
+      # @products = products_dropdown
+      # @offer_items = []
 
       # manually handle authorization
       authorize! :new, @invoice
@@ -591,7 +608,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @invoice = Invoice.find(params[:id])
       @organizations, @include_blank = organizations_according_oco
-      @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
+      @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : sale_offers_dropdown_edit(@invoice)
       @projects = projects_dropdown_edit(@invoice.bill.project)
       @project = @invoice.bill.project_id
       @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
@@ -601,12 +618,12 @@ module Ag2Gest
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
-      @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
-      if @offer_items.blank?
-        @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
-      else
-        @products = @offer_items.first.sale_offer.products.group(:product_code)
-      end
+      # @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
+      # if @offer_items.blank?
+      #   @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
+      # else
+      #   @products = @offer_items.first.sale_offer.products.group(:product_code)
+      # end
 
       # manually handle authorization
       authorize! :edit, @invoice
@@ -648,8 +665,8 @@ module Ag2Gest
           @status = invoice_statuses_dropdown if @status.nil?
           @types = invoice_types_dropdown if @types.nil?
           @operations = invoice_operations_dropdown if @operations.nil?
-          @products = products_dropdown
-          @offer_items = []
+          # @products = products_dropdown
+          # @offer_items = []
           format.html { render action: "new" }
           format.json { render json: @invoice.errors, status: :unprocessable_entity }
         end
@@ -717,17 +734,17 @@ module Ag2Gest
                           notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
             format.json { head :no_content }
           else
-            @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : @invoice.bill.client.sale_offers.unbilled(@invoice.organization_id, true)
+            @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : sale_offers_dropdown_edit(@invoice)
             @projects = projects_dropdown_edit(@invoice.bill.project)
             @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
             @clients = clients_dropdown
             @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
-            @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
-            if @offer_items.blank?
-              @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
-            else
-              @products = @offer_items.first.sale_offer.products.group(:product_code)
-            end
+            # @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
+            # if @offer_items.blank?
+            #   @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
+            # else
+            #   @products = @offer_items.first.sale_offer.products.group(:product_code)
+            # end
             format.html { render action: "edit" }
             format.json { render json: @invoice.errors, status: :unprocessable_entity }
           end
@@ -941,6 +958,13 @@ module Ag2Gest
 
     def sale_offers_dropdown
       session[:organization] != '0' ? SaleOffer.unbilled(session[:organization].to_i, true, true) : SaleOffer.unbilled(nil, true, true)
+    end
+
+    def sale_offers_dropdown_edit(_invoice)
+      _array = []
+      _array = _array << _invoice.sale_offer_id unless _invoice.sale_offer_id.blank?
+      ret_array(_array, _invoice.bill.client.sale_offers.unbilled(_invoice.organization_id, true), 'id')
+      SaleOffer.these(_array)
     end
 
     def payment_methods_dropdown

@@ -75,7 +75,7 @@
       var store = $('select#fnt-store :selected').val();
       if (typeof store === "undefined") {
         tbl = true;
-        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+        store = $(_this).closest('tr').find('.fnt-store').val();
       }
       if (store == "")
         store = "0";
@@ -303,7 +303,7 @@
       // stock check
       var store = $('select#fnt-store :selected').val();
       if (typeof store === "undefined") {
-        store = $(_this).closest('tr').find('select.fnt-store :selected').val();
+        store = $(_this).closest('tr').find('.fnt-store').val();
       }
       if (store == "")
         store = "0";
@@ -449,7 +449,7 @@
     var order = $('select#purchase_order_organization_id :selected').val();
     if (order == "")
       order = "0";
-    jQuery.getJSON('po_update_project_textfields_from_organization/' + order, function(data) {
+    jQuery.getJSON('po_update_product_select_from_organization/' + order, function(data) {
       var prods = data.product
       // Product
       $("#fnt-product").html("");
