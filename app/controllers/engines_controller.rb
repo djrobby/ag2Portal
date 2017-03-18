@@ -186,6 +186,32 @@ class EnginesController < ApplicationController
     render json: @suppliers
   end
 
+  # Product families
+  def search_product_families
+    @product_families = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(family_code LIKE '%#{@q}%' OR name LIKE '%#{@q}%')"
+      @product_families = serialized(ProductFamily.where(w).by_code,
+                             Api::V1::ProductFamiliesSerializer)
+    end
+    render json: @product_families
+  end
+
+  # Products
+  def search_products
+    @products = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(product_code LIKE '%#{@q}%' OR main_description LIKE '%#{@q}%')"
+      @products = serialized(Product.where(w).by_code,
+                             Api::V1::ProductsSerializer)
+    end
+    render json: @products
+  end
+
   # Returns JSON list of orders
   def serialized(_data, _serializer)
     ActiveModel::ArraySerializer.new(_data, each_serializer: _serializer, root: false)
@@ -194,13 +220,5 @@ class EnginesController < ApplicationController
   def set_params
     @q = params[:q]
     @page = params[:page]
-  end
-
-  def ret_array(_search)
-    _array = []
-    _search.each do |i|
-      _array = _array << [i.id, i.full_no]
-    end
-    _array
   end
 end

@@ -6,7 +6,9 @@ module Ag2Products
     include ModelsModule
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:po_update_description_prices_from_product_store,
+    skip_load_and_authorize_resource :only => [:po_remove_filters,
+                                               :po_restore_filters,
+                                               :po_update_description_prices_from_product_store,
                                                :po_update_description_prices_from_product,
                                                :po_update_charge_account_from_order,
                                                :po_update_charge_account_from_project,
@@ -35,6 +37,8 @@ module Ag2Products
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
+    # => index filters
+    helper_method :po_remove_filters, :po_restore_filters
 
     # Update addresses at view from store select
     def po_update_addresses_from_store
@@ -651,15 +655,16 @@ module Ag2Products
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      @suppliers = suppliers_dropdown if @suppliers.nil?
-      @families = families_dropdown if @families.nil?
-      @products = products_dropdown if @products.nil?
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @family = !family.blank? ? ProductFamily.find(family).full_name : " "
+      @product = !product.blank? ? Product.find(product).full_name : " "
       @statuses = OrderStatus.order('id') if @statuses.nil?
       @petitioners = PurchaseOrder.petitioners if @petitioners.nil?
       @balances = balances_dropdown if @balances.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       if !family.blank?
         @items = PurchaseOrder.has_family(family, current_projects)
@@ -1363,6 +1368,12 @@ module Ag2Products
       elsif session[:Supplier]
         params[:Supplier] = session[:Supplier]
       end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
       # family
       if params[:Family]
         session[:Family] = params[:Family]
@@ -1375,11 +1386,11 @@ module Ag2Products
       elsif session[:Products]
         params[:Products] = session[:Products]
       end
-      # project
-      if params[:Project]
-        session[:Project] = params[:Project]
-      elsif session[:Project]
-        params[:Project] = session[:Project]
+      # petitioner
+      if params[:Petitioner]
+        session[:Petitioner] = params[:Petitioner]
+      elsif session[:Petitioner]
+        params[:Petitioner] = session[:Petitioner]
       end
       # status
       if params[:Status]
@@ -1387,18 +1398,37 @@ module Ag2Products
       elsif session[:Status]
         params[:Status] = session[:Status]
       end
-      # petitioner
-      if params[:Petitioner]
-        session[:Petitioner] = params[:Petitioner]
-      elsif session[:Petitioner]
-        params[:Petitioner] = session[:Petitioner]
-      end
       # balance
       if params[:Balance]
         session[:Balance] = params[:Balance]
       elsif session[:Balance]
         params[:Balance] = session[:Balance]
       end
+    end
+
+    def po_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Supplier] = ""
+      params[:Project] = ""
+      params[:Family] = ""
+      params[:Products] = ""
+      params[:Petitioner] = ""
+      params[:Status] = ""
+      params[:Balance] = ""
+      return " "
+    end
+
+    def po_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Supplier] = session[:Supplier]
+      params[:Project] = session[:Project]
+      params[:Family] = session[:Family]
+      params[:Products] = session[:Products]
+      params[:Petitioner] = session[:Petitioner]
+      params[:Status] = session[:Status]
+      params[:Balance] = session[:Balance]
     end
   end
 end

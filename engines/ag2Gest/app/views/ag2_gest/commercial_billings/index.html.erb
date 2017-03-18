@@ -129,12 +129,12 @@
   $(window).bind("load", function() {
     a = "<%= ci_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
-    $("#Project").select2("val", "<%= params[:Project] %>");
-    $("#Client").val("<%= params[:Client] %>");
+    // $("#Project").select2("val", "<%= params[:Project] %>");
+    // $("#Client").select2("val", "<%= params[:Client] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
-    $("#Biller").select2("val", "<%= params[:Biller] %>");
+    // $("#Biller").select2("val", "<%= params[:Biller] %>");
     $("#search").val("<%= params[:search] %>");
   });
 
@@ -157,7 +157,7 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
-      $("#Client").val("");
+      $("#Client").select2("val", "");
       $("#Status").val("");
       $("#Type").val("");
       $("#Operation").val("");

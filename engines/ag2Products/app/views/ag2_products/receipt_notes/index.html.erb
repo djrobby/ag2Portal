@@ -129,9 +129,9 @@
   $(window).bind("load", function() {
     a = "<%= rn_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
-    $("#Supplier").select2("val", "<%= params[:Supplier] %>");
-    $("#Project").select2("val", "<%= params[:Project] %>");
-    $("#Order").select2("val", "<%= params[:Order] %>");
+    // $("#Supplier").select2("val", "<%= params[:Supplier] %>");
+    // $("#Project").select2("val", "<%= params[:Project] %>");
+    // $("#Order").select2("val", "<%= params[:Order] %>");
     $("#search").val("<%= params[:search] %>");
   });
 
@@ -195,7 +195,7 @@
         <%= form_tag "receipt_notes", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.receipt_note.receipt_no"), nil, :class => 'form-label' %>
-        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field' %>
         <!-- Supplier -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_supplier"), nil, :class => 'form-label' %>
         <%= hidden_field_tag "Supplier", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>

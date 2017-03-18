@@ -3,6 +3,12 @@ class ProductFamily < ActiveRecord::Base
   attr_accessible :family_code, :max_orders_count, :max_orders_sum, :name, :organization_id,
                   :order_authorization, :is_meter, :no_order_needed
 
+  has_many :products
+  has_many :stocks, :through => :products
+  has_many :product_family_stocks
+  has_many :product_valued_stocks
+  has_many :product_valued_stock_by_companies
+
   has_paper_trail
 
   validates :name,          :presence => true
@@ -13,12 +19,10 @@ class ProductFamily < ActiveRecord::Base
                             :numericality => { :only_integer => true, :greater_than => 0 }
   validates :organization,  :presence => true
 
-  has_many :products
-  has_many :stocks, :through => :products
-  has_many :product_family_stocks
-  has_many :product_valued_stocks
-  has_many :product_valued_stock_by_companies
+  # Scopes
+  scope :by_code, -> { order(:family_code) }
 
+  # Callbacks
   before_validation :fields_to_uppercase
 
   before_destroy :check_for_dependent_records
