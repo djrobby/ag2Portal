@@ -112,7 +112,7 @@
     var order = $('select#work_order_organization_id :selected').val();
     if (order == "")
       order = "0";
-    jQuery.getJSON('wo_update_project_textfields_from_organization/' + order, function(data) {
+    jQuery.getJSON('wo_update_vehicle_select_from_organization/' + order, function(data) {
       var ve = data.vehicle
       // Tool
       $("#fnt-vehicle").html("");

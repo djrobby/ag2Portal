@@ -20,6 +20,10 @@ module Ag2Tech
                                                :wo_update_amount_and_costs_from_price_or_quantity,
                                                :wo_update_costs_from_cost_or_hours,
                                                :wo_update_project_textfields_from_organization,
+                                               :wo_update_product_select_from_organization,
+                                               :wo_update_tool_select_from_organization,
+                                               :wo_update_vehicle_select_from_organization,
+                                               :wo_update_worker_select_from_organization,
                                                :wo_generate_no,
                                                :wo_update_costs_from_tool,
                                                :wo_update_costs_from_vehicle,
@@ -497,6 +501,68 @@ module Ag2Tech
       render json: @json_data
     end
 
+    # Update product select at view from organization select
+    def wo_update_product_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+      else
+        @products = products_dropdown
+      end
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
+    # Update tool select at view from organization select
+    def wo_update_tool_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
+      else
+        @tools = tools_dropdown
+      end
+      # Vehicles array
+      @vehicles_dropdown = vehicles_array(@vehicles)
+      # Setup JSON
+      @json_data = { "tool" => @tools_dropdown }
+      render json: @json_data
+    end
+
+    # Update vehicle select at view from organization select
+    def wo_update_vehicle_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
+      else
+        @vehicles = vehicles_dropdown
+      end
+      # Vehicles array
+      @vehicles_dropdown = vehicles_array(@vehicles)
+      # Setup JSON
+      @json_data = { "vehicle" => @vehicles_dropdown }
+      render json: @json_data
+    end
+
+    # Update worker select at view from organization select
+    def wo_update_worker_select_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @workers = @organization.blank? ? workers_dropdown : @organization.workers.order(:worker_code)
+      else
+        @workers = workers_dropdown
+      end
+      # Setup JSON
+      @json_data = { "worker" => @workers }
+      render json: @json_data
+    end
+
     # Update account & master order selects at view from project select
     def wo_update_account_textfield_from_project
       project = params[:project]
@@ -736,11 +802,11 @@ module Ag2Tech
       # Form & Sub-forms
       @workers = workers_dropdown
       # Sub-forms
-      @products = products_dropdown
       @suppliers = suppliers_dropdown
       @orders = orders_dropdown
-      @tools = tools_dropdown
-      @vehicles = vehicles_dropdown
+      # @products = products_dropdown
+      # @tools = tools_dropdown
+      # @vehicles = vehicles_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -774,12 +840,12 @@ module Ag2Tech
       # Form & Sub-forms
       @workers = project_workers(@work_order.project)
       # Sub-forms
-      @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
       @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
       @orders = orders_dropdown_edit(@work_order, nil)
       #@orders = @work_order.supplier.blank? ? orders_dropdown : @work_order.supplier.purchase_orders.order(:supplier_id, :order_no, :id)
-      @tools = tools_dropdown_edit(@work_order)
-      @vehicles = vehicles_dropdown_edit(@work_order)
+      # @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
+      # @tools = tools_dropdown_edit(@work_order)
+      # @vehicles = vehicles_dropdown_edit(@work_order)
     end
 
     # POST /work_orders
@@ -811,11 +877,11 @@ module Ag2Tech
           @meter_locations = meter_locations_dropdown
           @readings = readings_dropdown(nil, nil, nil)
           @workers = workers_dropdown
-          @products = products_dropdown
           @suppliers = suppliers_dropdown
           @orders = orders_dropdown
-          @tools = tools_dropdown
-          @vehicles = vehicles_dropdown
+          # @products = products_dropdown
+          # @tools = tools_dropdown
+          # @vehicles = vehicles_dropdown
           @subscriber_meter = false
           @master_order = master_orders_dropdown(nil, nil, nil, true)
           format.html { render action: "new" }
@@ -962,11 +1028,11 @@ module Ag2Tech
             @meter_locations = meter_locations_dropdown
             @readings = readings_dropdown(@work_order.project, @work_order.meter, @work_order.subscriber)
             @workers = project_workers(@work_order.project)
-            @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
             @suppliers = @work_order.organization.blank? ? suppliers_dropdown : @work_order.organization.suppliers(:supplier_code)
             @orders = orders_dropdown_edit(@work_order, nil)
-            @tools = tools_dropdown_edit(@work_order)
-            @vehicles = vehicles_dropdown_edit(@work_order)
+            # @products = @work_order.organization.blank? ? products_dropdown : @work_order.organization.products(:product_code)
+            # @tools = tools_dropdown_edit(@work_order)
+            # @vehicles = vehicles_dropdown_edit(@work_order)
             @subscriber_meter = subscriber_meter_required(@work_order)
             @master_order = master_orders_dropdown(@work_order.project, nil, @work_order.id, false)
             format.html { render action: "edit" }

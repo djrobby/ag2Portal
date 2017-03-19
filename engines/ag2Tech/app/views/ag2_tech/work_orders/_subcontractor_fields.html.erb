@@ -108,7 +108,7 @@
       var order = $('select#fnt-purchase-order :selected').val();
       if (typeof order === "undefined") {
         tbl = true;
-        order = $(_this).closest('tr').find('select.fnt-purchase-order :selected').val();
+        order = $(_this).closest('tr').find('.fnt-purchase-order').val();
       }
       if (order == "")
         order = "0";

@@ -79,7 +79,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = true;
-      var order = $(this).closest('tr').find('select.fnt-purchase-order :selected').val();
+      var order = $(this).closest('tr').find('.fnt-purchase-order').val();
       if (order == "")
         order = "0";
       var pct = $(this).closest('tr').find('.fnt-enforcement-pct').val();
@@ -180,7 +180,7 @@
       <td><%= i.input :enforcement_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.enforcement_pct, precision: 2) if i.object.enforcement_pct), class: 'sub-number-text-field fnt-enforcement-pct' } %></td>
       <td><%= i.input :cost, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.cost, precision: 4) if i.object.cost), class: 'sub-number-text-field sub-disabled-field fnt-costsub' } %></td>
       <td><%= i.input :costs, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.costs, precision: 4) if i.object.costs), class: 'sub-number-text-field sub-disabled-field fnt-costssub' } %></td>
-      <td style="display:none;"><%= i.association :charge_account, label: false, wrapper: false, input_html: { class: 'isel2 fnt-charge-account-sub' } %></td>
+      <td style="display:none;"><%= i.input :charge_account_id, label: false, wrapper: false, input_html: { class: 'fnt-charge-account-sub' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

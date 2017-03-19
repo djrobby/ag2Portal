@@ -21,6 +21,7 @@ module Ag2Products
       session[:Products] = nil
       session[:Stores] = nil
       session[:Supplier] = nil
+      session[:Status] = nil
       session[:Suppliers] = nil
       session[:Companies] = nil
       session[:sort] = nil
