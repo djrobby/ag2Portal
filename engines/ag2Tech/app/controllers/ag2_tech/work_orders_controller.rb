@@ -526,8 +526,8 @@ module Ag2Tech
       else
         @tools = tools_dropdown
       end
-      # Vehicles array
-      @vehicles_dropdown = vehicles_array(@vehicles)
+      # Tools array
+      @tools_dropdown = tools_array(@tools)
       # Setup JSON
       @json_data = { "tool" => @tools_dropdown }
       render json: @json_data

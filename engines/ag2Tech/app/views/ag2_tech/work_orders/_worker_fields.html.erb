@@ -1,6 +1,8 @@
 <script>
   var _f = '';
   var _p = '';
+  var _o = '';
+  var _id = '';
   var _date = '';
   var _year = '';
   var _t = '';
@@ -14,6 +16,12 @@
     // Project
     _p = $('select#work_order_project_id :selected').val();
     if (_p == "") _p = "0";
+    // Organization
+    _o = $('select#work_order_organization_id :selected').val();
+    if (_o == "") _o = "0";
+    // Id
+    _id = $('#work_order_id').val();
+    if (_id == "") _id = "0";
     // Hours type
     _t = $('select#work_order_hours_type :selected').val();
     if (_t == "") _t = "0";
@@ -134,16 +142,12 @@
   function initW() {
     var ajax_path = 'wo_update_worker_select_from_organization/';
     // make a POST call and replace the content
-    var order = $('select#work_order_project_id :selected').val();
-    if (order != "") {
-      ajax_path = 'wo_update_account_textfield_from_project/';
+    if (_p != "0" && _o != "0" && _id != "0") {
+      ajax_path = 'wo_update_account_textfield_from_project/' + _p + '/' + _o + '/' + _id;
     } else {
-      order = $('select#work_order_organization_id :selected').val();
-      if (order == "") {
-        order = '0';
-      }
+      ajax_path = ajax_path + '/' + _o;
     }
-    jQuery.getJSON(ajax_path + order, function(data) {
+    jQuery.getJSON(ajax_path, function(data) {
       var w = data.worker
       // Worker
       $("#fnt-worker").html("");

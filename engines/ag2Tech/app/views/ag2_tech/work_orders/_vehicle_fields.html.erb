@@ -9,6 +9,8 @@
     var _c = $('#work_order_charge_account_id :selected').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account-v').val(_c);
+    // Vehicle
+    initV();
 
     // Set focus
     $(".modal").on('shown', function() {
@@ -107,7 +109,7 @@
   });
 
   // Initialize
-  function initT() {
+  function initV() {
     // make a POST call and replace the content
     var order = $('select#work_order_organization_id :selected').val();
     if (order == "")
