@@ -5,6 +5,13 @@ module Ag2Gest
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:iv_remove_filters,
+                                               :iv_restore_filters]
+    # Helper methods for
+    # => returns client code & full name
+    helper_method :client_name
+    # => index filters
+    helper_method :iv_remove_filters, :iv_restore_filters
 
     # GET /invoices
     # GET /invoices.json
@@ -24,19 +31,21 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      #@clients = clients_dropdown if @clients.nil?
-      #@subscribers = subscribers_dropdown if @subscribers.nil?
+      # @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
+      @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
-      @billers = billers_dropdown if @billers.nil?
-      @periods = billing_periods_dropdown if @periods.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      client = !client.blank? ? inverse_client_search(client) : client
+      subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
 
       @search = Invoice.search do
         with :project_id, current_projects
@@ -49,13 +58,24 @@ module Ag2Gest
           end
         end
         if !client.blank?
-          fulltext client
-        end
-        if !subscriber.blank?
-          fulltext subscriber
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         # if !client.blank?
         #   with :client_id, client
+        # end
+        if !subscriber.blank?
+          if subscriber.class == Array
+            with :subscriber_code_name_address_fiscal, subscriber
+          else
+            with(:subscriber_code_name_address_fiscal).starting_with(subscriber)
+          end
+        end
+        # if !subscriber.blank?
+        #   fulltext subscriber
         # end
         # if !subscriber.blank?
         #   with :subscriber_id, subscriber
@@ -263,12 +283,22 @@ module Ag2Gest
 
     private
 
+    def client_name(_invoice)
+      _name = _invoice.bill.client.full_name_or_company_and_code rescue nil
+      _name.blank? ? '' : _name[0,40]
+    end
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
         _current_projects = _current_projects << i.id
       end
       _current_projects
+    end
+
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
     end
 
     def inverse_no_search(no)
@@ -278,6 +308,26 @@ module Ag2Gest
         _numbers = _numbers << i.invoice_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_subscriber_search(subscriber)
+      _numbers = []
+      no = setup_no(subscriber)
+      w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Subscriber.where(w).each do |i|
+        _numbers = _numbers << i.code_full_name_or_company_address_fiscal
+      end
+      _numbers = _numbers.blank? ? subscriber : _numbers
+    end
+
+    def inverse_client_search(client)
+      _numbers = []
+      no = setup_no(client)
+      w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Client.where(w).each do |i|
+        _numbers = _numbers << i.full_name_or_company_code_fiscal
+      end
+      _numbers = _numbers.blank? ? client : _numbers
     end
 
     def projects_dropdown
@@ -429,6 +479,37 @@ module Ag2Gest
       elsif session[:To]
         params[:To] = session[:To]
       end
+    end
+
+    def iv_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Project] = ""
+      params[:Client] = ""
+      params[:Subscriber] = ""
+      params[:Status] = ""
+      params[:Type] = ""
+      params[:Operation] = ""
+      params[:Biller] = ""
+      params[:Period] = ""
+      params[:From] = ""
+      params[:To] = ""
+      return " "
+    end
+
+    def iv_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Project] = session[:Project]
+      params[:Client] = session[:Client]
+      params[:Subscriber] = session[:Subscriber]
+      params[:Status] = session[:Status]
+      params[:Type] = session[:Type]
+      params[:Operation] = session[:Operation]
+      params[:Biller] = session[:Biller]
+      params[:Period] = session[:Period]
+      params[:From] = session[:From]
+      params[:To] = session[:To]
     end
   end
 end

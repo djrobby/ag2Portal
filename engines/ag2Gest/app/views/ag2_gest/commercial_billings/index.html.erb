@@ -210,7 +210,7 @@
         <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Biller -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_biller"), nil, :class => 'form-label' %>
-        <%= hidden_field_tag "Biller", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

@@ -17,6 +17,10 @@ class BillingPeriod < ActiveRecord::Base
 
   has_paper_trail
 
+  validates :period,            :presence => true,
+                                :numericality => true
+  validates :billing_frequency, :presence => true
+
   # Scopes
   scope :by_period, -> { order(:period) }
   #

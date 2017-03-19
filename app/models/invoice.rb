@@ -216,10 +216,16 @@ class Invoice < ActiveRecord::Base
 
   searchable do
     text :invoice_no
-    text :client_code_name_fiscal do
+    # text :client_code_name_fiscal do
+    #   bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
+    # end
+    # text :subscriber_code_name_address_fiscal do
+    #   bill.subscriber.code_full_name_or_company_address_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    # end
+    string :client_code_name_fiscal, :multiple => true do
       bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end
-    text :subscriber_code_name_address_fiscal do
+    string :subscriber_code_name_address_fiscal, :multiple => true do
       bill.subscriber.code_full_name_or_company_address_fiscal unless (bill.blank? || bill.subscriber.blank?)
     end
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)

@@ -12,8 +12,10 @@
     });
 
     $('textarea').get(0).style.height = '60px';
-    });
-
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
+  });
 </script>
 
 <%= simple_form_for @billing_period, :html => {:class => 'form-vertical well' } do |f| %>
@@ -23,7 +25,7 @@
   <div class="row-fluid">
 
     <div class="span4">
-    <%= f.input :period, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :period, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
 
     <%= f.association :billing_frequency, label: t('activerecord.attributes.billing_period.billing_frequency_id'),:required => true, collection: BillingFrequency.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>

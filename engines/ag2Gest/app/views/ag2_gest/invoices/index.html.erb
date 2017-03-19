@@ -2,6 +2,121 @@
   var _thisForm = '';
   var changing = false;
 
+  function setupAllSelect2(p, b, r) {
+    projectsSelect2(p);
+    billersSelect2(b);    
+    periodsSelect2(r);    
+  }
+
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function billersSelect2(intialValue) {
+    $('#Biller').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_companies",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function periodsSelect2(intialValue) {
+    $('#Period').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_billing_periods",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -21,24 +136,30 @@
     $('.date_picker').datepicker({
      format:'dd/mm/yyyy',weekStart:1
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>", "<%= @biller %>", "<%= @period %>");
+
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
   }); 
 
-  $(document).ajaxStart(function() {
-    // show loader on start
-    if (changing == false) {
-      $("#div_table").html("");
-      $("#loader").show();
-    }
-  }).ajaxSuccess(function() {
+  // $(document).ajaxStart(function() {
+  //   // show loader on start
+  //   if (changing == false) {
+  //     $("#div_table").html("");
+  //     $("#loader").show();
+  //   }
+  // });
+  $(document).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
   });
 
   $(window).bind("load", function() {
+    a = "<%= iv_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
-    $("#Project").select2("val", "<%= params[:Project] %>");
+    // $("#Project").select2("val", "<%= params[:Project] %>");
     // $("#Client").select2("val", "<%= params[:Client] %>");
     // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
     $("#Client").val("<%= params[:Client] %>");
@@ -46,19 +167,32 @@
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
-    $("#Biller").select2("val", "<%= params[:Biller] %>");
-    $("#Period").select2("val", "<%= params[:Period] %>");
+    // $("#Biller").select2("val", "<%= params[:Biller] %>");
+    // $("#Period").select2("val", "<%= params[:Period] %>");
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
+    $("#search").val("<%= params[:search] %>");
   });
 
   jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
-      // $("#Client").select2("val", "");
-      // $("#Subscriber").select2("val", "");
       $("#Client").val("");
       $("#Subscriber").val("");
       $("#Status").val("");
@@ -69,6 +203,8 @@
       $("#From").val("");
       $("#To").val("");
       $("#search").val("");
+      a = "<%= iv_remove_filters %>";
+      setupAllSelect2(a, a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -102,15 +238,15 @@
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
-        <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
+        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <!--<%#= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>-->
         <!--<%#= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
-        <!--<%#= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
+        <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
@@ -122,10 +258,10 @@
         <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Biller -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
-        <%= select_tag "Biller", options_from_collection_for_select(@billers, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Period -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
 
         <!-- Dates -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>

@@ -212,7 +212,20 @@ class EnginesController < ApplicationController
     render json: @products
   end
 
-  # Returns JSON list of orders
+  # Billing periods
+  def search_billing_periods
+    @billing_periods = []
+    w = ''
+    w = "projects.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    if @q != ''
+      w += "(period LIKE '%#{@q}%')"
+      @billing_periods = serialized(BillingPeriod.where(w).by_period,
+                             Api::V1::BillingPeriodsSerializer)
+    end
+    render json: @billing_periods
+  end
+
+  # Returns JSON list of data
   def serialized(_data, _serializer)
     ActiveModel::ArraySerializer.new(_data, each_serializer: _serializer, root: false)
   end
