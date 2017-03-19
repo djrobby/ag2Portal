@@ -287,7 +287,7 @@ class Subscriber < ActiveRecord::Base
     time :starting_at
     time :ending_at
     integer :tariff_type_id do
-      tariffs.tariff_type_id unless (tariffs.blank? || tariffs.tariff_type_id.blank?)
+      tariffs.first.tariff_type_id unless (tariffs.blank? || tariffs.first.tariff_type_id.blank?)
     end
     integer :caliber_id do
       meter_caliber

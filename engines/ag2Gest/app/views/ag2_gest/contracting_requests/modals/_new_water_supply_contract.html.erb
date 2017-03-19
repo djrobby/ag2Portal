@@ -137,7 +137,7 @@ jQuery(function($) {
       <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' } %>
 
-      <%= f.association :caliber, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' } %>
+      <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, include_blank: true %>
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' } %>

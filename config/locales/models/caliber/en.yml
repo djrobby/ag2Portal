@@ -7,6 +7,7 @@ en:
         few:   Calibers
         other: Calibers
         check_for_meters: "Caliber cannot be destroyed while linked meters exist."
+        check_for_tariffs: "Caliber cannot be destroyed while linked tariffs exist."
     attributes:
       caliber:
         caliber: "Caliber"

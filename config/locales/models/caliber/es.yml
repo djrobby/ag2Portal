@@ -7,6 +7,7 @@ es:
         few:   Calibres
         other: Calibres
         check_for_meters: "Calibre no puede ser eliminado mientras existan contadores vinculados."
+        check_for_tariffs: "Calibre no puede ser eliminado mientras existan tarifas vinculadas."
     attributes:
       caliber:
         caliber: "Calibre"

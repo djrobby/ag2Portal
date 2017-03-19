@@ -2,6 +2,7 @@ class Caliber < ActiveRecord::Base
   attr_accessible :caliber, :letter_id, :nominal_flow
 
   has_many :meters
+  has_many :tariffs
 
   has_paper_trail
 
@@ -19,6 +20,13 @@ class Caliber < ActiveRecord::Base
     caliber
   end
 
+  #
+  # Class (self) user defined methods
+  #
+  def self.with_tariff
+    joins(:tariffs).group(:caliber_id)
+  end
+
   private
 
   def fields_to_uppercase
@@ -32,6 +40,11 @@ class Caliber < ActiveRecord::Base
     # Check for meters
     if meters.count > 0
       errors.add(:base, I18n.t('activerecord.models.caliber.check_for_meters'))
+      return false
+    end
+    # Check for tariffs
+    if tariffs.count > 0
+      errors.add(:base, I18n.t('activerecord.models.caliber.check_for_tariffs'))
       return false
     end
   end

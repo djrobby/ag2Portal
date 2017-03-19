@@ -1180,6 +1180,7 @@ module Ag2Gest
       @projects = current_projects
       @projects_ids = current_projects_ids
       @tariff_types_availables = Tariff.availables_to_project(@contracting_request.project_id).map(&:tariff_type).uniq
+      @calibers = Caliber.with_tariff.order(:caliber)
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 
@@ -1535,7 +1536,7 @@ module Ag2Gest
 
     private
 
-   def available_meters_for_contract(_request)
+    def available_meters_for_contract(_request)
       if session[:office] != '0'
         Meter.from_office(session[:office]).availables(_request.try(:old_subscriber).try(:meter_id))
       else
