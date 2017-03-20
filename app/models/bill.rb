@@ -11,8 +11,9 @@ class Bill < ActiveRecord::Base
   belongs_to :province
   belongs_to :region
   belongs_to :country
-  belongs_to :reading_1, :class_name => 'Reading' #periodo anterior
-  belongs_to :reading_2, :class_name => 'Reading' #año anterior
+  belongs_to :reading_1, :class_name => 'Reading' # Previous reading
+  belongs_to :reading_2, :class_name => 'Reading' # Current reading
+  # About readings: Consumption = reading_2.reading_index - reading_1.reading_index
 
   attr_accessible :bill_date, :bill_no, :first_name, :last_name, :company, :fiscal_id,
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,

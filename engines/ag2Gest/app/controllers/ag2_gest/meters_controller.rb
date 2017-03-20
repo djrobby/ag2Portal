@@ -32,9 +32,9 @@ module Ag2Gest
         end
         if !code.blank?
           if code.class == Array
-            with :meter_code, code
+            with :meter_code_s, code
           else
-            with(:meter_code).starting_with(code)
+            with(:meter_code_s).starting_with(code)
           end
         end
         if !model.blank?

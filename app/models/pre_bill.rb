@@ -10,8 +10,8 @@ class PreBill < ActiveRecord::Base
   belongs_to :region
   belongs_to :country
   belongs_to :bill
-  belongs_to :reading_1, :class_name => 'Reading' #periodo anterior
-  belongs_to :reading_2, :class_name => 'Reading' #año anterior
+  belongs_to :reading_1, :class_name => 'Reading' # Previous reading
+  belongs_to :reading_2, :class_name => 'Reading' # Current reading
 
   attr_accessible :bill_date, :bill_no, :first_name, :last_name, :company, :fiscal_id,
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,

@@ -7,8 +7,8 @@ class Reading < ActiveRecord::Base
   belongs_to :meter
   belongs_to :subscriber
   belongs_to :reading_route
-  belongs_to :reading_1, class_name: "Reading"
-  belongs_to :reading_2, class_name: "Reading"
+  belongs_to :reading_1, class_name: "Reading"  # Previous period reading
+  belongs_to :reading_2, class_name: "Reading"  # Previous year reading
   has_and_belongs_to_many :reading_incidence_types, join_table: "reading_incidences"
 
   attr_accessible :reading_date, :reading_index, :reading_sequence, :reading_variant,
@@ -125,12 +125,19 @@ class Reading < ActiveRecord::Base
     self.id
   end
 
+  # Generates only one Prebill & associated invoices & items, based on current reading data
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
-    pre_bill = PreBill.create( bill_no: nil, #bill_next_no(subscriber.contracting_request.project),
+    cr = consumption_total_period   # consumption real
+    ce = estimated_consumption      # consumption estimated
+    co = 0                          # consumption other
+    cf = cr + ce + country_id       # consumption invoiced
+
+    # Create PreBill, PreInvoices & PreInvoiceItems
+    pre_bill = PreBill.create( bill_no: nil,
                         pre_group_no: (group_no || PreBill.next_no),
                         project_id: project_id,
                         invoice_status_id: InvoiceStatus::PENDING,
-                        bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),#¿¿¿???
+                        bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),
                         subscriber_id: subscriber_id,
                         client_id: subscriber.client_id,
                         last_name: subscriber.client.last_name,
@@ -157,23 +164,23 @@ class Reading < ActiveRecord::Base
     #subscriber.tariff_scheme.tariffs_supply(meter.caliber_id).each do |tariffs_biller|
     subscriber.tariffs_supply.each do |tariffs_biller|
       pre_invoice = PreInvoice.create(
-        invoice_no: nil, #invoice_next_no(project.company_id),
+        invoice_no: nil,
         pre_bill_id: pre_bill.id,
         invoice_status_id: InvoiceStatus::PENDING,
         invoice_type_id: InvoiceType::WATER,
-        invoice_date: billing_period.try(:prebilling_starting_date),#¿¿¿???
+        invoice_date: (billing_period.try(:prebilling_starting_date) || Date.today),
         tariff_scheme_id: subscriber.tariff_scheme_id,
         payday_limit: billing_period.try(:prebilling_ending_date),
         invoice_operation_id: operation_id,
         billing_period_id: billing_period_id,
-        consumption: consumption_total_period,
-        consumption_real: consumption_total_period,
-        consumption_estimated: nil,#¿¿¿???
-        consumption_other: nil,#¿¿¿???
+        consumption: cf,
+        consumption_real: cr,
+        consumption_estimated: ce,
+        consumption_other: co,
         biller_id: tariffs_biller[0],
         discount_pct: 0.0,#¿¿¿???
         exemption: 0.0,#¿¿¿???
-        charge_account_id: subscriber.client.client_bank_accounts.active.first.try(:id),
+        charge_account_id: ChargeAccount.incomes(project_id).first.id,
         reading_1_date: reading_1.try(:reading_date),
         reading_2_date: reading_date,
         reading_1_index: reading_1.try(:reading_index),
@@ -200,14 +207,14 @@ class Reading < ActiveRecord::Base
           limit_before = 0
           (1..8).each do |i|
             # if limit nil (last block) or limit > consumption
-            if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (consumption_total_period || 0)
+            if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (cf || 0)
               PreInvoiceItem.create(
                 pre_invoice_id: pre_invoice.id,
                 code: tariff.try(:billable_item).try(:billable_concept).try(:code),
                 description: tariff.try(:billable_item).try(:billable_concept).try(:name),
                 tariff_id: tariff.id,
                 price:  tariff.instance_eval("block#{i}_fee"),
-                quantity: ((consumption_total_period || 0) - limit_before),
+                quantity: ((cf || 0) - limit_before),
                 tax_type_id: tariff.try(:tax_type_b_id),
                 discount_pct: tariff.try(:discount_pct_b),
                 discount: 0.0,#¿¿¿???
@@ -238,8 +245,8 @@ class Reading < ActiveRecord::Base
             code: tariff.try(:billable_item).try(:billable_concept).try(:code),
             description: tariff.try(:billable_item).try(:billable_concept).try(:name),
             tariff_id: tariff.id,
-            price:  (tariff.percentage_fee/100) * pre_bill.total_by_concept(tariff.percentage_applicable_formula) / consumption_total_period,
-            quantity: consumption_total_period,
+            price:  (tariff.percentage_fee/100) * pre_bill.total_by_concept(tariff.percentage_applicable_formula) / cf,
+            quantity: cf,
             tax_type_id: tariff.try(:tax_type_p_id),
             discount_pct: tariff.try(:discount_pct_p),
             discount: 0.0,#¿¿¿???
@@ -253,7 +260,7 @@ class Reading < ActiveRecord::Base
             description: tariff.try(:billable_item).try(:billable_concept).try(:name),
             tariff_id: tariff.id,
             price:  tariff.variable_fee,
-            quantity: consumption_total_period,
+            quantity: cf,
             tax_type_id: tariff.try(:tax_type_v_id),
             discount_pct: tariff.try(:discount_pct_v),
             discount: 0.0,#¿¿¿???
@@ -312,7 +319,7 @@ class Reading < ActiveRecord::Base
           biller_id: tariffs_biller[0],
           discount_pct: 0.0,
           exemption: 0.0,
-          charge_account_id: 1,
+          charge_account_id: ChargeAccount.incomes(project_id).first.id,
           created_by: user_id,
           reading_1_date: reading_1.try(:reading_date),
           reading_2_date: reading_date,
@@ -428,6 +435,61 @@ class Reading < ActiveRecord::Base
 
   # Estimated consumption
   def estimated_consumption
+    total = 0
+    # if real consumption equals zero, try to estimate
+    if consumption_total_period == 0
+      # Only estimates if there is an incidence that requires estimating
+      if ReadingIncidence.reading_should_be_estimated(self.id)
+        # 1. Consumption invoiced in the same period of last year (reading_2)
+        total = consumption_invoiced(reading_2)
+        if total == 0
+          # 2. Consumption invoiced in the last period (reading_1)
+          total = consumption_invoiced(reading_1)
+          if total == 0
+            # 3. Average consumption of...
+            invoice_date = billing_period.try(:prebilling_starting_date) || Date.today
+            # 3.1. ...the last 36 months of reading
+            from_date = invoice_date - 36.months
+            total = consumption_previous_readings(from_date, invoice_date)
+            if total == 0
+              # 3.2. ...the last 12 months of reading
+              from_date = invoice_date - 12.months
+              total = consumption_previous_readings(from_date, invoice_date)
+              if total == 0
+                # 4. Nominal capacity of the meter x 15 hs x quantity of months
+                nominal_flow = meter.caliber.nominal_flow rescue 1.5
+                nominal_flow = 1.5 if nominal_flow.blank?
+                total = (nominal_flow * 15) * billing_frequency.total_months
+              end # 3.2
+            end # 3.1
+          end # 2
+        end # 1
+      end # ReadingIncidence.reading_should_be_estimated(self.id)
+    end # consumption_total_period == 0
+    total || 0
+  end
+
+  def consumption_previous_readings(from_date, to_date)
+    begin
+      previous_readings = subscriber.readings.where('reading_date between ? AND ?', from_date, to_date)
+                                    .select('SUM(reading_index - reading_index_1) CONSUMPTION,COUNT(*) COUNTER')
+      (previous_readings[0].CONSUMPTION / previous_readings[0].COUNTER).round
+    rescue
+      0
+    end
+  end
+
+  def consumption_invoiced(previous_reading)
+    begin
+      previous_consumption = previous_reading.bill.active_supply_invoices.joins(:invoice).select('SUM(consumption) CONSUMPTION')
+      (previous_consumption[0].CONSUMPTION).round
+    rescue
+      0
+    end
+  end
+
+  # Prorated consumption
+  def prorated_consumption
     total = 0
     # if real consumption equals zero, try to estimate
     if consumption_total_period == 0
