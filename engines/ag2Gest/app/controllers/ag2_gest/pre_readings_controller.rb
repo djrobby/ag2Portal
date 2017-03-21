@@ -5,7 +5,7 @@ module Ag2Gest
   class PreReadingsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    before_filter :get_pre_readings, only: [:impute_readings, :to_reading, :create, :to_pdf, :list]
+    before_filter :get_pre_readings, only: [:impute_readings, :to_reading, :create, :to_pdf, :list, :list_q]
     skip_load_and_authorize_resource :only => [ :update,
                                                 :destroy,
                                                 :list,
@@ -26,6 +26,10 @@ module Ag2Gest
     end
 
     def list
+      @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => per_page)
+    end
+
+    def list_q
       @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => per_page)
     end
 
@@ -70,8 +74,11 @@ module Ag2Gest
     # GET /prereadings
     # GET /prereadings.json
     def index
-      @pre_readings = PreReading.where(project_id: current_projects_ids)
-                                .group_by{|p| [p.reading_route_id, p.billing_period_id]}
+      @pre_readings = PreReading.includes(:reading_route, :billing_period)
+                                .group(:reading_route_id, :billing_period_id)
+                                .select('reading_route_id, billing_period_id, COUNT(*) COUNTER')
+      # @pre_readings = PreReading.where(project_id: current_projects_ids)
+      #                           .group_by{|p| [p.reading_route_id, p.billing_period_id]}
     end
 
     # GET /prereadings/1
@@ -191,7 +198,9 @@ module Ag2Gest
     def get_pre_readings
       @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } if params[:prereading][:reading_routes]
       @period = params[:prereading][:period]
-      @pre_readings = PreReading.where(reading_route_id: @routes, billing_period_id: @period).all(:order => 'reading_route_id, reading_sequence')
+      @pre_readings = PreReading.where(reading_route_id: @routes, billing_period_id: @period)
+                                .includes(:reading_route, :billing_period)
+                                .order(:reading_route_id, :reading_sequence)
     end
 
     def billing_periods_dropdown

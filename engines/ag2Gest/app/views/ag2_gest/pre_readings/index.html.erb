@@ -26,16 +26,18 @@
         <thead>
           <tr>
             <th><%= t("activerecord.attributes.pre_reading.reading_route_id") %></th>
-            <th class="center"><%= t("activerecord.attributes.pre_reading.billing_period_id") %></th>
-            <th class="center"><%= t("activerecord.attributes.pre_reading.prereadings_number") %></th>
+            <th align="center"><%= t("activerecord.attributes.pre_reading.billing_period_id") %></th>
+            <th align="center"><%= t("activerecord.attributes.pre_reading.prereadings_number") %></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <% @pre_readings.each do |pre_reading| %>
             <tr>
-              <td ><%= ReadingRoute.find(pre_reading[0][0]).try(:name) %></td>
-              <td class="center"><%= BillingPeriod.find(pre_reading[0][1]).try(:period) %></td>
-              <td class="center"><%= pre_reading[1].count %></td>
+              <td ><%= pre_reading.reading_route.try(:name) %></td>
+              <td align="center"><%= pre_reading.billing_period.try(:period) %></td>
+              <td align="center"><%= pre_reading.COUNTER %></td>
+              <td><%= render :partial => '/layouts/crud/read', :locals => { :model => PreReading, :path => list_q_pre_readings_path(prereading: {reading_routes: [pre_reading.reading_route_id], period: pre_reading.billing_period_id }) } %></td>
             </tr>
           <% end %>
         </tbody>

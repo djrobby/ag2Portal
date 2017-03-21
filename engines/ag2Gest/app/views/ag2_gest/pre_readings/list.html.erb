@@ -1,7 +1,7 @@
-
 <%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
 
-<h3>Prelecturas Generadas</h3>
+<h3><%=t 'ag2_gest.pre_readings.list_title' %></h3>
+
 <h5>Periodo: <%= BillingPeriod.find(@period).try(:period) %></h5>
 <h5>Rutas: <%= ReadingRoute.where(id: @routes).map(&:name).join(",") %></h5>
 <div class="container-fluid">
@@ -53,12 +53,12 @@
       </table>
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @pre_readings } %>
     </div>
-    <div class="row">
+    <div>
       <%= link_to "Imprimir", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
-        <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %>
+      <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %>
     </div>
   </div>
   <br>
-      <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>
+  <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>
 </div>

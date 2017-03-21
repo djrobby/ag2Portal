@@ -130,7 +130,7 @@ class Reading < ActiveRecord::Base
     cr = consumption_total_period   # consumption real
     ce = estimated_consumption      # consumption estimated
     co = 0                          # consumption other
-    cf = cr + ce + country_id       # consumption invoiced
+    cf = cr + ce + co               # consumption invoiced
 
     # Create PreBill, PreInvoices & PreInvoiceItems
     pre_bill = PreBill.create( bill_no: nil,

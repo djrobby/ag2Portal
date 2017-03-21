@@ -12,6 +12,8 @@ en:
         btn_delete: "Delete Billable item"
         return_to: "Back to Billable item"
       edit:
+        show: "Show"
+        back: "Back"
         title: "Edit Billable item"
         btn_show: "Show Billable item"
       new:
@@ -22,5 +24,5 @@ en:
       # commercial_info: "Accounting & Commercial Info"
       # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       # code_error: "Unable to generate billable_item Code: No Organization chosen."
-
-      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}
+      list_title: "Uncofirmed Readings (Generated)"
+      list_q_title: "Uncofirmed Readings (Imported)"

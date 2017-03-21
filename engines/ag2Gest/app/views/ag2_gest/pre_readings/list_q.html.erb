@@ -1,0 +1,55 @@
+<%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
+
+<h3><%=t 'ag2_gest.pre_readings.list_q_title' %></h3>
+
+<h5><%= t("activerecord.attributes.pre_reading.billing_period_id") %>: <%= BillingPeriod.find(@period).try(:period) %></h5>
+<h5><%= t("activerecord.attributes.pre_reading.routes") %>: <%= ReadingRoute.where(id: @routes).map(&:name).join(",") %></h5>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12" id="div_table">
+      <table class="table table-condensed table-striped shrinked stu">
+        <thead>
+          <tr>
+            <th><%= t("activerecord.attributes.pre_reading.route") %></th>
+            <th align="right"><%= t("activerecord.attributes.pre_reading.reading_seq") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.subscriber_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.delivery_address") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_2") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_1") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_c") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pre_readings.each do |pre_reading| %>
+            <tr>
+              <td><%= pre_reading.try(:reading_route).try(:route_code) %></td>
+              <td align="right"><%= pre_reading.reading_sequence %></td>
+              <td><%= pre_reading.try(:subscriber).try(:to_label) %></td>
+              <td><%= pre_reading.try(:subscriber).try(:address_1) %></td>
+              <td><%= pre_reading.try(:meter).try(:meter_code) %></td>
+              <td>
+              <span><%= pre_reading.reading_2.billing_period.period unless (pre_reading.reading_2.blank? || pre_reading.reading_2.billing_period.blank?) %> </span>
+              <span><%= formatted_date(pre_reading.reading_2.reading_date) unless (pre_reading.reading_2.blank? || pre_reading.reading_2.reading_date.blank?) %> </span>
+              <span><%= pre_reading.reading_index_2 unless pre_reading.reading_index_2.blank? %></span>
+              </td>
+              <td>
+              <span><%= pre_reading.reading_1.billing_period.period unless (pre_reading.reading_1.blank? || pre_reading.reading_1.billing_period.blank?) %> </span>
+              <span><%= formatted_date(pre_reading.reading_1.reading_date) unless (pre_reading.reading_1.blank? || pre_reading.reading_1.reading_date.blank?) %> </span>
+              <span><%= pre_reading.reading_index_1 unless pre_reading.reading_index_1.blank? %></span>
+              </td>
+              <td>
+              <span><%= pre_reading.billing_period.period unless pre_reading.billing_period.blank? %> </span>
+              <span><%= formatted_date(pre_reading.reading_date) unless pre_reading.reading_date.blank? %> </span>
+              <span><%= pre_reading.reading_index unless pre_reading.reading_index.blank? %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @pre_readings } %>
+    </div>
+  </div>
+  <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>
+</div>

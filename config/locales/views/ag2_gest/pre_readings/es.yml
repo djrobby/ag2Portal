@@ -24,3 +24,5 @@ es:
       # commercial_info: "Información Contable y Comercial"
       # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       # code_error: "Imposible generar Código de Cliente: No has elegido Organización."
+      list_title: "Prelecturas Generadas"
+      list_q_title: "Prelecturas Importadas"
