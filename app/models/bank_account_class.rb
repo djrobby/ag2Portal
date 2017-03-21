@@ -1,9 +1,9 @@
 class BankAccountClass < ActiveRecord::Base
   # CONSTANTS (right)
   SERVICIO = 1
-  TCA = 2
-  CONTRATACION = 3
-  FRACCIONAMIENTO = 4
+  CONTRATACION = 2
+  FRACCIONAMIENTO = 3
+  TCA = 4
   TODAS = 5
   PROVEEDOR = 6
   OTRAS = 7

@@ -14,12 +14,21 @@
       if (department == "")
         department = "0";
       jQuery.getJSON('ar_update_worker_select_from_department/' + department, function(data) {
+        var w = data.workers;
         $("#area_worker_id").html("");
         $("#area_worker_id").select2("val", "");
         $("#area_worker_id").append($('<option></option>').val("").html(""));
-        $.each(data, function(id, option) {
-          $("#area_worker_id").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
-        });
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'companies' && option != "") {
+              $("#area_worker_id").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#area_worker_id").append($('<option></option>').val(option.id).html(option.last_name + ", " + option.first_name));
+          });
+        }
       });
       return false;
     });

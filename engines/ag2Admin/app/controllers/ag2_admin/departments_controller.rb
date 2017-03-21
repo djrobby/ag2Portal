@@ -20,7 +20,7 @@ module Ag2Admin
       else
         @workers = workers_dropdown
       end
-      render json: @workers
+      render json: { "workers" => @workers }
     end
 
     # Update company select at view from organization select

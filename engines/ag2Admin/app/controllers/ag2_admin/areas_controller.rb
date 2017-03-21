@@ -19,7 +19,7 @@ module Ag2Admin
       else
         @workers = workers_dropdown
       end
-      render json: @workers
+      render json: { "workers" => @workers }
     end
     #
     # Default Methods
@@ -147,7 +147,7 @@ module Ag2Admin
     end
 
     def workers_dropdown
-      _workers = session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
+      session[:organization] != '0' ? Worker.where(organization_id: session[:organization].to_i).order(:last_name, :first_name) : Worker.order(:last_name, :first_name)
     end
 
     def departments_dropdown
@@ -159,7 +159,7 @@ module Ag2Admin
     end
 
     def workers_by_department(_department)
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)
+      Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { department_id: _department }).order(:last_name, :first_name)
     end
 
     # Keeps filter state
