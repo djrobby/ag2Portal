@@ -15,18 +15,26 @@ es:
         id: "Id"
         charge: "Cargar Prelecturas"
         impute: "Imputar lecturas"
+        project_id: "Proyecto"
+        billing_period_id: "Periodo"
+        billing_frequency_id: "Frecuencia de facturación"
+        reading_type_id: "Tipo de lectura"
+        subscriber_id: "Abonado"
+        reading_variant: "Reading variant"
+        reading_1_id: "reading_1_id"
+        reading_2_id: "reading_2_id"
+        created_at: "Creado por"
+        updated_at: "Actualizado por"
         reading_route_id: "Cód. ruta"
         reading_sequence: "Secuencia"
         reading_seq: "Sec"
         meter_id: "Contador"
-        subscriber_id: "Abonado"
         reading_index_c: "Lect.per.act."
         reading_index_1: "Lect.per.ant."
         reading_index_2: "Lect.año.ant."
         reading_date: "Fecha"
-        billing_period_id: "Periodo"
         index: "Índice"
-        pass_to_definitive: "Pasar a definitivas"
+        pass_to_definitive: "Registrar lecturas"
         loading: "Cargando, espere por favor..."
         print: "Imprimir"
         save: "Guardar"
@@ -39,8 +47,6 @@ es:
         reading_sequence_acronym: "Secuencia"
         delivery_address: "Dirección suministro"
         not_found: "Periodo no encontrado"
-
-
     report:
       pre_reading:
         reading_route_id: "Ruta"
@@ -53,15 +59,10 @@ es:
         meter_model: "Marca/Modelo"
         date_install: "F. instalación"
         period: "Periodo"
-        reading_index_1: "Lect. per. ant."
-        reading_index_2: "Lect. año. ant."
+        reading_index_1: "Lect.per.ant."
+        reading_index_2: "Lect.año.ant."
         reading_date: "Fecha"
         reading_index: "Índice"
-
-
-
-
-
         project_id: "Proyecto"
         billing_period_id: "Periodo"
         billing_frequency_id: "Frecuencia de facturación"
