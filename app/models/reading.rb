@@ -7,7 +7,7 @@ class Reading < ActiveRecord::Base
   belongs_to :meter
   belongs_to :subscriber
   belongs_to :reading_route
-  belongs_to :reading_1, class_name: "Reading"  # Previous period reading
+  belongs_to :reading_1, class_name: "Reading"  # Previous (period) reading
   belongs_to :reading_2, class_name: "Reading"  # Previous year reading
   has_and_belongs_to_many :reading_incidence_types, join_table: "reading_incidences"
 
@@ -489,15 +489,33 @@ class Reading < ActiveRecord::Base
   end
 
   # Prorated consumption
-  def prorated_consumption
+  def prorate_consumption_and_apply_tariffs
     total = 0
-    # if real consumption equals zero, try to estimate
-    if consumption_total_period == 0
-      # Only estimates if there is an incidence that requires estimating
-      if ReadingIncidence.reading_should_be_estimated(self.id)
-      end
+    # Is there previous reading?
+    if reading_1_id.blank?
+      # There isn't previous reading
+    else
+      # Previous reading exists
     end
+    # Should prorate?
+
     total
+  end
+
+  def search_tariff_to_apply(_date, _concept, _type, _caliber=nil)
+    if _caliber.nil?
+      subscriber_tariff = SubscriberTariff.joins(tariff: :billable_item)
+                                          .where('(? BETWEEN starting_at AND ending_at) OR (? >= starting_at AND ending_at IS NULL)', _date, _date)
+                                          .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id', _type, _concept)
+                                          .last
+    else
+      subscriber_tariff = SubscriberTariff.joins(tariff: :billable_item)
+                                          .where('(? BETWEEN starting_at AND ending_at) OR (? >= starting_at AND ending_at IS NULL)', _date, _date)
+                                          .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id', _type, _concept)
+                                          .where('tariffs.caliber_id = ?', _caliber)
+                                          .last
+    end
+
   end
 
   searchable do
