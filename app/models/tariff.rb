@@ -54,7 +54,7 @@ class Tariff < ActiveRecord::Base
   scope :availables_to_project, -> p { joins(:billable_item).where("billable_items.project_id IN (?) AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, Date.today)}
   scope :availables_to_project_type, -> p,t { joins(:billable_item).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, Date.today)}
   scope :availables_to_project_type_document, -> p,t,d { joins(:billable_item).joins(:billable_concept).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, d, Date.today)}
-  scope :availables_to_project_type_document_caliber, -> p,t,d,c { joins(:billable_item).joins(:billable_concept).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, d, c, Date.today)}
+  scope :availables_to_project_type_document_caliber, -> p,t,d,c { joins(:billable_item).joins(:billable_concept).order("billable_items.billable_concept_id").where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at < ?)", p, t, d, c, Date.today)}
 
   before_destroy :check_for_dependent_records
   after_save :assing_ending_at, :reindex_tariff

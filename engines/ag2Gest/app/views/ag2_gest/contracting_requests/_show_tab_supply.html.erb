@@ -273,6 +273,16 @@
       changeState(currentStepWizard,nextStepWizard)
     });
 
+    // ajax success for initial_billing
+    $("#inspection-billing").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-2"]'),
+          nextStepWizard = $('a[href="#step-3"]');
+      changeState(currentStepWizard,nextStepWizard)
+      $("#bill-doc").addClass("hide");
+      $("#link-bill").addClass("hide");
+    });
+
+
     // ajax success for inspection_billing
     // $("#inspection-billing").bind("ajax:success", function(xhr, data, status) {
     //   var currentStepWizard = $('a[href="#step-2"]'),
@@ -465,7 +475,7 @@
       <% end %>
 
     <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank? && !@contracting_request.water_supply_contract.bill.invoices.blank? && @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION %>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill).try(:subscriber_id)}", target: "_blank" %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill).try(:subscriber_id)}", target: "_blank", :remote => true %>
       <% else %>
           <a target="_blank" id="bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.biller') %></a>
       <% end %>

@@ -630,7 +630,7 @@ module Ag2Gest
         params[:subscriber].delete :meter_details_attributes
         params[:subscriber].delete :readings_attributes
         @billing_period = BillingPeriod.find(params_readings[:billing_period_id])
-        @subscriber = Subscriber.new(params[:subscriber].except(:meter))
+        @subscriber = Subscriber.new(params[:subscriber].except(:meter_code_input))
         @subscriber.assign_attributes(
           active: true,
           billing_frequency_id: @contracting_request.water_supply_contract.try(:bill).try(:invoices).try(:first).try(:tariff_scheme).try(:tariffs).try(:first).try(:billing_frequency_id),
@@ -674,6 +674,7 @@ module Ag2Gest
           created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save
+          @contracting_request.water_supply_contract.contracted_tariffs.update_all(:starting_at => @subscriber.starting_at)
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
           billing_frequency = @billing_period.billing_frequency_id
           #lectura de retirada

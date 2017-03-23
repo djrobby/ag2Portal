@@ -72,6 +72,23 @@ class Subscriber < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
+  def current_tariffs(_reading_date=nil)
+    unless tariffs.blank?
+      if _reading.nil
+        tariffs.where("subscriber_tariffs.ending_at IS NULL")
+        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+        .group_by{|t| t.try(:billable_item).try(:biller_id)}
+      else
+        tariffs
+        .where('(? BETWEEN subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at) OR (? >= subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at IS NULL)', _reading_date, _reading_date)
+        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+        .group_by{|t| t.try(:billable_item).try(:biller_id)}
+      end
+    else
+      []
+    end
+  end
+
   def tariffs_supply
     unless tariffs.blank?
       tariffs

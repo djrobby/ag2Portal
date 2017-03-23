@@ -52,6 +52,9 @@ module Ag2Gest
     end
     # add mj
 
+    #
+    # Bulk billing (confirm prebilling)
+    #
     def confirm
       @pre_bills = PreBill.where(pre_group_no: params[:pre_bill][:ids], bill_id: nil)
       pre_bills_count = @pre_bills.count

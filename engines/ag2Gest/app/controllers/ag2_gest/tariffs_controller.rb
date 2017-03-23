@@ -54,7 +54,8 @@ module Ag2Gest
         tariffs_assing = @new_tariffs.select{|t| (t.caliber_id.nil? || t.caliber_id == s.meter.caliber_id) and t.billable_concept.billable_document == "1"}
         s.tariffs << tariffs_assing
        end
-      @tariffs.each{|t| t.update_attributes(ending_at: params[:init_date])}
+      _end_date = @new_tariffs.first.starting_at - 1.day
+      @tariffs.each{|t| t.update_attributes(ending_at: _end_date)}
       # @tariffs.map(&:subscriber_tariffs).compact.flatten.update_all(ending_at: params[:init_date])
       # @tariffs.map(&:contracted_tariffs).compact.flatten.update_all(ending_at: params[:init_date])
       redirect_to tariffs_path, notice: "Tarifas creadas"
