@@ -274,7 +274,7 @@ class Reading < ActiveRecord::Base
               measure_id: tariff.billing_frequency.fix_measure_id,
               created_by: user_id )
           end
-          if tariff.block1_fee > 0
+          if tariff.block1_limit > 0
             limit_before = 0
             (1..8).each do |i|
               # if limit nil (last block) or limit > consumption
@@ -455,7 +455,7 @@ class Reading < ActiveRecord::Base
                               billing_frequency.total_months,
                               tariff.billing_frequency.fix_measure_id)
     end
-    if tariff.block1_fee > 0
+    if tariff.block1_limit > 0
       limit_before = 0
       (1..8).each do |i|
         # if limit nil (last block) or limit > consumption
@@ -491,7 +491,7 @@ class Reading < ActiveRecord::Base
                               tariff.variable_fee,
                               cf,
                               tariff.billing_frequency.var_measure_id)
-    end # tariff.block1_fee > 0
+    end # tariff.block1_limit > 0
   end
 
   #
@@ -532,12 +532,162 @@ class Reading < ActiveRecord::Base
 
   # Prorated consumption
   def prorate_consumption_and_apply_tariffs(tariff, prev_reading_tariff, pre_invoice, pre_bill, cf)
+    # Calculates days
     days_between_readings = (reading_date - reading_1.reading_date).to_i
-    days_current_tariff = (reading_date - tariff.starting_at).to_i
-    days_previous_tariff = (prev_reading_tariff.ending_at - reading_1.reading_date).to_i
-    coefficient_current_tariff = days_current_tariff / days_between_readings
-    coefficient_previous_tariff = days_previous_tariff / days_between_readings
-  end
+    days_current_tariff = (reading_date - tariff.starting_at).to_i + 1
+    days_previous_tariff = days_between_readings - days_current_tariff
+    # days_previous_tariff = (prev_reading_tariff.ending_at - reading_1.reading_date).to_i
+    days_billing_period = (billing_period.billing_ending_date - billing_period.billing_starting_date).to_i rescue 0
+    days_current_period = (billing_period.billing_ending_date - tariff.starting_at).to_i rescue 0
+    days_previous_period = days_billing_period - days_current_period rescue 0
+
+    # Calculates coefficients
+    variable_current_coefficient = days_current_tariff / days_between_readings
+    variable_previous_coefficient = days_previous_tariff / days_between_readings
+    if days_billing_period == 0
+      fixed_current_coefficient = variable_current_coefficient
+      fixed_previous_coefficient = variable_previous_coefficient
+    else
+      fixed_current_coefficient = days_current_period / days_billing_period
+      fixed_previous_coefficient = days_previous_period / days_billing_period
+    end
+
+    #####################
+    ### Apply Tariffs ###
+    #####################
+
+    #+++ Fixed +++
+    previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
+    current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
+    # Previous
+    if previous_fixed_fee_qty > 0 && !prev_reading_tariff.fixed_fee.zero?
+      create_pre_invoice_item(prev_reading_tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (prev_reading_tariff.fixed_fee / prev_reading_tariff.billing_frequency.total_months),
+                              previous_fixed_fee_qty,
+                              prev_reading_tariff.billing_frequency.fix_measure_id)
+    end
+    # Current
+    unless tariff.fixed_fee.zero?
+      create_pre_invoice_item(tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (tariff.fixed_fee / tariff.billing_frequency.total_months),
+                              current_fixed_fee_qty,
+                              tariff.billing_frequency.fix_measure_id)
+    end
+
+    #+++ Blocks +++
+    block_fee_qty = 0
+    previous_block_fee_quantities = []
+    # Previous
+    if prev_reading_tariff.block1_limit > 0
+      limit_before = 0
+      (1..8).each do |i|
+        if prev_reading_tariff.instance_eval("block#{i}_limit").nil? || prev_reading_tariff.instance_eval("block#{i}_limit") >= (cf || 0)
+          block_fee_qty = (((cf || 0) - limit_before) * variable_previous_coefficient).round
+          create_pre_invoice_item(prev_reading_tariff,
+                                  pre_invoice.id,
+                                  "BL"+i.to_s,
+                                  prev_reading_tariff.instance_eval("block#{i}_fee"),
+                                  block_fee_qty,
+                                  prev_reading_tariff.billing_frequency.var_measure_id)
+          previous_block_fee_quantities = previous_block_fee_quantities << [(((cf || 0) - limit_before) * variable_previous_coefficient), block_fee_qty]
+          break
+        else
+          block_fee_qty = ((prev_reading_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient).round
+          limit_before = prev_reading_tariff.instance_eval("block#{i}_limit")
+        end
+        create_pre_invoice_item(prev_reading_tariff,
+                                pre_invoice.id,
+                                "BL"+i.to_s,
+                                prev_reading_tariff.instance_eval("block#{i}_fee"),
+                                block_fee_qty,
+                                prev_reading_tariff.billing_frequency.var_measure_id)
+        previous_block_fee_quantities = previous_block_fee_quantities << [((prev_reading_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient), block_fee_qty]
+      end # (1..8).each
+    end
+    # Current
+    if tariff.block1_limit > 0
+      limit_before = 0
+      (1..8).each do |i|
+        if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") >= (cf || 0)
+          if previous_block_fee_quantities[i-1].nil?
+            block_fee_qty = (((cf || 0) - limit_before) * variable_current_coefficient).round
+          else
+            block_fee_qty = ((previous_block_fee_quantities[i-1][0] - previous_block_fee_quantities[i-1][1]) +
+                            (((cf || 0) - limit_before) * variable_current_coefficient)).round
+          end
+          create_pre_invoice_item(tariff,
+                                  pre_invoice.id,
+                                  "BL"+i.to_s,
+                                  tariff.instance_eval("block#{i}_fee"),
+                                  block_fee_qty,
+                                  tariff.billing_frequency.var_measure_id)
+          break
+        else
+          if previous_block_fee_quantities[i-1].nil?
+            block_fee_qty = ((tariff.instance_eval("block#{i}_limit") - limit_before) * variable_current_coefficient).round
+          else
+            block_fee_qty = ((previous_block_fee_quantities[i-1][0] - previous_block_fee_quantities[i-1][1]) +
+                            ((tariff.instance_eval("block#{i}_limit") - limit_before) * variable_current_coefficient)).round
+          end
+          limit_before = tariff.instance_eval("block#{i}_limit")
+        end
+        create_pre_invoice_item(tariff,
+                                pre_invoice.id,
+                                "BL"+i.to_s,
+                                tariff.instance_eval("block#{i}_fee"),
+                                block_fee_qty,
+                                tariff.billing_frequency.var_measure_id)
+      end # (1..8).each
+    end
+
+    #+++ Variables +++
+    previous_var_fee_qty = (cf * variable_previous_coefficient).round
+    current_var_fee_qty = cf - previous_var_fee_qty
+
+    #+++ Percentage +++
+    # Previous
+    if prev_reading_tariff.percentage_fee > 0 and !prev_reading_tariff.percentage_applicable_formula.blank?
+      create_pre_invoice_item(prev_reading_tariff,
+                              pre_invoice.id,
+                              "VP",
+                              (prev_reading_tariff.percentage_fee/100) * pre_bill.total_by_concept(prev_reading_tariff.percentage_applicable_formula) / cf,
+                              previous_var_fee_qty,
+                              prev_reading_tariff.billing_frequency.var_measure_id)
+    end
+    # Current
+    if tariff.percentage_fee > 0 and !tariff.percentage_applicable_formula.blank?
+      create_pre_invoice_item(tariff,
+                              pre_invoice.id,
+                              "VP",
+                              (tariff.percentage_fee/100) * pre_bill.total_by_concept(tariff.percentage_applicable_formula) / cf,
+                              current_var_fee_qty,
+                              tariff.billing_frequency.var_measure_id)
+    end
+
+    #+++ Variable +++
+    # Previous
+    if prev_reading_tariff.variable_fee > 0
+      create_pre_invoice_item(prev_reading_tariff,
+                              pre_invoice.id,
+                              "CV",
+                              prev_reading_tariff.variable_fee,
+                              current_var_fee_qty,
+                              prev_reading_tariff.billing_frequency.var_measure_id)
+    end
+    # Current
+    if tariff.variable_fee > 0
+      create_pre_invoice_item(tariff,
+                              pre_invoice.id,
+                              "CV",
+                              tariff.variable_fee,
+                              current_var_fee_qty,
+                              tariff.billing_frequency.var_measure_id)
+    end
+  end # prorate_consumption_and_apply_tariffs
 
   # Search tariffs (normally, for prorates previous reading)
   def search_tariff_to_apply(_date, _concept, _type, _caliber=nil)
