@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170317174453) do
+ActiveRecord::Schema.define(:version => 20170326110547) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1919,6 +1919,7 @@ ActiveRecord::Schema.define(:version => 20170317174453) do
     t.integer  "work_order_id"
     t.integer  "charge_account_id"
     t.integer  "organization_id"
+    t.decimal  "totals",            :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "offer_requests", ["approved_offer_id"], :name => "index_offer_requests_on_approved_offer_id"
@@ -1958,6 +1959,7 @@ ActiveRecord::Schema.define(:version => 20170317174453) do
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
     t.integer  "purchase_orders_count",                                  :default => 0
+    t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "offers", ["approver_id"], :name => "index_offers_on_approver_id"

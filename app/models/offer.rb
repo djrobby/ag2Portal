@@ -42,7 +42,9 @@ class Offer < ActiveRecord::Base
 
   validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
 
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
   after_create :notify_on_create
   after_update :notify_on_update
 
@@ -79,13 +81,7 @@ class Offer < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    subtotal = 0
-    offer_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    offer_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -97,13 +93,7 @@ class Offer < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    offer_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    offer_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -111,7 +101,7 @@ class Offer < ActiveRecord::Base
   end
 
   def quantity
-    offer_items.sum("quantity")
+    offer_items.sum(:quantity)
   end
 
   #
@@ -155,6 +145,10 @@ class Offer < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   def check_for_dependent_records
     # Check for purchase orders

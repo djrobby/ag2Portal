@@ -455,6 +455,8 @@ module Ag2Purchase
                 break
               end   # !offer_item.save?
             end   # do |i|
+            # Update totals
+            offer.update_column(:totals, Offer.find(offer.id).total)
           else
             # Can't save offer
             code = '$write'

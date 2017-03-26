@@ -11,7 +11,7 @@ class OfferRequest < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :approval_date, :deadline_date, :request_date, :request_no, :remarks,
                   :discount_pct, :discount, :payment_method_id, :project_id, :approved_offer_id,
-                  :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id
+                  :approver_id, :store_id, :work_order_id, :charge_account_id, :organization_id, :totals
   attr_accessible :offer_request_items_attributes, :offer_request_suppliers_attributes
 
   has_many :offer_request_items, dependent: :destroy
@@ -40,7 +40,9 @@ class OfferRequest < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
 
   def to_label
     "#{full_name}"
@@ -63,13 +65,7 @@ class OfferRequest < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    subtotal = 0
-    offer_request_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    offer_request_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -81,13 +77,7 @@ class OfferRequest < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    offer_request_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    offer_request_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -95,7 +85,7 @@ class OfferRequest < ActiveRecord::Base
   end
 
   def quantity
-    offer_request_items.sum("quantity")
+    offer_request_items.sum(:quantity)
   end
 
   # Returns multidimensional array containing different tax type in each line
@@ -171,6 +161,10 @@ class OfferRequest < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   def check_for_dependent_records
     # Check for offers

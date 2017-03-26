@@ -451,7 +451,7 @@ module Ag2Purchase
       request_item = nil
       code = ''
 
-      # Parms data to array
+      # Params data to array
       suppliers = suppliers.split(",")
       families = families.split(",")
 
@@ -499,6 +499,8 @@ module Ag2Purchase
                 end   # family.products.each do |p|
               end   # !family.nil?
             end   # families.each do |f|
+            # Update totals
+            request.update_column(:totals, OfferRequest.find(request.id).total)
             # Loop thru suppliers
             suppliers.each do |s|
               supplier = Supplier.find(s) rescue nil
@@ -524,7 +526,7 @@ module Ag2Purchase
         code = '$err'
       end   # !suppliers.empty? && !families.empty?
 
-      if code == ''
+      if code != '$err' && code != '$write'
         code = I18n.t("ag2_purchase.offer_requests.generate_request_ok", var: request.full_no)
       end
       @json_data = { "code" => code }
@@ -591,7 +593,7 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
-        data_accessor_for(OfferRequest).include = [:approved_offer]
+        data_accessor_for(OfferRequest).include = [{approved_offer: :supplier}]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page
       end

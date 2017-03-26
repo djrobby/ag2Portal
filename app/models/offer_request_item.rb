@@ -43,10 +43,18 @@ class OfferRequestItem < ActiveRecord::Base
   end
 
   def net
-    amount - (amount * (offer_request.discount_pct / 100)) if !offer_request.discount_pct.blank?
+    if offer_request && !offer_request.discount_pct.blank?
+      amount - (amount * (offer_request.discount_pct / 100))
+    else
+      amount
+    end
   end
 
   def net_tax
-    tax - (tax * (offer_request.discount_pct / 100)) if !offer_request.discount_pct.blank?
+    if offer_request && !offer_request.discount_pct.blank?
+      tax - (tax * (offer_request.discount_pct / 100))
+    else
+      tax
+    end
   end
 end
