@@ -1179,7 +1179,7 @@ module Ag2Gest
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = current_projects
       @projects_ids = current_projects_ids
-      @tariff_types_availables = Tariff.availables_to_project(@contracting_request.project_id).map(&:tariff_type).uniq
+      @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
@@ -1236,12 +1236,12 @@ module Ag2Gest
     # POST /requests.json
     def create
       @breadcrumb = 'create'
-      @projects = current_projects
-      @projects_ids = current_projects_ids
-      _subscribers = Subscriber.where(office_id: current_offices_ids)
-      @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @offices = current_offices
+      # @projects = current_projects
+      # @projects_ids = current_projects_ids
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      # @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
       @account_no = @contracting_request.account_no
       @contracting_request.ccc_dc = @account_no[0..1] unless @account_no.blank?

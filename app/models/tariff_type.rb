@@ -13,6 +13,7 @@ class TariffType < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:code) }
+  scope :availables_to_project, -> p { includes(tariffs: :billable_item).where("billable_items.project_id IN (?) AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", p, Date.today)}
 
   before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase
