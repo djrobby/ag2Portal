@@ -1181,6 +1181,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
+      @billing_periods = BillingPeriod.includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 
