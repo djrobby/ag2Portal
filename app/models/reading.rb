@@ -379,7 +379,7 @@ class Reading < ActiveRecord::Base
                               tariff.try(:discount_pct_f),
                               user_id)
     end
-    if tariff.block1_limit > 0
+    if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       (1..8).each do |i|
         # if limit nil (last block) or limit > consumption
@@ -431,7 +431,7 @@ class Reading < ActiveRecord::Base
   end
 
   # Creates Invoice Item
-  def create_invoice_item(tariff, invoice_id, subcode, price, quantity, measure, measure, tax_type_id, discount_pct, user_id)
+  def create_invoice_item(tariff, invoice_id, subcode, price, quantity, measure, tax_type_id, discount_pct, user_id)
     InvoiceItem.create(
       invoice_id: invoice_id,
       code: tariff.try(:billable_item).try(:billable_concept).try(:code),
@@ -461,7 +461,7 @@ class Reading < ActiveRecord::Base
                           tariff.try(:discount_pct_f),
                           user_id)
     end
-    if tariff.block1_limit > 0
+    if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       (1..8).each do |i|
         # if limit nil (last block) or limit > consumption

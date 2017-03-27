@@ -74,7 +74,7 @@ class Subscriber < ActiveRecord::Base
 
   def current_tariffs(_reading_date=nil)
     unless tariffs.blank?
-      if _reading.nil
+      if _reading_date.nil?
         tariffs.where("subscriber_tariffs.ending_at IS NULL")
         .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
         .group_by{|t| t.try(:billable_item).try(:biller_id)}
