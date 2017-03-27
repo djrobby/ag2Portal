@@ -36,7 +36,7 @@
       <td align="center"><%= formatted_date(note.receipt_date) unless note.receipt_date.blank? %></td>
       <td><%= note.supplier.partial_name30 unless note.supplier.blank? %></td>
       <td><%= note.purchase_order.full_no unless note.purchase_order.blank? %></td>
-      <td align="right"><%= number_with_precision(note.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.total.blank? %></td>
+      <td align="right"><%= number_with_precision(note.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.totals.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ReceiptNote, :path => edit_receipt_note_path(note) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => ReceiptNote, :path => note, :msg => t("activerecord.models.receipt_note.one"), :txt => note.receipt_no } %> </td>
     </tr>

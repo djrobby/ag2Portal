@@ -65,11 +65,19 @@ class DeliveryNoteItem < ActiveRecord::Base
   end
 
   def net
-    amount - (amount * (delivery_note.discount_pct / 100)) if !delivery_note.discount_pct.blank?
+    if delivery_note && !delivery_note.discount_pct.blank?
+      amount - (amount * (delivery_note.discount_pct / 100))
+    else
+      amount
+    end
   end
 
   def net_tax
-    tax - (tax * (delivery_note.discount_pct / 100)) if !delivery_note.discount_pct.blank?
+    if delivery_note && !delivery_note.discount_pct.blank?
+      tax - (tax * (delivery_note.discount_pct / 100))
+    else
+      tax
+    end
   end
 
   private

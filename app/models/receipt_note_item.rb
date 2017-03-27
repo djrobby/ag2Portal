@@ -34,6 +34,7 @@ class ReceiptNoteItem < ActiveRecord::Base
   validates :price,               :numericality => true
   validates :purchase_order_item, :presence => true, :if => "!purchase_order_id.blank?"
 
+  # Callbacks
   before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase
   before_save :check_for_new_stock_and_price
@@ -79,11 +80,19 @@ class ReceiptNoteItem < ActiveRecord::Base
   end
 
   def net
-    amount - (amount * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
+    if receipt_note && !receipt_note.discount_pct.blank?
+      amount - (amount * (receipt_note.discount_pct / 100))
+    else
+      amount
+    end
   end
 
   def net_tax
-    tax - (tax * (receipt_note.discount_pct / 100)) if !receipt_note.discount_pct.blank?
+    if receipt_note && !receipt_note.discount_pct.blank?
+      tax - (tax * (receipt_note.discount_pct / 100))
+    else
+      tax
+    end
   end
 
   def net_price

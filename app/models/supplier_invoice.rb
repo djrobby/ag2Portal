@@ -12,7 +12,7 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding
+                  :internal_no, :withholding, :totals
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -43,7 +43,9 @@ class SupplierInvoice < ActiveRecord::Base
   validates :organization,   :presence => true
   validates :internal_no,    :uniqueness => { :scope => :project_id }, :if => "!internal_no.nil?"
 
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
   after_create :notify_on_create
   after_update :notify_on_update
 
@@ -69,13 +71,7 @@ class SupplierInvoice < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    subtotal = 0
-    supplier_invoice_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    supplier_invoice_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -87,13 +83,7 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    supplier_invoice_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    supplier_invoice_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -101,11 +91,11 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def quantity
-    supplier_invoice_items.sum("quantity")
+    supplier_invoice_items.sum(:quantity)
   end
 
   def paid
-    supplier_payments.sum("amount")
+    supplier_payments.sum(:amount)
   end
 
   def debt
@@ -128,7 +118,7 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def approved_to_pay
-    supplier_invoice_approvals.sum("approved_amount")
+    supplier_invoice_approvals.sum(:approved_amount)
   end
 
   def amount_not_yet_approved
@@ -169,6 +159,10 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   def check_for_dependent_records
     # Check for supplier payments

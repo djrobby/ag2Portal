@@ -16,7 +16,7 @@ class PurchaseOrder < ActiveRecord::Base
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time,
                   :organization_id, :approver_id, :approval_date,
-                  :store_address_1, :store_address_2, :store_phones, :created_by
+                  :store_address_1, :store_address_2, :store_phones, :created_by, :totals
   attr_accessible :purchase_order_items_attributes
 
   has_many :purchase_order_items, dependent: :destroy
@@ -51,7 +51,9 @@ class PurchaseOrder < ActiveRecord::Base
   #
   scope :these, -> t { where(id: t).by_no }
 
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
   after_create :notify_on_create
   after_update :notify_on_update
 
@@ -87,13 +89,7 @@ class PurchaseOrder < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    subtotal = 0
-    purchase_order_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    purchase_order_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -105,13 +101,7 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    purchase_order_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    purchase_order_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -119,11 +109,11 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   def balance
-    purchase_order_item_balances.sum("balance")
+    purchase_order_item_balances.sum(:balance)
   end
 
   def quantity
-    purchase_order_items.sum("quantity")
+    purchase_order_items.sum(:quantity)
   end
 
   def delivery_avg
@@ -278,6 +268,10 @@ class PurchaseOrder < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   # Before destroy
   def check_for_dependent_records

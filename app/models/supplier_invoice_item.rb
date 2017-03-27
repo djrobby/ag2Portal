@@ -40,7 +40,7 @@ class SupplierInvoiceItem < ActiveRecord::Base
   # Calculated fields
   #
   def amount
-    quantity * (price - discount)
+    quantity * net_price
   end
 
   def tax
@@ -48,10 +48,22 @@ class SupplierInvoiceItem < ActiveRecord::Base
   end
 
   def net
-    amount - (amount * (supplier_invoice.discount_pct / 100)) if !supplier_invoice.discount_pct.blank?
+    if supplier_invoice && !supplier_invoice.discount_pct.blank?
+      amount - (amount * (supplier_invoice.discount_pct / 100))
+    else
+      amount
+    end
   end
 
   def net_tax
-    tax - (tax * (supplier_invoice.discount_pct / 100)) if !supplier_invoice.discount_pct.blank?
+    if supplier_invoice && !supplier_invoice.discount_pct.blank?
+      tax - (tax * (supplier_invoice.discount_pct / 100))
+    else
+      tax
+    end
+  end
+
+  def net_price
+    price - discount
   end
 end

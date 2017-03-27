@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170326110547) do
+ActiveRecord::Schema.define(:version => 20170327193752) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1205,6 +1205,8 @@ ActiveRecord::Schema.define(:version => 20170326110547) do
     t.integer  "updated_by"
     t.integer  "sale_offer_id"
     t.integer  "organization_id"
+    t.decimal  "totals",            :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "total_costs",       :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "delivery_notes", ["charge_account_id"], :name => "index_delivery_notes_on_charge_account_id"
@@ -2486,6 +2488,7 @@ ActiveRecord::Schema.define(:version => 20170326110547) do
     t.string   "store_address_1"
     t.string   "store_address_2"
     t.string   "store_phones"
+    t.decimal  "totals",            :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "purchase_orders", ["approver_id"], :name => "index_purchase_orders_on_approver_id"
@@ -2710,6 +2713,7 @@ ActiveRecord::Schema.define(:version => 20170326110547) do
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
+    t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"
@@ -3411,6 +3415,7 @@ ActiveRecord::Schema.define(:version => 20170326110547) do
     t.decimal  "withholding",             :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.string   "internal_no"
     t.integer  "purchase_order_id"
+    t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"

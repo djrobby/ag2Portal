@@ -11,7 +11,7 @@ class ReceiptNote < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :discount, :discount_pct, :receipt_date, :receipt_no, :remarks, :retention_pct, :retention_time,
                   :supplier_id, :payment_method_id, :project_id, :store_id, :work_order_id, :charge_account_id,
-                  :purchase_order_id, :organization_id, :attachment
+                  :purchase_order_id, :organization_id, :attachment, :totals
   attr_accessible :receipt_note_items_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -37,7 +37,9 @@ class ReceiptNote < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
+  # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
   after_validation :update_user_in_items
 
   def to_label
@@ -77,13 +79,7 @@ class ReceiptNote < ActiveRecord::Base
   # Calculated fields
   #
   def subtotal
-    subtotal = 0
-    receipt_note_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    receipt_note_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -95,13 +91,7 @@ class ReceiptNote < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    receipt_note_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    receipt_note_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -109,11 +99,11 @@ class ReceiptNote < ActiveRecord::Base
   end
 
   def quantity
-    receipt_note_items.sum("quantity")
+    receipt_note_items.sum(:quantity)
   end
 
   def balance
-    receipt_note_item_balances.sum("balance")
+    receipt_note_item_balances.sum(:balance)
   end
 
   # Has meter items?
@@ -182,6 +172,10 @@ class ReceiptNote < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   def check_for_dependent_records
     # Check for supplier invoice items

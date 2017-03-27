@@ -25,7 +25,7 @@
       <td align="center"><%= formatted_date(note.delivery_date) unless note.delivery_date.blank? %></td>
       <td><%= note.client.partial_name30 unless note.client.blank? %></td>
       <td><%= note.work_order.full_no unless note.work_order.blank? %></td>
-      <td align="right"><%= number_with_precision(note.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.costs.blank? %></td>
+      <td align="right"><%= number_with_precision(note.total_costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.total_costs.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ReceiptNote, :path => edit_delivery_note_path(note) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => ReceiptNote, :path => note, :msg => t("activerecord.models.delivery_note.one"), :txt => note.full_no } %> </td>
     </tr>

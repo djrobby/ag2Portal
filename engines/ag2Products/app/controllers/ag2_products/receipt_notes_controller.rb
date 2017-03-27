@@ -504,6 +504,8 @@ module Ag2Products
                 end   # !note_item.save?
               end   # i.balance != 0
             end   # do |i|
+            # Update totals
+            note.update_column(:totals, ReceiptNote.find(note.id).total)
           else
             # Can't save note
             code = '$write'

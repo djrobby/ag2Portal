@@ -23,6 +23,7 @@ class OfferItem < ActiveRecord::Base
   #validates :work_order,      :presence => true
   validates :charge_account,  :presence => true
 
+  # Callbacks
   before_validation :fields_to_uppercase
 
   def fields_to_uppercase

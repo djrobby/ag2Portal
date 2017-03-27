@@ -546,6 +546,8 @@ module Ag2Purchase
                   end   # !invoice_item.save?
                 end   # i.balance != 0
               end   # receipt_note_items.each do |i|
+              # Update totals
+              invoice.update_column(:totals, SupplierInvoice.find(invoice.id).total)
             else
               # Can't save invoice
               code = '$write'
@@ -586,6 +588,8 @@ module Ag2Purchase
                     end   # !invoice_item.save?
                   end   # i.balance != 0
                 end   # receipt_note_items.each do |i|
+                # Update totals
+                invoice.update_column(:totals, SupplierInvoice.find(invoice.id).total)
               else
                 # Can't save invoice
                 code = '$write'
@@ -653,6 +657,8 @@ module Ag2Purchase
                   end   # !invoice_item.save?
                 end   # i.balance != 0
               end   # purchase_order_items.each do |i|
+              # Update totals
+              invoice.update_column(:totals, SupplierInvoice.find(invoice.id).total)
             else
               # Can't save invoice
               code = '$write'
@@ -693,6 +699,8 @@ module Ag2Purchase
                     end   # !invoice_item.save?
                   end   # i.balance != 0
                 end   # purchase_order_items.each do |i|
+                # Update totals
+                invoice.update_column(:totals, SupplierInvoice.find(invoice.id).total)
               else
                 # Can't save invoice
                 code = '$write'

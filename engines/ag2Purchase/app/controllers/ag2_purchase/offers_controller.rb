@@ -534,6 +534,8 @@ module Ag2Purchase
                   break
                 end   # !item.save?
               end   # do |i|
+              # Update totals
+              order.update_column(:totals, PurchaseOrder.find(order.id).total)
             else
               # Can't save order
               code = '$write'

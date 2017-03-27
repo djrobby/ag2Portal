@@ -13,7 +13,7 @@ class Offer < ActiveRecord::Base
   attr_accessible :offer_date, :offer_no, :remarks, :discount_pct, :discount,
                   :offer_request_id, :supplier_id, :payment_method_id,
                   :project_id, :store_id, :work_order_id, :charge_account_id,
-                  :organization_id, :approver_id, :approval_date, :attachment
+                  :organization_id, :approver_id, :approval_date, :attachment, :totals
   attr_accessible :offer_items_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 

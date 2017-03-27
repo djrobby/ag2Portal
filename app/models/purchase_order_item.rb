@@ -1,6 +1,6 @@
 class PurchaseOrderItem < ActiveRecord::Base
   include ModelsModule
-  
+
   belongs_to :purchase_order
   belongs_to :product
   belongs_to :tax_type
@@ -30,6 +30,7 @@ class PurchaseOrderItem < ActiveRecord::Base
   #validates :work_order,      :presence => true
   validates :charge_account,  :presence => true
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
@@ -63,20 +64,28 @@ class PurchaseOrderItem < ActiveRecord::Base
   end
 
   def net
-    amount - (amount * (purchase_order.discount_pct / 100)) if !purchase_order.discount_pct.blank?
+    if purchase_order && !purchase_order.discount_pct.blank?
+      amount - (amount * (purchase_order.discount_pct / 100))
+    else
+      amount
+    end
   end
 
   def net_tax
-    tax - (tax * (purchase_order.discount_pct / 100)) if !purchase_order.discount_pct.blank?
+    if purchase_order && !purchase_order.discount_pct.blank?
+      tax - (tax * (purchase_order.discount_pct / 100))
+    else
+      tax
+    end
   end
 
   def net_price
     price - discount
   end
-    
+
   def balance
     purchase_order_item_balance.balance
-    #quantity - receipt_note_items.sum("quantity")
+    #quantity - purchase_order_items.sum("quantity")
   end
 
   private

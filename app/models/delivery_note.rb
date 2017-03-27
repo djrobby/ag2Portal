@@ -11,7 +11,7 @@ class DeliveryNote < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :delivery_date, :delivery_no, :discount, :discount_pct, :remarks,
                   :client_id, :payment_method_id, :project_id, :store_id, :work_order_id,
-                  :charge_account_id, :sale_offer_id, :organization_id
+                  :charge_account_id, :sale_offer_id, :organization_id, :totals, :total_costs
   attr_accessible :delivery_note_items_attributes
 
   has_many :delivery_note_items, dependent: :destroy
@@ -35,7 +35,9 @@ class DeliveryNote < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
+  # Callbacks
   #before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
 
   def to_label
     "#{full_name}"
@@ -73,23 +75,11 @@ class DeliveryNote < ActiveRecord::Base
   # Calculated fields
   #
   def costs
-    costs = 0
-    delivery_note_items.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    delivery_note_items.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def subtotal
-    subtotal = 0
-    delivery_note_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    delivery_note_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def bonus
@@ -101,13 +91,7 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    delivery_note_items.each do |i|
-      if !i.net_tax.blank?
-        taxes += i.net_tax
-      end
-    end
-    taxes
+    delivery_note_items.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
   def total
@@ -121,7 +105,7 @@ class DeliveryNote < ActiveRecord::Base
   # Returns multidimensional array containing different tax type in each line
   # Each line contains 5 elements: Id, Description, Tax %, Net amount & Net tax
   def tax_breakdown
-    tt = global_tax_breakdown(delivery_note_items, false)
+    global_tax_breakdown(delivery_note_items, false)
   end
 
   #
@@ -167,6 +151,11 @@ class DeliveryNote < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+    self.total_costs = costs
+  end
 
   def check_for_dependent_records
     # Check for client invoice items
