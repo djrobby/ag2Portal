@@ -1201,12 +1201,18 @@ module Ag2Gest
       @contracting_request = ContractingRequest.new
       @projects = current_projects
       @projects_ids = current_projects_ids
-      _subscribers = Subscriber.where(office_id: current_offices_ids)
-      @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      # @subscribers = []
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      @subscribers = []
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
-      @offices = current_offices
+      @offices = current_offices.group(:town_id).pluck(:town_id)
+      @street_types = StreetType.order(:street_type_code)
+      @towns = Town.order(:name)
+      @provinces = Province.order(:name)
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @zipcodes = Zipcode.order(:zipcode)
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
