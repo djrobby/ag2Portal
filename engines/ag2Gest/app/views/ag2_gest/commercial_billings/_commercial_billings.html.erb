@@ -48,7 +48,7 @@
       <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
       <td><%= invoice.sale_offer.full_no unless invoice.sale_offer.blank? %></td>
       <td><%= client_name(invoice) %></td>
-      <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
+      <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
       <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Invoice, :path => edit_commercial_billing_path(invoice) } unless cannot_edit(invoice) %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Invoice, :path => invoice, :msg => t("activerecord.models.commercial_billing.one"), :txt => invoice.invoice_no } unless cannot_edit(invoice) %> </td>
     </tr>

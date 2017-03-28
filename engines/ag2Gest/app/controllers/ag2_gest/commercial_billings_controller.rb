@@ -408,6 +408,8 @@ module Ag2Gest
                     end   # !invoice_item.save?
                   end   # i.unbilled_balance != 0
                 end   # do |i|
+                # Update totals
+                invoice.update_column(:totals, Invoice.find(invoice.id).total)
               else
                 # Can't save invoice
                 code = '$write'

@@ -45,7 +45,7 @@
       <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
       <td><%= invoice.biller.name[0,40] unless invoice.biller.blank? %></td>
       <td><%= client_name(invoice) %></td>
-      <td align="right"><%= number_with_precision(invoice.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
+      <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
     </tr>
     <% end %>
   </tbody>

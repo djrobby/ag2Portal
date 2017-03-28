@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170328084022) do
+ActiveRecord::Schema.define(:version => 20170328181829) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1655,6 +1655,7 @@ ActiveRecord::Schema.define(:version => 20170328084022) do
     t.integer  "organization_id"
     t.integer  "payment_method_id"
     t.integer  "sale_offer_id"
+    t.decimal  "totals",                :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"

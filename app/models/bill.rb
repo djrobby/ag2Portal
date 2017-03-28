@@ -84,63 +84,34 @@ class Bill < ActiveRecord::Base
   end
 
   def total
-    total = 0
-    invoices.each do |i|
-      if !i.total.blank?
-        total += i.total
-      end
-    end
-    total
+    invoices.reject(&:marked_for_destruction?).sum(&:total)
   end
 
   def debt
-    debt = 0
-    invoices.each do |i|
-      if !i.debt.blank?
-        debt += i.debt
-      end
-    end
-    debt
+    invoices.reject(&:marked_for_destruction?).sum(&:debt)
+    # debt = 0
+    # invoices.each do |i|
+    #   if !i.debt.blank?
+    #     debt += i.debt
+    #   end
+    # end
+    # debt
   end
 
   def subtotal
-    subtotal = 0
-    invoices.each do |i|
-      if !i.subtotal.blank?
-        subtotal += i.subtotal
-      end
-    end
-    subtotal
+    invoices.reject(&:marked_for_destruction?).sum(&:subtotal)
   end
 
   def bonus
-    bonus = 0
-    invoices.each do |i|
-      if !i.bonus.blank?
-        bonus += i.bonus
-      end
-    end
-    bonus
+    invoices.reject(&:marked_for_destruction?).sum(&:bonus)
   end
 
   def taxes
-    taxes = 0
-    invoices.each do |i|
-      if !i.taxes.blank?
-        taxes += i.taxes
-      end
-    end
-    taxes
+    invoices.reject(&:marked_for_destruction?).sum(&:taxes)
   end
 
   def taxable
-    taxable = 0
-    invoices.each do |i|
-      if !i.taxable.blank?
-        taxable += i.taxable
-      end
-    end
-    taxable
+    invoices.reject(&:marked_for_destruction?).sum(&:taxable)
   end
 
   def unpaid?

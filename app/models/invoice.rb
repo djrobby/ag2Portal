@@ -18,7 +18,7 @@ class Invoice < ActiveRecord::Base
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
                   :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
-                  :remarks, :organization_id, :payment_method_id, :sale_offer_id
+                  :remarks, :organization_id, :payment_method_id, :sale_offer_id, :totals
   attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
@@ -61,9 +61,11 @@ class Invoice < ActiveRecord::Base
   scope :service, -> { where("invoice_type_id = 1").by_no }
   scope :contracting, -> { where("invoice_type_id = 3").by_no }
 
+  # Callbacks
   before_validation :item_repeat, :on => :create
-  after_save :bill_status
+  before_save :calculate_and_store_totals
   before_create :assign_payday_limit
+  after_save :bill_status
 
   def discount_zero?
     invoice_items.map(&:discount).all?{|d| d==0}
@@ -199,19 +201,15 @@ class Invoice < ActiveRecord::Base
   end
 
   def collected
-    client_payments.sum("amount")
+    client_payments.sum(:amount)
   end
 
   def debt
-    receivable-collected
+    receivable - collected
   end
 
   def quantity
-    invoice_items.sum("quantity")
-  end
-
-  def collected
-    client_payments.sum("amount")
+    invoice_items.sum(:quantity)
   end
 
   searchable do
@@ -257,6 +255,10 @@ class Invoice < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+  end
 
   def item_repeat
     @errors.add(:base, "Invoice repeat") if !Invoice.where(bill_id: bill_id, invoice_type_id: invoice_type_id, invoice_operation_id: invoice_operation_id, billing_period_id: billing_period_id, biller_id: biller_id).blank?
