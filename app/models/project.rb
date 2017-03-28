@@ -28,6 +28,8 @@ class Project < ActiveRecord::Base
   has_many :bills
   has_many :billing_periods
   has_many :billable_items
+  has_many :tariffs, through: :billable_items
+  has_many :billable_concepts, through: :billable_items
   has_many :pre_readings
   has_many :readings
   has_many :reading_routes

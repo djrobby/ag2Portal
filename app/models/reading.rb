@@ -565,42 +565,44 @@ class Reading < ActiveRecord::Base
   # Prorated consumption
   def prorate_consumption_and_apply_tariffs(tariff, prev_reading_tariff, pre_invoice, pre_bill, cf, user_id)
     # Calculates days
-    days_between_readings = (reading_date - reading_1.reading_date).to_i
-    days_current_tariff = (reading_date - tariff.starting_at).to_i + 1
+    days_between_readings = (reading_date.to_date - reading_1.reading_date.to_date).to_i
+    days_current_tariff = (reading_date.to_date - tariff.starting_at.to_date).to_i + 1
     days_previous_tariff = days_between_readings - days_current_tariff
     # days_previous_tariff = (prev_reading_tariff.ending_at - reading_1.reading_date).to_i
-    days_billing_period = (billing_period.billing_ending_date - billing_period.billing_starting_date).to_i rescue 0
-    days_current_period = (billing_period.billing_ending_date - tariff.starting_at).to_i rescue 0
+    days_billing_period = (billing_period.billing_ending_date.to_date - billing_period.billing_starting_date.to_date).to_i rescue 0
+    days_current_period = (billing_period.billing_ending_date.to_date - tariff.starting_at.to_date).to_i rescue 0
     days_previous_period = days_billing_period - days_current_period rescue 0
 
     # Calculates coefficients
-    variable_current_coefficient = days_current_tariff / days_between_readings
-    variable_previous_coefficient = days_previous_tariff / days_between_readings
+    variable_current_coefficient = days_current_tariff.to_d / days_between_readings.to_d
+    variable_previous_coefficient = days_previous_tariff.to_d / days_between_readings.to_d
     if days_billing_period == 0
       fixed_current_coefficient = variable_current_coefficient
       fixed_previous_coefficient = variable_previous_coefficient
     else
-      fixed_current_coefficient = days_current_period / days_billing_period
-      fixed_previous_coefficient = days_previous_period / days_billing_period
+      fixed_current_coefficient = days_current_period.to_d / days_billing_period.to_d
+      fixed_previous_coefficient = days_previous_period.to_d / days_billing_period.to_d
     end
 
     #####################
     ### Apply Tariffs ###
     #####################
 
+    prev_reading_subscriber_tariff_tariff = prev_reading_tariff.tariff
+
     #+++ Fixed +++
     previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
     current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
     # Previous
-    if previous_fixed_fee_qty > 0 && !prev_reading_tariff.fixed_fee.zero?
-      create_pre_invoice_item(prev_reading_tariff,
+    if previous_fixed_fee_qty > 0 && !prev_reading_subscriber_tariff_tariff.fixed_fee.zero?
+      create_pre_invoice_item(prev_reading_subscriber_tariff_tariff,
                               pre_invoice.id,
                               "CF",
-                              (prev_reading_tariff.fixed_fee / prev_reading_tariff.billing_frequency.total_months),
+                              (prev_reading_subscriber_tariff_tariff.fixed_fee / prev_reading_subscriber_tariff_tariff.billing_frequency.total_months),
                               previous_fixed_fee_qty,
-                              prev_reading_tariff.billing_frequency.fix_measure_id,
-                              prev_reading_tariff.try(:tax_type_f_id),
-                              prev_reading_tariff.try(:discount_pct_f),
+                              prev_reading_subscriber_tariff_tariff.billing_frequency.fix_measure_id,
+                              prev_reading_subscriber_tariff_tariff.try(:tax_type_f_id),
+                              prev_reading_subscriber_tariff_tariff.try(:discount_pct_f),
                               user_id)
     end
     # Current
@@ -620,40 +622,41 @@ class Reading < ActiveRecord::Base
     block_fee_qty = 0
     previous_block_fee_quantities = []
     # Previous
-    if prev_reading_tariff.block1_limit > 0
+    if !prev_reading_subscriber_tariff_tariff.block1_limit.nil? && prev_reading_subscriber_tariff_tariff.block1_limit > 0
       limit_before = 0
       (1..8).each do |i|
-        if prev_reading_tariff.instance_eval("block#{i}_limit").nil? || prev_reading_tariff.instance_eval("block#{i}_limit") >= (cf || 0)
+        if prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit").nil? || prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit") >= (cf || 0)
           block_fee_qty = (((cf || 0) - limit_before) * variable_previous_coefficient).round
-          create_pre_invoice_item(prev_reading_tariff,
+          create_pre_invoice_item(prev_reading_subscriber_tariff_tariff,
                                   pre_invoice.id,
                                   "BL"+i.to_s,
-                                  prev_reading_tariff.instance_eval("block#{i}_fee"),
+                                  prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_fee"),
                                   block_fee_qty,
-                                  prev_reading_tariff.billing_frequency.var_measure_id,
-                                  prev_reading_tariff.try(:tax_type_b_id),
-                                  prev_reading_tariff.try(:discount_pct_b),
+                                  prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
+                                  prev_reading_subscriber_tariff_tariff.try(:tax_type_b_id),
+                                  prev_reading_subscriber_tariff_tariff.try(:discount_pct_b),
                                   user_id)
           previous_block_fee_quantities = previous_block_fee_quantities << [(((cf || 0) - limit_before) * variable_previous_coefficient), block_fee_qty]
           break
         else
-          block_fee_qty = ((prev_reading_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient).round
-          limit_before = prev_reading_tariff.instance_eval("block#{i}_limit")
+          block_fee_qty = ((prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient).round
         end
-        create_pre_invoice_item(prev_reading_tariff,
+        create_pre_invoice_item(prev_reading_subscriber_tariff_tariff,
                                 pre_invoice.id,
                                 "BL"+i.to_s,
-                                prev_reading_tariff.instance_eval("block#{i}_fee"),
+                                prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_fee"),
                                 block_fee_qty,
-                                prev_reading_tariff.billing_frequency.var_measure_id,
-                                prev_reading_tariff.try(:tax_type_b_id),
-                                prev_reading_tariff.try(:discount_pct_b),
+                                prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
+                                prev_reading_subscriber_tariff_tariff.try(:tax_type_b_id),
+                                prev_reading_subscriber_tariff_tariff.try(:discount_pct_b),
                                 user_id)
-        previous_block_fee_quantities = previous_block_fee_quantities << [((prev_reading_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient), block_fee_qty]
+        previous_block_fee_quantities = previous_block_fee_quantities << [((prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit") - limit_before) * variable_previous_coefficient), block_fee_qty]
+        limit_before = prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit")
       end # (1..8).each
     end
     # Current
-    if tariff.block1_limit > 0
+    block_fee_qty = 0
+    if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       (1..8).each do |i|
         if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") >= (cf || 0)
@@ -680,7 +683,6 @@ class Reading < ActiveRecord::Base
             block_fee_qty = ((previous_block_fee_quantities[i-1][0] - previous_block_fee_quantities[i-1][1]) +
                             ((tariff.instance_eval("block#{i}_limit") - limit_before) * variable_current_coefficient)).round
           end
-          limit_before = tariff.instance_eval("block#{i}_limit")
         end
         create_pre_invoice_item(tariff,
                                 pre_invoice.id,
@@ -691,6 +693,7 @@ class Reading < ActiveRecord::Base
                                 tariff.try(:tax_type_b_id),
                                 tariff.try(:discount_pct_b),
                                 user_id)
+        limit_before = tariff.instance_eval("block#{i}_limit")
       end # (1..8).each
     end
 
@@ -700,15 +703,15 @@ class Reading < ActiveRecord::Base
 
     #+++ Percentage +++
     # Previous
-    if prev_reading_tariff.percentage_fee > 0 and !prev_reading_tariff.percentage_applicable_formula.blank?
-      create_pre_invoice_item(prev_reading_tariff,
+    if prev_reading_subscriber_tariff_tariff.percentage_fee > 0 and !prev_reading_subscriber_tariff_tariff.percentage_applicable_formula.blank?
+      create_pre_invoice_item(prev_reading_subscriber_tariff_tariff,
                               pre_invoice.id,
                               "VP",
-                              (prev_reading_tariff.percentage_fee/100) * pre_bill.total_by_concept(prev_reading_tariff.percentage_applicable_formula) / cf,
+                              (prev_reading_subscriber_tariff_tariff.percentage_fee/100) * pre_bill.total_by_concept(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula) / cf,
                               previous_var_fee_qty,
-                              prev_reading_tariff.billing_frequency.var_measure_id,
-                              prev_reading_tariff.try(:tax_type_p_id),
-                              prev_reading_tariff.try(:discount_pct_p),
+                              prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
+                              prev_reading_subscriber_tariff_tariff.try(:tax_type_p_id),
+                              prev_reading_subscriber_tariff_tariff.try(:discount_pct_p),
                               user_id)
     end
     # Current
@@ -726,15 +729,15 @@ class Reading < ActiveRecord::Base
 
     #+++ Variable +++
     # Previous
-    if prev_reading_tariff.variable_fee > 0
-      create_pre_invoice_item(prev_reading_tariff,
+    if prev_reading_subscriber_tariff_tariff.variable_fee > 0
+      create_pre_invoice_item(prev_reading_subscriber_tariff_tariff,
                               pre_invoice.id,
                               "CV",
-                              prev_reading_tariff.variable_fee,
-                              current_var_fee_qty,
-                              prev_reading_tariff.billing_frequency.var_measure_id,
-                              prev_reading_tariff.try(:tax_type_v_id),
-                              prev_reading_tariff.try(:discount_pct_v),
+                              prev_reading_subscriber_tariff_tariff.variable_fee,
+                              previous_var_fee_qty,
+                              prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
+                              prev_reading_subscriber_tariff_tariff.try(:tax_type_v_id),
+                              prev_reading_subscriber_tariff_tariff.try(:discount_pct_v),
                               user_id)
     end
     # Current
@@ -756,13 +759,13 @@ class Reading < ActiveRecord::Base
     if _caliber.nil?
       SubscriberTariff.joins(tariff: :billable_item)
                       .where('(? BETWEEN subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at) OR (? >= subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at IS NULL)', _date, _date)
-                      .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id', _type, _concept)
+                      .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id = ?', _type, _concept)
                       .order('subscriber_tariffs.starting_at')
                       .last rescue nil
     else
       SubscriberTariff.joins(tariff: :billable_item)
                       .where('(? BETWEEN subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at) OR (? >= subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at IS NULL)', _date, _date)
-                      .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id', _type, _concept)
+                      .where('tariffs.tariff_type_id = ? AND billable_items.billable_concept_id = ?', _type, _concept)
                       .where('tariffs.caliber_id = ?', _caliber)
                       .order('subscriber_tariffs.starting_at')
                       .last rescue nil

@@ -117,6 +117,12 @@ class DeliveryNoteItem < ActiveRecord::Base
                                created_by: delivery_note.created_by)
       if !_woi.save
         _ok = false
+      else
+        # Update totals
+        _wo = WorkOrder.find(work_order_id)
+        _wo.update_column(:totals, _wo.total)
+        _wo.update_column(:this_costs, _wo.this_total_costs)
+        _wo.update_column(:with_suborder_costs, _wo.total_costs)
       end
     end
     _ok
@@ -231,5 +237,12 @@ class DeliveryNoteItem < ActiveRecord::Base
       end
     end
     _check_stock
+  end
+
+  def update_work_order_totals(work_order_id)
+    _wo = WorkOrder.find(work_order_id)
+    _wo.update_column(:totals, _wo.total)
+    _wo.update_column(:this_costs, _wo.this_total_costs)
+    _wo.update_column(:with_suborder_costs, _wo.total_costs)
   end
 end

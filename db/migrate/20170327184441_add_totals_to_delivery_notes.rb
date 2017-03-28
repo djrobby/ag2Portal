@@ -11,5 +11,6 @@ class AddTotalsToDeliveryNotes < ActiveRecord::Migration
 
   def self.down
     remove_column :delivery_notes, :totals
+    remove_column :delivery_notes, :total_costs
   end
 end

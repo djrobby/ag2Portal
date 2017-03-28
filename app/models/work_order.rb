@@ -27,7 +27,8 @@ class WorkOrder < ActiveRecord::Base
                   :in_charge_id, :reported_at, :approved_at, :certified_at, :posted_at,
                   :location, :pub_record, :subscriber_id, :incidences, :por_affected,
                   :meter_id, :meter_code, :meter_model_id, :caliber_id, :meter_owner_id,
-                  :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index, :hours_type
+                  :meter_location_id, :last_reading_id, :current_reading_date, :current_reading_index, :hours_type,
+                  :totals, :this_costs, :with_suborder_costs
   attr_accessible :work_order_items_attributes, :work_order_workers_attributes,
                   :work_order_tools_attributes, :work_order_vehicles_attributes,
                   :work_order_subcontractors_attributes
@@ -129,6 +130,7 @@ class WorkOrder < ActiveRecord::Base
 
   # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :calculate_and_store_totals
   before_save :update_status_based_on_dates
   before_save :update_dates_based_on_status
 
@@ -200,23 +202,11 @@ class WorkOrder < ActiveRecord::Base
   # Calculated fields
   #
   def item_costs
-    costs = 0
-    work_order_items.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    work_order_items.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def subtotal
-    subtotal = 0
-    work_order_items.each do |i|
-      if !i.amount.blank?
-        subtotal += i.amount
-      end
-    end
-    subtotal
+    work_order_items.reject(&:marked_for_destruction?).sum(&:amount)
   end
 
   def taxable
@@ -224,13 +214,7 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def taxes
-    taxes = 0
-    work_order_items.each do |i|
-      if !i.tax.blank?
-        taxes += i.tax
-      end
-    end
-    taxes
+    work_order_items.reject(&:marked_for_destruction?).sum(&:tax)
   end
 
   def total
@@ -238,81 +222,53 @@ class WorkOrder < ActiveRecord::Base
   end
 
   def quantity
-    work_order_items.sum("quantity")
+    work_order_items.sum(:quantity)
   end
 
   def worker_costs
-    costs = 0
-    work_order_workers.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    work_order_workers.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def hours
-    work_order_workers.sum("hours")
+    work_order_workers.sum(:hours)
   end
 
   def hours_avg
     hours / work_order_workers.count
   end
 
+  # Total costs, this WO only
   def this_total_costs
     item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs
   end
 
+  # Total costs, including suborder costs
   def total_costs
     item_costs + worker_costs + tool_costs + vehicle_costs + subcontractor_costs + suborder_costs
   end
 
   def tool_costs
-    costs = 0
-    work_order_tools.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    work_order_tools.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def tool_minutes
-    work_order_tools.sum("minutes")
+    work_order_tools.sum(:minutes)
   end
 
   def vehicle_costs
-    costs = 0
-    work_order_vehicles.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    work_order_vehicles.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def vehicle_distance
-    work_order_vehicles.sum("distance")
+    work_order_vehicles.sum(:distance)
   end
 
   def subcontractor_costs
-    costs = 0
-    work_order_subcontractors.each do |i|
-      if !i.costs.blank?
-        costs += i.costs
-      end
-    end
-    costs
+    work_order_subcontractors.reject(&:marked_for_destruction?).sum(&:costs)
   end
 
   def suborder_costs
-    costs = 0
-    suborders.each do |i|
-      if !i.total_costs.blank?
-        costs += i.total_costs
-      end
-    end
-    costs
+    suborders.reject(&:marked_for_destruction?).sum(&:total_costs)
   end
 
   # Returns multidimensional array containing different tax type in each line
@@ -468,6 +424,12 @@ class WorkOrder < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+    self.this_costs = this_total_costs
+    self.with_suborder_costs = total_costs
+  end
 
   def check_for_dependent_records
     # Check for purchase orders

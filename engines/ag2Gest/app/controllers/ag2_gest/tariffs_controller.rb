@@ -9,7 +9,8 @@ module Ag2Gest
 
     def create_pct
       @project = Project.find(params[:project_id])
-      @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
+      @tariffs = @project.tariffs.where('ending_at IS NULL AND tariff_type_id = ?', params[:tariff_types].to_i).order(:billable_concept_id)
+      # @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
       redirect_to tariffs_path, alert: "No hay tarifas para de ese tipo para este proyecto" and return if @tariffs.blank?
       @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
       @new_tariffs = []
