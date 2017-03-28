@@ -119,10 +119,7 @@ class DeliveryNoteItem < ActiveRecord::Base
         _ok = false
       else
         # Update totals
-        _wo = WorkOrder.find(work_order_id)
-        _wo.update_column(:totals, _wo.total)
-        _wo.update_column(:this_costs, _wo.this_total_costs)
-        _wo.update_column(:with_suborder_costs, _wo.total_costs)
+        update_work_order_totals(work_order_id)
       end
     end
     _ok
@@ -173,6 +170,9 @@ class DeliveryNoteItem < ActiveRecord::Base
                             updated_by: delivery_note.updated_by.blank? ? delivery_note.created_by : delivery_note.updated_by }
         if !_woi.save
           _ok = false
+        else
+          # Update totals
+          update_work_order_totals(work_order_id)
         end
       end
     end
@@ -197,6 +197,8 @@ class DeliveryNoteItem < ActiveRecord::Base
     _woi = WorkOrderItem.find_by_delivery_note_item_id(id)
     if !_woi.nil?
       _woi.destroy
+      # Update totals
+      update_work_order_totals(work_order_id) if !work_order.blank?
     end
     _ok
   end
@@ -239,6 +241,7 @@ class DeliveryNoteItem < ActiveRecord::Base
     _check_stock
   end
 
+  # Update totals in current work order
   def update_work_order_totals(work_order_id)
     _wo = WorkOrder.find(work_order_id)
     _wo.update_column(:totals, _wo.total)
