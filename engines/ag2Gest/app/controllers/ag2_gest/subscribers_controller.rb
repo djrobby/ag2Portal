@@ -676,6 +676,7 @@ module Ag2Gest
         if @subscriber.save
           @contracting_request.water_supply_contract.contracted_tariffs.update_all(:starting_at => @subscriber.starting_at)
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
+          @subscriber.subscriber_tariffs.where(ending_at: nil).update_all(:starting_at => @subscriber.starting_at)
           billing_frequency = @billing_period.billing_frequency_id
           #lectura de retirada
         # if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP && @contracting_request.old_subscriber

@@ -314,14 +314,16 @@
       var currentStepWizard = $('a[href="#step-3"]'),
           nextStepWizard = $('a[href="#step-4"]');
       changeState(currentStepWizard,nextStepWizard);
-      $("#link-bailback-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bailback_bill.id);
-      $("#link-bailback-bill").text(data.bailback_bill.bill_no.substr(0, 12) + "-" + data.bailback_bill.bill_no.substr(12, 4) + "-" +  data.bailback_bill.bill_no.substr(16, 7));
+      if (data.bailback_bill) {
+        $("#link-bailback-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bailback_bill.id);
+        $("#link-bailback-bill").text(data.bailback_bill.bill_no.substr(0, 12) + "-" + data.bailback_bill.bill_no.substr(12, 4) + "-" +  data.bailback_bill.bill_no.substr(16, 7));
+        $("#bailback-bill-doc").removeClass("hide");
+        $("#bailback-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bailback_bill.id + "/biller_pdf.pdf");
+      };
       $("#link-unsubscribe-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id);
       $("#link-unsubscribe-bill").text(data.unsubscribe_bill.bill_no.substr(0, 12) + "-" + data.unsubscribe_bill.bill_no.substr(12, 4) + "-" +  data.unsubscribe_bill.bill_no.substr(16, 7));
       $("#unsubscribe-bill-doc").removeClass("hide");
-      $("#bailback-bill-doc").removeClass("hide");
       $("#unsubscribe-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id + "/biller_pdf.pdf");
-      $("#bailback-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bailback_bill.id + "/biller_pdf.pdf");
       // $("#bill-doc").removeClass("hide");
       // $("#unsubscribe-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id);
       // $("#bailback-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bailback_bill.id);

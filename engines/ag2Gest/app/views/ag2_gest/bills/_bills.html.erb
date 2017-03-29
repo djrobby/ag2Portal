@@ -97,7 +97,7 @@
               <th align="right"><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
               <th align="right"><%= t("activerecord.attributes.contracting_request.total") %></th>
             </tr>
-            <% invoice.pre_invoice_items.order(:tariff_id).each do |item| %>
+            <% invoice.pre_invoice_items.each do |item| %>
               <tr>
                 <td><%= item.code %></td>
                 <td><%= item.subcode_name %></td>
@@ -158,9 +158,9 @@
       <h4>Confirmar facturas</h4>
     </div>
     <div class="modal-body">
-      <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker", value: Date.today} %>
-      <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @bills.first.pre_invoices.first.try(:billing_period).try(:billing_starting_date)} %>
-      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date)} %>
+      <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker", value: formatted_date(Date.today)} %>
+      <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_starting_date))} %>
+      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date))} %>
     </div>
     <div class="modal-footer">
       <%= f.button :submit, "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>

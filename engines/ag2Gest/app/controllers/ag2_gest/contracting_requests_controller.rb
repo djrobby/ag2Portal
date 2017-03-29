@@ -401,7 +401,7 @@ module Ag2Gest
         @billchange = @water_supply_contract.generate_bill
       end
 
-      if @bill && @billcontract
+      if @bill
         @contracting_request.status_control;
         if @contracting_request.save
           respond_to do |format|
@@ -475,7 +475,6 @@ module Ag2Gest
                                   )
       if @work_order.save(:validate => false)
         @contracting_request.work_order = @work_order;
-
         @water_supply_contract = @contracting_request.water_supply_contract
 
         @billcontract = @water_supply_contract.generate_bill_cancellation
@@ -483,7 +482,7 @@ module Ag2Gest
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           @billchange = @water_supply_contract.generate_bill
         end
-        if @bill && @billcontract
+        if @bill
           @contracting_request.status_control("billing");
           if @contracting_request.save
             respond_to do |format|
@@ -561,7 +560,7 @@ module Ag2Gest
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
-          response_hash[:bailback_bill] = @water_supply_contract.bailback_bill
+          response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill
           respond_to do |format|
             format.json { render json: response_hash }
@@ -1181,7 +1180,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
-      @billing_periods = BillingPeriod.includes(:billing_frequency).find_all_by_project_id(@projects_ids)
+      @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 

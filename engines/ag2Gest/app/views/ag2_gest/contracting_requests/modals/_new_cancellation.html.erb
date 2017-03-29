@@ -158,7 +158,7 @@ jQuery(function($) {
 
     <div class="span5">
     <%= label_tag I18n.t("activerecord.attributes.reading.billing_period_id"), nil, required: true , :class => 'form-label' %>
-    <%= select_tag "BillingPeriodForReading", options_from_collection_for_select(BillingPeriod.find_all_by_project_id(@projects_ids), "id", "period"), required: true , :prompt => "", :class => 'x-large-text-field shrinked' %>
+    <%= select_tag "BillingPeriodForReading", options_from_collection_for_select(BillingPeriod.order("period DESC").find_all_by_project_id(@projects_ids), "id", "to_label"), required: true , :prompt => "", :class => 'x-large-text-field shrinked' %>
     </div>
     
 
