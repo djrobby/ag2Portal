@@ -6,6 +6,14 @@ en:
         btn_new: "New Tariff"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Tariff Management"
+        label_description: "Descripción"
+        label_project: "Proyecto"
+        label_item: "Concepto"
+        label_type: "Tipo"
+        label_caliber: "Calibre"
+        label_frequency: "Frequencia"
+        label_from: "Vigente desde"
+        label_to: "Vigente hasta"
       show:
         title: "Tariff"
         btn_edit: "Edit Tariff"
@@ -13,9 +21,16 @@ en:
         return_to: "Back to Tariffs"
       edit:
         title: "Edit Tariff"
+        update: "Actualizar Tarifa"
         btn_show: "Show Tariff"
         show: "Show"
         back: "Back"
       new:
         title: "New Tariff"
+        fee_label: "Cuotas"
       back_to_main_page: "Back to General Tariffs"
+      generate_error: "New Tariffs can not be created: No current tariffs for this Type and Project."
+      generate_error_date: "The indicated expiration date is earlier than the effective date of the current tariffs."
+      generate_write: "Unable to save New Tariff."
+      generate_ok: "New Tariffs has been created."
+

@@ -56,6 +56,8 @@ class PurchaseOrder < ActiveRecord::Base
   before_save :calculate_and_store_totals
   after_create :notify_on_create
   after_update :notify_on_update
+  after_save :reindex
+  after_destroy :reindex
 
   def to_label
     "#{full_name}"
@@ -271,6 +273,10 @@ class PurchaseOrder < ActiveRecord::Base
 
   def calculate_and_store_totals
     self.totals = total
+  end
+
+  def reindex
+    Sunspot.index(self)
   end
 
   # Before destroy

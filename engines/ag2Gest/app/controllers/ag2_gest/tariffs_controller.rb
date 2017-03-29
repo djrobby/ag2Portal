@@ -11,8 +11,10 @@ module Ag2Gest
       @project = Project.find(params[:project_id])
       @tariffs = @project.tariffs.where('ending_at IS NULL AND tariff_type_id = ?', params[:tariff_types].to_i).order(:billable_concept_id)
       # @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
-      redirect_to tariffs_path, alert: "No hay tarifas para de ese tipo para este proyecto" and return if @tariffs.blank?
-      @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
+      redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error") and return if @tariffs.blank?
+      redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error_date") and return if @tariffs.first.starting_at > params[:init_date].to_date - 1.day
+      @subscribers = Subscriber.joins(:subscriber_tariffs).availables.where('subscriber_tariffs.tariff_id IN (?)', @tariffs)
+      # @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
       @new_tariffs = []
       @tariffs.each do |tariff|
         @new_tariffs << Tariff.create(
@@ -57,9 +59,7 @@ module Ag2Gest
        end
       _end_date = @new_tariffs.first.starting_at - 1.day
       @tariffs.each{|t| t.update_attributes(ending_at: _end_date)}
-      # @tariffs.map(&:subscriber_tariffs).compact.flatten.update_all(ending_at: params[:init_date])
-      # @tariffs.map(&:contracted_tariffs).compact.flatten.update_all(ending_at: params[:init_date])
-      redirect_to tariffs_path, notice: "Tarifas creadas"
+      redirect_to tariffs_path, notice: I18n.t("ag2_gest.tariffs.generate_ok")
     end
 
     # GET /tariffs

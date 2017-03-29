@@ -29,3 +29,7 @@ es:
         title: "Nueva Tarifa"
         fee_label: "Cuotas"
       back_to_main_page: "Volver a Tarifas Generales"
+      generate_error: "No se han generado nuevas tarifas: No existen tarifas actuales para este Tipo y Proyecto."
+      generate_error_date: "La fecha de fin de vigencia indicada es anterior a la fecha de inicio de vigencia de las tarifas actuales."
+      generate_write: "Imposible guardar nueva Tarifa."
+      generate_ok: "Se han creado las Nuevas Tarifas."
