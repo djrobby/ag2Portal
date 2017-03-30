@@ -18,6 +18,8 @@ module Ag2HelpDesk
       session[:Domain] = nil
       session[:sort] = nil
       session[:direction] = nil
+      # Special search variable for ag2HelpDesk
+      session[:hdsearch] = nil
     end
   end
 end

@@ -55,7 +55,7 @@
       $("#Status").val("");
       $("#Technician").val("");
       $("#Destination").val("");
-      $("#search").val("");
+      $("#hdsearch").val("");
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -72,12 +72,12 @@
 
   // Refresh div_table content
   function executeQuery() {
-    $.ajax({
-      success: function(data) {
-        $("#div_table").html("<%= escape_javascript(render('tickets')) %>");
-      }
-    });
-    //setTimeout(executeQuery, 60000);
+    // $.ajax({
+    //   success: function(data) {
+    //     $("#div_table").html("<%#= escape_javascript(render('tickets')) %>");
+    //   }
+    // });
+    // setTimeout(executeQuery, 60000);
   }
 </script>
 
@@ -125,7 +125,7 @@
         <%= select_tag "Destination", options_for_select(Ticket.destinations), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_help_desk.tickets.index.label_others"), nil, :class => 'form-label' %>
-        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <%= text_field_tag :hdsearch, params[:hdsearch], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->

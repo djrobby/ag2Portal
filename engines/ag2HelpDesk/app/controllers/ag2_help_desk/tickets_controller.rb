@@ -82,7 +82,7 @@ module Ag2HelpDesk
       init_oco if !session[:organization]
 
       @search = Ticket.search do
-        fulltext params[:search]
+        fulltext params[:hdsearch]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
         end
@@ -128,6 +128,9 @@ module Ag2HelpDesk
       end
 
       @tickets = @search.results
+      # Initialize _ticket form's select_tags
+      @ticket_statuses = TicketStatus.order(:id)
+      @technicians = Technician.order(:name)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -523,6 +526,12 @@ module Ag2HelpDesk
         session[:search] = params[:search]
       elsif session[:search]
         params[:search] = session[:search]
+      end
+      # hdsearch
+      if params[:hdsearch]
+        session[:hdsearch] = params[:hdsearch]
+      elsif session[:hdsearch]
+        params[:hdsearch] = session[:hdsearch]
       end
       # id
       if params[:Id]
