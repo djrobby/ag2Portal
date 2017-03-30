@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170328181829) do
+ActiveRecord::Schema.define(:version => 20170330151508) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2122,9 +2122,9 @@ ActiveRecord::Schema.define(:version => 20170328181829) do
     t.string   "description"
     t.integer  "measure_id"
     t.decimal  "quantity",       :precision => 12, :scale => 4, :default => 1.0, :null => false
-    t.decimal  "price",          :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",          :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.decimal  "discount_pct",   :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "discount",       :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.integer  "tax_type_id"
     t.datetime "created_at",                                                     :null => false
     t.datetime "updated_at",                                                     :null => false

@@ -19,10 +19,17 @@ class PreInvoice < ActiveRecord::Base
   has_many :pre_invoice_items, dependent: :destroy
   has_one :active_supply_invoice
 
+  def total_by_concept(billable_concept=1, includes_cf=false)
+    if includes_cf
+      pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ?', billable_concept.to_i).sum(&:amount)
+    else
+      pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode != "CF"', billable_concept.to_i).sum(&:amount)
+    end
+  end
+
   #
   # Calculated fields
   #
-
   def reading_1
     pre_bill.reading_1
   end

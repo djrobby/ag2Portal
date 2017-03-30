@@ -21,11 +21,16 @@ class PreBill < ActiveRecord::Base
                   :reading_1_id, :reading_2_id
 
   has_many :pre_invoices, dependent: :destroy
+  has_many :pre_invoice_items, through: :pre_invoices
   has_one :water_supply_contract
   has_many :client_payments
 
-  def total_by_concept(billable_concept)
-    pre_invoices.map(&:pre_invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)
+  def total_by_concept(billable_concept=1, includes_cf=false)
+    if includes_cf
+      pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ?', billable_concept.to_i).sum(&:amount)
+    else
+      pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode != "CF"', billable_concept.to_i).sum(&:amount)
+    end
   end
 
   def reading
@@ -47,13 +52,7 @@ class PreBill < ActiveRecord::Base
   end
 
   def total
-    total = 0
-    pre_invoices.each do |i|
-      if !i.total.blank?
-        total += i.total
-      end
-    end
-    total
+    pre_invoices.reject(&:marked_for_destruction?).sum(&:total)
   end
 
   # PreBill no

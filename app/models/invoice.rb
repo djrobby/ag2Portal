@@ -75,6 +75,14 @@ class Invoice < ActiveRecord::Base
     invoice_items.map(&:discount_pct).all?{|d| d==0}
   end
 
+  def total_by_concept(billable_concept=1, includes_cf=false)
+    if includes_cf
+      invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ?', billable_concept.to_i).sum(&:amount)
+    else
+      invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode != "CF"', billable_concept.to_i).sum(&:amount)
+    end
+  end
+
   def total_by_invoice_concept(billable_concept)
     invoice_items.flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
   end

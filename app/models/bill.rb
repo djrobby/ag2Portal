@@ -22,6 +22,7 @@ class Bill < ActiveRecord::Base
                   :reading_1_id, :reading_2_id, :organization_id, :payment_method_id
 
   has_many :invoices, dependent: :destroy
+  has_many :invoice_items, through: :invoices
   has_many :client_payments
   has_many :instalments
   has_one :pre_bill
@@ -46,8 +47,12 @@ class Bill < ActiveRecord::Base
     (bill_operation == 1 || bill_operation == 3) && ((!bill_type.blank? && bill_type.id == InvoiceType::WATER) ? reading.try(:bill_id) == id : true)
   end
 
-  def total_by_concept(billable_concept)
-    invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i and item.subcode != 'CF'}.sum(&:amount)
+  def total_by_concept(billable_concept=1, includes_cf=false)
+    if includes_cf
+      invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ?', billable_concept.to_i).sum(&:amount)
+    else
+      invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode != "CF"', billable_concept.to_i).sum(&:amount)
+    end
   end
 
   def total_by_invoice_concept(billable_concept)
