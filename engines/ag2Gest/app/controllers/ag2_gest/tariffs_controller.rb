@@ -13,7 +13,7 @@ module Ag2Gest
       # @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error") and return if @tariffs.blank?
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error_date") and return if @tariffs.first.starting_at > params[:init_date].to_date - 1.day
-      @subscribers = Subscriber.joins(:subscriber_tariffs).availables.where('subscriber_tariffs.tariff_id IN (?)', @tariffs)
+      @subscribers = Subscriber.joins(:subscriber_tariffs).availables.where('subscriber_tariffs.tariff_id IN (?)', @tariffs).group('subscribers.id')
       # @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
       @new_tariffs = []
       @tariffs.each do |tariff|
