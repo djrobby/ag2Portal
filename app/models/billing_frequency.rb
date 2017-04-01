@@ -13,7 +13,7 @@ class BillingFrequency < ActiveRecord::Base
   has_paper_trail
 
   def total_months
-    months.nil? ? days / 30 : months
+    months.nil? || months.zero? ? (days / 30.0).round : months
   end
 
   def to_label
@@ -28,7 +28,7 @@ class BillingFrequency < ActiveRecord::Base
 
   def days_xor_months
     if !(days? ^ months?)
-      errors[:days] << "Espcifica dias o meses, no ambos"
+      errors[:days] << "Especifica dias o meses, no ambos"
     end
   end
 end

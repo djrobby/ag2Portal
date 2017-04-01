@@ -379,11 +379,12 @@ class Reading < ActiveRecord::Base
                               tariff.try(:discount_pct_f),
                               user_id, '')
     end
+    block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = tariff.instance_eval("block#{i}_limit") * billing_frequency.total_months rescue nil
+        block_limit = (tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_pre_invoice_item(tariff,
@@ -463,11 +464,12 @@ class Reading < ActiveRecord::Base
                           tariff.try(:discount_pct_f),
                           user_id, '')
     end
+    block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = tariff.instance_eval("block#{i}_limit") * billing_frequency.total_months rescue nil
+        block_limit = (tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_invoice_item(tariff,
@@ -633,13 +635,14 @@ class Reading < ActiveRecord::Base
 
     #+++ Blocks +++
     block_fee_qty = 0
+    block_frequency = billing_frequency.total_months.to_d / prev_reading_subscriber_tariff_tariff.billing_frequency.total_months.to_d
     previous_block_fee_quantities = []
     # Previous
     if !prev_reading_subscriber_tariff_tariff.block1_limit.nil? && prev_reading_subscriber_tariff_tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit") * billing_frequency.total_months rescue nil
+        block_limit = (prev_reading_subscriber_tariff_tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
         if block_limit.nil? || block_limit >= (cf || 0)
           block_fee_qty = (((cf || 0) - limit_before) * variable_previous_coefficient).round
           prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
@@ -671,11 +674,12 @@ class Reading < ActiveRecord::Base
     end
     # Current
     block_fee_qty = 0
+    block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = tariff.instance_eval("block#{i}_limit") * billing_frequency.total_months rescue nil
+        block_limit = (tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
         if block_limit.nil? || block_limit >= (cf || 0)
           if previous_block_fee_quantities[i-1].nil?
             block_fee_qty = (((cf || 0) - limit_before) * variable_current_coefficient).round
