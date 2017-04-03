@@ -10,20 +10,16 @@ module Ag2Human
     # Update workers from office select
     def update_workers_select_from_office
       if params[:id] == '0'
-        @workers = Worker.order('worker_code')
+        @workers = Worker.order(:worker_code)
       else
         office = Office.find(params[:id])
         if !office.nil?
-          @workers = office.workers.order('worker_code')
+          @workers = workers_by_office(office)
         else
-          @workers = Worker.order('worker_code')
+          @workers = Worker.order(:worker_code)
         end
       end
-
-      respond_to do |format|
-        format.html # update_company_textfield_from_office.html.erb does not exist! JSON only
-        format.json { render json: @workers }
-      end
+      render json: { "workers" => @workers }
     end
 
     # Worker report
@@ -34,7 +30,7 @@ module Ag2Human
       office = params[:office]
       code = params[:code]
 
-      if worker.blank? || @from.blank? || @to.blank? 
+      if worker.blank? || @from.blank? || @to.blank?
         return
       end
 
@@ -43,7 +39,7 @@ module Ag2Human
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
-      
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
@@ -64,7 +60,7 @@ module Ag2Human
       office = params[:office]
       code = params[:code]
 
-      if office.blank? || @from.blank? || @to.blank? 
+      if office.blank? || @from.blank? || @to.blank?
         return
       end
 
@@ -73,7 +69,7 @@ module Ag2Human
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
-      
+
       respond_to do |format|
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
@@ -91,9 +87,15 @@ module Ag2Human
     #
     def index
       authorize! :update, TimeRecord
-      
-      @offices = Office.order('name')
-      @workers = Worker.order('worker_code')
+
+      @offices = Office.order(:name)
+      @workers = Worker.order(:worker_code)
+    end
+
+    private
+
+    def workers_by_office(_office)
+      Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:worker_code)
     end
   end
 end
