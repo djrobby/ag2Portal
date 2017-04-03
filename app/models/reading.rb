@@ -368,7 +368,8 @@ class Reading < ActiveRecord::Base
 
   # Create Preinvoice Items, for current tariff
   def save_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
-    unless tariff.fixed_fee.zero?
+    # Fixed
+    if !tariff.fixed_fee.zero?
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "CF",
@@ -378,7 +379,19 @@ class Reading < ActiveRecord::Base
                               tariff.try(:tax_type_f_id),
                               tariff.try(:discount_pct_f),
                               user_id, '')
+    elsif tariff.percentage_fixed_fee > 0 and !tariff.percentage_applicable_formula.blank?
+      create_pre_invoice_item(tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (tariff.percentage_fixed_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula),
+                              billing_frequency.total_months,
+                              tariff.billing_frequency.fix_measure_id,
+                              tariff.try(:tax_type_f_id),
+                              tariff.try(:discount_pct_f),
+                              user_id, '')
     end
+
+    # Variables
     block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
@@ -453,7 +466,8 @@ class Reading < ActiveRecord::Base
 
   # Create Invoice Items, for current tariff
   def save_invoice_items(tariff, invoice, bill, cf, user_id)
-    unless tariff.fixed_fee.zero?
+    # Fixed
+    if !tariff.fixed_fee.zero?
       create_invoice_item(tariff,
                           invoice.id,
                           "CF",
@@ -463,7 +477,19 @@ class Reading < ActiveRecord::Base
                           tariff.try(:tax_type_f_id),
                           tariff.try(:discount_pct_f),
                           user_id, '')
+    elsif tariff.percentage_fixed_fee > 0 and !tariff.percentage_applicable_formula.blank?
+      create_invoice_item(tariff,
+                          invoice.id,
+                          "CF",
+                          (tariff.percentage_fixed_fee/100) * Invoice.find(invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula),
+                          billing_frequency.total_months,
+                          tariff.billing_frequency.fix_measure_id,
+                          tariff.try(:tax_type_f_id),
+                          tariff.try(:discount_pct_f),
+                          user_id, '')
     end
+
+    # Variables
     block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
@@ -609,28 +635,76 @@ class Reading < ActiveRecord::Base
     previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
     current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
     # Previous
-    if previous_fixed_fee_qty > 0 && !prev_reading_subscriber_tariff_tariff.fixed_fee.zero?
-      prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
-                          pre_invoice.id,
-                          "CF",
-                          (prev_reading_subscriber_tariff_tariff.fixed_fee / prev_reading_subscriber_tariff_tariff.billing_frequency.total_months),
-                          previous_fixed_fee_qty,
-                          prev_reading_subscriber_tariff_tariff.billing_frequency.fix_measure_id,
-                          prev_reading_subscriber_tariff_tariff.try(:tax_type_f_id),
-                          prev_reading_subscriber_tariff_tariff.try(:discount_pct_f),
-                          user_id, '0')
+    if previous_fixed_fee_qty > 0
+      if !prev_reading_subscriber_tariff_tariff.fixed_fee.zero?
+        prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
+                            pre_invoice.id,
+                            "CF",
+                            (prev_reading_subscriber_tariff_tariff.fixed_fee / prev_reading_subscriber_tariff_tariff.billing_frequency.total_months),
+                            previous_fixed_fee_qty,
+                            prev_reading_subscriber_tariff_tariff.billing_frequency.fix_measure_id,
+                            prev_reading_subscriber_tariff_tariff.try(:tax_type_f_id),
+                            prev_reading_subscriber_tariff_tariff.try(:discount_pct_f),
+                            user_id, '0')
+      elsif prev_reading_subscriber_tariff_tariff.percentage_fixed_fee > 0 and !prev_reading_subscriber_tariff_tariff.percentage_applicable_formula.blank?
+        if t == 'P'
+          prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (prev_reading_subscriber_tariff_tariff.percentage_fixed_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept_ff(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula),
+                              previous_fixed_fee_qty,
+                              prev_reading_subscriber_tariff_tariff.billing_frequency.fix_measure_id,
+                              prev_reading_subscriber_tariff_tariff.try(:tax_type_f_id),
+                              prev_reading_subscriber_tariff_tariff.try(:discount_pct_f),
+                              user_id, '0')
+        else
+          prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (prev_reading_subscriber_tariff_tariff.percentage_fixed_fee/100) * Invoice.find(pre_invoice.id).total_by_concept_ff(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula),
+                              previous_var_fee_qty,
+                              prev_reading_subscriber_tariff_tariff.billing_frequency.fix_measure_id,
+                              prev_reading_subscriber_tariff_tariff.try(:tax_type_f_id),
+                              prev_reading_subscriber_tariff_tariff.try(:discount_pct_f),
+                              user_id, '0')
+        end
+      end
     end
     # Current
-    unless tariff.fixed_fee.zero?
-      prorate_create_item(t, tariff,
-                          pre_invoice.id,
-                          "CF",
-                          (tariff.fixed_fee / tariff.billing_frequency.total_months),
-                          current_fixed_fee_qty,
-                          tariff.billing_frequency.fix_measure_id,
-                          tariff.try(:tax_type_f_id),
-                          tariff.try(:discount_pct_f),
-                          user_id, '1')
+    if current_fixed_fee_qty > 0
+      if !tariff.fixed_fee.zero?
+        prorate_create_item(t, tariff,
+                            pre_invoice.id,
+                            "CF",
+                            (tariff.fixed_fee / tariff.billing_frequency.total_months),
+                            current_fixed_fee_qty,
+                            tariff.billing_frequency.fix_measure_id,
+                            tariff.try(:tax_type_f_id),
+                            tariff.try(:discount_pct_f),
+                            user_id, '1')
+      elsif tariff.percentage_fixed_fee > 0 and !tariff.percentage_applicable_formula.blank?
+        if t == 'P'
+          prorate_create_item(t, tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (tariff.percentage_fixed_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula),
+                              current_fixed_fee_qty,
+                              tariff.billing_frequency.fix_measure_id,
+                              tariff.try(:tax_type_f_id),
+                              tariff.try(:discount_pct_f),
+                              user_id, '0')
+        else
+          prorate_create_item(t, tariff,
+                              pre_invoice.id,
+                              "CF",
+                              (tariff.percentage_fixed_fee/100) * Invoice.find(pre_invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula),
+                              current_fixed_fee_qty,
+                              tariff.billing_frequency.fix_measure_id,
+                              tariff.try(:tax_type_f_id),
+                              tariff.try(:discount_pct_f),
+                              user_id, '0')
+        end
+      end
     end
 
     #+++ Blocks +++

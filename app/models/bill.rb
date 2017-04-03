@@ -55,6 +55,10 @@ class Bill < ActiveRecord::Base
     end
   end
 
+  def total_by_concept_ff(billable_concept=1)
+    invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode = "CF"', billable_concept.to_i).sum(&:amount)
+  end
+
   def total_by_invoice_concept(billable_concept)
     invoices.map(&:invoice_items).flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
   end

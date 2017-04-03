@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170330151508) do
+ActiveRecord::Schema.define(:version => 20170403140021) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -89,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20170330151508) do
     t.integer "tax_type_v_id"
     t.integer "tax_type_p_id"
     t.integer "tax_type_b_id"
+    t.decimal "percentage_fixed_fee",                       :precision => 6,  :scale => 2, :default => 0.0, :null => false
   end
 
   create_table "activities", :force => true do |t|
@@ -3241,6 +3242,7 @@ ActiveRecord::Schema.define(:version => 20170330151508) do
     t.integer  "use_id"
     t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "deposit",                             :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3631,6 +3633,7 @@ ActiveRecord::Schema.define(:version => 20170330151508) do
     t.integer  "updated_by"
     t.date     "starting_at"
     t.date     "ending_at"
+    t.decimal  "percentage_fixed_fee",          :precision => 6,  :scale => 2, :default => 0.0, :null => false
   end
 
   add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"

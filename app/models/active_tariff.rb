@@ -14,7 +14,7 @@ class ActiveTariff < ActiveRecord::Base
                   :block1_limit, :block2_limit, :block3_limit, :block4_limit, :block5_limit, :block6_limit, :block7_limit, :block8_limit,
                   :block1_fee, :block2_fee, :block3_fee, :block4_fee, :block5_fee, :block6_fee, :block7_fee, :block8_fee,
                   :discount_pct_b, :discount_pct_f, :discount_pct_p, :discount_pct_v,
-                  :tax_type_b_id,:tax_type_f_id, :tax_type_p_id, :tax_type_v_id
+                  :tax_type_b_id,:tax_type_f_id, :tax_type_p_id, :tax_type_v_id, :percentage_fixed_fee
   # Scopes
   scope :belongs_to_project, -> p { where(project_id: p) }
   scope :belongs_to_type, -> t { where(tariff_type_id: t) }

@@ -27,6 +27,10 @@ class PreInvoice < ActiveRecord::Base
     end
   end
 
+  def total_by_concept_ff(billable_concept=1)
+    pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode = "CF"', billable_concept.to_i).sum(&:amount)
+  end
+
   #
   # Calculated fields
   #

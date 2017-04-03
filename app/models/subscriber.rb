@@ -18,7 +18,7 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id, :use_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
-                  :readings_attributes, :meter_details_attributes
+                  :readings_attributes, :meter_details_attributes, :deposit
 
   attr_accessor :reading_index_add, :reading_date_add
 
