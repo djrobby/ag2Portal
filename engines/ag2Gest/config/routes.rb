@@ -381,6 +381,7 @@ Ag2Gest::Engine.routes.draw do
     resources :commercial_billings do
       get 'invoice_form', on: :collection
     end
+    resources :bills_to_files
     #
     resources :regulations
     resources :regulation_types

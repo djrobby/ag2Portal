@@ -1,0 +1,20 @@
+<% content_for :title, "aGestiona2 | ag2GestBillsToFile" %>
+<% content_for :icon, "/assets/icon/ag2BillsToFile.png" %>
+<% content_for :alt, "ag2GestBillsToFile" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.bill_management_path %>"><%= t "ag2_gest.home.index.bill_management" %></a><span class="divider">></span>
+  </li>
+  <li>
+    <%= t "ag2_gest.home.bill.bills_to_file" %>
+  </li>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

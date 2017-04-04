@@ -1,0 +1,17 @@
+<%= form_for(@bills_to_file) do |f| %>
+  <% if @bills_to_file.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@bills_to_file.errors.count, "error") %> prohibited this bills_to_file from being saved:</h2>
+
+      <ul>
+      <% @bills_to_file.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
