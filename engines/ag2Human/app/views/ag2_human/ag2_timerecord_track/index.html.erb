@@ -23,6 +23,12 @@
       var code = $('select#Code :selected').val();
       if ((worker == "") || (from == "") || (to == ""))
         return;
+      var dateFrom = right_date(from, 'es');
+      var dateTo = right_date(to, 'es');
+      if (dateFrom > dateTo) {
+        alert('Hasta debe ser igual o posterior a Desde');
+        return;
+      }
       window.open("worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
       //window.location = "worker_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
       //jQuery.getJSON('worker_report/' + worker + '/' + from + '/' + to + '/' + office + '/' + code, function(data) {
@@ -40,6 +46,12 @@
       var code = $('select#Code :selected').val();
       if ((office == "") || (from == "") || (to == ""))
         return;
+      var dateFrom = right_date(from, 'es');
+      var dateTo = right_date(to, 'es');
+      if (dateFrom > dateTo) {
+        alert('Hasta debe ser igual o posterior a Desde');
+        return;
+      }
       window.open("office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code, "_blank");
       //window.location = "office_report.pdf?worker=" + worker + "&from=" + from + "&to=" + to + "&office=" + office + "&code=" + code;
       //jQuery.get('office_report/' + worker, function(data) {
