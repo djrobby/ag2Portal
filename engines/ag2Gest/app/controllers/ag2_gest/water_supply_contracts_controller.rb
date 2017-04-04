@@ -166,8 +166,10 @@ module Ag2Gest
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
             @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])
-            rdg_1 = set_reading_1_to_reading(@contracting_request.old_subscriber,@meter,@billing_period)
-            rdg_2 = set_reading_2_to_reading(@contracting_request.old_subscriber,@meter,@billing_period)
+            pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.previous_period,@billing_period.billing_frequency_id).try(:id)
+            pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.year_period,@billing_period.billing_frequency_id).try(:id)
+            rdg_1 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_period_id).first
+            rdg_2 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_year_id).first
             #lectura de retirada
               @reading = Reading.create(
                 subscriber_id: @contracting_request.old_subscriber.id,
@@ -181,8 +183,8 @@ module Ag2Gest
                 reading_variant:  @contracting_request.old_subscriber.reading_variant,
                 reading_date: @contracting_request.water_supply_contract.try(:installation_date),
                 reading_index: @contracting_request.water_supply_contract.try(:installation_index),
-                reading_index_1: rdg_1.try(:reading_index),
-                reading_index_2: rdg_2.try(:reading_index),
+                reading_index_1: rdg_1 ? rdg_1.try(:reading_index) : 0 ,
+                reading_index_2: rdg_2 ? rdg_2.try(:reading_index) : 0,
                 reading_1: rdg_1,
                 reading_2: rdg_2,
                 created_by: @contracting_request.try(:created_by)

@@ -169,9 +169,9 @@ class ContractingRequest < ActiveRecord::Base
 
   def subscriber_info_street
     a = subscriber_street_directory.to_label + ", " + subscriber_street_number
-    b = subscriber_building.blank? ? "" : + ", " + subscriber_building
-    c = subscriber_floor.blank? ? "" : + ", " + subscriber_floor
-    d = subscriber_floor_office.blank? ? "" : + ", " + subscriber_floor_office
+    b = subscriber_building.blank? ? "" : ", " + subscriber_building
+    c = subscriber_floor.blank? ? "" : ", " + subscriber_floor
+    d = subscriber_floor_office.blank? ? "" : ", " + subscriber_floor_office
     subscriber_street_directory.blank? ? "" : a + b + c + d
   end
 
@@ -416,20 +416,20 @@ class ContractingRequest < ActiveRecord::Base
     water_supply_contract = WaterSupplyContract.new(
                               contracting_request_id: id,
                               client_id: client.id,
-                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
-                              meter_id: old_subscriber.water_supply_contract.meter_id,
-                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
+                              reading_route_id: old_subscriber.reading_route_id,
+                              meter_id: old_subscriber.meter_id,
+                              tariff_scheme_id: old_subscriber.tariff_scheme_id,
                               contract_date: Date.today,
-                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
-                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
-                              gis_id: old_subscriber.water_supply_contract.gis_id,
-                              remarks: old_subscriber.water_supply_contract.remarks,
-                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
-                              endowments: old_subscriber.water_supply_contract.endowments,
-                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
-                              use_id:old_subscriber.water_supply_contract.use_id,
+                              reading_sequence: old_subscriber.reading_sequence,
+                              cadastral_reference: old_subscriber.cadastral_reference,
+                              gis_id: old_subscriber.gis_id,
+                              remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
+                              caliber_id: old_subscriber.meter.caliber_id,
+                              endowments: old_subscriber.endowments,
+                              inhabitants: old_subscriber.inhabitants,
+                              use_id:old_subscriber.use_id,
                               created_by: created_by,
-                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id
+                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
                             )
     water_supply_contract.save
     if !client.client_bank_accounts.where(ending_at: nil).blank?
@@ -452,23 +452,23 @@ class ContractingRequest < ActiveRecord::Base
                               contracting_request_id: id,
                               client_id: client.id,
                               subscriber_id: old_subscriber.id,
-                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
-                              work_order_id: old_subscriber.water_supply_contract.work_order_id,
-                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
-                              bill_id: old_subscriber.water_supply_contract.bill_id,
-                              meter_id: old_subscriber.water_supply_contract.meter_id,
+                              reading_route_id: old_subscriber.reading_route_id,
+                              work_order_id: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.work_order_id : nil,
+                              tariff_scheme_id: old_subscriber.tariff_scheme_id,
+                              bill_id: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.bill_id : nil,
+                              meter_id: old_subscriber.meter_id,
                               contract_date: request_date,
-                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
-                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
-                              gis_id: old_subscriber.water_supply_contract.gis_id,
-                              remarks: old_subscriber.water_supply_contract.remarks,
-                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
-                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id,
-                              use_id: old_subscriber.water_supply_contract.use_id,
-                              endowments: old_subscriber.water_supply_contract.endowments,
-                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
-                              installation_date: old_subscriber.water_supply_contract.installation_date,
-                              installation_index: old_subscriber.water_supply_contract.installation_index,
+                              reading_sequence: old_subscriber.reading_sequence,
+                              cadastral_reference: old_subscriber.cadastral_reference,
+                              gis_id: old_subscriber.gis_id,
+                              remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
+                              caliber_id: old_subscriber.meter.caliber_id,
+                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
+                              use_id:old_subscriber.use_id,
+                              endowments: old_subscriber.endowments,
+                              inhabitants: old_subscriber.inhabitants,
+                              installation_date: old_subscriber.meter_details.first.installation_date,
+                              installation_index: old_subscriber.meter_details.first.installation_index,
                               created_by: created_by
                             )
     subscriber = old_subscriber
@@ -484,7 +484,7 @@ class ContractingRequest < ActiveRecord::Base
       fax: client.fax,
       updated_by: created_by
     )
-    self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id
+    self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id || nil
     self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
     self.save
   end
@@ -497,20 +497,20 @@ class ContractingRequest < ActiveRecord::Base
     water_supply_contract = WaterSupplyContract.new(
                               contracting_request_id: id,
                               client_id: client.id,
-                              reading_route_id: old_subscriber.water_supply_contract.reading_route,
-                              meter_id: old_subscriber.water_supply_contract.meter_id,
-                              tariff_scheme_id: old_subscriber.water_supply_contract.tariff_scheme_id,
+                              reading_route_id: old_subscriber.reading_route_id,
+                              meter_id: old_subscriber.meter_id,
+                              tariff_scheme_id: old_subscriber.tariff_scheme_id,
                               contract_date: Date.today,
-                              reading_sequence: old_subscriber.water_supply_contract.reading_sequence,
-                              cadastral_reference: old_subscriber.water_supply_contract.cadastral_reference,
-                              gis_id: old_subscriber.water_supply_contract.gis_id,
-                              remarks: old_subscriber.water_supply_contract.remarks,
-                              caliber_id: old_subscriber.water_supply_contract.caliber_id,
-                              endowments: old_subscriber.water_supply_contract.endowments,
-                              inhabitants: old_subscriber.water_supply_contract.inhabitants,
-                              use_id:old_subscriber.water_supply_contract.use_id,
+                              reading_sequence: old_subscriber.reading_sequence,
+                              cadastral_reference: old_subscriber.cadastral_reference,
+                              gis_id: old_subscriber.gis_id,
+                              remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
+                              caliber_id: old_subscriber.meter.caliber_id,
+                              endowments: old_subscriber.endowments,
+                              inhabitants: old_subscriber.inhabitants,
+                              use_id:old_subscriber.use_id,
                               created_by: created_by,
-                              tariff_type_id: old_subscriber.water_supply_contract.tariff_type_id
+                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
                             )
     water_supply_contract.save
 

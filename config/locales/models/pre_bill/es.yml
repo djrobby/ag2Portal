@@ -68,7 +68,7 @@ es:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"
         client: "Datos de Cliente / Abonado"
-        client_code: "Nº Abonado"
+        client_code: "Nº Cliente / Abonado"
         type: "Tipo de Facturas"
         subtotal: "Subtotal"
         taxes: "Impuestos"

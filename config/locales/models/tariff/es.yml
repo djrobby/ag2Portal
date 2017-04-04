@@ -40,6 +40,7 @@ es:
         block7_fee: "B7 precio"
         block8_fee: "B8 precio"
         variable_fee: "Cuota variable"
+        percentage_fixed_fee: "Cuota fija %"
         percentage_fee: "Variable %"
         percentage_applicable_formula: "Fórmula V%"
         discount_pct_f: "%Dto. CF"

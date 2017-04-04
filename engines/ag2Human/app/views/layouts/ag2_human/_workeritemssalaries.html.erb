@@ -3,7 +3,7 @@
 <% salaries = item.worker_salaries.order('year desc') %>
 <% if (salaries.size > 0) %>
 <% salaries.each do |salary| %>
-<% if item.ending_at.blank? %>
+<% if item.active? %>
 <tr>
 <% else %>
 <tr class="inactive-row">

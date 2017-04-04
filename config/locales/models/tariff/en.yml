@@ -37,6 +37,7 @@ en:
         block7_fee: "B7 price"
         block8_fee: "B8 price"
         variable_fee: "Variable fee"
+        percentage_fixed_fee: "Fixed fee %"
         percentage_fee: "Variable %"
         percentage_applicable_formula: "V% Formula"
         discount_pct_f: "Disc.% FF"

@@ -204,7 +204,7 @@ es:
         remark: "Comentario"
         subtotal: "Subtotal"
         base_imp: "Base imponible"
-        iva_c: "Cuota de Iva"
+        iva_c: "Cuota de IVA"
         total_billing: "Total facturado"
         billing: "Facturación"
         amount_title: "Importe por "

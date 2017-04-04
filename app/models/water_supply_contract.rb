@@ -91,7 +91,7 @@ class WaterSupplyContract < ActiveRecord::Base
                                 invoice_type_id: InvoiceType::CONTRACT,
                                 invoice_date: Date.today,
                                 tariff_scheme_id: tariff_scheme.id,
-                                payday_limit: nil,
+                                payday_limit: Date.today,
                                 invoice_operation_id: InvoiceOperation::INVOICE,
                                 billing_period_id: nil,
                                 consumption: nil,
@@ -131,11 +131,13 @@ class WaterSupplyContract < ActiveRecord::Base
 
   def generate_bill_cancellation
     old_subscriber = contracting_request.old_subscriber
-    old_contract = WaterSupplyContract.where(subscriber_id: old_subscriber).last
+    old_contract = old_subscriber.water_supply_contract ? WaterSupplyContract.where(subscriber_id: old_subscriber).last : nil
 
     _array = []
-    old_contract.bill.invoices.first.invoice_items.each do |i|
-      _array = _array << [i.id, i.code]
+    if old_contract != nil
+      old_contract.bill.invoices.first.invoice_items.each do |i|
+        _array = _array << [i.id, i.code]
+      end
     end
 
     fianza = _array.select { |u| u.include? "FIA" }
@@ -171,7 +173,7 @@ class WaterSupplyContract < ActiveRecord::Base
                                     invoice_type_id: InvoiceType::CONTRACT,
                                     invoice_date: Date.today,
                                     tariff_scheme_id: tariff_scheme.id,
-                                    payday_limit: nil,
+                                    payday_limit: Date.today,
                                     invoice_operation_id: InvoiceOperation::INVOICE,
                                     billing_period_id: nil,
                                     consumption: nil,
@@ -211,151 +213,15 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation_service
-    old_subscriber = contracting_request.old_subscriber
-    old_contract = WaterSupplyContract.where(subscriber_id: old_subscriber).last
+    @subscriber = contracting_request.old_subscriber
+    @reading = @subscriber.readings.where(billing_period_id: contracting_request.old_subscriber.readings.last.billing_period_id, reading_type_id: [ReadingType::RETIRADA]).order(:reading_date).last
+    payday_limit = !@reading.billing_period.billing_starting_date.blank? ? @reading.billing_period.billing_starting_date : Date.today
+    invoice_date = !@reading.billing_period.billing_ending_date.blank? ? @reading.billing_period.billing_ending_date : Date.today
+    @bill = @reading.generate_bill(bill_next_no(@reading.project),contracting_request.try(:created_by),1,payday_limit,invoice_date)
 
-    bill_service = Bill.create(
-          bill_no: bill_next_no(contracting_request.project),
-          project_id: contracting_request.project_id,
-          invoice_status_id: InvoiceStatus::PENDING,
-          bill_date: Date.today,
-          subscriber_id: subscriber_id,
-          client_id: old_contract.client_id,
-          last_name: old_contract.client.last_name,
-          first_name: old_contract.client.first_name,
-          company: old_contract.client.company,
-          fiscal_id: old_contract.client.fiscal_id,
-          street_type_id: old_contract.client.street_type_id,
-          street_name: old_contract.client.street_name,
-          street_number: old_contract.client.street_number,
-          building: old_contract.client.building,
-          floor: old_contract.client.floor,
-          floor_office: old_contract.client.floor_office,
-          zipcode_id: old_contract.client.zipcode_id,
-          town_id: old_contract.client.town_id,
-          province_id: old_contract.client.province_id,
-          region_id: old_contract.client.region_id,
-          country_id: old_contract.client.country_id,
-          organization_id: contracting_request.project.organization_id,
-          created_by: contracting_request.try(:created_by),
-          reading_1_id: contracting_request.old_subscriber.readings.last.reading_1_id,
-          reading_2_id: contracting_request.old_subscriber.readings.last.id)
-        contracting_request.old_subscriber.tariffs_supply.each do |tariffs_biller|
-          invoiceservice = Invoice.create(
-            invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),
-            bill_id: bill_service.id,
-            invoice_status_id: InvoiceStatus::PENDING,
-            invoice_type_id: InvoiceType::WATER,
-            invoice_date: Date.today,
-            tariff_scheme_id: nil,
-            payday_limit: Date.today,
-            invoice_operation_id: InvoiceOperation::INVOICE,
-            billing_period_id: contracting_request.old_subscriber.readings.last.billing_period_id,
-            consumption: contracting_request.old_subscriber.readings.last.consumption_total_period,
-            consumption_real: contracting_request.old_subscriber.readings.last.consumption_total_period,
-            consumption_estimated: nil,
-            consumption_other: nil,
-            biller_id: tariffs_biller[0],
-            discount_pct: 0.0,
-            exemption: 0.0,
-            charge_account_id: contracting_request.project.try(:charge_accounts).first.try(:id),
-            created_by: contracting_request.try(:created_by),
-            reading_1_date: contracting_request.old_subscriber.readings.last.reading_1.try(:reading_date),
-            reading_2_date: contracting_request.old_subscriber.readings.last.reading_date,
-            reading_1_index: contracting_request.old_subscriber.readings.last.reading_1.try(:reading_index),
-            reading_2_index: contracting_request.old_subscriber.readings.last.reading_index,
-            organization_id: contracting_request.project.organization_id)
-          tariffs_biller[1].each do |tariff|
-            unless tariff.fixed_fee.zero?
-              InvoiceItem.create(
-                invoice_id: invoiceservice.id,
-                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-                tariff_id: tariff.id,
-                price: (tariff.fixed_fee / tariff.billing_frequency.total_months),
-                quantity: contracting_request.old_subscriber.readings.last.billing_frequency.total_months,
-                tax_type_id: tariff.try(:tax_type_f_id),
-                discount_pct: tariff.try(:discount_pct_f),
-                discount: 0.0,#¿¿¿???
-                product_id: nil,
-                subcode: "CF",
-                measure_id: tariff.billing_frequency.fix_measure_id,
-                created_by: contracting_request.try(:created_by) )
-            end
-            if tariff.block1_fee > 0
-              limit_before = 0
-              (1..8).each do |i|
-                # if limit nil (last block) or limit > consumption
-                if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > (consumption_total_period || 0)
-                  InvoiceItem.create(
-                    invoice_id: invoiceservice.id,
-                    code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                    description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-                    tariff_id: tariff.id,
-                    price:  tariff.instance_eval("block#{i}_fee"),
-                    quantity: ((contracting_request.old_subscriber.readings.last.consumption_total_period || 0) - limit_before),
-                    tax_type_id: tariff.try(:tax_type_b_id),
-                    discount_pct: tariff.try(:discount_pct_b),
-                    discount: 0.0,#¿¿¿???
-                    product_id: nil,
-                    subcode: "BL"+i.to_s,
-                    measure_id: tariff.billing_frequency.var_measure_id,
-                    created_by: contracting_request.try(:created_by) )
-                  break
-                else
-                  InvoiceItem.create(
-                    invoice_id: invoiceservice.id,
-                    code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                    description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-                    tariff_id: tariff.id,
-                    price:  tariff.instance_eval("block#{i}_fee"),
-                    quantity: tariff.instance_eval("block#{i}_limit") - limit_before,
-                    tax_type_id: tariff.try(:tax_type_b_id),
-                    discount_pct: tariff.try(:discount_pct_b),
-                    discount: 0.0,#¿¿¿???
-                    product_id: nil,
-                    subcode: "BL"+i.to_s,
-                    measure_id: tariff.billing_frequency.var_measure_id,
-                    created_by: contracting_request.try(:created_by) )
-                  limit_before = tariff.instance_eval("block#{i}_limit")
-                end
-              end
-            elsif tariff.percentage_fee > 0 and !tariff.percentage_applicable_formula.blank?
-              InvoiceItem.create(
-                invoice_id: invoiceservice.id,
-                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-                tariff_id: tariff.id,
-                price:  (tariff.percentage_fee/100) * @bill.total_by_concept(tariff.percentage_applicable_formula) / consumption_total_period,
-                quantity: contracting_request.old_subscriber.readings.last.consumption_total_period,
-                tax_type_id: tariff.try(:tax_type_p_id),
-                discount_pct: tariff.try(:discount_pct_p),
-                discount: 0.0,#¿¿¿???
-                product_id: nil,
-                subcode: "VP",
-                measure_id: tariff.billing_frequency.var_measure_id,
-                created_by: contracting_request.try(:created_by) )
-            elsif tariff.variable_fee > 0
-              InvoiceItem.create(
-                invoice_id: invoiceservice.id,
-                code: tariff.try(:billable_item).try(:billable_concept).try(:code),
-                description: tariff.try(:billable_item).try(:billable_concept).try(:name),
-                tariff_id: tariff.id,
-                price:  tariff.variable_fee,
-                quantity: contracting_request.old_subscriber.readings.last.consumption_total_period,
-                tax_type_id: tariff.try(:tax_type_v_id),
-                discount_pct: tariff.try(:discount_pct_v),
-                discount: 0.0,#¿¿¿???
-                product_id: nil,
-                subcode: "CV",
-                measure_id: tariff.billing_frequency.var_measure_id,
-                created_by: contracting_request.try(:created_by) )
-            end
-          end
-        end
-    self.unsubscribe_bill_id = bill_service.id
+    self.unsubscribe_bill_id = @bill.id
     if self.save
-      return bill_service
+      return @bill
     else
       return nil
     end

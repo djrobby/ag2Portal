@@ -26,7 +26,7 @@ class WorkerItem < ActiveRecord::Base
   validates :contribution_account_code, :presence => true
   validates :department,                :presence => true
 
-  before_destroy :check_for_dependent_records  
+  before_destroy :check_for_dependent_records
 
   def to_label
     "#{id} - #{worker.full_name}"
@@ -40,6 +40,22 @@ class WorkerItem < ActiveRecord::Base
     end
   end
 
+  def active?
+    ending_at.blank?
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.actives(_office_id=nil)
+    if _office_id.nil?
+      where(ending_at: nil)
+    else
+      where(ending_at: nil, office_id: _office_id)
+    end
+  end
+
+  # Sunspot search
   searchable do
     text :contribution_account_code
     integer :company_id

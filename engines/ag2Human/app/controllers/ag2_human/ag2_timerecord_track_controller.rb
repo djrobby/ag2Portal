@@ -10,13 +10,13 @@ module Ag2Human
     # Update workers from office select
     def update_workers_select_from_office
       if params[:id] == '0'
-        @workers = Worker.order(:worker_code)
+        @workers = Worker.actives
       else
         office = Office.find(params[:id])
         if !office.nil?
-          @workers = workers_by_office(office)
+          @workers = Worker.actives(office.id)
         else
-          @workers = Worker.order(:worker_code)
+          @workers = Worker.actives
         end
       end
       render json: { "workers" => @workers }
@@ -44,11 +44,13 @@ module Ag2Human
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
         @time_records = TimerecordReport.all
-        # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord_#{@worker.worker_code}_#{from}_#{to}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
+        if @time_records.count > 0
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "ag2TimeRecord_#{@worker.worker_code}_#{from}_#{to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
       end
     end
 
@@ -74,11 +76,13 @@ module Ag2Human
         # Execute procedure and load aux table
         ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(0, '#{from}', '#{to}', #{office});")
         @time_records = TimerecordReport.all
-        # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "ag2TimeRecord_#{@office.office_code}_#{from}_#{to}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
+        if @time_records.count > 0
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "ag2TimeRecord_#{@office.office_code}_#{from}_#{to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
       end
     end
 
@@ -90,12 +94,6 @@ module Ag2Human
 
       @offices = Office.order(:name)
       @workers = Worker.order(:worker_code)
-    end
-
-    private
-
-    def workers_by_office(_office)
-      Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { office_id: _office }).order(:worker_code)
     end
   end
 end

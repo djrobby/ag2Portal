@@ -117,7 +117,7 @@ class Worker < ActiveRecord::Base
   def worker_count
     worker_items.count
   end
-  
+
   def age
     (Date.current - borned_on).round / 365
   end
@@ -130,7 +130,18 @@ class Worker < ActiveRecord::Base
     end
     _ret
   end
-  
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.actives(_office_id=nil)
+    if _office_id.nil?
+      joins(:worker_items).group(:worker_id).where(worker_items: { ending_at: nil }).order(:worker_code)
+    else
+      joins(:worker_items).group(:worker_id).where(worker_items: { ending_at: nil, office_id: _office_id }).order(:worker_code)
+    end
+  end
+
   #
   # Records navigator
   #
@@ -161,7 +172,8 @@ class Worker < ActiveRecord::Base
   def to_duplicate_next
     Worker.where("worker_code = ? and id > ?", worker_code, id).order("worker_code, id").first
   end
-  
+
+  # Sunspot search
   searchable do
     text :worker_code, :first_name, :last_name, :fiscal_id, :affiliation_id,
          :corp_cellular_long, :corp_cellular_short, :corp_extension, :corp_phone, :email

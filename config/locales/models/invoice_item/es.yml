@@ -24,7 +24,7 @@ es:
         description: "Concepto"
         measure: "U.Medida"
         measure_id: "U.Medida"
-        measure_c: "U.M"
+        measure_c: "U.M."
         quantity: "Cantidad"
         quantity_c: "Cant."
         price_c: "Precio"

@@ -553,10 +553,10 @@ module Ag2Gest
     def billing_instalation_cancellation
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
-      @reading = Reading.where(subscriber_id: @contracting_request.old_subscriber.id,reading_type_id: ReadingType::RETIRADA, billing_period_id: @contracting_request.water_supply_contract.unsubscribe_bill.invoices.last.billing_period_id, bill_id: nil)
+      @reading = Reading.where(subscriber_id: @contracting_request.old_subscriber.id,reading_type_id: ReadingType::RETIRADA, billing_period_id: @contracting_request.old_subscriber.readings.last.billing_period_id, bill_id: nil)
         @contracting_request.status_control
         if @contracting_request.save
-          @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
+          # @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
