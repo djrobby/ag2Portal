@@ -127,6 +127,27 @@ class Invoice < ActiveRecord::Base
     bill.client unless (bill.blank? || bill.client.blank?)
   end
 
+  def subscriber
+    bill.subscriber unless (bill.blank? || bill.subscriber.blank?)
+  end
+
+  # Calculates & returns the average billed consumption up to the last six invoices
+  def average_billed_consumption
+    _prev_consumptions = []
+    _average_consumption = 0
+    if !billing_period.blank? && invoice_type_id == InvoiceType::WATER
+      _invoices = ActiveSupplyInvoice.joins(:billing_period).where('period <= ? AND subscriber_id = ?', billing_period.period, subscriber.id).order('period DESC').first(6)
+      if !_invoices.blank?
+        _invoices.each do |_i|
+          _prev_consumptions << _i.invoice.consumption
+          _average_consumption += _i.invoice.consumption
+        end
+        _average_consumption = _average_consumption / _invoices.count
+      end
+    end
+    return _prev_consumptions, _average_consumption
+  end
+
   #
   # Calculated fields
   #
