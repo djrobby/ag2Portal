@@ -1,3 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+  }); 
+
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#from").val("");
+      $("#to").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
+
 <%= render '/layouts/ag2_products/receipts_deliveries_productbreadcrumb' %>
 
 <table class="header-with-image">
@@ -17,208 +51,35 @@
 
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span12" id="div_table">
 
-      <!-- Inventory counts -->
-      <a href="#counts" data-toggle="collapse"><h4><%= t :"activerecord.attributes.product.inventory_counts" %></h4></h4></a>
-      <% if (@counts.count > 0) %>
-      <div id="counts" class="collapse in">
-      <table class="table table-condensed table-striped">
-        <!-- id -->
-        <col width="5%" />
-        <!-- date -->
-        <col width="10%" />
-        <!-- no -->
-        <col width="20%" />
-        <!-- store -->
-        <col width="29%" />
-        <!-- type -->
-        <col width="16%" />
-        <!-- quantity -->
-        <col width="10%" />
-        <!-- price -->
-        <col width="10%" />
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th align="center"><%= t 'activerecord.attributes.inventory_count.count_date' %></th>
-            <th><%= t 'activerecord.attributes.inventory_count.count_no' %></th>
-            <th><%=t "activerecord.attributes.inventory_count.store" %></th>
-            <th><%=t "activerecord.attributes.inventory_count.inventory_count_type" %></th>
-            <th align="right"><%=t "activerecord.attributes.inventory_count_item.quantity_c" %></th>
-            <th align="right"><%=t "activerecord.attributes.inventory_count_item.price" %></th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
-            <td align="right"><%= number_with_precision(@product.counts, precision: 4) unless @product.counts.blank? %></td>
-            <td align="right"><%= number_with_precision(@product.counts_price_avg, precision: 4) unless @product.counts_price_avg.blank? %></td>
-          </tr>
-        </tfoot>
-        <tbody>
-          <% @counts.each do |m| %>
-          <tr>
-            <td><%= m.inventory_count.id %></td>
-            <td align="center"><%= formatted_date(m.inventory_count.count_date) unless m.inventory_count.count_date.blank? %></td>
-            <td><%= link_to m.inventory_count.full_no, m.inventory_count %></td>
-            <td><%= m.inventory_count.store.name unless m.inventory_count.store.blank? %></td>
-            <td><%= m.inventory_count.inventory_count_type.name unless m.inventory_count.inventory_count_type.blank? %></td>
-            <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
-            <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      </div>
-      <% end %>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @counts } %>
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to receipts_deliveries_products_path(id: @product), title: I18n.t(:refresh), class: "icon-refresh-link", :remote => true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "receipts_deliveries", :method => 'get', :remote => true do %>
+        <!-- Id -->
+        <%= hidden_field_tag "id", params[:id] %>
+        <!-- Dates -->
+        <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label' %>
+        <%= text_field_tag "from", params[:from], :class =>  'x-large-text-field-text-field date_picker' %>
+        <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "to", params[:to], :class =>  'x-large-text-field-text-field date_picker' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Back -->
+        <%= link_to t("ag2_products.products.show.return_to"), @product %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
 
-      <!-- Receipts -->
-      <a href="#receipts" data-toggle="collapse"><h4><%= t :"activerecord.attributes.product.receipts" %></h4></a>
-      <% if (@receipts.count > 0) %>
-      <div id="receipts" class="collapse in">
-      <table class="table table-condensed table-striped">
-        <!-- id -->
-        <col width="5%" />
-        <!-- date -->
-        <col width="10%" />
-        <!-- no -->
-        <col width="20%" />
-        <!-- store -->
-        <col width="29%" />
-        <!-- quantity -->
-        <col width="9%" />
-        <!-- price -->
-        <col width="9%" />
-        <!-- discount -->
-        <col width="9%" />
-        <!-- amount -->
-        <col width="9%" />
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th align="center"><%= t 'activerecord.attributes.receipt_note.receipt_date' %></th>
-            <th><%= t :"activerecord.attributes.receipt_note.receipt_no" %></th>
-            <th><%=t "activerecord.attributes.receipt_note_item.store" %></th>
-            <th align="right"><%=t "activerecord.attributes.receipt_note_item.quantity_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.receipt_note_item.price_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.receipt_note_item.discount_c" %></th>
-            <th align="right"><%=t "activerecord.attributes.receipt_note_item.amount_c" %></th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
-            <td align="right"><%= number_with_precision(@product.receipts, precision: 4) unless @product.receipts.blank? %></td>
-            <td align="right"><%= number_with_precision(@product.receipts_price_avg_total, precision: 4) unless @product.receipts_price_avg_total.blank? %></td>
-            <td align="right"></td>
-            <!--<td align="right"><%#= number_with_precision(@product.receipts_discount_avg, precision: 4) unless @product.receipts_discount_avg.blank? %></td>-->
-            <td align="right"><%= number_with_precision(@product.receipts_amount, precision: 4) unless @product.receipts_amount.blank? %></td>
-          </tr>
-        </tfoot>
-        <tbody>
-          <% @receipts.each do |m| %>
-          <tr>
-            <td><%= m.receipt_note.id %></td>
-            <td align="center"><%= formatted_date(m.receipt_note.receipt_date) unless m.receipt_note.receipt_date.blank? %></td>
-            <td><%= link_to m.receipt_note.receipt_no, m.receipt_note %></td>
-            <td><%= m.store.name unless m.store.blank? %></td>
-            <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
-            <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
-            <td align="right"><%= number_with_precision(m.discount, precision: 4) unless m.discount.blank? %></td>
-            <td align="right"><%= number_with_precision(m.amount, precision: 4) unless m.amount.blank? %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      </div>
-      <% end %>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @receipts } %>
-
-      <!-- Deliveries -->
-      <a href="#deliveries" data-toggle="collapse"><h4><%= t :"activerecord.attributes.product.deliveries" %></h4></a>
-      <% if (@deliveries.count > 0) %>
-      <div id="deliveries" class="collapse in">
-      <table class="table table-condensed table-striped">
-        <!-- id -->
-        <col width="5%" />
-        <!-- date -->
-        <col width="10%" />
-        <!-- no -->
-        <col width="18%" />
-        <!-- store -->
-        <col width="19%" />
-        <!-- quantity -->
-        <col width="8%" />
-        <!-- cost -->
-        <col width="8%" />
-        <!-- costs -->
-        <col width="8%" />
-        <!-- price -->
-        <col width="8%" />
-        <!-- discount -->
-        <col width="8%" />
-        <!-- amount -->
-        <col width="8%" />
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th align="center"><%= t 'activerecord.attributes.delivery_note.delivery_date' %></th>
-            <th><%=t "activerecord.attributes.delivery_note.delivery_no" %></th>
-            <th><%=t "activerecord.attributes.delivery_note_item.store" %></th>
-            <th align="right"><%=t "activerecord.attributes.delivery_note_item.quantity_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.delivery_note_item.cost_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.delivery_note_item.costs_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.delivery_note_item.price_c" %></th>
-            <th align="right"><%= t "activerecord.attributes.delivery_note_item.discount_c" %></th>
-            <th align="right"><%=t "activerecord.attributes.delivery_note_item.amount_c" %></th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td align="right"><%=t "activerecord.attributes.product.stock" %></td>
-            <td align="right"><%= number_with_precision(@product.deliveries, precision: 4) unless @product.deliveries.blank? %></td>
-            <td align="right"><%= number_with_precision(@product.deliveries_cost_avg_total, precision: 4) unless @product.deliveries_cost_avg.blank? %></td>
-            <td align="right"><%= number_with_precision(@product.deliveries_costs, precision: 4) unless @product.deliveries_costs.blank? %></td>
-            <td align="right"><%= number_with_precision(@product.deliveries_price_avg_total, precision: 4) unless @product.deliveries_price_avg.blank? %></td>
-            <!--<td align="right"><%#= number_with_precision(@product.deliveries_discount_avg, precision: 4) unless @product.deliveries_discount_avg.blank? %></td>-->
-            <td align="right"></td>
-            <td align="right"><%= number_with_precision(@product.deliveries_amount, precision: 4) unless @product.deliveries_amount.blank? %></td>
-          </tr>
-        </tfoot>
-        <tbody>
-          <% @deliveries.each do |m| %>
-          <tr>
-            <td><%= m.delivery_note.id %></td>
-            <td align="center"><%= formatted_date(m.delivery_note.delivery_date) unless m.delivery_note.delivery_date.blank? %></td>
-            <td><%= link_to m.delivery_note.full_no, m.delivery_note %></td>
-            <td><%= m.store.name unless m.store.blank? %></td>
-            <td align="right"><%= number_with_precision(m.quantity, precision: 4) unless m.quantity.blank? %></td>
-            <td align="right"><%= number_with_precision(m.cost, precision: 4) unless m.cost.blank? %></td>
-            <td align="right"><%= number_with_precision(m.costs, precision: 4) unless m.costs.blank? %></td>
-            <td align="right"><%= number_with_precision(m.price, precision: 4) unless m.price.blank? %></td>
-            <td align="right"><%= number_with_precision(m.discount, precision: 4) unless m.discount.blank? %></td>
-            <td align="right"><%= number_with_precision(m.amount, precision: 4) unless m.amount.blank? %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-      </div>
-      <% end %>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @deliveries } %>
-
-      <%= link_to t("ag2_products.products.show.return_to"), @product %>
-    </div><!-- /.span12 -->
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'receipts_deliveries' %>
+      </div><!-- /#div_table -->
+    </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->

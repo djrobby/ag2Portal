@@ -266,17 +266,37 @@ module Ag2Products
     # GET /receipts_deliveries.json
     def receipts_deliveries
       @product = Product.find(params[:id])
+      from = params[:from]
+      to = params[:to]
       # OCO
       init_oco if !session[:organization]
-      # Receipts & Deliveries
+      # Dates
+      # Receipts, Deliveries & Counts
       #@receipts = product.receipt_note_items.includes(:receipt_note).order(:receipt_date)
-      @receipts = @product.receipt_note_items.joins(:receipt_note).order('receipt_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
-      @deliveries = @product.delivery_note_items.joins(:delivery_note).order('delivery_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
-      @counts = @product.inventory_count_items.joins(:inventory_count).order('count_date desc, id desc').paginate(:page => params[:page], :per_page => per_page)
+      @receipts = @product.receipt_note_items.includes(:receipt_note, :store).order('receipt_notes.receipt_date desc, receipt_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
+      @deliveries = @product.delivery_note_items.includes(:delivery_note, :store).order('delivery_notes.delivery_date desc, delivery_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
+      @counts = @product.inventory_count_items.includes(inventory_count: [:store, :inventory_count_type]).order('inventory_counts.count_date desc, inventory_count_items.id desc').paginate(:page => params[:page], :per_page => per_page)
+      if (!from.nil? && from != "") && (!to.nil? && to != "")
+        from = from.to_date
+        to = to.to_date
+        @receipts = @receipts.where('receipt_notes.receipt_date BETWEEN ? AND ?', from, to)
+        @deliveries = @deliveries.where('delivery_notes.delivery_date BETWEEN ? AND ?', from, to)
+        @counts = @counts.where('inventory_counts.count_date BETWEEN ? AND ?', from, to)
+      elsif !from.nil? && from != ""
+        from = from.to_date
+        @receipts = @receipts.where('receipt_notes.receipt_date >= ?', from)
+        @deliveries = @deliveries.where('delivery_notes.delivery_date >= ?', from)
+        @counts = @counts.where('inventory_counts.count_date >= ?', from)
+      elsif !to.nil? && to != ""
+        to = to.to_date
+        @receipts = @receipts.where('receipt_notes.receipt_date <= ?', to)
+        @deliveries = @deliveries.where('delivery_notes.delivery_date <= ?', to)
+        @counts = @counts.where('inventory_counts.count_date <= ?', to)
+      end
 
       respond_to do |format|
         format.html # receipts_deliveries.html.erb
-        format.json { render json: { :product => @product, :receipts => @receipts, :deliveries => @deliveries, :counts => @counts } }
+        format.js
       end
     end
 
