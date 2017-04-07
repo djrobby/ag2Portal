@@ -147,6 +147,10 @@ es:
           attributes:
             code:
               code_invalid: "inválido (debe ser alfanumérico)"
+        center:
+          attributes:
+            code:
+              code_invalid: "inválido (debe ser único y de 3 caracteres)"
         client_bank_account:
           iban_invalid: "IBAN inválido."
           attributes:

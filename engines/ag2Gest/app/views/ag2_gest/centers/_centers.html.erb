@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "code", t('activerecord.attributes.center.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.center.name') %></th>
       <th><%= sortable "town_id", t('activerecord.attributes.center.town') %></th>
       <th><%= sortable "active", t('activerecord.attributes.center.active') %></th>
@@ -19,7 +20,8 @@
   <tbody>
     <% @centers.each do |center| %>
     <tr>
-      <td><%= link_to center.try(:name), ag2_gest.center_path(center) %></td>
+      <td><%= link_to center.code, center %></td>
+      <td><%= center.try(:name) %></td>
       <td><%= center.try(:town).try(:name) %></td> <!-- Render With id in the model method -->
       <td>
         <% if center.try(:active) == true %>

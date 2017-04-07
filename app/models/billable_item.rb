@@ -5,15 +5,17 @@ class BillableItem < ActiveRecord::Base
   belongs_to :regulation
 
   has_many :tariffs
+  has_many :tariff_types, through: :tariffs
 
   has_paper_trail
 
   attr_accessible :biller_id, :project_id, :billable_concept_id, :tariffs_by_caliber, :regulation_id, :organization_id
 
-  validates :project,           :presence => true
-  validates :billable_concept,  :presence => true
-  validates :biller,            :presence => true
-  validates :billable_concept_id, uniqueness: { scope: :project_id }
+  validates :project,             :presence => true
+  validates :billable_concept,    :presence => true
+  validates :biller,              :presence => true
+  validates :billable_concept_id, :uniqueness => { :scope => [:project_id, :biller_id] }
+  validates :regulation_id,       :uniqueness => { :scope => [:project_id, :biller_id, :billable_concept_id] }
 
   # Scopes
   scope :by_code_id, -> { includes(:billable_concept).order('billable_concepts.code, billable_items.id') }
@@ -33,6 +35,10 @@ class BillableItem < ActiveRecord::Base
 
   def company
     project.company
+  end
+
+  def grouped_tariff_types
+    tariff_types.group(:tariff_type_id)
   end
 
   searchable do

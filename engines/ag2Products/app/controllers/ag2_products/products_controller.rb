@@ -270,7 +270,6 @@ module Ag2Products
       to = params[:to]
       # OCO
       init_oco if !session[:organization]
-      # Dates
       # Receipts, Deliveries & Counts
       #@receipts = product.receipt_note_items.includes(:receipt_note).order(:receipt_date)
       @receipts = @product.receipt_note_items.includes(:receipt_note, :store).order('receipt_notes.receipt_date desc, receipt_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)

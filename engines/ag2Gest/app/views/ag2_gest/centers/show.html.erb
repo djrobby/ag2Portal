@@ -6,8 +6,12 @@
     <tr>
       <td><%= t('activerecord.attributes.center.id') %>:</td>
       <td><%= @center.try(:id) %></td>
+      <td><%= t('activerecord.attributes.center.code') %>:</td>
+      <td class="highlighted bolded"><%= @center.code %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.center.name') %>:</td>
-      <td><%= @center.try(:name) %></td>
+      <td colspan="3"><%= @center.try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.center.active') %>:</td>

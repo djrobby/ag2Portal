@@ -11,22 +11,13 @@
 <%= simple_form_for @center, :html => {:class => 'form-vertical well' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
-
-  <div class="row-fluid">
-    
-    <div class="span6">
-    
-    <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    
-    <%= f.association :town, collection: Town.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
-    <div class="span2">
-      <%= f.input :active, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-
+  <div>
+    <label class="multi-field-label-two"> <%= f.input :code, :required => true, :autofocus => true, :input_html => { onkeyup: "caps(this)", :class => 'large-text-field', maxlength: 3 }, :label_html => { :class => 'form-label' } %> </label>
+    <label class="multi-field-label-two"> <%= f.input :name, :required => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   </div>
-
+  <div>
+    <label class="multi-field-label-two"> <%= f.association :town, collection: Town.all(order: 'name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+    <label class="multi-field-label-two"> <%= f.input :active, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
+  </div>
   <%= f.button :submit, :class => 'btn-primary' %>
-
 <% end %>

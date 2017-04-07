@@ -6,6 +6,8 @@ class BillableConcept < ActiveRecord::Base
   attr_accessible :code, :name, :billable_document
 
   has_many :billable_items
+  has_many :tariffs, through: :billable_items
+  has_many :tariff_types, through: :tariffs
 
   has_paper_trail
 
@@ -17,6 +19,8 @@ class BillableConcept < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:code) }
+  #
+  scope :belongs_to_project, -> p { joins(:billable_items).where(billable_items: { project_id: p }).by_code }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -27,6 +31,10 @@ class BillableConcept < ActiveRecord::Base
 
   def document
     billable_document.to_s == '1' ? I18n.t('activerecord.attributes.billable_concept.supply') : I18n.t('activerecord.attributes.billable_concept.contracting')
+  end
+
+  def grouped_tariff_types
+    tariff_types.group(:tariff_type_id)
   end
 
   private

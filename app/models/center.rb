@@ -1,6 +1,6 @@
 class Center < ActiveRecord::Base
   belongs_to :town
-  attr_accessible :active, :name, :town_id
+  attr_accessible :active, :name, :town_id, :code
 
   has_many :subscribers
 
@@ -8,14 +8,25 @@ class Center < ActiveRecord::Base
 
   validates :town,        :presence => true
   validates :name,        :presence => true
+  validates :code,        :presence => true,
+                          :length => { :is => 3 },
+                          :uniqueness => { :scope => :town_id },
+                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid }
 
   # Scopes
   scope :by_town, -> { order(:town_id, :name) }
 
+  before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
   def to_label
-    "#{name} (#{town.name})"
+    "#{code} (#{town.name})"
+  end
+
+  def fields_to_uppercase
+    if !self.code.blank?
+      self[:code].upcase!
+    end
   end
 
   private

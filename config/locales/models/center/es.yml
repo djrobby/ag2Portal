@@ -14,6 +14,7 @@ es:
       center:
         id: "Id"
         center_id: "Id"
+        code: "Código"
         name: "Nombre"
         active: "Activo"
         town: "Población/Oficina"
