@@ -46,6 +46,7 @@ es:
         cf: "Cuota de Servicio"
         cv: "Cuota de Variable"
         vp: "Cuota de Variable %"
+        bl: "Consumo"
         bl1: "Consumo B1"
         bl2: "Consumo B2"
         bl3: "Consumo B3"

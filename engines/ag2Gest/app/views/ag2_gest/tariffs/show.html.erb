@@ -38,6 +38,12 @@
       <td ><%= @tariff.try(:get_code_formula)  %></td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.tariff.percentage_fixed_fee') %>:</td>
+      <td ><%= @tariff.try(:percentage_fixed_fee)  %></td>
+      <td><%= t('activerecord.attributes.tariff.percentage_applicable_formula_fixed') %>:</td>
+      <td ><%= @tariff.try(:get_code_formula)  %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.tariff.block1_limit') %>:</td>
       <td ><%= @tariff.try(:block1_limit) %></td>
       <td><%= t('activerecord.attributes.tariff.block1_fee') %>:</td>

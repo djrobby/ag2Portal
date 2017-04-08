@@ -112,11 +112,42 @@ class Invoice < ActiveRecord::Base
   def invoiced_subtotals_by_concept
     _codes = []
     _aux = []
-    _ii = invoice_items.group(:tariff_id)
+    _ii = invoice_items.joins(tariff: :billable_item).order('billable_items.billable_concept_id').group('billable_items.billable_concept_id')
     _ii.each do |r|
       _aux = _aux << r.tariff.billable_concept.id
       _aux = _aux << r.tariff.billable_concept.name
-      _aux = _aux << invoice_items.where(tariff_id: r.tariff_id).sum(&:amount)
+      _aux = _aux << invoice_items.where(code: r.tariff.billable_concept.code).sum(&:amount)
+      if r.description[0] == 0.to_s
+        _aux = _aux << r.description[0]
+      elsif r.description[0] == 1.to_s
+        _aux = _aux << r.description[0]
+      else
+        _aux = _aux << nil
+      end
+      _aux = _aux << r.tariff.billable_item.regulation_id
+      _codes = _codes << _aux
+      _aux = []
+    end
+    _codes
+  end
+
+  def invoiced_subtotals_by_billable_item
+    _codes = []
+    _aux = []
+    _ii = invoice_items.joins(tariff: :billable_item).order('billable_items.billable_concept_id').group('billable_item_id')
+    _ii.each do |r|
+      _aux = _aux << r.tariff.billable_concept.id
+      _aux = _aux << r.tariff.billable_concept.name
+      _aux = _aux << invoice_items.where(code: r.tariff.billable_concept.code).sum(&:amount)
+      _aux = _aux << r.tariff.billable_concept.code
+      if r.description[0] == 0.to_s
+        _aux = _aux << r.description[0]
+      elsif r.description[0] == 1.to_s
+        _aux = _aux << r.description[0]
+      else
+        _aux = _aux << nil
+      end
+      _aux = _aux << r.tariff.billable_item.regulation_id
       _codes = _codes << _aux
       _aux = []
     end

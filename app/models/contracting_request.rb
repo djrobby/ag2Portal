@@ -468,7 +468,7 @@ class ContractingRequest < ActiveRecord::Base
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
                               installation_date: old_subscriber.meter_details.first.installation_date,
-                              installation_index: old_subscriber.meter_details.first.installation_index,
+                              installation_index: old_subscriber.meter_details.first.installation_reading,
                               created_by: created_by
                             )
     subscriber = old_subscriber
@@ -484,7 +484,11 @@ class ContractingRequest < ActiveRecord::Base
       fax: client.fax,
       updated_by: created_by
     )
-    self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id || nil
+    if old_subscriber.water_supply_contract
+      self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id || nil
+    else
+      self.work_order_id = nil
+    end
     self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
     self.save
   end

@@ -23,7 +23,7 @@
   </div>
   <div class="row-fluid">
 
-    <%= f.association :regulation, label: t('activerecord.attributes.billable_item.regulation_id'), collection: @regulations, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |rg| rg.description }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+    <%= f.association :regulation, label: t('activerecord.attributes.billable_item.regulation_id'), collection: @regulations, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |rg| rg.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 
     <%= f.input :tariffs_by_caliber, label: t('activerecord.attributes.billable_item.tariffs_by_caliber'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %>
 

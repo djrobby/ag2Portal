@@ -15,10 +15,18 @@ class Regulation < ActiveRecord::Base
 
   validate :ending_at_cannot_be_less_than_started_at
 
+  def to_label
+    if ending_at.blank?
+      "#{regulation_type.description} #{try(:description)} (#{I18n.l(starting_at)})"
+    else
+      "#{regulation_type.description} #{try(:description)} (#{I18n.l(starting_at)} - #{I18n.l(ending_at)})"
+    end
+  end
+
   private
 
   def ending_at_cannot_be_less_than_started_at
-    if (!ending_at.blank? and !started_at.blank?) and ending_at < started_at
+    if (!ending_at.blank? and !starting_at.blank?) and ending_at < starting_at
       errors.add(:ending_at, :date_invalid)
     end
   end

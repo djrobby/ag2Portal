@@ -95,9 +95,12 @@ if @contracting_request.contracting_request_type_id == 2
 	end
 elsif @contracting_request.contracting_request_type_id == 4
 	var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
-	report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase ,
-									 request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
-				   					 request_no_master: var_master.first.contracting_request.full_no)
+		report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase)
+
+	if !var_master.last.blank?
+		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
+				   			request_no_master: var_master.first.contracting_request.full_no)
+	end
 else
 	report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase)
 end

@@ -307,7 +307,7 @@
       <%= f.input :billing_period_id, label: I18n.t("ag2_gest.bills.index.billing_period_id"), collection: @billing_periods_reading, input_html: {class: "large-text-field sel2"}, :label_html => { :class => 'form-label' } %>
       <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
       <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
-      <%= f.submit "Crear factura", class: "btn btn-primary" %>
+      <%= f.submit "Crear factura", disable_with: t("activerecord.attributes.pre_reading.loading"), class: "btn btn-primary" %>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
     <% end %>
   </div>

@@ -31,6 +31,8 @@ module Ag2Gest
                                                 :instalation_subscriber,
                                                 :contracting_request_pdf,
                                                 :bill,
+                                                :bill_cancellation,
+                                                :contracting_subscriber_pdf,
                                                 :update_bill,
                                                 :biller_pdf,
                                                 :get_caliber,
@@ -40,7 +42,8 @@ module Ag2Gest
                                                 :billing_complete,
                                                 :cr_find_meter,
                                                 :cr_find_subscriber,
-                                                :cr_find_service_point ]
+                                                :cr_find_service_point,
+                                                :contract_pdf ]
     # Helper methods for
     helper_method :sort_column
     # => search available meters
@@ -1236,8 +1239,18 @@ module Ag2Gest
     # POST /requests.json
     def create
       @breadcrumb = 'create'
-      # @projects = current_projects
-      # @projects_ids = current_projects_ids
+      @projects = current_projects
+      @projects_ids = current_projects_ids
+      @subscribers = []
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      @service_points = []
+      @offices = current_offices.group(:town_id).pluck(:town_id)
+      @street_types = StreetType.order(:street_type_code)
+      @towns = Town.order(:name)
+      @provinces = Province.order(:name)
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @zipcodes = Zipcode.order(:zipcode)
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}

@@ -542,7 +542,8 @@ module Ag2Gest
       @reading = Reading.new
       @client_bank_account = ClientBankAccount.new
       # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
-      @billing_periods_reading = @subscriber.readings.select{|r| [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
+      @billing_period = BillingPeriod.order('period DESC').all
+      @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
       @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
 
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
@@ -671,6 +672,7 @@ module Ag2Gest
           service_point_id: @contracting_request.service_point_id,
           contracting_request_id: @contracting_request.id,
           use_id: @contracting_request.water_supply_contract.use_id,
+          deposit: @contracting_request.water_supply_contract.bill.total,
           created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save
@@ -811,7 +813,7 @@ module Ag2Gest
 
     def simple_bill
       @subscriber = Subscriber.find params[:id]
-      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
+      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::INSTALACION, ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
       payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
       invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
       @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)

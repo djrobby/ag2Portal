@@ -11,8 +11,12 @@ en:
         check_for_tariff_scheme_items: "Tariff cannot be destroyed while linked scheme tariffs exist."
     attributes:
       tariff:
+        id: "Id"
+        successfully: "Tarifa se ha actualizado correctamente."
+        create: "Tarifa se ha creado correctamente."
         billable_item: "Billable item"
         billable_item_id: "Billable item"
+        billable_concept: "Concept"
         tariff_type: "Type"
         tariff_type_id: "Type"
         caliber: "Caliber"
@@ -40,6 +44,7 @@ en:
         percentage_fixed_fee: "Fixed fee %"
         percentage_fee: "Variable %"
         percentage_applicable_formula: "V% Formula"
+        percentage_applicable_formula_fixed: "F% Formula"
         discount_pct_f: "Disc.% FF"
         discount_pct_b: "Disc.% BVF"
         discount_pct_v: "Disc.% VF"
@@ -50,7 +55,6 @@ en:
         tax_type_p_id: "Tax VF%"
         starting_at: "Effective since"
         ending_at: "Valid until"
-
         blocks: "Blocks"
         price: "Price"
         limit: "Limit"

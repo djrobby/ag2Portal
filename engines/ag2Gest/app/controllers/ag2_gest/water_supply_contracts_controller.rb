@@ -168,8 +168,8 @@ module Ag2Gest
             @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])
             pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.previous_period,@billing_period.billing_frequency_id).try(:id)
             pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.year_period,@billing_period.billing_frequency_id).try(:id)
-            rdg_1 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_period_id).first
-            rdg_2 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: ReadingType::NORMAL, billing_period_id: pervious_year_id).first
+            rdg_1 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_period_id).first
+            rdg_2 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_year_id).first
             #lectura de retirada
               @reading = Reading.create(
                 subscriber_id: @contracting_request.old_subscriber.id,
