@@ -5,6 +5,7 @@ class StreetDirectory < ActiveRecord::Base
   attr_accessible :street_name, :town_id, :street_type_id, :zipcode_id
 
   has_many :service_points
+  has_many :subscribers
 
   has_paper_trail
 

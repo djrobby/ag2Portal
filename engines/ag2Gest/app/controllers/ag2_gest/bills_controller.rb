@@ -155,7 +155,6 @@ module Ag2Gest
     end
 
     def get_subscribers
-
       _reading_routes = params[:bill][:reading_routes].reject(&:empty?)
       reading_routes = _reading_routes.blank? ? ReadingRoute.pluck(:id) : _reading_routes
       _offices = current_offices_ids
@@ -166,25 +165,22 @@ module Ag2Gest
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
 
-      subscribers = Reading.joins(:subscriber).where("(subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)",uses, reading_routes, offices, centers, period, [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]).select{|r| r.billable?}.map(&:subscriber).uniq
-
+      # Select subscribers properly
+      subscribers = Subscriber.joins(:readings).where('(subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, period, ReadingType.billable).includes(street_directory: :street_type)
+      # Extract only needed colums (street_directories & street_types were previously cached)
       subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
-
+      # Returns JSON hash
       response_hash = { subscribers: subscribers_label}
-      respond_to do |format|
-        format.json { render json: response_hash }
-      end
+      render json: response_hash
     end
 
     def show_consumptions
-      # subscribers = Subscriber.where(id: params[:subscribers][:ids].reject(&:empty?))
-      # period = Period.find(params[:subscribers][:period])
       billing_period_id = params[:subscribers][:period]
       subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
       @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
       subscribers  = Subscriber.where(id: subscriber_ids)
       subscribers.each do |subscriber|
-        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
+        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)', ReadingType.billable).order(:reading_date).last
       end
       respond_to do |format|
         format.html

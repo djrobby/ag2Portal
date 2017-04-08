@@ -1,12 +1,4 @@
 class ReadingType < ActiveRecord::Base
-  # CONSTANTS (bad, change to right!)
-  # NORMAL = 1
-  # OCTAVILLA = 2
-  # CONTROL = 3
-  # INSTALACION = 4
-  # RETIRADA = 5
-  # AUTO = 6
-
   # CONSTANTS (right)
   INSTALACION = 1
   NORMAL = 2
@@ -22,12 +14,19 @@ class ReadingType < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :name,         :presence => true
+  validates :name,  :presence => true
 
   before_destroy :check_for_dependent_records
 
   def to_label
     "#{name}"
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.billable
+    [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]
   end
 
   private

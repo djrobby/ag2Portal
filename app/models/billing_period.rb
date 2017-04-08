@@ -24,7 +24,7 @@ class BillingPeriod < ActiveRecord::Base
   # Scopes
   scope :by_period, -> { order(:period) }
   #
-  scope :belongs_to_project, -> project { where("project_id = ?", project).by_period }
+  scope :belongs_to_project, -> project { where(project_id: project).by_period }
   scope :belongs_to_projects, -> projects { where(project_id: projects).by_period }
 
   def period_to_date

@@ -29,12 +29,9 @@ module Ag2Gest
                                                 :billing_instalation_cancellation,
                                                 :new_subscriber_cancellation,
                                                 :instalation_subscriber,
-                                                :contracting_request_pdf,
                                                 :bill,
                                                 :bill_cancellation,
-                                                :contracting_subscriber_pdf,
                                                 :update_bill,
-                                                :biller_pdf,
                                                 :get_caliber,
                                                 :update_old_subscriber,
                                                 :dn_update_from_invoice,
@@ -43,6 +40,13 @@ module Ag2Gest
                                                 :cr_find_meter,
                                                 :cr_find_subscriber,
                                                 :cr_find_service_point,
+                                                :next_status,
+                                                :subrogation,
+                                                :contracting_request_report,
+                                                :contracting_request_complete_report,
+                                                :biller_pdf,
+                                                :contracting_request_pdf,
+                                                :contracting_subscriber_pdf,
                                                 :contract_pdf ]
     # Helper methods for
     helper_method :sort_column
@@ -51,8 +55,6 @@ module Ag2Gest
     helper_method :available_meters_for_subscriber
 
     def dn_update_from_invoice
-
-
       invoice_items = JSON.parse(params[:arr_invoice]) #INVOICEITEM TOTAL
       #parsed_json = ActiveSupport::JSON.decode(params[:arr_invoice])
 
@@ -961,7 +963,7 @@ module Ag2Gest
       end
     end
 
-        # Validate entity fiscal id (modal)
+    # Validate entity fiscal id (modal)
     def et_validate_fiscal_id_textfield
       fiscal_id = params[:id]
       dc = ''

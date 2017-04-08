@@ -48,10 +48,10 @@
       </div>
       <div class="row-fluid">
         <div class="span6">
-          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :centers, label: t('activerecord.models.center.one'), collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span6">
-          <%= f.input :centers, label: t('activerecord.models.center.one'), collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
       </div>
       <%= f.button :submit, "Cargar abonados", :class => 'btn-primary' %>
