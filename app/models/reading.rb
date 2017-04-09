@@ -44,6 +44,9 @@ class Reading < ActiveRecord::Base
   scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
   scope :by_id_desc, -> { order('id desc') }
 
+  #
+  # Class (self) user defined methods
+  #
   def self.to_csv(array)
     attributes = [I18n.t('activerecord.attributes.reading.reading_route_id'), I18n.t('activerecord.attributes.reading.sequence'), I18n.t('activerecord.attributes.reading.subscriber'), I18n.t('activerecord.attributes.reading.address'), I18n.t('activerecord.attributes.reading.meter'), I18n.t('activerecord.attributes.reading.billing_period_2'), I18n.t('activerecord.attributes.reading.reading_2_date'), I18n.t('activerecord.attributes.reading.reading_2_index'), I18n.t('activerecord.attributes.reading.reading_days'), I18n.t('activerecord.attributes.reading.consumption_2'), I18n.t('activerecord.attributes.reading.billing_period_1'), I18n.t('activerecord.attributes.reading.reading_1_date'), I18n.t('activerecord.attributes.reading.reading_1_index'), I18n.t('activerecord.attributes.reading.billing_period_id'), I18n.t('activerecord.attributes.reading.reading_date'), I18n.t('activerecord.attributes.reading.reading'), I18n.t('activerecord.attributes.reading.reading_days'), I18n.t('activerecord.attributes.reading.consumption'), I18n.t('activerecord.report.reading.incidences') ]
     CSV.generate(headers: true) do |csv|
@@ -64,7 +67,13 @@ class Reading < ActiveRecord::Base
   end
 
   def reading_days
-    ((reading_date.to_time - reading_1.reading_date.to_time)/86400).to_i  if reading_date
+    _d = 0
+    if !reading_1.nil?
+      if reading_date && reading_1.reading_date
+        _d = ((reading_date.to_time - reading_1.reading_date.to_time)/86400).to_i
+      end
+    end
+    _d
   end
 
   def incidences

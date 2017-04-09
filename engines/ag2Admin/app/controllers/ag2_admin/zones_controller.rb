@@ -40,6 +40,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @zones }
+        format.xml { render xml: @zones }
         format.js
       end
     end
@@ -55,6 +56,7 @@ module Ag2Admin
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @zone }
+        format.xml
       end
     end
 
