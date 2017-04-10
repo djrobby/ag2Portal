@@ -58,8 +58,8 @@ class Invoice < ActiveRecord::Base
   scope :by_no, -> { order(:invoice_no) }
   #
   scope :commercial, -> { where("invoice_type_id != 1 AND invoice_type_id != 3").by_no }
-  scope :service, -> { where("invoice_type_id = 1").by_no }
-  scope :contracting, -> { where("invoice_type_id = 3").by_no }
+  scope :service, -> { where(invoice_type_id: InvoiceType::WATER).by_no }
+  scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
 
   # Callbacks
   before_validation :item_repeat, :on => :create

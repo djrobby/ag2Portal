@@ -42,6 +42,13 @@ class Bill < ActiveRecord::Base
   validates :project,         :presence => true
   validates :client,          :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:bill_no) }
+  #
+  scope :commercial, -> { joins(:invoices).where("invoices.invoice_type_id != ? AND invoices.invoice_type_id != ?", InvoiceType::WATER, InvoiceType::CONTRACT).by_no }
+  scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
+  scope :contracting, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::CONTRACT}).by_no }
+
   def nullable?
     # (bill_operation == 1 or bill_operation == 3) and Invoice.where(original_invoice_id: invoices.try(:first).try(:id)).blank?
     (bill_operation == 1 || bill_operation == 3) && ((!bill_type.blank? && bill_type.id == InvoiceType::WATER) ? reading.try(:bill_id) == id : true)
@@ -93,7 +100,7 @@ class Bill < ActiveRecord::Base
   end
 
   def total
-    invoices.reject(&:marked_for_destruction?).sum(&:total)
+    invoices.reject(&:marked_for_destruction?).sum(&:totals)
   end
 
   def debt

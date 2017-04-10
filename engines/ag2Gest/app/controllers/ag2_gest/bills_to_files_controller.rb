@@ -22,9 +22,10 @@ module Ag2Gest
     # load_and_authorize_resource :worker
     skip_load_and_authorize_resource :only => :export_bills
 
+    # Generate & export XML file
     def export_bills
-      message = I18n.t("ag2_human.import.index.result_ok_message_html")
-      @json_data = { "DataImport" => message, "Result" => "OK" }
+      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
+      @json_data = { "DataExport" => message, "Result" => "OK" }
       $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
       $gamma = 'AEIOUUNCaeiouunc?!ao'
       $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
@@ -32,26 +33,55 @@ module Ag2Gest
       incidents = false
       message = ''
 
-      invoice = Invoice.first
-      xml = bills_to_xml(invoice)
+      bills = Bill.service.includes(:reading_1, :reading_2, :client, :subscriber, invoices:
+                                   [:biller, :billing_period, invoice_items: [:tariff, :product, :tax_type]]).first(2)
+      xml = bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
 
       if incidents
-        message = I18n.t("ag2_human.import.index.result_ok_with_error_message_html") + message
-        @json_data = { "DataImport" => message, "Result" => "ERROR" }
+        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") + message
+        @json_data = { "DataExport" => message, "Result" => "ERROR" }
       end
       render json: @json_data
     end
 
     # Generates XML file
-    def bills_to_xml(invoice)
+    def bills_to_xml(bills)
       xml = Builder::XmlMarkup.new
       xml.instruct!
-      xml.invoice do
-        xml.invoice_no    invoice.invoice_no
-        xml.invoice_date  invoice.invoice_date
-        xml.total         invoice.totals
-      end
+      xml.bills do
+        bills.each do |bill|
+          xml.bill do
+            xml.bill_no       bill.full_no
+            xml.bill_date     formatted_date(bill.bill_date)
+            xml.client        bill.client.full_name_or_company_code_fiscal
+            xml.total         number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            xml.invoices do
+              bill.invoices.each do |invoice|
+                xml.invoice do
+                  xml.invoice_no    invoice.full_no
+                  xml.invoice_date  formatted_date(invoice.invoice_date)
+                  xml.total         number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                  xml.invoice_items do
+                    invoice.invoice_items.each do |item|
+                      tax_pct = item.tax_type.blank? ? 0 : item.tax_type.tax
+                      xml.item do
+                        xml.code          item.code
+                        xml.subcode       item.subcode
+                        xml.description   item.description
+                        xml.quantity      number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+                        xml.price         number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
+                        xml.amount        number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+                        xml.tax_pct       number_with_precision(tax_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                      end # xml.item do
+                    end # invoice.invoice_items.each do |item|
+                  end # xml.invoice_items do
+                end # xml.invoice do
+              end # bill.invoices.each do |invoice|
+            end # xml.invoices do
+          end # xml.bill do
+        end # bills.each do |bill|
+      end # xml.bills do
     end
 
     # Upload XML file to Rails server (public/uploads)
@@ -79,6 +109,8 @@ module Ag2Gest
     # GET /bills_to_files
     # GET /bills_to_files.json
     def index
+      # Authorize only if current user can read Bill
+      authorize! :read, Bill
       # OCO
       init_oco if !session[:organization]
       @projects = projects_dropdown
@@ -98,15 +130,15 @@ module Ag2Gest
     def set_defaults
       #@company = Company.first
       #@office = Office.find_by_company_id(@company)
-      @street_type = StreetType.first
-      @department = Department.first
-      @professional_group = ProfessionalGroup.first
-      @contract_type = ContractType.first
-      @collective_agreement = CollectiveAgreement.first
-      @zipcode = Zipcode.first
-      @worker_type = WorkerType.first
-      @degree_type = DegreeType.first
-      @organization = Organization.first
+      # @street_type = StreetType.first
+      # @department = Department.first
+      # @professional_group = ProfessionalGroup.first
+      # @contract_type = ContractType.first
+      # @collective_agreement = CollectiveAgreement.first
+      # @zipcode = Zipcode.first
+      # @worker_type = WorkerType.first
+      # @degree_type = DegreeType.first
+      # @organization = Organization.first
     end
 
     def projects_dropdown

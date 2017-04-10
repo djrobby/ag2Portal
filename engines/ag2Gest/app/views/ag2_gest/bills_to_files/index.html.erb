@@ -23,7 +23,7 @@
       $('#buttons').children().hide();
       // make a POST call and executes action
       jQuery.getJSON('export_bills', function(data) {
-        $(".modal-body > p").html(data.DataImport);
+        $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
           $('#message_area').children().hide();
@@ -56,6 +56,7 @@
       <br />
       <p>
         <%=t '.description' %>
+        <%=t '.description_html' %>
       </p>
       <p class="bolded">
         <%=t '.do_not_interrupt' %>
@@ -67,22 +68,21 @@
       <p class="import-caution">
         <%=t '.caution' %>
       </p>
-
       <%= form_tag "ag2_purchase_track", :method => 'get' do %>
       <!-- Project -->
-      <%= label_tag t(".label_project"), nil, :class => 'form-label' %>
+      <%= label_tag "label_project", t(".label_project"), :class => 'form-label' %>
       <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Period -->
-      <%= label_tag t(".label_period"), nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag "label_period", t(".label_period"), :class => 'form-label-under-sel2' %>
       <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "period"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Biller -->
-      <%= label_tag t(".label_biller"), nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag "label_biller", t(".label_biller"), :class => 'form-label-under-sel2' %>
       <%= select_tag "Biller", options_from_collection_for_select(@billers, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Numbers -->
-      <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
-      <%= text_field_tag "From", params[:from], :class =>  'mid-text-field date_picker centered' %>
-      <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
-      <%= text_field_tag "To", params[:to], :class =>  'mid-text-field date_picker centered' %>
+      <%= label_tag "label_from", t(".label_from"), :class => 'form-label-under-sel2' %>
+      <%= text_field_tag "From", params[:from], :class =>  'mid-text-field centered' %>
+      <%= label_tag "label_to", t(".label_to"), :class => 'form-label' %>
+      <%= text_field_tag "To", params[:to], :class =>  'mid-text-field centered' %>
       <!-- Buttons -->
       <div id="buttons">
         <p>
