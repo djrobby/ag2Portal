@@ -29,6 +29,7 @@ class Company < ActiveRecord::Base
   has_many :meters
   has_many :subscribers, through: :offices
   has_many :service_points
+  has_many :invoices, foreign_key: :biller_id
 
   # Nested attributes
   accepts_nested_attributes_for :company_notifications,
@@ -62,6 +63,8 @@ class Company < ActiveRecord::Base
   # Scopes
   scope :by_fiscal, -> { order(:fiscal_id) }
   scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_name }
 
   # Callbacks
   before_validation :fields_to_uppercase

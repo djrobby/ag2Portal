@@ -154,6 +154,14 @@ class Invoice < ActiveRecord::Base
     _codes
   end
 
+  def bill_no
+    bill.bill_no unless (bill.blank? || bill.bill_no.blank?)
+  end
+
+  def project
+    bill.project unless (bill.blank? || bill.project.blank?)
+  end
+
   def client
     bill.client unless (bill.blank? || bill.client.blank?)
   end

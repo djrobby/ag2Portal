@@ -1,26 +1,39 @@
 <script>
   $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      containerCssClass: 'left-winged',
+      allowClear: true
+    });
+
     //$("#progressbar").css("width", "0%");
     $("#message_area").children().hide();
   });
 
   jQuery(function($) {
-    // when #data_import_btn is clicked
-    $("#data_import_btn").click(function() {
+    // when #data_export_btn is clicked
+    $("#data_export_btn").click(function() {
       $('#message_area').children().show();
       $('#buttons').children().hide();
       // make a POST call and executes action
-      jQuery.getJSON('data_import', function(data) {
+      jQuery.getJSON('export_bills', function(data) {
         $(".modal-body > p").html(data.DataImport);
-        $("#importinfo").modal("show");
+        $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
-          $("#message").html('<%= link_to I18n.t("ag2_human.import.index.go_to_target"), bill_management_path %>');
+          $('#message_area').children().hide();
+          // $("#message").html('<%#= link_to I18n.t("ag2_gest.bills_to_files.index.go_to_target"), bill_management_path %>');
           $("#progressbar").hide();
         }
         else {
           $('#message_area').children().hide();
         }
-        $("#data_import_btn").text(I18n["try_again"]);
+        // $("#data_export_btn").text(I18n["try_again"]);
         $('#buttons').children().show();
       })
       return false;
@@ -54,15 +67,34 @@
       <p class="import-caution">
         <%=t '.caution' %>
       </p>
-      <p>
-        <%=t '.warning' %>
-        <br />
-        <%=t '.are_you_sure' %>
-      </p>
+
+      <%= form_tag "ag2_purchase_track", :method => 'get' do %>
+      <!-- Project -->
+      <%= label_tag t(".label_project"), nil, :class => 'form-label' %>
+      <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Period -->
+      <%= label_tag t(".label_period"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "period"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Biller -->
+      <%= label_tag t(".label_biller"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Biller", options_from_collection_for_select(@billers, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Numbers -->
+      <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
+      <%= text_field_tag "From", params[:from], :class =>  'mid-text-field date_picker centered' %>
+      <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
+      <%= text_field_tag "To", params[:to], :class =>  'mid-text-field date_picker centered' %>
+      <!-- Buttons -->
       <div id="buttons">
-        <a href="#" id="data_import_btn" class="btn btn-primary"><%=t '.btn_yes' %></a>
-        <a href="<%= ag2_gest.bill_management_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>
+        <p>
+          <%=t '.are_you_sure' %>
+        </p>
+        <p>
+          <a href="#" id="data_export_btn" class="btn btn-primary"><%=t '.btn_yes' %></a>
+          <a href="<%= ag2_gest.bill_management_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>
+          <!--<a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%#= t '.report_btn' %></a>-->
+        </p>
       </div>
+      <% end %>
       <br />
       <div id="message_area">
         <span id="message"><%=t '.message' %></span>

@@ -287,7 +287,7 @@
   </div>
   <div class="span5 track-box">
     <div align="center">
-      <%= form_tag "ag2_purchase_track", :method => 'get' do %>
+      <%= form_tag "bills_to_file", :method => 'get' do %>
       <!-- Report -->
       <%= label_tag t(".label_report"), nil, :class => 'form-label' %>
       <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field sel2' %>
