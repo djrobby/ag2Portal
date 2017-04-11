@@ -1,4 +1,6 @@
 class InvoiceItem < ActiveRecord::Base
+  @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
+
   belongs_to :invoice
   belongs_to :tariff
   belongs_to :tax_type
@@ -59,6 +61,10 @@ class InvoiceItem < ActiveRecord::Base
 
   def discount_present?
     !discount.blank? && discount != 0
+  end
+
+  def is_block?
+    @@block_codes.include? subcode
   end
 
   def net_price

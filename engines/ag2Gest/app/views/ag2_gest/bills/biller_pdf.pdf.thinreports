@@ -317,7 +317,7 @@ end
 	var_subcode = "BL1"
 	_bll = -1
 	_qty_ant = 0
-  # Array for subcodes
+  # Array for block subcodes
 	_bloque = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 		@biller_printer.invoices.first.invoice_items.each do |item|
       # Only print global CONCEPT if it changes from last iterate

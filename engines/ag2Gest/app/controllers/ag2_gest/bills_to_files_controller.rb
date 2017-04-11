@@ -34,8 +34,8 @@ module Ag2Gest
       message = ''
 
       bills = Bill.service.includes(:reading_1, :reading_2, :client, :subscriber, invoices:
-                                   [:biller, :billing_period, invoice_items: [:tariff, :product, :tax_type, :measure]]).first(2)
-      xml = bills_to_xml(bills)
+                                   [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]]).first(2)
+      xml = service_bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
 
       if incidents
@@ -46,7 +46,14 @@ module Ag2Gest
     end
 
     # Generates XML file
-    def bills_to_xml(bills)
+    def service_bills_to_xml(bills)
+      consumption_t = I18n.t("activerecord.attributes.invoice_item.bl")
+      from_t = I18n.t("activerecord.attributes.invoice_item.bl_from")
+      to_t = I18n.t("activerecord.attributes.invoice_item.bl_to")
+      more_t = I18n.t("activerecord.attributes.invoice_item.bl_more")
+      block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
+
+      # Initialize Builder
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
 
@@ -67,14 +74,18 @@ module Ag2Gest
                   xml.items do  # Invoice items
                     invoice.ordered_invoiced_concepts.each do |concept, description|
                       xml.concept('code' => concept, 'description' => description) do  # Each invoice concept
-                        invoice.invoice_items_by_concept(concept).each do |item|
+                        bll = -1
+                        qty_ant = 0
+                        invoice_items = invoice.invoice_items_by_concept(concept)
+                        has_block_items = invoice.has_block_items?(invoice_items)
+                        # Split invoice items between blocks & non-blocks
+                        no_block_items = invoice.no_block_items(invoice_items)
+                        block_items = invoice.block_items(invoice_items)
+                        # Export non-block items
+                        no_block_items.each do |item|
                           subcode_name = item.subcode_name
-                          if concept == 'BL1' || concept == 'BL2' || concept == 'BL3' || concept == 'BL4' ||
-                             concept == 'BL5' || concept == 'BL6' || concept == 'BL7' || concept == 'BL8'
-                            subcode_name = item.subcode_name
-                          end
-                          tax_pct = item.tax_type.blank? ? 0 : item.tax_type.tax
-                          measure = item.measure.blank? ? ' ' : item.measure.description
+                          tax_pct = item.tax_type.tax rescue 0
+                          measure = item.measure.description rescue ' '
                           xml.item('code' => item.subcode, 'description' => subcode_name) do   # Each invoice item
                             xml.measure     measure
                             xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
@@ -82,7 +93,33 @@ module Ag2Gest
                             xml.amount      number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
                             xml.tax_pct     number_with_precision(tax_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                           end # xml.item do
-                        end # invoice.invoice_items_by_concept(concept).each do |item|
+                        end # no_block_items.each do |item|
+                        # Export block items
+                        xml.consumption('description' => consumption_t) do  # Each consumption items
+                          block_items.each do |item|
+                            subcode_name = item.subcode_name
+                            if block_codes.include? item.subcode  # It's a block
+                              from = bll + 1
+                              to = item.quantity + qty_ant
+                              if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
+                                subcode_name = more_t + from.to_i.to_s
+                              else
+                                subcode_name = from_t + from.to_i.to_s + to_t + to.to_i.to_s
+                              end
+                              qty_ant += item.quantity
+                              bll = to
+                            end
+                            tax_pct = item.tax_type.tax rescue 0
+                            measure = item.measure.description rescue ' '
+                            xml.item('code' => item.subcode, 'description' => subcode_name) do   # Each invoice item
+                              xml.measure     measure
+                              xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                              xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
+                              xml.amount      number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+                              xml.tax_pct     number_with_precision(tax_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                            end # xml.item do
+                          end # block_items.each do |item|
+                        end # xml.consumption do
                       end # xml.concept do
                     end # invoice.ordered_invoiced_concepts.each do |concept|
                   end # xml.items do

@@ -1,4 +1,7 @@
 class Invoice < ActiveRecord::Base
+  @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
+  @@no_block_codes = ["CF", "CV", "VP"]
+
   belongs_to :bill
   belongs_to :invoice_status
   belongs_to :invoice_type
@@ -122,7 +125,26 @@ class Invoice < ActiveRecord::Base
   end
 
   def invoice_items_by_concept(_code)
-    invoice_items.where(code: _code).order(:id)
+    invoice_items.includes(:tariff, :tax_type, :measure).where(code: _code).order(:id)
+  end
+
+  def block_items(_items = invoice_items)
+    _items.select {|i| @@block_codes.include? i.subcode}
+  end
+
+  def no_block_items(_items = invoice_items)
+    _items.select {|i| @@no_block_codes.include? i.subcode}
+  end
+
+  def has_block_items?(_items = invoice_items)
+    present = false
+    _items.each do |i|
+      if i.is_block?
+        present = true
+        break
+      end
+    end
+    present
   end
 
   def invoiced_subtotals_by_concept

@@ -19,34 +19,36 @@
               <amount>3,9600</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>6,00</quantity>
-              <price>0,250000</price>
-              <amount>1,5000</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL2" description="Consumo B2">
-              <measure>m3</measure>
-              <quantity>4,00</quantity>
-              <price>0,470000</price>
-              <amount>1,8800</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL3" description="Consumo B3">
-              <measure>m3</measure>
-              <quantity>6,00</quantity>
-              <price>0,850000</price>
-              <amount>5,1000</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL4" description="Consumo B4">
-              <measure>m3</measure>
-              <quantity>14,00</quantity>
-              <price>1,420000</price>
-              <amount>19,8800</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="De 0 a 6">
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>0,250000</price>
+                <amount>1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>0,470000</price>
+                <amount>1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>0,850000</price>
+                <amount>5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <measure>m3</measure>
+                <quantity>14,00</quantity>
+                <price>1,420000</price>
+                <amount>19,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="DEP" description="DEPURACION">
             <item code="CF" description="Cuota de Servicio">
@@ -56,13 +58,15 @@
               <amount>7,5600</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="SAN" description="SANEAMIENTO">
             <item code="CF" description="Cuota de Servicio">
@@ -72,22 +76,26 @@
               <amount>7,2900</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="CAN" description="CANON">
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
         </items>
       </invoice>
@@ -112,34 +120,36 @@
               <amount>-3,9600</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>6,00</quantity>
-              <price>-0,250000</price>
-              <amount>-1,5000</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL2" description="Consumo B2">
-              <measure>m3</measure>
-              <quantity>4,00</quantity>
-              <price>-0,470000</price>
-              <amount>-1,8800</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL3" description="Consumo B3">
-              <measure>m3</measure>
-              <quantity>6,00</quantity>
-              <price>-0,850000</price>
-              <amount>-5,1000</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <item code="BL4" description="Consumo B4">
-              <measure>m3</measure>
-              <quantity>14,00</quantity>
-              <price>-1,420000</price>
-              <amount>-19,8800</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="De 0 a 6">
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,250000</price>
+                <amount>-1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>-0,470000</price>
+                <amount>-1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,850000</price>
+                <amount>-5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <measure>m3</measure>
+                <quantity>14,00</quantity>
+                <price>-1,420000</price>
+                <amount>-19,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="DEP" description="DEPURACION">
             <item code="CF" description="Cuota de Servicio">
@@ -149,13 +159,15 @@
               <amount>-7,5600</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="SAN" description="SANEAMIENTO">
             <item code="CF" description="Cuota de Servicio">
@@ -165,22 +177,26 @@
               <amount>-7,2900</amount>
               <tax_pct>10,00</tax_pct>
             </item>
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
           <concept code="CAN" description="CANON">
-            <item code="BL1" description="Consumo B1">
-              <measure>m3</measure>
-              <quantity>30,00</quantity>
-              <price>0,000000</price>
-              <amount>0,0000</amount>
-              <tax_pct>0,00</tax_pct>
-            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
           </concept>
         </items>
       </invoice>
