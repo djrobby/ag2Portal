@@ -109,6 +109,22 @@ class Invoice < ActiveRecord::Base
     _codes
   end
 
+  def ordered_invoiced_concepts
+    _codes = []
+    _prev_code = ''
+    invoice_items.each do |i|
+      if i.code != _prev_code
+        _codes << [i.code, i.description]
+        _prev_code = i.code
+      end
+    end
+    _codes
+  end
+
+  def invoice_items_by_concept(_code)
+    invoice_items.where(code: _code).order(:id)
+  end
+
   def invoiced_subtotals_by_concept
     _codes = []
     _aux = []

@@ -34,7 +34,7 @@ module Ag2Gest
       message = ''
 
       bills = Bill.service.includes(:reading_1, :reading_2, :client, :subscriber, invoices:
-                                   [:biller, :billing_period, invoice_items: [:tariff, :product, :tax_type]]).first(2)
+                                   [:biller, :billing_period, invoice_items: [:tariff, :product, :tax_type, :measure]]).first(2)
       xml = bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
 
@@ -47,41 +47,52 @@ module Ag2Gest
 
     # Generates XML file
     def bills_to_xml(bills)
-      xml = Builder::XmlMarkup.new
+      xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
-      xml.bills do
+
+      #+++ Begin +++
+      xml.bills do  # Bills
         bills.each do |bill|
-          xml.bill do
+          xml.bill do   # Eeach bill
             xml.bill_no       bill.full_no
             xml.bill_date     formatted_date(bill.bill_date)
             xml.client        bill.client.full_name_or_company_code_fiscal
             xml.total         number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            xml.invoices do
+            xml.invoices do   # Invoices
               bill.invoices.each do |invoice|
-                xml.invoice do
+                xml.invoice do  # Each invoice
                   xml.invoice_no    invoice.full_no
                   xml.invoice_date  formatted_date(invoice.invoice_date)
                   xml.total         number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-                  xml.invoice_items do
-                    invoice.invoice_items.each do |item|
-                      tax_pct = item.tax_type.blank? ? 0 : item.tax_type.tax
-                      xml.item do
-                        xml.code          item.code
-                        xml.subcode       item.subcode
-                        xml.description   item.description
-                        xml.quantity      number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-                        xml.price         number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
-                        xml.amount        number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-                        xml.tax_pct       number_with_precision(tax_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-                      end # xml.item do
-                    end # invoice.invoice_items.each do |item|
-                  end # xml.invoice_items do
+                  xml.items do  # Invoice items
+                    invoice.ordered_invoiced_concepts.each do |concept, description|
+                      xml.concept('code' => concept, 'description' => description) do  # Each invoice concept
+                        invoice.invoice_items_by_concept(concept).each do |item|
+                          subcode_name = item.subcode_name
+                          if concept == 'BL1' || concept == 'BL2' || concept == 'BL3' || concept == 'BL4' ||
+                             concept == 'BL5' || concept == 'BL6' || concept == 'BL7' || concept == 'BL8'
+                            subcode_name = item.subcode_name
+                          end
+                          tax_pct = item.tax_type.blank? ? 0 : item.tax_type.tax
+                          measure = item.measure.blank? ? ' ' : item.measure.description
+                          xml.item('code' => item.subcode, 'description' => subcode_name) do   # Each invoice item
+                            xml.measure     measure
+                            xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                            xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
+                            xml.amount      number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+                            xml.tax_pct     number_with_precision(tax_pct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                          end # xml.item do
+                        end # invoice.invoice_items_by_concept(concept).each do |item|
+                      end # xml.concept do
+                    end # invoice.ordered_invoiced_concepts.each do |concept|
+                  end # xml.items do
                 end # xml.invoice do
               end # bill.invoices.each do |invoice|
             end # xml.invoices do
           end # xml.bill do
         end # bills.each do |bill|
       end # xml.bills do
+      #+++ End +++
     end
 
     # Upload XML file to Rails server (public/uploads)

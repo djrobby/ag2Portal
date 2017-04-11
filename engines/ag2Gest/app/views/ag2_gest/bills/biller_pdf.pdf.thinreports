@@ -98,7 +98,7 @@ report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_re
 report.page.values(tariff_data_c: I18n.t("activerecord.models.tariff.zero"))
 #
 # billing
-report.page.values(billing_c: I18n.t("activerecord.attributes.contracting_request.billing"))				   
+report.page.values(billing_c: I18n.t("activerecord.attributes.contracting_request.billing"))
 #
 report.layout.config.list(:default) do |c|
 	# On list page footer insertion
@@ -126,14 +126,14 @@ _array = [ ]
 regulation_tariff = " "
 
 a = @biller_printer.invoices.first
-	a.invoiced_subtotals_by_billable_item.each do |sub_billable_item| 	
+	a.invoiced_subtotals_by_billable_item.each do |sub_billable_item|
 		regulation = Regulation.find(sub_billable_item[5]) rescue nil
 		if !regulation.blank?
 			if _code != sub_billable_item[3]
 				_number1 = _number1 + 1.to_i
 				_code = sub_billable_item[3]
 			end
-			if sub_billable_item[4] == 1.to_s 
+			if sub_billable_item[4] == 1.to_s
 				_number1 = _number1 + 1.to_i
 			end
 				_array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
@@ -143,9 +143,9 @@ a = @biller_printer.invoices.first
 				_bridge = " // "
 		end
 	end
-	
+
 _number2 = " "
-	a.invoiced_subtotals_by_concept.each do |sub_concept| 
+	a.invoiced_subtotals_by_concept.each do |sub_concept|
 	_array.each do |array|
 		if sub_concept[4] == nil
 			_number2 = " "
@@ -174,7 +174,7 @@ _number2 = " "
 				row.item(:iva).value number_with_precision(tax[2], precision: 2)
 			end
 		end
-	end	
+	end
 #
 #
 #
@@ -185,7 +185,7 @@ if @biller_printer.project.company.company_bank_accounts.first.blank?
 else
 	var_issuer = @biller_printer.project.company.fiscal_id[1..9] + @biller_printer.project.company.company_bank_accounts.first.bank_suffix
 end
-if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500" 
+if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
 	var_ident = @biller_printer.subscriber.subscriber_code[5..10]
 else
 	var_ident = @biller_printer.invoices.first.payday_limit.strftime('%d%m%y') unless @biller_printer.invoices.first.payday_limit.blank?
@@ -317,34 +317,42 @@ end
 	var_subcode = "BL1"
 	_bll = -1
 	_qty_ant = 0
+  # Array for subcodes
 	_bloque = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 		@biller_printer.invoices.first.invoice_items.each do |item|
+      # Only print global CONCEPT if it changes from last iterate
 			if item.try(:description)[1..-1] != var_concept
 				_bll = -1
 				_qty_ant = 0
+        # Line to print global CONCEPT
 				report.page.list(:default).add_row do |row|
 					if item.try(:description)[0] != 0.to_s && item.try(:description)[0] != 1.to_s
-						row.item(:concept).value item.try(:description).upcase 
+						row.item(:concept).value item.try(:description).upcase
 					else
-						row.item(:concept).value item.try(:description)[1..-1].upcase 
+						row.item(:concept).value item.try(:description)[1..-1].upcase
 					end
 				end
 			end
-			
+
 			date_tariff = !item.tariff.ending_at.blank? ? I18n.t("activerecord.attributes.bill.label_to") + " " + item.tariff.ending_at.strftime("%d/%m/%Y") : I18n.t("activerecord.attributes.bill.label_from") + " " + item.tariff.starting_at.strftime("%d/%m/%Y")
 
+      # _array:
+      # [0] Tariff reference number
+      # [1] 0 (prorate previous tariff), 1 (prorate current tariff), nil (current tariff only)
+      # [2] Regulation ID
+      # [3] Billable Concept ID
 			_number= ""
-			_array.each do | array|
+			_array.each do |array|
 				if array[2] == item.tariff.billable_item.regulation_id && array[1] == item.description[0]
 					_number = "(" + array[0] + ")"
 				end
 			end
 
-			if var_subcode == item.try(:subcode)
+			# Line to print subtitle "Consume" if current invoice_item.subcode == "BL1"
+      if var_subcode == item.try(:subcode)
 				_bll = -1
 				_qty_ant = 0
 				report.page.list(:default).add_row do |row2|
-
 					if item.try(:description)[0] == 0.to_s
 						row2.item(:sub).value _number.to_s
 						row2.item(:subcode).value I18n.t("activerecord.attributes.invoice_item.bl") + " (" + I18n.t("activerecord.models.tariff.one") + " " + date_tariff + ")"
@@ -355,9 +363,10 @@ end
 						row2.item(:subcode).value I18n.t("activerecord.attributes.invoice_item.bl")
 					end
 				end
-			end
-			report.page.list(:default).add_row do |row1|
+      end
 
+      # Line to print full item detail
+			report.page.list(:default).add_row do |row1|
 				if _bloque.include? item.try(:subcode)
 					from = _bll + 1
 					to = item.quantity + _qty_ant
@@ -390,7 +399,7 @@ end
 				var_concept = item.try(:description)[1..-1]
 			end
 		end
-#		
+#
 #
 
 

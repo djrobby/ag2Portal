@@ -1,1 +1,189 @@
-<?xml version="1.0" encoding="UTF-8"?><bills><bill><bill_no>005SER000001-2016-000004</bill_no><bill_date>24/10/2016</bill_date><client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client><total>51,89</total><invoices><invoice><invoice_no>00EL2-0160-00004</invoice_no><invoice_date>24/10/2016</invoice_date><total>51,89</total><invoice_items><item><code>SUM</code><subcode>CF</subcode><description>SUMINISTRO</description><quantity>3,0000</quantity><price>1,320000</price><amount>3,9600</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL1</subcode><description>SUMINISTRO</description><quantity>6,0000</quantity><price>0,250000</price><amount>1,5000</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL2</subcode><description>SUMINISTRO</description><quantity>4,0000</quantity><price>0,470000</price><amount>1,8800</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL3</subcode><description>SUMINISTRO</description><quantity>6,0000</quantity><price>0,850000</price><amount>5,1000</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL4</subcode><description>SUMINISTRO</description><quantity>14,0000</quantity><price>1,420000</price><amount>19,8800</amount><tax_pct>10,00</tax_pct></item><item><code>DEP</code><subcode>CF</subcode><description>DEPURACION</description><quantity>3,0000</quantity><price>2,520000</price><amount>7,5600</amount><tax_pct>10,00</tax_pct></item><item><code>DEP</code><subcode>BL1</subcode><description>DEPURACION</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item><item><code>SAN</code><subcode>CF</subcode><description>SANEAMIENTO</description><quantity>3,0000</quantity><price>2,430000</price><amount>7,2900</amount><tax_pct>10,00</tax_pct></item><item><code>SAN</code><subcode>BL1</subcode><description>SANEAMIENTO</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item><item><code>CAN</code><subcode>BL1</subcode><description>CANON</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item></invoice_items></invoice></invoices></bill><bill><bill_no>005SER000001-2016-000004</bill_no><bill_date>24/10/2016</bill_date><client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client><total>-51,89</total><invoices><invoice><invoice_no>00EL2-0160-00004</invoice_no><invoice_date>24/10/2016</invoice_date><total>-51,89</total><invoice_items><item><code>SUM</code><subcode>CF</subcode><description>SUMINISTRO</description><quantity>3,0000</quantity><price>-1,320000</price><amount>-3,9600</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL1</subcode><description>SUMINISTRO</description><quantity>6,0000</quantity><price>-0,250000</price><amount>-1,5000</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL2</subcode><description>SUMINISTRO</description><quantity>4,0000</quantity><price>-0,470000</price><amount>-1,8800</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL3</subcode><description>SUMINISTRO</description><quantity>6,0000</quantity><price>-0,850000</price><amount>-5,1000</amount><tax_pct>10,00</tax_pct></item><item><code>SUM</code><subcode>BL4</subcode><description>SUMINISTRO</description><quantity>14,0000</quantity><price>-1,420000</price><amount>-19,8800</amount><tax_pct>10,00</tax_pct></item><item><code>DEP</code><subcode>CF</subcode><description>DEPURACION</description><quantity>3,0000</quantity><price>-2,520000</price><amount>-7,5600</amount><tax_pct>10,00</tax_pct></item><item><code>DEP</code><subcode>BL1</subcode><description>DEPURACION</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item><item><code>SAN</code><subcode>CF</subcode><description>SANEAMIENTO</description><quantity>3,0000</quantity><price>-2,430000</price><amount>-7,2900</amount><tax_pct>10,00</tax_pct></item><item><code>SAN</code><subcode>BL1</subcode><description>SANEAMIENTO</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item><item><code>CAN</code><subcode>BL1</subcode><description>CANON</description><quantity>30,0000</quantity><price>0,000000</price><amount>0,0000</amount><tax_pct>0,00</tax_pct></item></invoice_items></invoice></invoices></bill></bills>
+<?xml version="1.0" encoding="UTF-8"?>
+<bills>
+  <bill>
+    <bill_no>005SER000001-2016-000004</bill_no>
+    <bill_date>24/10/2016</bill_date>
+    <client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client>
+    <total>51,89</total>
+    <invoices>
+      <invoice>
+        <invoice_no>00EL2-0160-00004</invoice_no>
+        <invoice_date>24/10/2016</invoice_date>
+        <total>51,89</total>
+        <items>
+          <concept code="SUM" description="SUMINISTRO">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>1,320000</price>
+              <amount>3,9600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>6,00</quantity>
+              <price>0,250000</price>
+              <amount>1,5000</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL2" description="Consumo B2">
+              <measure>m3</measure>
+              <quantity>4,00</quantity>
+              <price>0,470000</price>
+              <amount>1,8800</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL3" description="Consumo B3">
+              <measure>m3</measure>
+              <quantity>6,00</quantity>
+              <price>0,850000</price>
+              <amount>5,1000</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL4" description="Consumo B4">
+              <measure>m3</measure>
+              <quantity>14,00</quantity>
+              <price>1,420000</price>
+              <amount>19,8800</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="DEP" description="DEPURACION">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>2,520000</price>
+              <amount>7,5600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="SAN" description="SANEAMIENTO">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>2,430000</price>
+              <amount>7,2900</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="CAN" description="CANON">
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+        </items>
+      </invoice>
+    </invoices>
+  </bill>
+  <bill>
+    <bill_no>005SER000001-2016-000004</bill_no>
+    <bill_date>24/10/2016</bill_date>
+    <client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client>
+    <total>-51,89</total>
+    <invoices>
+      <invoice>
+        <invoice_no>00EL2-0160-00004</invoice_no>
+        <invoice_date>24/10/2016</invoice_date>
+        <total>-51,89</total>
+        <items>
+          <concept code="SUM" description="SUMINISTRO">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-1,320000</price>
+              <amount>-3,9600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>6,00</quantity>
+              <price>-0,250000</price>
+              <amount>-1,5000</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL2" description="Consumo B2">
+              <measure>m3</measure>
+              <quantity>4,00</quantity>
+              <price>-0,470000</price>
+              <amount>-1,8800</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL3" description="Consumo B3">
+              <measure>m3</measure>
+              <quantity>6,00</quantity>
+              <price>-0,850000</price>
+              <amount>-5,1000</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL4" description="Consumo B4">
+              <measure>m3</measure>
+              <quantity>14,00</quantity>
+              <price>-1,420000</price>
+              <amount>-19,8800</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="DEP" description="DEPURACION">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,520000</price>
+              <amount>-7,5600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="SAN" description="SANEAMIENTO">
+            <item code="CF" description="Cuota de Servicio">
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,430000</price>
+              <amount>-7,2900</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+          <concept code="CAN" description="CANON">
+            <item code="BL1" description="Consumo B1">
+              <measure>m3</measure>
+              <quantity>30,00</quantity>
+              <price>0,000000</price>
+              <amount>0,0000</amount>
+              <tax_pct>0,00</tax_pct>
+            </item>
+          </concept>
+        </items>
+      </invoice>
+    </invoices>
+  </bill>
+</bills>
