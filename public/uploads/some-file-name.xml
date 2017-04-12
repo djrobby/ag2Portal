@@ -59,7 +59,7 @@
               <tax_pct>10,00</tax_pct>
             </item>
             <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
+              <item code="BL1" description="Bloque único">
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -160,7 +160,7 @@
               <tax_pct>10,00</tax_pct>
             </item>
             <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
+              <item code="BL1" description="Bloque único">
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>

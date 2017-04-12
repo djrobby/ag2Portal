@@ -58,3 +58,4 @@ en:
         bl_from: "From "
         bl_to: " to "
         bl_more: "More than "
+        bl_single: "Single block"

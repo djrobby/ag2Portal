@@ -58,3 +58,4 @@ es:
         bl_from: "De "
         bl_to: " a "
         bl_more: "Más de "
+        bl_single: "Bloque único"

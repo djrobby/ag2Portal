@@ -51,6 +51,7 @@ module Ag2Gest
       from_t = I18n.t("activerecord.attributes.invoice_item.bl_from")
       to_t = I18n.t("activerecord.attributes.invoice_item.bl_to")
       more_t = I18n.t("activerecord.attributes.invoice_item.bl_more")
+      single_t = I18n.t("activerecord.attributes.invoice_item.bl_single")
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 
       # Initialize Builder
@@ -77,7 +78,7 @@ module Ag2Gest
                         bll = -1
                         qty_ant = 0
                         invoice_items = invoice.invoice_items_by_concept(concept)
-                        has_block_items = invoice.has_block_items?(invoice_items)
+                        # has_block_items = invoice.has_block_items?(invoice_items)
                         # Split invoice items between blocks & non-blocks
                         no_block_items = invoice.no_block_items(invoice_items)
                         block_items = invoice.block_items(invoice_items)
@@ -102,7 +103,11 @@ module Ag2Gest
                               from = bll + 1
                               to = item.quantity + qty_ant
                               if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
-                                subcode_name = more_t + from.to_i.to_s
+                                if item.subcode == 'BL1' && item.tariff.block1_fee > 0
+                                  subcode_name = single_t
+                                else
+                                  subcode_name = more_t + from.to_i.to_s
+                                end
                               else
                                 subcode_name = from_t + from.to_i.to_s + to_t + to.to_i.to_s
                               end
@@ -164,13 +169,6 @@ module Ag2Gest
       @projects = projects_dropdown
       @periods = projects_periods(@projects)
       @billers = billers_dropdown
-
-      # @bills_to_files = Invoice.all
-
-      # respond_to do |format|
-      #   format.html # index.html.erb
-      #   format.json { render json: @bills_to_files }
-      # end
     end
 
     private
