@@ -4,6 +4,8 @@ end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
+# Localization for dates
+_format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
 
 report.set_layout tlf: 'reports/invoice_form', layout_options: { default: true }
 
@@ -33,8 +35,8 @@ report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
 
 #
 # Lists
-var_bill_date = @biller_printer.bill_date.strftime("%d/%m/%Y") unless @biller_printer.bill_date.blank?
-var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime("%d/%m/%Y") unless @biller_printer.invoices.first.payday_limit.blank?
+var_bill_date = @biller_printer.bill_date.strftime(_format) unless @biller_printer.bill_date.blank?
+var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 #
 report.page.values(bill_c: I18n.t("activerecord.models.bill.one"),
 				   data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
@@ -334,7 +336,7 @@ end
 				end
 			end
 
-			date_tariff = !item.tariff.ending_at.blank? ? I18n.t("activerecord.attributes.bill.label_to") + " " + item.tariff.ending_at.strftime("%d/%m/%Y") : I18n.t("activerecord.attributes.bill.label_from") + " " + item.tariff.starting_at.strftime("%d/%m/%Y")
+			date_tariff = !item.tariff.ending_at.blank? ? I18n.t("activerecord.attributes.bill.label_to") + " " + item.tariff.ending_at.strftime(_format) : I18n.t("activerecord.attributes.bill.label_from") + " " + item.tariff.starting_at.strftime(_format)
 
       # _array:
       # [0] Tariff reference number
@@ -373,17 +375,14 @@ end
 
 					if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
 						max = to
-						row1.item(:bloque).value "Mas de " + max.to_i.to_s
+						row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_more") + max.to_i.to_s
 					else
-						row1.item(:bloque).value "De " + from.to_i.to_s + " a " + to.to_i.to_s
+						row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_from") + from.to_i.to_s + I18n.t("activerecord.attributes.invoice_item.bl_to") + to.to_i.to_s
 					end
 					_qty_ant += item.quantity
 					_bll = to
 				else
-					if item.try(:description)[0] == 0.to_s
-						row1.item(:sub).value _number.to_s
-						row1.item(:subcode).value item.subcode_name + " (" + I18n.t("activerecord.models.tariff.one") + " " + date_tariff + ")"
-					elsif item.try(:description)[0] == 1.to_s
+					if item.try(:description)[0] == 0.to_s || item.try(:description)[0] == 1.to_s
 						row1.item(:sub).value _number.to_s
 						row1.item(:subcode).value item.subcode_name + " (" + I18n.t("activerecord.models.tariff.one") + " " + date_tariff + ")"
 					else

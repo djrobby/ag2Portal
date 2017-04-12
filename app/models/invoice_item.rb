@@ -1,4 +1,6 @@
 class InvoiceItem < ActiveRecord::Base
+  include ModelsModule
+
   @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 
   belongs_to :invoice
@@ -89,6 +91,14 @@ class InvoiceItem < ActiveRecord::Base
 
   def total
     net + tax
+  end
+
+  def tariff_starting_at
+    formatted_date(tariff.starting_at) rescue ''
+  end
+
+  def tariff_ending_at
+    formatted_date(tariff.ending_at) rescue ''
   end
 
   private

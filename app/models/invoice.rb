@@ -1,4 +1,6 @@
 class Invoice < ActiveRecord::Base
+  include ModelsModule
+
   @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
   @@no_block_codes = ["CF", "CV", "VP"]
 
@@ -117,14 +119,15 @@ class Invoice < ActiveRecord::Base
     _prev_code = ''
     invoice_items.each do |i|
       if i.code != _prev_code
-        _codes << [i.code, i.description]
+        _description = i.description[0] == '0' || i.description[0] == '1' ? i.description[1..-1] : i.description
+        _codes << [i.code, _description]
         _prev_code = i.code
       end
     end
     _codes
   end
 
-  def invoice_items_by_concept(_code)
+  def invoice_items_by_concept(_code='SUM')
     invoice_items.includes(:tariff, :tax_type, :measure).where(code: _code).order(:id)
   end
 
@@ -145,6 +148,18 @@ class Invoice < ActiveRecord::Base
       end
     end
     present
+  end
+
+  def block_item_tariffs(_items = invoice_items)
+    _tariffs = []
+    _prev_tariff = 0
+    _items.each do |i|
+      if i.tariff_id != _prev_tariff
+        _tariffs << [i.tariff_id, i.tariff_starting_at, i.tariff_ending_at, i.description[0]]
+        _prev_tariff = i.tariff_id
+      end
+    end
+    _tariffs
   end
 
   def invoiced_subtotals_by_concept
