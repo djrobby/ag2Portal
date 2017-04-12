@@ -5,6 +5,7 @@ module Ag2Gest
     before_filter :authenticate_user!
     load_and_authorize_resource
 
+
     # GET /water_supply_contracts
     # GET /water_supply_contracts.json
     def index
@@ -106,6 +107,7 @@ module Ag2Gest
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
+      _tariff_type_ids = params[:TariffType_]
       #@meter = Meter.find params[:water_supply_contract][:meter_id]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
@@ -117,8 +119,12 @@ module Ag2Gest
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
-        tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
-        @water_supply_contract.tariffs << tariffs
+
+        _tariff_type_ids.each do |r|
+          _tariff_type = TariffType.find(r)
+          tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
+          @water_supply_contract.tariffs << tariffs
+        end
         # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
         # data_meters = Array.new
         # @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
@@ -150,6 +156,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
+      _tariff_type_ids = params[:TariffType_]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
@@ -197,10 +204,16 @@ module Ag2Gest
                 reading_index: @contracting_request.water_supply_contract.try(:installation_index)
               )
           end
+        else
+          @water_supply_contract.contracted_tariffs.destroy_all
+
+          _tariff_type_ids.each do |r|
+            _tariff_type = TariffType.find(r)
+            tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
+            @water_supply_contract.tariffs << tariffs
+          end
         end
-        @water_supply_contract.contracted_tariffs.destroy_all
-        tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,@water_supply_contract.tariff_type_id,1,@caliber.id)
-        @water_supply_contract.tariffs << tariffs
+
         response_hash = { water_supply_contract: @water_supply_contract }
         response_hash[:tariff_scheme] = @tariff_scheme
         response_hash[:caliber] = @caliber.caliber

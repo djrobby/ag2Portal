@@ -33,3 +33,4 @@ en:
         bill_charged_report: "Collected Invoices"
         client_payment_report: "Bill Collections"
       back_to_main_page: "Back to Bill Collections"
+      generate_error_payment: "No Payment Method selected."

@@ -392,7 +392,7 @@ $(document).ready(function () {
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
         </div>
       <% end %>
@@ -416,7 +416,7 @@ $(document).ready(function () {
           <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
         </div>
       <% end %>
@@ -441,7 +441,7 @@ $(document).ready(function () {
           <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
         </div>
       <% end %>
@@ -478,7 +478,7 @@ $(document).ready(function () {
 
         </div>
         <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", :class => 'btn btn-primary' %>
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
           <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
         </div>
       <% end %>

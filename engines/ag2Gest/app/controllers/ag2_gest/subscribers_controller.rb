@@ -1106,7 +1106,7 @@ module Ag2Gest
     def inverse_street_name_search(supply_address)
       _numbers = []
       no = setup_no(supply_address)
-      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").each do |i|
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
         _numbers = _numbers << i.supply_address
       end
       _numbers = _numbers.blank? ? supply_address : _numbers

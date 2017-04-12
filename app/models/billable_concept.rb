@@ -20,7 +20,7 @@ class BillableConcept < ActiveRecord::Base
   # Scopes
   scope :by_code, -> { order(:code) }
   #
-  scope :belongs_to_project, -> p { joins(:billable_items).where(billable_items: { project_id: p }).by_code }
+  scope :belongs_to_project, -> p { joins(:billable_items).where(billable_items: { project_id: p }).group(:billable_concept_id).by_code }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

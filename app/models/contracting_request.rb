@@ -428,10 +428,16 @@ class ContractingRequest < ActiveRecord::Base
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
                               use_id:old_subscriber.use_id,
-                              created_by: created_by,
-                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
+                              created_by: created_by #,
+                              #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
                             )
     water_supply_contract.save
+
+    old_subscriber.subscriber_tariffs.where(ending_at: nil).each do |st|
+        _subscriber_tariffs = st.tariff
+        water_supply_contract.tariffs << _subscriber_tariffs
+    end
+
     if !client.client_bank_accounts.where(ending_at: nil).blank?
       self.update_attributes(
         country_id: client.client_bank_accounts.where(ending_at: nil).last.country_id,
@@ -463,7 +469,7 @@ class ContractingRequest < ActiveRecord::Base
                               gis_id: old_subscriber.gis_id,
                               remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
                               caliber_id: old_subscriber.meter.caliber_id,
-                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
+                              #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
                               use_id:old_subscriber.use_id,
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
@@ -471,6 +477,11 @@ class ContractingRequest < ActiveRecord::Base
                               installation_index: old_subscriber.meter_details.first.installation_reading,
                               created_by: created_by
                             )
+    old_subscriber.subscriber_tariffs.where(ending_at: nil).each do |st|
+        _subscriber_tariffs = st.tariff
+        water_supply_contract.tariffs << _subscriber_tariffs
+    end
+
     subscriber = old_subscriber
     subscriber.update_attributes(
       client_id: client.id,
@@ -513,10 +524,15 @@ class ContractingRequest < ActiveRecord::Base
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
                               use_id:old_subscriber.use_id,
-                              created_by: created_by,
-                              tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
+                              created_by: created_by #,
+                              #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
                             )
     water_supply_contract.save
+
+    old_subscriber.subscriber_tariffs.where(ending_at: nil).each do |st|
+        _subscriber_tariffs = st.tariff
+        water_supply_contract.tariffs << _subscriber_tariffs
+    end
 
     #
     # @subscriber = Subscriber.new

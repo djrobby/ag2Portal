@@ -30,6 +30,7 @@
 
   $(window).bind("load", function() {
     $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Concept").select2("val", "<%= params[:Concept] %>");
     $("#Item").select2("val", "<%= params[:Item] %>");
     $("#Type").select2("val", "<%= params[:Type] %>");
     $("#Caliber").select2("val", "<%= params[:Caliber] %>");
@@ -41,6 +42,7 @@
   jQuery(function($) {
     $("#removeFilter").click(function() {
       $("#Project").select2("val", "");
+      $("#Concept").select2("val", "");
       $("#Item").select2("val", "");
       $("#Type").select2("val", "");
       $("#Caliber").select2("val", "");
@@ -52,6 +54,7 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+
   });
 
 </script>
@@ -72,6 +75,9 @@
         <!-- Project -->
         <%= label_tag I18n.t("ag2_gest.tariffs.index.label_project"), nil, :class => 'form-label' %>
         <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Concept -->
+        <%= label_tag I18n.t("ag2_gest.tariffs.index.label_concept"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Concept", options_from_collection_for_select(@concepts, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Item -->
         <%= label_tag I18n.t("ag2_gest.tariffs.index.label_item"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Item", options_from_collection_for_select(@items, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
@@ -112,31 +118,7 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div id="new-tariff-pct" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <%= form_tag create_pct_tariffs_path, :method=>'post' do%>
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="myModalLabel">Nueva Tarifa</h3>
-    </div>
-    <div class="modal-body">
+<%= render '/ag2_gest/tariffs/modals/new-tariff-pct' %>
 
-      <%= label_tag "Proyecto", nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "project_id", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
 
-      <%= label_tag "Tipo Tarifa a duplicar", nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "tariff_types", options_from_collection_for_select(Tariff.availables_to_project(@projects.pluck(:id)).map(&:tariff_type).uniq, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
 
-      <%= label_tag "Incremento porcentual", nil, :class => 'form-label-under-sel2' %>
-      <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
-
-      <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>
-      <%= text_field_tag "init_date", nil, :class => 'x-large-text-field shrinked number-text-field date_picker', onkeyup: "caps(this)", required: "required" %>
-
-    </div>
-    <div class="modal-footer">
-      <%= submit_tag "Crear Tarifa", :class => 'btn btn-primary', :id => 'submit_btn' %>
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-    </div>
-  <% end %>
-</div>

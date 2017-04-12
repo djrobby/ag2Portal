@@ -82,7 +82,7 @@
       </div>
       <div class="row-fluid">
         <div class="span2"><h5><%= t('activerecord.attributes.tariff_scheme.block8') %></h5></div>
-        <div class="span5"><%= f.input :block8_limit, label: false, required: false %></div>
+        <div class="span5"><%= f.input :block8_limit, :as => :hidden, label: false, required: false %></div>
         <div class="span5"><%= f.input :block8_fee, label: false %></div>
       </div>
     </div>

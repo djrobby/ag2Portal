@@ -6,13 +6,19 @@ module Ag2Gest
     load_and_authorize_resource
     # Helper methods for sorting
     helper_method :sort_column
+
     # GET /street_directories
     # GET /street_directories.json
     def index
       manage_filter_state
 
-      #@street_directories = StreetDirectory.paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
-      @street_directories = StreetDirectory.paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
+      @search = StreetDirectory.search do
+        fulltext params[:search]
+        data_accessor_for(StreetDirectory).include = [:town, :street_type, :zipcode]
+        order_by sort_column, sort_direction
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @street_directories = @search.results
 
       respond_to do |format|
         format.html # index.html.erb

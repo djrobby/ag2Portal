@@ -17,6 +17,7 @@ class WaterSupplyContract < ActiveRecord::Base
   has_many :tariffs, through: :contracted_tariffs
 
   attr_accessor   :meter_code_input
+
   attr_accessible :bill_id,                 # Contract bill for: New contracting or change of holder (to NEW subscriber)
                   :unsubscribe_bill_id,     # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
                   :bailback_bill_id,        # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)

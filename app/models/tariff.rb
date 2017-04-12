@@ -72,6 +72,9 @@ class Tariff < ActiveRecord::Base
     integer :billable_item_id
     integer :caliber_id
     integer :billing_frequency_id
+    integer :billable_concept_code do
+      billable_item.billable_concept_id unless billable_item.blank?
+    end
     time :ending_at
     time :starting_at
   end

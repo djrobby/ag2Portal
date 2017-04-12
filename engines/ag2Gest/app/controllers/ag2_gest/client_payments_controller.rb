@@ -7,6 +7,7 @@ module Ag2Gest
       invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       amount = BigDecimal.new(params[:client_payment][:amount])
       payment_method = params[:client_payment][:payment_method_id]
+      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
       payment_type = payment_method.blank? ? 1 : 5
       acu = amount
       invoices.each do |i|
@@ -46,6 +47,7 @@ module Ag2Gest
       invoices = Invoice.find_all_by_id(params[:client_payment_bank][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       receipt_no = params[:client_payment_bank][:receipt_no]
       payment_method_id = params[:client_payment_bank][:payment_method_id]
+      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
       invoice_status = InvoiceStatus::BANK
       invoices.each do |i|
         client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 2, bill_id: i.bill_id, invoice_id: i.id,
@@ -65,6 +67,7 @@ module Ag2Gest
       bill = invoices.first.bill
       charge = params[:instalment][:charge].to_d
       payment_method_id = params[:instalment][:payment_method_id]
+      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
       number_quotas = params[:instalment][:number_inst].to_i
       pct_plus = invoices.sum(&:debt) * (charge/100)
       quota_total = invoices.sum(&:debt) + pct_plus

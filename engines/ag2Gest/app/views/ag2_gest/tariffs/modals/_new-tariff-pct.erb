@@ -1,0 +1,105 @@
+<script type="text/javascript">
+  var text_field_color;
+
+  $(document).ready(function(){
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+
+  jQuery(function($) {
+    // when the #contracting_request_bank_id field changes
+    $("#project_id").change(function() {
+      // make a POST call and replace the content
+      var project_ids = $('select#project_id :selected').val();
+      if (project_ids == "")
+        project_ids = "0";
+      jQuery.getJSON('update_billable_concept_select_from_project/' + project_ids, function(data) {
+        var o = data.billable_concept_ids;
+        $("#BillableConcept_").html("");
+        $("#BillableConcept_").select2("val", "");
+        $("#BillableConcept_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'billable_concept_ids' && option != "") {
+              $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
+    });
+
+    $("#BillableConcept_").change(function() {
+      // make a POST call and replace the content
+      $("#TariffType_").removeClass("disabled");
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids, function(data) {
+        var o = data.tariff_type_ids;
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'tariff_type_ids' && option != "") {
+              $("#TariffType_").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#TariffType_").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
+    });
+
+
+  });
+
+//End jQuery function, exclusive $ jQuery function
+</script>
+
+<!-- Modal -->
+<div id="new-tariff-pct" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <%= form_tag create_pct_tariffs_path, :method=>'post' do%>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Nueva Tarifa</h3>
+    </div>
+    <div class="modal-body">
+
+      <%= label_tag "Proyecto", nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "project_id", options_from_collection_for_select(@projects, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2', required: "required" %>
+
+      <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+      <%= select_tag "BillableConcept_", nil, :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+
+      <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+      <%= select_tag "TariffType_", nil, :prompt => "", :class => 'x-large-text-field sel2 disabled', multiple: true %>
+
+
+      <%= label_tag "new Item", nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "billable_item", options_from_collection_for_select(BillableItem.order('id DESC').all, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+
+
+      <%= label_tag "Incremento porcentual", nil, :class => 'form-label-under-sel2' %>
+      <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
+
+      <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>
+      <%= text_field_tag "init_date", nil, :class => 'x-large-text-field shrinked number-text-field date_picker', onkeyup: "caps(this)", required: "required" %>
+
+    </div>
+    <div class="modal-footer">
+      <%= submit_tag "Crear Tarifa", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', :id => 'submit_btn' %>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    </div>
+  <% end %>
+</div>

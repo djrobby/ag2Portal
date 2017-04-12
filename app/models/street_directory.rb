@@ -27,6 +27,18 @@ class StreetDirectory < ActiveRecord::Base
     "#{street_type.street_type_code} #{street_name} (#{town.name})"
   end
 
+  def town_name
+    town.name
+  end
+
+  searchable do
+    text :street_name, :town_name
+    string :street_name
+    integer :town_id
+    integer :street_type_id
+    integer :zipcode_id
+  end
+
   private
 
   def upcase_street_name

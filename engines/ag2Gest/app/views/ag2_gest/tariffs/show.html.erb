@@ -87,7 +87,7 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff.block8_limit') %>:</td>
-      <td ><%= @tariff.try(:block8_limit) %></td>
+      <td ><%= "> " + @tariff.try(:block7_limit).to_s if @tariff.try(:block7_limit) and @tariff.try(:block8_fee) != 0.0 %></td>
       <td><%= t('activerecord.attributes.tariff.block8_fee') %>:</td>
       <td ><%= @tariff.try(:block8_fee) %></td>
     </tr>

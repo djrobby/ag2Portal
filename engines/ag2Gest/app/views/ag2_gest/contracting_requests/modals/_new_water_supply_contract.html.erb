@@ -107,6 +107,35 @@ jQuery(function($) {
       });
       return false;
     });
+
+
+    $("#BillableConcept_").change(function() {
+      // make a POST call and replace the content
+      $("#TariffType_").removeClass("disabled");
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids, function(data) {
+        var o = data.tariff_type_ids;
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'tariff_type_ids' && option != "") {
+              $("#TariffType_").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#TariffType_").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
+    });
+
+
   });
 
 //End jQuery function, exclusive $ jQuery function
@@ -126,7 +155,14 @@ jQuery(function($) {
       <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
-      <%= f.association :tariff_type, required: true, collection: @tariff_types_availables, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+
+      <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+      <%= select_tag "BillableConcept_", options_from_collection_for_select(BillableConcept.belongs_to_project(@contracting_request.project_id), "id", "to_label"), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+
+      <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+      <%= select_tag "TariffType_", nil, :prompt => "", :class => 'x-large-text-field sel2 disabled', multiple: true %>
+
+
       <%= f.association :use, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>

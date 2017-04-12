@@ -131,6 +131,14 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
     match 'contracting_requests/:id/cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
     match 'cr_find_service_point/:service_point', :controller => 'contracting_requests', :action => 'cr_find_service_point'
+    match 'contracting_requests/update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'contracting_requests/:id/update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    #
+    # Tariff
+    match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
+    match 'tariffs/:id/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
+    match 'update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     #
     # Prototype
     match "sale_offers/show_test", controller: "sale_offers", action: 'show_test'

@@ -5,11 +5,52 @@ module Ag2Gest
   class TariffsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:create_pct]
+    skip_load_and_authorize_resource :only => [ :create_pct,
+                                                :update_billable_concept_select_from_project,
+                                                :update_tariff_type_select_from_billing_concept ]
+
+    def update_billable_concept_select_from_project
+      project_ids = params[:project_ids]
+
+      @billable_concept_ids = BillableConcept.belongs_to_project(project_ids.to_i)
+
+      @billable_concept_dropdown = billable_concept_array(@billable_concept_ids)
+      # Setup JSON
+      @json_data = { "billable_concept_ids" => @billable_concept_dropdown }
+      render json: @json_data
+    end
+
+
+    def update_tariff_type_select_from_billing_concept
+      billable_concept_ids = params[:billable_concept_ids]
+      billable_concept_ids = billable_concept_ids.split(",")
+      @tariff_type_ids = []
+      billable_concept_ids.each do |bc|
+        @tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      end
+      @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
+      # Setup JSON
+      @json_data = { "tariff_type_ids" => @tariff_type_dropdown }
+      render json: @json_data
+    end
 
     def create_pct
       @project = Project.find(params[:project_id])
-      @tariffs = @project.tariffs.where('ending_at IS NULL AND tariff_type_id = ?', params[:tariff_types].to_i).order(:billable_concept_id)
+      if params[:billable_item].blank?
+        @billable_item = ""
+      else
+        @billable_item = BillableItem.find(params[:billable_item])
+      end
+      _tariff_type_ids = params[:TariffType_]
+      _billable_concept_ids = params[:BillableConcept_]
+      @tariffs = []
+      _billable_concept_ids.each do |bc|
+        _billable_concept = BillableConcept.find(bc)
+        _tariff_type_ids.each do |tt|
+          _tariff_type = TariffType.find(tt)
+          @tariffs += @project.tariffs.where('ending_at IS NULL AND tariff_type_id = ? AND billable_concept_id = ?',_tariff_type.id,_billable_concept.id).order(:billable_concept_id)
+        end
+      end
       # @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error") and return if @tariffs.blank?
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error_date") and return if @tariffs.first.starting_at > params[:init_date].to_date - 1.day
@@ -17,8 +58,13 @@ module Ag2Gest
       # @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
       @new_tariffs = []
       @tariffs.each do |tariff|
+        if @billable_item.billable_concept_id == tariff.billable_item.billable_concept_id
+          billable_item = @billable_item.id
+        else
+          billable_item = tariff.billable_item_id
+        end
         @new_tariffs << Tariff.create(
-          billable_item_id: tariff.billable_item_id,
+          billable_item_id: billable_item,
           tariff_type_id: tariff.tariff_type_id,
           caliber_id: tariff.caliber_id,
           billing_frequency_id: tariff.billing_frequency_id,
@@ -69,6 +115,7 @@ module Ag2Gest
       manage_filter_state
 
       project = params[:Project]
+      concept = params[:Concept]
       item = params[:Item]
       type = params[:Type]
       caliber = params[:Caliber]
@@ -79,6 +126,7 @@ module Ag2Gest
       init_oco if !session[:organization]
       # Initialize select_tags
       @projects = current_projects if @projects.nil?
+      @concepts = billable_concept_dropdown
       @items = billable_item_dropdown
       @types = tariff_type_dropdown
       @calibers = caliber_dropdown
@@ -87,11 +135,15 @@ module Ag2Gest
       # @tariffs = ActiveTariff.belongs_to_project(current_projects_ids) if @tariffs.nil?
       @search = Tariff.search do
         with :project_id, current_projects_ids unless current_projects_ids.blank?
+        fulltext params[:search]
         if !project.blank?
           with :project_id, project
         end
         if !type.blank?
           with :tariff_type_id, type
+        end
+        if !concept.blank?
+          with :billable_concept_code, concept
         end
         if !item.blank?
           with :billable_item_id, item
@@ -256,12 +308,32 @@ module Ag2Gest
 
     private
 
+    def billable_concept_array(_billable_concept)
+      _array = []
+      _billable_concept.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def tariff_type_array(_tariff_type)
+      _array = []
+      _tariff_type.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
     def tariff_type_dropdown
       TariffType.all
     end
 
     def tax_type_dropdown
       TaxType.current
+    end
+
+    def billable_concept_dropdown
+        BillableConcept.all
     end
 
     def billable_item_dropdown
@@ -290,7 +362,14 @@ module Ag2Gest
         params[:Project] = session[:Project]
       end
 
-      # Office
+      # Concept
+      if params[:Concept]
+        session[:Concept] = params[:Concept]
+      elsif session[:Concept]
+        params[:Concept] = session[:Concept]
+      end
+
+      # Item
       if params[:Item]
         session[:Item] = params[:Item]
       elsif session[:Item]

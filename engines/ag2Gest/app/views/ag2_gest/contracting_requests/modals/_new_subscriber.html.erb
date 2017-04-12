@@ -90,7 +90,7 @@ jQuery(function($) {
     <% end %>
 
     <%= f.simple_fields_for :readings, @subscriber.readings.build do |s| %>
-      <%= s.association :billing_period, required: true, collection: @billing_periods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.billing_period_id') %>
+      <%= s.association :billing_period, required: true, collection: @billing_periods, selected: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:billing_period_id), input_html: { class: 'x-large-text-field sel2', value: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:billing_period).try(:period) }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.billing_period_id') %>
     <% end %>
 
   </div>

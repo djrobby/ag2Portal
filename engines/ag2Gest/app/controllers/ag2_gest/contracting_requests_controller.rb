@@ -5,7 +5,8 @@ module Ag2Gest
   class ContractingRequestsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [ :update_province_textfield_from_town,
+    skip_load_and_authorize_resource :only => [ :update_tariff_type_select_from_billing_concept,
+                                                :update_province_textfield_from_town,
                                                 :update_province_textfield_from_zipcode,
                                                 :update_province_textfield_from_street_directory,
                                                 :update_country_textfield_from_region,
@@ -111,6 +112,19 @@ module Ag2Gest
         format.html
         format.json { render json: @data_return } #@invoice_items_updated
       end
+    end
+
+    def update_tariff_type_select_from_billing_concept
+      billable_concept_ids = params[:billable_concept_ids]
+      billable_concept_ids = billable_concept_ids.split(",")
+      @tariff_type_ids = []
+      billable_concept_ids.each do |bc|
+        @tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      end
+      @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
+      # Setup JSON
+      @json_data = { "tariff_type_ids" => @tariff_type_dropdown }
+      render json: @json_data
     end
 
     def bill
@@ -481,7 +495,24 @@ module Ag2Gest
       if @work_order.save(:validate => false)
         @contracting_request.work_order = @work_order;
         @water_supply_contract = @contracting_request.water_supply_contract
-
+        # current_user_id = current_user.id if !current_user.nil?
+          @work_order_wsc = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+                                      master_order_id: @contracting_request.work_order_id,
+                                      work_order_type_id: 29, #WorkOderType inspection Nestor - Baja Suministro Voluntaria G.A
+                                      work_order_status_id: 1, #WorkOderStatus initial Nestor
+                                      work_order_labor_id: 151, # Nestor - Baja Suministro Retirar Contador
+                                      work_order_area_id: 3, # Nestor - Gestion de abonados
+                                      project_id: @contracting_request.project_id,
+                                      client_id: @contracting_request.client.id, # ¿¿??
+                                      description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+                                      organization_id: @contracting_request.project.organization_id,
+                                      charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
+                                      in_charge_id: 1
+                                      # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
+                                    )
+        if @work_order_wsc.save(:validate => false)
+          @water_supply_contract.update_attributes(work_order_id: @work_order_wsc.id)
+        end
         @billcontract = @water_supply_contract.generate_bill_cancellation
         @bill = @water_supply_contract.generate_bill_cancellation_service
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
@@ -1186,6 +1217,14 @@ module Ag2Gest
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
+      _tariff_type = []
+      @water_supply_contract.contracted_tariffs.each do |tt|
+          if !_tariff_type.include? tt.tariff.tariff_type.name
+            _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+          end
+      end
+      @tariff_type = _tariff_type.join(",")
+
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
 
@@ -1632,6 +1671,14 @@ module Ag2Gest
 
     def sort_column
       ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
+    end
+
+    def tariff_type_array(_tariff_type)
+      _array = []
+      _tariff_type.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
     end
 
     def bank_offices_array(_offices)
