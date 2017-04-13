@@ -206,6 +206,21 @@ class Reading < ActiveRecord::Base
     return pre_bill
   end
 
+  ### DO NOT USE: It's a mess! ###
+  def do_not_use_bills_with_this_attributes(operation_id=1)
+    Bill.select{|b| b.bill_operation == operation_id and b.bill_period == billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == subscriber_id}.blank?
+  end
+
+  # It's right: Returns bills with this reading data
+  def bills_with_this_attributes(operation_id=1)
+    Bill.joins(:invoices).where(invoices: {invoice_operation_id: operation_id, billing_period_id: billing_period, invoice_type_id: InvoiceType::WATER}, subscriber_id: subscriber_id)
+  end
+
+  # It's right: Returns bills with this reading_id
+  def bills
+    Bill.where(reading_2_id: self.id)
+  end
+
   #
   # Generates non-bulk individual bill/invoice
   #
@@ -215,7 +230,7 @@ class Reading < ActiveRecord::Base
     co = 0                          # consumption other
     cf = cr + ce + co               # consumption invoiced
 
-    if Bill.select{|b| b.bill_operation == operation_id and b.bill_period == billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == subscriber_id}.blank?
+    if bill_id.blank?   # This reading can be billed only if it's released (nil)
       @bill = Bill.create!(
         bill_no: next_bill_no,
         project_id: project_id,
