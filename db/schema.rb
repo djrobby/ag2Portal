@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170407090341) do
+ActiveRecord::Schema.define(:version => 20170413101003) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3168,6 +3168,20 @@ ActiveRecord::Schema.define(:version => 20170407090341) do
   add_index "subscriber_annotations", ["created_by"], :name => "index_subscriber_annotations_on_created_by"
   add_index "subscriber_annotations", ["subscriber_annotation_class_id"], :name => "index_subscriber_annotations_on_subscriber_annotation_class_id"
   add_index "subscriber_annotations", ["subscriber_id"], :name => "index_subscriber_annotations_on_subscriber_id"
+
+  create_table "subscriber_filiations", :id => false, :force => true do |t|
+    t.integer "subscriber_id",                      :default => 0, :null => false
+    t.string  "subscriber_code",     :limit => 12
+    t.string  "name",                :limit => 512
+    t.text    "supply_address"
+    t.string  "meter_code"
+    t.integer "use_id"
+    t.integer "reading_route_id"
+    t.integer "office_id"
+    t.integer "center_id"
+    t.integer "street_directory_id"
+    t.text    "everything"
+  end
 
   create_table "subscriber_supply_addresses", :id => false, :force => true do |t|
     t.integer "subscriber_id",  :default => 0, :null => false

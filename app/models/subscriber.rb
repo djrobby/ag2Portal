@@ -27,6 +27,7 @@ class Subscriber < ActiveRecord::Base
   has_one :contracting_request
   has_one :water_supply_contract
   has_one :subscriber_supply_address
+  has_one :subscriber_filiation
   has_many :readings
   has_many :pre_readings
   has_many :pre_bills

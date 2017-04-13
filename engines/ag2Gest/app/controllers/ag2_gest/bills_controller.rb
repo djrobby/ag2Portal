@@ -165,12 +165,13 @@ module Ag2Gest
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
 
-      # Select subscribers properly
-      subscribers = Subscriber.joins(:readings).where('(subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, period, ReadingType.billable).includes(street_directory: :street_type)
+      # Select subscribers properly (caching street_directories & street_types), extracting only needed colums!
+      subscribers = SubscriberFiliation.joins(subscriber: :readings).where('(subscriber_filiations.use_id IN (?) OR subscriber_filiations.use_id IS NULL) AND subscriber_filiations.reading_route_id IN (?) AND subscriber_filiations.office_id IN (?) AND subscriber_filiations.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, period, ReadingType.billable).includes(street_directory: :street_type).select('subscriber_filiations.subscriber_id,everything')
       # Extract only needed colums (street_directories & street_types were previously cached)
-      subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
+      # subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
       # Returns JSON hash
-      response_hash = { subscribers: subscribers_label}
+      response_hash = { subscribers: subscribers}
+      # response_hash = { subscribers: subscribers_label}
       render json: response_hash
     end
 

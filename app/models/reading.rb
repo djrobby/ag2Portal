@@ -23,6 +23,7 @@ class Reading < ActiveRecord::Base
 
   has_many :reading_incidences
   has_one :bill, foreign_key: "reading_2_id"
+  has_one :subscriber_filiation, foreign_key: "subscriber_id"
 
   has_paper_trail
 
@@ -451,7 +452,7 @@ class Reading < ActiveRecord::Base
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "VP",
-                              (tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf,
+                              cf != 0.0 ? (tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf : 0.0,
                               cf,
                               tariff.billing_frequency.var_measure_id,
                               tariff.try(:tax_type_p_id),
@@ -549,7 +550,7 @@ class Reading < ActiveRecord::Base
       create_invoice_item(tariff,
                           invoice.id,
                           "VP",
-                          (tariff.percentage_fee/100) * Invoice.find(invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf,
+                          cf != 0.0 ? (tariff.percentage_fee/100) * Invoice.find(invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf : 0.0,
                           cf,
                           tariff.billing_frequency.var_measure_id,
                           tariff.try(:tax_type_p_id),
@@ -827,7 +828,7 @@ class Reading < ActiveRecord::Base
         prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
                             pre_invoice.id,
                             "VP",
-                            (prev_reading_subscriber_tariff_tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula, false) / cf,
+                            cf != 0.0 ? (prev_reading_subscriber_tariff_tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula, false) / cf : 0.0,
                             previous_var_fee_qty,
                             prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
                             prev_reading_subscriber_tariff_tariff.try(:tax_type_p_id),
@@ -837,7 +838,7 @@ class Reading < ActiveRecord::Base
         prorate_create_item(t, prev_reading_subscriber_tariff_tariff,
                             pre_invoice.id,
                             "VP",
-                            (prev_reading_subscriber_tariff_tariff.percentage_fee/100) * Invoice.find(pre_invoice.id).total_by_concept(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula, false) / cf,
+                            cf != 0.0 ? (prev_reading_subscriber_tariff_tariff.percentage_fee/100) * Invoice.find(pre_invoice.id).total_by_concept(prev_reading_subscriber_tariff_tariff.percentage_applicable_formula, false) / cf : 0.0,
                             previous_var_fee_qty,
                             prev_reading_subscriber_tariff_tariff.billing_frequency.var_measure_id,
                             prev_reading_subscriber_tariff_tariff.try(:tax_type_p_id),
@@ -851,7 +852,7 @@ class Reading < ActiveRecord::Base
         prorate_create_item(t, tariff,
                             pre_invoice.id,
                             "VP",
-                            (tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf,
+                            cf != 0.0 ? (tariff.percentage_fee/100) * PreInvoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf : 0.0,
                             current_var_fee_qty,
                             tariff.billing_frequency.var_measure_id,
                             tariff.try(:tax_type_p_id),
@@ -861,7 +862,7 @@ class Reading < ActiveRecord::Base
         prorate_create_item(t, tariff,
                             pre_invoice.id,
                             "VP",
-                            (tariff.percentage_fee/100) * Invoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf,
+                            cf != 0.0 ? (tariff.percentage_fee/100) * Invoice.find(pre_invoice.id).total_by_concept(tariff.percentage_applicable_formula, false) / cf : 0.0,
                             current_var_fee_qty,
                             tariff.billing_frequency.var_measure_id,
                             tariff.try(:tax_type_p_id),
