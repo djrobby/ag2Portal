@@ -4,6 +4,8 @@ require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
   class BillsController < ApplicationController
+    @@subscribers = nil
+    @@period = nil
 
     # def void
     #   @subscriber = Subscriber.find params[:id]
@@ -161,27 +163,31 @@ module Ag2Gest
       offices = _offices.blank? ? Office.pluck(:id) : _offices
       _centers = params[:bill][:centers].reject(&:empty?)
       centers = _centers.blank? ? Center.pluck(:id) : _centers
-      period = params[:bill][:period]
+      @@period = params[:bill][:period]
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
 
       # Select subscribers properly (caching street_directories & street_types), extracting only needed colums!
-      subscribers = SubscriberFiliation.joins(subscriber: :readings).where('(subscriber_filiations.use_id IN (?) OR subscriber_filiations.use_id IS NULL) AND subscriber_filiations.reading_route_id IN (?) AND subscriber_filiations.office_id IN (?) AND subscriber_filiations.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, period, ReadingType.billable).includes(street_directory: :street_type).select('subscriber_filiations.subscriber_id,everything')
+      @@subscribers = SubscriberFiliation.joins(subscriber: :readings).where('subscribers.active=TRUE AND (subscriber_filiations.use_id IN (?) OR subscriber_filiations.use_id IS NULL) AND subscriber_filiations.reading_route_id IN (?) AND subscriber_filiations.office_id IN (?) AND subscriber_filiations.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, @@period, ReadingType.billable).includes(street_directory: :street_type).select('subscriber_filiations.subscriber_id,everything')
       # Extract only needed colums (street_directories & street_types were previously cached)
       # subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
       # Returns JSON hash
-      response_hash = { subscribers: subscribers}
+      response_hash = { subscribers: @@subscribers }
       # response_hash = { subscribers: subscribers_label}
       render json: response_hash
     end
 
+    def selected_subscribers
+    end
+
     def show_consumptions
-      billing_period_id = params[:subscribers][:period]
-      subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
+      # billing_period_id = params[:subscribers][:period]
+      # subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
       @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
-      subscribers  = Subscriber.where(id: subscriber_ids)
+      # subscribers = Subscriber.where(id: subscriber_ids)
+      subscribers = Subscriber.where(id: @@subscribers.map{ |s| s.subscriber_id })
       subscribers.each do |subscriber|
-        @readings << subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)', ReadingType.billable).order(:reading_date).last
+        @readings << subscriber.readings.where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable).order(:reading_date).last
       end
       respond_to do |format|
         format.html
@@ -239,7 +245,6 @@ module Ag2Gest
     # GET /bills/1
     # GET /bills/1.json
     def show
-
       @breadcrumb = 'read'
       @bill = Bill.find(params[:id])
       @billing_periods = billing_periods_dropdown

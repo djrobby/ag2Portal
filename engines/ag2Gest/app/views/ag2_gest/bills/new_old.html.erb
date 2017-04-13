@@ -68,11 +68,18 @@
       <br /><br />
       <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>
     <% end %>
-    <div id="form-subscribers">
-      <input class="hidden" id="subscribers_period" name="subscribers[period]" type="hidden" />
-      <label class="select required control-label form-label" for="select-subscribers"><abbr title="requerido">*</abbr> <%= t("activerecord.models.subscriber.few") %></label>
-      <select class="select required x-large-text-field" id="select-subscribers" multiple="multiple" name="subscribers[ids][]"></select>
-      <%= link_to "Calcular Consumos", ag2_gest.show_consumptions_bills_path, class: 'btn btn-primary' %>
-    </div>
+    <%= simple_form_for :subscribers, url: show_consumptions_bills_path, method: :get, :html => {:class => 'form-vertical', multiple: "multiple", id: "form-subscribers"} do |g| %>
+      <%= g.input :period, :as => :hidden %>
+      <div class="row-fluid">
+        <div class="span12">
+          <a id="btn-select-all" class="btn btn-primary pull-right">Seleccionar todos</a>
+          <br />
+          <%= g.input :ids, label: t("activerecord.models.subscriber.few"), collection: [], required: true, :label_html => { :class => 'form-label' }, input_html: {class: "x-large-text-field", multiple: "multiple", id: "select-subscribers"} %>
+        </div>
+      </div>
+      <%= g.button :submit, t("ag2_gest.bills.index.calc_consumptions"), :class => 'btn-primary', :id => 'submit-btn' %>
+      <br /><br />
+      <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>
+    <% end %>
   </div>
 </div>
