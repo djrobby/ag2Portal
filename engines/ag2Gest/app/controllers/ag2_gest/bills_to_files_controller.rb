@@ -56,13 +56,22 @@ module Ag2Gest
       from_d = I18n.t("activerecord.attributes.bill.label_from")
       to_d = I18n.t("activerecord.attributes.bill.label_to")
       tariff_d = I18n.t("activerecord.models.tariff.one")
+      invoice_type_d = I18n.t("activerecord.models.invoice.one")
 
       bill_d = I18n.t("activerecord.models.bill.one")
       bill_no_d = I18n.t("activerecord.attributes.bill.bill_no")
       bill_date_d = I18n.t("activerecord.attributes.bill.bill_date")
       billing_period_d = I18n.t("activerecord.attributes.report.billing_period")
       payday_limit_d = I18n.t("ag2_gest.bills.index.payday_limit")
-      client_d = I18n.t("activerecord.attributes.contracting_request.data_client")
+
+      subscriber_d = I18n.t("activerecord.attributes.contracting_request.data_client")
+      subscriber_code_d = I18n.t("activerecord.attributes.subscriber.subscriber_code")
+      subscriber_holder_d = I18n.t("activerecord.attributes.subscriber.titular")
+      subscriber_address_d = I18n.t("activerecord.report.subscriber.direction")
+      subscriber_supply_d = I18n.t("activerecord.attributes.contracting_request.supply_data")
+      subscriber_fiscal_id_d = I18n.t("activerecord.attributes.subscriber.fiscal_id_c")
+      subscriber_use_d = I18n.t("activerecord.attributes.subscriber.use")
+
       meter_d = I18n.t("activerecord.attributes.contracting_request.data_meter")
       consumption_d = I18n.t("activerecord.attributes.contracting_request.consumption_data")
       previous_reading_d = I18n.t("activerecord.attributes.reading.lec_ant")
@@ -71,6 +80,10 @@ module Ag2Gest
       m3_estimated_d = I18n.t("activerecord.attributes.reading.est")
       m3_others_d = I18n.t("activerecord.attributes.reading.other")
       m3_invoiced_d = I18n.t("activerecord.attributes.reading.fac")
+      avg_consumption_d = I18n.t("activerecord.attributes.invoice.average_billed_consumption")
+
+      tariffs_d = I18n.t("activerecord.models.tariff.zero")
+      billing_d = I18n.t("activerecord.attributes.contracting_request.billing")
 
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 
@@ -94,13 +107,17 @@ module Ag2Gest
             xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
             xml.billing_period({ description: billing_period_d }, bill.billing_period)
             xml.payday_limit({ description: payday_limit_d }, bill.formatted_payday_limit)
-            xml.subscriber(description: client_d) do
-              xml.code          bill.subscriber.full_code
-              xml.holder        bill.subscriber.full_name
-              xml.address_1     bill.subscriber.address_1
-              xml.address_2     bill.subscriber.address_2
-              xml.fiscal_id     bill.subscriber.fiscal_id
-              xml.use           bill.subscriber.use.right_name
+            xml.subscriber(description: subscriber_d) do
+              xml.code({ description: subscriber_code_d }, bill.subscriber.full_code)
+              xml.holder({ description: subscriber_holder_d }, bill.subscriber.full_name)
+              xml.address(description: subscriber_address_d) do
+                xml.address_1     bill.subscriber.address_1
+                xml.address_2     bill.subscriber.address_2
+              end
+              xml.supply(description: subscriber_supply_d) do
+                xml.fiscal_id({ description: subscriber_fiscal_id_d }, bill.subscriber.fiscal_id)
+                xml.use({ description: subscriber_use_d }, bill.subscriber.use.right_name)
+              end
             end
             xml.client do
               xml.code          bill.client.full_code
@@ -126,11 +143,21 @@ module Ag2Gest
               xml.estimated({ description: m3_estimated_d }, bill.consumption_estimated)
               xml.others({ description: m3_others_d }, bill.consumption_other)
               xml.invoiced({ description: m3_invoiced_d }, bill.consumption)
+              xml.average({ description: avg_consumption_d }, bill.average_billed_consumption)
+            end
+            xml.tariffs(description: tariffs_d) do
+            end
+            xml.billing(description: billing_d) do
             end
             xml.total           number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             xml.invoices do   # Invoices
               bill.invoices.each do |invoice|
-                xml.invoice do  # Each invoice
+                if I18n.locale == :es
+                  invoice_type_d = I18n.t("activerecord.models.invoice.one") + ' de ' + invoice.invoice_type_name
+                else
+                  invoice_type_d = invoice.invoice_type_name + ' ' + I18n.t("activerecord.models.invoice.one")
+                end
+                xml.invoice(description: invoice_type_d) do  # Each invoice
                   xml.invoice_no    invoice.full_no
                   xml.invoice_date  formatted_date(invoice.invoice_date)
                   xml.total         number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")

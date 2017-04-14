@@ -227,6 +227,10 @@ class Invoice < ActiveRecord::Base
     bill.subscriber unless (bill.blank? || bill.subscriber.blank?)
   end
 
+  def invoice_type_name
+    invoice_type.name rescue ''
+  end
+
   # Calculates & returns the average billed consumption up to the last six invoices
   def average_billed_consumption
     _prev_consumptions = []

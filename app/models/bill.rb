@@ -134,6 +134,14 @@ class Bill < ActiveRecord::Base
     invoices.first.consumption_other || 0
   end
 
+  def average_billed_consumption
+    invoices.first.average_billed_consumption[1] || 0
+  end
+
+  def previous_billed_consumptions
+    invoices.first.average_billed_consumption[0] || []
+  end
+
   def full_no
     # Bill no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
     if bill_no == "$err"

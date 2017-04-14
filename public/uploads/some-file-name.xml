@@ -14,12 +14,16 @@
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha de vencimiento"></payday_limit>
     <subscriber description="Datos Cliente">
-      <code>0001-0000001</code>
-      <holder>Camacho Sanchez, Manuel Jesus</holder>
-      <address_1>CL. Cervantes 8</address_1>
-      <address_2>04700 El Ejido, Almería (España)</address_2>
-      <fiscal_id>48991284L</fiscal_id>
-      <use>bonificado</use>
+      <code description="Código">0001-0000001</code>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <address description="Dirección">
+        <address_1>CL. Cervantes 8</address_1>
+        <address_2>04700 El Ejido, Almería (España)</address_2>
+      </address>
+      <supply description="Datos Suministro">
+        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
+        <use description="Uso">bonificado</use>
+      </supply>
     </subscriber>
     <client>
       <code>0001-0000003</code>
@@ -45,10 +49,15 @@
       <estimated description="M3 estimados">0</estimated>
       <others description="Otros consumos">0</others>
       <invoiced description="M3 facturados">30</invoiced>
+      <average description="Consumo medio">30</average>
     </consumption>
+    <tariffs description="Tarifas">
+    </tariffs>
+    <billing description="Facturación">
+    </billing>
     <total>51,89</total>
     <invoices>
-      <invoice>
+      <invoice description="Factura de Servicio">
         <invoice_no>00EL2-0160-00004</invoice_no>
         <invoice_date>24/10/2016</invoice_date>
         <total>51,89</total>
@@ -149,12 +158,16 @@
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha de vencimiento"></payday_limit>
     <subscriber description="Datos Cliente">
-      <code>0001-0000001</code>
-      <holder>Camacho Sanchez, Manuel Jesus</holder>
-      <address_1>CL. Cervantes 8</address_1>
-      <address_2>04700 El Ejido, Almería (España)</address_2>
-      <fiscal_id>48991284L</fiscal_id>
-      <use>bonificado</use>
+      <code description="Código">0001-0000001</code>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <address description="Dirección">
+        <address_1>CL. Cervantes 8</address_1>
+        <address_2>04700 El Ejido, Almería (España)</address_2>
+      </address>
+      <supply description="Datos Suministro">
+        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
+        <use description="Uso">bonificado</use>
+      </supply>
     </subscriber>
     <client>
       <code>0001-0000003</code>
@@ -180,10 +193,15 @@
       <estimated description="M3 estimados">0</estimated>
       <others description="Otros consumos">0</others>
       <invoiced description="M3 facturados">30</invoiced>
+      <average description="Consumo medio">30</average>
     </consumption>
+    <tariffs description="Tarifas">
+    </tariffs>
+    <billing description="Facturación">
+    </billing>
     <total>-51,89</total>
     <invoices>
-      <invoice>
+      <invoice description="Factura de Servicio">
         <invoice_no>00EL2-0160-00004</invoice_no>
         <invoice_date>24/10/2016</invoice_date>
         <total>-51,89</total>

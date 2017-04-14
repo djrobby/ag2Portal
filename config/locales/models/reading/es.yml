@@ -36,7 +36,7 @@ es:
         repeat: "Ya exite lectura para ese periodo, tipo, proyecto, contador y fecha"
         create: "Lectura se ha creado correctamente."
         consumption: "Consumo"
-        consumption_2: "Consumo año anterior" 
+        consumption_2: "Consumo año anterior"
         reading_1_index: "Indice periodo anterior"
         reading_1_index_c: "Indice ant."
         reading_1_date: "Fecha periodo anterior"
