@@ -16,7 +16,8 @@
     $("#form-bill").bind("ajax:success", function(xhr, data, status) {
       $('#select-subscribers option').remove();
       $.each(data.subscribers, function(i, value) {
-        $('#select-subscribers').append($('<option>').text(value.everything).attr('value', value.subscriber_id));
+        $('#select-subscribers').append($('<option>').text(value[1]).attr('value', value[0]));
+        // $('#select-subscribers').append($('<option>').text(value.everything).attr('value', value.subscriber_id));
       });
       $('#subscribers_period').val($("#bill_period").val());
       $('#form-subscribers').removeClass("hide");
@@ -32,8 +33,6 @@
       var subscriber_ids = $('#select-subscribers').val();
       var period = $('#subscribers_period').val();
       var myString = JSON.stringify(subscriber_ids);
-      alert(myString);
-      a = "<%#= show_consumptions %>";
       //return false;
     });
   });

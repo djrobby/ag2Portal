@@ -167,17 +167,38 @@ module Ag2Gest
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
 
-      # Select subscribers properly (caching street_directories & street_types), extracting only needed colums!
-      @@subscribers = SubscriberFiliation.joins(subscriber: :readings).where('subscribers.active=TRUE AND (subscriber_filiations.use_id IN (?) OR subscriber_filiations.use_id IS NULL) AND subscriber_filiations.reading_route_id IN (?) AND subscriber_filiations.office_id IN (?) AND subscriber_filiations.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, @@period, ReadingType.billable).includes(street_directory: :street_type).select('subscriber_filiations.subscriber_id,everything')
+      # Select subscribers properly
+      # With readings (preferable)
+      # subscribers_with_readings(uses, reading_routes, offices, centers)
+      # Without readings (faster)
+      subscribers_only(uses, reading_routes, offices, centers)
       # Extract only needed colums (street_directories & street_types were previously cached)
-      # subscribers_label = subscribers.map{|s| [s.id, "#{s.to_label} #{s.address_1}"]}
+      subscribers_label = @@subscribers.map{|s| [s.id, "#{s.to_label} - #{s.address_1} - #{s.meter_code}"]}
       # Returns JSON hash
-      response_hash = { subscribers: @@subscribers }
-      # response_hash = { subscribers: subscribers_label}
+      response_hash = { subscribers: subscribers_label}
+
+      ### SubscriberFiliation is too slow ###
+      # # Select subscribers properly (caching street_directories & street_types), extracting only needed colums!
+      # @@subscribers = SubscriberFiliation.joins(subscriber: :readings).where('subscribers.active=TRUE AND (subscriber_filiations.use_id IN (?) OR subscriber_filiations.use_id IS NULL) AND subscriber_filiations.reading_route_id IN (?) AND subscriber_filiations.office_id IN (?) AND subscriber_filiations.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, @@period, ReadingType.billable).includes(street_directory: :street_type).select('subscriber_filiations.subscriber_id,everything')
+      # # Returns JSON hash
+      # response_hash = { subscribers: @@subscribers }
+
       render json: response_hash
     end
 
-    def selected_subscribers
+    def subscribers_with_readings(uses, reading_routes, offices, centers)
+      @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+                                .joins(:readings) \
+                                .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, @@period, ReadingType.billable) \
+                                .group('subscribers.id') \
+                                .includes(:meter, street_directory: :street_type)
+    end
+
+    def subscribers_only(uses, reading_routes, offices, centers)
+      @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+                                .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?)', uses, reading_routes, offices, centers) \
+                                .group('subscribers.id') \
+                                .includes(:meter, street_directory: :street_type)
     end
 
     def show_consumptions
@@ -185,10 +206,21 @@ module Ag2Gest
       # subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
       @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
       # subscribers = Subscriber.where(id: subscriber_ids)
-      subscribers = Subscriber.where(id: @@subscribers.map{ |s| s.subscriber_id })
-      subscribers.each do |subscriber|
-        @readings << subscriber.readings.where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable).order(:reading_date).last
+      # subscribers = Subscriber.where(id: @@subscribers.pluck('subscribers.id'))
+
+      ### SubscriberFiliation is too slow ###
+      # subscribers = Subscriber.where(id: @@subscribers.map{ |s| s.subscriber_id })
+      # subscribers.each do |subscriber|
+      #   @readings << subscriber.readings.where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable).order(:reading_date).last
+      # end
+
+      @@subscribers.each do |subscriber|
+        @readings << subscriber.readings.select('readings.id') \
+                               .where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable) \
+                               .order(:reading_date).last
       end
+      @readings = Reading.where(id: @readings).paginate(:page => params[:page], :per_page => per_page || 10)
+
       respond_to do |format|
         format.html
         format.csv { render text: Reading.to_csv(@readings) }

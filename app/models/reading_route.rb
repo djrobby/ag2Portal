@@ -23,21 +23,26 @@ class ReadingRoute < ActiveRecord::Base
   end
 
   def to_label
-    "#{route_code} (#{name})"
+    "#{full_code} (#{name})"
+  end
+
+  def full_code
+    routing_code.blank? ? "" : routing_code[0..3] + '-' + routing_code[4..9]
   end
 
   private
 
+  # This method has been changed for the old code was a mess
   def next_rr(office)
     code = ''
-    office = office.to_i
-    office_code = office.to_s.rjust(4, '0')
-    last_code = ReadingRoute.select{|r| r.office_id == office}.max_by(&:routing_code).try(:routing_code)
-    if last_code.nil?
-      code = office_code + '000001'
+    office = office.to_s if office.is_a? Fixnum
+    office = office.rjust(4, '0')
+    last_no = ReadingRoute.where("routing_code LIKE ?", "#{office}%").order(:routing_code).maximum(:routing_code)
+    if last_no.nil?
+      code = office + '000001'
     else
-      last_code = last_code[4..9].to_i + 10
-      code = office_code + last_code.to_s.rjust(6, '0')
+      last_no = last_no[4..9].to_i + 1
+      code = office +  last_no.to_s.rjust(6, '0')
     end
     code
   end

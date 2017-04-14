@@ -6,8 +6,8 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-  	// Select2
-  	$('select.sel2').select2({
+    // Select2
+    $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
@@ -16,7 +16,7 @@
     $("#form-bill").bind("ajax:success", function(xhr, data, status) {
       $('#select-subscribers option').remove();
       $.each(data.subscribers, function(i, value) {
-        $('#select-subscribers').append($('<option>').text(value.everything).attr('value', value.subscriber_id));
+          $('#select-subscribers').append($('<option>').text(value[1]).attr('value', value[0]));
       });
       $('#subscribers_period').val($("#bill_period").val());
       $('#form-subscribers').removeClass("hide");
@@ -27,15 +27,6 @@
       $('#select-subscribers option').attr('selected','selected');
     });
 
-    // when the #submit-btn button clicked
-    $("#submit-btn").click(function(e) {
-      var subscriber_ids = $('#select-subscribers').val();
-      var period = $('#subscribers_period').val();
-      var myString = JSON.stringify(subscriber_ids);
-      alert(myString);
-      a = "<%#= show_consumptions %>";
-      //return false;
-    });
   });
 </script>
 
@@ -49,7 +40,7 @@
     <%= display_base_errors resource %>
       <div class="row-fluid">
         <div class="span6">
-          <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "sel2 large-text-field"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "large-text-field"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span6">
           <%= f.input :use, label: t('activerecord.models.use.few'), collection: @uses, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
@@ -60,24 +51,25 @@
           <%= f.input :centers, label: t('activerecord.models.center.one'), collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span6">
-          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "sel2 large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
       </div>
-      <br />
       <%= f.button :submit, "Cargar abonados", :class => 'btn-primary' %>
       <br /><br />
       <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>
     <% end %>
-    <%= simple_form_for :subscribers, url: show_consumptions_bills_path, method: :get, :html => {:class => 'form-vertical', multiple: "multiple", id: "form-subscribers"} do |g| %>
+    <br>
+    <br>
+    <%= simple_form_for :subscribers, url: show_consumptions_bills_path, method: :get, :html => {:class => 'form-vertical hide', multiple: "multiple", id: "form-subscribers"} do |g| %>
       <%= g.input :period, :as => :hidden %>
       <div class="row-fluid">
         <div class="span12">
           <a id="btn-select-all" class="btn btn-primary pull-right">Seleccionar todos</a>
-          <br />
-          <%= g.input :ids, label: t("activerecord.models.subscriber.few"), collection: [], required: true, :label_html => { :class => 'form-label' }, input_html: {class: "x-large-text-field", multiple: "multiple", id: "select-subscribers"} %>
+          <br>
+          <%= g.input :ids, label: 'Abonados', collection: [], required: true, :label_html => { :class => 'form-label' }, input_html: {class: "x-large-text-field", multiple: "multiple", id: "select-subscribers"} %>
         </div>
       </div>
-      <%= g.button :submit, t("ag2_gest.bills.index.calc_consumptions"), :class => 'btn-primary', :id => 'submit-btn' %>
+      <%= g.button :submit, t("ag2_gest.bills.index.calc_consumptions"), :class => 'btn-primary' %>
       <br /><br />
       <%= link_to t("ag2_gest.bills.index.back_to_pre_index"), ag2_gest.pre_index_bills_path %>
     <% end %>

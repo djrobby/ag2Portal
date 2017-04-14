@@ -40,16 +40,16 @@
           <% @readings.each do |reading| %>
             <tr>
                 <td>
-                  <%= reading.try(:reading_route).try(:route_code) %>
+                  <%= reading.try(:reading_route).try(:full_code) %>
                 </td>
                 <td>
                   <%= reading.reading_sequence %>
                 </td>
                 <td>
-                  <%= reading.try(:subscriber).try(:subscriber_code) %>
+                  <%= reading.try(:subscriber).try(:full_code) %>
                 </td>
                 <td>
-                  <%= reading.try(:subscriber).try(:street_directory).try(:street_name) %>
+                  <%= reading.try(:subscriber).try(:address_1) %>
                 </td>
                 <td>
                   <%= reading.try(:meter).try(:meter_code) %>
@@ -73,8 +73,9 @@
           <% end %>
         </tbody>
       </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @readings } %>
     </div>
-    <div class="row">
+    <div class="row-fluid">
         <%#= link_to I18n.t('activerecord.attributes.reading.exportcsv'), show_consumptions_bills_path(subscribers: {period: params[:subscribers][:period], ids: params[:subscribers][:ids]}, format: :csv), class: "btn btn-warning pull-right" %>
         <%= link_to I18n.t('activerecord.attributes.reading.exportcsv'), show_consumptions_bills_path(format: :csv), class: "btn btn-warning pull-right" %>
         <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>
