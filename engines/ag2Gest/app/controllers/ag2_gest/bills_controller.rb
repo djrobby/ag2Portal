@@ -169,9 +169,9 @@ module Ag2Gest
 
       # Select subscribers properly
       # With readings (preferable)
-      # subscribers_with_readings(uses, reading_routes, offices, centers)
+      subscribers_with_readings(uses, reading_routes, offices, centers)
       # Without readings (faster)
-      subscribers_only(uses, reading_routes, offices, centers)
+      # subscribers_only(uses, reading_routes, offices, centers)
       # Extract only needed colums (street_directories & street_types were previously cached)
       subscribers_label = @@subscribers.map{|s| [s.id, "#{s.to_label} - #{s.address_1} - #{s.meter_code}"]}
       # Returns JSON hash
