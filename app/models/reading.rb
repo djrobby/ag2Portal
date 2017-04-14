@@ -1,4 +1,6 @@
 class Reading < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :project
   # belongs_to :bill
   belongs_to :billing_period
@@ -64,7 +66,12 @@ class Reading < ActiveRecord::Base
   end
 
   def to_reading_date
-    "#{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
+    formatted_timestamp(reading_date) if reading_date
+    # "#{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
+  end
+
+  def formatted_reading_date
+    formatted_date(reading_date) rescue ''
   end
 
   def reading_days

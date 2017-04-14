@@ -101,6 +101,10 @@ class Invoice < ActiveRecord::Base
     invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]
   end
 
+  def formatted_payday_limit
+    formatted_date(payday_limit) rescue ''
+  end
+
   def invoiced_concepts
     _codes = ""
     _ii = invoice_items.group(:code)

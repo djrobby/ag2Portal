@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bills>
-  <bill>
-    <bill_no>005SER000001-2016-000004</bill_no>
-    <bill_date>24/10/2016</bill_date>
-    <client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client>
+  <company>
+    <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+    <address_1>Cl. Mayor 20, </address_1>
+    <address_2>04700 El Ejido, Almería (España)</address_2>
+    <phone_and_fax>Tel: 950489050 / Fax: 950 570163</phone_and_fax>
+    <email_and_website>info@aguasdeelejido.es - www.aguasdeelejido.es</email_and_website>
+    <company_data>Empresa Mixta de Servicios Municipales de El Ejido S.A. - CIF: A04241147 - Inscrita en el R.M. Almería, Tomo 256, Sección 8a, Folio 78, Hoja 8120</company_data>
+  </company>
+  <bill description="Recibo">
+    <bill_no description="Nº">005SER000001-2016-000004</bill_no>
+    <bill_date description="Fecha">24/10/2016</bill_date>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
+    <payday_limit description="Fecha de vencimiento"></payday_limit>
+    <subscriber description="Datos Cliente">
+      <code>0001-0000001</code>
+      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <address_1>CL. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+      <use>bonificado</use>
+    </subscriber>
+    <client>
+      <code>0001-0000003</code>
+      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <address_1>Cl. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+    </client>
+    <meter description="Datos contador">
+      <code>C14CA000001K</code>
+      <caliber>15</caliber>
+    </meter>
+    <consumption description="Datos Consumo">
+      <previous_reading description="Lect. Anterior">
+        <index>50</index>
+        <date>24/10/2016</date>
+      </previous_reading>
+      <current_reading description="Lect. Actual">
+        <index>80</index>
+        <date>24/10/2016</date>
+      </current_reading>
+      <read description="M3 registrados">30</read>
+      <estimated description="M3 estimados">0</estimated>
+      <others description="Otros consumos">0</others>
+      <invoiced description="M3 facturados">30</invoiced>
+    </consumption>
     <total>51,89</total>
     <invoices>
       <invoice>
@@ -101,10 +143,44 @@
       </invoice>
     </invoices>
   </bill>
-  <bill>
-    <bill_no>005SER000001-2016-000004</bill_no>
-    <bill_date>24/10/2016</bill_date>
-    <client>00010000003 Camacho Sanchez, Manuel Jesus 48991284L</client>
+  <bill description="Recibo">
+    <bill_no description="Nº">005SER000001-2016-000004</bill_no>
+    <bill_date description="Fecha">24/10/2016</bill_date>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
+    <payday_limit description="Fecha de vencimiento"></payday_limit>
+    <subscriber description="Datos Cliente">
+      <code>0001-0000001</code>
+      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <address_1>CL. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+      <use>bonificado</use>
+    </subscriber>
+    <client>
+      <code>0001-0000003</code>
+      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <address_1>Cl. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+    </client>
+    <meter description="Datos contador">
+      <code>C14CA000001K</code>
+      <caliber>15</caliber>
+    </meter>
+    <consumption description="Datos Consumo">
+      <previous_reading description="Lect. Anterior">
+        <index>50</index>
+        <date>24/10/2016</date>
+      </previous_reading>
+      <current_reading description="Lect. Actual">
+        <index>80</index>
+        <date>24/10/2016</date>
+      </current_reading>
+      <read description="M3 registrados">30</read>
+      <estimated description="M3 estimados">0</estimated>
+      <others description="Otros consumos">0</others>
+      <invoiced description="M3 facturados">30</invoiced>
+    </consumption>
     <total>-51,89</total>
     <invoices>
       <invoice>

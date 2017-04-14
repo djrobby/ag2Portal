@@ -22,6 +22,10 @@ class Use < ActiveRecord::Base
     "#{code} #{name}"
   end
 
+  def right_name
+    name.blank? ? '' : name
+  end
+
   private
 
   def fields_to_uppercase

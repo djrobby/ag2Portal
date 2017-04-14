@@ -62,8 +62,8 @@ report.page.values(bill_c: I18n.t("activerecord.models.bill.one"),
 				   province: @biller_printer.try(:client).try(:zipcode).try(:province).try(:name).upcase
 				   )
 #
-reading_a = @biller_printer.reading_1.reading_date.strftime("%d/%m/%Y") unless @biller_printer.reading_1.blank?
-reading_b = @biller_printer.reading_2.reading_date.strftime("%d/%m/%Y") unless @biller_printer.reading_2.blank?
+reading_a = @biller_printer.reading_1.reading_date.strftime("_format") unless @biller_printer.reading_1.blank?
+reading_b = @biller_printer.reading_2.reading_date.strftime("_format") unless @biller_printer.reading_2.blank?
 # supply_data
 report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.supply_data"),
 				   data_meter_c: I18n.t("activerecord.attributes.contracting_request.data_meter"),

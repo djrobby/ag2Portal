@@ -33,7 +33,8 @@ module Ag2Gest
       incidents = false
       message = ''
 
-      bills = Bill.service.includes(:reading_1, :reading_2, :client, :subscriber, invoices:
+      bills = Bill.service.includes(:project, :reading_1, :reading_2, :client,
+                                    subscriber: [:use, meter: [:caliber]], invoices:
                                    [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]]).first(2)
       xml = service_bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
@@ -55,8 +56,23 @@ module Ag2Gest
       from_d = I18n.t("activerecord.attributes.bill.label_from")
       to_d = I18n.t("activerecord.attributes.bill.label_to")
       tariff_d = I18n.t("activerecord.models.tariff.one")
+
+      bill_d = I18n.t("activerecord.models.bill.one")
+      bill_no_d = I18n.t("activerecord.attributes.bill.bill_no")
+      bill_date_d = I18n.t("activerecord.attributes.bill.bill_date")
+      billing_period_d = I18n.t("activerecord.attributes.report.billing_period")
+      payday_limit_d = I18n.t("ag2_gest.bills.index.payday_limit")
+      client_d = I18n.t("activerecord.attributes.contracting_request.data_client")
+      meter_d = I18n.t("activerecord.attributes.contracting_request.data_meter")
+      consumption_d = I18n.t("activerecord.attributes.contracting_request.consumption_data")
+      previous_reading_d = I18n.t("activerecord.attributes.reading.lec_ant")
+      current_reading_d = I18n.t("activerecord.attributes.reading.lec_act")
+      m3_read_d = I18n.t("activerecord.attributes.reading.reg")
+      m3_estimated_d = I18n.t("activerecord.attributes.reading.est")
+      m3_others_d = I18n.t("activerecord.attributes.reading.other")
+      m3_invoiced_d = I18n.t("activerecord.attributes.reading.fac")
+
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
-      _format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
 
       # Initialize Builder
       xml = Builder::XmlMarkup.new(:indent => 2)
@@ -64,12 +80,54 @@ module Ag2Gest
 
       #+++ Begin +++
       xml.bills do  # Bills
+        xml.company do  # Issuing company
+          xml.name                bills.first.project.company.name
+          xml.address_1           bills.first.project.company.address_1
+          xml.address_2           bills.first.project.company.address_2
+          xml.phone_and_fax       bills.first.project.company.phone_and_fax
+          xml.email_and_website   bills.first.project.company.email_and_website
+          xml.company_data        bills.first.project.company.invoice_footer_complete
+        end
         bills.each do |bill|
-          xml.bill do   # Eeach bill
-            xml.bill_no       bill.full_no
-            xml.bill_date     formatted_date(bill.bill_date)
-            xml.client        bill.client.full_name_or_company_code_fiscal
-            xml.total         number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          xml.bill(description: bill_d) do  # Eeach bill
+            xml.bill_no({ description: bill_no_d }, bill.full_no)
+            xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
+            xml.billing_period({ description: billing_period_d }, bill.billing_period)
+            xml.payday_limit({ description: payday_limit_d }, bill.formatted_payday_limit)
+            xml.subscriber(description: client_d) do
+              xml.code          bill.subscriber.full_code
+              xml.holder        bill.subscriber.full_name
+              xml.address_1     bill.subscriber.address_1
+              xml.address_2     bill.subscriber.address_2
+              xml.fiscal_id     bill.subscriber.fiscal_id
+              xml.use           bill.subscriber.use.right_name
+            end
+            xml.client do
+              xml.code          bill.client.full_code
+              xml.holder        bill.client.full_name
+              xml.address_1     bill.client.address_1
+              xml.address_2     bill.client.address_2
+              xml.fiscal_id     bill.client.fiscal_id
+            end
+            xml.meter(description: meter_d) do
+              xml.code          bill.subscriber.meter.meter_code
+              xml.caliber       bill.subscriber.meter.caliber.caliber
+            end
+            xml.consumption(description: consumption_d) do
+              xml.previous_reading(description: previous_reading_d) do
+                xml.index       bill.formatted_reading_1_index
+                xml.date        bill.formatted_reading_1_date
+              end
+              xml.current_reading(description: current_reading_d) do
+                xml.index       bill.formatted_reading_2_index
+                xml.date        bill.formatted_reading_2_date
+              end
+              xml.read({ description: m3_read_d }, bill.consumption_real)
+              xml.estimated({ description: m3_estimated_d }, bill.consumption_estimated)
+              xml.others({ description: m3_others_d }, bill.consumption_other)
+              xml.invoiced({ description: m3_invoiced_d }, bill.consumption)
+            end
+            xml.total           number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             xml.invoices do   # Invoices
               bill.invoices.each do |invoice|
                 xml.invoice do  # Each invoice
@@ -78,7 +136,7 @@ module Ag2Gest
                   xml.total         number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                   xml.items do  # Invoice items
                     invoice.ordered_invoiced_concepts.each do |concept, description|
-                      xml.concept('code' => concept.upcase, 'description' => description.upcase) do  # Each invoice concept
+                      xml.concept(code: concept.upcase, description: description.upcase) do  # Each invoice concept
                         bll = -1
                         qty_ant = 0
                         invoice_items = invoice.invoice_items_by_concept(concept)
@@ -97,7 +155,7 @@ module Ag2Gest
                           end
                           tax_pct = item.tax_type.tax rescue 0
                           measure = item.measure.description rescue ' '
-                          xml.item('code' => item.subcode, 'description' => subcode_name) do   # Each invoice item
+                          xml.item(code: item.subcode, description: subcode_name) do   # Each invoice item
                             xml.measure     measure
                             xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                             xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
@@ -114,7 +172,7 @@ module Ag2Gest
                           elsif tariff[3] == '1'
                             consumption_description += " (" + tariff_d + " " + from_d + " " + tariff[1] + ")"
                           end
-                          xml.consumption('description' => consumption_description) do  # Each consumption items
+                          xml.consumption(description: consumption_description) do  # Each consumption items
                             block_items.each do |item|
                               subcode_name = item.subcode_name
                               if block_codes.include? item.subcode  # It's a block
@@ -134,7 +192,7 @@ module Ag2Gest
                               end
                               tax_pct = item.tax_type.tax rescue 0
                               measure = item.measure.description rescue ' '
-                              xml.item('code' => item.subcode, 'description' => subcode_name) do   # Each invoice item
+                              xml.item(code: item.subcode, description: subcode_name) do   # Each invoice item
                                 xml.measure     measure
                                 xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                                 xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")

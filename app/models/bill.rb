@@ -78,6 +78,10 @@ class Bill < ActiveRecord::Base
     try(:invoices).try(:first).try(:billing_period_id)
   end
 
+  def billing_period
+    invoices.first.billing_period.to_label rescue ''
+  end
+
   def bill_type
     invoices.first.invoice_type rescue nil
   end
@@ -88,6 +92,46 @@ class Bill < ActiveRecord::Base
 
   def reading
     reading_2
+  end
+
+  def payday_limit
+    invoices.first.payday_limit rescue nil
+  end
+
+  def formatted_payday_limit
+    invoices.first.formatted_payday_limit
+  end
+
+  def formatted_reading_1_index
+    reading_1.reading_index rescue ''
+  end
+
+  def formatted_reading_1_date
+    reading_1.formatted_reading_date rescue ''
+  end
+
+  def formatted_reading_2_index
+    reading_2.reading_index rescue ''
+  end
+
+  def formatted_reading_2_date
+    reading_2.formatted_reading_date rescue ''
+  end
+
+  def consumption
+    invoices.first.consumption || 0
+  end
+
+  def consumption_real
+    invoices.first.consumption_real || 0
+  end
+
+  def consumption_estimated
+    invoices.first.consumption_estimated || 0
+  end
+
+  def consumption_other
+    invoices.first.consumption_other || 0
   end
 
   def full_no
