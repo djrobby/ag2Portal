@@ -57,6 +57,11 @@ module Ag2Gest
       to_d = I18n.t("activerecord.attributes.bill.label_to")
       tariff_d = I18n.t("activerecord.models.tariff.one")
       invoice_type_d = I18n.t("activerecord.models.invoice.one")
+      concepts_detail_d = I18n.t("activerecord.attributes.report.detail").upcase
+      invoice_no_d = I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+      total_invoice_d = I18n.t("activerecord.attributes.bill.total")
+      vat_rate_d = I18n.t("activerecord.attributes.contracting_request.iva_c")
+      subtotal_invoice_d = I18n.t("activerecord.attributes.bill.subtotal")
 
       bill_d = I18n.t("activerecord.models.bill.one")
       bill_no_d = I18n.t("activerecord.attributes.bill.bill_no")
@@ -84,12 +89,24 @@ module Ag2Gest
 
       tariffs_d = I18n.t("activerecord.models.tariff.zero")
       billing_d = I18n.t("activerecord.attributes.contracting_request.billing")
+      total_bill_d = I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.bill.one")
+      currency_note_d = "* " + I18n.t("every_report.currency_note")
+      payment_note_d = "* " + I18n.t("activerecord.attributes.bill.payment_note")
+      payment_data_d = I18n.t("activerecord.attributes.contracting_request.payment_data")
+      payment_supply_no_d = I18n.t("activerecord.attributes.water_supply_contract.supply_number")
+      payment_supply_d = I18n.t("activerecord.attributes.billable_concept.supply")
+      payment_bank_d = I18n.t("activerecord.models.client_bank_account.one")
+      payment_issuer_d = I18n.t("activerecord.attributes.bill.issuer")
+      payment_reference_d = I18n.t("activerecord.attributes.work_order_item.code")
+      payment_ident_d = I18n.t("activerecord.attributes.bill.ident")
 
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
 
       # Initialize Builder
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
+      # xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8", :standalone => "yes"
+      # xml.declare! :DOCTYPE, :bills, :PUBLIC, "-//W3C//DTD HTML 4.0 Transitional//EN", "http://www.w3.org/TR/REC-html40/loose.dtd"
 
       #+++ Begin +++
       xml.bills do  # Bills
@@ -121,7 +138,7 @@ module Ag2Gest
             end
             xml.client do
               xml.code          bill.client.full_code
-              xml.holder        bill.client.full_name
+              xml.name          bill.client.full_name
               xml.address_1     bill.client.address_1
               xml.address_2     bill.client.address_2
               xml.fiscal_id     bill.client.fiscal_id
@@ -145,23 +162,72 @@ module Ag2Gest
               xml.invoiced({ description: m3_invoiced_d }, bill.consumption)
               xml.average({ description: avg_consumption_d }, bill.average_billed_consumption)
             end
+            # Tariffs frame
             xml.tariffs(description: tariffs_d) do
             end
+            # Invoices frame
             xml.billing(description: billing_d) do
             end
-            xml.total           number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            # Total Bill
+            xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+            # Notes
+            xml.currency_note   currency_note_d
+            xml.payment_note    payment_note_d
+            # Payment data
+            xml.payment_data(description: payment_data_d) do
+              xml.supply_no({ description: payment_supply_no_d }, bill.subscriber.full_code)
+              xml.bill_no({ description: bill_d + ' ' + bill_no_d }, bill.full_no)
+              xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
+              xml.holder({ description: subscriber_holder_d }, bill.subscriber.full_name)
+              xml.bank_account({ description: payment_bank_d }, bill.subscriber.full_name)
+              xml.barcode do
+                xml.issuer({ description: payment_issuer_d.upcase }, bill.subscriber.full_name)
+                xml.reference({ description: payment_reference_d.upcase }, bill.subscriber.full_name)
+                xml.ident({ description: payment_ident_d.upcase }, bill.subscriber.full_name)
+                xml.supply({ description: payment_supply_d.upcase }, bill.subscriber.subscriber_code[3..10])
+                xml.payday_limit({ description: payday_limit_d.upcase }, bill.formatted_payday_limit)
+                xml.total({ description: total_invoice_d.upcase }, number_with_precision(bill.total, precision: 2))
+              end
+            end
             xml.invoices do   # Invoices
               bill.invoices.each do |invoice|
+                # Invoice type description
                 if I18n.locale == :es
                   invoice_type_d = I18n.t("activerecord.models.invoice.one") + ' de ' + invoice.invoice_type_name
                 else
                   invoice_type_d = invoice.invoice_type_name + ' ' + I18n.t("activerecord.models.invoice.one")
                 end
+                # Is the first invoice? Set concepts_detail_d
+                if invoice.id == bill.invoices.first.id
+                  concepts_detail_d = I18n.t("activerecord.attributes.report.detail").upcase
+                else
+                  concepts_detail_d = ''
+                end
                 xml.invoice(description: invoice_type_d) do  # Each invoice
-                  xml.invoice_no    invoice.full_no
-                  xml.invoice_date  formatted_date(invoice.invoice_date)
-                  xml.total         number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-                  xml.items do  # Invoice items
+                  xml.invoice_no({ description: invoice_no_d }, invoice.full_no)
+                  xml.invoice_date({ description: bill_date_d }, formatted_date(invoice.invoice_date))
+                  xml.payday_limit({ description: payday_limit_d }, invoice.formatted_payday_limit)
+                  # Biller
+                  xml.biller do |biller|
+                    xml.name        invoice.formatted_biller_name
+                    xml.fiscal_id   invoice.formatted_biller_fiscal_id
+                  end
+                  # Subtotal
+                  xml.subtotal({ description: subtotal_invoice_d }, number_with_precision(invoice.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+                  # Taxes
+                  if invoice.tax_breakdown.count > 0
+                    xml.vat_rates do
+                      invoice.tax_breakdown.each do |tax|
+                        if tax[0] != TaxType.exempt.tax
+                          vat_description = vat_rate_d + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
+                          xml.vat_rate({ description: vat_description }, number_with_precision(tax[2], precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+                        end
+                      end
+                    end
+                  end
+                  # Total
+                  xml.total({ description: total_invoice_d }, number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+                  xml.items(description: concepts_detail_d) do  # Invoice items
                     invoice.ordered_invoiced_concepts.each do |concept, description|
                       xml.concept(code: concept.upcase, description: description.upcase) do  # Each invoice concept
                         bll = -1

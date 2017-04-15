@@ -16,7 +16,7 @@ es:
         create: "Recibo se ha creado correctamente."
         billing: "Facturación Masiva"
         invoices_created: "Facturas creadas"
-        export_google: "Exportar a Google Sheets" 
+        export_google: "Exportar a Google Sheets"
         massive_billing_consumption: "Facturación masiva - Consumos"
         id: "Id"
         bill_no: "Nº"
@@ -68,6 +68,7 @@ es:
         label_to: "Hasta"
         alert_bill: "Factura creada con exito."
         alert_bill_error: "Error al crear factura"
+        payment_note: "El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores."
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

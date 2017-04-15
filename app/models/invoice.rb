@@ -105,6 +105,14 @@ class Invoice < ActiveRecord::Base
     formatted_date(payday_limit) rescue ''
   end
 
+  def formatted_biller_name
+    biller_name || ''
+  end
+
+  def formatted_biller_fiscal_id
+    biller_fiscal_id || ''
+  end
+
   def invoiced_concepts
     _codes = ""
     _ii = invoice_items.group(:code)
@@ -225,6 +233,14 @@ class Invoice < ActiveRecord::Base
 
   def subscriber
     bill.subscriber unless (bill.blank? || bill.subscriber.blank?)
+  end
+
+  def biller_name
+    biller.name unless (biller.blank? || biller.name.blank?)
+  end
+
+  def biller_fiscal_id
+    biller.fiscal_id unless (biller.blank? || biller.fiscal_id.blank?)
   end
 
   def invoice_type_name

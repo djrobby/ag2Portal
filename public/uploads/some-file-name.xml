@@ -27,7 +27,7 @@
     </subscriber>
     <client>
       <code>0001-0000003</code>
-      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <name>Camacho Sanchez, Manuel Jesus</name>
       <address_1>Cl. Cervantes 8</address_1>
       <address_2>04700 El Ejido, Almería (España)</address_2>
       <fiscal_id>48991284L</fiscal_id>
@@ -55,13 +55,39 @@
     </tariffs>
     <billing description="Facturación">
     </billing>
-    <total>51,89</total>
+    <total description="Total Recibo">51,89</total>
+    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
+    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
+    <payment_data description="Datos de pago">
+      <supply_no description="Nº de Suministro">0001-0000001</supply_no>
+      <bill_no description="Recibo Nº">005SER000001-2016-000004</bill_no>
+      <bill_date description="Fecha">24/10/2016</bill_date>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
+      <barcode>
+        <issuer description="Emisora">Camacho Sanchez, Manuel Jesus</issuer>
+        <reference description="Referencia">Camacho Sanchez, Manuel Jesus</reference>
+        <ident description="Identif.">Camacho Sanchez, Manuel Jesus</ident>
+        <supply description="SUMINISTRO">10000001</supply>
+        <payday_limit description="FECHA DE VENCIMIENTO"></payday_limit>
+        <total description="TOTAL">51,89</total>
+      </barcode>
+    </payment_data>
     <invoices>
       <invoice description="Factura de Servicio">
-        <invoice_no>00EL2-0160-00004</invoice_no>
-        <invoice_date>24/10/2016</invoice_date>
-        <total>51,89</total>
-        <items>
+        <invoice_no description="Factura Nº">00EL2-0160-00004</invoice_no>
+        <invoice_date description="Fecha">24/10/2016</invoice_date>
+        <payday_limit description="Fecha de vencimiento"></payday_limit>
+        <biller>
+          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+          <fiscal_id>A04241147</fiscal_id>
+        </biller>
+        <subtotal description="Subtotal">47,17</subtotal>
+        <vat_rates>
+          <vat_rate description="Cuota de IVA (10,00% de 47,17)">4,72</vat_rate>
+        </vat_rates>
+        <total description="Total">51,89</total>
+        <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" description="SUMINISTRO">
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
@@ -171,7 +197,7 @@
     </subscriber>
     <client>
       <code>0001-0000003</code>
-      <holder>Camacho Sanchez, Manuel Jesus</holder>
+      <name>Camacho Sanchez, Manuel Jesus</name>
       <address_1>Cl. Cervantes 8</address_1>
       <address_2>04700 El Ejido, Almería (España)</address_2>
       <fiscal_id>48991284L</fiscal_id>
@@ -199,13 +225,39 @@
     </tariffs>
     <billing description="Facturación">
     </billing>
-    <total>-51,89</total>
+    <total description="Total Recibo">-51,89</total>
+    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
+    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
+    <payment_data description="Datos de pago">
+      <supply_no description="Nº de Suministro">0001-0000001</supply_no>
+      <bill_no description="Recibo Nº">005SER000001-2016-000004</bill_no>
+      <bill_date description="Fecha">24/10/2016</bill_date>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
+      <barcode>
+        <issuer description="Emisora">Camacho Sanchez, Manuel Jesus</issuer>
+        <reference description="Referencia">Camacho Sanchez, Manuel Jesus</reference>
+        <ident description="Identif.">Camacho Sanchez, Manuel Jesus</ident>
+        <supply description="SUMINISTRO">10000001</supply>
+        <payday_limit description="FECHA DE VENCIMIENTO"></payday_limit>
+        <total description="TOTAL">-51,89</total>
+      </barcode>
+    </payment_data>
     <invoices>
       <invoice description="Factura de Servicio">
-        <invoice_no>00EL2-0160-00004</invoice_no>
-        <invoice_date>24/10/2016</invoice_date>
-        <total>-51,89</total>
-        <items>
+        <invoice_no description="Factura Nº">00EL2-0160-00004</invoice_no>
+        <invoice_date description="Fecha">24/10/2016</invoice_date>
+        <payday_limit description="Fecha de vencimiento"></payday_limit>
+        <biller>
+          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+          <fiscal_id>A04241147</fiscal_id>
+        </biller>
+        <subtotal description="Subtotal">-47,17</subtotal>
+        <vat_rates>
+          <vat_rate description="Cuota de IVA (10,00% de -47,17)">-4,72</vat_rate>
+        </vat_rates>
+        <total description="Total">-51,89</total>
+        <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" description="SUMINISTRO">
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>

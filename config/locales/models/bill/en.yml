@@ -62,6 +62,7 @@ en:
         quantity: "Articles"
         bonus: "Bonus"
         consumption: "Consumption"
+        payment_note: "The payment of this bill/invoice is credited with the possession of the receipt of payment or the bank debt, and does not presuppose the payment of previous bills/invoices."
       report:
         billable_concept: "Conceptos Facturados"
         client: "Datos de Cliente / Abonado"

@@ -105,5 +105,6 @@ es:
     pd: "de"
     page_subtotals: "Subtotales Página"
     currency_note: "Todos los importes están expresados en Euros (salvo indicación en contrario)"
+    payment_note: "El pago de este/a %{singular} se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de los/las %{plural} anteriores. "
     from_title: "Desde:"
     to_title: "Hasta:"

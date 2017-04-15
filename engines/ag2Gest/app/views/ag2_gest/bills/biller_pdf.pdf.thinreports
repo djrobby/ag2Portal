@@ -31,7 +31,7 @@ report.page.values(company_data: (@biller_printer.project.company.invoice_footer
 # Remarks
 
 report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
-				   remark: "* " + I18n.t("activerecord.attributes.report.remark"))
+				   remark: "* " + I18n.t("activerecord.attributes.bill.payment_note"))
 
 #
 # Lists
@@ -62,8 +62,8 @@ report.page.values(bill_c: I18n.t("activerecord.models.bill.one"),
 				   province: @biller_printer.try(:client).try(:zipcode).try(:province).try(:name).upcase
 				   )
 #
-reading_a = @biller_printer.reading_1.reading_date.strftime("_format") unless @biller_printer.reading_1.blank?
-reading_b = @biller_printer.reading_2.reading_date.strftime("_format") unless @biller_printer.reading_2.blank?
+reading_a = @biller_printer.reading_1.reading_date.strftime(_format) unless @biller_printer.reading_1.blank?
+reading_b = @biller_printer.reading_2.reading_date.strftime(_format) unless @biller_printer.reading_2.blank?
 # supply_data
 report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.supply_data"),
 				   data_meter_c: I18n.t("activerecord.attributes.contracting_request.data_meter"),
@@ -180,8 +180,8 @@ _number2 = " "
 #
 #
 #
-var_invoice_first_date = @biller_printer.invoices.first.invoice_date.strftime("%d/%m/%Y") unless @biller_printer.invoices.first.invoice_date.blank?
-var_invoice_first_limit = @biller_printer.invoices.first.payday_limit.strftime("%d/%m/%Y") unless @biller_printer.invoices.first.payday_limit.blank?
+var_invoice_first_date = @biller_printer.invoices.first.invoice_date.strftime(_format) unless @biller_printer.invoices.first.invoice_date.blank?
+var_invoice_first_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 if @biller_printer.project.company.company_bank_accounts.first.blank?
 	var_issuer = @biller_printer.project.company.fiscal_id[1..9]
 else
@@ -190,7 +190,7 @@ end
 if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
 	var_ident = @biller_printer.subscriber.subscriber_code[5..10]
 else
-	var_ident = @biller_printer.invoices.first.payday_limit.strftime('%d%m%y') unless @biller_printer.invoices.first.payday_limit.blank?
+	var_ident = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 end
 # payment_data
 var_client_bank = ClientBankAccount.where(subscriber_id: @biller_printer.subscriber_id,ending_at: nil)
@@ -216,7 +216,7 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
 				   pay_ident_c: I18n.t("activerecord.attributes.bill.ident").upcase,
 				   pay_ident: var_ident,
 				   pay_sum_c: I18n.t("activerecord.attributes.billable_concept.supply").upcase,
-				   pay_sum: @biller_printer.subscriber.subscriber_code[3..15],
+				   pay_sum: @biller_printer.subscriber.subscriber_code[3..10],
 				   pay_date_limit_c: I18n.t("ag2_gest.bills.index.payday_limit").upcase,
 				   pay_date_limit: var_invoice_first_limit,
 				   pay_total_c: I18n.t("activerecord.attributes.bill.total").upcase,
@@ -229,8 +229,8 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
 #
 #
 if !@biller_printer.invoices.second.blank?
-var_invoice_date = @biller_printer.invoices.second.invoice_date.strftime("%d/%m/%Y") unless @biller_printer.invoices.second.invoice_date.blank?
-var_invoice_limit = @biller_printer.invoices.second.payday_limit.strftime("%d/%m/%Y") unless @biller_printer.invoices.second.payday_limit.blank?
+var_invoice_date = @biller_printer.invoices.second.invoice_date.strftime(_format) unless @biller_printer.invoices.second.invoice_date.blank?
+var_invoice_limit = @biller_printer.invoices.second.payday_limit.strftime(_format) unless @biller_printer.invoices.second.payday_limit.blank?
 #
 	report.layout.config.list(:other_invoice) do |c|
 		# On list page footer insertion
