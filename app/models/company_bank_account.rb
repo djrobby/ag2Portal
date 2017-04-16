@@ -49,6 +49,10 @@ class CompanyBankAccount < ActiveRecord::Base
     "#{full_name}"
   end
 
+  def active
+    ending_at.nil? || ending_at > Date.today
+  end
+
   def full_name
     full_name = ""
     if !self.bank_account_class.blank?

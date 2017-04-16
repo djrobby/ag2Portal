@@ -190,7 +190,7 @@ end
 if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
 	var_ident = @biller_printer.subscriber.subscriber_code[5..10]
 else
-	var_ident = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
+	var_ident = @biller_printer.invoices.first.payday_limit.strftime("%d%m%y") unless @biller_printer.invoices.first.payday_limit.blank?
 end
 # payment_data
 var_client_bank = ClientBankAccount.where(subscriber_id: @biller_printer.subscriber_id,ending_at: nil)

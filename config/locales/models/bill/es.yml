@@ -69,6 +69,8 @@ es:
         alert_bill: "Factura creada con exito."
         alert_bill_error: "Error al crear factura"
         payment_note: "El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores."
+        debt: "Deuda"
+        debt_c: "Su total pendiente asciende a"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

@@ -97,7 +97,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def full_no
-    # Invoice no (Invoice code & year & sequential number) => SSSSS-YYYY-NNNNNNN
+    # Invoice no (Invoice code & office & year & sequential number) => SSSOO-YYYY-NNNNNNN
     invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]
   end
 
@@ -182,9 +182,7 @@ class Invoice < ActiveRecord::Base
       _aux = _aux << r.tariff.billable_concept.id
       _aux = _aux << r.tariff.billable_concept.name
       _aux = _aux << invoice_items.where(code: r.tariff.billable_concept.code).sum(&:amount)
-      if r.description[0] == 0.to_s
-        _aux = _aux << r.description[0]
-      elsif r.description[0] == 1.to_s
+      if r.description[0] == 0.to_s || r.description[0] == 1.to_s
         _aux = _aux << r.description[0]
       else
         _aux = _aux << nil
@@ -196,6 +194,7 @@ class Invoice < ActiveRecord::Base
     _codes
   end
 
+  # Same as 'invoiced_subtotals_by_concept', but when items are prorated (different tariffs, two items by each concept)
   def invoiced_subtotals_by_billable_item
     _codes = []
     _aux = []
@@ -205,9 +204,7 @@ class Invoice < ActiveRecord::Base
       _aux = _aux << r.tariff.billable_concept.name
       _aux = _aux << invoice_items.where(code: r.tariff.billable_concept.code).sum(&:amount)
       _aux = _aux << r.tariff.billable_concept.code
-      if r.description[0] == 0.to_s
-        _aux = _aux << r.description[0]
-      elsif r.description[0] == 1.to_s
+      if r.description[0] == 0.to_s || r.description[0] == 1.to_s
         _aux = _aux << r.description[0]
       else
         _aux = _aux << nil

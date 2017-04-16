@@ -177,6 +177,14 @@ class Company < ActiveRecord::Base
     _ret
   end
 
+  def numeric_fiscal_id
+    fiscal_id.gsub(/[^0-9]/, '')
+  end
+
+  def first_active_bank_suffix
+    company_bank_accounts.active.first.bank_suffix rescue ''
+  end
+
   private
 
   def check_for_dependent_records

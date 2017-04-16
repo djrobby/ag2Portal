@@ -118,6 +118,22 @@ class Bill < ActiveRecord::Base
     reading_2.formatted_reading_date rescue ''
   end
 
+  def issuer
+    project.company.numeric_fiscal_id + project.company.first_active_bank_suffix
+  end
+
+  def reference
+    invoices.first.invoice_no[3..15] rescue ''
+  end
+
+  def ident
+    if project.company.first_active_bank_suffix < '500'
+      subscriber.subscriber_code[5..10]
+    else
+      invoices.first.payday_limit.strftime("%d%m%y") rescue subscriber.subscriber_code[5..10]
+    end
+  end
+
   def consumption
     invoices.first.consumption || 0
   end

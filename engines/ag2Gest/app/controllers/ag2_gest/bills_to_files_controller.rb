@@ -35,7 +35,7 @@ module Ag2Gest
 
       bills = Bill.service.includes(:project, :reading_1, :reading_2, :client,
                                     subscriber: [:use, meter: [:caliber]], invoices:
-                                   [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]]).first(2)
+                                   [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]]).last(2)
       xml = service_bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
 
@@ -90,6 +90,7 @@ module Ag2Gest
       tariffs_d = I18n.t("activerecord.models.tariff.zero")
       billing_d = I18n.t("activerecord.attributes.contracting_request.billing")
       total_bill_d = I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.bill.one")
+      pending_debt_d = I18n.t("activerecord.attributes.bill.debt_c")
       currency_note_d = "* " + I18n.t("every_report.currency_note")
       payment_note_d = "* " + I18n.t("activerecord.attributes.bill.payment_note")
       payment_data_d = I18n.t("activerecord.attributes.contracting_request.payment_data")
@@ -168,8 +169,9 @@ module Ag2Gest
             # Invoices frame
             xml.billing(description: billing_d) do
             end
-            # Total Bill
+            # Total Bill & Pending debt
             xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+            xml.pending_debt({ description: pending_debt_d }, number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             # Notes
             xml.currency_note   currency_note_d
             xml.payment_note    payment_note_d
@@ -181,9 +183,9 @@ module Ag2Gest
               xml.holder({ description: subscriber_holder_d }, bill.subscriber.full_name)
               xml.bank_account({ description: payment_bank_d }, bill.subscriber.full_name)
               xml.barcode do
-                xml.issuer({ description: payment_issuer_d.upcase }, bill.subscriber.full_name)
-                xml.reference({ description: payment_reference_d.upcase }, bill.subscriber.full_name)
-                xml.ident({ description: payment_ident_d.upcase }, bill.subscriber.full_name)
+                xml.issuer({ description: payment_issuer_d.upcase }, bill.issuer)
+                xml.reference({ description: payment_reference_d.upcase }, bill.reference)
+                xml.ident({ description: payment_ident_d.upcase }, bill.ident)
                 xml.supply({ description: payment_supply_d.upcase }, bill.subscriber.subscriber_code[3..10])
                 xml.payday_limit({ description: payday_limit_d.upcase }, bill.formatted_payday_limit)
                 xml.total({ description: total_invoice_d.upcase }, number_with_precision(bill.total, precision: 2))
