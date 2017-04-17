@@ -168,6 +168,9 @@ module Ag2Gest
             end
             # Tariffs frame
             xml.tariffs(description: tariffs_d) do
+              bill.regulations.each do |r|
+
+              end
             end
             # Total Bill & Pending debt
             xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))

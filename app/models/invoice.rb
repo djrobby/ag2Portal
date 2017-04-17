@@ -179,6 +179,9 @@ class Invoice < ActiveRecord::Base
     _tariffs
   end
 
+  # Array of:
+  # [0] concept.code
+  # [1] regulation_id
   def regulations(_items = invoice_items.includes(tariff: :billable_item).order(:id))
     _i = nil
     _codes = []
