@@ -17,10 +17,26 @@ class Regulation < ActiveRecord::Base
 
   def to_label
     if ending_at.blank?
-      "#{regulation_type.description} #{try(:description)} (#{I18n.l(starting_at)})"
+      "#{type_description} #{regulation_description} #{regulation_starting_at}"
     else
-      "#{regulation_type.description} #{try(:description)} (#{I18n.l(starting_at)} - #{I18n.l(ending_at)})"
+      "#{type_description} #{regulation_description} #{regulation_starting_at}-#{regulation_ending_at}"
     end
+  end
+
+  def type_description
+    regulation_type.description.strip rescue ''
+  end
+
+  def regulation_description
+    description.strip rescue ''
+  end
+
+  def regulation_starting_at
+    I18n.l(starting_at) rescue ''
+  end
+
+  def regulation_ending_at
+    I18n.l(ending_at) rescue ''
   end
 
   private

@@ -169,7 +169,7 @@ class Bill < ActiveRecord::Base
       i.regulations.each do |r|
         unless _codes.include? r
           _i += 1
-          _codes << r.insert(0,_i)
+          _codes << r.insert(0,_i.to_s)
         end
       end
     end

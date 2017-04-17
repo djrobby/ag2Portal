@@ -51,7 +51,9 @@
       <invoiced description="M3 facturados">30</invoiced>
       <average description="Consumo medio">30</average>
     </consumption>
-    <tariffs description="Tarifas">
+    <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
     <total description="Total Recibo">-51,89</total>
     <pending_debt description="Su total pendiente asciende a">-51,89</pending_debt>
@@ -87,9 +89,11 @@
         </vat_rates>
         <total description="Total">-51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
-          <concept code="SUM" description="SUMINISTRO">
-            <amount description="Importe por SUMINISTRO">-32,32</amount>
+          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
+            <tariffs>(1)</tariffs>
+            <amount>-32,32</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff>(1)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>-1,320000</price>
@@ -98,6 +102,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>-0,250000</price>
@@ -105,6 +110,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>4,00</quantity>
                 <price>-0,470000</price>
@@ -112,6 +118,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>-0,850000</price>
@@ -119,6 +126,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>14,00</quantity>
                 <price>-1,420000</price>
@@ -127,9 +135,11 @@
               </item>
             </consumption>
           </concept>
-          <concept code="DEP" description="DEPURACION">
-            <amount description="Importe por DEPURACION">-7,56</amount>
+          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
+            <tariffs>(2)</tariffs>
+            <amount>-7,56</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff>(2)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>-2,520000</price>
@@ -138,6 +148,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Bloque único">
+                <tariff>(2)</tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -146,9 +157,11 @@
               </item>
             </consumption>
           </concept>
-          <concept code="SAN" description="SANEAMIENTO">
-            <amount description="Importe por SANEAMIENTO">-7,29</amount>
+          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
+            <tariffs></tariffs>
+            <amount>-7,29</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff></tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>-2,430000</price>
@@ -157,6 +170,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
+                <tariff></tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -165,10 +179,12 @@
               </item>
             </consumption>
           </concept>
-          <concept code="CAN" description="CANON">
-            <amount description="Importe por CANON">0,00</amount>
+          <concept code="CAN" name="CANON" description="Importe por CANON">
+            <tariffs></tariffs>
+            <amount>0,00</amount>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
+                <tariff></tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -224,7 +240,9 @@
       <invoiced description="M3 facturados">30</invoiced>
       <average description="Consumo medio">30</average>
     </consumption>
-    <tariffs description="Tarifas">
+    <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
     <total description="Total Recibo">51,89</total>
     <pending_debt description="Su total pendiente asciende a">51,89</pending_debt>
@@ -260,9 +278,11 @@
         </vat_rates>
         <total description="Total">51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
-          <concept code="SUM" description="SUMINISTRO">
-            <amount description="Importe por SUMINISTRO">32,32</amount>
+          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
+            <tariffs>(1)</tariffs>
+            <amount>32,32</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff>(1)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>1,320000</price>
@@ -271,6 +291,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,250000</price>
@@ -278,6 +299,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>4,00</quantity>
                 <price>0,470000</price>
@@ -285,6 +307,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,850000</price>
@@ -292,6 +315,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>14,00</quantity>
                 <price>1,420000</price>
@@ -300,9 +324,11 @@
               </item>
             </consumption>
           </concept>
-          <concept code="DEP" description="DEPURACION">
-            <amount description="Importe por DEPURACION">7,56</amount>
+          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
+            <tariffs>(2)</tariffs>
+            <amount>7,56</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff>(2)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>2,520000</price>
@@ -311,6 +337,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Bloque único">
+                <tariff>(2)</tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -319,9 +346,11 @@
               </item>
             </consumption>
           </concept>
-          <concept code="SAN" description="SANEAMIENTO">
-            <amount description="Importe por SANEAMIENTO">7,29</amount>
+          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
+            <tariffs></tariffs>
+            <amount>7,29</amount>
             <item code="CF" description="Cuota de Servicio">
+              <tariff></tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>2,430000</price>
@@ -330,6 +359,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
+                <tariff></tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>
@@ -338,10 +368,12 @@
               </item>
             </consumption>
           </concept>
-          <concept code="CAN" description="CANON">
-            <amount description="Importe por CANON">0,00</amount>
+          <concept code="CAN" name="CANON" description="Importe por CANON">
+            <tariffs></tariffs>
+            <amount>0,00</amount>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
+                <tariff></tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>

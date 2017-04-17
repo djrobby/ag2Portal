@@ -104,7 +104,7 @@ module Ag2Gest
       payment_ident_d = I18n.t("activerecord.attributes.bill.ident")
 
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
-      bridge = " // "
+      bridge = " | "
 
       # Initialize Builder
       xml = Builder::XmlMarkup.new(:indent => 2)
@@ -167,9 +167,13 @@ module Ag2Gest
               xml.average({ description: avg_consumption_d }, bill.average_billed_consumption)
             end
             # Tariffs frame
-            xml.tariffs(description: tariffs_d) do
+            xml.tariffs(description: tariffs_d, separator: bridge) do
               bill.regulations.each do |r|
-
+                regulation = Regulation.find(r[2]) rescue nil
+                if !regulation.nil?
+                  tariff_t = '(' + r[0] + ') ' + regulation.to_label
+                  xml.tariff({ code: r[1] }, tariff_t)
+                end
               end
             end
             # Total Bill & Pending debt
@@ -208,8 +212,6 @@ module Ag2Gest
                 else
                   concepts_detail_d = ''
                 end
-                # Invoice subtotals (array of invoice items grouped by tariff's billable item)
-                # subtotals_by_billable_item = invoice.invoiced_subtotals_by_billable_item
                 xml.invoice(description: invoice_type_d) do  # Each invoice
                   xml.invoice_no({ description: invoice_no_d }, invoice.full_no)
                   xml.invoice_date({ description: bill_date_d }, formatted_date(invoice.invoice_date))
@@ -238,8 +240,15 @@ module Ag2Gest
                     invoice.ordered_invoiced_concepts.each do |concept, description, amount|
                       concept_description = invoice_concept_d + description
                       concept_amount = number_with_precision(amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                      # Regulation legends to apply to current concept
+                      concept_regulations = ''
+                      bill.regulations.each do |r|
+                        if concept == r[1]
+                          concept_regulations += '(' + r[0] + ')'
+                        end
+                      end
                       xml.concept(code: concept.upcase, name: description.upcase, description: concept_description) do  # Each invoice concept
-                        xml.tariffs(concept_tariffs)
+                        xml.tariffs(concept_regulations)
                         xml.amount(concept_amount)
                         bll = -1
                         qty_ant = 0
@@ -257,9 +266,19 @@ module Ag2Gest
                             date_tariff = !item.tariff.ending_at.blank? ? to_d + " " + item.tariff_ending_at : from_d + " " + item.tariff_starting_at
                             subcode_name += " (" + tariff_d + " " + date_tariff + ")"
                           end
+                          # Tax & measure
                           tax_pct = item.tax_type.tax rescue 0
                           measure = item.measure.description rescue ' '
+                          # Regulation legend to apply to current item
+                          item_regulation = ''
+                          bill.regulations.each do |r|
+                            if concept == r[1] && item.regulation == r[2]
+                              item_regulation = '(' + r[0] + ')'
+                              break
+                            end
+                          end
                           xml.item(code: item.subcode, description: subcode_name) do   # Each invoice item
+                            xml.tariff      item_regulation
                             xml.measure     measure
                             xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                             xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
@@ -278,12 +297,13 @@ module Ag2Gest
                           end
                           xml.consumption(description: consumption_description) do  # Each consumption items
                             block_items.each do |item|
+                              # If it's a block, specify bounds
                               subcode_name = item.subcode_name
                               if block_codes.include? item.subcode  # It's a block
                                 from = bll + 1
                                 to = item.quantity + qty_ant
                                 if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
-                                  if item.subcode == 'BL1' && item.tariff.block1_fee > 0
+                                  if item.subcode == 'BL1' && item.tariff.block1_fee > 0  # Unique block
                                     subcode_name = single_t
                                   else
                                     subcode_name = more_t + from.to_i.to_s
@@ -294,9 +314,19 @@ module Ag2Gest
                                 qty_ant += item.quantity
                                 bll = to
                               end
+                              # Tax & measure
                               tax_pct = item.tax_type.tax rescue 0
                               measure = item.measure.description rescue ' '
+                              # Regulation legend to apply to current item
+                              item_regulation = ''
+                              bill.regulations.each do |r|
+                                if concept == r[1] && item.regulation == r[2]
+                                  item_regulation = '(' + r[0] + ')'
+                                  break
+                                end
+                              end
                               xml.item(code: item.subcode, description: subcode_name) do   # Each invoice item
+                                xml.tariff      item_regulation
                                 xml.measure     measure
                                 xml.quantity    number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
                                 xml.price       number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
