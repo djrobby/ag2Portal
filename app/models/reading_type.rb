@@ -29,6 +29,10 @@ class ReadingType < ActiveRecord::Base
     [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]
   end
 
+  def self.auto_registrable
+    [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::INSTALACION, ReadingType::AUTO]
+  end
+
   private
 
   def check_for_dependent_records

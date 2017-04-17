@@ -101,6 +101,10 @@ class InvoiceItem < ActiveRecord::Base
     formatted_date(tariff.ending_at) rescue ''
   end
 
+  def regulation
+    tariff.billable_item.regulation_id
+  end
+
   private
 
   def item_repeat

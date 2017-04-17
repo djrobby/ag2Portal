@@ -27,6 +27,7 @@ en:
         subscriber: "Subscriber"
         subscriber_id: "Subscriber"
         bill_date: "Date"
+        payday_limit: "Payday limit"
         last_name: "Last name"
         first_name: "First Name"
         name: "Name"

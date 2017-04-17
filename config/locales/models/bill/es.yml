@@ -27,6 +27,7 @@ es:
         subscriber: "Abonado"
         subscriber_id: "Abonado"
         bill_date: "Fecha"
+        payday_limit: "Fecha límite pago"
         last_name: "Apellidos"
         first_name: "Nombres"
         name: "Nombre"

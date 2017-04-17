@@ -62,12 +62,14 @@ module Ag2Gest
       total_invoice_d = I18n.t("activerecord.attributes.bill.total")
       vat_rate_d = I18n.t("activerecord.attributes.contracting_request.iva_c")
       subtotal_invoice_d = I18n.t("activerecord.attributes.bill.subtotal")
+      invoice_concept_d = I18n.t("activerecord.attributes.contracting_request.amount_title")
+      invoice_payday_limit_d = I18n.t("ag2_gest.bills.index.payday_limit")
 
       bill_d = I18n.t("activerecord.models.bill.one")
       bill_no_d = I18n.t("activerecord.attributes.bill.bill_no")
       bill_date_d = I18n.t("activerecord.attributes.bill.bill_date")
       billing_period_d = I18n.t("activerecord.attributes.report.billing_period")
-      payday_limit_d = I18n.t("ag2_gest.bills.index.payday_limit")
+      bill_payday_limit_d = I18n.t("activerecord.attributes.bill.payday_limit")
 
       subscriber_d = I18n.t("activerecord.attributes.contracting_request.data_client")
       subscriber_code_d = I18n.t("activerecord.attributes.subscriber.subscriber_code")
@@ -102,6 +104,7 @@ module Ag2Gest
       payment_ident_d = I18n.t("activerecord.attributes.bill.ident")
 
       block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
+      bridge = " // "
 
       # Initialize Builder
       xml = Builder::XmlMarkup.new(:indent => 2)
@@ -124,7 +127,7 @@ module Ag2Gest
             xml.bill_no({ description: bill_no_d }, bill.full_no)
             xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
             xml.billing_period({ description: billing_period_d }, bill.billing_period)
-            xml.payday_limit({ description: payday_limit_d }, bill.formatted_payday_limit)
+            xml.payday_limit({ description: bill_payday_limit_d }, bill.formatted_payday_limit)
             xml.subscriber(description: subscriber_d) do
               xml.code({ description: subscriber_code_d }, bill.subscriber.full_code)
               xml.holder({ description: subscriber_holder_d }, bill.subscriber.full_name)
@@ -166,9 +169,6 @@ module Ag2Gest
             # Tariffs frame
             xml.tariffs(description: tariffs_d) do
             end
-            # Invoices frame
-            xml.billing(description: billing_d) do
-            end
             # Total Bill & Pending debt
             xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             xml.pending_debt({ description: pending_debt_d }, number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
@@ -187,11 +187,11 @@ module Ag2Gest
                 xml.reference({ description: payment_reference_d.upcase }, bill.reference)
                 xml.ident({ description: payment_ident_d.upcase }, bill.ident)
                 xml.supply({ description: payment_supply_d.upcase }, bill.subscriber.subscriber_code[3..10])
-                xml.payday_limit({ description: payday_limit_d.upcase }, bill.formatted_payday_limit)
+                xml.payday_limit({ description: bill_payday_limit_d.upcase }, bill.formatted_payday_limit)
                 xml.total({ description: total_invoice_d.upcase }, number_with_precision(bill.total, precision: 2))
               end
             end
-            xml.invoices do   # Invoices
+            xml.invoices(description: billing_d) do   # Invoices
               bill.invoices.each do |invoice|
                 # Invoice type description
                 if I18n.locale == :es
@@ -205,10 +205,12 @@ module Ag2Gest
                 else
                   concepts_detail_d = ''
                 end
+                # Invoice subtotals (array of invoice items grouped by tariff's billable item)
+                # subtotals_by_billable_item = invoice.invoiced_subtotals_by_billable_item
                 xml.invoice(description: invoice_type_d) do  # Each invoice
                   xml.invoice_no({ description: invoice_no_d }, invoice.full_no)
                   xml.invoice_date({ description: bill_date_d }, formatted_date(invoice.invoice_date))
-                  xml.payday_limit({ description: payday_limit_d }, invoice.formatted_payday_limit)
+                  xml.payday_limit({ description: invoice_payday_limit_d }, invoice.formatted_payday_limit)
                   # Biller
                   xml.biller do |biller|
                     xml.name        invoice.formatted_biller_name
@@ -230,8 +232,12 @@ module Ag2Gest
                   # Total
                   xml.total({ description: total_invoice_d }, number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
                   xml.items(description: concepts_detail_d) do  # Invoice items
-                    invoice.ordered_invoiced_concepts.each do |concept, description|
-                      xml.concept(code: concept.upcase, description: description.upcase) do  # Each invoice concept
+                    invoice.ordered_invoiced_concepts.each do |concept, description, amount|
+                      concept_description = invoice_concept_d + description
+                      concept_amount = number_with_precision(amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+                      xml.concept(code: concept.upcase, name: description.upcase, description: concept_description) do  # Each invoice concept
+                        xml.tariffs(concept_tariffs)
+                        xml.amount(concept_amount)
                         bll = -1
                         qty_ant = 0
                         invoice_items = invoice.invoice_items_by_concept(concept)

@@ -140,7 +140,7 @@ a = @biller_printer.invoices.first
 			end
 				_array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
 
-				regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime("%d/%m/%Y") + "." unless regulation.blank?
+				regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "." unless regulation.blank?
 
 				_bridge = " // "
 		end

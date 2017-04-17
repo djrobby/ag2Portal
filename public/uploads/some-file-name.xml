@@ -12,7 +12,7 @@
     <bill_no description="Nº">005SER000001-2016-000023</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
-    <payday_limit description="Fecha de vencimiento">24/10/2016</payday_limit>
+    <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
     <subscriber description="Datos Cliente">
       <code description="Código">0001-0000001</code>
       <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
@@ -39,7 +39,7 @@
     <consumption description="Datos Consumo">
       <previous_reading description="Lect. Anterior">
         <index>50</index>
-        <date>24/10/2016</date>
+        <date>01/10/2016</date>
       </previous_reading>
       <current_reading description="Lect. Actual">
         <index>80</index>
@@ -53,8 +53,6 @@
     </consumption>
     <tariffs description="Tarifas">
     </tariffs>
-    <billing description="Facturación">
-    </billing>
     <total description="Total Recibo">-51,89</total>
     <pending_debt description="Su total pendiente asciende a">-51,89</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
@@ -70,11 +68,11 @@
         <reference description="REFERENCIA">L2016000023</reference>
         <ident description="IDENTIF.">000001</ident>
         <supply description="SUMINISTRO">10000001</supply>
-        <payday_limit description="FECHA DE VENCIMIENTO">24/10/2016</payday_limit>
+        <payday_limit description="FECHA LíMITE PAGO">24/10/2016</payday_limit>
         <total description="TOTAL">-51,89</total>
       </barcode>
     </payment_data>
-    <invoices>
+    <invoices description="Facturación">
       <invoice description="Factura de Servicio">
         <invoice_no description="Factura Nº">00EL2-0160-00023</invoice_no>
         <invoice_date description="Fecha">24/10/2016</invoice_date>
@@ -90,6 +88,7 @@
         <total description="Total">-51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" description="SUMINISTRO">
+            <amount description="Importe por SUMINISTRO">-32,32</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -129,6 +128,7 @@
             </consumption>
           </concept>
           <concept code="DEP" description="DEPURACION">
+            <amount description="Importe por DEPURACION">-7,56</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -147,6 +147,7 @@
             </consumption>
           </concept>
           <concept code="SAN" description="SANEAMIENTO">
+            <amount description="Importe por SANEAMIENTO">-7,29</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -165,6 +166,7 @@
             </consumption>
           </concept>
           <concept code="CAN" description="CANON">
+            <amount description="Importe por CANON">0,00</amount>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
                 <measure>m3</measure>
@@ -183,7 +185,7 @@
     <bill_no description="Nº">005SER000001-2016-000024</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
-    <payday_limit description="Fecha de vencimiento">24/10/2016</payday_limit>
+    <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
     <subscriber description="Datos Cliente">
       <code description="Código">0001-0000001</code>
       <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
@@ -210,7 +212,7 @@
     <consumption description="Datos Consumo">
       <previous_reading description="Lect. Anterior">
         <index>50</index>
-        <date>24/10/2016</date>
+        <date>01/10/2016</date>
       </previous_reading>
       <current_reading description="Lect. Actual">
         <index>80</index>
@@ -224,8 +226,6 @@
     </consumption>
     <tariffs description="Tarifas">
     </tariffs>
-    <billing description="Facturación">
-    </billing>
     <total description="Total Recibo">51,89</total>
     <pending_debt description="Su total pendiente asciende a">51,89</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
@@ -238,16 +238,16 @@
       <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
       <barcode>
         <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">0920160000024</reference>
+        <reference description="REFERENCIA">L2016000024</reference>
         <ident description="IDENTIF.">000001</ident>
         <supply description="SUMINISTRO">10000001</supply>
-        <payday_limit description="FECHA DE VENCIMIENTO">24/10/2016</payday_limit>
+        <payday_limit description="FECHA LíMITE PAGO">24/10/2016</payday_limit>
         <total description="TOTAL">51,89</total>
       </barcode>
     </payment_data>
-    <invoices>
+    <invoices description="Facturación">
       <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">0EL09-2016-0000024</invoice_no>
+        <invoice_no description="Factura Nº">00EL2-0160-00024</invoice_no>
         <invoice_date description="Fecha">24/10/2016</invoice_date>
         <payday_limit description="Fecha de vencimiento">24/10/2016</payday_limit>
         <biller>
@@ -261,6 +261,7 @@
         <total description="Total">51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" description="SUMINISTRO">
+            <amount description="Importe por SUMINISTRO">32,32</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -300,6 +301,7 @@
             </consumption>
           </concept>
           <concept code="DEP" description="DEPURACION">
+            <amount description="Importe por DEPURACION">7,56</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -318,6 +320,7 @@
             </consumption>
           </concept>
           <concept code="SAN" description="SANEAMIENTO">
+            <amount description="Importe por SANEAMIENTO">7,29</amount>
             <item code="CF" description="Cuota de Servicio">
               <measure>Mes</measure>
               <quantity>3,00</quantity>
@@ -336,6 +339,7 @@
             </consumption>
           </concept>
           <concept code="CAN" description="CANON">
+            <amount description="Importe por CANON">0,00</amount>
             <consumption description="Consumo">
               <item code="BL1" description="Más de 0">
                 <measure>m3</measure>

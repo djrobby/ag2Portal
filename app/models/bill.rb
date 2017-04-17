@@ -158,6 +158,22 @@ class Bill < ActiveRecord::Base
     invoices.first.average_billed_consumption[0] || []
   end
 
+  def regulations
+    _codes = []
+    _aux = []
+    _i = 0
+    invoices.each do |i|
+      i.regulations.each do |r|
+        unless _codes.include? r
+          _i += 1
+          _codes << r
+          _aux << _i
+        end
+      end
+    end
+    _aux.zip(_codes)
+  end
+
   def full_no
     # Bill no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
     if bill_no == "$err"
