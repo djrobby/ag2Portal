@@ -19,6 +19,7 @@ en:
       new:
         title: "New Billable item"
       back_to_main_page: "Back to Billable items"
+      generate_error_incidence: "There are unconfirmed readings without index. Please, indicate at least one incidence."
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

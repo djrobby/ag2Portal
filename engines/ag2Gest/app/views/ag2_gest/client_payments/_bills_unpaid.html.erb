@@ -15,7 +15,7 @@
     <!-- <a href="#" class="btn btn-primary btn-small pull-right">Devoluciones</a> -->
   </div>
 </div>
-
+<% if !@bills_pending.blank? %>
 <% @bills_pending.each do |bill| %>
   <% unless bill.payable? %>
     <div class="accordion">
@@ -85,3 +85,4 @@
 <% end %>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills_pending } %>
+<% end %>

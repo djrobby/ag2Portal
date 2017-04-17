@@ -198,8 +198,8 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -229,8 +229,8 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -260,8 +260,8 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -291,8 +291,8 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -322,8 +322,8 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -353,19 +353,28 @@ module Ag2Gest
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
+        if !billing_period.blank?
+          with :billing_period, billing_period
         end
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @bills_pending = @search_pending.results
-      @bills_charged = @search_charged.results
-      @client_payments_cash = @search_cash.results
-      @client_payments_bank = @search_bank.results
-      @client_payments_others = @search_others.results
-      @instalments = @search_instalment.results
+      if bill_no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and billing_period.blank? and reading_routes.blank?
+        @bills_pending = ""
+        @bills_charged = ""
+        @client_payments_cash = @search_cash.results
+        @client_payments_bank = @search_bank.results
+        @client_payments_others = @search_others.results
+        @instalments = @search_instalment.results
+      else
+        @bills_pending = @search_pending.results
+        @bills_charged = @search_charged.results
+        @client_payments_cash = @search_cash.results
+        @client_payments_bank = @search_bank.results
+        @client_payments_others = @search_others.results
+        @instalments = @search_instalment.results
+      end 
       #@reports = reports_array
 
       respond_to do |format|

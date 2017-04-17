@@ -34,9 +34,12 @@ module Ag2Gest
     end
 
     def to_reading
-      @to_readings = @pre_readings.select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
+      @to_readings = @pre_readings
+      # .select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
 
       @to_readings.each do |pre_reading|
+
+        redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil?
         reading = Reading.new( project_id: pre_reading.project_id,
                               billing_period_id: pre_reading.billing_period_id,
                               billing_frequency_id: pre_reading.billing_frequency_id,
@@ -69,7 +72,7 @@ module Ag2Gest
          send_data render_to_string, filename: "#{title}_#{Date.today}.pdf", type: 'application/pdf', disposition: 'inline'
        }
      end
-   end
+    end
 
     # GET /prereadings
     # GET /prereadings.json
@@ -163,6 +166,11 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @prereading = PreReading.find(params[:id])
+      if params["reading_index"].nil?
+        r_date = params[:pre_reading][:reading_date]
+        @prereading.reading_index = Reading.where(subscriber_id: @prereading.subscriber_id, reading_type_id: ReadingType.auto_registrable).where("reading_date < ?", r_date.to_date).order(:reading_date).last.reading_index
+        @prereading.reading_type_id = ReadingType::AUTO
+      end
       if params["incidence_type_ids"]
         @prereading.reading_incidence_types.destroy_all
         @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])

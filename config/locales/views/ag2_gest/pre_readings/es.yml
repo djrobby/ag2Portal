@@ -19,6 +19,7 @@ es:
       new:
         title: "Nueva Lectura no Confirmada"
       back_to_main_page: "Volver a Lecturas no Confirmadas"
+      generate_error_incidence: "Existen Lecturas no Confirmadas sin índice. Por favor indique al menos una incidencia."
       # generate_code_btn: "Código de Lectura"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"
