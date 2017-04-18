@@ -244,6 +244,10 @@ class Subscriber < ActiveRecord::Base
     meter.blank? ? "" : meter.caliber_id
   end
 
+  def use_name
+    use.blank? ? "" : use.right_name
+  end
+
   #
   # Class (self) user defined methods
   #

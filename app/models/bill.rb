@@ -29,9 +29,12 @@ class Bill < ActiveRecord::Base
   has_many :cancelled_invoices
   has_many :active_invoices
   has_many :active_supply_invoices
-  has_one :water_supply_contract                                      # Contract bill for: New contracting or change of holder (to NEW subscriber)
-  has_one :water_supply_contract, foreign_key: "unsubscribe_bill_id"  # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
-  has_one :water_supply_contract, foreign_key: "bailback_bill_id"     # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)
+  # Contract bill for: New contracting or change of holder (to NEW subscriber)
+  has_one :water_supply_contract
+  # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
+  has_one :unsubscribe_water_supply_contract, :class_name => 'WaterSupplyContract', foreign_key: "unsubscribe_bill_id"
+  # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)
+  has_one :bailback_water_supply_contract, :class_name => 'WaterSupplyContract', foreign_key: "bailback_bill_id"
 
   validates :bill_no,         :presence => true,
                               :length => { :is => 23 },

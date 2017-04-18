@@ -296,10 +296,16 @@ class Reading < ActiveRecord::Base
           # Computes & generates Invoice Items
           generate_invoice_items(tariff, @invoice, @bill, cf, user_id)
         end # tariffs_biller[1].each do |tariff|
+
+        # Save totals in generated invoice
+        _i = Invoice.find(@invoice.id)
+        _i.totals = _i.total
+        _i.save
       end
+      # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
-      return @bill
+      return
     else
       return nil
     end

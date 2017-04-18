@@ -67,8 +67,8 @@ class Invoice < ActiveRecord::Base
   scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
 
   # Callbacks
-  before_validation :item_repeat, :on => :create
   before_save :calculate_and_store_totals
+  before_validation :item_repeat, :on => :create
   before_create :assign_payday_limit
   after_save :bill_status
 
@@ -285,6 +285,10 @@ class Invoice < ActiveRecord::Base
     invoice_type.name rescue ''
   end
 
+  def invoice_type_by_item_description
+    invoice_items.first.description.capitalize rescue ''
+  end
+
   # Calculates & returns the average billed consumption up to the last six invoices
   def average_billed_consumption
     _prev_consumptions = []
@@ -458,5 +462,6 @@ class Invoice < ActiveRecord::Base
 
   def assign_payday_limit
     self.payday_limit = self.invoice_date if self.payday_limit.nil?
+    true
   end
 end

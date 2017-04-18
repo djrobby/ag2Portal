@@ -137,7 +137,7 @@ module Ag2Gest
               end
               xml.supply(description: subscriber_supply_d) do
                 xml.fiscal_id({ description: subscriber_fiscal_id_d }, bill.subscriber.fiscal_id)
-                xml.use({ description: subscriber_use_d }, bill.subscriber.use.right_name)
+                xml.use({ description: subscriber_use_d }, bill.subscriber.use_name)
               end
             end
             xml.client do
@@ -200,17 +200,19 @@ module Ag2Gest
             end
             xml.invoices(description: billing_d) do   # Invoices
               bill.invoices.each do |invoice|
-                # Invoice type description
-                if I18n.locale == :es
-                  invoice_type_d = I18n.t("activerecord.models.invoice.one") + ' de ' + invoice.invoice_type_name
-                else
-                  invoice_type_d = invoice.invoice_type_name + ' ' + I18n.t("activerecord.models.invoice.one")
-                end
                 # Is the first invoice? Set concepts_detail_d
                 if invoice.id == bill.invoices.first.id
                   concepts_detail_d = I18n.t("activerecord.attributes.report.detail").upcase
+                  invoice_type_name = invoice.invoice_type_name
                 else
                   concepts_detail_d = ''
+                  invoice_type_name = invoice.invoice_type_by_item_description
+                end
+                # Invoice type description
+                if I18n.locale == :es
+                  invoice_type_d = I18n.t("activerecord.models.invoice.one") + ' de ' + invoice_type_name
+                else
+                  invoice_type_d = invoice_type_name + ' ' + I18n.t("activerecord.models.invoice.one")
                 end
                 xml.invoice(description: invoice_type_d) do  # Each invoice
                   xml.invoice_no({ description: invoice_no_d }, invoice.full_no)
@@ -250,8 +252,6 @@ module Ag2Gest
                       xml.concept(code: concept.upcase, name: description.upcase, description: concept_description) do  # Each invoice concept
                         xml.tariffs(concept_regulations)
                         xml.amount(concept_amount)
-                        bll = -1
-                        qty_ant = 0
                         invoice_items = invoice.invoice_items_by_concept(concept)
                         # has_block_items = invoice.has_block_items?(invoice_items)
                         # Split current concept invoice items between blocks & non-blocks, and tariffs applied to blocks
@@ -296,7 +296,13 @@ module Ag2Gest
                             consumption_description += " (" + tariff_d + " " + from_d + " " + tariff[1] + ")"
                           end
                           xml.consumption(description: consumption_description) do  # Each consumption items
+                            bll = -1
+                            qty_ant = 0
                             block_items.each do |item|
+                              # Only processes items belong to current tariff
+                              if item.tariff_id != tariff[0]
+                                next
+                              end
                               # If it's a block, specify bounds
                               subcode_name = item.subcode_name
                               if block_codes.include? item.subcode  # It's a block
