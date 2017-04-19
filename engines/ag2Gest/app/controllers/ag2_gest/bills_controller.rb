@@ -6,6 +6,7 @@ module Ag2Gest
   class BillsController < ApplicationController
     @@subscribers = nil
     @@period = nil
+    @@readings = nil
 
     # def void
     #   @subscriber = Subscriber.find params[:id]
@@ -238,7 +239,7 @@ module Ag2Gest
     def show_consumptions
       # billing_period_id = params[:subscribers][:period]
       # subscriber_ids = params[:subscribers][:ids].reject(&:empty?)
-      @readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
+      readings = [] #Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).order(:reading_date)
       # subscribers = Subscriber.where(id: subscriber_ids)
       # subscribers = Subscriber.where(id: @@subscribers.pluck('subscribers.id'))
 
@@ -249,11 +250,12 @@ module Ag2Gest
       # end
 
       @@subscribers.each do |subscriber|
-        @readings << subscriber.readings.select('readings.id') \
-                               .where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable) \
-                               .order(:reading_date).last
+        readings << subscriber.readings.select('readings.id') \
+                              .where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable) \
+                              .order(:reading_date).last
       end
-      @readings = Reading.where(id: @readings).paginate(:page => params[:page], :per_page => per_page || 10)
+      @readings = Reading.where(id: readings).paginate(:page => params[:page], :per_page => per_page || 10)
+      @@readings = @readings
 
       respond_to do |format|
         format.html
@@ -266,7 +268,8 @@ module Ag2Gest
         @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       else
         if session[:office] != '0'
-          @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+          @bills = PreBill.joins(:project).where(projects: {office_id: session[:office].to_i}).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+          # @bills = Office.find(session[:office]).subscribers.map(&:pre_bills).flatten.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
         else
           @bills = PreBill.all.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
         end
@@ -362,12 +365,12 @@ module Ag2Gest
     # POST /bills
     # POST /bills.json
     def create
-      readings_ids = params[:bill][:readings][0...-1][1..-1].split(", ")
-      readings = Reading.where(id: readings_ids)
+      # readings_ids = params[:bill][:readings][0...-1][1..-1].split(", ")
+      # readings = Reading.where(id: readings_ids)
       @bills = []
       group_no = PreBill.next_no
       # must be thread
-      readings.each do |r|
+      @@readings.each do |r|
         @bills << r.generate_pre_bill(group_no)
       end
 

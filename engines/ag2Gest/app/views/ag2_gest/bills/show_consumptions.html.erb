@@ -79,7 +79,7 @@
         <%#= link_to I18n.t('activerecord.attributes.reading.exportcsv'), show_consumptions_bills_path(subscribers: {period: params[:subscribers][:period], ids: params[:subscribers][:ids]}, format: :csv), class: "btn btn-warning pull-right" %>
         <%= link_to I18n.t('activerecord.attributes.reading.exportcsv'), show_consumptions_bills_path(format: :csv), class: "btn btn-warning pull-right" %>
         <%= simple_form_for :bill, url: bills_path, method: :post do |f| %>
-        <%= f.input :readings, :as => :hidden, :input_html => { :value =>  @readings.map(&:id) } %>
+        <%#= f.input :readings, :as => :hidden, :input_html => { :value =>  @readings.map(&:id) } %>
         <%= f.button :submit, "Aplicar tarifas", :class => 'btn btn-primary' %>
       <% end %>
     </div>
