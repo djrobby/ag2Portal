@@ -254,8 +254,8 @@ module Ag2Gest
                               .where(billing_period_id: @@period).where('reading_type_id IN (?)', ReadingType.billable) \
                               .order(:reading_date).last
       end
-      @readings = Reading.where(id: readings).paginate(:page => params[:page], :per_page => per_page || 10)
-      @@readings = @readings
+      @@readings = Reading.where(id: readings)
+      @readings = @@readings.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
 
       respond_to do |format|
         format.html
