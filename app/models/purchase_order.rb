@@ -171,15 +171,15 @@ class PurchaseOrder < ActiveRecord::Base
   def self.undelivered(organization, _ordered)
     if !organization.blank?
       if !_ordered
-        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       else
-        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       end
     else
       if !_ordered
-        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       else
-        joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       end
     end
   end

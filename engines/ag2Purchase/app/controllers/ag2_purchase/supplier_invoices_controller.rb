@@ -5,7 +5,9 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:si_update_receipt_select_from_supplier,
+    skip_load_and_authorize_resource :only => [:si_remove_filters,
+                                               :si_restore_filters,
+                                               :si_update_receipt_select_from_supplier,
                                                :si_update_order_select_from_supplier,
                                                :si_update_selects_from_note,
                                                :si_update_product_select_from_note_item,
@@ -29,6 +31,10 @@ module Ag2Purchase
                                                :si_generate_invoice_from_order,
                                                :si_attachment_changed,
                                                :si_update_attachment]
+    # Helper methods for
+    # => index filters
+    helper_method :si_remove_filters, :si_restore_filters
+
     # Public attachment for drag&drop
     $attachment = nil
     $attachment_changed = false
@@ -782,13 +788,14 @@ module Ag2Purchase
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      @suppliers = suppliers_dropdown if @suppliers.nil?
-      @work_orders = work_orders_dropdown if @work_orders.nil?
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
       @purchase_orders = purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -1212,7 +1219,7 @@ module Ag2Purchase
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
     def receipts_dropdown
@@ -1382,6 +1389,23 @@ module Ag2Purchase
       elsif session[:Order]
         params[:Order] = session[:Order]
       end
+    end
+
+    def si_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Supplier] = ""
+      params[:Project] = ""
+      params[:Order] = ""
+      return " "
+    end
+
+    def si_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Supplier] = session[:Supplier]
+      params[:Project] = session[:Project]
+      params[:Order] = session[:Order]
     end
   end
 end

@@ -672,7 +672,7 @@ module Ag2Gest
           service_point_id: @contracting_request.service_point_id,
           contracting_request_id: @contracting_request.id,
           use_id: @contracting_request.water_supply_contract.use_id,
-          deposit: @contracting_request..water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").first.total,
+          deposit: @contracting_request.water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").first.total,
           created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save

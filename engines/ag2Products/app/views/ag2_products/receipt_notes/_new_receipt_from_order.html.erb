@@ -1,6 +1,5 @@
 <!-- Modal -->
 <script>
-
   function suppliers_Select2(intialValue) {
     $('#Supplier_').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -27,6 +26,7 @@
       }
     });
   }
+
   $(document).ready(function() {
     $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {

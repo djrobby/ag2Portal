@@ -143,7 +143,6 @@ module Ag2Gest
               reading_2_date: pre_invoice.reading_2_date,
               reading_1_index: pre_invoice.reading_1_index,
               reading_2_index: pre_invoice.reading_2_index,
-              totals: pre_invoice.total,
               organization_id: pre_bill.project.organization_id )
             pre_invoice.pre_invoice_items.map do |pre_invoice_item|
               InvoiceItem.create!( invoice_id: @invoice.id,
@@ -167,9 +166,9 @@ module Ag2Gest
             pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
 
             # Save totals in generated invoice
-            # _i = Invoice.find(@invoice.id)
-            # _i.totals = _i.total
-            # _i.save
+            _i = Invoice.find(@invoice.id)
+            _i.totals = _i.total
+            _i.save
           end
           # add mj
           final_bills << @bill

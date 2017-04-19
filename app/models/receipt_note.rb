@@ -124,15 +124,15 @@ class ReceiptNote < ActiveRecord::Base
   def self.unbilled(organization, _ordered)
     if !organization.blank?
       if !_ordered
-        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       else
-        joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:receipt_note_item_balances).where('receipt_notes.organization_id = ?', organization).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
     else
       if !_ordered
-        joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       else
-        joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+        includes(:supplier).joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
     end
   end
