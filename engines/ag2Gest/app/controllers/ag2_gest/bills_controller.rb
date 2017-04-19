@@ -54,6 +54,26 @@ module Ag2Gest
     end
     # add mj
 
+    ### DO NOT USE: It's a mess! ###
+    # def do_not_use_bills_with_this_attributes(operation_id=1)
+    #   Bill.where(reading_2_id: reading_ids_subscriber_period).blank? and Bill.select{|b| b.bill_operation == InvoiceOperation::INVOICE and b.bill_period == pre_bill.reading_2.billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == pre_bill.subscriber_id}.blank?
+    # end
+
+    # Returns bills with this pre_bill data
+    def bills_with_this_attributes(pre_bill)
+      Bill.joins(:invoices).where(invoices: {invoice_operation_id: InvoiceOperation::INVOICE, billing_period_id: pre_bill.billing_period_id, invoice_type_id: InvoiceType::WATER}, subscriber_id: pre_bill.subscriber_id)
+    end
+
+    # There is active Bill for the PreBill reading?
+    def pre_bill_reading_not_billed?(pre_bill)
+      pre_bill.reading_2.bill_id.blank?
+    end
+
+    # This PreBill can be confirmed and create new Bill?
+    def pre_bill_can_be_confirmed?(pre_bill)
+      pre_bill_reading_not_billed?(pre_bill) && bills_with_this_attributes(pre_bill).count <= 0
+    end
+
     #
     # Bulk billing (confirm prebilling)
     #
@@ -65,8 +85,14 @@ module Ag2Gest
       invoice_date = params[:pre_bill][:invoice_date]
       final_bills = []
       @pre_bills.each do |pre_bill|
-        reading_ids_subscriber_period = pre_bill.subscriber.readings.where(billing_period_id: pre_bill.reading_2.billing_period_id).map(&:id)
-        if Bill.where(reading_2_id: reading_ids_subscriber_period).blank? and Bill.select{|b| b.bill_operation == InvoiceOperation::INVOICE and b.bill_period == pre_bill.reading_2.billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == pre_bill.subscriber_id}.blank?
+        # Begin: What the hell is this???!!!
+        # reading_ids_subscriber_period = pre_bill.subscriber.readings.where(billing_period_id: pre_bill.reading_2.billing_period_id).map(&:id)
+        # if Bill.where(reading_2_id: reading_ids_subscriber_period).blank? and Bill.select{|b| b.bill_operation == InvoiceOperation::INVOICE and b.bill_period == pre_bill.reading_2.billing_period_id and b.bill_type.id == InvoiceType::WATER and b.subscriber_id == pre_bill.subscriber_id}.blank?
+        # End
+        #
+        # If the next 'if' is not enough, revert to this one:
+        # if pre_bill_can_be_confirmed?(pre_bill)
+        if pre_bill_reading_not_billed?(pre_bill)
           @bill = Bill.create!( bill_no: bill_next_no(pre_bill.project),
             project_id: pre_bill.project_id,
             # project_id: pre_bill.reading.project_id,
