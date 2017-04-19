@@ -18,8 +18,12 @@
     <tr>
       <td><%=t 'activerecord.attributes.ledger_account.organization' %>:</td>
       <td><%= @ledger_account.organization.name %></td>
+      <td><%=t 'activerecord.attributes.ledger_account.company' %>:</td>
+      <td><%= @ledger_account.company.name unless @ledger_account.company.blank? %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.ledger_account.project' %>:</td>
-      <td><%= @ledger_account.project.full_name unless @ledger_account.project.blank? %></td>
+      <td colspan="3"><%= @ledger_account.project.full_name unless @ledger_account.project.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @ledger_account } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @ledger_account } %>

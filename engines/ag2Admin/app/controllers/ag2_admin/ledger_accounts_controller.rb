@@ -43,9 +43,9 @@ module Ag2Admin
       manage_filter_state
       init_oco if !session[:organization]
       if session[:organization] != '0'
-        @ledger_accounts = LedgerAccount.where(organization_id: session[:organization]).includes(:accounting_group).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @ledger_accounts = LedgerAccount.where(organization_id: session[:organization]).includes(:accounting_group, :organization, :company, :project).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       else
-        @ledger_accounts = LedgerAccount.includes(:accounting_group).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
+        @ledger_accounts = LedgerAccount.includes(:accounting_group, :organization, :company, :project).paginate(:page => params[:page], :per_page => per_page).order(sort_column + ' ' + sort_direction)
       end
 
       respond_to do |format|
@@ -73,6 +73,7 @@ module Ag2Admin
       @breadcrumb = 'create'
       @ledger_account = LedgerAccount.new
       @projects = projects_dropdown
+      @companies = companies_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -85,6 +86,7 @@ module Ag2Admin
       @breadcrumb = 'update'
       @ledger_account = LedgerAccount.find(params[:id])
       @projects = projects_dropdown_edit(@ledger_account.project)
+      @companies = companies_dropdown_edit(@ledger_account.company)
     end
 
     # POST /ledger_accounts
@@ -100,6 +102,7 @@ module Ag2Admin
           format.json { render json: @ledger_account, status: :created, location: @ledger_account }
         else
           @projects = projects_dropdown
+          @companies = companies_dropdown
           format.html { render action: "new" }
           format.json { render json: @ledger_account.errors, status: :unprocessable_entity }
         end
@@ -120,6 +123,7 @@ module Ag2Admin
           format.json { head :no_content }
         else
           @projects = projects_dropdown_edit(@ledger_account.project)
+          @companies = companies_dropdown_edit(@ledger_account.company)
           format.html { render action: "edit" }
           format.json { render json: @ledger_account.errors, status: :unprocessable_entity }
         end
@@ -165,6 +169,18 @@ module Ag2Admin
         _projects = Project.where(id: _project)
       end
       _projects
+    end
+
+    def companies_dropdown
+      session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+    end
+
+    def companies_dropdown_edit(_company)
+      _companies = companies_dropdown
+      if _companies.blank?
+        _companies = Company.where(id: _company)
+      end
+      _companies
     end
 
     # Keeps filter state

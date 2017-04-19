@@ -20,3 +20,5 @@ en:
         organization_id: "Organization"
         project: "Project"
         project_id: "Project"
+        company: "Company"
+        company_id: "Company"

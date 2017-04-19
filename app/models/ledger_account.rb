@@ -1,14 +1,15 @@
 class LedgerAccount < ActiveRecord::Base
   belongs_to :accounting_group
-  belongs_to :project
   belongs_to :organization
-  attr_accessible :code, :name, :accounting_group_id, :project_id, :organization_id
+  belongs_to :company
+  belongs_to :project
+  attr_accessible :code, :name, :accounting_group_id, :project_id, :organization_id, :company_id
 
   has_many :charge_accounts
   has_many :charge_groups
   has_many :suppliers
   has_many :clients
-  
+
   has_paper_trail
 
   validates :code,              :presence => true,
@@ -18,7 +19,7 @@ class LedgerAccount < ActiveRecord::Base
   validates :organization,      :presence => true
 
   before_destroy :check_for_dependent_records
-  
+
   def to_label
     "#{full_name}"
   end
@@ -32,7 +33,7 @@ class LedgerAccount < ActiveRecord::Base
   end
 
   private
-  
+
   def check_for_dependent_records
     # Check for charge accounts
     if charge_accounts.count > 0

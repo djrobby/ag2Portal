@@ -27,11 +27,12 @@ new_path: new_accounting_group_path, new_txt: t('ag2_admin.accounting_groups.ind
 
 <% if (@ledger_accounts.count > 0) %>
 <h4><%= t '.subtable_title' %></h4>
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th><%= t 'activerecord.attributes.ledger_account.code' %></th>
       <th><%= t 'activerecord.attributes.ledger_account.name' %></th>
+      <th><%= t 'activerecord.attributes.ledger_account.company' %></th>
       <th><%= t 'activerecord.attributes.ledger_account.project' %></th>
     </tr>
   </thead>
@@ -39,7 +40,8 @@ new_path: new_accounting_group_path, new_txt: t('ag2_admin.accounting_groups.ind
     <% @ledger_accounts.each do |t| %>
     <tr>
       <td><%= link_to t.code, t %></td>
-      <td><%= t.name %></td>
+      <td><%= t.name[0,90] %></td>
+      <td><%= t.company.name unless t.company.blank? %></td>
       <td><%= t.project.full_code unless t.project.blank? %></td>
     </tr>
     <% end %>

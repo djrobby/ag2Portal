@@ -36,6 +36,7 @@ class Project < ActiveRecord::Base
   has_many :tariff_shemes
   has_many :regulations
   has_many :contracting_requests
+  has_many :ledger_accounts
 
   has_paper_trail
 

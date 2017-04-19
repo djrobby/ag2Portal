@@ -20,3 +20,5 @@ es:
         organization_id: "Organización"
         project: "Proyecto"
         project_id: "Proyecto"
+        company: "Empresa"
+        company_id: "Empresa"
