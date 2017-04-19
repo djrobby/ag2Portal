@@ -1,3 +1,6 @@
+<% session[:return_to] = nil %>
+<% session[:return_to] = nil %>
+
 <script>
 $(document).ready(function () {
   var _thisForm = '';
@@ -237,6 +240,10 @@ $(document).ready(function () {
     margin-left: 5px !important;
   }
 </style>
+
+<% session[:return_to] = I18n.t('ag2_gest.client_payments.show.return_to') %>
+<% session[:return_to_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+
 
 <%= render '/layouts/ag2_gest/clientpaymentsbreadcrumb' %>
 

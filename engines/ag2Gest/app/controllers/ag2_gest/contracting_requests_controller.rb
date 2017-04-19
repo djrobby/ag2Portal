@@ -592,19 +592,15 @@ module Ag2Gest
       @reading = Reading.where(subscriber_id: @contracting_request.old_subscriber.id,reading_type_id: ReadingType::RETIRADA, billing_period_id: @contracting_request.old_subscriber.readings.last.billing_period_id, bill_id: nil)
         @contracting_request.status_control
         if @contracting_request.save
-          # @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
+          @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill
-          respond_to do |format|
-            format.json { render json: response_hash }
-          end
+          render json: response_hash
         else
-          respond_to do |format|
-            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
-          end
+          render :json => { :errors => @contracting_request.errors.as_json }, :status => 420
         end
       # else
       #   respond_to do |format|

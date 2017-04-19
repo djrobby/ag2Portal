@@ -164,8 +164,11 @@ module Ag2Gest
             pre_bill.update_attributes(bill_id: @bill.id,confirmation_date: params[:pre_bill][:confirmation_date])
             # add mj
             pre_invoice.update_attributes(invoice_id: @invoice.id,confirmation_date: params[:pre_bill][:confirmation_date])
+
             # Save totals in generated invoice
-            # @invoice.update_attributes(totals: @invoice.total)
+            # _i = Invoice.find(@invoice.id)
+            # _i.totals = _i.total
+            # _i.save
           end
           # add mj
           final_bills << @bill
@@ -195,6 +198,8 @@ module Ag2Gest
       @@period = params[:bill][:period]
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
+      # from_subscriber = params[:bill][:from]
+      # to_subscriber = params[:bill][:to]
 
       # Select subscribers properly
       # With readings (preferable)
@@ -308,6 +313,8 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @bill = Bill.find(params[:id])
+      @invoice = @bill.invoices.paginate(:page => params[:page], :per_page => per_page).order('id')
+      # @items = @invoice.invoice_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       @billing_periods = billing_periods_dropdown
       if !@bill.water_supply_contract.nil?
         @water_supply_contract = @bill.water_supply_contract

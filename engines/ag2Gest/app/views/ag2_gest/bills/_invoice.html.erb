@@ -1,0 +1,13 @@
+<tr>
+  <th><%= invoice.try(:id) %></th>
+  <th><%= invoice.try(:full_no) %></th>
+  <th><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></th>
+  <th><%= invoice.try(:invoice_type).try(:name) %></th>
+  <th><%= invoice.try(:invoice_status).try(:name) %></th>
+  <th><%= invoice.try(:invoice_operation).try(:name) %></th>
+  <td align="right"><%= number_with_precision(invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.total.blank? %></td>
+  <td align="right"><%= number_with_precision(invoice.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless invoice.debt.blank? %></td>
+  <td>&nbsp;
+  <%= link_to invoice_path(invoice), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
+  </td>
+</tr>

@@ -672,7 +672,7 @@ module Ag2Gest
           service_point_id: @contracting_request.service_point_id,
           contracting_request_id: @contracting_request.id,
           use_id: @contracting_request.water_supply_contract.use_id,
-          deposit: @contracting_request.water_supply_contract.bill.total,
+          deposit: @contracting_request..water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").first.total,
           created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save
@@ -714,6 +714,7 @@ module Ag2Gest
             reading_variant:  @subscriber.reading_variant,
             reading_date: params_meter_details[:installation_date],
             reading_index: params_meter_details[:installation_reading],
+            bill_id: @contracting_request.water_supply_contract.bill_id,
             created_by: (current_user.id if !current_user.nil?)
           )
           # CHANGE_OWNERS
