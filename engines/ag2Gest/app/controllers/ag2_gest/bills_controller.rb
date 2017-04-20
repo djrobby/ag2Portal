@@ -297,6 +297,9 @@ module Ag2Gest
       if @bills.empty?
         redirect_to pre_index_bills_path, notice: I18n.t("ag2_gest.bills.index.no_pre_group")
       else
+        @totals = @bills.select('count(pre_bills.id) as bills, sum(r2.reading_index-r1.reading_index) as consumptions, sum(pre_invoices.totals) as totals') \
+                        .joins('INNER JOIN readings r2 ON pre_bills.reading_2_id=r2.id INNER JOIN readings r1 on pre_bills.reading_1_id=r1.id INNER JOIN pre_invoices ON pre_bills.id=pre_invoices.pre_bill_id') \
+                        .first
         respond_to do |format|
           format.html # index.html.erb
           format.json { render json: @bills }
