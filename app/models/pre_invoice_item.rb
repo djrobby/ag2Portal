@@ -61,7 +61,8 @@ class PreInvoiceItem < ActiveRecord::Base
   # end
 
   def total
-    net #+ net_tax
+    amount
+    # net #+ net_tax
   end
 
   def bonus

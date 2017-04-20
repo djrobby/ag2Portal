@@ -209,6 +209,11 @@ class Reading < ActiveRecord::Base
       tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
         # Computes & generates Preinvoice Items
         generate_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
+
+        # Save totals in generated pre_invoice
+        _i = PreInvoice.find(pre_invoice.id)
+        _i.totals = _i.total
+        _i.save
       end # tariffs_biller[1].each do |tariff|
     end # subscriber.current_tariffs(reading_date).each
     return pre_bill

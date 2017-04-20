@@ -19,6 +19,9 @@ class PreInvoice < ActiveRecord::Base
   has_many :pre_invoice_items, dependent: :destroy
   has_one :active_supply_invoice
 
+  # Callbacks
+  before_save :calculate_and_store_totals
+
   def total_by_concept(billable_concept=1, includes_cf=false)
     if includes_cf
       pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ?', billable_concept.to_i).sum(&:amount)
@@ -64,23 +67,25 @@ class PreInvoice < ActiveRecord::Base
   end
 
   def subtotal
-    subtotal = 0
-    pre_invoice_items.each do |i|
-      if !i.total.blank?
-        subtotal += i.total
-      end
-    end
-    subtotal
+    pre_invoice_items.reject(&:marked_for_destruction?).sum(&:amount)
+    # subtotal = 0
+    # pre_invoice_items.each do |i|
+    #   if !i.total.blank?
+    #     subtotal += i.total
+    #   end
+    # end
+    # subtotal
   end
 
   def bonus
-    bonus = 0
-    pre_invoice_items.each do |i|
-      if !i.bonus.blank?
-        bonus += i.bonus
-      end
-    end
-    bonus
+    (discount_pct / 100) * subtotal if !discount_pct.blank?
+    # bonus = 0
+    # pre_invoice_items.each do |i|
+    #   if !i.bonus.blank?
+    #     bonus += i.bonus
+    #   end
+    # end
+    # bonus
   end
 
   def taxable
@@ -102,6 +107,12 @@ class PreInvoice < ActiveRecord::Base
   end
 
   def quantity
-    pre_invoice_items.sum("quantity")
+    pre_invoice_items.sum(:quantity)
+  end
+
+  private
+
+  def calculate_and_store_totals
+    self.totals = total
   end
 end

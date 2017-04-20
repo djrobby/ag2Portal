@@ -262,6 +262,7 @@ module Ag2Gest
       end
     end
 
+    # This method executes on Apply Tariffs
     def index
       if params[:bills]
         @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
@@ -284,27 +285,55 @@ module Ag2Gest
       end
     end
 
+    ### The commented lines of code, are a piece of shit. Do not use them!
     def pre_index
       from  = params[:From]
       to = params[:To]
       # OCO
       init_oco if !session[:organization]
       if !to.blank? and !from.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ? AND bill_date <= ?",from.to_date, to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        # @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ? AND bill_date <= ?",from.to_date, to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        @pre_bills = PreBill.select('pre_group_no, min(bill_date) as billing_date, count(*) as billing_count, min(billing_periods.period) as billing_period, max(bill_id) billed_id, sum(pre_invoices.totals) as billing_total') \
+                            .joins('LEFT JOIN (pre_invoices LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id) ON pre_bills.id=pre_invoices.pre_bill_id') \
+                            .where(project_id: current_projects_ids) \
+                            .where("bill_date BETWEEN ? AND ?", from.to_date, to.to_date) \
+                            .group(:pre_group_no) \
+                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       elsif !to.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date <= ?", to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        # @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date <= ?", to.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        @pre_bills = PreBill.select('pre_group_no, min(bill_date) as billing_date, count(*) as billing_count, min(billing_periods.period) as billing_period, max(bill_id) billed_id, sum(pre_invoices.totals) as billing_total') \
+                            .joins('LEFT JOIN (pre_invoices LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id) ON pre_bills.id=pre_invoices.pre_bill_id') \
+                            .where(project_id: current_projects_ids) \
+                            .where("bill_date <= ?", to.to_date) \
+                            .group(:pre_group_no) \
+                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       elsif !from.blank?
-        @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        # @pre_bills = PreBill.where(project_id: current_projects_ids).where("bill_date >= ?", from.to_date).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        @pre_bills = PreBill.select('pre_group_no, min(bill_date) as billing_date, count(*) as billing_count, min(billing_periods.period) as billing_period, max(bill_id) billed_id, sum(pre_invoices.totals) as billing_total') \
+                            .joins('LEFT JOIN (pre_invoices LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id) ON pre_bills.id=pre_invoices.pre_bill_id') \
+                            .where(project_id: current_projects_ids) \
+                            .where("bill_date >= ?", from.to_date) \
+                            .group(:pre_group_no) \
+                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       else
-        @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        # @pre_bills = PreBill.where(project_id: current_projects_ids).group_by{|p| p.pre_group_no }.to_a.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+        @pre_bills = PreBill.select('pre_group_no, min(bill_date) as billing_date, count(*) as billing_count, min(billing_periods.period) as billing_period, max(bill_id) billed_id, sum(pre_invoices.totals) as billing_total') \
+                            .joins('LEFT JOIN (pre_invoices LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id) ON pre_bills.id=pre_invoices.pre_bill_id') \
+                            .where(project_id: current_projects_ids) \
+                            .group(:pre_group_no) \
+                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       end
       # Resume info
       if !params[:pre_bill_no].blank?
-        @invoices_by_biller = PreBill.where("pre_group_no = ? AND bill_id IS NOT NULL", params[:pre_bill_no]).map(&:bill).map(&:invoices).flatten.group_by(&:biller_id)
+        @invoices_by_biller = PreBill.select('companies.name as company,min(invoices.invoice_no) as from_no,max(invoices.invoice_no) as to_no,sum(invoices.totals) as invoiced_total') \
+                                     .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
+                                     .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:pre_bill_no]) \
+                                     .group('invoices.biller_id')
+        # @invoices_by_biller = PreBill.where("pre_group_no = ? AND bill_id IS NOT NULL", params[:pre_bill_no]).map(&:bill).map(&:invoices).flatten.group_by(&:biller_id)
       end
 
       respond_to do |format|
-        format.html # index.html.erb
+        format.html # pre_index.html.erb
         format.json { render json: @pre_bills }
         format.js
       end
@@ -477,15 +506,15 @@ module Ag2Gest
     # end
 
     def billing_periods_dropdown
-      _billing_periods = BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
+      BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
     end
 
     def uses_dropdown
-      _uses = Use.order("code DESC")
+      Use.order("code DESC")
     end
 
     def reading_routes_dropdown
-      _reading_routes = ReadingRoute.where(project_id: current_projects_ids).order("name")
+      ReadingRoute.where(project_id: current_projects_ids).order("name")
     end
 
     def background(&block)
