@@ -28,7 +28,7 @@ class WaterSupplyContract < ActiveRecord::Base
                   :created_by, :updated_by, :meter_code_input
 
   def request_no
-    contracting_request.request_no
+    contracting_request.request_no unless contracting_request.blank?
   end
 
   searchable do

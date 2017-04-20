@@ -198,12 +198,12 @@ module Ag2Gest
       @@period = params[:bill][:period]
       _uses = params[:bill][:use].reject(&:empty?)
       uses = _uses.blank? ? Use.pluck(:id) : _uses
-      # from_subscriber = params[:bill][:from]
-      # to_subscriber = params[:bill][:to]
+      from_subscriber = params[:From]
+      to_subscriber = params[:To]
 
       # Select subscribers properly
       # With readings (preferable)
-      subscribers_with_readings(uses, reading_routes, offices, centers)
+      subscribers_with_readings(uses, reading_routes, offices, centers, from_subscriber, to_subscriber)
       # Without readings (faster)
       # subscribers_only(uses, reading_routes, offices, centers)
       # Extract only needed colums (street_directories & street_types were previously cached)
@@ -221,11 +221,31 @@ module Ag2Gest
     end
 
     def subscribers_with_readings(uses, reading_routes, offices, centers)
-      @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+      if (!from_subscriber.nil? && from_subscriber != "") && (!to_subscriber.nil? && to_subscriber != "")
+        @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+                                .joins(:readings) \
+                                .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?) AND subscribers.subscriber_code BETWEEN ? AND ?', uses, reading_routes, offices, centers, @@period, ReadingType.billable,from_subscriber,to_subscriber) \
+                                .group('subscribers.id') \
+                                .includes(:meter, street_directory: :street_type)
+      elsif !from_subscriber.nil? && from_subscriber != ""
+        @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+                                .joins(:readings) \
+                                .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?) AND subscribers.subscriber_code >= ?', uses, reading_routes, offices, centers, @@period, ReadingType.billable,from_subscriber) \
+                                .group('subscribers.id') \
+                                .includes(:meter, street_directory: :street_type)
+      elsif !to_subscriber.nil? && to_subscriber != ""
+        @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
+                                .joins(:readings) \
+                                .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?) AND subscribers.subscriber_code <= ?', uses, reading_routes, offices, centers, @@period, ReadingType.billable,to_subscriber) \
+                                .group('subscribers.id') \
+                                .includes(:meter, street_directory: :street_type)
+      else
+        @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
                                 .joins(:readings) \
                                 .where('subscribers.active=TRUE AND (subscribers.use_id IN (?) OR subscribers.use_id IS NULL) AND subscribers.reading_route_id IN (?) AND subscribers.office_id IN (?) AND subscribers.center_id IN (?) AND readings.billing_period_id = ? AND readings.reading_type_id IN (?)', uses, reading_routes, offices, centers, @@period, ReadingType.billable) \
                                 .group('subscribers.id') \
                                 .includes(:meter, street_directory: :street_type)
+      end
     end
 
     def subscribers_only(uses, reading_routes, offices, centers)
