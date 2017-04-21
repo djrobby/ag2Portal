@@ -151,71 +151,74 @@ class Reading < ActiveRecord::Base
     co = 0                          # consumption other
     cf = cr + ce + co               # consumption invoiced
 
-    # Create PreBill, PreInvoices & PreInvoiceItems
-    pre_bill = PreBill.create( bill_no: nil,
-                        pre_group_no: (group_no || PreBill.next_no),
-                        project_id: project_id,
-                        invoice_status_id: InvoiceStatus::PENDING,
-                        bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),
-                        subscriber_id: subscriber_id,
-                        client_id: subscriber.client_id,
-                        last_name: subscriber.client.last_name,
-                        first_name: subscriber.client.first_name,
-                        company: subscriber.client.company,
-                        fiscal_id: subscriber.client.fiscal_id,
-                        street_type_id: subscriber.client.street_type_id,
-                        street_name: subscriber.client.street_name,
-                        street_number: subscriber.client.street_number,
-                        building: subscriber.client.building,
-                        floor: subscriber.client.floor,
-                        floor_office: subscriber.client.floor_office,
-                        zipcode_id: subscriber.client.zipcode_id,
-                        town_id: subscriber.client.town_id,
-                        province_id: subscriber.client.province_id,
-                        region_id: subscriber.client.region_id,
-                        country_id: subscriber.client.country_id,
-                        confirmation_date: nil,
-                        bill_id: nil,
-                        created_by: user_id,
-                        reading_1_id: reading_1.try(:id),
-                        reading_2_id: id)
+    # Launch transaction
+    pre_bill = create_pre_bill(group_no, user_id, operation_id, cr, ce, co, cf)
 
-    subscriber.current_tariffs(reading_date).each do |tariffs_biller|
-      pre_invoice = PreInvoice.create(
-        invoice_no: nil,
-        pre_bill_id: pre_bill.id,
-        invoice_status_id: InvoiceStatus::PENDING,
-        invoice_type_id: InvoiceType::WATER,
-        invoice_date: (billing_period.try(:prebilling_starting_date) || Date.today),
-        tariff_scheme_id: subscriber.tariff_scheme_id,
-        payday_limit: billing_period.try(:prebilling_ending_date),
-        invoice_operation_id: operation_id,
-        billing_period_id: billing_period_id,
-        consumption: cf,
-        consumption_real: cr,
-        consumption_estimated: ce,
-        consumption_other: co,
-        biller_id: tariffs_biller[0],
-        discount_pct: 0.0,
-        exemption: 0.0,
-        charge_account_id: ChargeAccount.incomes(project_id).first.id,
-        created_by: user_id,
-        reading_1_date: reading_1.try(:reading_date),
-        reading_2_date: reading_date,
-        reading_1_index: reading_1.try(:reading_index),
-        reading_2_index: reading_index
-      )
+    # # Create PreBill, PreInvoices & PreInvoiceItems
+    # pre_bill = PreBill.create( bill_no: nil,
+    #                     pre_group_no: (group_no || PreBill.next_no),
+    #                     project_id: project_id,
+    #                     invoice_status_id: InvoiceStatus::PENDING,
+    #                     bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),
+    #                     subscriber_id: subscriber_id,
+    #                     client_id: subscriber.client_id,
+    #                     last_name: subscriber.client.last_name,
+    #                     first_name: subscriber.client.first_name,
+    #                     company: subscriber.client.company,
+    #                     fiscal_id: subscriber.client.fiscal_id,
+    #                     street_type_id: subscriber.client.street_type_id,
+    #                     street_name: subscriber.client.street_name,
+    #                     street_number: subscriber.client.street_number,
+    #                     building: subscriber.client.building,
+    #                     floor: subscriber.client.floor,
+    #                     floor_office: subscriber.client.floor_office,
+    #                     zipcode_id: subscriber.client.zipcode_id,
+    #                     town_id: subscriber.client.town_id,
+    #                     province_id: subscriber.client.province_id,
+    #                     region_id: subscriber.client.region_id,
+    #                     country_id: subscriber.client.country_id,
+    #                     confirmation_date: nil,
+    #                     bill_id: nil,
+    #                     created_by: user_id,
+    #                     reading_1_id: reading_1.try(:id),
+    #                     reading_2_id: id)
 
-      tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
-        # Computes & generates Preinvoice Items
-        generate_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
+    # subscriber.current_tariffs(reading_date).each do |tariffs_biller|
+    #   pre_invoice = PreInvoice.create(
+    #     invoice_no: nil,
+    #     pre_bill_id: pre_bill.id,
+    #     invoice_status_id: InvoiceStatus::PENDING,
+    #     invoice_type_id: InvoiceType::WATER,
+    #     invoice_date: (billing_period.try(:prebilling_starting_date) || Date.today),
+    #     tariff_scheme_id: subscriber.tariff_scheme_id,
+    #     payday_limit: billing_period.try(:prebilling_ending_date),
+    #     invoice_operation_id: operation_id,
+    #     billing_period_id: billing_period_id,
+    #     consumption: cf,
+    #     consumption_real: cr,
+    #     consumption_estimated: ce,
+    #     consumption_other: co,
+    #     biller_id: tariffs_biller[0],
+    #     discount_pct: 0.0,
+    #     exemption: 0.0,
+    #     charge_account_id: ChargeAccount.incomes(project_id).first.id,
+    #     created_by: user_id,
+    #     reading_1_date: reading_1.try(:reading_date),
+    #     reading_2_date: reading_date,
+    #     reading_1_index: reading_1.try(:reading_index),
+    #     reading_2_index: reading_index
+    #   )
 
-        # Save totals in generated pre_invoice
-        _i = PreInvoice.find(pre_invoice.id)
-        _i.totals = _i.total
-        _i.save
-      end # tariffs_biller[1].each do |tariff|
-    end # subscriber.current_tariffs(reading_date).each
+    #   tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
+    #     # Computes & generates Preinvoice Items
+    #     generate_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
+
+    #     # Save totals in generated pre_invoice
+    #     _i = PreInvoice.find(pre_invoice.id)
+    #     _i.totals = _i.total
+    #     _i.save
+    #   end # tariffs_biller[1].each do |tariff|
+    # end # subscriber.current_tariffs(reading_date).each
     return pre_bill
   end
 
@@ -243,77 +246,91 @@ class Reading < ActiveRecord::Base
     co = 0                          # consumption other
     cf = cr + ce + co               # consumption invoiced
 
-    if bill_id.blank?   # This reading can be billed only if it's released (nil)
-      @bill = Bill.create!(
-        bill_no: next_bill_no,
-        project_id: project_id,
-        invoice_status_id: InvoiceStatus::PENDING,
-        bill_date: invoice_date,
-        subscriber_id: subscriber_id,
-        client_id: subscriber.client_id,
-        last_name: subscriber.client.last_name,
-        first_name: subscriber.client.first_name,
-        company: subscriber.client.company,
-        fiscal_id: subscriber.client.fiscal_id,
-        street_type_id: subscriber.client.street_type_id,
-        street_name: subscriber.client.street_name,
-        street_number: subscriber.client.street_number,
-        building: subscriber.client.building,
-        floor: subscriber.client.floor,
-        floor_office: subscriber.client.floor_office,
-        zipcode_id: subscriber.client.zipcode_id,
-        town_id: subscriber.client.town_id,
-        province_id: subscriber.client.province_id,
-        region_id: subscriber.client.region_id,
-        country_id: subscriber.client.country_id,
-        created_by: user_id,
-        reading_1_id: reading_1.try(:id),
-        reading_2_id: id,
-        organization_id: project.organization_id )
+    # Bill No.
+    if next_bill_no.nil?
+      next_bill_no = bill_next_no(project)
+      if next_bill_no == '$err'
+        return nil
+      end
+    end
 
-      subscriber.current_tariffs(reading_date).each do |tariffs_biller|
-        @invoice = Invoice.create!(
-          invoice_no: invoice_next_no(project.company_id, project.office_id),
-          bill_id: @bill.id,
+    if bill_id.blank?   # This reading can be billed only if it's released (nil)
+      # Launch transaction
+      ActiveRecord::Base.transaction do
+        @bill = Bill.create!(
+          bill_no: next_bill_no,
+          project_id: project_id,
           invoice_status_id: InvoiceStatus::PENDING,
-          invoice_type_id: InvoiceType::WATER,
-          invoice_date: invoice_date,
-          tariff_scheme_id: nil,
-          payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
-          invoice_operation_id: operation_id,
-          billing_period_id: billing_period_id,
-          consumption: cf,
-          consumption_real: cr,
-          consumption_estimated: ce,
-          consumption_other: co,
-          biller_id: tariffs_biller[0],
-          discount_pct: 0.0,
-          exemption: 0.0,
-          charge_account_id: ChargeAccount.incomes(project_id).first.id,
+          bill_date: invoice_date,
+          subscriber_id: subscriber_id,
+          client_id: subscriber.client_id,
+          last_name: subscriber.client.last_name,
+          first_name: subscriber.client.first_name,
+          company: subscriber.client.company,
+          fiscal_id: subscriber.client.fiscal_id,
+          street_type_id: subscriber.client.street_type_id,
+          street_name: subscriber.client.street_name,
+          street_number: subscriber.client.street_number,
+          building: subscriber.client.building,
+          floor: subscriber.client.floor,
+          floor_office: subscriber.client.floor_office,
+          zipcode_id: subscriber.client.zipcode_id,
+          town_id: subscriber.client.town_id,
+          province_id: subscriber.client.province_id,
+          region_id: subscriber.client.region_id,
+          country_id: subscriber.client.country_id,
           created_by: user_id,
-          reading_1_date: reading_1.try(:reading_date),
-          reading_2_date: reading_date,
-          reading_1_index: reading_1.try(:reading_index),
-          reading_2_index: reading_index,
+          reading_1_id: reading_1.try(:id),
+          reading_2_id: id,
           organization_id: project.organization_id )
 
-        tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
-          # Computes & generates Invoice Items
-          generate_invoice_items(tariff, @invoice, @bill, cf, user_id)
-        end # tariffs_biller[1].each do |tariff|
+        subscriber.current_tariffs(reading_date).each do |tariffs_biller|
+          @invoice = Invoice.create!(
+            invoice_no: invoice_next_no(project.company_id, project.office_id),
+            bill_id: @bill.id,
+            invoice_status_id: InvoiceStatus::PENDING,
+            invoice_type_id: InvoiceType::WATER,
+            invoice_date: invoice_date,
+            tariff_scheme_id: nil,
+            payday_limit: payday_limit.blank? ? invoice_date : payday_limit,
+            invoice_operation_id: operation_id,
+            billing_period_id: billing_period_id,
+            consumption: cf,
+            consumption_real: cr,
+            consumption_estimated: ce,
+            consumption_other: co,
+            biller_id: tariffs_biller[0],
+            discount_pct: 0.0,
+            exemption: 0.0,
+            charge_account_id: ChargeAccount.incomes(project_id).first.id,
+            created_by: user_id,
+            reading_1_date: reading_1.try(:reading_date),
+            reading_2_date: reading_date,
+            reading_1_index: reading_1.try(:reading_index),
+            reading_2_index: reading_index,
+            organization_id: project.organization_id )
 
-        # Save totals in generated invoice
-        _i = Invoice.find(@invoice.id)
-        _i.totals = _i.total
-        _i.save
-      end
+          tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
+            # Computes & generates Invoice Items
+            generate_invoice_items(tariff, @invoice, @bill, cf, user_id)
+          end # tariffs_biller[1].each do |tariff|
+
+          # Save totals in generated invoice
+          _i = Invoice.find(@invoice.id)
+          _i.totals = _i.total
+          _i.save
+        end # subscriber.current_tariffs(reading_date).each
+      end # end transaction
       # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
       return
     else
       return nil
-    end
+    end # bill_id.blank?
+
+  rescue ActiveRecord::RecordInvalid
+    puts "Oops! We tried to do an invalid operation (generate_bill)."
   end
 
   #
@@ -986,5 +1003,80 @@ class Reading < ActiveRecord::Base
       end
     end
     code
+  end
+
+  # PreBill create transaction
+  def create_pre_bill(group_no, user_id, operation_id, cr, ce, co, cf)
+    pre_bill = nil
+    ActiveRecord::Base.transaction do
+      pre_bill = PreBill.create( bill_no: nil,
+                          pre_group_no: (group_no || PreBill.next_no),
+                          project_id: project_id,
+                          invoice_status_id: InvoiceStatus::PENDING,
+                          bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),
+                          subscriber_id: subscriber_id,
+                          client_id: subscriber.client_id,
+                          last_name: subscriber.client.last_name,
+                          first_name: subscriber.client.first_name,
+                          company: subscriber.client.company,
+                          fiscal_id: subscriber.client.fiscal_id,
+                          street_type_id: subscriber.client.street_type_id,
+                          street_name: subscriber.client.street_name,
+                          street_number: subscriber.client.street_number,
+                          building: subscriber.client.building,
+                          floor: subscriber.client.floor,
+                          floor_office: subscriber.client.floor_office,
+                          zipcode_id: subscriber.client.zipcode_id,
+                          town_id: subscriber.client.town_id,
+                          province_id: subscriber.client.province_id,
+                          region_id: subscriber.client.region_id,
+                          country_id: subscriber.client.country_id,
+                          confirmation_date: nil,
+                          bill_id: nil,
+                          created_by: user_id,
+                          reading_1_id: reading_1.try(:id),
+                          reading_2_id: id)
+
+      subscriber.current_tariffs(reading_date).each do |tariffs_biller|
+        pre_invoice = PreInvoice.create(
+          invoice_no: nil,
+          pre_bill_id: pre_bill.id,
+          invoice_status_id: InvoiceStatus::PENDING,
+          invoice_type_id: InvoiceType::WATER,
+          invoice_date: (billing_period.try(:prebilling_starting_date) || Date.today),
+          tariff_scheme_id: subscriber.tariff_scheme_id,
+          payday_limit: billing_period.try(:prebilling_ending_date),
+          invoice_operation_id: operation_id,
+          billing_period_id: billing_period_id,
+          consumption: cf,
+          consumption_real: cr,
+          consumption_estimated: ce,
+          consumption_other: co,
+          biller_id: tariffs_biller[0],
+          discount_pct: 0.0,
+          exemption: 0.0,
+          charge_account_id: ChargeAccount.incomes(project_id).first.id,
+          created_by: user_id,
+          reading_1_date: reading_1.try(:reading_date),
+          reading_2_date: reading_date,
+          reading_1_index: reading_1.try(:reading_index),
+          reading_2_index: reading_index
+        )
+
+        tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
+          # Computes & generates Preinvoice Items
+          generate_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
+
+          # Save totals in generated pre_invoice
+          _i = PreInvoice.find(pre_invoice.id)
+          _i.totals = _i.total
+          _i.save
+        end # tariffs_biller[1].each do |tariff|
+      end # subscriber.current_tariffs(reading_date).each
+    end # end transaction
+    return pre_bill
+
+  rescue ActiveRecord::RecordInvalid
+    puts "Oops! We tried to do an invalid operation (create_pre_bill)."
   end
 end
