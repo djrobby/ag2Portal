@@ -1,7 +1,8 @@
 <div class="row-fluid">
-  <div class="span4"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total") %>:</b> <%= @bills_charged.count unless @bills_charged.blank?  %></h5></div>
-  <div class="span4" align="center"></h5></div>
-  <div class="span4" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>:</b> <%= number_with_precision(@bills_charged.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @bills_charged.blank?  %></h5></div>
+  <b>
+  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.total") %>: <%= @charged_totals.bills %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>: <%= number_with_precision(@charged_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  </b>
 </div>
 
 <% if !@bills_charged.blank? %>
@@ -57,6 +58,5 @@
     </div>
   </div>
 <% end %>
-
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills_charged } %>
 <% end %>

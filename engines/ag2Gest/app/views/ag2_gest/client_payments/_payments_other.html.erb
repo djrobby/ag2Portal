@@ -1,8 +1,9 @@
 <div class="row-fluid">
-  <div class="span6"><h5><b><%= I18n.t("ag2_gest.client_payments.index.count_payments") %>:</b> <%= @client_payments_others.count unless @client_payments_others.blank?%></h5></div>
-  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>:</b> <%= number_with_precision(@client_payments_others.sum{|b| b.amount}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @client_payments_others.blank?  %></h5></div>
+  <b>
+  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.count_payments") %>: <%= @others_totals.payments %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@others_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  </b>
 </div>
-
 
 <table class="table table-condensed table-striped">
   <thead>

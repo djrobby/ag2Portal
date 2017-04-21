@@ -48,6 +48,7 @@ class Bill < ActiveRecord::Base
   # Scopes
   scope :by_no, -> { order(:bill_no) }
   #
+  scope :none, where("1 = 0")
   scope :commercial, -> { joins(:invoices).where("invoices.invoice_type_id != ? AND invoices.invoice_type_id != ?", InvoiceType::WATER, InvoiceType::CONTRACT).by_no }
   scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
   scope :contracting, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::CONTRACT}).by_no }

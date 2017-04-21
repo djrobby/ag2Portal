@@ -1,9 +1,9 @@
 <div class="row-fluid">
-  <div class="span4"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total") %>:</b> <%= @bills_pending.count unless @bills_pending.blank?  %></h5></div>
-  <div class="span4" align="center"></h5></div>
-  <div class="span4" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>:</b> <%= number_with_precision(@bills_pending.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @bills_pending.blank?  %></h5></div>
+  <b>
+  <div class="span6"><h5><%= I18n.t("activerecord.models.bill.few") %>: <%= @pending_totals.bills  %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>: <%= number_with_precision(@pending_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  </b>
 </div>
-
 
 <div class="row-fluid">
   <div class="span12">
@@ -61,8 +61,8 @@
               <tr class="<%= 'text-error' if i.unpaid? %>">
                 <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
                 <td><%= i.invoice_no %></td>
-                <td><%= i.invoice_date.strftime("%d/%m/%Y") %></td>
-                <td><%= i.payday_limit.strftime("%d/%m/%Y") %></td>
+                <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
+                <td><%= formatted_date(i.payday_limit) unless i.payday_limit.blank? %></td>
                 <% if i.bill.try(:instalments).blank? %>
                   <td align="right"><%= number_with_precision(i.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
@@ -81,7 +81,5 @@
     </div>
   </div>
 <% end %>
-
-
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills_pending } %>
 <% end %>

@@ -152,26 +152,22 @@ module Ag2Gest
       bill_no = params[:bill_no]
       client = params[:Client]
       subscriber = params[:Subscriber]
-      # entity = params[:entity]
       project = params[:Project]
       bank_account = params[:bank_account] == "SI" ? true : false
       billing_period = params[:billing_period]
-      reading_routes = params[:reading_routes]
 
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @billing_periods = billing_periods_dropdown if @billing_periods.nil?
-      @reading_routes = reading_routes_dropdown if @reading_routes.nil?
       @projects  = projects_dropdown if @projects.nil?
       # @clients = clients_dropdown if @clients.nil?
       # @subscribers  = subscribers_dropdown if @subscribers.nil?
-      # @entities  = entities_dropdown if @entities.nil?
 
       # If inverse no search is required
       bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
 
-      @search_pending = Bill.search do
+      search_pending = Bill.search do
         with(:invoice_status_id, 0..98)
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
@@ -205,8 +201,8 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @search_charged = Bill.search do
-        with :invoice_status_id, 99
+      search_charged = Bill.search do
+        with :invoice_status_id, InvoiceStatus::CHARGED
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
         end
@@ -236,7 +232,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @search_cash = ClientPayment.search do
+      search_cash = ClientPayment.search do
         with :payment_type, ClientPayment::CASH
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
@@ -267,7 +263,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @search_bank = ClientPayment.search do
+      search_bank = ClientPayment.search do
         with :payment_type, ClientPayment::BANK
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
@@ -298,7 +294,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @search_others = ClientPayment.search do
+      search_others = ClientPayment.search do
         with :payment_type, ClientPayment::OTHERS
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
@@ -329,7 +325,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      @search_instalment = Instalment.search do
+      search_instalment = Instalment.search do
         with :client_payment, nil
         if !current_projects_ids.blank?
           with :project_id, current_projects_ids
@@ -360,22 +356,37 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      if bill_no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and billing_period.blank? and reading_routes.blank?
-        @bills_pending = ""
-        @bills_charged = ""
-        @client_payments_cash = @search_cash.results
-        @client_payments_bank = @search_bank.results
-        @client_payments_others = @search_others.results
-        @instalments = @search_instalment.results
+      # Initialize datasets
+      if bill_no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and billing_period.blank?
+        # Return no results
+        @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
+        @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
       else
-        @bills_pending = @search_pending.results
-        @bills_charged = @search_charged.results
-        @client_payments_cash = @search_cash.results
-        @client_payments_bank = @search_bank.results
-        @client_payments_others = @search_others.results
-        @instalments = @search_instalment.results
-      end 
-      #@reports = reports_array
+        @bills_pending = search_pending.results
+        @bills_charged = search_charged.results
+      end
+      @client_payments_cash = search_cash.results
+      @client_payments_bank = search_bank.results
+      @client_payments_others = search_others.results
+      @instalments = search_instalment.results
+
+      # Initialize totals
+      bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
+      payments_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
+
+      pending_ids = @bills_pending.map(&:id)
+      charged_ids = @bills_charged.map(&:id)
+      cash_ids = @client_payments_cash.map(&:id)
+      bank_ids = @client_payments_bank.map(&:id)
+      others_ids = @client_payments_others.map(&:id)
+      instalments_ids = @instalments.map(&:id)
+
+      @pending_totals = Bill.select(bills_select).joins(:invoices).where(id: pending_ids).first
+      @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
+      @cash_totals = ClientPayment.select(payments_select).where(id: cash_ids).first
+      @bank_totals = ClientPayment.select(payments_select).where(id: bank_ids).first
+      @others_totals = ClientPayment.select(payments_select).where(id: others_ids).first
+      @instalments_totals = Instalment.select(payments_select).where(id: instalments_ids).first
 
       respond_to do |format|
         format.html # index.html.erb

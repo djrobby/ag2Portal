@@ -1,46 +1,43 @@
 <div class="row-fluid">
-  <div class="span6"><h5><b><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>:</b> <%= @instalments.count unless @instalments.blank?%></h5></div>
-  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>:</b> <%= number_with_precision(@instalments.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @instalments.blank?  %></h5></div>
+  <b>
+  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>: <%= @instalments_totals.payments %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@instalments_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  </b>
 </div>
 
-
 <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
-  <div class="row-fluid">
-    <div class="span12">
-      <%= f.input :ids, :as => :hidden %>
-      <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
-    </div>
-  </div>
-  <table class="table table-condensed table-striped">
-    <thead>
-      <tr>
-        <th><input type="checkbox" class="checkbox-master-table"></th>
-        <th>Factura</th>
-        <th>Abonado</th>
-        <th>Plazo</th>
-        <th>Limite</th>
-        <th>Bonus</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @instalments.each do |instalment| %>
-        <tr>
-          <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
-          <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
-          <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
-          <td><%= instalment.instalment %></td>
-          <td><%= instalment.payday_limit.strftime("%d/%m/%Y") %></td>
-          <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-          <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-          <td>
-            <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(instalment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <%= f.input :ids, :as => :hidden %>
+  <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
 <% end %>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><input type="checkbox" class="checkbox-master-table"></th>
+      <th>Factura</th>
+      <th>Abonado</th>
+      <th>Plazo</th>
+      <th>Limite</th>
+      <th>Bonus</th>
+      <th>Total</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @instalments.each do |instalment| %>
+      <tr>
+        <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
+        <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
+        <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
+        <td><%= instalment.instalment %></td>
+        <td><%= instalment.payday_limit.strftime("%d/%m/%Y") %></td>
+        <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td>
+          <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(instalment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @instalments } %>

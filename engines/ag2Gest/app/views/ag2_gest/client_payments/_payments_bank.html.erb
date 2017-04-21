@@ -1,17 +1,15 @@
 <div class="row-fluid">
-  <div class="span6"><h5><b><%= I18n.t("ag2_gest.client_payments.index.count_payments") %>:</b> <%= @client_payments_bank.count unless @client_payments_bank.blank?%></h5></div>
-  <div class="span6" align="right"><h5><b><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>:</b> <%= number_with_precision(@client_payments_bank.sum{|b| b.amount}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @client_payments_bank.blank?  %></h5></div>
+  <b>
+  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.count_payments") %>: <%= @bank_totals.payments %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></h5></div>
+  </b>
 </div>
 
-<div class="row-fluid">
-  <div class="span12">
-    <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
-      <%= f.input :ids, :as => :hidden %>
-      <%= f.button :submit, "Confirmar Pagos", :class => 'btn btn-primary btn-small' %>
-      <button id="bank_order" type="button" class="btn btn-primary btn-small" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
-    <% end %>
-  </div>
-</div>
+<%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
+  <%= f.input :ids, :as => :hidden %>
+  <%= f.button :submit, "Confirmar Pagos", :class => 'btn btn-primary btn-small' %>
+  <button id="bank_order" type="button" class="btn btn-primary btn-small" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+<% end %>
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
