@@ -324,7 +324,7 @@ class Reading < ActiveRecord::Base
       # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
-      return
+      return @bill
     else
       return nil
     end # bill_id.blank?
