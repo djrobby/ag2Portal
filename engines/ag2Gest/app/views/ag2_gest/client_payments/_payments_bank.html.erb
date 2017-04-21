@@ -8,6 +8,7 @@
     <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
       <%= f.input :ids, :as => :hidden %>
       <%= f.button :submit, "Confirmar Pagos", :class => 'btn btn-primary btn-small' %>
+      <button id="bank_order" type="button" class="btn btn-primary btn-small" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
     <% end %>
   </div>
 </div>

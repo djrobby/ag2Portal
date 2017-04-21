@@ -19,6 +19,8 @@ en:
         export_google: "Export to Google Sheets"
         massive_billing_consumption: "Mass Billing - Consumption"
         id: "Id"
+        bill_id: "Bill"
+        billed: "Billed?"
         bill_no: "No."
         project: "Project"
         project_id: "Project"

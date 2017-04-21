@@ -19,6 +19,8 @@ es:
         export_google: "Exportar a Google Sheets"
         massive_billing_consumption: "Facturación masiva - Consumos"
         id: "Id"
+        bill_id: "Recibo"
+        billed: "¿Fact?"
         bill_no: "Nº"
         project: "Proyecto"
         project_id: "Proyecto"
