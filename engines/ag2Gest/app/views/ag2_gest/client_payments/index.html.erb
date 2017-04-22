@@ -304,13 +304,13 @@ $(document).ready(function () {
         <div class="span6 text-center"><h4>Facturas</h4></div>
         <div class="span6 text-center"><h4>Cobros</h4></div>
         <ul class="nav nav-tabs" id="payments-tabs">
-          <li class="active" style="width:25%"><a href="#pendings">Pendientes</a></li>
+          <li class="active" style="width:25%"><a href="#pendings"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
           <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
-          <li style="width:25%"><a href="#charged">Cobradas</a></li>
-          <li class="pull-right"><a href="#others">Otros</a></li>
-          <li class="pull-right"><a href="#fractionated">Aplazamientos</a></li>
-          <li class="pull-right"><a href="#banks">Bancos</a></li>
-          <li class="pull-right"><a href="#cash">Caja</a></li>
+          <li style="width:25%"><a href="#charged"><%= I18n.t("ag2_gest.client_payments.index.charged") %></a></li>
+          <li class="pull-right"><a href="#others"><%= I18n.t("ag2_gest.client_payments.index.others") %></a></li>
+          <li class="pull-right"><a href="#fractionated"><%= I18n.t("ag2_gest.client_payments.index.deferrals") %></a></li>
+          <li class="pull-right"><a href="#banks"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a></li>
+          <li class="pull-right"><a href="#cash"><%= I18n.t("ag2_gest.client_payments.index.cash") %></a></li>
         </ul>
 
         <div id="loader"></div>

@@ -23,7 +23,7 @@ class Invoice < ActiveRecord::Base
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
                   :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
-                  :remarks, :organization_id, :payment_method_id, :sale_offer_id, :totals
+                  :remarks, :organization_id, :payment_method_id, :sale_offer_id, :totals, :receivables
   attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
@@ -388,7 +388,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def receivable
-    total - exemption
+    totals - exemption
   end
 
   def collected
@@ -396,7 +396,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def debt
-    receivable - collected
+    receivables - collected
   end
 
   def quantity
@@ -449,6 +449,7 @@ class Invoice < ActiveRecord::Base
 
   def calculate_and_store_totals
     self.totals = total
+    self.receivables = receivable
   end
 
   def item_repeat

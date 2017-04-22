@@ -146,7 +146,6 @@ module Ag2Gest
       redirect_to client_payments_path, notice: "Pagos confirmados con exito"
     end
 
-
     def index
       manage_filter_state
       bill_no = params[:bill_no]
@@ -197,6 +196,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -228,6 +228,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -259,6 +260,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -290,6 +292,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -321,6 +324,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -352,6 +356,7 @@ module Ag2Gest
         if !billing_period.blank?
           with :billing_period, billing_period
         end
+        data_accessor_for(Instalment).include = [:bill, {instalment_plan: [:client, :subscriber, :payment_method]}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

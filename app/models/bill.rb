@@ -193,6 +193,14 @@ class Bill < ActiveRecord::Base
     invoices.reject(&:marked_for_destruction?).sum(&:totals)
   end
 
+  def receivable
+    invoices.reject(&:marked_for_destruction?).sum(&:receivables)
+  end
+
+  def collected
+    client_payments.sum(:amount)
+  end
+
   def debt
     invoices.reject(&:marked_for_destruction?).sum(&:debt)
     # debt = 0

@@ -7,9 +7,9 @@
 
 <%= simple_form_for :payment_fractionated, url: instalment_client_payments_path, method: :post do |f|  %>
   <%= f.input :ids, :as => :hidden %>
-  <%= f.button :submit, "Cobrar cuotas", :class => 'btn btn-primary btn-small' %>
+  <%= f.button :submit, I18n.t("ag2_gest.client_payments.index.collect_instalments"), :class => 'btn btn-primary btn-small' %>
 <% end %>
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th><input type="checkbox" class="checkbox-master-table"></th>
@@ -29,7 +29,7 @@
         <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
         <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
         <td><%= instalment.instalment %></td>
-        <td><%= instalment.payday_limit.strftime("%d/%m/%Y") %></td>
+        <td><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
         <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td>

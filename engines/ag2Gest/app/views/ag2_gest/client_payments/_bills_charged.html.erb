@@ -1,6 +1,6 @@
 <div class="row-fluid">
   <b>
-  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.total") %>: <%= @charged_totals.bills %></h5></div>
+  <div class="span6"><h5><%= I18n.t("activerecord.models.bill.few") %>: <%= @charged_totals.bills %></h5></div>
   <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>: <%= number_with_precision(@charged_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
   </b>
 </div>
@@ -9,20 +9,17 @@
 <% @bills_charged.each do |bill| %>
   <div class="accordion">
     <div class="accordion-group">
-      <div class="accordion-heading row-fluid">
-        <div class="span1">
+      <div class="accordion-heading row-fluid shrinked">
+        <div class="span2">
           <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
         </div>
-        <div class="span3 soft-padding">
+        <div class="span3">
           <%= link_to bill.try(:full_no), bill_path(bill) %>
         </div>
-        <div class="span5 soft-padding">
+        <div class="span5">
           <%= link_to bill.client.to_label, client_path(bill.client) if bill.client %>
         </div>
-        <div class="span1 soft-padding">
-          <%= "Bco." if bill.client.active_bank_accounts?  %>
-        </div>
-        <div align="right" class="span2 soft-padding">
+        <div align="right" class="span2">
           <%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>
         </div>
       </div>
@@ -37,18 +34,16 @@
                 <th align="right">Total</th>
                 <th align="right">Cobrado</th>
                 <th align="right">Deuda</th>
-                <th align="right">Estado</th>
               </tr>
             </thead>
             <tbody>
-              <% bill.invoices.order("created_at DESC").each do |i| %>
+              <% bill.invoices.order(:invoice_no).each do |i| %>
                 <tr>
-                  <td><%= i.invoice_no %></td>
-                  <td><%= i.invoice_date.strftime("%d/%m/%Y") %></td>
-                  <td align="right"><%= number_with_precision(i.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td><%= i.full_no %></td>
+                  <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
+                  <td align="right"><%= number_with_precision(i.receivable, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.invoice_status.name, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 </tr>
               <% end %>
             </tbody>

@@ -5,7 +5,7 @@
   </b>
 </div>
 
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th>Nº</th>
@@ -22,10 +22,10 @@
       <tr>
         <td><%= client_payment.receipt_no %></td>
         <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
-        <td><%= link_to client_payment.bill.client.to_label, client_path(client_payment.bill.client) %></td>
-        <td><%= client_payment.payment_date.strftime("%d/%m/%Y") %></td>
+        <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
+        <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
         <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= number_with_precision(client_payment.invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td>
           <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(client_payment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
         </td>
