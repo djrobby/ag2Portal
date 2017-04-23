@@ -289,10 +289,17 @@ Ag2Gest::Engine.routes.draw do
     match 'sale_offers/so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
     match 'so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
     match 'sale_offers/:id/so_item_totals/:qty/:amount/:tax/:discount_p', :controller => 'sale_offers', :action => 'so_item_totals'
-
     match 'sale_offers/so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
     match 'so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
     match 'sale_offers/:id/so_update_approval_date', :controller => 'sale_offers', :action => 'so_update_approval_date'
+    #
+    # Client payments
+    match 'client_payments/cp_format_number/:num', :controller => 'client_payments', :action => 'cp_format_number'
+    match 'cp_format_number/:num', :controller => 'client_payments', :action => 'cp_format_number'
+    match 'client_payments/:id/cp_format_number/:num', :controller => 'client_payments', :action => 'cp_format_number'
+    match 'client_payments/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
+    match 'cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
+    match 'client_payments/:id/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
 
     # Resources
     resources :clients
@@ -399,10 +406,11 @@ Ag2Gest::Engine.routes.draw do
     resources :regulation_types
     #
     resources :client_payments do
-      post 'cash_others', on: :collection
+      post 'cash', on: :collection
       post 'banks', on: :collection
       post 'fractionated', on: :collection
       post 'instalment', on: :collection
+      post 'others', on: :collection
       post 'close_cash', on: :collection
       post 'confirm_bank', on: :collection
     end

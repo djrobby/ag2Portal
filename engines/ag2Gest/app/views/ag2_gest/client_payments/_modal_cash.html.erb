@@ -1,0 +1,41 @@
+<!-- Modal Cash / Others -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#proc_mesage").hide();
+  });
+</script>
+
+<div id="modal-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_gest.client_payments.index.cash') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <%= simple_form_for :client_payment, url: cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
+    <div class="modal-body">
+      <%= f.input :invoices_ids, :as => :hidden %>
+      <div class="control-group string required">
+        <label class="form-label">A Cobrar</label>
+        <div class="controls highlighted bolded">
+          <span class="debt-total">0,0000</span>
+        </div>
+      </div>
+      <%= f.input :amount, required: true, label: I18n.t("ag2_gest.client_payments.index.amount"), as: :decimal, inline_label: "Yes", input_html: { class: 'mid-text-field number-text-field', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+      <%= f.input :payment_method_id, required: true, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: @payment_methods, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <div class="control-group string required">
+        <label class="form-label-under-sel2">Vuelta</label>
+        <div class="controls highlighted bolded">
+          <span class="cash-return">0,0000</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <%= f.button :submit, t(:confirm), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+    </div>
+  <% end %>
+</div>

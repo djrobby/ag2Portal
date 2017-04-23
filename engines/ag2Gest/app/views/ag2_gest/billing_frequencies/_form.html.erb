@@ -18,10 +18,10 @@
 		</div>
 
 		<div class="span2">
-			<%= f.input :days, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+			<%= f.input :days, :input_html => { min: 0, max: 366, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 		</div>
 		<div class="span2">
-			<%= f.input :months, :autofocus => false, :input_html => { min: 0, max: 99, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+			<%= f.input :months, :autofocus => false, :input_html => { min: 0, max: 13, :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
 		</div>
 
 		<div class="span2">

@@ -19,10 +19,22 @@ $(document).ready(function () {
       dropdownAutoWidth: true,
       allowClear: true
     });
+    $('.sel4').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    // Date picker
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   });
-
 
   $(document).ajaxStart(function() {
     // show loader on start
@@ -68,13 +80,6 @@ $(document).ready(function () {
       $("#submit_btn").trigger("click");
     });
   });
-  // Date picker
-  $('.date_picker').datepicker({
-    format : 'dd/mm/yyyy',
-    weekStart : 1
-  }).on('changeDate', function(e){
-    $('.date_picker').datepicker('hide');
-  });
 
   $('#payments-tabs a').click(function (e) {
     e.preventDefault();
@@ -90,6 +95,7 @@ $(document).ready(function () {
     }
   });
 
+  // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
   $(".btn-payment").click(function(){
     var elements = $( "input:checked" );
     var invoices_id = [];
@@ -102,7 +108,12 @@ $(document).ready(function () {
         total_debt += parseFloat(debts_array[i]);
       }
     }
-    $(".debt-total").text(total_debt);
+    total_debt = parseInt(right_number(total_debt.toString(), 4) * 10000);
+    jQuery.getJSON('cp_format_number_4/' + total_debt, function(data) {
+      $(".debt-total").text(data.num);
+      // AJAX refresh index table is necessary
+      $(".icon-refresh-link").click();
+    });
     $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
     $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
     $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
@@ -131,10 +142,12 @@ $(document).ready(function () {
   });
 
   $("#client_payment_amount").change(function() {
-    amount = this.value
-    debt = jQuery(this).parents(".modal").find(".debt-total").text()
-    $(".cash-return").text((amount - debt).toFixed(2))
-  })
+    amount = parseFloat(this.value) || 0;
+    debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
+    cash_return = debt - amount;
+    // alert(debt + "-" + amount + " = " + cash_return);
+    $(".cash-return").text(cash_return.toFixed(2));
+  });
 
   $("#initial-cash").change(function() {
     initialCash = parseFloat(this.value)
@@ -354,35 +367,9 @@ $(document).ready(function () {
       </div>
     </div>
 
-    <!-- Modal Cash / Others -->
-    <div id="modal-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
-      <div class="modal-header">
-        <h4>Caja/Otros</h4>
-      </div>
-      <%= simple_form_for :client_payment, url: cash_others_client_payments_path, method: :post do |f| %>
-        <div class="modal-body">
-          <%= f.input :invoices_ids, :as => :hidden %>
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string control-label">Total</label>
-            <div class="controls">
-              <span class="debt-total">0</span>
-            </div>
-          </div>
-          <%= f.input :amount, label: I18n.t("ag2_gest.client_payments.index.amount"), as: "decimal", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string control-label">Vuelta</label>
-            <div class="controls">
-              <span class="cash-return">0</span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-        </div>
-      <% end %>
-    </div>
+    <!-- Modals -->
+    <!-- Cash / Others -->
+    <%= render 'modal_cash' %>
 
     <!-- Modal Bank -->
     <div id="modal-bank" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
@@ -399,7 +386,7 @@ $(document).ready(function () {
             </div>
           </div>
           <%= f.input :receipt_no, label: I18n.t("ag2_gest.client_payments.index.receipt_no"), as: "string", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
+          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: @payment_methods, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
@@ -424,7 +411,7 @@ $(document).ready(function () {
           </div>
           <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
           <%= f.input :charge, label: "Porcentaje de recargo", as: "string", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: PaymentMethod.all, inline_label: "Yes" %>
+          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: @payment_methods, inline_label: "Yes" %>
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>

@@ -1,5 +1,5 @@
 class ClientPayment < ActiveRecord::Base
-  # CONSTANTS
+  # CONSTANTS (payment_type)
   CASH = 1
   BANK = 2
   FRACTIONATED = 3

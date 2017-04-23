@@ -2,33 +2,47 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ClientPaymentsController < ApplicationController
+    include ActionView::Helpers::NumberHelper
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+    # Must authorize manually for every action in this controller
+    skip_load_and_authorize_resource :only => [:cp_format_number,
+                                               :cp_format_number_4]
 
-    def cash_others
+    # Format numbers properly
+    def cp_format_number
+      num = params[:num].to_f / 100
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+    def cp_format_number_4
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+
+    def cash
       invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       amount = BigDecimal.new(params[:client_payment][:amount])
       payment_method = params[:client_payment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
-      payment_type = payment_method.blank? ? 1 : 5
       acu = amount
       invoices.each do |i|
         if acu > 0
           if acu >= i.debt
             amount_paid = i.debt
             acu -= i.debt
-            if payment_method.blank?
-              confirmation_date = nil
-              invoice_status = InvoiceStatus::CASH
-            else
-              confirmation_date = Time.now
-              invoice_status = InvoiceStatus::CHARGED
-            end
+            confirmation_date = nil
+            invoice_status = InvoiceStatus::CASH
           else
             amount_paid = acu
             acu = 0
             confirmation_date = nil
             invoice_status = InvoiceStatus::PENDING
           end
-          client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: payment_type, bill_id: i.bill_id, invoice_id: i.id,
+          client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
@@ -40,7 +54,41 @@ module Ag2Gest
           break
         end
       end
-      redirect_to client_payments_path, notice: "Vuelta de " + acu.to_s
+      redirect_to client_payments_path
+    end
+
+    def others
+      invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      amount = BigDecimal.new(params[:client_payment][:amount])
+      payment_method = params[:client_payment][:payment_method_id]
+      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
+      acu = amount
+      invoices.each do |i|
+        if acu > 0
+          if acu >= i.debt
+            amount_paid = i.debt
+            acu -= i.debt
+            confirmation_date = Time.now
+            invoice_status = InvoiceStatus::CHARGED
+          else
+            amount_paid = acu
+            acu = 0
+            confirmation_date = nil
+            invoice_status = InvoiceStatus::PENDING
+          end
+          client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
+                               payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
+                               payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
+                               client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+          if client_payment.save
+            i.invoice_status_id = invoice_status
+            i.save
+          end
+        else
+          break
+        end
+      end
+      redirect_to client_payments_path
     end
 
     def banks
@@ -162,6 +210,7 @@ module Ag2Gest
       @projects  = projects_dropdown if @projects.nil?
       # @clients = clients_dropdown if @clients.nil?
       # @subscribers  = subscribers_dropdown if @subscribers.nil?
+      @payment_methods = payment_methods_dropdown
 
       # If inverse no search is required
       bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
@@ -783,6 +832,14 @@ module Ag2Gest
 
     def entities_dropdown
       Entity.order("created_at DESC")
+    end
+
+    def payment_methods_dropdown
+      session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
+    end
+
+    def collection_payment_methods(_organization)
+      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
     end
 
     # Keeps filter state

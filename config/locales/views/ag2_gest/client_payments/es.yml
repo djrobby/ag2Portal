@@ -42,4 +42,4 @@ es:
         bill_charged_report: "Facturas Cobradas"
         client_payment_report: "Cobros"
       back_to_main_page: "Volver a Cobros"
-      generate_error_payment: "No se ha seleccionado una Forma de Pago."
+      generate_error_payment: "¡Oye!... No has elegido la forma de pago."

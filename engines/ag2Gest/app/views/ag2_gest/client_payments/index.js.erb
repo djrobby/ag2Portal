@@ -26,21 +26,26 @@ $(".btn-payment").click(function(){
       total_debt += parseFloat(debts_array[i]);
     }
   }
-  $(".debt-total").text(total_debt);
+  total_debt = parseInt(right_number(total_debt.toString(), 4) * 10000);
+  jQuery.getJSON('cp_format_number_4/' + total_debt, function(data) {
+    $(".debt-total").text(data.num);
+    // AJAX refresh index table is necessary
+    $(".icon-refresh-link").click();
+  });
   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
   $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
   $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
 });
 
-$(".btn-others").click(function (e) {
-  $(".client_payment_payment_method_id").show();
-  $("#client_payment_payment_method_id").prop('disabled', false);
-});
+// $(".btn-others").click(function (e) {
+//   $(".client_payment_payment_method_id").show();
+//   $("#client_payment_payment_method_id").prop('disabled', false);
+// });
 
-$(".btn-cash").click(function (e) {
-  $(".client_payment_payment_method_id").hide();
-  $("#client_payment_payment_method_id").prop('disabled', true);
-});
+// $(".btn-cash").click(function (e) {
+//   $(".client_payment_payment_method_id").hide();
+//   $("#client_payment_payment_method_id").prop('disabled', true);
+// });
 
 $(".checkbox-master").click(function () {
   $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
@@ -55,9 +60,10 @@ $(".checkbox-main").click(function () {
 });
 
 $("#client_payment_amount").change(function() {
-  amount = this.value
-  debt = jQuery(this).parents(".modal").find(".debt-total").text()
-  $(".cash-return").text((amount - debt).toFixed(2))
+  amount = parseFloat(this.value) || 0;
+  debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
+  cash_return = debt - amount;
+  $(".cash-return").text(cash_return.toFixed(2));
 })
 
 $("#initial-cash").change(function() {

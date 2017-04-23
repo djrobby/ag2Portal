@@ -312,6 +312,10 @@ th .current:focus {
 label.required_:before {
   content: "* "
 }
+.modal-footer-right {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
 
 /* Sub-Form (items) text fields */
 .sub-bordered-input {
