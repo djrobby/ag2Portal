@@ -1,122 +1,171 @@
+<style>
+  .divborder_radius {
+    border: 2px solid #ddd;
+    padding: 10px 40px; 
+    width: auto;
+    border-radius: 10px;
+  }
+  .divborder {
+    border: 2px solid #ddd;
+    padding: 10px 40px; 
+    width: auto;
+  }
+</style>
+
 <%= render '/layouts/ag2_gest/tariffschemesbreadcrumb' %>
 
 <h3><%= t('.title') %></h3>
 <table class="table">
   <tbody>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.id') %>:</td>
-      <td colspan="3"><%= @tariff.try(:id) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.billable_item_id') %>:</td>
-      <td ><%= @tariff.try(:billable_item).try(:to_label) %></td>
-      <td><%= t('activerecord.attributes.tariff.tariff_type_id') %>:</td>
-      <td ><%= @tariff.try(:tariff_type).try(:to_label) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.caliber_id') %>:</td>
-      <td ><%= @tariff.try(:caliber).try(:to_label) %></td>
-      <td><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</td>
-      <td ><%= @tariff.try(:billing_frequency).try(:to_label) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.starting_at') %>:</td>
-      <td ><%=l @tariff.starting_at if @tariff.starting_at %></td>
-      <td><%= t('activerecord.attributes.tariff.ending_at') %>:</td>
-      <td ><%=l @tariff.ending_at if @tariff.ending_at %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.fixed_fee') %>:</td>
-      <td ><%= @tariff.try(:fixed_fee) %></td>
-      <td><%= t('activerecord.attributes.tariff.variable_fee') %>:</td>
-      <td ><%= @tariff.try(:variable_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.percentage_fee') %>:</td>
-      <td ><%= @tariff.try(:percentage_fee) %></td>
-      <td><%= t('activerecord.attributes.tariff.percentage_applicable_formula') %>:</td>
-      <td ><%= @tariff.try(:get_code_formula)  %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.percentage_fixed_fee') %>:</td>
-      <td ><%= @tariff.try(:percentage_fixed_fee)  %></td>
-      <td><%= t('activerecord.attributes.tariff.percentage_applicable_formula_fixed') %>:</td>
-      <td ><%= @tariff.try(:get_code_formula)  %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block1_limit') %>:</td>
-      <td ><%= @tariff.try(:block1_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block1_fee') %>:</td>
-      <td ><%= @tariff.try(:block1_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block2_limit') %>:</td>
-      <td ><%= @tariff.try(:block2_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block2_fee') %>:</td>
-      <td ><%= @tariff.try(:block2_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block3_limit') %>:</td>
-      <td ><%= @tariff.try(:block3_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block3_fee') %>:</td>
-      <td ><%= @tariff.try(:block3_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block4_limit') %>:</td>
-      <td ><%= @tariff.try(:block4_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block4_fee') %>:</td>
-      <td ><%= @tariff.try(:block4_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block5_limit') %>:</td>
-      <td ><%= @tariff.try(:block5_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block5_fee') %>:</td>
-      <td ><%= @tariff.try(:block5_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block6_limit') %>:</td>
-      <td ><%= @tariff.try(:block6_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block6_fee') %>:</td>
-      <td ><%= @tariff.try(:block6_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block7_limit') %>:</td>
-      <td ><%= @tariff.try(:block7_limit) %></td>
-      <td><%= t('activerecord.attributes.tariff.block7_fee') %>:</td>
-      <td ><%= @tariff.try(:block7_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.block8_limit') %>:</td>
-      <td ><%= "> " + @tariff.try(:block7_limit).to_s if @tariff.try(:block7_limit) and @tariff.try(:block8_fee) != 0.0 %></td>
-      <td><%= t('activerecord.attributes.tariff.block8_fee') %>:</td>
-      <td ><%= @tariff.try(:block8_fee) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.discount_pct_f') %>:</td>
-      <td ><%= @tariff.try(:discount_pct_f) %></td>
-      <td><%= t('activerecord.attributes.tariff.discount_pct_v') %>:</td>
-      <td ><%= @tariff.try(:discount_pct_v) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.discount_pct_p') %>:</td>
-      <td ><%= @tariff.try(:discount_pct_p) %></td>
-      <td><%= t('activerecord.attributes.tariff.discount_pct_b') %>:</td>
-      <td ><%= @tariff.try(:discount_pct_b) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.tax_type_f_id') %>:</td>
-      <td ><%= @tariff.try(:tax_type_f).try(:to_label) %></td>
-      <td><%= t('activerecord.attributes.tariff.tax_type_v_id') %>:</td>
-      <td ><%= @tariff.try(:tax_type_v).try(:to_label) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.tariff.tax_type_p_id') %>:</td>
-      <td ><%= @tariff.try(:tax_type_p).try(:to_label) %></td>
-      <td><%= t('activerecord.attributes.tariff.tax_type_b_id') %>:</td>
-      <td ><%= @tariff.try(:tax_type_b).try(:to_label) %></td>
-    </tr>
-    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff } %>
-    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff } %>
+  <div class="row-fluid divborder_radius">
+    <div class="row-fluid">
+      <div class="span3">
+          <b><%= t('activerecord.attributes.tariff.id') %>:</b>
+          <%= @tariff.try(:id) %>
+      </div>
+      <div class="span3">
+        <b><%= t('activerecord.attributes.tariff.tariff_type_id') %>:</b>
+        <%= @tariff.try(:tariff_type).try(:to_label) %>
+      </div>
+      <div class="span6">
+        <b><%= t('activerecord.attributes.tariff.billable_item_id') %>:</b>
+        <%= @tariff.try(:billable_item).try(:to_label) %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3">
+        <b><%= t('activerecord.attributes.tariff.caliber_id') %>:</b>
+        <%= @tariff.try(:caliber).try(:to_label) %>
+      </div>
+      <div class="span3">
+        <b><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</b>
+        <%= @tariff.try(:billing_frequency).try(:to_label) %>
+      </div>
+      <div class="span3">
+        <b><%= t('activerecord.attributes.tariff.starting_at') %>:</b>
+        <%= formatted_date(@tariff.starting_at) if @tariff.starting_at %>
+      </div>
+      <div class="span3">
+        <b><%= t('activerecord.attributes.tariff.ending_at') %>:</b>
+        <%= formatted_date(@tariff.ending_at) if @tariff.ending_at %>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row-fluid">
+    <div class="span5 divborder_radius">
+      <h4 class="text-center"><%= t('activerecord.attributes.tariff.blocks') %></h4>
+      <div class="row-fluid">
+        <div class="span4 offset3"><b><%= t('activerecord.attributes.tariff.limit') %></b></div>
+        <div class="span4"><b><%= t('activerecord.attributes.tariff.price') %></b></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block1') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block1_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block1_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block2') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block2_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block2_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block3') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block3_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block3_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block4') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block4_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block4_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block5') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block5_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block5_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block6') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block6_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block6_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block7') %>:</b></div>
+        <div class="span4"><%= @tariff.try(:block7_limit) %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block7_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span3"><b><%= t('activerecord.attributes.tariff.block8') %>:</b></div>
+        <div class="span4"><%= "> " + @tariff.try(:block7_limit).to_s if @tariff.try(:block7_limit) and @tariff.try(:block8_fee) != 0.0 %></div>
+        <div class="span4"><%= number_with_precision(@tariff.block8_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+    </div>
+
+    <div class="span3 divborder_radius">
+      <h4><br></h4>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.fixed_fee') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.fixed_fee, precision: 12, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.variable_fee') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.variable_fee, precision: 10, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.percentage_fee') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.percentage_fee, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.percentage_fixed_fee') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.percentage_fixed_fee, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",")  %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.percentage_applicable_formula') %>:</b></div>
+        <div class="span4"><%= @tariff.get_code_formula  %></div>
+      </div>
+    </div>
+
+    <div class="span4 divborder_radius">
+      <h4><br></h4>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.discount_pct_f') %>:</b></div>
+        <div class="span5"><%= number_with_precision(@tariff.discount_pct_f, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.discount_pct_b') %>:</b></div>
+        <div class="span5"><%= number_with_precision(@tariff.discount_pct_b, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.discount_pct_v') %>:</b></div>
+        <div class="span5"><%= number_with_precision(@tariff.discount_pct_v, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.discount_pct_p') %>:</b></div>
+        <div class="span5"><%= number_with_precision(@tariff.discount_pct_p, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+
+      <h4><br></h4>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.tax_type_f_id') %>:</b></div>
+        <div class="span5"><%= @tariff.tax_type_f.description + " (" + number_with_precision(@tariff.tax_type_f.tax, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + ")" %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.tax_type_b_id') %>:</b></div>
+        <div class="span5"><%= @tariff.tax_type_b.description + " (" + number_with_precision(@tariff.tax_type_b.tax, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + ")" %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.tax_type_v_id') %>:</b></div>
+        <div class="span5"><%= @tariff.tax_type_v.description + " (" + number_with_precision(@tariff.tax_type_v.tax, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + ")" %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6"><b><%= t('activerecord.attributes.tariff.tax_type_p_id') %>:</b></div>
+        <div class="span5"><%= @tariff.tax_type_p.description + " (" + number_with_precision(@tariff.tax_type_p.tax, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + ")" %></div>
+      </div>
+    </div>
+  </div>
+  <br>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff } %>
   </tbody>
 </table>
 

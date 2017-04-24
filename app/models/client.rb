@@ -31,8 +31,16 @@ class Client < ActiveRecord::Base
   has_many :invoice_rebills
   has_many :supply_requests, :through => :water_supply_contracts, :source => :contracting_request
   has_many :connection_requests, :through => :water_connection_contracts, :source => :contracting_request
+  has_many :client_ledger_accounts, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :client_ledger_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :client_ledger_accounts
 
   validates :first_name,    :presence => true, :if => "company.blank?"
   validates :last_name,     :presence => true, :if => "company.blank?"
@@ -59,6 +67,7 @@ class Client < ActiveRecord::Base
   #
   scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
   after_create :should_create_shared_contact, if: :is_contact?

@@ -42,5 +42,4 @@ en:
         bill_charged_report: "Collected Invoices"
         client_payment_report: "Bill Collections"
       back_to_main_page: "Back to Bill Collections"
-    default: "Hey!... You are not authorized to access there."
-      generate_error_payment: "Hey!... You haven't chosen the payment method."
+      generate_error_payment: "Oops!... You haven't selected the payment method."

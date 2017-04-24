@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  supplier: 
+  ledger_account: 
+
+two:
+  supplier: 
+  ledger_account: 

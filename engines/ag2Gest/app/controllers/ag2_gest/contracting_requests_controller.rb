@@ -1219,7 +1219,7 @@ module Ag2Gest
             _tariff_type = _tariff_type << tt.tariff.tariff_type.name
           end
       end
-      @tariff_type = _tariff_type.join(",")
+      @tariff_type = _tariff_type.join(", ")
 
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)

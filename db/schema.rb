@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170422072014) do
+ActiveRecord::Schema.define(:version => 20170424090400) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -487,6 +487,18 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
   add_index "centers", ["town_id", "code"], :name => "index_centers_on_town_and_code", :unique => true
   add_index "centers", ["town_id"], :name => "index_centers_on_town_id"
 
+  create_table "charge_account_ledger_accounts", :force => true do |t|
+    t.integer  "charge_account_id"
+    t.integer  "ledger_account_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "charge_account_ledger_accounts", ["charge_account_id"], :name => "index_charge_account_ledger_accounts_on_charge_account_id"
+  add_index "charge_account_ledger_accounts", ["ledger_account_id"], :name => "index_charge_account_ledger_accounts_on_ledger_account_id"
+
   create_table "charge_accounts", :force => true do |t|
     t.string   "name"
     t.date     "opened_at"
@@ -509,6 +521,18 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
   add_index "charge_accounts", ["organization_id", "account_code"], :name => "index_charge_accounts_on_organization_id_and_account_code", :unique => true
   add_index "charge_accounts", ["organization_id"], :name => "index_charge_accounts_on_organization_id"
   add_index "charge_accounts", ["project_id"], :name => "index_charge_accounts_on_project_id"
+
+  create_table "charge_group_ledger_accounts", :force => true do |t|
+    t.integer  "charge_group_id"
+    t.integer  "ledger_account_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "charge_group_ledger_accounts", ["charge_group_id"], :name => "index_charge_group_ledger_accounts_on_charge_group_id"
+  add_index "charge_group_ledger_accounts", ["ledger_account_id"], :name => "index_charge_group_ledger_accounts_on_ledger_account_id"
 
   create_table "charge_groups", :force => true do |t|
     t.string   "group_code"
@@ -561,6 +585,18 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
   add_index "client_bank_accounts", ["holder_fiscal_id"], :name => "index_client_bank_accounts_on_holder_fiscal_id"
   add_index "client_bank_accounts", ["holder_name"], :name => "index_client_bank_accounts_on_holder_name"
   add_index "client_bank_accounts", ["subscriber_id"], :name => "index_client_bank_accounts_on_subscriber_id"
+
+  create_table "client_ledger_accounts", :force => true do |t|
+    t.integer  "client_id"
+    t.integer  "ledger_account_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "client_ledger_accounts", ["client_id"], :name => "index_client_ledger_accounts_on_client_id"
+  add_index "client_ledger_accounts", ["ledger_account_id"], :name => "index_client_ledger_accounts_on_ledger_account_id"
 
   create_table "client_payments", :force => true do |t|
     t.string   "receipt_no"
@@ -2280,6 +2316,16 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3373,6 +3419,19 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
     t.decimal "debt",                :precision => 65, :scale => 20
   end
 
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
+  end
+
   create_table "supplier_invoice_items", :force => true do |t|
     t.integer  "supplier_invoice_id"
     t.integer  "receipt_note_id"
@@ -3456,6 +3515,18 @@ ActiveRecord::Schema.define(:version => 20170422072014) do
   add_index "supplier_invoices", ["receipt_note_id"], :name => "index_supplier_invoices_on_receipt_note_id"
   add_index "supplier_invoices", ["supplier_id"], :name => "index_supplier_invoices_on_supplier_id"
   add_index "supplier_invoices", ["work_order_id"], :name => "index_supplier_invoices_on_work_order_id"
+
+  create_table "supplier_ledger_accounts", :force => true do |t|
+    t.integer  "supplier_id"
+    t.integer  "ledger_account_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "supplier_ledger_accounts", ["ledger_account_id"], :name => "index_supplier_ledger_accounts_on_ledger_account_id"
+  add_index "supplier_ledger_accounts", ["supplier_id"], :name => "index_supplier_ledger_accounts_on_supplier_id"
 
   create_table "supplier_payments", :force => true do |t|
     t.integer  "supplier_id"

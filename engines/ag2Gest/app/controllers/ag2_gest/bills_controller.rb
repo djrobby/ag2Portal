@@ -220,7 +220,7 @@ module Ag2Gest
       render json: response_hash
     end
 
-    def subscribers_with_readings(uses, reading_routes, offices, centers)
+    def subscribers_with_readings(uses, reading_routes, offices, centers, from_subscriber, to_subscriber)
       if (!from_subscriber.nil? && from_subscriber != "") && (!to_subscriber.nil? && to_subscriber != "")
         @@subscribers = Subscriber.select('subscribers.id, subscriber_code, last_name, first_name, company, street_directory_id, street_number, building, floor, floor_office, subscribers.meter_id') \
                                 .joins(:readings) \

@@ -29,6 +29,8 @@ module Ag2Gest
       payment_method = params[:client_payment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
       acu = amount
+      # Receipt No.
+      receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
       invoices.each do |i|
         if acu > 0
           if acu >= i.debt
@@ -42,7 +44,7 @@ module Ag2Gest
             confirmation_date = nil
             invoice_status = InvoiceStatus::PENDING
           end
-          client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
+          client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
@@ -76,7 +78,7 @@ module Ag2Gest
             confirmation_date = nil
             invoice_status = InvoiceStatus::PENDING
           end
-          client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
+          client_payment = ClientPayment.new(receipt_no: nil, payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)

@@ -140,7 +140,7 @@
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
           <td><%= link_to @subscriber.try(:tariff_scheme).try(:name), tariff_scheme_path(@subscriber.tariff_scheme) unless @subscriber.tariff_scheme.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_type_contract') %>:</b></td>
-          <td><%= link_to @subscriber.water_supply_contract.try(:tariff_type).try(:name), ag2_gest.tariff_type_path(@subscriber.water_supply_contract.tariff_type_id) unless @subscriber.try(:water_supply_contract).try(:tariff_type).blank? %></td>
+          <td><%= @tariff_type %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>

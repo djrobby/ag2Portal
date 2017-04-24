@@ -41,6 +41,15 @@ class Tariff < ActiveRecord::Base
   validates :tax_type_p,        :presence => true, :if => "!percentage_fee.blank?"
   validates :tax_type_v,        :presence => true, :if => "!variable_fee.blank?"
 
+  validates :block1_limit, :numericality => { :greater_than => 0}, :if => :block1_limit?
+  validates :block2_limit, :numericality => { :greater_than => :block1_limit}, :if => :block2_limit?
+  validates :block3_limit, :numericality => { :greater_than => :block2_limit}, :if => :block3_limit?
+  validates :block4_limit, :numericality => { :greater_than => :block3_limit}, :if => :block4_limit?
+  validates :block5_limit, :numericality => { :greater_than => :block4_limit}, :if => :block5_limit?
+  validates :block6_limit, :numericality => { :greater_than => :block5_limit}, :if => :block6_limit?
+  validates :block7_limit, :numericality => { :greater_than => :block6_limit}, :if => :block7_limit?
+  validates :block8_limit, :numericality => { :greater_than => :block7_limit}, :if => :block8_limit?
+
   # tariffs for water supply contract
   # def self.by_contract(water_supply_contract)
   #   where(tariff_scheme_id: water_supply_contract.tariff_scheme.id)

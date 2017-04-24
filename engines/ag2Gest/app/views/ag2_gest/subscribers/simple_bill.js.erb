@@ -65,11 +65,13 @@ var content = '';
     content += "</table>";
 
     content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
-    form.append(content);
+
     // form.attr("action", "bills/<%= @bill.id %>")
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
+form.append(content);
+
 $("#new-bill").modal("hide");
 $("#bill-supply-modal").modal("show");
 

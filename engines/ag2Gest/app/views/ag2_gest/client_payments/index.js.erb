@@ -1,3 +1,13 @@
+// Current localization
+_currentLocale = '<%= I18n.locale %>'
+if (_currentLocale == 'es') {
+  _delimiter = '.';
+  _separator = ',';
+} else {
+  _delimiter = ',';
+  _separator = '.';
+}
+
 $('#pendings').html("<%= escape_javascript(render('bills_pendings')) %>");
 // $('#unpaid').html("<%#= escape_javascript(render('bills_unpaid')) %>");
 $('#charged').html("<%= escape_javascript(render('bills_charged')) %>");
@@ -16,6 +26,7 @@ $('.accor').click(function () {
 
 $(".btn-payment").click(function(){
   var elements = $( "input:checked" );
+  if (elements.length <= 0) return false;
   var invoices_id = [];
   var debts_array = [];
   for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
@@ -26,13 +37,11 @@ $(".btn-payment").click(function(){
       total_debt += parseFloat(debts_array[i]);
     }
   }
-  total_debt = parseInt(right_number(total_debt.toString(), 4) * 10000);
-  jQuery.getJSON('cp_format_number_4/' + total_debt, function(data) {
-    $(".debt-total").text(data.num);
-    // AJAX refresh index table is necessary
-    $(".icon-refresh-link").click();
-  });
+  $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
+
+  // Update Ids in the
   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+  $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))
   $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
   $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
 });
@@ -63,14 +72,15 @@ $("#client_payment_amount").change(function() {
   amount = parseFloat(this.value) || 0;
   debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
   cash_return = debt - amount;
-  $(".cash-return").text(cash_return.toFixed(2));
-})
+  $(".cash-return").text(cash_return.format(2, 3, _delimiter, _separator));
+});
 
 $("#initial-cash").change(function() {
-  initialCash = parseFloat(this.value)
+  initial_cash = parseFloat(this.value)
   cashed = parseFloat($("#total-cash").text());
-  $("#ending-cash").text((initialCash + cashed).toFixed(2));
-})
+  ending_cash = initial_cash + cashed
+  $("#ending-cash").text(ending_cash.format(2, 3, _delimiter, _separator));
+});
 
 $("form.bank_confirm").submit(function(){
  var $input = $(this).find("input[name='bank_confirm[ids]']");

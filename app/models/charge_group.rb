@@ -5,8 +5,16 @@ class ChargeGroup < ActiveRecord::Base
   attr_accessible :flow, :group_code, :ledger_account_id, :name, :organization_id, :budget_heading_id
 
   has_many :charge_accounts
+  has_many :charge_group_ledger_accounts, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :charge_group_ledger_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :charge_group_ledger_accounts
 
   validates :group_code,      :presence => true,
                               :length => { :is => 4 },

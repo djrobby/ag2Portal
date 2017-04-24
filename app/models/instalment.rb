@@ -5,12 +5,36 @@ class Instalment < ActiveRecord::Base
   attr_accessible :amount, :instalment, :payday_limit, :surcharge,
                   :instalment_plan_id, :bill_id, :invoice_id
 
-  has_one :client_payment
+  has_many :client_payments
 
   # validates :code,  :presence => true
   # validates :name,  :presence => true
   # validates :type,  :presence => true
 
+  # Callbacks
+  before_destroy :check_for_dependent_records
+
+  #
+  # Calculated fields
+  #
+  def total
+    amount + surcharge
+  end
+
+  def amount_collected
+  end
+
+  def surcharge_collected
+  end
+
+  def amount_debt
+  end
+
+  def surcharge_debt
+  end
+
+  def debt
+  end
 
   searchable do
     text :bill_no do
@@ -54,25 +78,13 @@ class Instalment < ActiveRecord::Base
     end
   end
 
-  #
-  # Calculated fields
-  #
-  def total
-    amount + surcharge
-  end
+  private
 
-  def amount_collected
-  end
-
-  def surcharge_collected
-  end
-
-  def amount_debt
-  end
-
-  def surcharge_debt
-  end
-
-  def debt
+  def check_for_dependent_records
+    # Check for client payments
+    if client_payments.count > 0
+      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_client_payments'))
+      return false
+    end
   end
 end

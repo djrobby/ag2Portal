@@ -22,8 +22,14 @@ class ClientPayment < ActiveRecord::Base
   validates :invoice,           :presence => true
   validates :payment_method,    :presence => true
 
+  # Callbacks
   after_save :reindex_instalment
   after_destroy :reindex_instalment
+
+  def full_no
+    # Receipt no (Office & year & sequential number) => OO-YYYY-NNNN
+    receipt_no.blank? ? "" : receipt_no[0.1] + '-' + receipt_no[2..5] + '-' + receipt_no[6..9]
+  end
 
   searchable do
     text :receipt_no
@@ -74,5 +80,4 @@ class ClientPayment < ActiveRecord::Base
   def reindex_instalment
     Sunspot.index(instalment) if instalment
   end
-
 end

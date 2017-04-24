@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      instalment:
+        zero:  Instalments
+        one:   Instalment
+        few:   Instalments
+        other: Instalments
+        check_for_client_payments: "Instalment cannot be destroyed while linked client payments exist."
+    attributes:
+      instalment:
+        instalment_plan: "Instalment Plan"
+        instalment_plan_id: "Instalment Plan"
+        instalment: "Instalment No."
+        bill_id: "Bill"
+        invoice_id: "Invoice"
+        payday_limit: "Payday limit"
+        amount: "Amount"
+        surcharge: "Surcharge"

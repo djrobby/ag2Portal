@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      instalment_plan:
+        zero:  Instalment plans
+        one:   Instalment plan
+        few:   Instalment plans
+        other: Instalment plans
+    attributes:
+      instalment_plan:
+        instalment_no: "Plan No."
+        instalment_date: "Date"
+        surcharge_pct: "Surcharge %"
+        payment_method_id: "Payment method"
+        client_id: "Client"
+        subscriber_id: "Subscriber"
+        instalments_qty: "Instalments"

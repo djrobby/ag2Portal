@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  charge_account: 
+  ledger_account: 
+
+two:
+  charge_account: 
+  ledger_account: 

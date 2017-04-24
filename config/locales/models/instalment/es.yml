@@ -1,0 +1,19 @@
+es:
+  activerecord:
+    models:
+      instalment:
+        zero:  Plazos
+        one:   Plazo
+        few:   Plazos
+        other: Plazos
+        check_for_client_payments: "Plazo no puede ser eliminado mientras existan cobros vinculados."
+    attributes:
+      instalment:
+        instalment_plan: "Aplazamiento"
+        instalment_plan_id: "Aplazamiento"
+        instalment: "Nº Plazo"
+        bill_id: "Recibo"
+        invoice_id: "Factura"
+        payday_limit: "F.Límite Pago"
+        amount: "Importe"
+        surcharge: "Recargo"

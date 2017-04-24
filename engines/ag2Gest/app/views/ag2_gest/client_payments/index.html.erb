@@ -5,6 +5,9 @@
 $(document).ready(function () {
   var _thisForm = '';
   var changing = false;
+  var _currentLocale = 'es';
+  var _delimiter = '.';
+  var _separator = ',';
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -31,6 +34,16 @@ $(document).ready(function () {
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+
+    // Current localization
+    _currentLocale = '<%= I18n.locale %>'
+    if (_currentLocale == 'es') {
+      _delimiter = '.';
+      _separator = ',';
+    } else {
+      _delimiter = ',';
+      _separator = '.';
+    }
 
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
@@ -98,6 +111,7 @@ $(document).ready(function () {
   // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
   $(".btn-payment").click(function(){
     var elements = $( "input:checked" );
+    if (elements.length <= 0) return false;
     var invoices_id = [];
     var debts_array = [];
     for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
@@ -108,13 +122,11 @@ $(document).ready(function () {
         total_debt += parseFloat(debts_array[i]);
       }
     }
-    total_debt = parseInt(right_number(total_debt.toString(), 4) * 10000);
-    jQuery.getJSON('cp_format_number_4/' + total_debt, function(data) {
-      $(".debt-total").text(data.num);
-      // AJAX refresh index table is necessary
-      $(".icon-refresh-link").click();
-    });
+    $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
+
+    // Update Ids in the
     $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))
     $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
     $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
   });
@@ -146,14 +158,15 @@ $(document).ready(function () {
     debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
     cash_return = debt - amount;
     // alert(debt + "-" + amount + " = " + cash_return);
-    $(".cash-return").text(cash_return.toFixed(2));
+    $(".cash-return").text(cash_return.format(2, 3, _delimiter, _separator));
   });
 
   $("#initial-cash").change(function() {
-    initialCash = parseFloat(this.value)
+    initial_cash = parseFloat(this.value)
     cashed = parseFloat($("#total-cash").text());
-    $("#ending-cash").text((initialCash + cashed).toFixed(2));
-  })
+    ending_cash = initial_cash + cashed
+    $("#ending-cash").text(ending_cash.format(2, 3, _delimiter, _separator));
+  });
 
   $("form.bank_confirm").submit(function(){
    var $input = $(this).find("input[name='bank_confirm[ids]']");
@@ -175,12 +188,13 @@ $(document).ready(function () {
     $.getScript(this.href);
     return false;
   });
-    // when #print_report_btn is clicked
-    $("#print_report_btn").click(function() {
-      // make a POST call and get report
-      window.open("client_payment_report.pdf", "_blank");
-      return false;
-    });
+
+  // when #print_report_btn is clicked
+  $("#print_report_btn").click(function() {
+    // make a POST call and get report
+    window.open("client_payment_report.pdf", "_blank");
+    return false;
+  });
 
   //  // when #report_btn is clicked
   //   $("#print_report_btn").click(function() {
@@ -368,57 +382,17 @@ $(document).ready(function () {
     </div>
 
     <!-- Modals -->
-    <!-- Cash / Others -->
+    <!-- Cash -->
     <%= render 'modal_cash' %>
 
-    <!-- Modal Bank -->
-    <div id="modal-bank" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
-      <div class="modal-header">
-        <h4>Banco</h4>
-      </div>
-      <%= simple_form_for :client_payment_bank, url: banks_client_payments_path, method: :post do |f| %>
-        <div class="modal-body">
-          <%= f.input :invoices_ids, :as => :hidden %>
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string control-label">Total</label>
-            <div class="controls">
-              <span class="debt-total">0</span>
-            </div>
-          </div>
-          <%= f.input :receipt_no, label: I18n.t("ag2_gest.client_payments.index.receipt_no"), as: "string", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: @payment_methods, inline_label: "Yes" %>
-        </div>
-        <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-        </div>
-      <% end %>
-    </div>
+    <!-- Others -->
+    <%= render 'modal_others' %>
 
-    <!-- Modal Fractionated -->
-    <div id="modal-fracionated" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
-      <div class="modal-header">
-        <h4>Aplazamiento</h4>
-      </div>
-      <%= simple_form_for :instalment, url: fractionated_client_payments_path, method: :post do |f| %>
-        <div class="modal-body">
-          <%= f.input :invoices_ids, :as => :hidden %>
-          <div class="control-group string required meter_manufacturing_date">
-            <label class="string control-label">Total</label>
-            <div class="controls">
-              <span class="debt-total">0</span>
-            </div>
-          </div>
-          <%= f.input :number_inst, label: "Plazos", as: "string", inline_label: "Yes" %>
-          <%= f.input :charge, label: "Porcentaje de recargo", as: "string", inline_label: "Yes" %>
-          <%= f.input :payment_method_id, label: I18n.t("ag2_gest.client_payments.index.payment_method_id"), collection: @payment_methods, inline_label: "Yes" %>
-        </div>
-        <div class="modal-footer">
-          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-        </div>
-      <% end %>
-    </div>
+    <!-- Bank -->
+    <%= render 'modal_bank' %>
+
+    <!-- Instalments -->
+    <%= render 'modal_instalment' %>
 
     <!-- Modal Close Cash -->
     <div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">

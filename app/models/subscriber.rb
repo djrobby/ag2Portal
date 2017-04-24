@@ -70,6 +70,7 @@ class Subscriber < ActiveRecord::Base
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
   scope :availables, -> { where(ending_at: nil) }
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 

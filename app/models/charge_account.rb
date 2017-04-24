@@ -29,8 +29,16 @@ class ChargeAccount < ActiveRecord::Base
   has_many :delivery_note_items
   has_many :sale_offers
   has_many :sale_offer_items
+  has_many :charge_account_ledger_accounts, dependent: :destroy
+
+  # Nested attributes
+  accepts_nested_attributes_for :charge_account_ledger_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
 
   has_paper_trail
+
+  validates_associated :charge_account_ledger_accounts
 
   validates :account_code,    :presence => true,
                               :length => { :is => 9 },

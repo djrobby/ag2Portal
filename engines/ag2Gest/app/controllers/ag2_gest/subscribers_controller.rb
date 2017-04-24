@@ -545,7 +545,15 @@ module Ag2Gest
       @billing_period = BillingPeriod.order('period DESC').all
       @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
       @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
-
+      _tariff_type = []
+      if !@subscriber.water_supply_contract.blank?
+        @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
+            if !_tariff_type.include? tt.tariff.tariff_type.name
+              _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+            end
+        end
+        @tariff_type = _tariff_type.join(", ")
+      end
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
       # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first

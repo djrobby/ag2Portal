@@ -33,15 +33,20 @@ class Supplier < ActiveRecord::Base
   has_many :supplier_payments
   has_many :supplier_invoice_debts
   has_many :product_company_prices
+  has_many :supplier_ledger_accounts, dependent: :destroy
 
   # Nested attributes
   accepts_nested_attributes_for :supplier_bank_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
+  accepts_nested_attributes_for :supplier_ledger_accounts,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
   has_paper_trail
 
   validates_associated :supplier_bank_accounts
+  validates_associated :supplier_ledger_accounts
 
   validates :name,            :presence => true
   validates :supplier_code,   :presence => true,
@@ -68,6 +73,7 @@ class Supplier < ActiveRecord::Base
   scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
   scope :actives, -> { where(active: true).by_code }
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
   after_create :should_create_shared_contact, if: :is_contact?

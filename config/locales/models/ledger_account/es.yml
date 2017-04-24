@@ -10,6 +10,7 @@ es:
         check_for_charge_groups: "Cuenta contable no puede ser eliminada mientras existan grupos analíticos vinculados."
         check_for_suppliers: "Cuenta contable no puede ser eliminada mientras existan proveedores vinculados."
         check_for_clients: "Cuenta contable no puede ser eliminada mientras existan clientes vinculados."
+        check_for_projects: "Cuenta contable no puede ser eliminada mientras existan proyectos vinculados."
     attributes:
       ledger_account:
         name: "Nombre"

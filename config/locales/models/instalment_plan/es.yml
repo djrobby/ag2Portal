@@ -1,0 +1,17 @@
+es:
+  activerecord:
+    models:
+      instalment_plan:
+        zero:  Aplazamientos
+        one:   Aplazamiento
+        few:   Aplazamientos
+        other: Aplazamientos
+    attributes:
+      instalment_plan:
+        instalment_no: "Nº Aplazamiento"
+        instalment_date: "Fecha"
+        surcharge_pct: "% Recargo"
+        payment_method_id: "Forma de pago"
+        client_id: "Cliente"
+        subscriber_id: "Abonado"
+        instalments_qty: "Plazos"

@@ -9,6 +9,11 @@ class LedgerAccount < ActiveRecord::Base
   has_many :charge_groups
   has_many :suppliers
   has_many :clients
+  has_many :projects
+  has_many :charge_group_ledger_accounts
+  has_many :charge_account_ledger_accounts
+  has_many :client_ledger_accounts
+  has_many :supplier_ledger_accounts
 
   has_paper_trail
 
@@ -40,8 +45,16 @@ class LedgerAccount < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_charge_accounts'))
       return false
     end
+    if charge_account_ledger_accounts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_charge_accounts'))
+      return false
+    end
     # Check for charge groups
     if charge_groups.count > 0
+      errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_charge_groups'))
+      return false
+    end
+    if charge_group_ledger_accounts.count > 0
       errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_charge_groups'))
       return false
     end
@@ -50,8 +63,21 @@ class LedgerAccount < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_suppliers'))
       return false
     end
+    if supplier_ledger_accounts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_suppliers'))
+      return false
+    end
     # Check for clients
     if clients.count > 0
+      errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_clients'))
+      return false
+    end
+    if client_ledger_accounts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_clients'))
+      return false
+    end
+    # Check for projects
+    if projects.count > 0
       errors.add(:base, I18n.t('activerecord.models.ledger_account.check_for_clients'))
       return false
     end
