@@ -7,10 +7,11 @@ class Entity < ActiveRecord::Base
   belongs_to :country
   belongs_to :entity_type
   belongs_to :organization
+  belongs_to :country_of_birth, class_name: "Country"
   attr_accessible :building, :cellular, :company, :email, :extension, :fax, :first_name, :fiscal_id,
                   :floor, :floor_office, :last_name, :phone, :street_name, :street_number, :town,
                   :entity_type_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
-                  :created_by, :updated_by, :organization_id
+                  :created_by, :updated_by, :organization_id, :is_foreign, :country_of_birth_id
 
   has_one :supplier
   has_one :client

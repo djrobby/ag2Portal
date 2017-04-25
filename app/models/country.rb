@@ -5,6 +5,7 @@ class Country < ActiveRecord::Base
   has_many :shared_contacts
   has_many :regions
   has_many :entities
+  has_many :entities_by_country_of_birth, :class_name => 'Entity', foreign_key: "country_of_birth_id"
   has_many :suppliers
   has_many :clients
   has_many :supplier_bank_accounts

@@ -125,10 +125,10 @@ $(document).ready(function () {
     $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
 
     // Update Ids in the
-    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
-    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))
-    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
-    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
+    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
+    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
+    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
   });
 
   // $(".btn-others").click(function (e) {
@@ -399,9 +399,8 @@ $(document).ready(function () {
       <div class="modal-header">
         <h4>Cerrar Caja</h4>
       </div>
-      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post do |f| %>
+      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
-
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Saldo de apertura</label>
             <div class="controls">
@@ -412,7 +411,7 @@ $(document).ready(function () {
           <div class="control-group string required meter_manufacturing_date">
             <label class="string control-label">Total cobrado</label>
             <div class="controls">
-              <span id="total-cash"><%= @client_payments_cash.sum{|c| c.amount} %></span>
+              <span id="total-cash"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
 

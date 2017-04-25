@@ -93,22 +93,33 @@ module Ag2Gest
       redirect_to client_payments_path
     end
 
+    def collection_payment_methods(_organization)
+      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
+    end
+
     def banks
       invoices = Invoice.find_all_by_id(params[:client_payment_bank][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      # Bank order No.
       receipt_no = params[:client_payment_bank][:receipt_no]
-      payment_method_id = params[:client_payment_bank][:payment_method_id]
-      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
+      # Payment type & status
       invoice_status = InvoiceStatus::BANK
-      invoices.each do |i|
-        client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 2, bill_id: i.bill_id, invoice_id: i.id,
-                             payment_method_id: payment_method_id, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
-                             payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
-                             client_bank_account_id: nil, charge_account_id: i.charge_account_id)
-        if client_payment.save
-          i.invoice_status_id = invoice_status
-          i.save
-        end
+      payment_method_id = PaymentType.find(ClientPayment::BANK).payment_method_id rescue collection_payment_methods(invoices.first.organization_id)
+      if payment_method_id.nil?
+        payment_method_id = collection_payment_methods(invoices.first.organization_id)
       end
+      invoices.each do |i|
+        client_bank_account = i.client.active_bank_account
+        if !client_bank_account.blank?
+          client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::BANK, bill_id: i.bill_id, invoice_id: i.id,
+                               payment_method_id: payment_method_id, client_id: i.client.id, subscriber_id: i.subscriber.id,
+                               payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
+                               client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+          if client_payment.save
+            i.invoice_status_id = invoice_status
+            i.save
+          end
+        end
+      end # invoices.each
       redirect_to client_payments_path
     end
 

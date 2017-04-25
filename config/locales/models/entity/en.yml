@@ -44,3 +44,5 @@ en:
         address: "Address"
         organization: "Organization"
         organization_id: "Organization"
+        is_foreign: "Foreign?"
+        country_of_birth: "Country of birth"

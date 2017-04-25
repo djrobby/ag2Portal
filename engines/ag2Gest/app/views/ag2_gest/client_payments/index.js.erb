@@ -26,7 +26,7 @@ $('.accor').click(function () {
 
 $(".btn-payment").click(function(){
   var elements = $( "input:checked" );
-  if (elements.length <= 0) return false;
+  // if (elements.length <= 0) return false;
   var invoices_id = [];
   var debts_array = [];
   for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
@@ -40,10 +40,10 @@ $(".btn-payment").click(function(){
   $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
 
   // Update Ids in the
-  $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
-  $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))
-  $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))
-  $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+  $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
+  $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
+  $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
+  $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
 });
 
 // $(".btn-others").click(function (e) {

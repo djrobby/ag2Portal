@@ -34,7 +34,7 @@
           <%= link_to bill.client.to_label, client_path(bill.client) if bill.client %>
         </div>
         <div align="right" class="span2">
-           <%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>
+           <%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>
         </div>
       </div>
     </div>

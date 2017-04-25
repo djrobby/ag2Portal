@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170424090400) do
+ActiveRecord::Schema.define(:version => 20170425120224) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -897,6 +897,8 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -1301,16 +1303,19 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
     t.string   "fax"
     t.string   "cellular"
     t.string   "email"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "created_by"
     t.string   "updated_by"
     t.integer  "organization_id"
+    t.boolean  "is_foreign",       :default => false, :null => false
+    t.integer  "country_of_birth"
   end
 
   add_index "entities", ["cellular"], :name => "index_entities_on_cellular"
   add_index "entities", ["company"], :name => "index_entities_on_company"
   add_index "entities", ["country_id"], :name => "index_entities_on_country_id"
+  add_index "entities", ["country_of_birth"], :name => "index_entities_on_country_of_birth"
   add_index "entities", ["email"], :name => "index_entities_on_email"
   add_index "entities", ["entity_type_id"], :name => "index_entities_on_entity_type_id"
   add_index "entities", ["first_name"], :name => "index_entities_on_first_name"
@@ -2111,6 +2116,17 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
   add_index "payment_methods", ["flow"], :name => "index_payment_methods_on_flow"
   add_index "payment_methods", ["organization_id"], :name => "index_payment_methods_on_organization_id"
 
+  create_table "payment_types", :force => true do |t|
+    t.string   "name"
+    t.integer  "payment_method_id"
+    t.integer  "organization_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "payment_types", ["organization_id"], :name => "index_payment_types_on_organization_id"
+  add_index "payment_types", ["payment_method_id"], :name => "index_payment_types_on_payment_method_id"
+
   create_table "pre_bills", :force => true do |t|
     t.string   "bill_no"
     t.integer  "project_id"
@@ -2260,8 +2276,8 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
   add_index "pre_readings", ["meter_id"], :name => "index_pre_readings_on_meter_id"
   add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "subscriber_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
   add_index "pre_readings", ["project_id"], :name => "index_pre_readings_on_project_id"
-  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_1_id"
-  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_2_id"
+  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_2_id"
+  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_1_id"
   add_index "pre_readings", ["reading_date"], :name => "index_pre_readings_on_reading_date"
   add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
   add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
@@ -3420,16 +3436,16 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
   end
 
   create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
+    t.integer "id",                                              :default => 0, :null => false
     t.integer "organization_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
+    t.decimal "subtotal",        :precision => 47, :scale => 8
+    t.decimal "taxes",           :precision => 65, :scale => 20
+    t.decimal "bonus",           :precision => 57, :scale => 14
+    t.decimal "taxable",         :precision => 58, :scale => 14
+    t.decimal "total",           :precision => 65, :scale => 20
+    t.decimal "paid",            :precision => 35, :scale => 4
+    t.decimal "debt",            :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
@@ -3718,13 +3734,18 @@ ActiveRecord::Schema.define(:version => 20170424090400) do
 
   create_table "tax_types", :force => true do |t|
     t.string   "description"
-    t.decimal  "tax",         :precision => 6, :scale => 2, :default => 0.0, :null => false
-    t.datetime "created_at",                                                 :null => false
-    t.datetime "updated_at",                                                 :null => false
+    t.decimal  "tax",                   :precision => 6, :scale => 2, :default => 0.0, :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.date     "expiration"
+    t.integer  "input_ledger_account"
+    t.integer  "output_ledger_account"
   end
+
+  add_index "tax_types", ["input_ledger_account"], :name => "index_tax_types_on_input_ledger_account"
+  add_index "tax_types", ["output_ledger_account"], :name => "index_tax_types_on_output_ledger_account"
 
   create_table "technicians", :force => true do |t|
     t.string   "name"

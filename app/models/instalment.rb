@@ -5,7 +5,7 @@ class Instalment < ActiveRecord::Base
   attr_accessible :amount, :instalment, :payday_limit, :surcharge,
                   :instalment_plan_id, :bill_id, :invoice_id
 
-  has_many :client_payments
+  has_one :client_payment
 
   # validates :code,  :presence => true
   # validates :name,  :presence => true

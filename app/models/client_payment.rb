@@ -1,10 +1,10 @@
 class ClientPayment < ActiveRecord::Base
-  # CONSTANTS (payment_type)
-  CASH = 1
-  BANK = 2
-  FRACTIONATED = 3
-  COUNTER = 4
-  OTHERS = 5
+  # CONSTANTS (payment_type model)
+  CASH = 1          # CAJA
+  BANK = 2          # BANCO
+  FRACTIONATED = 3  # APLAZAMIENTO
+  COUNTER = 4       # VENTANILLA BANCARIA
+  OTHERS = 5        # OTROS
 
   belongs_to :bill
   belongs_to :invoice

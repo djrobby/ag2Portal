@@ -458,7 +458,7 @@ class Invoice < ActiveRecord::Base
 
   def bill_status
     b = self.bill rescue nil
-    b.update_attributes(invoice_status_id: b.invoices.map(&:invoice_status_id).min) unless b.nil?
+    b.update_attributes(invoice_status_id: b.invoices.select('min(invoice_status_id) as min_status').first.min_status) unless b.nil?
   end
 
   def assign_payday_limit

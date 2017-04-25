@@ -44,3 +44,5 @@ es:
         address: "Dirección"
         organization: "Organización"
         organization_id: "Organización"
+        is_foreign: "¿Extranjero?"
+        country_of_birth: "País de nacimiento"

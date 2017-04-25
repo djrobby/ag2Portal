@@ -1,6 +1,10 @@
 class TaxType < ActiveRecord::Base
+  belongs_to :input_ledger_account, class_name: "LedgerAccount"
+  belongs_to :output_ledger_account, class_name: "LedgerAccount"
+
   attr_accessible :description, :tax, :expiration,
-                  :created_by, :updated_by
+                  :created_by, :updated_by,
+                  :input_ledger_account_id, :output_ledger_account_id
 
   has_many :products
   has_many :work_order_items
