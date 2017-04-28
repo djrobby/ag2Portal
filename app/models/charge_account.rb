@@ -61,6 +61,18 @@ class ChargeAccount < ActiveRecord::Base
     .where(w)
     .by_code
   }
+  scope :g_where_incomes, -> w {
+    joins(:charge_group)
+    .where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 1, 3)
+    .where(w)
+    .by_code
+  }
+  scope :g_where_expenditures, -> w {
+    joins(:charge_group)
+    .where("(charge_groups.flow = ? OR charge_groups.flow = ?) AND charge_accounts.closed_at IS NULL", 2, 3)
+    .where(w)
+    .by_code
+  }
 
   before_destroy :check_for_dependent_records
 

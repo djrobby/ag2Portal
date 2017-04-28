@@ -20,6 +20,7 @@ module Ag2Purchase
       session[:ifilter] = nil
       session[:Petitioner] = nil
       session[:Balance] = nil
+      session[:Account] = nil
     end
   end
 end

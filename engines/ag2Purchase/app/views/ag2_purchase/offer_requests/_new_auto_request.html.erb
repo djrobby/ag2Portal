@@ -27,23 +27,83 @@
     });
   }
 
+  function projects_Select2(intialValue) {
+    $('#Project_').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function caccounts_Select2(intialValue) {
+    $('#Account_').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_projects_expenditure_charge_accounts?projects=<%= @search_projects %>",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {
       $('#Date_').datepicker('setValue', es_date(new Date()));
     }
-    suppliers_Select2("<%= @supplier %>");
+    // suppliers_Select2("<%= @supplier %>");
+    projects_Select2("<%= @project %>");
+    caccounts_Select2("<%= @charge_account %>");
   });
 
   jQuery(function($) {
     $('#btn_accept').click(function() {
       var supplier = $('#Supplier_').val();
+      if (supplier == null) supplier = "";
       var family = $('#Family_').val();
       if (family == null) family = "";
       var offer_date = $('#Date_').val();
-      var project = $('#Project_ :selected').val();
+      // var project = $('#Project_ :selected').val();
+      var project = $('#Project_').val();
       var store = $('#Store_ :selected').val();
-      var account = $('#Account_ :selected').val();
+      // var account = $('#Account_ :selected').val();
+      var account = $('#Account_').val();
       var payment = $('#Payment_ :selected').val();
       if ((supplier == "") || (family == "") || (offer_date == "") || (project == "") || (store == "") || (account == "") || (payment == "")) {
         // Error
@@ -88,7 +148,8 @@
   <div class="modal-body">
     <!-- Supplier -->
     <label for="Supplier_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("ag2_purchase.offer_requests.suppliers_info") %></label>
-    <%= hidden_field_tag "Supplier_", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+    <%= select_tag "Supplier_", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2', multiple: true %>
+    <!-- <%#= hidden_field_tag "Supplier_", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %> -->
     <!-- Family -->
     <label for="Family_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("ag2_purchase.offer_requests.families_info") %></label>
     <%= select_tag "Family_", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2', multiple: true %>
@@ -97,13 +158,15 @@
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
     <!-- Project -->
     <label for="Project_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.project") %></label>
-    <%= select_tag "Project_", options_from_collection_for_select(@current_projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <!-- <%#= select_tag "Project_", options_from_collection_for_select(@current_projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %> -->
+    <%= hidden_field_tag "Project_", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
     <!-- Store -->
     <label for="Store_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.store") %></label>
     <%= select_tag "Store_", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
     <!-- Account -->
     <label for="Account_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.charge_account") %></label>
-    <%= select_tag "Account_", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <%= hidden_field_tag "Account_", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+    <!-- <%#= select_tag "Account_", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %> -->
     <!-- Payment -->
     <label for="Payment_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer_request.payment_method") %></label>
     <%= select_tag "Payment_", options_from_collection_for_select(@payment_methods, "id", "to_label"), :prompt => "", :class => 'x-large-text-field nsel2' %>

@@ -550,15 +550,17 @@ module Ag2Purchase
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
+      account = params[:Account]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
 
       # Arrays for search
-      if !supplier.blank?
+      if !supplier.blank?   # Offer requests that include current supplier
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id).where(supplier_id: supplier)
       else
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id)
@@ -570,9 +572,11 @@ module Ag2Purchase
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       # Auto generate request
+      @suppliers = suppliers_dropdown if @suppliers.nil?
       @current_projects = Project.where(id: current_projects) if @current_projects.nil?
-      @families = ProductFamily.order(:family_code) if @families.nil?
-      @charge_accounts = projects_charge_accounts(@current_projects) if @charge_accounts.nil?
+      @search_projects = @current_projects.map{ |p| p.id }.map(&:inspect).join(',')
+      @families = families_dropdown if @families.nil?
+      # @charge_accounts = projects_charge_accounts(@current_projects) if @charge_accounts.nil?
       @stores = projects_stores(@current_projects) if @stores.nil?
       @payment_methods = payment_methods_dropdown if @payment_methods.nil?
 
@@ -831,6 +835,7 @@ module Ag2Purchase
       _current_projects
     end
 
+    # Returns offer requests that include these suppliers, for seach
     def current_suppliers_for_index(_suppliers)
       _current_suppliers = []
       # Add suppliers found
@@ -855,19 +860,19 @@ module Ag2Purchase
 
       # Adding stores belonging to current project only
       # Stores with exclusive office
-      if !_project.company.blank? && !_project.office.blank?
-        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company.id, _project.office.id)
-      elsif !_project.company.blank? && _project.office.blank?
-        _stores = Store.where("(company_id = ?)", _project.company.id)
-      elsif _project.company.blank? && !_project.office.blank?
-        _stores = Store.where("(office_id = ?)", _project.office.id)
+      if !_project.company_id.blank? && !_project.office_id.blank?
+        _stores = Store.where("(company_id = ? AND office_id = ?)", _project.company_id, _project.office_id)
+      elsif !_project.company_id.blank? && _project.office_id.blank?
+        _stores = Store.where("(company_id = ?)", _project.company_id)
+      elsif _project.company_id.blank? && !_project.office_id.blank?
+        _stores = Store.where("(office_id = ?)", _project.office_id)
       else
         _stores = nil
       end
       ret_array(_array, _stores, 'id')
       # Stores with multiple offices
-      if !_project.office.blank?
-        _stores = StoreOffice.where("office_id = ?", _project.office.id)
+      if !_project.office_id.blank?
+        _stores = StoreOffice.where("office_id = ?", _project.office_id)
         ret_array(_array, _stores, 'store_id')
       end
 
@@ -890,11 +895,11 @@ module Ag2Purchase
 
       # Adding stores belonging to current projects (projects have company and office)
       _projects.each do |i|
-        if !i.company.blank? && !i.office.blank?
+        if !i.company_id.blank? && !i.office_id.blank?
           _ret = Store.where("(company_id = ? AND office_id = ?)", i.company_id, i.office_id)
-        elsif !i.company.blank? && i.office.blank?
+        elsif !i.company_id.blank? && i.office_id.blank?
           _ret = Store.where("(company_id = ?)", i.company_id)
-        elsif i.company.blank? && !i.office.blank?
+        elsif i.company_id.blank? && !i.office_id.blank?
           _ret = Store.where("(office_id = ?)", i.office_id)
         end
         ret_array(_array, _ret, 'id')
@@ -1007,7 +1012,11 @@ module Ag2Purchase
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+    end
+
+    def families_dropdown
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).by_code : ProductFamily.by_code
     end
 
     def charge_accounts_dropdown
@@ -1020,11 +1029,11 @@ module Ag2Purchase
     end
 
     def stores_dropdown
-      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     def payment_methods_dropdown
@@ -1161,6 +1170,12 @@ module Ag2Purchase
       elsif session[:Order]
         params[:Order] = session[:Order]
       end
+      # account
+      if params[:Account]
+        session[:Account] = params[:Account]
+      elsif session[:Account]
+        params[:Account] = session[:Account]
+      end
     end
 
     def or_remove_filters
@@ -1169,6 +1184,7 @@ module Ag2Purchase
       params[:Supplier] = ""
       params[:Project] = ""
       params[:Order] = ""
+      params[:Account] = ""
       return " "
     end
 
@@ -1178,6 +1194,7 @@ module Ag2Purchase
       params[:Supplier] = session[:Supplier]
       params[:Project] = session[:Project]
       params[:Order] = session[:Order]
+      params[:Account] = session[:Account]
     end
   end
 end
