@@ -1163,7 +1163,7 @@ module Ag2Purchase
       end
     end
 
-    def of_remove_filters
+    def or_remove_filters
       params[:search] = ""
       params[:No] = ""
       params[:Supplier] = ""
@@ -1172,7 +1172,7 @@ module Ag2Purchase
       return " "
     end
 
-    def of_restore_filters
+    def or_restore_filters
       params[:search] = session[:search]
       params[:No] = session[:No]
       params[:Supplier] = session[:Supplier]
