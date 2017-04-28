@@ -5,7 +5,9 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:of_totals,
+    skip_load_and_authorize_resource :only => [:of_remove_filters,
+                                               :of_restore_filters,
+                                               :of_totals,
                                                :of_update_description_prices_from_product_store,
                                                :of_update_description_prices_from_product,
                                                :of_update_amount_from_price_or_quantity,
@@ -22,6 +24,10 @@ module Ag2Purchase
                                                :of_generate_order,
                                                :of_attachment_changed,
                                                :of_update_attachment]
+    # Helper methods for
+    # => index filters
+    helper_method :of_remove_filters, :of_restore_filters
+
     # Public attachment for drag&drop
     $attachment = nil
     $attachment_changed = false
@@ -571,12 +577,13 @@ module Ag2Purchase
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @suppliers = suppliers_dropdown if @suppliers.nil?
-      @projects = projects_dropdown if @projects.nil?
-      @work_orders = work_orders_dropdown if @work_orders.nil?
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @offer_requests = offer_requests_dropdown if @offer_requests.nil?
 
       # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -1099,5 +1106,21 @@ module Ag2Purchase
         params[:Order] = session[:Order]
       end
     end
-  end
+
+    def of_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Supplier] = ""
+      params[:Project] = ""
+      params[:Order] = ""
+      return " "
+    end
+
+    def of_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Supplier] = session[:Supplier]
+      params[:Project] = session[:Project]
+      params[:Order] = session[:Order]
+    end  end
 end

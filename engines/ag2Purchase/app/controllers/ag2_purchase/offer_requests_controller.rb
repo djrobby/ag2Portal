@@ -6,7 +6,9 @@ module Ag2Purchase
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [:or_update_description_prices_from_product_store,
+    skip_load_and_authorize_resource :only => [:or_remove_filters,
+                                               :or_restore_filters,
+                                               :or_update_description_prices_from_product_store,
                                                :or_update_description_prices_from_product,
                                                :or_update_charge_account_from_order,
                                                :or_update_charge_account_from_project,
@@ -25,6 +27,10 @@ module Ag2Purchase
                                                :offer_request_form_no_prices,
                                                :send_offer_request_form,
                                                :or_generate_request]
+    # Helper methods for
+    # => index filters
+    helper_method :or_remove_filters, :or_restore_filters
+
     # Calculate and format totals properly
     def or_totals
       qty = params[:qty].to_f / 10000
@@ -547,26 +553,25 @@ module Ag2Purchase
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @suppliers = suppliers_dropdown if @suppliers.nil?
-      @projects = projects_dropdown if @projects.nil?
-      #@work_orders = WorkOrder.limit(2)
-      @work_orders = work_orders_dropdown if @work_orders.nil?
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
 
+      # Arrays for search
       if !supplier.blank?
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id).where(supplier_id: supplier)
       else
         @request_suppliers = OfferRequestSupplier.group(:offer_request_id)
       end
-
-      # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
       current_suppliers = @request_suppliers.blank? ? [0] : current_suppliers_for_index(@request_suppliers)
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       # Auto generate request
-      @families = ProductFamily.order(:family_code) if @families.nil?
       @current_projects = Project.where(id: current_projects) if @current_projects.nil?
+      @families = ProductFamily.order(:family_code) if @families.nil?
       @charge_accounts = projects_charge_accounts(@current_projects) if @charge_accounts.nil?
       @stores = projects_stores(@current_projects) if @stores.nil?
       @payment_methods = payment_methods_dropdown if @payment_methods.nil?
@@ -1156,6 +1161,23 @@ module Ag2Purchase
       elsif session[:Order]
         params[:Order] = session[:Order]
       end
+    end
+
+    def of_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Supplier] = ""
+      params[:Project] = ""
+      params[:Order] = ""
+      return " "
+    end
+
+    def of_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Supplier] = session[:Supplier]
+      params[:Project] = session[:Project]
+      params[:Order] = session[:Order]
     end
   end
 end

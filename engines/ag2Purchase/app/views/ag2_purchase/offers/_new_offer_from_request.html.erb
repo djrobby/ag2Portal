@@ -1,15 +1,44 @@
 <!-- Modal -->
 <script>
+  function suppliers_Select2(intialValue) {
+    $('#Supplier_').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_suppliers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {
       $('#Date_').datepicker('setValue', es_date(new Date()));
     }
+    suppliers_Select2("<%= @supplier %>");
   });
 
   jQuery(function($) {
     $('#btn_accept').click(function() {
-      var supplier = $('#Supplier_ :selected').val();
+      var supplier = $('#Supplier_').val();
+      // var supplier = $('#Supplier_ :selected').val();
       var request = $('#Request_ :selected').val();
       var offer_no = $('#No_').val();
       var offer_date = $('#Date_').val();
@@ -46,7 +75,7 @@
     // when the #Supplier_ field changes
     $("#Supplier_").change(function() {
       // make a POST call and replace the content
-      var supplier = $('#Supplier_ :selected').val();
+      var supplier = $('#Supplier_').val();
       if (supplier == "") supplier = 0;
       jQuery.getJSON('of_update_request_select_from_supplier/' + supplier, function(data) {
         var r = data.offer_request;
@@ -84,7 +113,7 @@
   <div class="modal-body">
     <!-- Supplier -->
     <label for="Supplier_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.supplier") %></label>
-    <%= select_tag "Supplier_", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
+    <%= hidden_field_tag "Supplier_", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
     <!-- Offer request -->
     <label for="Request_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.offer.offer_request") %></label>
     <%= select_tag "Request_", options_from_collection_for_select(@offer_requests, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2' %>
