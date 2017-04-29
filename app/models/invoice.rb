@@ -405,6 +405,8 @@ class Invoice < ActiveRecord::Base
 
   searchable do
     text :invoice_no
+    integer :organization_id
+    integer :payment_method_id
     # text :client_code_name_fiscal do
     #   bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     # end
@@ -438,14 +440,12 @@ class Invoice < ActiveRecord::Base
     integer :subscriber_id do
       bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
     end
-    integer :project_id do
+    integer :project_id, :multiple => true do
       bill.project_id unless (bill.blank? || bill.project_id.blank?)
     end
     string :sort_no do
       invoice_no
     end
-    integer :organization_id
-    integer :payment_method_id
   end
 
   private

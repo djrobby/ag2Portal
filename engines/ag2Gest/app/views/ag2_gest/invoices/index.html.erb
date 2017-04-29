@@ -159,17 +159,17 @@
   $(window).bind("load", function() {
     a = "<%= iv_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
-    // $("#Project").select2("val", "<%= params[:Project] %>");
-    // $("#Client").select2("val", "<%= params[:Client] %>");
-    // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    // $("#Project").select2("val", "<%#= params[:Project] %>");
+    // $("#Client").select2("val", "<%#= params[:Client] %>");
+    // $("#Subscriber").select2("val", "<%#= params[:Subscriber] %>");
     $("#Client").val("<%= params[:Client] %>");
     $("#Subscriber").val("<%= params[:Subscriber] %>");
     $("#StreetName").val("<%= params[:StreetName] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
-    // $("#Biller").select2("val", "<%= params[:Biller] %>");
-    // $("#Period").select2("val", "<%= params[:Period] %>");
+    // $("#Biller").select2("val", "<%#= params[:Biller] %>");
+    // $("#Period").select2("val", "<%#= params[:Period] %>");
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
     $("#search").val("<%= params[:search] %>");
@@ -219,7 +219,6 @@
       window.open("invoice_view_report.pdf", "_blank");
       return false;
     });
-
   });
 </script>
 

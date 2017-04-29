@@ -245,28 +245,28 @@ class Bill < ActiveRecord::Base
   end
 
   searchable do
-    text :bill_no #, :to_label, :fiscal_id, :phone, :full_name
-    text :client_code_name_fiscal do
+    text :bill_no
+    date :created_at
+    integer :organization_id
+    integer :payment_method_id
+    string :client_code_name_fiscal, :multiple => true do
       client.full_name_or_company_code_fiscal unless client.blank?
     end
-    text :subscriber_code_name_fiscal do
+    string :subscriber_code_name_fiscal, :multiple => true do
       subscriber.code_full_name_or_company_fiscal unless subscriber.blank?
     end
-    text :entity_name_fiscal do
-      client.entity.full_name_or_company_fiscal unless (client.blank? || client.entity.blank?)
+    string :supply_address, :multiple => true do
+      subscriber.subscriber_supply_address.supply_address unless (subscriber.blank? || subscriber.subscriber_supply_address.blank? || subscriber.subscriber_supply_address.supply_address.blank?)
     end
     string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
-    integer :project_id, :multiple => true
     integer :invoice_status_id
+    integer :project_id, :multiple => true
     integer :client_id
     integer :subscriber_id
-    integer :entity_id do
-      client.entity_id unless (client.blank? || client.entity_id.blank?)
-    end
     boolean :bank_account do
       client.active_bank_accounts? unless client.blank?
     end
-    integer :billing_period do
+    integer :billing_period_id do
       reading_2.nil? ? nil : reading_2.billing_period_id
     end
     integer :reading_route_id do
@@ -275,9 +275,6 @@ class Bill < ActiveRecord::Base
     string :sort_no do
       bill_no
     end
-    date :created_at
-    integer :organization_id
-    integer :payment_method_id
   end
 end
 

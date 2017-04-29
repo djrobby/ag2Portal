@@ -223,7 +223,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
 
-       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = Invoice.search do
         fulltext params[:search]
@@ -288,7 +288,6 @@ module Ag2Gest
         end
       end
     end
-
 
     private
 

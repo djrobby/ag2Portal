@@ -33,42 +33,37 @@ class ClientPayment < ActiveRecord::Base
 
   searchable do
     text :receipt_no
-    text :bill_no do
-      bill.bill_no
-    end
-    text :client_code_name_fiscal do
-      bill.client.full_name_or_company_code_fiscal unless bill.client.blank?
-    end
-    text :subscriber_code_name_address_fiscal do
-      bill.subscriber.code_full_name_or_company_address_fiscal unless bill.subscriber.blank?
-    end
-    text :entity_name_fiscal do
-      bill.client.entity.full_name_or_company_fiscal unless bill.client.entity.blank?
-    end
-    string :bill_no, :multiple => true do
-      bill.bill_no
-    end   # Multiple search values accepted in one search (inverse_no_search)
     integer :payment_type
-    integer :project_id, :multiple => true do
-      bill.project_id
+    integer :id
+    string :client_code_name_fiscal, :multiple => true do
+      bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
+    end
+    string :subscriber_code_name_fiscal, :multiple => true do
+      bill.subscriber.code_full_name_or_company_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    end
+    string :supply_address, :multiple => true do
+      bill.subscriber.subscriber_supply_address.supply_address unless (bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
+    end
+    string :bill_no, :multiple => true do     # Multiple search values accepted in one search (inverse_no_search)
+      bill.bill_no unless (bill.blank? || bill.bill_no.blank?)
+    end
+    string :invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
+      invoice.invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
     end
     integer :client_id do
-      bill.client_id
+      bill.client_id unless (bill.blank? || bill.client_id.blank?)
     end
     integer :subscriber_id do
-      bill.subscriber_id
+      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
     end
-    integer :entity_id do
-      bill.client.entity_id
+    integer :project_id, :multiple => true do
+      bill.project_id unless (bill.blank? || bill.project_id.blank?)
     end
     boolean :bank_account do
-      bill.client.active_bank_accounts?
+      bill.client.active_bank_accounts? unless (bill.blank? || bill.client.blank?)
     end
-    integer :billing_period do
+    integer :billing_period_id do
       bill.reading_2.nil? ? nil : bill.reading_2.billing_period_id
-    end
-    integer :reading_route_id do
-      bill.subscriber.nil? ? nil : bill.subscriber.reading_route_id
     end
     string :sort_no do
       bill.bill_no

@@ -47,6 +47,7 @@ class EnginesController < ApplicationController
     session[:StreetName] = nil
     session[:entity] = nil
     session[:Request] = nil
+    session[:BankAccount] = nil
     session[:Use] = nil
     # Ag2HelpDesk
     session[:Id] = nil

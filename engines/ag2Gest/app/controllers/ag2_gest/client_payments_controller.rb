@@ -6,8 +6,13 @@ module Ag2Gest
     before_filter :authenticate_user!
     load_and_authorize_resource
     # Must authorize manually for every action in this controller
-    skip_load_and_authorize_resource :only => [:cp_format_number,
+    skip_load_and_authorize_resource :only => [:cp_remove_filters,
+                                               :cp_restore_filters,
+                                               :cp_format_number,
                                                :cp_format_number_4]
+    # Helper methods for
+    # => index filters
+    helper_method :cp_remove_filters, :cp_restore_filters
 
     # Format numbers properly
     def cp_format_number
@@ -209,29 +214,32 @@ module Ag2Gest
 
     def index
       manage_filter_state
-      bill_no = params[:bill_no]
+      no = params[:No]
+      project = params[:Project]
       client = params[:Client]
       subscriber = params[:Subscriber]
-      project = params[:Project]
-      bank_account = params[:bank_account] == "SI" ? true : false
-      billing_period = params[:billing_period]
+      street_name = params[:StreetName]
+      bank_account = params[:BankAccount] == t(:yes_on) ? true : false
+      period = params[:Period]
 
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @billing_periods = billing_periods_dropdown if @billing_periods.nil?
-      @projects  = projects_dropdown if @projects.nil?
-      # @clients = clients_dropdown if @clients.nil?
-      # @subscribers  = subscribers_dropdown if @subscribers.nil?
-      @payment_methods = payment_methods_dropdown
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
+      @have_bank_account = have_bank_account_array
 
       # If inverse no search is required
-      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      client = !client.blank? ? inverse_client_search(client) : client
+      subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      current_projects = current_projects_ids
 
       search_pending = Bill.search do
         with(:invoice_status_id, 0..98)
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -240,23 +248,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
-        # if !entity.blank?
-        #   with :entity_id, entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
         order_by :sort_no, :asc
@@ -265,8 +285,8 @@ module Ag2Gest
 
       search_charged = Bill.search do
         with :invoice_status_id, InvoiceStatus::CHARGED
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -275,20 +295,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}]
         order_by :sort_no, :asc
@@ -297,8 +332,8 @@ module Ag2Gest
 
       search_cash = ClientPayment.search do
         with :payment_type, ClientPayment::CASH
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -307,20 +342,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
@@ -329,8 +379,8 @@ module Ag2Gest
 
       search_bank = ClientPayment.search do
         with :payment_type, ClientPayment::BANK
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -339,20 +389,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
@@ -361,8 +426,8 @@ module Ag2Gest
 
       search_others = ClientPayment.search do
         with :payment_type, ClientPayment::OTHERS
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -371,20 +436,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
@@ -393,8 +473,8 @@ module Ag2Gest
 
       search_instalment = Instalment.search do
         with :client_payment, nil
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
+        if !current_projects.blank?
+          with :project_id, current_projects
         end
         if !bill_no.blank?
           if bill_no.class == Array
@@ -403,20 +483,35 @@ module Ag2Gest
             with(:bill_no).starting_with(bill_no)
           end
         end
+        if !project.blank?
+          with :project_id, project
+        end
         if !client.blank?
-          fulltext client
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
         if !subscriber.blank?
-          fulltext subscriber
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
         end
-        # if !entity.blank?
-        #   fulltext entity
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         if !bank_account.blank?
           with :bank_account, bank_account
         end
-        if !billing_period.blank?
-          with :billing_period, billing_period
+        if !period.blank?
+          with :billing_period_id, period
         end
         data_accessor_for(Instalment).include = [:bill, {instalment_plan: [:client, :subscriber, :payment_method]}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
@@ -784,23 +879,54 @@ module Ag2Gest
 
     private
 
-    # def reports_array()
-    #   _array = []
-    #   _array = _array << t("ag2_gest.client_payments.report.bill_report")
-    #   _array = _array << t("ag2_gest.client_payments.report.bill_pending_report")
-    #   _array = _array << t("ag2_gest.client_payments.report.bill_unpaid_report")
-    #   _array = _array << t("ag2_gest.client_payments.report.bill_charged_report")
-    #   _array = _array << t("ag2_gest.client_payments.report.client_payment_report")
-    #   _array
-    # end
+    def have_bank_account_array()
+      _array = []
+      _array = _array << t(:yes_on)
+      _array = _array << t(:no_off)
+      _array
+    end
+
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
+    end
 
     def inverse_no_search(no)
       _numbers = []
       # Add numbers found
-      Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.subscriber_code
+      Bill.where('bill_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.bill_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_client_search(client)
+      _numbers = []
+      no = setup_no(client)
+      w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Client.where(w).first(1000).each do |i|
+        _numbers = _numbers << i.full_name_or_company_code_fiscal
+      end
+      _numbers = _numbers.blank? ? client : _numbers
+    end
+
+    def inverse_subscriber_search(subscriber)
+      _numbers = []
+      no = setup_no(subscriber)
+      w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Subscriber.where(w).first(1000).each do |i|
+        _numbers = _numbers << i.code_full_name_or_company_fiscal
+      end
+      _numbers = _numbers.blank? ? subscriber : _numbers
+    end
+
+    def inverse_street_name_search(supply_address)
+      _numbers = []
+      no = setup_no(supply_address)
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
+        _numbers = _numbers << i.supply_address
+      end
+      _numbers = _numbers.blank? ? supply_address : _numbers
     end
 
     def billing_periods_dropdown
@@ -857,11 +983,11 @@ module Ag2Gest
 
     # Keeps filter state
     def manage_filter_state
-      # bill_no
-      if params[:bill_no]
-        session[:bill_no] = params[:bill_no]
-      elsif session[:bill_no]
-        params[:bill_no] = session[:bill_no]
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
       end
       # project
       if params[:Project]
@@ -881,32 +1007,45 @@ module Ag2Gest
       elsif session[:Subscriber]
         params[:Subscriber] = session[:Subscriber]
       end
-      # entity
-      if params[:entity]
-        session[:entity] = params[:entity]
-      elsif session[:entity]
-        params[:entity] = session[:entity]
+      # street_name
+      if params[:StreetName]
+        session[:StreetName] = params[:StreetName]
+      elsif session[:StreetName]
+        params[:StreetName] = session[:StreetName]
       end
       # bank_account
-      if params[:bank_account]
-        session[:bank_account] = params[:bank_account]
-      elsif session[:bank_account]
-        params[:bank_account] = session[:bank_account]
+      if params[:BankAccount]
+        session[:BankAccount] = params[:BankAccount]
+      elsif session[:BankAccount]
+        params[:BankAccount] = session[:BankAccount]
       end
-      # billing_period
-      if params[:billing_period]
-        session[:billing_period] = params[:billing_period]
-      elsif session[:billing_period]
-        params[:billing_period] = session[:billing_period]
-      end
-      # reading_routes
-      if params[:reading_routes]
-        session[:reading_routes] = params[:reading_routes]
-      elsif session[:reading_routes]
-        params[:reading_routes] = session[:reading_routes]
+      # period
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
       end
     end
 
+    def cp_remove_filters
+      params[:No] = ""
+      params[:Project] = ""
+      params[:Client] = ""
+      params[:Subscriber] = ""
+      params[:StreetName] = ""
+      params[:BankAccount] = ""
+      params[:Period] = ""
+      return " "
+    end
 
+    def cp_restore_filters
+      params[:No] = session[:No]
+      params[:Project] = session[:Project]
+      params[:Client] = session[:Client]
+      params[:Subscriber] = session[:Subscriber]
+      params[:StreetName] = session[:StreetName]
+      params[:BankAccount] = session[:BankAccount]
+      params[:Period] = session[:Period]
+    end
   end
 end

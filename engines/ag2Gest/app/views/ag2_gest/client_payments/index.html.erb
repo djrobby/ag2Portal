@@ -2,12 +2,98 @@
 <% session[:return_to] = nil %>
 
 <script>
-$(document).ready(function () {
   var _thisForm = '';
   var changing = false;
   var _currentLocale = 'es';
   var _delimiter = '.';
   var _separator = ',';
+
+  function setupAllSelect2(p, r) {
+    projectsSelect2(p);
+    periodsSelect2(r);    
+  }
+
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function periodsSelect2(intialValue) {
+    $('#Period').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_billing_periods",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
 
   $(document).ready(function() {
     $('.sel2').select2({
@@ -45,48 +131,67 @@ $(document).ready(function () {
       _separator = '.';
     }
 
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>", "<%= @period %>");
+
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   });
 
-  $(document).ajaxStart(function() {
-    // show loader on start
-    if (changing == false) {
-      $("#pendings").html("");
-      $("#unpaid").html("");
-      $("#charged").html("");
-      $("#cash").html("");
-      $("#banks").html("");
-      $("#others").html("");
-      $("#fractionated").html("");
-      $("#loader").show();
-    }
-  }).ajaxSuccess(function() {
+  // $(document).ajaxStart(function() {
+  //   // show loader on start
+  //   if (changing == false) {
+  //     $("#pendings").html("");
+  //     $("#unpaid").html("");
+  //     $("#charged").html("");
+  //     $("#cash").html("");
+  //     $("#banks").html("");
+  //     $("#others").html("");
+  //     $("#fractionated").html("");
+  //     $("#loader").show();
+  //   }
+  // });
+  $(document).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
   });
 
   $(window).bind("load", function() {
-    $("#bill_no").val("<%= params[:bill_no] %>");
-    $("#Project").select2("val", "<%= params[:Project] %>");
-    // $("#Client").select2("val", "<%= params[:Client] %>");
-    // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    a = "<%= cp_restore_filters %>";
+    $("#No").val("<%= params[:No] %>");
+    // $("#Project").select2("val", "<%#= params[:Project] %>");
     $("#Client").val("<%= params[:Client] %>");
     $("#Subscriber").val("<%= params[:Subscriber] %>");
-    $("#bank_account").select2("val", "<%= params[:bank_account] %>");
-    $("#billing_period").select2("val", "<%= params[:billing_period] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
+    $("#BankAccount").val("<%= params[:BankAccount] %>");
+    // $("#Period").select2("val", "<%#= params[:billing_period] %>");
   });
 
   jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
     $("#removeFilter").click(function() {
-      $("#bill_no").val("");
+      $("#No").val("");
       $("#Project").select2("val", "");
-      // $("#Client").select2("val", "");
-      // $("#Subscriber").select2("val", "");
       $("#Client").val("");
       $("#Subscriber").val("");
-      $("#bank_account").select2("val", "");
-      $("#billing_period").select2("val", "");
+      $("#StreetName").val("");
+      $("#BankAccount").val("");
+      $("#Period").select2("val", "");
+      a = "<%= cp_remove_filters %>";
+      setupAllSelect2(a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -235,8 +340,6 @@ $(document).ready(function () {
   //     }
   //     return false;
   // });
-
-});
 </script>
 
 <style>
@@ -275,41 +378,32 @@ $(document).ready(function () {
         <%= link_to ag2_gest.client_payments_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %><i class="icon-refresh"></i><% end %>
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
-
-          <!-- Bill No -->
-          <%= label_tag "Factura", nil, :class => 'form-label' %>
-          <%= text_field_tag "bill_no", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
-
+          <!-- No -->
+          <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
+          <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Project -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_project"), nil, :class => 'form-label' %>
-          <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "project_code"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-
+          <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
+          <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Client -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-          <%= text_field_tag "Client", nil, :class => 'x-large-text-field shrinked' %>
-          <!--<%#= select_tag "client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
-
+          <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
+          <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
           <!-- Subscriber -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_subscriber"), nil, :class => 'form-label' %>
-          <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
-          <!--<%#= select_tag "Subscriber", options_from_collection_for_select(@subscribers, "id", "code_full_name_or_company_address"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
-
+          <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
+          <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
+          <!-- Street name -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
+          <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- BankAccount -->
           <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), nil, :class => 'form-label' %>
-          <%= select_tag "bank_account", options_for_select([ "SI", "NO" ]), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-
+          <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
           <!-- Period -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_billing_period"), nil, :class => 'form-label-under-sel2' %>
-          <%= select_tag "billing_period", options_from_collection_for_select(@billing_periods, "id", "period"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-
+          <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
+          <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <br /><br />
           <!-- Submit -->
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
-
-
           <!-- Remove filter -->
           <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
-
         <% end %>
 
       <!-- Report -->
@@ -327,20 +421,20 @@ $(document).ready(function () {
     </div><!-- /.span3 -->
 
     <div class="span9">
-      <div id="div_table">
-        <div class="span6 text-center"><h4>Facturas</h4></div>
-        <div class="span6 text-center"><h4>Cobros</h4></div>
-        <ul class="nav nav-tabs" id="payments-tabs">
-          <li class="active" style="width:25%"><a href="#pendings"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
-          <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
-          <li style="width:25%"><a href="#charged"><%= I18n.t("ag2_gest.client_payments.index.charged") %></a></li>
-          <li class="pull-right"><a href="#others"><%= I18n.t("ag2_gest.client_payments.index.others") %></a></li>
-          <li class="pull-right"><a href="#fractionated"><%= I18n.t("ag2_gest.client_payments.index.deferrals") %></a></li>
-          <li class="pull-right"><a href="#banks"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a></li>
-          <li class="pull-right"><a href="#cash"><%= I18n.t("ag2_gest.client_payments.index.cash") %></a></li>
-        </ul>
+      <div class="span6 text-center"><h4>Facturas</h4></div>
+      <div class="span6 text-center"><h4>Cobros</h4></div>
+      <ul class="nav nav-tabs" id="payments-tabs">
+        <li class="active" style="width:25%"><a href="#pendings"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
+        <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
+        <li style="width:25%"><a href="#charged"><%= I18n.t("ag2_gest.client_payments.index.charged") %></a></li>
+        <li class="pull-right"><a href="#others"><%= I18n.t("ag2_gest.client_payments.index.others") %></a></li>
+        <li class="pull-right"><a href="#fractionated"><%= I18n.t("ag2_gest.client_payments.index.deferrals") %></a></li>
+        <li class="pull-right"><a href="#banks"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a></li>
+        <li class="pull-right"><a href="#cash"><%= I18n.t("ag2_gest.client_payments.index.cash") %></a></li>
+      </ul>
+      <div id="loader"></div>
 
-        <div id="loader"></div>
+      <div id="div_table">
         <div class="tab-content">
         <!-- PENDING TAB -->
           <div class="tab-pane active" id="pendings">
