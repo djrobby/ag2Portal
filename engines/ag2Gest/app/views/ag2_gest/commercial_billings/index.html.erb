@@ -2,8 +2,7 @@
   var _thisForm = '';
   var changing = false;
 
-  function setupAllSelect2(c, p, b) {
-    clientsSelect2(c);
+  function setupAllSelect2(p, b) {
     projectsSelect2(p);
     billersSelect2(b);    
   }
@@ -108,7 +107,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @client %>", "<%= @project %>", "<%= @biller %>");
+    setupAllSelect2("<%= @project %>", "<%= @biller %>");
 
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
@@ -131,6 +130,7 @@
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%= params[:Project] %>");
     // $("#Client").select2("val", "<%= params[:Client] %>");
+    $("#Client").val("<%= params[:Client] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
@@ -157,7 +157,8 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
-      $("#Client").select2("val", "");
+      $("#Client").val("");
+      // $("#Client").select2("val", "");
       $("#Status").val("");
       $("#Type").val("");
       $("#Operation").val("");
@@ -198,9 +199,10 @@
         <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-        <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <!-- <%#= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %> -->
         <!-- Type -->
-        <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_type"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.commercial_billings.index.label_status"), nil, :class => 'form-label' %>

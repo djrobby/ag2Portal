@@ -245,6 +245,9 @@ class Client < ActiveRecord::Base
 
   searchable do
     text :client_code, :full_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
+    string :address, :multiple => true do
+      address_1 unless address_1.blank?
+    end
     string :client_code, :multiple => true
     string :company
     string :full_name

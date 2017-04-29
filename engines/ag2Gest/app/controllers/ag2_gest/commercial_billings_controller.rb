@@ -496,7 +496,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @client = !client.blank? ? Client.find(client).to_label : " "
+      # @client = !client.blank? ? Client.find(client).to_label : " "
       @project = !project.blank? ? Project.find(project).full_name : " "
       @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @status = invoice_statuses_dropdown if @status.nil?
@@ -510,6 +510,7 @@ module Ag2Gest
       current_types = @types.blank? ? [0] : current_types_for_index(@types)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      client = !client.blank? ? inverse_client_search(client) : client
 
       @search = Invoice.search do
         with :invoice_type_id, current_types
@@ -522,20 +523,27 @@ module Ag2Gest
             with(:invoice_no).starting_with(no)
           end
         end
-        if !client.blank?
-          with :client_id, client
-        end
-        # if !subscriber.blank?
-        #   fulltext subscriber
-        # end
         if !project.blank?
           with :project_id, project
         end
-        if !status.blank?
-          with :invoice_status_id, status
+        if !client.blank?
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
         end
+        # if !client.blank?
+        #   with :client_id, client
+        # end
+        # if !subscriber.blank?
+        #   fulltext subscriber
+        # end
         if !type.blank?
           with :invoice_type_id, type
+        end
+        if !status.blank?
+          with :invoice_status_id, status
         end
         if !operation.blank?
           with :invoice_operation_id, operation
@@ -812,6 +820,11 @@ module Ag2Gest
       _current_types
     end
 
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
+    end
+
     def inverse_no_search(no)
       _numbers = []
       # Add numbers found
@@ -819,6 +832,16 @@ module Ag2Gest
         _numbers = _numbers << i.invoice_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_client_search(client)
+      _numbers = []
+      no = setup_no(client)
+      w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Client.where(w).first(1000).each do |i|
+        _numbers = _numbers << i.full_name_or_company_code_fiscal
+      end
+      _numbers = _numbers.blank? ? client : _numbers
     end
 
     def projects_dropdown

@@ -171,6 +171,14 @@ class Subscriber < ActiveRecord::Base
     subscriber_code + " " + full_name_or_company + " " + address_1 + " " + fiscal_id
   end
 
+  def code_full_name_or_company_address_fiscal_2
+    subscriber_code + " " + full_name_or_company + " " + subscriber_supply_address.supply_address + " " + fiscal_id
+  end
+
+  def code_full_name_or_company_fiscal
+    subscriber_code + " " + full_name_or_company + " " + fiscal_id
+  end
+
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]

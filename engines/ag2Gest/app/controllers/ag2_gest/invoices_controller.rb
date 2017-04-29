@@ -21,6 +21,7 @@ module Ag2Gest
       project = params[:Project]
       client = params[:Client]
       subscriber = params[:Subscriber]
+      street_name = params[:StreetName]
       status = params[:Status]
       type = params[:Type]
       operation = params[:Operation]
@@ -46,6 +47,7 @@ module Ag2Gest
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
       client = !client.blank? ? inverse_client_search(client) : client
       subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Invoice.search do
         with :project_id, current_projects
@@ -56,6 +58,9 @@ module Ag2Gest
           else
             with(:invoice_no).starting_with(no)
           end
+        end
+        if !project.blank?
+          with :project_id, project
         end
         if !client.blank?
           if client.class == Array
@@ -69,9 +74,16 @@ module Ag2Gest
         # end
         if !subscriber.blank?
           if subscriber.class == Array
-            with :subscriber_code_name_address_fiscal, subscriber
+            with :subscriber_code_name_fiscal, subscriber
           else
-            with(:subscriber_code_name_address_fiscal).starting_with(subscriber)
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
+        end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
           end
         end
         # if !subscriber.blank?
@@ -80,14 +92,11 @@ module Ag2Gest
         # if !subscriber.blank?
         #   with :subscriber_id, subscriber
         # end
-        if !project.blank?
-          with :project_id, project
+        if !type.blank?
+          with :invoice_type_id, type
         end
         if !status.blank?
           with :invoice_status_id, status
-        end
-        if !type.blank?
-          with :invoice_type_id, type
         end
         if !operation.blank?
           with :invoice_operation_id, operation
@@ -310,24 +319,33 @@ module Ag2Gest
       _numbers = _numbers.blank? ? no : _numbers
     end
 
-    def inverse_subscriber_search(subscriber)
-      _numbers = []
-      no = setup_no(subscriber)
-      w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
-      Subscriber.where(w).each do |i|
-        _numbers = _numbers << i.code_full_name_or_company_address_fiscal
-      end
-      _numbers = _numbers.blank? ? subscriber : _numbers
-    end
-
     def inverse_client_search(client)
       _numbers = []
       no = setup_no(client)
       w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
-      Client.where(w).each do |i|
+      Client.where(w).first(1000).each do |i|
         _numbers = _numbers << i.full_name_or_company_code_fiscal
       end
       _numbers = _numbers.blank? ? client : _numbers
+    end
+
+    def inverse_subscriber_search(subscriber)
+      _numbers = []
+      no = setup_no(subscriber)
+      w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      Subscriber.where(w).first(1000).each do |i|
+        _numbers = _numbers << i.code_full_name_or_company_fiscal
+      end
+      _numbers = _numbers.blank? ? subscriber : _numbers
+    end
+
+    def inverse_street_name_search(supply_address)
+      _numbers = []
+      no = setup_no(supply_address)
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
+        _numbers = _numbers << i.supply_address
+      end
+      _numbers = _numbers.blank? ? supply_address : _numbers
     end
 
     def projects_dropdown
@@ -437,6 +455,12 @@ module Ag2Gest
       elsif session[:Subscriber]
         params[:Subscriber] = session[:Subscriber]
       end
+      # street_name
+      if params[:StreetName]
+        session[:StreetName] = params[:StreetName]
+      elsif session[:StreetName]
+        params[:StreetName] = session[:StreetName]
+      end
       # status
       if params[:Status]
         session[:Status] = params[:Status]
@@ -487,6 +511,7 @@ module Ag2Gest
       params[:Project] = ""
       params[:Client] = ""
       params[:Subscriber] = ""
+      params[:StreetName] = ""
       params[:Status] = ""
       params[:Type] = ""
       params[:Operation] = ""
@@ -503,6 +528,7 @@ module Ag2Gest
       params[:Project] = session[:Project]
       params[:Client] = session[:Client]
       params[:Subscriber] = session[:Subscriber]
+      params[:StreetName] = session[:StreetName]
       params[:Status] = session[:Status]
       params[:Type] = session[:Type]
       params[:Operation] = session[:Operation]

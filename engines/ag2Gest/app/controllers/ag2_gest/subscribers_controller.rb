@@ -1106,7 +1106,7 @@ module Ag2Gest
     def inverse_meter_search(meter)
       _numbers = []
       no = setup_no(meter)
-      Meter.where('meter_code LIKE ?', "#{no}").each do |i|
+      Meter.where('meter_code LIKE ?', "#{no}").first(1000).each do |i|
         _numbers = _numbers << i.meter_code
       end
       _numbers = _numbers.blank? ? meter : _numbers
@@ -1207,6 +1207,5 @@ module Ag2Gest
         params[:letter] = session[:letter]
       end
     end
-
   end
 end

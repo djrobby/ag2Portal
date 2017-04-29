@@ -164,6 +164,7 @@
     // $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
     $("#Client").val("<%= params[:Client] %>");
     $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
@@ -195,6 +196,7 @@
       $("#Project").select2("val", "");
       $("#Client").val("");
       $("#Subscriber").val("");
+      $("#StreetName").val("");
       $("#Status").val("");
       $("#Type").val("");
       $("#Operation").val("");
@@ -247,6 +249,9 @@
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
         <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
+        <!-- Street name -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
+        <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>

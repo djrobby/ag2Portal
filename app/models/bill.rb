@@ -90,6 +90,10 @@ class Bill < ActiveRecord::Base
     invoices.first.invoice_type rescue nil
   end
 
+  def subscriber_supply_address
+    subscriber.subscriber_supply_address.supply_address rescue ''
+  end
+
   def to_label
     full_no
   end
@@ -245,8 +249,8 @@ class Bill < ActiveRecord::Base
     text :client_code_name_fiscal do
       client.full_name_or_company_code_fiscal unless client.blank?
     end
-    text :subscriber_code_name_address_fiscal do
-      subscriber.code_full_name_or_company_address_fiscal unless subscriber.blank?
+    text :subscriber_code_name_fiscal do
+      subscriber.code_full_name_or_company_fiscal unless subscriber.blank?
     end
     text :entity_name_fiscal do
       client.entity.full_name_or_company_fiscal unless (client.blank? || client.entity.blank?)

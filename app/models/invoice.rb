@@ -414,8 +414,11 @@ class Invoice < ActiveRecord::Base
     string :client_code_name_fiscal, :multiple => true do
       bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end
-    string :subscriber_code_name_address_fiscal, :multiple => true do
-      bill.subscriber.code_full_name_or_company_address_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    string :subscriber_code_name_fiscal, :multiple => true do
+      bill.subscriber.code_full_name_or_company_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    end
+    string :supply_address, :multiple => true do
+      bill.subscriber.subscriber_supply_address.supply_address unless (bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
     end
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id
