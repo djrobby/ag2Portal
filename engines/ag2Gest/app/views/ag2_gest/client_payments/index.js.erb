@@ -16,6 +16,12 @@ $('#banks').html("<%= escape_javascript(render('payments_bank')) %>");
 $('#others').html("<%= escape_javascript(render('payments_other')) %>");
 $('#fractionated').html("<%= escape_javascript(render('instalments')) %>");
 
+$('#payments-tabs a').click(function (e) {
+  e.preventDefault();
+  $('input:checkbox').removeAttr('checked');
+  $(this).tab('show');
+});
+
 $('.accor').click(function () {
   if (this.classList.contains("collapsed")){
     this.children[0].className = "icon-minus";

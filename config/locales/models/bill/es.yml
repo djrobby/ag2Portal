@@ -20,6 +20,7 @@ es:
         massive_billing_consumption: "Facturación masiva - Consumos"
         id: "Id"
         bill_no: "Nº"
+        bill_no_c: "Nº Recibo"
         project: "Proyecto"
         project_id: "Proyecto"
         client: "Cliente"

@@ -20,6 +20,7 @@ en:
         massive_billing_consumption: "Mass Billing - Consumption"
         id: "Id"
         bill_no: "No."
+        bill_no_c: "Bill No."
         project: "Project"
         project_id: "Project"
         client: "Client"

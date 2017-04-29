@@ -13,33 +13,6 @@
     periodsSelect2(r);    
   }
 
-  function clientsSelect2(intialValue) {
-    $('#Client').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: "/search_clients",
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return { 
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }
-
   function projectsSelect2(intialValue) {
     $('#Project').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -171,14 +144,26 @@
     // when .icon-refresh-link is clicked
     $(".icon-refresh-link").click(function() {
       // show loader
-      $("#div_table").html("");
+      $("#pendings").html("");
+      $("#unpaid").html("");
+      $("#charged").html("");
+      $("#cash").html("");
+      $("#banks").html("");
+      $("#others").html("");
+      $("#fractionated").html("");
       $("#loader").show();
     });
 
     // when #submit_btn is clicked
     $("#submit_btn").click(function() {
       // show loader
-      $("#div_table").html("");
+      $("#pendings").html("");
+      $("#unpaid").html("");
+      $("#charged").html("");
+      $("#cash").html("");
+      $("#banks").html("");
+      $("#others").html("");
+      $("#fractionated").html("");
       $("#loader").show();
     });
 
@@ -379,25 +364,25 @@
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
           <!-- No -->
-          <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
+          <%= label_tag "label_no", I18n.t("activerecord.attributes.bill.bill_no_c"), :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Project -->
-          <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
+          <%= label_tag "label_project", I18n.t("ag2_gest.invoices.index.label_project"), :class => 'form-label' %>
           <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Client -->
-          <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag "label_client", I18n.t("ag2_gest.invoices.index.label_client"), :class => 'form-label-under-sel2' %>
           <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
           <!-- Subscriber -->
-          <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
+          <%= label_tag "label_subscriber", I18n.t("ag2_gest.invoices.index.label_subscriber"), :class => 'form-label' %>
           <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
           <!-- Street name -->
-          <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
+          <%= label_tag "label_street", I18n.t("ag2_gest.subscribers.index.supply_address"), :class => 'form-label' %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- BankAccount -->
-          <%= label_tag I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), nil, :class => 'form-label' %>
-          <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <%= label_tag "label_bank_account", I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), :class => 'form-label' %>
+          <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
           <!-- Period -->
-          <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag "label_period", I18n.t("ag2_gest.invoices.index.label_period"), :class => 'form-label' %>
           <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <br /><br />
           <!-- Submit -->
@@ -437,7 +422,7 @@
       <div id="div_table">
         <div class="tab-content">
         <!-- PENDING TAB -->
-          <div class="tab-pane active" id="pendings">
+          <div id="pendings" class="tab-pane active">
             <%= render 'bills_pendings' %>
           </div>
 
@@ -447,33 +432,32 @@
           </div> -->
 
           <!-- CHARGED TAB -->
-          <div class="tab-pane" id="charged">
+          <div id="charged" class="tab-pane">
             <%= render 'bills_charged' %>
           </div>
 
           <!-- CASH TAB -->
-          <div class="tab-pane" id="cash">
+          <div id="cash" class="tab-pane">
             <%= render 'payments_cash' %>
           </div>
 
           <!-- BANK TAB -->
-          <div class="tab-pane" id="banks">
+          <div id="banks" class="tab-pane">
             <%= render 'payments_bank' %>
           </div>
 
           <!-- OTHERS TAB -->
-          <div class="tab-pane" id="others">
+          <div id="others" class="tab-pane">
             <%= render 'payments_other' %>
           </div>
 
           <!-- FRACTIONATED TAB -->
-          <div class="tab-pane" id="fractionated">
+          <div id="fractionated" class="tab-pane">
             <%= render 'instalments' %>
           </div>
-
-        </div>
-      </div>
-    </div>
+        </div><!-- /.tab-content -->
+      </div><!-- /#div_table -->
+    </div><!-- /.span9 -->
 
     <!-- Modals -->
     <!-- Cash -->

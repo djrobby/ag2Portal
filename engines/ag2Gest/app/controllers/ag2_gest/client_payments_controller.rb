@@ -228,6 +228,7 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
       @have_bank_account = have_bank_account_array
+      @payment_methods = payment_methods_dropdown
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -241,11 +242,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -288,11 +289,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -335,11 +336,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -382,11 +383,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -429,11 +430,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -476,11 +477,11 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
           else
-            with(:bill_no).starting_with(bill_no)
+            with(:bill_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -519,7 +520,7 @@ module Ag2Gest
       end
 
       # Initialize datasets
-      if bill_no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and billing_period.blank?
+      if no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and period.blank?
         # Return no results
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
