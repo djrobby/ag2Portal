@@ -7,6 +7,19 @@
   var _currentLocale = 'es';
   var _delimiter = '.';
   var _separator = ',';
+  var _active_tab = 'pendings-tab';
+
+  function show_cashier() {
+    if (_active_tab == "pendings-tab") {
+      <% if !@bills_pending.blank? && !@bills_charged.blank? %>
+      $("#cashier").show();
+      <% else %>
+      $("#cashier").hide();
+      <% end %>
+    } else {
+      $("#cashier").hide();
+    }
+  }
 
   function setupAllSelect2(p, r) {
     projectsSelect2(p);
@@ -107,6 +120,9 @@
     // Setup special search (select2)
     setupAllSelect2("<%= @project %>", "<%= @period %>");
 
+    // Hide elements at init
+    show_cashier();
+
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
   });
@@ -151,6 +167,7 @@
       $("#banks").html("");
       $("#others").html("");
       $("#fractionated").html("");
+      $("#cashier").hide();
       $("#loader").show();
     });
 
@@ -164,6 +181,7 @@
       $("#banks").html("");
       $("#others").html("");
       $("#fractionated").html("");
+      $("#cashier").hide();
       $("#loader").show();
     });
 
@@ -177,17 +195,12 @@
       $("#Period").select2("val", "");
       a = "<%= cp_remove_filters %>";
       setupAllSelect2(a, a);
+      show_cashier();
       // no AJAX
       //_thisForm.submit();
       // AJAX
       $("#submit_btn").trigger("click");
     });
-  });
-
-  $('#payments-tabs a').click(function (e) {
-    e.preventDefault();
-    $('input:checkbox').removeAttr('checked');
-    $(this).tab('show');
   });
 
   $('.accor').click(function () {
@@ -231,17 +244,6 @@
   //   $("#client_payment_payment_method_id").prop('disabled', true);
   // });
 
-  $(".checkbox-master").click(function () {
-    $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
-  });
-
-  $(".checkbox-master-table").click(function () {
-    $(this).parents(".table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
-  });
-
-  $(".checkbox-main").click(function () {
-    $(".checkbox-slave, .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
-  });
 
   $("#client_payment_amount").change(function() {
     amount = parseFloat(this.value) || 0;
@@ -335,15 +337,26 @@
     width: 98%;
     padding: 0 1% 0 1%;
   }
+  .checkbox-master{
+    margin-top: 12px !important;
+    margin-left: 5px !important;
+  }
+  .condensed-accordion {
+    margin:5px 0 5px 0 !important;
+  }
   #pendings, #unpaid, #charged{
     background-color: #FDE3A7;
+  }
+  #pendings {
+    padding-bottom: 50px !important;
   }
   #cash, #banks, #others ,#fractionated{
     background-color: #FFCCBC;
   }
-  .checkbox-master{
-    margin-top: 12px !important;
-    margin-left: 5px !important;
+  #cashier {
+    position: fixed;
+    bottom: 0;
+    height: 80px;
   }
 </style>
 
@@ -409,13 +422,13 @@
       <div class="span6 text-center"><h4>Facturas</h4></div>
       <div class="span6 text-center"><h4>Cobros</h4></div>
       <ul class="nav nav-tabs" id="payments-tabs">
-        <li class="active" style="width:25%"><a href="#pendings"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
+        <li class="active" style="width:25%"><a id="pendings-tab" href="#pendings" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
         <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
-        <li style="width:25%"><a href="#charged"><%= I18n.t("ag2_gest.client_payments.index.charged") %></a></li>
-        <li class="pull-right"><a href="#others"><%= I18n.t("ag2_gest.client_payments.index.others") %></a></li>
-        <li class="pull-right"><a href="#fractionated"><%= I18n.t("ag2_gest.client_payments.index.deferrals") %></a></li>
-        <li class="pull-right"><a href="#banks"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a></li>
-        <li class="pull-right"><a href="#cash"><%= I18n.t("ag2_gest.client_payments.index.cash") %></a></li>
+        <li style="width:25%"><a id="charged-tab" href="#charged" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.charged") %></a></li>
+        <li class="pull-right"><a id="others-tab" href="#others" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.others") %></a></li>
+        <li class="pull-right"><a id="fractionated-tab" href="#fractionated" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.deferrals") %></a></li>
+        <li class="pull-right"><a id="banks-tab" href="#banks" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a></li>
+        <li class="pull-right"><a id="cash-tab" href="#cash" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.cash") %></a></li>
       </ul>
       <div id="loader"></div>
 
@@ -424,6 +437,10 @@
         <!-- PENDING TAB -->
           <div id="pendings" class="tab-pane active">
             <%= render 'bills_pendings' %>
+          </div>
+          <div id="cashier" class="modal-footer">
+            hola
+            <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
           </div>
 
           <!-- UNPAID TAB -->
@@ -509,3 +526,29 @@
     </div><!-- Modal Close Cash -->
   </div><!-- row-fluid -->
 </div><!-- container-fluid -->
+
+<script type="text/javascript">
+  $('#payments-tabs a').click(function (e) {
+    _active_tab = $(this).attr("id");
+    e.preventDefault();
+    $('input:checkbox').removeAttr('checked');
+    $(this).tab('show');
+    if (_active_tab == "pendings-tab") {
+      show_cashier();
+    } else {
+      $("#cashier").hide();
+    }
+  });  
+
+  $(".checkbox-master").click(function () {
+    $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+  });
+
+  $(".checkbox-master-table").click(function () {
+    $(this).parents(".table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+  });
+
+  $(".checkbox-main").click(function () {
+    $(".checkbox-slave, .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
+  });
+</script>

@@ -15,11 +15,26 @@ $('#cash').html("<%= escape_javascript(render('payments_cash')) %>");
 $('#banks').html("<%= escape_javascript(render('payments_bank')) %>");
 $('#others').html("<%= escape_javascript(render('payments_other')) %>");
 $('#fractionated').html("<%= escape_javascript(render('instalments')) %>");
+if (_active_tab == "pendings-tab") {
+<% if !@bills_pending.blank? && !@bills_charged.blank? %>
+$("#cashier").show();
+<% end %>
+}
 
 $('#payments-tabs a').click(function (e) {
+  _active_tab = $(this).attr("id");
   e.preventDefault();
   $('input:checkbox').removeAttr('checked');
   $(this).tab('show');
+  if (_active_tab == "pendings-tab") {
+    <% if !@bills_pending.blank? && !@bills_charged.blank? %>
+    $("#cashier").show();
+    <% else %>
+    $("#cashier").hide();
+    <% end %>
+  } else {
+    $("#cashier").hide();
+  }
 });
 
 $('.accor').click(function () {
