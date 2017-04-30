@@ -160,6 +160,7 @@
     // when .icon-refresh-link is clicked
     $(".icon-refresh-link").click(function() {
       // show loader
+      $('#pendings').removeClass('pendings');
       $("#pendings").html("");
       $("#unpaid").html("");
       $("#charged").html("");
@@ -174,6 +175,7 @@
     // when #submit_btn is clicked
     $("#submit_btn").click(function() {
       // show loader
+      $('#pendings').removeClass('pendings');
       $("#pendings").html("");
       $("#unpaid").html("");
       $("#charged").html("");
@@ -347,8 +349,8 @@
   #pendings, #unpaid, #charged{
     background-color: #FDE3A7;
   }
-  #pendings {
-    padding-bottom: 50px !important;
+  .pendings {
+    padding-bottom: 38px !important;
   }
   #cash, #banks, #others ,#fractionated{
     background-color: #FFCCBC;
@@ -357,6 +359,7 @@
     position: fixed;
     bottom: 0;
     height: 80px;
+    width: 810px;
   }
 </style>
 
@@ -419,8 +422,8 @@
     </div><!-- /.span3 -->
 
     <div class="span9">
-      <div class="span6 text-center"><h4>Facturas</h4></div>
-      <div class="span6 text-center"><h4>Cobros</h4></div>
+      <div class="span6 text-center"><h4><%= t('activerecord.models.invoice.few') %></h4></div>
+      <div class="span6 text-center"><h4><%= t('activerecord.models.client_payment.few') %></h4></div>
       <ul class="nav nav-tabs" id="payments-tabs">
         <li class="active" style="width:25%"><a id="pendings-tab" href="#pendings" data-toggle="tab"><%= I18n.t("ag2_gest.client_payments.index.pending") %></a></li>
         <!-- <li style="width:16%"><a href="#unpaid">Impagadas</a></li> -->
@@ -435,7 +438,7 @@
       <div id="div_table">
         <div class="tab-content">
         <!-- PENDING TAB -->
-          <div id="pendings" class="tab-pane active">
+          <div id="pendings" class="pendings tab-pane active">
             <%= render 'bills_pendings' %>
           </div>
           <div id="cashier" class="modal-footer">

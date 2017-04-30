@@ -9,6 +9,7 @@ if (_currentLocale == 'es') {
 }
 
 $('#pendings').html("<%= escape_javascript(render('bills_pendings')) %>");
+$('#pendings').addClass('pendings');
 // $('#unpaid').html("<%#= escape_javascript(render('bills_unpaid')) %>");
 $('#charged').html("<%= escape_javascript(render('bills_charged')) %>");
 $('#cash').html("<%= escape_javascript(render('payments_cash')) %>");

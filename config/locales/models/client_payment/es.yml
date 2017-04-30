@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       client_payment:
-        zero:  Pagos de cliente
-        one:   Pago de cliente
-        few:   Pagos de cliente
-        other: Pagos de cliente
+        zero:  Cobros
+        one:   Cobro
+        few:   Cobros
+        other: Cobros
         # check_for_delivery_notes: "Cliente no puede ser eliminado mientras existan notas de entrega vinculadas."
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
