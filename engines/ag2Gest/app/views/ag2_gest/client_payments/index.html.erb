@@ -488,7 +488,7 @@
       </div>
       <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
-          <%= f.input :client_payments_ids %>
+          <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
             <label class="string control-label">Saldo de apertura</label>
             <div class="controls">
