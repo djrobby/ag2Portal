@@ -1,4 +1,6 @@
 class Bill < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :organization
   belongs_to :payment_method
   belongs_to :project
@@ -108,6 +110,10 @@ class Bill < ActiveRecord::Base
 
   def formatted_payday_limit
     invoices.first.formatted_payday_limit
+  end
+
+  def payment_date
+    formatted_date(client_payments.last.payment_date) rescue ''
   end
 
   def formatted_reading_1_index

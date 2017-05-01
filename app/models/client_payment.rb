@@ -35,6 +35,7 @@ class ClientPayment < ActiveRecord::Base
     text :receipt_no
     integer :payment_type
     integer :id
+    date :confirmation_date
     string :client_code_name_fiscal, :multiple => true do
       bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end

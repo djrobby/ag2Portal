@@ -5,14 +5,15 @@
   </b>
 </div>
 
-<a href="#modal-close-cash" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.cash_closing" %></a>
-<table class="table table-condensed table-striped shrinked">
+<a href="#modal-close-cash" id="close-cash" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.cash_closing" %></a>
+<table id="cash-table" class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
+      <th class="hidden-text-field">Id</th>
       <th>Nº</th>
       <th>Factura</th>
-      <th>Abonado</th>
-      <th>F. pago</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
       <th align="right"><%= t("activerecord.attributes.client_payment.to_collect") %></th>
       <th align="right">Total</th>
       <th></th>
@@ -21,12 +22,13 @@
   <tbody>
     <% @client_payments_cash.each do |client_payment| %>
       <tr>
-        <td><%= client_payment.receipt_no %></td>
-        <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
-        <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
-        <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
-        <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cp-id hidden-text-field"><%= client_payment.id %></td>
+        <td class="cp-receipt-no"><%= client_payment.receipt_no %></td>
+        <td class="cp-bill"><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
+        <td class="cp-client"><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
+        <td class="cp-date"><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
+        <td class="cp-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cp-total" align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td>
             <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(client_payment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
         </td>

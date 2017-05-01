@@ -41,14 +41,13 @@ module Ag2Gest
           if acu >= i.debt
             amount_paid = i.debt
             acu -= i.debt
-            confirmation_date = nil
             invoice_status = InvoiceStatus::CASH
           else
             amount_paid = acu
             acu = 0
-            confirmation_date = nil
             invoice_status = InvoiceStatus::PENDING
           end
+          confirmation_date = nil
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
@@ -183,23 +182,17 @@ module Ag2Gest
     end
 
     def close_cash
-      if !current_projects_ids.blank?
-        @bills = Bill.where(project_id: current_projects_ids)
-        @client_payments_cash = @bills.where("invoice_status_id < 99").
-                                      order("created_at DESC").
-                                      map(&:invoices).flatten.
-                                      map(&:client_payments).flatten.
-                                      select{|c| c.payment_type == ClientPayment::CASH and c.confirmation_date.nil?}
-        @client_payments_cash.each do |cp|
-          cp.update_attributes(confirmation_date: Time.now)
-          if cp.invoice.debt == 0
-            cp.invoice.update_attributes(invoice_status_id: 99)
-          end
+      client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.update_attributes(confirmation_date: Time.now)
+        if cp.invoice.debt == 0
+          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
         end
-        redirect_to client_payments_path, notice: "Caja cerrada con exito"
-      else
-        redirect_to client_payments_path, alert: "Error al cerrar la caja"
       end
+      redirect_to client_payments_path, notice: "Caja cerrada con exito"
+    rescue
+      redirect_to client_payments_path, alert: "Error al cerrar la caja"
     end
 
     def confirm_bank
@@ -333,6 +326,7 @@ module Ag2Gest
 
       search_cash = ClientPayment.search do
         with :payment_type, ClientPayment::CASH
+        with :confirmation_date, nil
         if !current_projects.blank?
           with :project_id, current_projects
         end

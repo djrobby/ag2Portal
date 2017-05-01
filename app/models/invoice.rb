@@ -289,6 +289,10 @@ class Invoice < ActiveRecord::Base
     invoice_items.first.description.capitalize rescue ''
   end
 
+  def payment_date
+    formatted_date(client_payments.last.payment_date) rescue ''
+  end
+
   # Calculates & returns the average billed consumption up to the last six invoices
   def average_billed_consumption
     _prev_consumptions = []

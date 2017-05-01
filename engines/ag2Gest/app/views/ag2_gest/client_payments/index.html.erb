@@ -236,17 +236,6 @@
     $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
   });
 
-  // $(".btn-others").click(function (e) {
-  //   $(".client_payment_payment_method_id").show();
-  //   $("#client_payment_payment_method_id").prop('disabled', false);
-  // });
-  //
-  // $(".btn-cash").click(function (e) {
-  //   $(".client_payment_payment_method_id").hide();
-  //   $("#client_payment_payment_method_id").prop('disabled', true);
-  // });
-
-
   $("#client_payment_amount").change(function() {
     amount = parseFloat(this.value) || 0;
     debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
@@ -499,21 +488,22 @@
       </div>
       <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
-          <div class="control-group string required meter_manufacturing_date">
+          <%= f.input :client_payments_ids %>
+          <div class="control-group string required">
             <label class="string control-label">Saldo de apertura</label>
             <div class="controls">
               <input id="initial-cash" size="50" type="number" step="0.01">
             </div>
           </div>
 
-          <div class="control-group string required meter_manufacturing_date">
+          <div class="control-group string required">
             <label class="string control-label">Total cobrado</label>
             <div class="controls">
               <span id="total-cash"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
 
-          <div class="control-group string required meter_manufacturing_date">
+          <div class="control-group string required">
             <label class="string control-label">Saldo de cierre</label>
             <div class="controls">
               <span id="ending-cash" size="50" type="number" step="0.01"><%= @client_payments_cash.sum{|c| c.amount} %></span>
@@ -542,6 +532,35 @@
       $("#cashier").hide();
     }
   });  
+
+  $(".btn-others").click(function (e) {
+    ids = $("#client_payment_other_invoices_ids").val();
+    if (ids == null || ids == '') {
+      alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+      return false;
+    }
+  });
+
+  $(".btn-cash").click(function (e) {
+    ids = $("#client_payment_invoices_ids").val();
+    if (ids == null || ids == '') {
+      alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+      return false;
+    }
+  });
+
+  $("#close-cash").click(function(){
+    var cp_ids = [];
+    var cp_amount = 0;
+    $('#cash-table tr').each(function() {
+      id = $(this).find('td.cp-id').text();
+      if (id != null && id != '') cp_ids.push(id);
+      // amount = $(this).find('td.cp-amount').val();
+      // cp_amount += parseFloat(amount);
+    });
+    $("#close_cash_client_payments_ids").val(cp_ids.filter(i=>i!=null))   // modal-cash
+    // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
+  });
 
   $(".checkbox-master").click(function () {
     $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
