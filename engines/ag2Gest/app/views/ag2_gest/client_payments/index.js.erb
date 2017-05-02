@@ -81,10 +81,33 @@ $("#close-cash").click(function(){
   // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
 });
 
+$("#bank-confirm").click(function(){
+  var cp_ids = [];
+  var cp_amount = 0.0;
+  $('#bank-table tr').each(function() {
+    if ($(this).find('td input:checkbox').is(':checked')) {
+      id = $(this).find('td.cpb-id').text();
+      if (id != null && id != '') {
+        cp_ids.push(id);
+        amount = $(this).find('td.cpb-amount').text();
+        cp_amount += parseFloat(amount);
+      }
+    }
+  });
+  if (cp_ids.length <= 0) {
+    alert('¡Debes seleccionar cobros pendientes de confirmar!');
+    return false;
+  } else {
+    $("#bank_confirm_client_payments_ids").val(cp_ids)   // modal-bank
+    $("#bank-bills-selected").html(cp_ids.length);
+    $("#bank-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+  }
+});
+
 $(".btn-others").click(function (e) {
   ids = $("#client_payment_other_invoices_ids").val();
   if (ids == null || ids == '') {
-    alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
     return false;
   }
 });
@@ -92,7 +115,37 @@ $(".btn-others").click(function (e) {
 $(".btn-cash").click(function (e) {
   ids = $("#client_payment_invoices_ids").val();
   if (ids == null || ids == '') {
-    alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+    return false;
+  }
+});
+
+$(".btn-bank").click(function (e) {
+  ids = $("#client_payment_bank_invoices_ids").val();
+  if (ids == null || ids == '') {
+    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+    return false;
+  }
+});
+
+$(".btn-fractionated").click(function (e) {
+  ids = $("#instalment_invoices_ids").val();
+  if (ids == null || ids == '') {
+    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+    return false;
+  }
+});
+
+/* form.client_payment: Check required values before submit */
+$("#btn-submit-modal-cash").click(function(){
+  if ($('#client_payment_amount').val() == '' ||
+      $('#client_payment_amount').val() == null) {
+    alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+    return false;
+  }
+  if ($('#client_payment_payment_method_id').val() == '' ||
+      $('#client_payment_payment_method_id').val() == null) {
+    alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
     return false;
   }
 });

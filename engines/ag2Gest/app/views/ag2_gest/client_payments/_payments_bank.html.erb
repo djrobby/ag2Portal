@@ -5,15 +5,14 @@
   </b>
 </div>
 
-<%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post do |f| %>
-  <%= f.input :ids, :as => :hidden %>
-  <%= f.button :submit, "Confirmar cobros", :class => 'btn btn-primary btn-small' %>
-  <button id="bank_order" type="button" class="btn btn-primary btn-small" data-dismiss="modal" aria-hidden="true"><%= t "ag2_gest.client_payments.index.bank_order" %></button>
-<% end %>
-<table class="table table-condensed table-striped shrinked">
+<a href="#modal-bank-confirm" id="bank-confirm" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.bank_confirm" %></a>
+<a href="#modal-back-to-pending" id="bank-to-pending" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.back_to_pending" %></a>
+<button id="bank_order" type="button" class="btn btn-primary btn-small" data-dismiss="modal" aria-hidden="true"><%= t "ag2_gest.client_payments.index.bank_order" %></button>
+<table id="bank-table" class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th><input type="checkbox" class="checkbox-master-table"></th>
+      <th class="hidden-text-field">Id</th>
       <th>Nº</th>
       <th>Factura</th>
       <th>Abonado</th>
@@ -25,13 +24,14 @@
   <tbody>
     <% @client_payments_bank.each do |client_payment| %>
       <tr>
-        <td><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
+        <td class="cpb-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
+        <td class="cpb-id hidden-text-field"><%= client_payment.id %></td>
         <td><%= client_payment.receipt_no %></td>
         <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
         <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
         <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
-        <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cpb-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cpb-total" align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
       </tr>
     <% end %>
   </tbody>

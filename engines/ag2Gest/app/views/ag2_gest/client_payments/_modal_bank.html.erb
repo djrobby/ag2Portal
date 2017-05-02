@@ -24,7 +24,7 @@
           <span class="debt-total">0,0000</span>
         </div>
       </div>
-      <%= f.input :receipt_no, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_order_no"), as: :string, inline_label: "Yes", input_html: { class: 'mid-text-field', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+      <%= f.input :receipt_no, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_order_no"), as: :string, inline_label: "Yes", input_html: { class: 'mid-text-field', maxlength: 6, data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
       <%#= f.input :payment_method_id, required: true, label: I18n.t("activerecord.attributes.client_payment.payment_method_id"), collection: @payment_methods, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="modal-footer">

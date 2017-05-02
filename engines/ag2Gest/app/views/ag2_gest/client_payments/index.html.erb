@@ -267,6 +267,20 @@
    $input.val(instalments_ids);
   });
 
+  /* form.client_payment: Check required values before submit */
+  $("#btn-submit-modal-cash").click(function(){
+    if ($('#client_payment_amount').val() == '' ||
+        $('#client_payment_amount').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_payment_method_id').val() == '' ||
+        $('#client_payment_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
   $("#pages a").on("click", function() {
     $.getScript(this.href);
     return false;
@@ -481,10 +495,10 @@
     <!-- Instalments -->
     <%= render 'modal_instalment' %>
 
-    <!-- Modal Close Cash -->
+    <!-- Close Cash (modal) -->
     <div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
       <div class="modal-header">
-        <h4>Cerrar Caja</h4>
+        <h4><%= t "ag2_gest.client_payments.index.cash_closing" %></h4>
       </div>
       <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
@@ -513,7 +527,36 @@
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Close Cash -->
+
+    <!-- Bank Confirmation (modal) -->
+    <div id="modal-bank-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBanco" aria-hidden="true">
+      <div class="modal-header">
+        <h4><%= t "ag2_gest.client_payments.index.bank_confirm" %></h4>
+      </div>
+      <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
+        <div class="modal-body">
+          <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-bills-selected"><%= @bank_totals.payments %></span>
+            </div>
+          </div>
+
+          <div class="control-group string required">
+            <label class="string control-label">Total cobrado</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
         </div>
       <% end %>
     </div><!-- Modal Close Cash -->
@@ -536,7 +579,7 @@
   $(".btn-others").click(function (e) {
     ids = $("#client_payment_other_invoices_ids").val();
     if (ids == null || ids == '') {
-      alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+      alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
       return false;
     }
   });
@@ -544,7 +587,23 @@
   $(".btn-cash").click(function (e) {
     ids = $("#client_payment_invoices_ids").val();
     if (ids == null || ids == '') {
-      alert('¡Debes seleccionar recibos o facturas pendientes a cobrar!');
+      alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+      return false;
+    }
+  });
+
+  $(".btn-bank").click(function (e) {
+    ids = $("#client_payment_bank_invoices_ids").val();
+    if (ids == null || ids == '') {
+      alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+      return false;
+    }
+  });
+
+  $(".btn-fractionated").click(function (e) {
+    ids = $("#instalment_invoices_ids").val();
+    if (ids == null || ids == '') {
+      alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
       return false;
     }
   });
@@ -560,6 +619,29 @@
     });
     $("#close_cash_client_payments_ids").val(cp_ids.filter(i=>i!=null))   // modal-cash
     // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
+  });
+
+  $("#bank-confirm").click(function(){
+    var cp_ids = [];
+    var cp_amount = 0.0;
+    $('#bank-table tr').each(function() {
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cpb-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros pendientes de confirmar!');
+      return false;
+    } else {
+      $("#bank_confirm_client_payments_ids").val(cp_ids)   // modal-bank
+      $("#bank-bills-selected").html(cp_ids.length);
+      $("#bank-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    }
   });
 
   $(".checkbox-master").click(function () {

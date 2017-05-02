@@ -49,7 +49,7 @@ module Ag2Gest
           end
           confirmation_date = nil
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
-                               payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
+                               payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
           if client_payment.save
@@ -178,7 +178,7 @@ module Ag2Gest
           end
         end
       end
-      redirect_to client_payments_path, notice: "Cobro realizado con exito"
+      redirect_to client_payments_path, notice: "Cobro realizado correctamente"
     end
 
     def close_cash
@@ -190,19 +190,19 @@ module Ag2Gest
           cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
         end
       end
-      redirect_to client_payments_path, notice: "Caja cerrada con exito"
+      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias"
     rescue
-      redirect_to client_payments_path, alert: "Error al cerrar la caja"
+      redirect_to client_payments_path, alert: "Error al cerrar caja"
     end
 
     def confirm_bank
-      client_payment_ids = params[:bank_confirm][:ids].split(",")
+      client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payment_ids)
       client_payments.each do |cp|
         cp.update_attributes(confirmation_date: Time.now)
         cp.invoice.update_attributes(invoice_status_id: 99)
       end
-      redirect_to client_payments_path, notice: "Pagos confirmados con exito"
+      redirect_to client_payments_path, notice: "Cobros confirmados sin incidencias"
     end
 
     def index
