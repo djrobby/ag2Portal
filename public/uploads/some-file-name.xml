@@ -8,8 +8,8 @@
     <email_and_website>info@aguasdeelejido.es - www.aguasdeelejido.es</email_and_website>
     <company_data>Empresa Mixta de Servicios Municipales de El Ejido S.A. - CIF: A04241147 - Inscrita en el R.M. Almería, Tomo 256, Sección 8a, Folio 78, Hoja 8120</company_data>
   </company>
-  <bill description="Recibo">
-    <bill_no description="Nº">005SER000001-2016-000023</bill_no>
+  <bill description="Factura">
+    <bill_no description="Nº">00EL2-0160-00023</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
@@ -55,13 +55,14 @@
       <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
       <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
-    <total description="Total Recibo">-51,89</total>
+    <total description="Total Factura/s">-51,89</total>
+    <receivable description="Total A Pagar">-51,89</receivable>
     <pending_debt description="Su total pendiente asciende a">-51,89</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
     <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
     <payment_data description="Datos de pago">
       <supply_no description="Nº de Suministro">0001-0000001</supply_no>
-      <bill_no description="Recibo Nº">005SER000001-2016-000023</bill_no>
+      <bill_no description="Factura Nº">00EL2-0160-00023</bill_no>
       <bill_date description="Fecha">24/10/2016</bill_date>
       <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
       <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
@@ -197,8 +198,8 @@
       </invoice>
     </invoices>
   </bill>
-  <bill description="Recibo">
-    <bill_no description="Nº">005SER000001-2016-000024</bill_no>
+  <bill description="Factura">
+    <bill_no description="Nº">00EL2-0160-00024</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
     <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
@@ -244,13 +245,14 @@
       <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
       <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
-    <total description="Total Recibo">51,89</total>
+    <total description="Total Factura/s">51,89</total>
+    <receivable description="Total A Pagar">51,89</receivable>
     <pending_debt description="Su total pendiente asciende a">51,89</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
     <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
     <payment_data description="Datos de pago">
       <supply_no description="Nº de Suministro">0001-0000001</supply_no>
-      <bill_no description="Recibo Nº">005SER000001-2016-000024</bill_no>
+      <bill_no description="Factura Nº">00EL2-0160-00024</bill_no>
       <bill_date description="Fecha">24/10/2016</bill_date>
       <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
       <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>

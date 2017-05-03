@@ -55,6 +55,10 @@ class Bill < ActiveRecord::Base
   scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
   scope :contracting, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::CONTRACT}).by_no }
 
+  def real_no
+    invoices.first.full_no rescue full_no
+  end
+
   def nullable?
     # (bill_operation == 1 or bill_operation == 3) and Invoice.where(original_invoice_id: invoices.try(:first).try(:id)).blank?
     (bill_operation == 1 || bill_operation == 3) && ((!bill_type.blank? && bill_type.id == InvoiceType::WATER) ? reading.try(:bill_id) == id : true)
@@ -248,6 +252,13 @@ class Bill < ActiveRecord::Base
 
   def payable?
     invoices.select{|i| !i.payday_limit.nil?}.all? {|i| i.payday_limit > Date.today}
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.without_invoices
+    joins('LEFT JOIN invoices ON bills.id=invoices.bill_id').where('invoices.bill_id IS NULL')
   end
 
   searchable do

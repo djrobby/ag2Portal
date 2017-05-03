@@ -6,6 +6,7 @@ en:
         one:   Invoice
         few:   Invoices
         other: Invoices
+        one_or_many: Invoice(s)
     attributes:
       invoice:
         successfully: "Invoice updated correctly."
@@ -57,6 +58,7 @@ en:
         bonus: "Bonus"
         tax_breakdown: "Tax breakdown detail"
         receivable: "Receivable"
+        receivable_c: "To Pay"
         collected: "Collected"
         debt: "Debt"
         codes: "T S O"

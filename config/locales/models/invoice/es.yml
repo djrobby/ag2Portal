@@ -6,6 +6,7 @@ es:
         one:   Factura
         few:   Facturas
         other: Facturas
+        one_or_many: Factura/s
     attributes:
       invoice:
         successfully: "Factura se ha actualizado correctamente."
@@ -57,6 +58,7 @@ es:
         bonus: "Bonificación"
         tax_breakdown: "Detalle desglose impositivo"
         receivable: "A Cobrar"
+        receivable_c: "A Pagar"
         collected: "Cobrado"
         debt: "Deuda"
         codes: "T E O"

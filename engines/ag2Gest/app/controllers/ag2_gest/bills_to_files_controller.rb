@@ -58,6 +58,7 @@ module Ag2Gest
       tariff_d = I18n.t("activerecord.models.tariff.one")
       invoice_type_d = I18n.t("activerecord.models.invoice.one")
       concepts_detail_d = I18n.t("activerecord.attributes.report.detail").upcase
+      invoice_d = I18n.t("activerecord.models.invoice.one")
       invoice_no_d = I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
       total_invoice_d = I18n.t("activerecord.attributes.bill.total")
       vat_rate_d = I18n.t("activerecord.attributes.contracting_request.iva_c")
@@ -91,7 +92,8 @@ module Ag2Gest
 
       tariffs_d = I18n.t("activerecord.models.tariff.zero")
       billing_d = I18n.t("activerecord.attributes.contracting_request.billing")
-      total_bill_d = I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.bill.one")
+      total_bill_d = I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.invoice.one_or_many")
+      total_receivable_d = I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.attributes.invoice.receivable_c")
       pending_debt_d = I18n.t("activerecord.attributes.bill.debt_c")
       currency_note_d = "* " + I18n.t("every_report.currency_note")
       payment_note_d = "* " + I18n.t("activerecord.attributes.bill.payment_note")
@@ -123,8 +125,8 @@ module Ag2Gest
           xml.company_data        bills.first.project.company.invoice_footer_complete
         end
         bills.each do |bill|
-          xml.bill(description: bill_d) do  # Eeach bill
-            xml.bill_no({ description: bill_no_d }, bill.full_no)
+          xml.bill(description: invoice_d) do  # Eeach bill
+            xml.bill_no({ description: bill_no_d }, bill.real_no)
             xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
             xml.billing_period({ description: billing_period_d }, bill.billing_period)
             xml.payday_limit({ description: bill_payday_limit_d }, bill.formatted_payday_limit)
@@ -178,6 +180,7 @@ module Ag2Gest
             end
             # Total Bill & Pending debt
             xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+            xml.receivable({ description: total_receivable_d }, number_with_precision(bill.receivable, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             xml.pending_debt({ description: pending_debt_d }, number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             # Notes
             xml.currency_note   currency_note_d
@@ -185,7 +188,7 @@ module Ag2Gest
             # Payment data
             xml.payment_data(description: payment_data_d) do
               xml.supply_no({ description: payment_supply_no_d }, bill.subscriber.full_code)
-              xml.bill_no({ description: bill_d + ' ' + bill_no_d }, bill.full_no)
+              xml.bill_no({ description: invoice_d + ' ' + bill_no_d }, bill.real_no)
               xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
               xml.holder({ description: subscriber_holder_d }, bill.subscriber.full_name)
               xml.bank_account({ description: payment_bank_d }, bill.subscriber.full_name)
