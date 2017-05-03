@@ -28,7 +28,7 @@
       <%#= f.input :payment_method_id, required: true, label: I18n.t("activerecord.attributes.client_payment.payment_method_id"), collection: @payment_methods, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="modal-footer">
-      <%= f.button :submit, t(:confirm), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <%= f.button :submit, t(:confirm), :class => 'btn btn-primary', id: 'btn-submit-modal-bank' %>
       <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
     </div>
   <% end %>

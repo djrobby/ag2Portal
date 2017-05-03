@@ -32,7 +32,7 @@ es:
         charged: "Cobrada por:"
         client: "Cliente"
         to_collect: "A Cobrar"
+        to_deferred: "A Aplazar"
         change: "Cambio"
-
         successfully: "Pago de cliente se ha actualizado correctamente."
         create: "Pago de cliente se ha creado correctamente."

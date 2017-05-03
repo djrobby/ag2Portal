@@ -28,11 +28,11 @@ es:
         account_no: "Nº de cuenta"
         receipt_no: "Receipt No."
         bank_order_no: "Bank Order No."
-        total: "Total Cobrado"
+        total: "Total Charged"
         charged: "Cobrada por:"
         client: "Client"
         to_collect: "To Collect"
+        to_deferred: "To be Deferred"
         change: "Change"
-
         successfully: "Client payment se ha actualizado correctamente."
         create: "Client payment se ha creado correctamente."

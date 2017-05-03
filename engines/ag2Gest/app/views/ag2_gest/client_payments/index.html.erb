@@ -267,7 +267,7 @@
    $input.val(instalments_ids);
   });
 
-  /* form.client_payment: Check required values before submit */
+  /* modal_cash form.client_payment: Check required values before submit */
   $("#btn-submit-modal-cash").click(function(){
     if ($('#client_payment_amount').val() == '' ||
         $('#client_payment_amount').val() == null) {
@@ -277,6 +277,39 @@
     if ($('#client_payment_payment_method_id').val() == '' ||
         $('#client_payment_payment_method_id').val() == null) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* modal_bank form.client_payment_bank: Check required values before submit */
+  $("#btn-submit-modal-bank").click(function(){
+    if ($('#client_payment_bank_receipt_no').val() == '' ||
+        $('#client_payment_bank_receipt_no').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* modal_instalment form.instalment: Check required values before submit */
+  $("#btn-submit-modal-fracionated").click(function(){
+    if ($('#instalment_number_inst').val() == '' ||
+        $('#instalment_number_inst').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_amount_first').val() == '' ||
+        $('#instalment_amount_first').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_charge').val() == '' ||
+        $('#instalment_charge').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_payment_method_id').val() == '' ||
+        $('#instalment_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
       return false;
     }
   });
