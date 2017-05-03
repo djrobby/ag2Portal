@@ -281,6 +281,20 @@
     }
   });
 
+  /* modal_others form.client_payment_other: Check required values before submit */
+  $("#btn-submit-modal-others").click(function(){
+    if ($('#client_payment_amount').val() == '' ||
+        $('#client_payment_amount').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_payment_method_id').val() == '' ||
+        $('#client_payment_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
   /* modal_bank form.client_payment_bank: Check required values before submit */
   $("#btn-submit-modal-bank").click(function(){
     if ($('#client_payment_bank_receipt_no').val() == '' ||

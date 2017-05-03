@@ -67,10 +67,10 @@ var content = '';
 
     content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
 
-    form.append(content);
-
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
+form.append(content);
+
 $("#billing-modal").modal("show");
 
 $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + "<%=@bill.id%>");

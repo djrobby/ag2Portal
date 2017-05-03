@@ -35,7 +35,6 @@ module Ag2Gest
                                                 :update_bill,
                                                 :get_caliber,
                                                 :update_old_subscriber,
-                                                :dn_update_from_invoice,
                                                 :initial_complete,
                                                 :billing_complete,
                                                 :cr_find_meter,
@@ -54,65 +53,6 @@ module Ag2Gest
     # => search available meters
     helper_method :available_meters_for_contract
     helper_method :available_meters_for_subscriber
-
-    def dn_update_from_invoice
-      invoice_items = JSON.parse(params[:arr_invoice]) #INVOICEITEM TOTAL
-      #parsed_json = ActiveSupport::JSON.decode(params[:arr_invoice])
-
-      @invoice_items_updated = []
-
-      #Deserialize All and guardar in array UPDATED ROW #####DESERIALIZE AND UPDATE ROW
-      invoice_items.each_with_index do |item, index|
-
-        qty = item["qty"].to_f / 10000
-        pce = item["pce"].to_f / 10000
-        tax = item["tax"].to_f / 10000
-        disc = item["disc"].to_f / 10000
-        disc_per = item["disc_per"].to_f / 10000
-        invoice_id = item["invoice_id"].to_f
-        invoice_item_id = item["invoice_item_id"].to_f
-
-        #Make calculos and push array
-        net_price = pce - disc
-        amount = qty * net_price
-        bonus =  (disc_per / 100) * amount if !disc_per.blank?
-        total = amount - bonus
-
-        amount = number_with_precision(amount.round(4), precision: 4)
-        total = number_with_precision(total.round(4), precision: 4)
-
-        @invoice_items_updated[index] = {qty: qty, pce: pce, tax: tax, disc: disc, disc_per: disc_per, invoice_id: invoice_id, invoice_item_id: invoice_item_id, amount: amount.to_s, total: total.to_s, changed: item["changed"] }
-      end
-
-      subtotal = 0
-      @invoice_items_updated.each do |invoice_item|
-        subtotal += invoice_item[:total].gsub(/,/,".").to_f
-      end
-
-      total = 0
-      @tax_breakdown = []
-      sum_total_invoice = 0
-      @invoice_items_updated.group_by{|t| t[:tax]}.map do |tax|
-        tax_unique = tax[0].to_f
-        tax[1][0][:total].gsub(/,/,".").to_f
-        total = tax[1].sum{|j| j[:total].gsub(/,/,".").to_f}
-        tax_total = total * (tax_unique/100)
-
-        sum_total_invoice = sum_total_invoice + tax_total
-
-        @tax_breakdown.push({tax: tax_unique, total: total, tax_total: tax_total, tax_count: tax[1].count })
-      end
-
-      @tax_breakdown.to_json
-      @invoice_items_updated.to_json
-
-      @data_return = {invoice_items: @invoice_items_updated, tax_breakdown: @tax_breakdown, subtotal: subtotal, total: sum_total_invoice+subtotal}
-
-      respond_to do |format|
-        format.html
-        format.json { render json: @data_return } #@invoice_items_updated
-      end
-    end
 
     def update_tariff_type_select_from_billing_concept
       billable_concept_ids = params[:billable_concept_ids]
@@ -155,6 +95,13 @@ module Ag2Gest
     def contract_pdf
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
+      _tariff_type = []
+      @water_supply_contract.contracted_tariffs.each do |tt|
+          if !_tariff_type.include? tt.tariff.tariff_type.name
+            _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+          end
+      end
+      @tariff_type = _tariff_type.join(", ")
       title = t("activerecord.models.water_supply_contract.one")
       respond_to do |format|
         format.pdf {
@@ -423,7 +370,7 @@ module Ag2Gest
       if @bill
         @contracting_request.status_control;
         if @contracting_request.save
-          respond_to do |format|
+           respond_to do |format|
             format.json { render json: response_hash }
             format.js {}
           end
@@ -521,8 +468,8 @@ module Ag2Gest
         if @bill
           @contracting_request.status_control("billing");
           if @contracting_request.save
-            respond_to do |format|
-              format.json { render json: @bill }
+           respond_to do |format|
+              format.json { render json: response_hash }
               format.js {}
             end
           else
@@ -536,8 +483,7 @@ module Ag2Gest
           format.json { render json: @work_order.errors.as_json, status: :unprocessable_entity }
         end
       end
-    end
-
+    end 
 
     def update_bill
       @contracting_request = ContractingRequest.find(params[:id])
@@ -592,7 +538,7 @@ module Ag2Gest
       @reading = Reading.where(subscriber_id: @contracting_request.old_subscriber.id,reading_type_id: ReadingType::RETIRADA, billing_period_id: @contracting_request.old_subscriber.readings.last.billing_period_id, bill_id: nil)
         @contracting_request.status_control
         if @contracting_request.save
-          @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
+          # @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
@@ -1266,10 +1212,18 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:id])
       @projects = current_projects
       @projects_ids = current_projects_ids
-      _subscribers = Subscriber.where(office_id: current_offices_ids)
-      @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @offices = current_offices
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      @subscribers = []
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      @service_points = []
+      @offices = current_offices.group(:town_id).pluck(:town_id)
+      @street_types = StreetType.order(:street_type_code)
+      @towns = Town.order(:name)
+      @provinces = Province.order(:name)
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @zipcodes = Zipcode.order(:zipcode)
     end
 
     # POST /requests

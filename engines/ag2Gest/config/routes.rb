@@ -121,7 +121,7 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/:id/initial_complete', :controller => 'contracting_requests', :action => 'initial_complete'
     match 'contracting_requests/:id/billing_complete', :controller => 'contracting_requests', :action => 'billing_complete'
     #Comment Route Update Server
-    match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
+    # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
     match 'contracting_requests/:id/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
     match 'cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -413,6 +413,7 @@ Ag2Gest::Engine.routes.draw do
       post 'others', on: :collection
       post 'close_cash', on: :collection
       post 'confirm_bank', on: :collection
+      get 'payment_receipt', on: :member
     end
     resources :payment_methods
     #

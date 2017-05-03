@@ -1,4 +1,4 @@
-var form = $("#billing-form-cancellation ");
+var form = $("#billing-bailback-form-cancellation");
 var content = '';
     //content += '<h1>Initial Billing</h1>';
     //content += `<tbody>`;
@@ -6,18 +6,14 @@ var content = '';
 <%# @bill.invoices.each_with_index do |invoice, index| %>
 <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:invoices)  %>
     <% @contracting_request.water_supply_contract.bailback_bill.invoices.each_with_index do |invoice, index| %>
-      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
-        content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.cancellation_contract")%></h4>';
-      <% end %>
     content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_contract")%></h4>';
     content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content += '<h5><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></h5>';
 
     content += `<table class="table table<%= index %>">`;
     content += `<tbody>`;
 
-    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
+    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><% unless invoice.discount_zero? %><th><%= t("activerecord.attributes.contracting_request.discount") %></th><% else %><th></th><% end %><% unless invoice.discount_pct_zero? %><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><% else %><th></th><% end %><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
     <% invoice.invoice_items.each_with_index do |item, index| %>
       content+= '<tr class="in_item in_item<%= item.id %>">';
@@ -25,9 +21,9 @@ var content = '';
       content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
       content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
       content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
-      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
+      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
+      content+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
       content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
       content+= '</tr>';
 
@@ -67,136 +63,150 @@ var content = '';
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
+
+var form_u = $("#billing-unsubscribe-form-cancellation ");
+var content_u = '';
+
 <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices)  %>
   <% @contracting_request.water_supply_contract.unsubscribe_bill.invoices.each_with_index do |invoice, index| %>
-    <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
-      content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.cancellation_contract")%></h4>';
-    <% end %>
-    content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_service")%></h4>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content_u += '<h4><%= t("activerecord.attributes.contracting_request.invoice_service") + " - " + t("activerecord.attributes.reading.fac") + ": " + invoice.consumption.to_s %></h4>';
+    content_u += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
+    content_u += '<h5><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></h5>';
 
-    content += `<table class="table table<%= index %>">`;
-    content += `<tbody>`;
+    content_u += `<table class="table table<%= index %>">`;
+    content_u += `<tbody>`;
 
-    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
+    content_u+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><% unless invoice.discount_zero? %><th><%= t("activerecord.attributes.contracting_request.discount") %></th><% else %><th></th><% end %><% unless invoice.discount_pct_zero? %><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><% else %><th></th><% end %><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
     <% invoice.invoice_items.each_with_index do |item, index| %>
-      content+= '<tr class="in_item in_item<%= item.id %>">';
-      content+= '<td><%= item.code + " - " + item.subcode %></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
-      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
-      content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
-      content+= '</tr>';
+      content_u+= '<tr class="in_item_u in_item_u<%= item.id %>">';
+      content_u+= '<td><%= item.code + " - " + item.subcode %></td>';
+      content_u+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
+      content_u+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
+      content_u+= '<td class="td-amount-u<%= item.id %>"><%= item.amount %></td>';
+      content_u+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content_u+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
+      content_u+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
+      content_u+= '<td class="total_u total_u<%= item.id %>"><%= item.total %></td>';
+      content_u+= '</tr>';
 
     <% end %> /*End invoice.invoice_items*/
 
       /*Add Subtotal etc dinamyc*/
-      content+= '<tr class="subtotal">';
-      content+= '<td colspan="6" class="no-boder"></td>';
-      content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
-      content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
-      content+= '</tr>';
+      content_u+= '<tr class="subtotal_u">';
+      content_u+= '<td colspan="6" class="no-boder"></td>';
+      content_u+= '<td class="subtotal_u black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
+      content_u+= '<td class="subtotal_u<%= index %> black-border"><%= invoice.subtotal %></td>';
+      content_u+= '</tr>';
 
     <% invoice.tax_breakdown.each do |tax| %>
       <% if tax[0] != TaxType.exempt.tax %>
-        content+= '<tr class="breakdown">';
-        content+= '<td colspan="3" class="no-boder"></td>';
-        content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
-        content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
-        content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
-        content+= '<td><%= tax[2] %></td>';
-        content+= '</tr>';
+        content_u+= '<tr class="breakdown_u">';
+        content_u+= '<td colspan="3" class="no-boder"></td>';
+        content_u+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+        content_u+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+        content_u+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+        content_u+= '<td><%= tax[2] %></td>';
+        content_u+= '</tr>';
       <% end %>
     <% end %>
 
-    content+= '<tr>';
-    content+= '<td colspan="6" class="black-border"></td>';
-    content+= '<td class="black-border"><b>TOTAL</b></td>';
-    content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
-    content+= '</tr>';
+    content_u+= '<tr>';
+    content_u+= '<td colspan="6" class="black-border"></td>';
+    content_u+= '<td class="black-border"><b>TOTAL</b></td>';
+    content_u+= '<td class="black-border total_invoice_u"><%= invoice.total %></td>';
+    content_u+= '</tr>';
 
     /*End Subtotal dinamyc*/
 
-    content += "</tbody>";
-    content += "</table>";
+    content_u += "</tbody>";
+    content_u += "</table>";
 
-    content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
+    content_u += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
+
+var form_b = $("#billing-form ");
+var content_b = '';
+
 <% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices)  %>
     <% @contracting_request.water_supply_contract.bill.invoices.each_with_index do |invoice, index| %>
-      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
-        content += '<h4 align="center"><%= t("activerecord.attributes.contracting_request.new_contract")%></h4>';
-      <% end %>
-    content += '<h4><%= t("activerecord.attributes.contracting_request.invoice_contract")%></h4>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content_b += '<h4><%= t("activerecord.attributes.contracting_request.invoice_contract")%></h4>';
+    content_b += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
+    content_b += '<h5><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></h5>';
 
-    content += `<table class="table table<%= index %>">`;
-    content += `<tbody>`;
+    content_b += `<table class="table table<%= index %>">`;
+    content_b += `<tbody>`;
 
-    content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
+    content_b+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><% unless invoice.discount_zero? %><th><%= t("activerecord.attributes.contracting_request.discount") %></th><% else %><th></th><% end %><% unless invoice.discount_pct_zero? %><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><% else %><th></th><% end %><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
     <% invoice.invoice_items.each_with_index do |item, index| %>
-      content+= '<tr class="in_item in_item<%= item.id %>">';
-      content+= '<td><%= item.code %></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
-      content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>';
-      content+= '<td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td>';
-      content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
-      content+= '</tr>';
+      content_b+= '<tr class="in_item_b in_item_b<%= item.id %>">';
+      content_b+= '<td><%= item.code %></td>';
+      content_b+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
+      content_b+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
+      content_b+= '<td class="td-amount-b<%= item.id %>"><%= item.amount %></td>';
+      content_b+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content_b+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
+      content_b+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
+      content_b+= '<td class="total_b total_b<%= item.id %>"><%= item.total %></td>';
+      content_b+= '</tr>';
 
     <% end %> /*End invoice.invoice_items*/
 
       /*Add Subtotal etc dinamyc*/
-      content+= '<tr class="subtotal">';
-      content+= '<td colspan="6" class="no-boder"></td>';
-      content+= '<td class="subtotal black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
-      content+= '<td class="subtotal<%= index %> black-border"><%= invoice.subtotal %></td>';
-      content+= '</tr>';
+      content_b+= '<tr class="subtotal_b">';
+      content_b+= '<td colspan="6" class="no-boder"></td>';
+      content_b+= '<td class="subtotal_b black-border"><b><%= t("activerecord.attributes.contracting_request.subtotal").upcase %></b></td>';
+      content_b+= '<td class="subtotal_b<%= index %> black-border"><%= invoice.subtotal %></td>';
+      content_b+= '</tr>';
 
     <% invoice.tax_breakdown.each do |tax| %>
       <% if tax[0] != TaxType.exempt.tax %>
-        content+= '<tr class="breakdown">';
-        content+= '<td colspan="3" class="no-boder"></td>';
-        content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
-        content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
-        content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
-        content+= '<td><%= tax[2] %></td>';
-        content+= '</tr>';
+        content_b+= '<tr class="breakdown_b">';
+        content_b+= '<td colspan="3" class="no-boder"></td>';
+        content_b+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
+        content_b+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
+        content_b+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
+        content_b+= '<td><%= tax[2] %></td>';
+        content_b+= '</tr>';
       <% end %>
     <% end %>
 
-    content+= '<tr>';
-    content+= '<td colspan="6" class="black-border"></td>';
-    content+= '<td class="black-border"><b>TOTAL</b></td>';
-    content+= '<td class="black-border total_invoice"><%= invoice.total %></td>';
-    content+= '</tr>';
+    content_b+= '<tr>';
+    content_b+= '<td colspan="6" class="black-border"></td>';
+    content_b+= '<td class="black-border"><b>TOTAL</b></td>';
+    content_b+= '<td class="black-border total_invoice_b"><%= invoice.total %></td>';
+    content_b+= '</tr>';
 
     /*End Subtotal dinamyc*/
 
-    content += "</tbody>";
-    content += "</table>";
+    content_b += "</tbody>";
+    content_b += "</table>";
 
-    content += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
-
+    content_b += '<hr style="border-width: 2px; border-top: 1px solid #000000;">';
 
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
-form.append(content);
 
-$("#billing-modal-cancellation").modal("show");
+form_u.append(content_u);
+
+$("#billing-unsubscribe-modal-cancellation").modal("show");
+
+<% if @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:invoices)  %>
+  $("#edit-bailback").removeClass("hide");
+  form.append(content);
+  $("#billing-bailback-modal-cancellation").modal("hide");
+<% end %> 
+<% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices)  %>
+  $("#edit-unsubscribe").removeClass("hide");
+<% end %> 
+<% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices)  %>
+  $("#edit-bill").removeClass("hide").modal("hide");
+  form_b.append(content_b);
+  $("#billing-modal");
+<% end %> 
 
 link_work_order = $("#link_work_order_inspection");
 link_work_order.attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + "<%= @work_order.id %>");
@@ -219,7 +229,7 @@ changeState(currentStepWizard,nextStepWizard);
 
 $(document).ready(function() {
 
-  $("#billing-form-cancellation input, #billing-form-cancellation select").change(function() {
+  $("#billing-bailback-form-cancellation input, #billing-bailback-form-cancellation select").change(function() {
 
 
     /*$('td select').get(0).value; option checkbox*/
@@ -305,6 +315,9 @@ $(document).ready(function() {
     for (var k=0; k < total_invoiceitem; k++){
       subtotal = subtotal + parseFloat($(invoice).find('td.total')[k].textContent);
     }
+
+
+
     $(`.subtotal${index_table}`).get(0).innerHTML = subtotal.toFixed(2);
     /*END SUBTOTAL*/
 
@@ -384,6 +397,356 @@ $(document).ready(function() {
     /*TOTAL INVOICE*/
     invoice_total += subtotal;
     $(invoice + " .total_invoice").get(0).innerHTML = invoice_total.toFixed(4);
+
+  });
+
+});
+
+$(document).ready(function() {
+
+  $("#billing-unsubscribe-form-cancellation input, #billing-unsubscribe-form-cancellation select").change(function() {
+
+
+    /*$('td select').get(0).value; option checkbox*/
+    /*this - devuelve elemento atributo name invoice_item[47]quantity
+    this.value -> valor*/
+
+    /*Get id element*/
+    var _id = this.name.substring(this.name.indexOf("[")+1, this.name.indexOf("]")); //Obtengo el número de name
+
+    /*Saber que tipo de input ha cambiado*/
+    var str = this.name.substring(this.name.length-3 ,this.name.length);
+
+    /*Valor cambiado*/
+    var value = this.value;
+
+    /*Change Total and Subtotal*/
+    /*Delete Taxs and append tax en función de cuanto son*/
+
+    /*Get all values*/
+    var _tax = $(`#invoice_item_${_id}_tax_type_id`).find(":selected").text(); //Obtengo el Impuesto
+
+
+    var _quantity = $(`.in_item_u${_id} input`).get(0).value;
+    var _price = $(`.in_item_u${_id} input`).get(1).value;
+    var _discount = $(`.in_item_u${_id} input`).get(2).value;
+    var _discountpct = $(`.in_item_u${_id} input`).get(3).value;
+
+    var index_table = $(`.in_item_u${_id} input`).closest("table").attr('class').substring(11, ($(`.in_item_u${_id} input`).closest("table").attr('class').length)); //Get number table Cambiada
+    var invoice = "." + $(`.in_item_u${_id} input`).closest("table").attr('class').substring(6, ($(`.in_item_u${_id} input`).closest("table").attr('class').length)); //Get class identifier table Cambiada
+
+
+    if (str == "unt"){ //discount
+      _discount = value;
+    }
+    if (str == "pct"){ //discount_pct
+      _discountpct = value;
+    }
+    if (str == "ice"){ //price
+      _price = value;
+    }
+    if (str == "ity"){ //quantity
+      _quantity = value;
+    }
+    if (str == "id]"){ //Select Option Impuesto and Update Attributte
+      var opt_total = $(`#invoice_item_${_id}_tax_type_id option`).length; //get total option
+
+      //Remove Attributte Selected DOM
+      for (var opt = 0; opt < opt_total; opt++){
+        if ($(`#invoice_item_${_id}_tax_type_id option`)[opt].hasAttribute("selected")){
+          $(`#invoice_item_${_id}_tax_type_id option`)[opt].removeAttribute('selected');
+        }
+      }
+
+      //Add Attribute selected value changed
+      $(`#invoice_item_${_id}_tax_type_id`).find(":selected").attr("selected", "selected");
+
+    }
+
+    var net_price = parseFloat(_price) - parseFloat(_discount);
+    var amount =  parseFloat(_quantity) * net_price;
+    var bonus;
+
+    if (_discountpct == undefined){
+      bonus = 0;
+    } else {
+      bonus = (parseFloat(_discountpct)/100) * amount;
+    }
+
+    var total = amount - bonus;
+
+    $(`.total_u${_id}`).get(0).innerHTML = total.toFixed(2);
+    $(`.td-amount-u${_id}`).get(0).innerHTML = amount.toFixed(2);
+
+
+
+    /*SUBTOTAL*/
+    /*Get Table*/
+    //$(`.in_item${_id} input`).closest("table"); //Get element table parent equivalente a INVOICE
+    //$(`.in_item${_id} input`).closest("table").attr('class'); //Get class element table
+    var total_invoiceitem = $(invoice).find('tr.in_item_u').length; //Get cada InvoiceItem []Array Total (ej 2)
+    //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
+    var subtotal = 0.0;
+    for (var k=0; k < total_invoiceitem; k++){
+      subtotal = subtotal + parseFloat($(invoice).find('td.total_u')[k].textContent);
+    }
+
+
+
+    $(`.subtotal_u${index_table}`).get(0).innerHTML = subtotal.toFixed(2);
+    /*END SUBTOTAL*/
+
+    /*TAXES*/
+
+    var total_taxes = $(invoice).find('tr.in_item_u select option').length; // Get Total all option INVOICE
+
+    //Get All taxes selected InvoicesItem
+    var taxes = []
+    for (var p = 0; p < total_invoiceitem; p++) {
+      taxes[p] = $(invoice).find('tr.in_item_u select option:selected')[p].textContent;
+    }
+
+    //Get Cada InvoiceItem Selected con su Base imponible
+    var taxes_value = [];
+    for (var t = 0; t < total_invoiceitem; t++) {
+      //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item_u select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_u td.total_u')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+
+      //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
+    }
+
+    /*AGRUPAR*/
+    //Todos los impuestos posibles que hay
+    var uniqueTaxes = [];
+    $.each(taxes, function(i, el){
+      if($.inArray(el, uniqueTaxes) === -1) uniqueTaxes.push(el); //Si valor -1 (No encontrado) -> Push
+    });
+
+    var array_taxes = [];
+    for (var z=0; z < uniqueTaxes.length; z++) {
+
+      var total_tax = 0;
+      var articulo = 0;
+      var str_item = "<%= t('activerecord.attributes.contracting_request.item') %>";
+      for (var zx=0; zx < taxes_value.length; zx++){
+        if (uniqueTaxes[z] == taxes_value[zx].tax ){
+          total_tax += parseFloat(taxes_value[zx].base_imp);
+          articulo++;
+        }
+      }
+
+      if (articulo > 1) {
+        str_item = "<%= t('activerecord.attributes.contracting_request.items') %>";
+      }
+      /*Hacer porcentaje*/
+
+      var baseim = total_tax; //BaseImponible
+
+      total_tax = ((total_tax * parseFloat(uniqueTaxes[z])) / 100).toFixed(4); //Percentage Calculated for each Group
+
+      array_taxes[z] = {tax: uniqueTaxes[z], percentage_total: total_tax, base_imp: baseim, item: {quantity: articulo, item: str_item }   };
+
+    }
+
+    var invoice_total = 0; //Cálculo each INVOICE total
+
+    $(invoice + " .breakdown_u").remove();
+
+    for (var taxes = 0; taxes < array_taxes.length; taxes++) {
+      if (isNaN(array_taxes[taxes].percentage_total) ){
+        array_taxes[taxes].percentage_total = 0;
+      }
+
+      if (array_taxes[taxes].tax == ""){
+        array_taxes[taxes].tax = 0;
+      }
+
+      $(invoice + " .subtotal_u" ).first().after(`<tr class="breakdown_u"><td colspan="3" class="no-boder"></td><td class="no-boder" colspan="2" ><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b>${array_taxes[taxes].base_imp}</td><td class="no-boder">${array_taxes[taxes].item.quantity} ${array_taxes[taxes].item.item}</td><td><b>IVA (${array_taxes[taxes].tax}%)</b></td><td>${array_taxes[taxes].percentage_total}</td></tr>` ); //Add tr element breakdown
+
+      invoice_total += parseFloat(array_taxes[taxes].percentage_total);
+
+    }
+
+    /*END TAXES*/
+
+    /*TOTAL INVOICE*/
+    invoice_total += subtotal;
+    $(invoice + " .total_invoice_u").get(0).innerHTML = invoice_total.toFixed(4);
+
+  });
+
+});
+
+$(document).ready(function() {
+
+  $("#billing-form input, #billing-form select").change(function() {
+
+
+    /*$('td select').get(0).value; option checkbox*/
+    /*this - devuelve elemento atributo name invoice_item[47]quantity
+    this.value -> valor*/
+
+    /*Get id element*/
+    var _id = this.name.substring(this.name.indexOf("[")+1, this.name.indexOf("]")); //Obtengo el número de name
+
+    /*Saber que tipo de input ha cambiado*/
+    var str = this.name.substring(this.name.length-3 ,this.name.length);
+
+    /*Valor cambiado*/
+    var value = this.value;
+
+    /*Change Total and Subtotal*/
+    /*Delete Taxs and append tax en función de cuanto son*/
+
+    /*Get all values*/
+    var _tax = $(`#invoice_item_${_id}_tax_type_id`).find(":selected").text(); //Obtengo el Impuesto
+
+
+    var _quantity = $(`.in_item_b${_id} input`).get(0).value;
+    var _price = $(`.in_item_b${_id} input`).get(1).value;
+    var _discount = $(`.in_item_b${_id} input`).get(2).value;
+    var _discountpct = $(`.in_item_b${_id} input`).get(3).value;
+
+    var index_table = $(`.in_item_b${_id} input`).closest("table").attr('class').substring(11, ($(`.in_item_b${_id} input`).closest("table").attr('class').length)); //Get number table Cambiada
+    var invoice = "." + $(`.in_item_b${_id} input`).closest("table").attr('class').substring(6, ($(`.in_item_b${_id} input`).closest("table").attr('class').length)); //Get class identifier table Cambiada
+
+
+    if (str == "unt"){ //discount
+      _discount = value;
+    }
+    if (str == "pct"){ //discount_pct
+      _discountpct = value;
+    }
+    if (str == "ice"){ //price
+      _price = value;
+    }
+    if (str == "ity"){ //quantity
+      _quantity = value;
+    }
+    if (str == "id]"){ //Select Option Impuesto and Update Attributte
+      var opt_total = $(`#invoice_item_${_id}_tax_type_id option`).length; //get total option
+
+      //Remove Attributte Selected DOM
+      for (var opt = 0; opt < opt_total; opt++){
+        if ($(`#invoice_item_${_id}_tax_type_id option`)[opt].hasAttribute("selected")){
+          $(`#invoice_item_${_id}_tax_type_id option`)[opt].removeAttribute('selected');
+        }
+      }
+
+      //Add Attribute selected value changed
+      $(`#invoice_item_${_id}_tax_type_id`).find(":selected").attr("selected", "selected");
+
+    }
+
+    var net_price = parseFloat(_price) - parseFloat(_discount);
+    var amount =  parseFloat(_quantity) * net_price;
+    var bonus;
+
+    if (_discountpct == undefined){
+      bonus = 0;
+    } else {
+      bonus = (parseFloat(_discountpct)/100) * amount;
+    }
+
+    var total = amount - bonus;
+
+    $(`.total_b${_id}`).get(0).innerHTML = total.toFixed(2);
+    $(`.td-amount-b${_id}`).get(0).innerHTML = amount.toFixed(2);
+
+
+
+    /*SUBTOTAL*/
+    /*Get Table*/
+    //$(`.in_item${_id} input`).closest("table"); //Get element table parent equivalente a INVOICE
+    //$(`.in_item${_id} input`).closest("table").attr('class'); //Get class element table
+    var total_invoiceitem = $(invoice).find('tr.in_item_b').length; //Get cada InvoiceItem []Array Total (ej 2)
+    //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
+    var subtotal = 0.0;
+    for (var k=0; k < total_invoiceitem; k++){
+      subtotal = subtotal + parseFloat($(invoice).find('td.total_b')[k].textContent);
+    }
+
+
+
+    $(`.subtotal_b${index_table}`).get(0).innerHTML = subtotal.toFixed(2);
+    /*END SUBTOTAL*/
+
+    /*TAXES*/
+
+    var total_taxes = $(invoice).find('tr.in_item_b select option').length; // Get Total all option INVOICE
+
+    //Get All taxes selected InvoicesItem
+    var taxes = []
+    for (var p = 0; p < total_invoiceitem; p++) {
+      taxes[p] = $(invoice).find('tr.in_item_b select option:selected')[p].textContent;
+    }
+
+    //Get Cada InvoiceItem Selected con su Base imponible
+    var taxes_value = [];
+    for (var t = 0; t < total_invoiceitem; t++) {
+      //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item_b select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_b td.total_b')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+
+      //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
+    }
+
+    /*AGRUPAR*/
+    //Todos los impuestos posibles que hay
+    var uniqueTaxes = [];
+    $.each(taxes, function(i, el){
+      if($.inArray(el, uniqueTaxes) === -1) uniqueTaxes.push(el); //Si valor -1 (No encontrado) -> Push
+    });
+
+    var array_taxes = [];
+    for (var z=0; z < uniqueTaxes.length; z++) {
+
+      var total_tax = 0;
+      var articulo = 0;
+      var str_item = "<%= t('activerecord.attributes.contracting_request.item') %>";
+      for (var zx=0; zx < taxes_value.length; zx++){
+        if (uniqueTaxes[z] == taxes_value[zx].tax ){
+          total_tax += parseFloat(taxes_value[zx].base_imp);
+          articulo++;
+        }
+      }
+
+      if (articulo > 1) {
+        str_item = "<%= t('activerecord.attributes.contracting_request.items') %>";
+      }
+      /*Hacer porcentaje*/
+
+      var baseim = total_tax; //BaseImponible
+
+      total_tax = ((total_tax * parseFloat(uniqueTaxes[z])) / 100).toFixed(4); //Percentage Calculated for each Group
+
+      array_taxes[z] = {tax: uniqueTaxes[z], percentage_total: total_tax, base_imp: baseim, item: {quantity: articulo, item: str_item }   };
+
+    }
+
+    var invoice_total = 0; //Cálculo each INVOICE total
+
+    $(invoice + " .breakdown_b").remove();
+
+    for (var taxes = 0; taxes < array_taxes.length; taxes++) {
+      if (isNaN(array_taxes[taxes].percentage_total) ){
+        array_taxes[taxes].percentage_total = 0;
+      }
+
+      if (array_taxes[taxes].tax == ""){
+        array_taxes[taxes].tax = 0;
+      }
+
+      $(invoice + " .subtotal_b" ).first().after(`<tr class="breakdown_b"><td colspan="3" class="no-boder"></td><td class="no-boder" colspan="2" ><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b>${array_taxes[taxes].base_imp}</td><td class="no-boder">${array_taxes[taxes].item.quantity} ${array_taxes[taxes].item.item}</td><td><b>IVA (${array_taxes[taxes].tax}%)</b></td><td>${array_taxes[taxes].percentage_total}</td></tr>` ); //Add tr element breakdown
+
+      invoice_total += parseFloat(array_taxes[taxes].percentage_total);
+
+    }
+
+    /*END TAXES*/
+
+    /*TOTAL INVOICE*/
+    invoice_total += subtotal;
+    $(invoice + " .total_invoice_b").get(0).innerHTML = invoice_total.toFixed(4);
 
   });
 

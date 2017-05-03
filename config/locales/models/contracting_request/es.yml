@@ -168,6 +168,8 @@ es:
         invoice_service: "Factura de servicio"
         invoice_contract_c: "Fact. Con"
         invoice_service_c: "Fact. Ser"
+        invoice_c : "Fact. "
+        bailback: "Devolucion Fianza"
         cancellation_contract: "Baja del Servicio"
         new_contract: "Alta del Servicio"
         change_contract: "Cambio de titular"

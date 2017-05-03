@@ -39,7 +39,7 @@ jQuery(function($) {
 
     <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
 
-      <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+      <%= f.input :meter_code_input, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.water_supply_contract.try(:meter_id) } %>
 
     <!--

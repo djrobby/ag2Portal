@@ -18,6 +18,14 @@
     width: 880px !important;
     left: 40% !important;
   }
+  #billing-bailback-modal-cancellation{
+    width: 880px !important;
+    left: 40% !important;
+  }
+  #billing-unsubscribe-modal-cancellation{
+    width: 880px !important;
+    left: 40% !important;
+  }
   .stepwizard-step p {
           margin-top: 10px;
       }
@@ -85,6 +93,14 @@
         width: 1020px !important;
         left: 32% !important;
       }
+      #billing-bailback-modal-cancellation {
+        width: 1020px !important;
+        left: 32% !important;
+      }
+      #billing-unsubscribe-modal-cancellation {
+        width: 1020px !important;
+        left: 32% !important;
+      }
 
       #billing-modal td {
         text-align: center!important;
@@ -92,6 +108,14 @@
       }
 
       #billing-modal-cancellation td {
+        text-align: center!important;
+        width: 12%;
+      }
+      #billing-bailback-modal-cancellation td {
+        text-align: center!important;
+        width: 12%;
+      }
+      #billing-unsubscribe-modal-cancellation td {
         text-align: center!important;
         width: 12%;
       }
@@ -266,8 +290,14 @@
       $("#link-bill").addClass("hide");
     });
 
-      $("#initial-billing-cancellation").bind("ajax:success", function(xhr, data, status) {
+    $("#initial-billing-cancellation").bind("ajax:success", function(xhr, data, status) {
       var currentStepWizard = $('a[href="#step-1"]'),
+          nextStepWizard = $('a[href="#step-3"]');
+      changeState(currentStepWizard,nextStepWizard)
+    });
+
+    $("#inspection-billing-cancellation").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-2"]'),
           nextStepWizard = $('a[href="#step-3"]');
       changeState(currentStepWizard,nextStepWizard)
     });
@@ -521,13 +551,29 @@
 
     <!-- step 3 -->
     <div class="setup-content" id="step-3">
-      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or (@contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP) %>
-          <a id="billing-instalation-cancellation" href="<%= params[:id] %>/billing_instalation_cancellation" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
+        <a id="billing-instalation-cancellation" href="<%= params[:id] %>/billing_instalation_cancellation" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
 
-        <a href="#billing-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_edit') %></a>
+        <% if !@contracting_request.water_supply_contract.bailback_bill.blank? %>
+          <a id="edit-bailback" href="#billing-bailback-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_c') + t('activerecord.attributes.contracting_request.bailback')%></a>
+        <% else %>
+          <a id="edit-bailback" href="#billing-bailback-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary hide"><%= t('activerecord.attributes.contracting_request.invoice_c') + t('activerecord.attributes.contracting_request.bailback')%></a>
+        <% end %>
+
+        <% if !@contracting_request.water_supply_contract.unsubscribe_bill.blank? %>
+          <a id="edit-unsubscribe" href="#billing-unsubscribe-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_c') + t('activerecord.attributes.contracting_request.cancellation_contract')%></a>
+        <% else %>
+          <a id="edit-unsubscribe" href="#billing-unsubscribe-modal-cancellation" data-toggle="modal" role="button" class="btn btn-primary hide"><%= t('activerecord.attributes.contracting_request.invoice_c') + t('activerecord.attributes.contracting_request.cancellation_contract')%></a>
+        <% end %>
+
+        <% if !@contracting_request.water_supply_contract.bill.blank? %>
+          <a id="edit-bill" href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_c')  + t('activerecord.attributes.contracting_request.new_contract') %></a>
+        <% else %>
+          <a id="edit-bill" href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary hide"><%= t('activerecord.attributes.contracting_request.invoice_c')  + t('activerecord.attributes.contracting_request.new_contract') %></a>
+        <% end %>
 
       <% else %>
-          <a id="billing-instalation" href="<%= params[:id] %>/billing_instalation" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
+        <a id="billing-instalation" href="<%= params[:id] %>/billing_instalation" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
 
         <a href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_edit') %></a>
       <% end %>
@@ -551,7 +597,7 @@
 
     <!-- step 5 -->
     <div class="setup-content" id="step-5">
-    <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION %>
+    <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION && !@contracting_request.subscriber.blank? %>
       <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
     <% end %>
     </div>
@@ -895,6 +941,10 @@
 <%= render '/ag2_gest/contracting_requests/modals/new_cancellation' %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_bill' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/bailback_bill_cancellation' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/unsubscribe_bill_cancellation' %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_bill_cancellation' %>
 

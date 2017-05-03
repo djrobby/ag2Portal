@@ -807,6 +807,18 @@ module Ag2Gest
     #   end
     # end
 
+    def payment_receipt
+      @payment = ClientPayment.find(params[:id])
+      @payment_receipt = ClientPayment.where(receipt_no: @payment.receipt_no).group(:bill_id)
+      @payment_subscribers = ClientPayment.where(receipt_no: @payment.receipt_no).group(:subscriber_id)
+      title = t("activerecord.models.client_payment.few")
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@payment.receipt_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
+
      # client payment report
     def client_payment_report
       manage_filter_state

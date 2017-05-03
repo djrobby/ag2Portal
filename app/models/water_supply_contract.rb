@@ -135,7 +135,7 @@ class WaterSupplyContract < ActiveRecord::Base
     old_contract = old_subscriber.water_supply_contract ? WaterSupplyContract.where(subscriber_id: old_subscriber).last : nil
 
     _array = []
-    if old_contract != nil
+    if old_contract != nil && !old_contract.bill.blank?
       old_contract.bill.invoices.first.invoice_items.each do |i|
         _array = _array << [i.id, i.code]
       end
@@ -215,7 +215,7 @@ class WaterSupplyContract < ActiveRecord::Base
 
   def generate_bill_cancellation_service
     @subscriber = contracting_request.old_subscriber
-    @reading = @subscriber.readings.where(billing_period_id: contracting_request.old_subscriber.readings.last.billing_period_id, reading_type_id: [ReadingType::RETIRADA]).order(:reading_date).last
+    @reading = @subscriber.readings.where(billing_period_id: contracting_request.old_subscriber.readings.last.billing_period_id, reading_type_id: [ReadingType::RETIRADA], bill_id: nil).order(:reading_date).last
     payday_limit = !@reading.billing_period.billing_starting_date.blank? ? @reading.billing_period.billing_starting_date : Date.today
     invoice_date = !@reading.billing_period.billing_ending_date.blank? ? @reading.billing_period.billing_ending_date : Date.today
     @bill = @reading.generate_bill(bill_next_no(@reading.project),contracting_request.try(:created_by),1,payday_limit,invoice_date)

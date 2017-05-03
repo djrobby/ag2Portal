@@ -38,10 +38,10 @@ report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
 var_bill_date = @biller_printer.bill_date.strftime(_format) unless @biller_printer.bill_date.blank?
 var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 #
-report.page.values(bill_c: I18n.t("activerecord.models.bill.one"),
+report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
 				   data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
 				   bill_n_c:  I18n.t("activerecord.attributes.bill.bill_no"),
-				   bill_n: @biller_printer.try(:to_label),
+				   bill_n: @biller_printer.real_no,
 				   bill_date_c: I18n.t("activerecord.attributes.bill.bill_date"),
 				   bill_date: var_bill_date,
 				   billing_period_c: I18n.t("activerecord.attributes.report.billing_period"),

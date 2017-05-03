@@ -1,0 +1,165 @@
+if @payment.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+# Localization for dates
+_format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
+
+report.set_layout tlf: 'reports/payment_receipt', layout_options: { default: true }
+
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @payment.bill.project.company.logo.url(:original).split("?").first unless @payment.bill.project.company.logo.blank?
+
+# Page footer: Image block for Logo
+report.page.values logo_small: "public/" + @payment.bill.project.company.logo.url(:small).split("?").first unless @payment.bill.project.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @payment.bill.project.company.name,
+				   company_address_1: @payment.bill.project.company.address_1,
+				   company_address_2: @payment.bill.project.company.address_2,
+				   company_phones: @payment.bill.project.company.phone_and_fax,
+				   company_email: @payment.bill.project.company.email_and_website
+				   )
+report.page.values(company_data: (@payment.bill.project.company.invoice_footer_complete + "/r90"))
+#
+# Remarks
+
+report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"))
+
+#
+# Lists
+report.page.values(client2:  @payment.client.full_name.upcase,
+				   street2: @payment.try(:client).try(:address_1).upcase,
+				   zipcode2: @payment.try(:client).try(:zipcode).try(:zipcode).upcase + " " + @payment.try(:client).try(:zipcode).try(:town).try(:name).upcase,
+				   province: @payment.try(:client).try(:zipcode).try(:province).try(:name).upcase,
+				   client_code2: @payment.client.full_code
+				   )
+#
+#
+payment_date = I18n.l(@payment.payment_date, format: :long_whit_day) unless @payment.payment_date.blank?
+payment_date_format = @payment.payment_date.strftime(_format) unless @payment.payment_date.blank?
+report.page.values(title: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
+				   payment_date: payment_date,
+				   subscriber_c: I18n.t("activerecord.attributes.contracting_request.supply_data"),
+				   form_title: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
+				   request_no_c: I18n.t("activerecord.attributes.client_payment.receipt_no") + ": ",
+				   request_no: @payment.full_no,
+				   request_date_c: I18n.t("activerecord.attributes.client_payment.payment_date") + ": ",
+				   request_date: payment_date_format)
+
+_amount = 0
+_bill = ""
+@payment_receipt.each do |receipt|
+	_amount += receipt.bill.collected
+end
+
+#
+# subscribers
+report.page.list(:default).header do |header|
+	header.item(:subscriber_no_c).value I18n.t("activerecord.attributes.subscriber.subscriber_code2")
+	header.item(:subscriber_name_c).value I18n.t("activerecord.attributes.subscriber.titular")
+	header.item(:subscriber_address_c).value I18n.t("activerecord.attributes.subscriber.address")
+end
+
+#
+@payment_subscribers.each do |subscriber|
+	report.page.list(:default).add_row do |row|
+		row.item(:sup).hide
+		row.item(:subscriber_no).value subscriber.subscriber.full_code
+		row.item(:subscriber_name).value subscriber.subscriber.full_name
+		row.item(:subscriber_address).value subscriber.subscriber.address_1
+	end
+end
+
+
+#
+# receipt
+report.page.list(:default).add_row do |row|
+	row.item(:sup).show
+	row.item(:receipt).value I18n.t("ag2_gest.client_payments.report.receipt_detail") + number_with_precision(_amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + I18n.t("ag2_gest.client_payments.report.receipt_detail2")
+end
+
+#
+# client payment group receipt_no
+if !@payment_receipt.blank?
+	report.page.list(:default).add_row do |row1|
+		row1.item(:sup).show
+		row1.item(:receipt_no_c).value I18n.t("activerecord.models.bill.one")
+		row1.item(:receipt_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
+		row1.item(:total_c).value I18n.t("activerecord.attributes.bill.total")
+		row1.item(:amount_c).value I18n.t("ag2_gest.client_payments.report.amount_receipt")
+		row1.item(:debt_c).value I18n.t("ag2_gest.client_payments.report.debt_pending")
+	end
+end
+
+@payment_receipt.each do |receipt|
+	var_bill_date = receipt.bill.bill_date.strftime(_format) unless receipt.bill.bill_date.blank?
+	if receipt.bill.debt.to_i == 0
+			report.page.list(:default).add_row do |row2|
+				row2.item(:sup).hide
+				row2.item(:receipt_no).value receipt.bill.try(:to_label)
+				row2.item(:receipt_date).value var_bill_date
+				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				_bill += (receipt.bill.try(:to_label) + ", ")
+			end
+	else
+			report.page.list(:default).add_row do |row2|
+				row2.item(:sup).hide
+				row2.item(:receipt_no).value receipt.bill.try(:to_label)
+				row2.item(:receipt_date).value var_bill_date
+				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				_bill += (receipt.bill.try(:to_label) + ", ")
+			end
+				receipt.bill.invoices.each do |invoices|
+					var_invoice_date = invoices.invoice_date.strftime(_format) unless invoices.invoice_date.blank?
+						report.page.list(:default).add_row do |row3|
+							row3.item(:sup).hide
+							row3.item(:receipt_no).value "> " + invoices.try(:full_no)
+							row3.item(:receipt_date).value var_invoice_date
+							row3.item(:total).value number_with_precision(invoices.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+							row3.item(:amount).value number_with_precision(invoices.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+						end
+				end
+	end
+	_bill
+end
+report.page.list(:default).add_row do |row|
+	row.item(:sup).show
+	row.item(:full_total_c).value I18n.t("ag2_gest.client_payments.report.total_receipt") + ":"
+	row.item(:full_total).value number_with_precision(_amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+	row.item(:der).hide
+	row.item(:izq).hide
+end
+
+#
+# details
+
+#
+# summary
+report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal") + ":",
+				   loc_fiscal: @payment.bill.project.company.fiscal_id,
+				   payment_data_c: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
+				   request_no_c1: I18n.t("activerecord.attributes.client_payment.receipt_no") + ":",
+				   request_no1: @payment.full_no,
+				   request_date_c1: I18n.t("activerecord.attributes.client_payment.payment_date") + ": ",
+				   request_date1: payment_date_format,
+				   r_total_c: I18n.t("ag2_gest.client_payments.report.total_receipt") + ":",
+				   r_total: number_with_precision(_amount, precision: 2, delimiter: I18n.locale == :es ? "." : ","),
+				   bill_c: I18n.t("ag2_gest.client_payments.report.total_bill_payment") + " :" ,
+				   bill: _bill[0..-3],
+				   client2_1:  @payment.client.full_name ,
+				   street2_1: @payment.try(:client).try(:address_1),
+				   province2_1: @payment.client.address_2 ,
+				   client_code2_1: @payment.client.full_code )
+
+
