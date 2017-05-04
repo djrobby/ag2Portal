@@ -374,6 +374,7 @@ module Ag2Gest
 
       search_bank = ClientPayment.search do
         with :payment_type, ClientPayment::BANK
+        with :confirmation_date, nil
         if !current_projects.blank?
           with :project_id, current_projects
         end
