@@ -57,9 +57,9 @@ module Ag2Gest
       if session[:office] != '0'
         _offices =  [session[:office]]
       elsif session[:company] != '0'
-        _offices = Company.find(session[:company]).offices.map(&:id)
+        _offices = Company.find(session[:company]).offices.pluck('offices.town_id')
       else
-        _offices = session[:organization] != '0' ? Organization.find(session[:organization]).companies.map(&:offices).flatten.map(&:id) : Office.pluck(:id)
+        _offices = session[:organization] != '0' ? Organization.find(session[:organization]).offices.pluck('offices.town_id') : Office.pluck(:id)
       end
     end
 
@@ -69,7 +69,7 @@ module Ag2Gest
       elsif session[:company] != '0'
         _offices = Company.find(session[:company]).offices
       else
-        _offices = session[:organization] != '0' ? Organization.find(session[:organization]).companies.map(&:offices).flatten : Office.all
+        _offices = session[:organization] != '0' ? Organization.find(session[:organization]).offices : Office.order(:id)
       end
     end
   end

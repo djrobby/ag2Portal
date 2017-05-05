@@ -483,7 +483,7 @@ module Ag2Gest
           format.json { render json: @work_order.errors.as_json, status: :unprocessable_entity }
         end
       end
-    end 
+    end
 
     def update_bill
       @contracting_request = ContractingRequest.find(params[:id])
@@ -779,30 +779,6 @@ module Ag2Gest
       code = project == '$' ? '$err' : cr_next_no(project)
       @json_data = { "code" => code }
       render json: @json_data
-    end
-
-      ##########APPLICATION_CONTROLLER.RB##########
-    # Contracting request no
-    def cr_next_no(project)
-      year = Time.new.year
-      code = ''
-      # Builds code, if possible
-      project_code = Project.find(project).project_code rescue '$'
-      if project_code == '$'
-        code = '$err'
-      else
-        project = project_code.rjust(12, '0')
-        year = year.to_s if year.is_a? Fixnum
-        year = year.rjust(4, '0')
-        last_no = ContractingRequest.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
-        if last_no.nil?
-          code = project + year + '000001'
-        else
-          last_no = last_no[16..21].to_i + 1
-          code = project + year + last_no.to_s.rjust(6, '0')
-        end
-      end
-      code
     end
 
     # Search Entity
@@ -1192,7 +1168,7 @@ module Ag2Gest
       @subscribers = []
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
-      @offices = current_offices.group(:town_id).pluck(:town_id)
+      @offices = current_offices.group(:town_id).pluck('offices.town_id')
       @street_types = StreetType.order(:street_type_code)
       @towns = Town.order(:name)
       @provinces = Province.order(:name)

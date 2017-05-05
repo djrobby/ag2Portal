@@ -144,7 +144,8 @@
         <% end %>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new") } %>
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new2") } %>
+        <a data-toggle="modal" href="#notfound" class="btn btn-primary"><%= I18n.t("ag2_gest.contracting_requests.index.btn_new2") %></a>
+        <%#= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => I18n.t("ag2_gest.contracting_requests.index.btn_new2") } %>
         <!-- Report -->
         <%= label_tag I18n.t("ag2_gest.contracting_requests.report.report"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>

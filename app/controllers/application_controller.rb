@@ -658,6 +658,29 @@ end
     code
   end
 
+  # Contracting request no
+  def cr_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = ContractingRequest.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[16..21].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
+    end
+    code
+  end
+
   # Bill no
   def bill_next_no(project)
     year = Time.new.year

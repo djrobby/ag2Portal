@@ -131,6 +131,7 @@ class ContractingRequest < ActiveRecord::Base
 
   # Callbacks
   after_create :to_client #create/assign client after create contracting_request
+  before_save :assign_right_no
 
   # Searchable attributes
   searchable do
@@ -316,6 +317,18 @@ class ContractingRequest < ActiveRecord::Base
   # check bank account info
   def data_account?
     !country_id.blank? && !iban_dc.blank? && !bank_id.blank? && !bank_office_id.blank? && !ccc_dc.blank? && !account_no.blank?
+  end
+
+  # Assign right request no (if current one is empty or already exists)
+  def assign_right_no
+    no = self.request_no
+    if no.blank? || ContractingRequest.exists?(request_no: no)
+      no = cr_next_no(self.project_id)
+      if no == '$err'
+        no = self.request_no
+      end
+    end
+    self.request_no = no
   end
 
   def to_client
@@ -628,7 +641,7 @@ class ContractingRequest < ActiveRecord::Base
     #                     installation_reading: old_subscriber.readings.last.reading_index)
   end
 
-  # Subscriber order no
+  # Subscriber code
   def sub_next_no(office)
     code = ''
     office = office.to_s if office.is_a? Fixnum
@@ -639,6 +652,29 @@ class ContractingRequest < ActiveRecord::Base
     else
       last_no = last_no[4..10].to_i + 1
       code = office +  last_no.to_s.rjust(7, '0')
+    end
+    code
+  end
+
+  # Contracting request no
+  def cr_next_no(project)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    project_code = Project.find(project).project_code rescue '$'
+    if project_code == '$'
+      code = '$err'
+    else
+      project = project_code.rjust(12, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = ContractingRequest.where("request_no LIKE ?", "#{project}#{year}%").order(:request_no).maximum(:request_no)
+      if last_no.nil?
+        code = project + year + '000001'
+      else
+        last_no = last_no[16..21].to_i + 1
+        code = project + year + last_no.to_s.rjust(6, '0')
+      end
     end
     code
   end
