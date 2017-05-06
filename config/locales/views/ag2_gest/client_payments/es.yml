@@ -25,7 +25,7 @@ es:
         bank_counter_c: "Ventanilla"
         cash_closing: "Cerrar caja"
         collect_instalments: "Cobrar cuotas"
-        back_to_pending: "Devolver a pendiente"
+        back_to_pending: "Devolver a pendientes"
         cash: "Caja"
         bank: "Banco"
         others: "Otros"

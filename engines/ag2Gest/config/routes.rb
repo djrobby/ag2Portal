@@ -414,6 +414,8 @@ Ag2Gest::Engine.routes.draw do
       post 'close_cash', on: :collection
       post 'confirm_bank', on: :collection
       get 'payment_receipt', on: :member
+      post 'cash_to_pending', on: :collection
+      post 'bank_to_pending', on: :collection
     end
     resources :payment_methods
     #

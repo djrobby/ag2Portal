@@ -59,7 +59,7 @@ $(".btn-payment").click(function(){
       total_debt += parseFloat(debts_array[i]);
     }
   }
-  $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
+  $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
 
   // Update Ids in the
   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
@@ -79,6 +79,15 @@ $("#close-cash").click(function(){
   });  
   $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash
   // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
+});
+
+$("#cash-to-pending").click(function(){
+  var cp_ids = [];
+  $('#cash-table tr').each(function() {
+    id = $(this).find('td.cp-id').text();
+    if (id != null && id != '') cp_ids.push(id);
+  });  
+  $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
 });
 
 $("#bank-confirm").click(function(){
@@ -102,6 +111,15 @@ $("#bank-confirm").click(function(){
     $("#bank-bills-selected").html(cp_ids.length);
     $("#bank-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
   }
+});
+
+$("#bank-to-pending").click(function(){
+  var cp_ids = [];
+  $('#bank-table tr').each(function() {
+    id = $(this).find('td.cp-id').text();
+    if (id != null && id != '') cp_ids.push(id);
+  });  
+  $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
 });
 
 $(".btn-others").click(function (e) {
@@ -137,7 +155,7 @@ $(".btn-fractionated").click(function (e) {
 });
 
 /* modal_cash form.client_payment: Check required values before submit */
-$("#btn-submit-modal-cash").click(function(){
+$("form.cash-form").submit(function(){
   if ($('#client_payment_amount').val() == '' ||
       $('#client_payment_amount').val() == null) {
     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
@@ -149,32 +167,64 @@ $("#btn-submit-modal-cash").click(function(){
     return false;
   }
 });
+// $("#btn-submit-modal-cash").click(function(){
+//   alert('js');
+//   if ($('#client_payment_amount').val() == '' ||
+//       $('#client_payment_amount').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+//   if ($('#client_payment_payment_method_id').val() == '' ||
+//       $('#client_payment_payment_method_id').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+// });
 
 /* modal_others form.client_payment_other: Check required values before submit */
-$("#btn-submit-modal-others").click(function(){
-  if ($('#client_payment_amount').val() == '' ||
-      $('#client_payment_amount').val() == null) {
+$("form.others-form").submit(function(){
+  if ($('#client_payment_other_amount').val() == '' ||
+      $('#client_payment_other_amount').val() == null) {
     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
     return false;
   }
-  if ($('#client_payment_payment_method_id').val() == '' ||
-      $('#client_payment_payment_method_id').val() == null) {
+  if ($('#client_payment_other_payment_method_id').val() == '' ||
+      $('#client_payment_other_payment_method_id').val() == null) {
     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
     return false;
   }
 });
+// $("#btn-submit-modal-others").click(function(){
+//   if ($('#client_payment_amount').val() == '' ||
+//       $('#client_payment_amount').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+//   if ($('#client_payment_payment_method_id').val() == '' ||
+//       $('#client_payment_payment_method_id').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+// });
 
 /* modal_bank form.client_payment_bank: Check required values before submit */
-$("#btn-submit-modal-bank").click(function(){
+$("form.bank-form").submit(function(){
   if ($('#client_payment_bank_receipt_no').val() == '' ||
       $('#client_payment_bank_receipt_no').val() == null) {
     alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
     return false;
   }
 });
+// $("#btn-submit-modal-bank").click(function(){
+//   if ($('#client_payment_bank_receipt_no').val() == '' ||
+//       $('#client_payment_bank_receipt_no').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+// });
 
 /* modal_instalment form.instalment: Check required values before submit */
-$("#btn-submit-modal-fracionated").click(function(){
+$("form.instalment-form").submit(function(){
   if ($('#instalment_number_inst').val() == '' ||
       $('#instalment_number_inst').val() == null) {
     alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
@@ -196,6 +246,28 @@ $("#btn-submit-modal-fracionated").click(function(){
     return false;
   }
 });
+// $("#btn-submit-modal-fracionated").click(function(){
+//   if ($('#instalment_number_inst').val() == '' ||
+//       $('#instalment_number_inst').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+//   if ($('#instalment_amount_first').val() == '' ||
+//       $('#instalment_amount_first').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+//   if ($('#instalment_charge').val() == '' ||
+//       $('#instalment_charge').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+//   if ($('#instalment_payment_method_id').val() == '' ||
+//       $('#instalment_payment_method_id').val() == null) {
+//     alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
+//     return false;
+//   }
+// });
 
 $(".checkbox-master").click(function () {
   $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));

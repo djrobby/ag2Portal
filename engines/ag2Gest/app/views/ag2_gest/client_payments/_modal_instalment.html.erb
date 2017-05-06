@@ -15,7 +15,7 @@
     <h3><%= t('ag2_gest.client_payments.index.deferrals') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
-  <%= simple_form_for :instalment, url: fractionated_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
+  <%= simple_form_for :instalment, url: fractionated_client_payments_path, method: :post, :html => { class: 'modal-footer-right instalment-form'} do |f| %>
     <div class="modal-body">
       <%= f.input :invoices_ids, :as => :hidden %>
       <div class="control-group string required">

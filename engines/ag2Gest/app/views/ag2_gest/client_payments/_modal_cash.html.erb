@@ -15,7 +15,7 @@
     <h3><%= t('ag2_gest.client_payments.index.cash') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
-  <%= simple_form_for :client_payment, url: cash_client_payments_path, method: :post, :html => { class:'modal-footer-right cash-form' } do |f| %>
+  <%= simple_form_for :client_payment, url: cash_client_payments_path, method: :post, :html => { class: 'modal-footer-right cash-form' } do |f| %>
     <div class="modal-body">
       <%= f.input :invoices_ids, :as => :hidden %>
       <div class="control-group string required">

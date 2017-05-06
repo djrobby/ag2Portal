@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
@@ -107,9 +108,9 @@ module Ag2Gest
       receipt_no = params[:client_payment_bank][:receipt_no]
       # Payment type & status
       invoice_status = InvoiceStatus::BANK
-      payment_method_id = PaymentType.find(ClientPayment::BANK).payment_method_id rescue collection_payment_methods(invoices.first.organization_id)
+      payment_method_id = PaymentType.find(ClientPayment::BANK).payment_method_id rescue collection_payment_methods(invoices.first.organization_id).first.id
       if payment_method_id.nil?
-        payment_method_id = collection_payment_methods(invoices.first.organization_id)
+        payment_method_id = collection_payment_methods(invoices.first.organization_id).first.id
       end
       invoices.each do |i|
         client_bank_account = i.client.active_bank_account
@@ -117,7 +118,7 @@ module Ag2Gest
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::BANK, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method_id, client_id: i.client.id, subscriber_id: i.subscriber.id,
                                payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
-                               client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+                               client_bank_account_id: client_bank_account.id, charge_account_id: i.charge_account_id)
           if client_payment.save
             i.invoice_status_id = invoice_status
             i.save
@@ -190,9 +191,21 @@ module Ag2Gest
           cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
         end
       end
-      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias"
+      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
     rescue
-      redirect_to client_payments_path, alert: "Error al cerrar caja"
+      redirect_to client_payments_path, alert: "¡Error! Imposible cerrar caja."
+    end
+
+    def cash_to_pending
+      client_payments_ids = params[:cash_to_pending][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+        cp.delete
+      end
+      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
     end
 
     def confirm_bank
@@ -205,6 +218,23 @@ module Ag2Gest
       redirect_to client_payments_path, notice: "Cobros confirmados sin incidencias"
     end
 
+    def bank_to_pending
+      client_payments_ids = params[:bank_to_pending][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+        cp.delete
+      end
+      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
+    end
+
+    #
+    # Default Methods
+    #
+    # GET /client_payments
+    # GET /client_payments.json
     def index
       manage_filter_state
       no = params[:No]

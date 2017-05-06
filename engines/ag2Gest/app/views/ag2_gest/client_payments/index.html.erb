@@ -227,7 +227,7 @@
         total_debt += parseFloat(debts_array[i]);
       }
     }
-    $(".debt-total").text(total_debt.format(4, 3, _delimiter, _separator));
+    $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
 
     // Update Ids in the
     $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
@@ -268,65 +268,66 @@
   });
 
   /* modal_cash form.client_payment: Check required values before submit */
-  $("#btn-submit-modal-cash").click(function(){
-    if ($('#client_payment_amount').val() == '' ||
-        $('#client_payment_amount').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-    if ($('#client_payment_payment_method_id').val() == '' ||
-        $('#client_payment_payment_method_id').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-  });
+  // $("#btn-submit-modal-cash").click(function(){
+  //   alert('html');
+  //   if ($('#client_payment_amount').val() == '' ||
+  //       $('#client_payment_amount').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  //   if ($('#client_payment_payment_method_id').val() == '' ||
+  //       $('#client_payment_payment_method_id').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  // });
 
   /* modal_others form.client_payment_other: Check required values before submit */
-  $("#btn-submit-modal-others").click(function(){
-    if ($('#client_payment_amount').val() == '' ||
-        $('#client_payment_amount').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-    if ($('#client_payment_payment_method_id').val() == '' ||
-        $('#client_payment_payment_method_id').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-  });
+  // $("#btn-submit-modal-others").click(function(){
+  //   if ($('#client_payment_amount').val() == '' ||
+  //       $('#client_payment_amount').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  //   if ($('#client_payment_payment_method_id').val() == '' ||
+  //       $('#client_payment_payment_method_id').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  // });
 
   /* modal_bank form.client_payment_bank: Check required values before submit */
-  $("#btn-submit-modal-bank").click(function(){
-    if ($('#client_payment_bank_receipt_no').val() == '' ||
-        $('#client_payment_bank_receipt_no').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-  });
+  // $("#btn-submit-modal-bank").click(function(){
+  //   if ($('#client_payment_bank_receipt_no').val() == '' ||
+  //       $('#client_payment_bank_receipt_no').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  // });
 
   /* modal_instalment form.instalment: Check required values before submit */
-  $("#btn-submit-modal-fracionated").click(function(){
-    if ($('#instalment_number_inst').val() == '' ||
-        $('#instalment_number_inst').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-    if ($('#instalment_amount_first').val() == '' ||
-        $('#instalment_amount_first').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-    if ($('#instalment_charge').val() == '' ||
-        $('#instalment_charge').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-    if ($('#instalment_payment_method_id').val() == '' ||
-        $('#instalment_payment_method_id').val() == null) {
-      alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
-      return false;
-    }
-  });
+  // $("#btn-submit-modal-fracionated").click(function(){
+  //   if ($('#instalment_number_inst').val() == '' ||
+  //       $('#instalment_number_inst').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  //   if ($('#instalment_amount_first').val() == '' ||
+  //       $('#instalment_amount_first').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  //   if ($('#instalment_charge').val() == '' ||
+  //       $('#instalment_charge').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  //   if ($('#instalment_payment_method_id').val() == '' ||
+  //       $('#instalment_payment_method_id').val() == null) {
+  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
+  //     return false;
+  //   }
+  // });
 
   $("#pages a").on("click", function() {
     $.getScript(this.href);
@@ -545,7 +546,7 @@
     <!-- Close Cash (modal) -->
     <div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
       <div class="modal-header">
-        <h4><%= t "ag2_gest.client_payments.index.cash_closing" %></h4>
+        <h3><%= t "ag2_gest.client_payments.index.cash_closing" %></h3>
       </div>
       <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
@@ -579,6 +580,28 @@
       <% end %>
     </div><!-- Close Cash -->
 
+    <!-- Cash To Pending (modal) -->
+    <div id="modal-cash-to-pending" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+      <div class="modal-header">
+        <h3><%= t "ag2_gest.client_payments.index.back_to_pending" %></h3>
+      </div>
+      <%= simple_form_for :cash_to_pending, url: cash_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
+        <div class="modal-body">
+          <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Total a devolver</label>
+            <div class="controls highlighted bolded">
+              <span id="total-cash-to-pending"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Cash To Pending -->
+
     <!-- Bank Confirmation (modal) -->
     <div id="modal-bank-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBanco" aria-hidden="true">
       <div class="modal-header">
@@ -607,6 +630,28 @@
         </div>
       <% end %>
     </div><!-- Modal Close Cash -->
+
+    <!-- Bank To Pending (modal) -->
+    <div id="modal-bank-to-pending" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+      <div class="modal-header">
+        <h3><%= t "ag2_gest.client_payments.index.back_to_pending" %></h3>
+      </div>
+      <%= simple_form_for :bank_to_pending, url: bank_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
+        <div class="modal-body">
+          <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Total a devolver</label>
+            <div class="controls highlighted bolded">
+              <span id="total-bank-to-pending"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Bank To Pending -->
   </div><!-- row-fluid -->
 </div><!-- container-fluid -->
 
@@ -668,6 +713,15 @@
     // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
   });
 
+  $("#cash-to-pending").click(function(){
+    var cp_ids = [];
+    $('#cash-table tr').each(function() {
+      id = $(this).find('td.cp-id').text();
+      if (id != null && id != '') cp_ids.push(id);
+    });  
+    $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
+  });
+
   $("#bank-confirm").click(function(){
     var cp_ids = [];
     var cp_amount = 0.0;
@@ -689,6 +743,15 @@
       $("#bank-bills-selected").html(cp_ids.length);
       $("#bank-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
     }
+  });
+
+  $("#bank-to-pending").click(function(){
+    var cp_ids = [];
+    $('#bank-table tr').each(function() {
+      id = $(this).find('td.cp-id').text();
+      if (id != null && id != '') cp_ids.push(id);
+    });  
+    $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
   });
 
   $(".checkbox-master").click(function () {
