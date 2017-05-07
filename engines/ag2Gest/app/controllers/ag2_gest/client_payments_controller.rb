@@ -140,6 +140,7 @@ module Ag2Gest
       charge = params[:instalment][:charge].to_d
       payment_method_id = params[:instalment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
+      created_by = current_user.id if !current_user.nil?
 
       # Check that all invoices are from the same client
       clients = Client.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('clients.id').group('clients.id').to_a
@@ -157,15 +158,43 @@ module Ag2Gest
       end
 
       # Initialize invoices dataset
-      invoices = Invoice.where(id: invoice_ids).joins(:bill) \
-                        .select('invoices.id, invoices.bill_id, invoices.receivables, bills.client_id, bills.subscriber_id') \
-                        .order('invoices.created_at')
+      invoices = Invoice.where(id: invoice_ids).joins(:bill, 'LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id') \
+                        .select('invoices.id, invoices.bill_id, invoices.receivables, bills.client_id, bills.subscriber_id, invoices.organization_id, COALESCE(sum(client_payments.amount),0) AS payments, invoices.receivables-COALESCE(sum(client_payments.amount),0) AS debts') \
+                        .order('invoices.created_at') \
+                        .group('invoices.id')
+      organization_id = invoices.first.organization_id
 
       # Calcs
-      invoice_debts = invoices.sum(&:debt)
+      invoice_debts = 0
+      invoice_debts = invoices.each { |i| invoice_debts += i.debts }
       invoice_debts_surcharge = invoice_debts * (charge / 100)
       each_instalment_amount = (invoice_debts / number_quotas).round(4)
       each_instalment_surcharge = (invoice_debts_surcharge / number_quotas).round(4)
+
+      # Instalment plan No.
+      client_id = invoices.first.client.id
+      instalment_no = instalment_plan_next_no(client_id) || '0000000000000000000000'
+
+      # Create plan
+      plan = InstalmentPlan.create( instalment_no: instalment_no,
+                                    instalment_date: Date.today,
+                                    payment_method_id: payment_method_id,
+                                    client_id: client_id,
+                                    subscriber_id: subscriber_id,
+                                    surcharge_pct: charge,
+                                    created_by: created_by,
+                                    organization_id: organization_id )
+      # Create instalments
+      (1..number_quotas).each do |q|
+        instalment = Instalment.create( instalment_plan_id: plan.id,
+                                        instalment: q,
+                                        payday_limit: Date.today + q.month,
+                                        amount: each_instalment_amount,
+                                        surcharge: each_instalment_surcharge,
+                                        created_by: created_by )
+        # Create depending invoices
+      end
+
 
       invoices.each do |i|
         i.debt
@@ -175,9 +204,6 @@ module Ag2Gest
       pct_plus = invoices.sum(&:debt) * (charge/100)
       quota_total = invoices.sum(&:debt) + pct_plus
       single_quota = (quota_total / number_quotas).round(4)
-      # Instalment plan No.
-      client_id = invoices.first.client.id
-      instalment_no = instalment_plan_next_no(client_id) || '0000000000000000000000'
 
       bill = invoices.first.bill
       plan = InstalmentPlan.create( instalment_no: instalment_no,
