@@ -24,6 +24,8 @@ en:
         bill_no_c: "Bill No."
         project: "Project"
         project_id: "Project"
+        organization: "Organization"
+        organization_id: "Organization"
         client: "Client"
         client_id: "Client"
         subscriber: "Subscriber"

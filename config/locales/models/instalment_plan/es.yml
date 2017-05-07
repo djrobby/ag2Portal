@@ -16,3 +16,5 @@ es:
         subscriber_id: "Abonado"
         instalments_qty: "Plazos"
         amount_first: "Importe primer plazo"
+        organization: "Organización"
+        organization_id: "Organización"

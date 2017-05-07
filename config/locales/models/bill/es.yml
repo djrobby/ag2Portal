@@ -24,6 +24,8 @@ es:
         bill_no_c: "Nº Recibo"
         project: "Proyecto"
         project_id: "Proyecto"
+        organization: "Organización"
+        organization_id: "Organización"
         client: "Cliente"
         client_id: "Cliente"
         subscriber: "Abonado"

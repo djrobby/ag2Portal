@@ -16,3 +16,5 @@ es:
         subscriber_id: "Subscriber"
         instalments_qty: "Instalments"
         amount_first: "Amount first instalment"
+        organization: "Organization"
+        organization_id: "Organization"

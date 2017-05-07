@@ -6,6 +6,7 @@ class Instalment < ActiveRecord::Base
                   :instalment_plan_id, :bill_id, :invoice_id
 
   has_one :client_payment
+  has_many :instalment_invoices, dependent: :destroy
 
   # validates :code,  :presence => true
   # validates :name,  :presence => true

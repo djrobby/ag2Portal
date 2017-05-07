@@ -408,8 +408,8 @@ Ag2Gest::Engine.routes.draw do
     resources :client_payments do
       post 'cash', on: :collection
       post 'banks', on: :collection
-      post 'fractionated', on: :collection
-      post 'instalment', on: :collection
+      post 'fractionate', on: :collection
+      post 'charge_instalment', on: :collection
       post 'others', on: :collection
       post 'close_cash', on: :collection
       post 'confirm_bank', on: :collection

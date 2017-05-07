@@ -98,7 +98,7 @@ $("#bank-confirm").click(function(){
       id = $(this).find('td.cpb-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpb-amount').text();
+        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
         cp_amount += parseFloat(amount);
       }
     }
@@ -115,18 +115,24 @@ $("#bank-confirm").click(function(){
 
 $("#bank-to-pending").click(function(){
   var cp_ids = [];
+  var cp_amount = 0.0;
   $('#bank-table tr').each(function() {
-    id = $(this).find('td.cp-id').text();
-    if (id != null && id != '') cp_ids.push(id);
-  });  
-  $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
-});
-
-$(".btn-others").click(function (e) {
-  ids = $("#client_payment_other_invoices_ids").val();
-  if (ids == null || ids == '') {
-    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+    if ($(this).find('td input:checkbox').is(':checked')) {
+      id = $(this).find('td.cpb-id').text();
+      if (id != null && id != '') {
+        cp_ids.push(id);
+        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        cp_amount += parseFloat(amount);
+      }
+    }
+  });
+  if (cp_ids.length <= 0) {
+    alert('¡Debes seleccionar cobros pendientes de confirmar!');
     return false;
+  } else {
+    $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
+    $("#bank-to-pending-bills-selected").html(cp_ids.length);
+    $("#bank-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
   }
 });
 
@@ -136,6 +142,8 @@ $(".btn-cash").click(function (e) {
     alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
     return false;
   }
+  $("#client_payment_amount").val(0);
+  $("#client_payment_payment_method_id").select2("val", 0);
 });
 
 $(".btn-bank").click(function (e) {
@@ -144,6 +152,7 @@ $(".btn-bank").click(function (e) {
     alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
     return false;
   }
+  $("#client_payment_bank_receipt_no").val("");
 });
 
 $(".btn-fractionated").click(function (e) {
@@ -152,6 +161,20 @@ $(".btn-fractionated").click(function (e) {
     alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
     return false;
   }
+  $("#instalment_number_inst").val(1);
+  $("#instalment_amount_first").val(0);
+  $("#instalment_charge").val(0);
+  $("#instalment_payment_method_id").select2("val", 0);
+});
+
+$(".btn-others").click(function (e) {
+  ids = $("#client_payment_other_invoices_ids").val();
+  if (ids == null || ids == '') {
+    alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+    return false;
+  }
+  $("#client_payment_other_amount").val(0);
+  $("#client_payment_other_payment_method_id").select2("val", 0);
 });
 
 /* modal_cash form.client_payment: Check required values before submit */

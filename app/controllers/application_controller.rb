@@ -812,6 +812,32 @@ end
     code
   end
 
+  # Instalment plan no
+  def instalment_plan_next_no(client)
+    year = Time.new.year
+    code = ''
+    # Builds code, if possible
+    client_code = Client.find(client).client_code rescue '$'
+    if client_code == '$'
+      code = '$err'
+    else
+      client = client_code.rjust(11, '0')
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = InstalmentPlan.where("instalment_no LIKE ?", "#{client}#{year}%").order(:instalment_no).maximum(:instalment_no)
+      if last_no.nil?
+        code = client + year + '0000001'
+      else
+        last_no = last_no[16..22].to_i + 1
+        code = client + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
+  end
+
+  #
+  # For readings
+  #
   def set_reading_1_to_reading(subscriber,meter,billing_period)
     reading = meter.readings.where(reading_type_id: ReadingType::INSTALACION, billing_period_id: billing_period.id ,subscriber_id: subscriber.id).order(:reading_date).last
     if !reading.blank?

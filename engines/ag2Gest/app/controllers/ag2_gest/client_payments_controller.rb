@@ -65,11 +65,13 @@ module Ag2Gest
     end
 
     def others
-      invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
-      amount = BigDecimal.new(params[:client_payment][:amount])
-      payment_method = params[:client_payment][:payment_method_id]
+      invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      amount = BigDecimal.new(params[:client_payment_other][:amount])
+      payment_method = params[:client_payment_other][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
       acu = amount
+      # Receipt No.
+      receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
       invoices.each do |i|
         if acu > 0
           if acu >= i.debt
@@ -83,8 +85,8 @@ module Ag2Gest
             confirmation_date = nil
             invoice_status = InvoiceStatus::PENDING
           end
-          client_payment = ClientPayment.new(receipt_no: nil, payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
-                               payment_method_id: payment_method, client_id: i.bill.subscriber.client_id, subscriber_id: i.bill.subscriber_id,
+          client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
+                               payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
           if client_payment.save
@@ -128,23 +130,63 @@ module Ag2Gest
       redirect_to client_payments_path
     end
 
-    def fractionated
-      invoices = Invoice.find_all_by_id(params[:instalment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
-      bill = invoices.first.bill
+    # Must fractionate invoices from the same client!!
+    def fractionate
+      # invoices = Invoice.find_all_by_id().sort {|a, b| b[:created_at] <=> a[:created_at]}
+      # Params
+      invoice_ids = params[:instalment][:invoices_ids].split(",")
+      number_quotas = params[:instalment][:number_inst].to_i
+      amount_first = params[:instalment][:amount_first].to_d
       charge = params[:instalment][:charge].to_d
       payment_method_id = params[:instalment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
-      number_quotas = params[:instalment][:number_inst].to_i
+
+      # Check that all invoices are from the same client
+      clients = Client.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('clients.id').group('clients.id').to_a
+      if clients.count > 1
+        redirect_to client_payments_path, alert: "Imposible aplazar facturas de varios clientes a la vez."
+      end
+      client_id = clients.first.id
+
+      # Check that all invoices are from the same subscriber
+      subscribers = Subscriber.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('subscribers.id').group('subscribers.id').to_a
+      if subscribers.count > 1
+        subscriber_id = nil
+      else
+        subscriber_id = subscribers.first.id
+      end
+
+      # Initialize invoices dataset
+      invoices = Invoice.where(id: invoice_ids).joins(:bill) \
+                        .select('invoices.id, invoices.bill_id, invoices.receivables, bills.client_id, bills.subscriber_id') \
+                        .order('invoices.created_at')
+
+      # Calcs
+      invoice_debts = invoices.sum(&:debt)
+      invoice_debts_surcharge = invoice_debts * (charge / 100)
+      each_instalment_amount = (invoice_debts / number_quotas).round(4)
+      each_instalment_surcharge = (invoice_debts_surcharge / number_quotas).round(4)
+
+      invoices.each do |i|
+        i.debt
+      end
+
+      # Calcs
       pct_plus = invoices.sum(&:debt) * (charge/100)
       quota_total = invoices.sum(&:debt) + pct_plus
       single_quota = (quota_total / number_quotas).round(4)
-      plan = InstalmentPlan.create( instalment_no: "000000000000-000",
+      # Instalment plan No.
+      client_id = invoices.first.client.id
+      instalment_no = instalment_plan_next_no(client_id) || '0000000000000000000000'
+
+      bill = invoices.first.bill
+      plan = InstalmentPlan.create( instalment_no: instalment_no,
                       instalment_date: Date.today,
                       payment_method_id: payment_method_id,
-                      client_id: bill.subscriber.client_id,
+                      client_id: bill.client_id,
                       subscriber_id: bill.subscriber_id,
                       surcharge_pct: charge)
-      (1..number_quotas).to_a.each do |q|
+      (1..number_quotas).each do |q|
         Instalment.create( instalment_plan_id: plan.id,
                     bill_id: bill.id,
                     invoice_id: nil,
@@ -154,24 +196,28 @@ module Ag2Gest
                     surcharge: (charge / number_quotas) )
       end
       invoices.each do |i|
-        i.invoice_status_id = 5
+        i.invoice_status_id = InvoiceStatus::FRACTIONATED
         i.save
       end
       redirect_to client_payments_path
+    rescue
+      redirect_to client_payments_path, alert: "¡Error! Imposible aplazar deuda."
     end
 
-    def instalment
+    def charge_instalment
       instalment_ids = params[:payment_fractionated][:ids].split(",")
       instalments = Instalment.where(id: instalment_ids)
+      # Receipt No.
+      receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
       instalments.each do |instalment|
         bill = instalment.bill
         instalment_plan = instalment.instalment_plan
-        client_payment = ClientPayment.new(receipt_no: "000-0000-0000", payment_type: 3, bill_id: bill.id, invoice_id: nil,
-                             payment_method_id: instalment_plan.payment_method_id, client_id: bill.subscriber.client_id, subscriber_id: bill.subscriber_id,
+        client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::FRACTIONATED, bill_id: bill.id, invoice_id: i.invoice.id,
+                             payment_method_id: instalment_plan.payment_method_id, client_id: bill.client_id, subscriber_id: bill.subscriber_id,
                              payment_date: Time.now, confirmation_date: Time.now, amount: instalment.amount, instalment_id: instalment.id,
-                             client_bank_account_id: nil, charge_account_id: nil)
+                             client_bank_account_id: nil, charge_account_id: i.invoice.charge_account_id)
         if client_payment.save
-          if  instalment_plan.instalments.count == instalment_plan.instalments.map(&:client_payment).compact.count
+          if instalment_plan.instalments.count == instalment_plan.instalments.map(&:client_payment).compact.count
             bill.invoices.each do |i|
               i.invoice_status_id = 99
               i.save
@@ -179,7 +225,9 @@ module Ag2Gest
           end
         end
       end
-      redirect_to client_payments_path, notice: "Cobro realizado correctamente"
+      redirect_to client_payments_path, notice: "Plazo/s cobrado/s correctamente."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error! Imposible cobrar plazo/s."
     end
 
     def close_cash
@@ -549,14 +597,16 @@ module Ag2Gest
         # Return no results
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
+        @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
+        @instalments = Instalment.search { with :client_id, -1 }.results
       else
         @bills_pending = search_pending.results
         @bills_charged = search_charged.results
+        @client_payments_others = search_others.results
+        @instalments = search_instalment.results
       end
       @client_payments_cash = search_cash.results
       @client_payments_bank = search_bank.results
-      @client_payments_others = search_others.results
-      @instalments = search_instalment.results
 
       # Initialize totals
       bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'

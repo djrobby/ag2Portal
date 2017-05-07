@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  instalment: 
+  bill: 
+  invoice: 
+  debt: 9.99
+  amount: 9.99
+
+two:
+  instalment: 
+  bill: 
+  invoice: 
+  debt: 9.99
+  amount: 9.99

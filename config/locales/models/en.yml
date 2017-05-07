@@ -169,6 +169,18 @@ en:
               dc_invalid: "invalid (must be two numeric digits)"
             account_no:
               code_invalid: "invalid (must be twelve numeric digits)"
+        bill:
+          attributes:
+            bill_no:
+              code_invalid: "invalid"
+        invoice:
+          attributes:
+            invoice_no:
+              code_invalid: "invalid"
+        instalment_plan:
+          attributes:
+            instalment_no:
+              code_invalid: "invalid"
         contracting_request:
           invalid_search_string: "Invalid search criteria."
           service_point_not_found: "No service points were found with this criteria."

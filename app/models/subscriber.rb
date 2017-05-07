@@ -32,6 +32,7 @@ class Subscriber < ActiveRecord::Base
   has_many :pre_readings
   has_many :pre_bills
   has_many :bills
+  has_many :invoices, through: :bills
   has_many :client_payments
   has_many :subscriber_tariffs
   has_many :tariffs, through: :subscriber_tariffs

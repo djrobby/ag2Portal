@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170425120224) do
+ActiveRecord::Schema.define(:version => 20170507094332) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1418,6 +1418,20 @@ ActiveRecord::Schema.define(:version => 20170425120224) do
   add_index "infrastructures", ["organization_id", "code"], :name => "index_infraestructure_unique", :unique => true
   add_index "infrastructures", ["organization_id"], :name => "index_infrastructures_on_organization_id"
 
+  create_table "instalment_invoices", :force => true do |t|
+    t.integer  "instalment_id"
+    t.integer  "bill_id"
+    t.integer  "invoice_id"
+    t.decimal  "debt",          :precision => 10, :scale => 0
+    t.decimal  "amount",        :precision => 10, :scale => 0
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+  end
+
+  add_index "instalment_invoices", ["bill_id"], :name => "index_instalment_invoices_on_bill_id"
+  add_index "instalment_invoices", ["instalment_id"], :name => "index_instalment_invoices_on_instalment_id"
+  add_index "instalment_invoices", ["invoice_id"], :name => "index_instalment_invoices_on_invoice_id"
+
   create_table "instalment_plans", :force => true do |t|
     t.string   "instalment_no"
     t.date     "instalment_date"
@@ -1429,11 +1443,13 @@ ActiveRecord::Schema.define(:version => 20170425120224) do
     t.datetime "updated_at",                                                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "organization_id"
   end
 
   add_index "instalment_plans", ["client_id"], :name => "index_instalment_plans_on_client_id"
   add_index "instalment_plans", ["instalment_date"], :name => "index_instalment_plans_on_instalment_date"
   add_index "instalment_plans", ["instalment_no"], :name => "index_instalment_plans_on_instalment_no"
+  add_index "instalment_plans", ["organization_id"], :name => "index_instalment_plans_on_organization_id"
   add_index "instalment_plans", ["payment_method_id"], :name => "index_instalment_plans_on_payment_method_id"
   add_index "instalment_plans", ["subscriber_id"], :name => "index_instalment_plans_on_subscriber_id"
 

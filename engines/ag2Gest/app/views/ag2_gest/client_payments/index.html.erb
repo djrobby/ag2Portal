@@ -544,9 +544,10 @@
     <%= render 'modal_instalment' %>
 
     <!-- Close Cash (modal) -->
-    <div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
+    <div id="modal-close-cash" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
       <div class="modal-header">
-        <h3><%= t "ag2_gest.client_payments.index.cash_closing" %></h3>
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h4><%= t "ag2_gest.client_payments.index.cash_closing" %></h4>
       </div>
       <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
@@ -581,9 +582,10 @@
     </div><!-- Close Cash -->
 
     <!-- Cash To Pending (modal) -->
-    <div id="modal-cash-to-pending" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+    <div id="modal-cash-to-pending" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
       <div class="modal-header">
-        <h3><%= t "ag2_gest.client_payments.index.back_to_pending" %></h3>
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h4><%= t "ag2_gest.client_payments.index.back_to_pending" %></h4>
       </div>
       <%= simple_form_for :cash_to_pending, url: cash_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
@@ -603,8 +605,9 @@
     </div><!-- Cash To Pending -->
 
     <!-- Bank Confirmation (modal) -->
-    <div id="modal-bank-confirm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBanco" aria-hidden="true">
+    <div id="modal-bank-confirm" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBanco" aria-hidden="true">
       <div class="modal-header">
+        <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.bank_confirm" %></h4>
       </div>
       <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
@@ -632,17 +635,24 @@
     </div><!-- Modal Close Cash -->
 
     <!-- Bank To Pending (modal) -->
-    <div id="modal-bank-to-pending" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+    <div id="modal-bank-to-pending" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
       <div class="modal-header">
-        <h3><%= t "ag2_gest.client_payments.index.back_to_pending" %></h3>
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h4><%= t "ag2_gest.client_payments.index.back_to_pending" %></h4>
       </div>
       <%= simple_form_for :bank_to_pending, url: bank_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-to-pending-bills-selected"><%= @bank_totals.payments %></span>
+            </div>
+          </div>
+          <div class="control-group string required">
             <label class="string control-label">Total a devolver</label>
             <div class="controls highlighted bolded">
-              <span id="total-bank-to-pending"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+              <span id="bank-to-pending-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
         </div>
@@ -747,11 +757,25 @@
 
   $("#bank-to-pending").click(function(){
     var cp_ids = [];
+    var cp_amount = 0.0;
     $('#bank-table tr').each(function() {
-      id = $(this).find('td.cp-id').text();
-      if (id != null && id != '') cp_ids.push(id);
-    });  
-    $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cpb-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros pendientes de confirmar!');
+      return false;
+    } else {
+      $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
+      $("#bank-to-pending-bills-selected").html(cp_ids.length);
+      $("#bank-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    }
   });
 
   $(".checkbox-master").click(function () {
