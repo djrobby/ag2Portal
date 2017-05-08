@@ -166,8 +166,15 @@ module Ag2Gest
 
       # Calcs
       invoice_debts = 0
+      amount_first_surcharge = 0
       invoice_debts = invoices.each { |i| invoice_debts += i.debts }
       invoice_debts_surcharge = invoice_debts * (charge / 100)
+      if amount_first > 0
+        number_quotas -= 1
+        amount_first_surcharge = (amount_first * (charge / 100)).round(4)
+        invoice_debts -= amount_first
+        invoice_debts_surcharge -= amount_first_surcharge
+      end
       each_instalment_amount = (invoice_debts / number_quotas).round(4)
       each_instalment_surcharge = (invoice_debts_surcharge / number_quotas).round(4)
 
@@ -175,60 +182,79 @@ module Ag2Gest
       client_id = invoices.first.client.id
       instalment_no = instalment_plan_next_no(client_id) || '0000000000000000000000'
 
-      # Create plan
-      plan = InstalmentPlan.create( instalment_no: instalment_no,
-                                    instalment_date: Date.today,
-                                    payment_method_id: payment_method_id,
-                                    client_id: client_id,
-                                    subscriber_id: subscriber_id,
-                                    surcharge_pct: charge,
-                                    created_by: created_by,
-                                    organization_id: organization_id )
-      # Create instalments
-      (1..number_quotas).each do |q|
-        Instalment.create( instalment_plan_id: plan.id,
-                            instalment: q,
-                            payday_limit: Date.today + q.month,
-                            amount: each_instalment_amount,
-                            surcharge: each_instalment_surcharge,
-                            created_by: created_by )
-      end
-      # Create deferred invoices
-      i = 0
-      instalment_id = 0
-      instalment_balance = 0
-      invoice = []
-      amount = 0
-      debt = 0
-      new_debt = 0
-      plan.instalments.each do |q|
-        instalment_id = q.id
-        instalment_balance = q.amount
-        # Loop thru invoices
-        while instalment_balance > 0.0001
-          invoice = invoices[i]
-          debt = new_debt > 0 ? new_debt : invoice.debts
-          amount = debt > instalment_balance ? instalment_balance : debt
-          new_debt = (debt - amount).round(4)
-          instalment_balance = (instalment_balance - amount).round(4)
-          InstalmentInvoice.create( instalment_id: instalment_id,
-                                    bill_id: invoice.bill_id,
-                                    invoice_id: invoice.id,
-                                    debt: debt,
-                                    amount: amount )
-          i += 1 if new_debt <= 0.0001
-        end
-      end
+      # Begin the creation transaction
+      begin
+        ActiveRecord::Base.transaction do
+          ### Create plan ###
+          plan = InstalmentPlan.create( instalment_no: instalment_no,
+                                        instalment_date: Date.today,
+                                        payment_method_id: payment_method_id,
+                                        client_id: client_id,
+                                        subscriber_id: subscriber_id,
+                                        surcharge_pct: charge,
+                                        created_by: created_by,
+                                        organization_id: organization_id )
+          ### Create instalments ###
+          # Instalment 0
+          if amount_first > 0
+            Instalment.create( instalment_plan_id: plan.id,
+                                instalment: 0,
+                                payday_limit: Date.today,
+                                amount: amount_first,
+                                surcharge: amount_first_surcharge,
+                                created_by: created_by )
+          end
+          # Next instalments
+          (1..number_quotas).each do |q|
+            Instalment.create( instalment_plan_id: plan.id,
+                                instalment: q,
+                                payday_limit: Date.today + q.month,
+                                amount: each_instalment_amount,
+                                surcharge: each_instalment_surcharge,
+                                created_by: created_by )
+          end
+          ### Create deferred invoices ###
+          i = 0
+          instalment_id = 0
+          instalment_balance = 0
+          invoice = []
+          amount = 0
+          debt = 0
+          new_debt = 0
+          plan.instalments.each do |q|
+            instalment_id = q.id
+            instalment_balance = q.amount
+            # Loop thru invoices
+            while instalment_balance > 0.0001
+              invoice = invoices[i]
+              debt = new_debt > 0 ? new_debt : invoice.debts
+              amount = debt > instalment_balance ? instalment_balance : debt
+              new_debt = (debt - amount).round(4)
+              instalment_balance = (instalment_balance - amount).round(4)
+              InstalmentInvoice.create( instalment_id: instalment_id,
+                                        bill_id: invoice.bill_id,
+                                        invoice_id: invoice.id,
+                                        debt: debt,
+                                        amount: amount )
+              i += 1 if new_debt <= 0.0001
+            end
+          end
 
-      # Update invoice statuses
-      invoices.each do |i|
-        i.invoice_status_id = InvoiceStatus::FRACTIONATED
-        i.save
-      end
+          # Update invoice statuses
+          invoices.each do |j|
+            j.invoice_status_id = InvoiceStatus::FRACTIONATED
+            j.save
+          end
 
-      redirect_to client_payments_path
+          redirect_to client_payments_path
+        end # ActiveRecord::Base.transaction
+      rescue ActiveRecord::RecordInvalid
+        redirect_to client_payments_path, alert: I18n.t(:transaction_error, var: "fractionate") and return
+      end # begin
+
+    # Generic method rescue
     rescue
-      redirect_to client_payments_path, alert: "¡Error! Imposible aplazar deuda."
+      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.fractionate_error')
     end
 
     def charge_instalment
@@ -572,7 +598,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
-      search_instalment = Instalment.search do
+      search_instalment = InstalmentInvoice.search do
         with :client_payment, nil
         if !current_projects.blank?
           with :project_id, current_projects
@@ -614,7 +640,7 @@ module Ag2Gest
         if !period.blank?
           with :billing_period_id, period
         end
-        data_accessor_for(Instalment).include = [:bill, {instalment_plan: [:client, :subscriber, :payment_method]}, {invoice: {invoice_items: :tax_type}}]
+        data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -625,7 +651,7 @@ module Ag2Gest
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
-        @instalments = Instalment.search { with :client_id, -1 }.results
+        @instalments = InstalmentInvoice.search { with :client_id, -1 }.results
       else
         @bills_pending = search_pending.results
         @bills_charged = search_charged.results
@@ -651,7 +677,7 @@ module Ag2Gest
       @cash_totals = ClientPayment.select(payments_select).where(id: cash_ids).first
       @bank_totals = ClientPayment.select(payments_select).where(id: bank_ids).first
       @others_totals = ClientPayment.select(payments_select).where(id: others_ids).first
-      @instalments_totals = Instalment.select(payments_select).where(id: instalments_ids).first
+      @instalments_totals = InstalmentInvoice.select(payments_select).where(id: instalments_ids).first
 
       respond_to do |format|
         format.html # index.html.erb

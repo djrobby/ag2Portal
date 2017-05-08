@@ -78,6 +78,7 @@ es:
   reindex_error: "¡Tu solicitud de reindexado (%{var}) ha finalizado con error!"
   reindex_ok: "Tu solicitud de reindexado ha finalizado correctamente."
   reindex_empty: "Tu solicitud de reindexado no pudo ser procesada."
+  transaction_error: "<b>¡Oh oh!</b> Hemos intentado realizar una operación no válida (%{var})."
   receive_meters: "Contadores"
   record: "registro"
   records: "registros"

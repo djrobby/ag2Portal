@@ -10,10 +10,6 @@ class Instalment < ActiveRecord::Base
   has_many :bills, through: :instalment_invoices
   has_many :invoices, through: :instalment_invoices
 
-  # validates :code,  :presence => true
-  # validates :name,  :presence => true
-  # validates :type,  :presence => true
-
   # Callbacks
   before_destroy :check_for_dependent_records
 
@@ -83,9 +79,9 @@ class Instalment < ActiveRecord::Base
   private
 
   def check_for_dependent_records
-    # Check for client payments
-    if client_payments.count > 0
-      errors.add(:base, I18n.t('activerecord.models.supplier.check_for_client_payments'))
+    # Check for client payment
+    if client_payment
+      errors.add(:base, I18n.t('activerecord.models.instalment.check_for_client_payments'))
       return false
     end
   end

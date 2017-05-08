@@ -58,3 +58,4 @@ es:
         total_bill_payment: "Recibos Cobrados"
       back_to_main_page: "Volver a Cobros"
       generate_error_payment: "¡Oh oh!... No has seleccionado la forma de pago."
+      fractionate_error: "<b>Oops!</b> Imposible aplazar deuda."

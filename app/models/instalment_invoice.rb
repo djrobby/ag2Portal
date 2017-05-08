@@ -4,6 +4,9 @@ class InstalmentInvoice < ActiveRecord::Base
   belongs_to :invoice
   attr_accessible :amount, :debt, :instalment_id, :bill_id, :invoice_id
 
+  validates :bill,    :presence => true
+  validates :invoice, :presence => true
+
   searchable do
     string :bill_no, :multiple => true do   # Multiple search values accepted in one search (inverse_no_search)
       bill.bill_no unless bill.blank?

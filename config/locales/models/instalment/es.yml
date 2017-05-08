@@ -11,7 +11,7 @@ es:
       instalment:
         instalment_plan: "Aplazamiento"
         instalment_plan_id: "Aplazamiento"
-        instalment: "Nº Plazo"
+        instalment: "Plazo"
         bill_id: "Recibo"
         invoice_id: "Factura"
         payday_limit: "F.Límite Pago"

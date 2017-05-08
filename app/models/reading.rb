@@ -330,7 +330,7 @@ class Reading < ActiveRecord::Base
     end # bill_id.blank?
 
   rescue ActiveRecord::RecordInvalid
-    puts "Oops! We tried to do an invalid operation (generate_bill)."
+    puts I18n.t(:transaction_error, var: "generate_bill")
   end
 
   #
@@ -1077,6 +1077,6 @@ class Reading < ActiveRecord::Base
     return pre_bill
 
   rescue ActiveRecord::RecordInvalid
-    puts "Oops! We tried to do an invalid operation (create_pre_bill)."
+    puts I18n.t(:transaction_error, var: "create_pre_bill")
   end
 end

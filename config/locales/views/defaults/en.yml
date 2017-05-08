@@ -78,6 +78,7 @@ en:
   reindex_error: "Your reindex request (%{var}) ended with error!"
   reindex_ok: "Your reindex request completed successfully."
   reindex_empty: "Your reindex request could not be processed."
+  transaction_error: "<b>Oops!</b> Your We tried to do an invalid operation (%{var})."
   receive_meters: "Meters"
   record: "record"
   records: "records"
