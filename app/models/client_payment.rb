@@ -31,6 +31,10 @@ class ClientPayment < ActiveRecord::Base
     receipt_no.blank? ? "" : receipt_no[0.1] + '-' + receipt_no[2..5] + '-' + receipt_no[6..9]
   end
 
+  def instalment_invoices
+    instalment.instalment_invoices if instalment
+  end
+
   searchable do
     text :receipt_no
     integer :payment_type
@@ -74,6 +78,6 @@ class ClientPayment < ActiveRecord::Base
   private
 
   def reindex_instalment
-    Sunspot.index(instalment) if instalment
+    Sunspot.index(instalment_invoices) if instalment
   end
 end

@@ -35,17 +35,30 @@ class InstalmentPlan < ActiveRecord::Base
   end
 
   def subtotal
+    instalments.sum(:amount)
   end
 
   def surcharges
+    instalments.sum(:surcharge)
   end
 
   def total
+    subtotal + surcharges
   end
 
-  def collected
+  def amount_collected
+    instalments.sum(&:amount_collected)
+  end
+
+  def surcharge_collected
+    instalments.sum(&:surcharge_collected)
+  end
+
+  def surcharge_collected
+    amount_collected + surcharge_collected
   end
 
   def debt
+    total - collected
   end
 end

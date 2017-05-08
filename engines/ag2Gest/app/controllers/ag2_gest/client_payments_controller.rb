@@ -186,45 +186,46 @@ module Ag2Gest
                                     organization_id: organization_id )
       # Create instalments
       (1..number_quotas).each do |q|
-        instalment = Instalment.create( instalment_plan_id: plan.id,
-                                        instalment: q,
-                                        payday_limit: Date.today + q.month,
-                                        amount: each_instalment_amount,
-                                        surcharge: each_instalment_surcharge,
-                                        created_by: created_by )
-        # Create depending invoices
-      end
-
-
-      invoices.each do |i|
-        i.debt
-      end
-
-      # Calcs
-      pct_plus = invoices.sum(&:debt) * (charge/100)
-      quota_total = invoices.sum(&:debt) + pct_plus
-      single_quota = (quota_total / number_quotas).round(4)
-
-      bill = invoices.first.bill
-      plan = InstalmentPlan.create( instalment_no: instalment_no,
-                      instalment_date: Date.today,
-                      payment_method_id: payment_method_id,
-                      client_id: bill.client_id,
-                      subscriber_id: bill.subscriber_id,
-                      surcharge_pct: charge)
-      (1..number_quotas).each do |q|
         Instalment.create( instalment_plan_id: plan.id,
-                    bill_id: bill.id,
-                    invoice_id: nil,
-                    instalment: q,
-                    payday_limit: Date.today + q.month,
-                    amount: single_quota,
-                    surcharge: (charge / number_quotas) )
+                            instalment: q,
+                            payday_limit: Date.today + q.month,
+                            amount: each_instalment_amount,
+                            surcharge: each_instalment_surcharge,
+                            created_by: created_by )
       end
+      # Create deferred invoices
+      i = 0
+      instalment_id = 0
+      instalment_balance = 0
+      invoice = []
+      amount = 0
+      debt = 0
+      new_debt = 0
+      plan.instalments.each do |q|
+        instalment_id = q.id
+        instalment_balance = q.amount
+        # Loop thru invoices
+        while instalment_balance > 0.0001
+          invoice = invoices[i]
+          debt = new_debt > 0 ? new_debt : invoice.debts
+          amount = debt > instalment_balance ? instalment_balance : debt
+          new_debt = (debt - amount).round(4)
+          instalment_balance = (instalment_balance - amount).round(4)
+          InstalmentInvoice.create( instalment_id: instalment_id,
+                                    bill_id: invoice.bill_id,
+                                    invoice_id: invoice.id,
+                                    debt: debt,
+                                    amount: amount )
+          i += 1 if new_debt <= 0.0001
+        end
+      end
+
+      # Update invoice statuses
       invoices.each do |i|
         i.invoice_status_id = InvoiceStatus::FRACTIONATED
         i.save
       end
+
       redirect_to client_payments_path
     rescue
       redirect_to client_payments_path, alert: "¡Error! Imposible aplazar deuda."
