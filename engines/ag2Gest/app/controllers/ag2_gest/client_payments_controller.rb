@@ -10,7 +10,17 @@ module Ag2Gest
     skip_load_and_authorize_resource :only => [:cp_remove_filters,
                                                :cp_restore_filters,
                                                :cp_format_number,
-                                               :cp_format_number_4]
+                                               :cp_format_number_4,
+                                               :cash,
+                                               :others,
+                                               :collection_payment_methods,
+                                               :banks,
+                                               :fractionate,
+                                               :charge_instalment,
+                                               :close_cash,
+                                               :cash_to_pending,
+                                               :confirm_bank,
+                                               :bank_to_pending]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters

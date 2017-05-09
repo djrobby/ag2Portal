@@ -147,7 +147,7 @@ class ApplicationController < ActionController::Base
 
   def zone_approver(ivar, zone, current_user_id)
     table = ivar.class.table_name
-    notifications = zone.zone_notifications.joins(:notification).where('notifications.table = ? AND office_notifications.role = ? AND office_notifications.user_id = ?', table, 1, current_user_id) rescue nil
+    notifications = zone.zone_notifications.joins(:notification).where('notifications.table = ? AND zone_notifications.role = ? AND zone_notifications.user_id = ?', table, 1, current_user_id) rescue nil
     !notifications.blank?
   end
 
