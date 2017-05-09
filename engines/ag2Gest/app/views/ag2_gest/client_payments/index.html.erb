@@ -401,16 +401,38 @@
     background-color: #FDE3A7;
   }
   .pendings {
-    padding-bottom: 38px !important;
+    padding-bottom: 30px !important;
   }
   #cash, #banks, #others ,#fractionated{
     background-color: #FFCCBC;
   }
   #cashier {
     position: fixed;
-    bottom: 0;
-    height: 80px;
+    height: 104px;
     width: 810px;
+    bottom: 0;
+    margin-bottom: 0;
+    padding: 14px 15px 15px;
+    text-align: left;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    overflow-y: auto;
+    -webkit-border-radius: 0 0 6px 6px;
+       -moz-border-radius: 0 0 6px 6px;
+            border-radius: 0 0 6px 6px;
+    *zoom: 1;
+    -webkit-box-shadow: inset 0 1px 0 #ffffff;
+       -moz-box-shadow: inset 0 1px 0 #ffffff;
+            box-shadow: inset 0 1px 0 #ffffff;
+  }
+
+  #cashier .button-top {
+    vertical-align: top !important;
+    text-align: right;
+  }
+
+  #cashier .text-middle {
+    vertical-align: text-top !important;
   }
 </style>
 
@@ -492,9 +514,62 @@
           <div id="pendings" class="pendings tab-pane active">
             <%= render 'bills_pendings' %>
           </div>
-          <div id="cashier" class="modal-footer">
-            Future Cash payment (replacing modal)
-            <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+          <div id="cashier">
+            <%= simple_form_for :client_payment, url: cash_client_payments_path, method: :post, :html => { class: 'cash-form' } do |f| %>
+              <%= f.input :invoices_ids, :as => :hidden %>
+              <table style="width: 100%;">
+                <!-- debt -->
+                <col width="15%" />
+                <!-- amount -->
+                <col width="30%" />
+                <!-- separator -->
+                <!-- <col width="1%" /> -->
+                <!-- payment method -->
+                <col width="30%" />
+                <!-- cash return -->
+                <col width="15%" />
+                <!-- button -->
+                <col width="10%" />
+                <thead>
+                  <tr>
+                    <td><label class="form-label"><%= t('activerecord.attributes.client_payment.to_collect') %></label></td>
+                    <td align="center"><label class="form-label"><%= t('activerecord.attributes.client_payment.amount') %></label></td>
+                    <!-- <td></td> -->
+                    <td align="center"><label class="form-label"><%= t('activerecord.attributes.client_payment.payment_method_id') %></label></td>
+                    <td align="right"><label class="form-label"><%= t('activerecord.attributes.client_payment.change') %></label></td>
+                    <td align="right"></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-middle">
+                      <div class="control-group string required">
+                        <div class="controls string required highlighted bolded">
+                          <span class="debt-total">0,0000</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td align="center">
+                      <%= f.input :amount, required: true, label: false, as: :decimal, input_html: { class: 'number-text-field' } %>
+                    </td>
+                    <!-- <td></td> -->
+                    <td align="center">
+                      <%= f.input :payment_method_id, required: true, label: false, collection: @payment_methods %>
+                    </td>
+                    <td align="right" class="text-middle">
+                      <div class="control-group string required">
+                        <div class="controls highlighted bolded">
+                          <span class="cash-return">0,0000</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td align="right" class="button-top">
+                      <%= f.button :submit, t('ag2_gest.client_payments.index.cash'), :class => 'btn btn-primary', id: 'btn-submit-modal-cash' %>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            <% end %>
           </div>
 
           <!-- UNPAID TAB -->
