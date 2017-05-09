@@ -336,7 +336,7 @@ end
 				end
 			end
 
-			date_tariff = !item.tariff.ending_at.blank? ? I18n.t("activerecord.attributes.bill.label_to") + " " + item.tariff.ending_at.strftime(_format) : I18n.t("activerecord.attributes.bill.label_from") + " " + item.tariff.starting_at.strftime(_format)
+			date_tariff = !item.tariff.ending_at.blank? ? I18n.t("activerecord.attributes.bill.label_to") + " " + item.tariff.ending_at.strftime(_format) : I18n.t("activerecord.attributes.bill.label_from") + " " + item.tariff.starting_at.strftime(_format) unless item.tariff.blank?
 
       # _array:
       # [0] Tariff reference number

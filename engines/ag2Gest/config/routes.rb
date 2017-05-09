@@ -398,7 +398,7 @@ Ag2Gest::Engine.routes.draw do
     resources :invoice_statuses
     resources :invoice_operations
     resources :commercial_billings do
-      get 'invoice_form', on: :collection
+      get 'invoice_form', on: :member
     end
     resources :bills_to_files
     #
