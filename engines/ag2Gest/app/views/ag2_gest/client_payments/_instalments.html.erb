@@ -1,43 +1,125 @@
 <div class="row-fluid">
   <b>
-  <div class="span6"><h5><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>: <%= @instalments_totals.payments %></h5></div>
-  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@instalments_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  <div class="span4"><h5><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>: <%= @plans_totals.plans %></h5></div>
+  <div class="span4" align="center"><h5><%= I18n.t("activerecord.attributes.instalment_plan.instalments_qty") %>: <%= @instalments_totals.payments %></h5></div>
+  <div class="span4" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@instalments_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
   </b>
 </div>
 
+<% if !@instalments.blank? %>
 <%= simple_form_for :payment_fractionated, url: charge_instalment_client_payments_path, method: :post do |f|  %>
   <%= f.input :ids, :as => :hidden %>
   <%= f.button :submit, I18n.t("ag2_gest.client_payments.index.collect_instalments"), :class => 'btn btn-primary btn-small' %>
 <% end %>
-<table class="table table-condensed table-striped shrinked">
+
+<table class="form-table shrinked" style="margin-top: -10px !important;">
+  <!-- plus -->
+  <col width="8%" />
+  <!-- no -->
+  <col width="20%" />
+  <!-- date -->
+  <col width="9%" />
+  <!-- client -->
+  <col width="23%" />
+  <!-- instalment -->
+  <col width="4%" />
+  <!-- payday limit -->
+  <col width="9%" />
+  <!-- amount -->
+  <col width="9%" />
+  <!-- surcharge -->
+  <col width="9%" />
+  <!-- total -->
+  <col width="9%" />
   <thead>
     <tr>
-      <th><input type="checkbox" class="checkbox-master-table"></th>
-      <th>Factura</th>
-      <th>Abonado</th>
-      <th>Plazo</th>
-      <th>Limite</th>
-      <th>Bonus</th>
-      <th>Total</th>
-      <th></th>
+      <th align="left"><input type="checkbox" class="checkbox-master-table" id="instalments-checkbox-master"></th>
+      <th align="left"><%= t('activerecord.attributes.instalment_plan.instalment_no') %></th>
+      <th align="center"><%= t('activerecord.attributes.instalment_plan.instalment_date') %></th>
+      <th align="left"><%= t('activerecord.attributes.instalment_plan.client_id') %></th>
+      <th align="right"><%= t('activerecord.attributes.instalment.instalment') %></th>
+      <th align="center"><%= t('activerecord.attributes.instalment.payday_limit') %></th>
+      <th align="right"><%= t('activerecord.attributes.instalment.amount') %></th>
+      <th align="right"><%= t('activerecord.attributes.instalment.surcharge') %></th>
+      <th align="right"><%= t('activerecord.attributes.instalment.total') %></th>
     </tr>
   </thead>
-  <tbody>
-    <% @instalments.each do |instalment| %>
-      <tr>
-        <td><%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %></td>
-        <td><%= link_to instalment.bill.try(:full_no), bill_path(instalment.bill) %></td>
-        <td><%= link_to instalment.instalment_plan.subscriber.to_label, subscriber_path(instalment.instalment_plan.subscriber) %></td>
-        <td><%= instalment.instalment %></td>
-        <td><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
-        <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td>
-          <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(instalment.bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
 </table>
 
+<% @instalments.each do |instalment| %>
+  <div class="accordion condensed-accordion">
+    <div class="accordion-group">
+      <div class="accordion-heading row-fluid shrinked">
+        <table class="form-table" id="instalments-table">
+          <!-- plus -->
+          <col width="8%" />
+          <!-- no -->
+          <col width="20%" />
+          <!-- date -->
+          <col width="9%" />
+          <!-- client -->
+          <col width="23%" />
+          <!-- instalment -->
+          <col width="4%" />
+          <!-- payday limit -->
+          <col width="9%" />
+          <!-- amount -->
+          <col width="9%" />
+          <!-- surcharge -->
+          <col width="9%" />
+          <!-- total -->
+          <col width="9%" />
+          <tbody>
+            <td>
+              <%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %>
+              <a class="accor accordion-toggle collapsed pull-right" data-toggle="collapse" data-parent="#accordion2" href="#collapse-instalment-<%= instalment.id %>"><i class='icon-plus'></i></a>
+            </td>
+            <td><%= instalment.instalment_no %></td>
+            <td align="center"><%= formatted_date(instalment.instalment_date) unless instalment.instalment_date.blank? %></td>
+            <td><%= link_to instalment.client.to_name, client_path(instalment.client) %></td>
+            <td align="right"><%= instalment.instalment %></td>
+            <td align="center"><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
+            <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right"><%= number_with_precision(instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          </tbody>
+        </table> <!-- form-table -->
+      </div> <!-- accordion-heading -->
+
+      <div id="collapse-instalment-<%= instalment.id %>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <table class="table table-condensed table-striped">
+          <!-- bill -->
+          <col width="28%" />
+          <!-- invoice -->
+          <col width="22%" />
+          <!-- subscriber -->
+          <col width="40%" />
+          <!-- amount -->
+          <col width="10%" />
+            <thead>
+              <tr>
+                <th><%= t('activerecord.attributes.instalment.bill_id') %></th>
+                <th><%= t('activerecord.attributes.instalment.invoice_id') %></th>
+                <th><%= t('activerecord.attributes.instalment_plan.subscriber_id') %></th>
+                <th align="right"><%= t('activerecord.attributes.instalment.amount') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% instalment.instalment_invoices.order(:id).each do |i| %>
+                <tr>
+                  <td><%= link_to i.bill.try(:full_no), bill_path(i.bill) %></td>
+                  <td><%= link_to i.invoice.try(:full_no), invoice_path(i.invoice) %></td>
+                  <td class="shrinked"><%= link_to i.instalment.instalment_plan.subscriber.to_label, subscriber_path(i.instalment.instalment_plan.subscriber) unless i.instalment.instalment_plan.subscriber.blank? %></td>
+                  <td align="right"><%= number_with_precision(i.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div> <!-- collapse-instalment.id -->
+    </div>
+  </div>
+<% end %> <!-- @instalments.each -->
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @instalments } %>
+<% end %>

@@ -789,4 +789,8 @@
   $(".checkbox-main").click(function () {
     $(".checkbox-slave, .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
   });
+
+  $("#instalments-checkbox-master").click(function () {
+    $(".checkbox-slave").prop('checked', $(this).prop('checked'));
+  });
 </script>

@@ -304,6 +304,10 @@ $(".checkbox-main").click(function () {
   $(".checkbox-slave, .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
 });
 
+$("#instalments-checkbox-master").click(function () {
+  $(".checkbox-slave").prop('checked', $(this).prop('checked'));
+});
+
 $("#client_payment_amount").change(function() {
   amount = parseFloat(this.value) || 0;
   debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;

@@ -3,6 +3,7 @@ class Instalment < ActiveRecord::Base
   # belongs_to :bill
   # belongs_to :invoice
   attr_accessible :amount, :instalment, :payday_limit, :surcharge,
+                  :created_by, :updated_by,
                   :instalment_plan_id#, :bill_id, :invoice_id
 
   has_one :client_payment
@@ -10,8 +11,29 @@ class Instalment < ActiveRecord::Base
   has_many :bills, through: :instalment_invoices
   has_many :invoices, through: :instalment_invoices
 
+  # Scopes
+  scope :by_plan, -> { order(:instalment_plan_id, :instalment) }
+  #
+  scope :with_these_ids, -> ids {
+    includes(:instalment_invoices)
+    .where(id: ids)
+    .by_plan
+  }
+
   # Callbacks
   before_destroy :check_for_dependent_records
+
+  def instalment_no
+    !instalment_plan.nil? ? instalment_plan.full_no : "00000000000-0000-0000000"
+  end
+
+  def instalment_date
+    !instalment_plan.nil? ? instalment_plan.instalment_date : nil
+  end
+
+  def client
+    !instalment_plan.nil? ? instalment_plan.client : nil
+  end
 
   #
   # Calculated fields

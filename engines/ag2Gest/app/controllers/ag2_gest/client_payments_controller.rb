@@ -151,15 +151,14 @@ module Ag2Gest
 
       # Check that all invoices are from the same subscriber
       subscribers = Subscriber.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('subscribers.id').group('subscribers.id').to_a
-      if subscribers.count > 1
-        subscriber_id = nil
-      else
-        subscriber_id = subscribers.first.id
+      subscriber_id = nil
+      if subscribers.count == 1
+        subscriber_id = subscribers.first.id if !subscribers.first.blank?
       end
 
       # Initialize invoices dataset
       invoices = Invoice.where(id: invoice_ids).joins(:bill, 'LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id') \
-                        .select('invoices.id, invoices.bill_id, invoices.receivables, bills.client_id, bills.subscriber_id, invoices.organization_id, COALESCE(sum(client_payments.amount),0) AS payments, invoices.receivables-COALESCE(sum(client_payments.amount),0) AS debts') \
+                        .select('invoices.*, bills.client_id, bills.subscriber_id, COALESCE(sum(client_payments.amount),0) AS payments, invoices.receivables-COALESCE(sum(client_payments.amount),0) AS debts') \
                         .order('invoices.created_at') \
                         .group('invoices.id')
       organization_id = invoices.first.organization_id
@@ -167,7 +166,7 @@ module Ag2Gest
       # Calcs
       invoice_debts = 0
       amount_first_surcharge = 0
-      invoice_debts = invoices.each { |i| invoice_debts += i.debts }
+      invoices.each { |i| invoice_debts += i.debts }
       invoice_debts_surcharge = invoice_debts * (charge / 100)
       if amount_first > 0
         number_quotas -= 1
@@ -246,15 +245,15 @@ module Ag2Gest
             j.save
           end
 
-          redirect_to client_payments_path
+          redirect_to client_payments_path, notice: I18n.t('ag2_gest.client_payments.fractionate_ok', var: instalment_no)
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
         redirect_to client_payments_path, alert: I18n.t(:transaction_error, var: "fractionate") and return
       end # begin
 
     # Generic method rescue
-    rescue
-      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.fractionate_error')
+    # rescue
+    #   redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.fractionate_error')
     end
 
     def charge_instalment
@@ -651,12 +650,12 @@ module Ag2Gest
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
-        @instalments = InstalmentInvoice.search { with :client_id, -1 }.results
+        @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
       else
         @bills_pending = search_pending.results
         @bills_charged = search_charged.results
         @client_payments_others = search_others.results
-        @instalments = search_instalment.results
+        @instalment_invoices = search_instalment.results
       end
       @client_payments_cash = search_cash.results
       @client_payments_bank = search_bank.results
@@ -664,20 +663,27 @@ module Ag2Gest
       # Initialize totals
       bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
       payments_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
+      plans_select = 'count(id) as plans'
 
       pending_ids = @bills_pending.map(&:id)
       charged_ids = @bills_charged.map(&:id)
       cash_ids = @client_payments_cash.map(&:id)
       bank_ids = @client_payments_bank.map(&:id)
       others_ids = @client_payments_others.map(&:id)
-      instalments_ids = @instalments.map(&:id)
+      instalment_invoices_ids = @instalment_invoices.map(&:id)
+      instalment_ids = @instalment_invoices.map(&:instalment_id).uniq
 
       @pending_totals = Bill.select(bills_select).joins(:invoices).where(id: pending_ids).first
       @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
       @cash_totals = ClientPayment.select(payments_select).where(id: cash_ids).first
       @bank_totals = ClientPayment.select(payments_select).where(id: bank_ids).first
       @others_totals = ClientPayment.select(payments_select).where(id: others_ids).first
-      @instalments_totals = InstalmentInvoice.select(payments_select).where(id: instalments_ids).first
+      @instalment_invoices_totals = InstalmentInvoice.select(payments_select).where(id: instalment_invoices_ids).first
+
+      @instalments = Instalment.with_these_ids(instalment_ids).paginate(:page => params[:page], :per_page => per_page || 10)
+      @instalments_totals = @instalments.select(payments_select).first
+      plan_ids = @instalments.map(&:instalment_plan_id).uniq
+      @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
 
       respond_to do |format|
         format.html # index.html.erb

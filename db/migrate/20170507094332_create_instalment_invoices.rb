@@ -4,8 +4,8 @@ class CreateInstalmentInvoices < ActiveRecord::Migration
       t.references :instalment
       t.references :bill
       t.references :invoice
-      t.decimal :debt
-      t.decimal :amount
+      t.decimal :debt, :precision => 13, :scale => 4, :null => false, :default => 0
+      t.decimal :amount, :precision => 13, :scale => 4, :null => false, :default => 0
 
       t.timestamps
     end

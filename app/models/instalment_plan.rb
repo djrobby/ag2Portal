@@ -4,7 +4,8 @@ class InstalmentPlan < ActiveRecord::Base
   belongs_to :subscriber
   belongs_to :organization
   attr_accessible :instalment_date, :instalment_no, :surcharge_pct,
-                  :payment_method_id, :client_id, :subscriber_id, :organization_id
+                  :payment_method_id, :client_id, :subscriber_id, :organization_id,
+                  :created_by, :updated_by
 
   has_many :instalments, dependent: :destroy
   has_many :instalment_invoices, through: :instalments
@@ -17,6 +18,11 @@ class InstalmentPlan < ActiveRecord::Base
   validates :payment_method,  :presence => true
   validates :client,          :presence => true
   validates :organization,    :presence => true
+
+  # Scopes
+  scope :by_no, -> { order(:instalment_no) }
+  #
+  scope :belongs_to_project, -> project { where("project_id = ?", project).by_code }
 
   def full_no
     # Instalment no (Client code & year & sequential number) => CCCCCCCCCCC-YYYY-NNNNNNN
@@ -54,7 +60,7 @@ class InstalmentPlan < ActiveRecord::Base
     instalments.sum(&:surcharge_collected)
   end
 
-  def surcharge_collected
+  def collected
     amount_collected + surcharge_collected
   end
 

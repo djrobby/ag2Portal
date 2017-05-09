@@ -8,7 +8,7 @@ es:
         other: Aplazamientos
     attributes:
       instalment_plan:
-        instalment_no: "Nº Aplazamiento"
+        instalment_no: "Nº Plan"
         instalment_date: "Fecha"
         surcharge_pct: "% Recargo"
         payment_method_id: "Forma de pago"
@@ -18,3 +18,11 @@ es:
         amount_first: "Importe primer plazo"
         organization: "Organización"
         organization_id: "Organización"
+        instalments_qty: "Plazos"
+        subtotal: "Subtotal"
+        surcharges: "Recargos"
+        total: "Total"
+        amount_collected: "Importe cobrado"
+        surcharge_collected: "Recargo cobrado"
+        collected: "Cobrado"
+        debt: "Deuda"

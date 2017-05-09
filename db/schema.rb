@@ -897,6 +897,8 @@ ActiveRecord::Schema.define(:version => 20170507094332) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -1422,10 +1424,10 @@ ActiveRecord::Schema.define(:version => 20170507094332) do
     t.integer  "instalment_id"
     t.integer  "bill_id"
     t.integer  "invoice_id"
-    t.decimal  "debt",          :precision => 10, :scale => 0
-    t.decimal  "amount",        :precision => 10, :scale => 0
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.decimal  "debt",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "amount",        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
   end
 
   add_index "instalment_invoices", ["bill_id"], :name => "index_instalment_invoices_on_bill_id"
