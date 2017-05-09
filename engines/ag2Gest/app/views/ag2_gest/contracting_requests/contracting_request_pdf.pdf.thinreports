@@ -179,7 +179,8 @@ report.page.values(baja_c: I18n.t("ag2_gest.contracting_requests.report.baja_c")
 									 baja_4: I18n.t("activerecord.report.subscriber.ending_at") + ":",
 									 baja_5: I18n.t("ag2_gest.contracting_requests.report.baja_5"),
 									 baja_6: I18n.t("ag2_gest.contracting_requests.report.baja_6"),
-									 baja_7: I18n.t("ag2_gest.contracting_requests.report.baja_7")
+									 baja_7: I18n.t("ag2_gest.contracting_requests.report.baja_7"),
+									 baja_8: I18n.t("ag2_gest.contracting_requests.report.baja_8")
 									 )
 if @contracting_request.contracting_request_type_id == 6
 	date = @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.strftime("%d/%m/%Y") unless @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.blank?

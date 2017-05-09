@@ -113,7 +113,7 @@ class Reading < ActiveRecord::Base
         reading_index - reading_index_1
       else
         # vuelta de contador
-        ((10 ** meter.meter_model.digits) - reading_index_1) + reading_index
+        (((10 ** meter.meter_model.digits)-1) - reading_index_1) + reading_index
       end
     else
       0

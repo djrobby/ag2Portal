@@ -206,6 +206,9 @@ module Ag2Gest
         @reading.reading_index_2 = rdg_2.try(:reading_index)
         @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
         @reading.updated_by = current_user.id if !current_user.nil?
+        if @reading.reading_index < @reading.reading_index_1
+          @reading.reading_incidence_types << ReadingIncidenceType.find(1)
+        end 
 
         respond_to do |format|
           if @reading.save

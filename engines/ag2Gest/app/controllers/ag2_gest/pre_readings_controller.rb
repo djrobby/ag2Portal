@@ -176,8 +176,8 @@ module Ag2Gest
         @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])
       end
       # añdadir incidencia vuelta de contador y no existe. ID 4
-      if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 4
-        @prereading.reading_incidence_types << ReadingIncidenceType.find(4)
+      if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 1
+        @prereading.reading_incidence_types << ReadingIncidenceType.find(1)
       end
       respond_to do |format|
         if @prereading.update_attributes(params[:pre_reading])

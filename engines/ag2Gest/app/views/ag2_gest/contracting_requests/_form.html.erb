@@ -271,8 +271,14 @@
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#contracting_request_request_no').prop('readonly', true);
+      $('#contracting_request_request_date').attr('disabled', true);
+      $('#contracting_request_contracting_request_type_id').prop('readonly', true);
+      $('#contracting_request_project_id').prop('readonly', true);
     } else {
       $('#contracting_request_request_no').prop('readonly', false);
+      $('#contracting_request_request_date').attr('disabled', false);
+      $('#contracting_request_contracting_request_type_id').prop('readonly', false);
+      $('#contracting_request_project_id').prop('readonly', false);
     }
   });
 

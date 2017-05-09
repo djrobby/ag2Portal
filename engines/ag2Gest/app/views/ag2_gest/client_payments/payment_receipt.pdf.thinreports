@@ -100,14 +100,15 @@ end
 
 @payment_receipt.each do |receipt|
 	var_bill_date = receipt.bill.bill_date.strftime(_format) unless receipt.bill.bill_date.blank?
-	if receipt.bill.debt.to_i == 0
+	_debt = number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	if _debt == "0,0000"
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:to_label)
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:debt).value number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value _debt
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
 	else
@@ -117,7 +118,7 @@ end
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:debt).value number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value _debt
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
 				receipt.bill.invoices.each do |invoices|

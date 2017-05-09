@@ -81,6 +81,7 @@ en:
         baja_5: "Se puede proceder al corte del suministro."
         baja_6: "Es necesario proceder al corte en la acera."
         baja_7: "Es necesario romper el pavimento."
+        baja_8: "Imposible suspensión/corte suministro"
         change_1: "Se encuentra en buen estado el contador."
         change_2: "Se encuentra en estado la instalación."
         change_3: "Ultima lectura del contador"

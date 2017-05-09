@@ -123,7 +123,7 @@ jQuery(function($) {
       <%= f.association :tariff_scheme, required: true, :disabled => true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }  %>
       
       <%= f.input :tariff_type_id, :as => :hidden, :input_html => { :value => @water_supply_contract.tariff_type_id } %>
-      <%= f.input :TariffType_, required: true, :disabled => true, input_html: { class: 'x-large-text-field sel2', :value => @tariff_type }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
+      <%= f.input :TariffType_, required: true, :disabled => true, input_html: { class: 'x-large-text-field sel2', :value => @tariff_type }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }, label: t("activerecord.models.tariff_type.zero") %>
 
       <%= f.input :use_id, :as => :hidden, :input_html => { :value => @water_supply_contract.use_id } %>
       <%= f.association :use, :disabled => true, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>

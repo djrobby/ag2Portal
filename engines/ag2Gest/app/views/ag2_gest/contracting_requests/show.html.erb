@@ -22,10 +22,22 @@
   </tbody>
 </table>
 
-<%= render partial: '/layouts/crud/update_delete_new', locals:
+<% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING %>
+
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
+
+<% else %>
+
+  <%= render partial: '/layouts/crud/update_new', locals:
+  { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),
+  new_path: new_contracting_request_path, new_txt: t('.btn_new') } %>
+
+<% end %>
+
+<!-- <#%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),
 delete_path: @contracting_request, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request.one"), txt: @contracting_request.full_name,
-new_path: new_contracting_request_path, new_txt: t('.btn_new') } %>
+new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
 
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
