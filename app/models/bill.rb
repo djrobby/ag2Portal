@@ -55,6 +55,11 @@ class Bill < ActiveRecord::Base
   scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
   scope :contracting, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::CONTRACT}).by_no }
 
+  def to_label
+    full_no
+  end
+
+  # First invoice no. (own service)
   def real_no
     invoices.first.full_no rescue full_no
   end
@@ -92,16 +97,20 @@ class Bill < ActiveRecord::Base
     invoices.first.billing_period.to_label rescue ''
   end
 
+  def billing_period_code
+    invoices.first.billing_period.period rescue ''
+  end
+
   def bill_type
     invoices.first.invoice_type rescue nil
   end
 
-  def subscriber_supply_address
-    subscriber.subscriber_supply_address.supply_address rescue ''
+  def bill_type_id
+    invoices.first.invoice_type.id rescue 0
   end
 
-  def to_label
-    full_no
+  def subscriber_supply_address
+    subscriber.subscriber_supply_address.supply_address rescue ''
   end
 
   def reading
@@ -176,6 +185,14 @@ class Bill < ActiveRecord::Base
     invoices.first.average_billed_consumption[0] || []
   end
 
+  # Payment method used in collection
+  def real_payment_method_name
+    client_payments.last.payment_method.to_label rescue ''
+  end
+  def real_payment_method_code
+    client_payments.last.payment_method.code rescue ''
+  end
+
   # Array of:
   # [0] legend no.
   # [1] concept.code
@@ -217,13 +234,6 @@ class Bill < ActiveRecord::Base
 
   def debt
     invoices.reject(&:marked_for_destruction?).sum(&:debt)
-    # debt = 0
-    # invoices.each do |i|
-    #   if !i.debt.blank?
-    #     debt += i.debt
-    #   end
-    # end
-    # debt
   end
 
   def subtotal

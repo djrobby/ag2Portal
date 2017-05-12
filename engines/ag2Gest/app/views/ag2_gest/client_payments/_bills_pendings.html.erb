@@ -28,11 +28,11 @@
           <!-- bill -->
           <col width="30%" />
           <!-- client -->
-          <col width="35%" />
-          <!-- count -->
-          <col width="2%" />
+          <col width="34%" />
+          <!-- period -->
+          <col width="4%" />
           <!-- amount -->
-          <col width="15%" />
+          <col width="14%" />
           <!-- status -->
           <col width="10%" />
           <tbody>
@@ -41,10 +41,14 @@
               <a class="accor accordion-toggle collapsed pull-left" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
               <% if bill.client.active_bank_accounts? %><i class="icon-briefcase"></i><% end %>
             </td>
-            <td><%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <% if bill.bill_type_id == InvoiceType::WATER %>
+            <td><%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) if bill.subscriber %></td>
+            <% else %>
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
-            <td align="right"><%= bill.invoices.count unless bill.invoices.blank? %></td>
-            <td align="right"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <% end %>
+            <td align="right"><%= bill.billing_period_code %></td>
+            <td align="right" title="<%= bill.invoices.count.to_s %>"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.invoice_status.name unless bill.invoice_status.blank? %></td>
           </tbody>
         </table>

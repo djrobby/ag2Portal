@@ -34,6 +34,10 @@ class PaymentMethod < ActiveRecord::Base
     "#{description}"
   end
 
+  def code
+    id.to_s.rjust(3, '0')
+  end
+
   def flow_label
     flow_label = case flow
       when 1 then I18n.t('activerecord.attributes.payment_method.flow_1')

@@ -9,6 +9,7 @@ en:
         title: "Client"
         btn_edit: "Edit Client"
         btn_delete: "Delete Client"
+        subtable_title: "Subscribers"
         return_to: "Back to Client"
       edit:
         title: "Edit Client"

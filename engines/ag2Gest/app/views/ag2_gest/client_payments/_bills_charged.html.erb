@@ -16,20 +16,27 @@
           <!-- bill -->
           <col width="30%" />
           <!-- client -->
-          <col width="35%" />
-          <!-- count -->
-          <col width="5%" />
+          <col width="34%" />
+          <!-- period -->
+          <col width="4%" />
           <!-- amount -->
-          <col width="15%" />
+          <col width="14%" />
           <!-- payment date -->
-          <col width="10%" />
+          <col width="9%" />
+          <!-- payment method -->
+          <col width="4%" />
           <tbody>
             <td><a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a></td>
-            <td><%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <% if bill.bill_type_id == InvoiceType::WATER %>
+            <td><%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) if bill.subscriber %></td>
+            <% else %>
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
-            <td align="right"><%= bill.invoices.count unless bill.invoices.blank? %></td>
-            <td align="right"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <% end %>
+            <td align="right"><%= bill.billing_period_code %></td>
+            <td align="right" title="<%= bill.invoices.count.to_s %>"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.payment_date %></td>
+            <td align="right" title="<%= bill.real_payment_method_name %>"><%= bill.real_payment_method_code %></td>
           </tbody>
         </table>
       </div>
