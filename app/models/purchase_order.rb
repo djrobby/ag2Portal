@@ -168,7 +168,7 @@ class PurchaseOrder < ActiveRecord::Base
     User.where(id: PurchaseOrder.joins(:petitioner).group(:created_by).select('purchase_orders.created_by'))
   end
 
-  def self.undelivered(organization, _ordered)
+  def self.undelivered(organization = nil, _ordered = true)
     if !organization.blank?
       if !_ordered
         includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
@@ -181,6 +181,14 @@ class PurchaseOrder < ActiveRecord::Base
       else
         includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL').group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
       end
+    end
+  end
+
+  def self.undelivered_by_project(_projects = nil, organization = nil, _ordered = true)
+    if _projects.blank?
+      PurchaseOrder.undelivered(organization, _ordered)
+    else
+      includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.project_id IN (?)', _projects).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
     end
   end
 

@@ -59,11 +59,12 @@ module Ag2Products
     # Update purchase order select at view from supplier select
     def rn_update_order_select_from_supplier
       supplier = params[:supplier]
+      _projects = projects_dropdown
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.undelivered(@supplier.organization_id, true)
+        @orders = @supplier.blank? ? orders_dropdown(_projects) : @supplier.purchase_orders.undelivered_by_project(_projects, @supplier.organization_id, true)
       else
-        @orders = orders_dropdown
+        @orders = orders_dropdown(_projects)
       end
       # Orders array
       @orders_dropdown = orders_array(@orders)
@@ -82,12 +83,21 @@ module Ag2Products
       payment_method_id = 0
       if o != '0'
         @order = PurchaseOrder.find(o)
-        @order_items = @order.blank? ? [] : order_items_dropdown(@order)
-        @projects = @order.blank? ? projects_dropdown : @order.project
-        @work_orders = @order.blank? ? work_orders_dropdown_new : WorkOrder.where(id: @order.work_order)
-        @charge_accounts = @order.blank? ? charge_accounts_dropdown : @order.charge_account
-        @stores = @order.blank? ? stores_dropdown : @order.store
-        @payment_methods = @order.blank? ? payment_methods_dropdown : @order.payment_method
+        if @order.blank?
+          @order_items = []
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown_new
+          @charge_accounts = charge_accounts_dropdown
+          @stores = stores_dropdown
+          @payment_methods = payment_methods_dropdown
+        else
+          @order_items = order_items_dropdown(@order)
+          @projects = @order.project
+          @work_orders = WorkOrder.where(id: @order.work_order)
+          @charge_accounts = @order.charge_account.blank? ? charge_accounts_dropdown : @order.charge_account
+          @stores = @order.store.blank? ? project_stores(@projects) : @order.store
+          @payment_methods = @order.payment_method.blank? ? payment_methods_dropdown : @order.payment_method
+        end
         if @order_items.blank?
           @products = @order.blank? ? products_dropdown : @order.organization.products.order(:product_code)
         else
@@ -542,11 +552,11 @@ module Ag2Products
       @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
-      @orders = orders_dropdown if @orders.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @orders = orders_dropdown(@projects) if @orders.nil?
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -606,8 +616,8 @@ module Ag2Products
       $attachment_changed = false
       $attachment = Attachment.new
       destroy_attachment
-      @orders = orders_dropdown
       @projects = projects_dropdown
+      @orders = orders_dropdown(@projects)
       # @work_orders = work_orders_dropdown
       @work_orders = work_orders_dropdown_new
       @charge_accounts = projects_charge_accounts(@projects)
@@ -1020,9 +1030,16 @@ module Ag2Products
       session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
-    def orders_dropdown
+    def orders_dropdown(_projects)
+      if _projects.blank?
+        session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
+      else
+        PurchaseOrder.undelivered_by_project(_projects, nil, true)
+      end
+    end
+
+    def orders_dropdown_old
       session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
-      #_orders = session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
     end
 
     def orders_dropdown_edit(_receipt_note)
@@ -1046,6 +1063,26 @@ module Ag2Products
     end
 
     def stores_dropdown
+      _array = []
+      _stores = nil
+      _store_offices = nil
+
+      if session[:office] != '0'
+        _stores = Store.where(office_id: session[:office].to_i)
+        _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
+      elsif session[:company] != '0'
+        _stores = Store.where(company_id: session[:company].to_i)
+      else
+        _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+      end
+
+      # Returning founded stores
+      ret_array(_array, _stores, 'id')
+      ret_array(_array, _store_offices, 'store_id')
+      _stores = Store.where(id: _array).order(:name)
+    end
+
+    def stores_dropdown_old
       session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
