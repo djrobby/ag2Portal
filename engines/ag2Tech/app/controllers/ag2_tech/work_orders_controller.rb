@@ -256,7 +256,7 @@ module Ag2Tech
       costs = 0
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.order(:supplier_id, :order_no, :id)
+        @orders = @supplier.blank? ? orders_dropdown : @supplier.purchase_orders.includes(:supplier).by_supplier_no
       else
         @orders = orders_dropdown
       end
@@ -450,7 +450,7 @@ module Ag2Tech
         @areas = @organization.blank? ? areas_dropdown : organization_areas(@organization)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
         @suppliers = @organization.blank? ? suppliers_dropdown : @organization.suppliers.order(:supplier_code)
-        @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.order(:supplier_id, :order_no, :id)
+        @orders = @organization.blank? ? orders_dropdown : @organization.purchase_orders.includes(:supplier).by_supplier_no
         @tools = @organization.blank? ? tools_dropdown : @organization.tools.order(:serial_no)
         @vehicles = @organization.blank? ? vehicles_dropdown : @organization.vehicles.order(:registration)
         @subscribers = @organization.blank? ? subscribers_dropdown : @organization.subscribers.by_code
@@ -616,13 +616,9 @@ module Ag2Tech
       @json_data = { "name" => '' }
       if client != '0'
         @client = Client.find(client)
-        @json_data = { "name" => @client.name }
+        @json_data = { "name" => @client.to_name }
       end
-
-      respond_to do |format|
-        format.html # wo_update_petitioner_textfield_from_client.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # Update type select at view from woarea select
@@ -789,9 +785,12 @@ module Ag2Tech
       @areas = areas_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
-      @clients = clients_dropdown
-      @subscribers = subscribers_dropdown
-      @meters = meters_dropdown
+      # @clients = clients_dropdown
+      @client = " "
+      # @subscribers = subscribers_dropdown
+      @subscriber = " "
+      # @meters = meters_dropdown
+      @meter = " "
       @meter_models = meter_models_dropdown
       @calibers = calibers_dropdown
       @meter_owners = meter_owners_dropdown
@@ -827,9 +826,12 @@ module Ag2Tech
       @areas = @work_order.project.blank? ? areas_dropdown : project_areas(@work_order.project)
       @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
       @stores = project_stores(@work_order.project)
-      @clients = clients_dropdown
-      @subscribers = subscribers_dropdown
-      @meters = meters_dropdown
+      # @clients = clients_dropdown
+      @client = @work_order.client.blank? ? " " : @work_order.client.full_name_or_company_and_code
+      # @subscribers = subscribers_dropdown
+      @subscriber = @work_order.subscriber.blank? ? " " : @work_order.subscriber.full_name_or_company_and_code
+      # @meters = meters_dropdown
+      @meter = @work_order.meter.blank? ? " " : @work_order.meter.full_name
       @meter_models = meter_models_dropdown
       @calibers = calibers_dropdown
       @meter_owners = meter_owners_dropdown
@@ -854,6 +856,9 @@ module Ag2Tech
       @breadcrumb = 'create'
       @work_order = WorkOrder.new(params[:work_order])
       @work_order.created_by = current_user.id if !current_user.nil?
+      @work_order.client_id = params[:Client].to_i unless params[:Client].blank?
+      @work_order.subscriber_id = params[:Subscriber].to_i unless params[:Subscriber].blank?
+      @work_order.meter_id = params[:Meter].to_i unless params[:Meter].blank?
 
       respond_to do |format|
         if @work_order.save
@@ -868,9 +873,12 @@ module Ag2Tech
           @areas = areas_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
-          @clients = clients_dropdown
-          @subscribers = subscribers_dropdown
-          @meters = meters_dropdown
+          # @clients = clients_dropdown
+          @client = " "
+          # @subscribers = subscribers_dropdown
+          @subscriber = " "
+          # @meters = meters_dropdown
+          @meter = " "
           @meter_models = meter_models_dropdown
           @calibers = calibers_dropdown
           @meter_owners = meter_owners_dropdown
@@ -985,7 +993,7 @@ module Ag2Tech
           (params[:work_order][:in_charge_id].to_i != @work_order.in_charge_id.to_i) ||
           (params[:work_order][:charge_account_id].to_i != @work_order.charge_account_id.to_i) ||
           (params[:work_order][:store_id].to_i != @work_order.store_id.to_i) ||
-          (params[:work_order][:client_id].to_i != @work_order.client_id.to_i) ||
+          (params[:Client].to_i != @work_order.client_id.to_i) ||
           (params[:work_order][:petitioner] != @work_order.petitioner) ||
           (params[:work_order][:location] != @work_order.location) ||
           (params[:work_order][:pub_record] != @work_order.pub_record) ||
@@ -998,6 +1006,8 @@ module Ag2Tech
           (params[:work_order][:posted_at].to_datetime != @work_order.posted_at) ||
           (params[:work_order][:hours_type].to_i != @work_order.hours_type) ||
           (params[:work_order][:master_order_id].to_i != @work_order.master_order_id.to_i) ||
+          (params[:Subscriber].to_i != @work_order.subscriber_id.to_i) ||
+          (params[:Meter].to_i != @work_order.meter_id.to_i) ||
           (params[:work_order][:remarks].to_s != @work_order.remarks))
         master_changed = true
       end
@@ -1006,6 +1016,9 @@ module Ag2Tech
       respond_to do |format|
         if master_changed || items_changed
           @work_order.updated_by = current_user.id if !current_user.nil?
+          @work_order.client_id = params[:Client].to_i unless params[:Client].blank?
+          @work_order.subscriber_id = params[:Subscriber].to_i unless params[:Subscriber].blank?
+          @work_order.meter_id = params[:Meter].to_i unless params[:Meter].blank?
           if @work_order.update_attributes(params[:work_order])
             format.html { redirect_to @work_order,
                           notice: (crud_notice('updated', @work_order) + "#{undo_link(@work_order)}").html_safe }
@@ -1019,9 +1032,12 @@ module Ag2Tech
             @areas = areas_dropdown
             @charge_accounts = @work_order.project.blank? ? projects_charge_accounts(@projects) : charge_accounts_dropdown_edit(@work_order.project)
             @stores = project_stores(@work_order.project)
-            @clients = clients_dropdown
-            @subscribers = subscribers_dropdown
-            @meters = meters_dropdown
+            # @clients = clients_dropdown
+            @client = @work_order.client.blank? ? " " : @work_order.client.full_name_or_company_and_code
+            # @subscribers = subscribers_dropdown
+            @subscriber = @work_order.subscriber.blank? ? " " : @work_order.subscriber.full_name_or_company_and_code
+            # @meters = meters_dropdown
+            @meter = @work_order.meter.blank? ? " " : @work_order.meter.full_name
             @meter_models = meter_models_dropdown
             @calibers = calibers_dropdown
             @meter_owners = meter_owners_dropdown
@@ -1655,17 +1671,17 @@ module Ag2Tech
     end
 
     def orders_dropdown
-      session[:organization] != '0' ? PurchaseOrder.where(organization_id: session[:organization].to_i).order(:supplier_id, :order_no, :id) : PurchaseOrder.order(:supplier_id, :order_no, :id)
+      session[:organization] != '0' ? PurchaseOrder.belongs_to_organization(session[:organization].to_i) : PurchaseOrder.with_supplier
     end
 
     def orders_dropdown_edit(_work_order, _supplier)
       _a = nil
       if !_work_order.nil? && !_work_order.project.nil? && !_supplier.nil?
-        _a = PurchaseOrder.where('organization_id = ? AND project_id = ? AND supplier_id', _work_order.organization_id, _work_order.project_id, _supplier).order(:supplier_id, :order_no, :id)
+        _a = PurchaseOrder.belongs_to_organization_project_supplier(_work_order.organization_id, _work_order.project_id, _supplier)
       elsif !_work_order.nil? && !_work_order.project.nil? && _supplier.nil?
-        _a = PurchaseOrder.where('organization_id = ? AND project_id = ?', _work_order.organization_id, _work_order.project_id).order(:supplier_id, :order_no, :id)
+        _a = PurchaseOrder.belongs_to_organization_project(_work_order.organization_id, _work_order.project_id)
       elsif (_work_order.nil? || _work_order.project.nil?) && !_supplier.nil?
-        _a = session[:organization] != '0' ? PurchaseOrder.where('organization_id = ? AND supplier_id = ?', session[:organization].to_i, _supplier).order(:supplier_id, :order_no, :id) : PurchaseOrder.where(supplier_id: _supplier).order(:supplier_id, :order_no, :id)
+        _a = session[:organization] != '0' ? PurchaseOrder.belongs_to_organization_supplier(session[:organization].to_i, _supplier) : PurchaseOrder.belongs_to_supplier(_supplier)
       else
         _a = orders_dropdown
       end

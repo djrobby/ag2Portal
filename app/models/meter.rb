@@ -47,6 +47,12 @@ class Meter < ActiveRecord::Base
     .where("((subscribers.meter_id IS NULL OR subscribers.meter_id=0) AND meters.caliber_id = ?) OR meters.id = ?", cal, old_subscriber_meter_id)
     .by_code
   }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    includes([meter_model: :meter_brand], :caliber)
+    .where(w)
+    .by_code
+  }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records

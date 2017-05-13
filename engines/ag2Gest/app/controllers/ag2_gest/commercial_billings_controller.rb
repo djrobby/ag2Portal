@@ -497,6 +497,7 @@ module Ag2Gest
       init_oco if !session[:organization]
       # Initialize select_tags
       # @client = !client.blank? ? Client.find(client).to_label : " "
+      @client = " "
       @project = !project.blank? ? Project.find(project).full_name : " "
       @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @status = invoice_statuses_dropdown if @status.nil?
@@ -596,7 +597,8 @@ module Ag2Gest
       @sale_offers = sale_offers_dropdown
       @projects = projects_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
-      @clients = clients_dropdown
+      # @clients = clients_dropdown
+      @client = " "
       @payment_methods = payment_methods_dropdown
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
@@ -618,16 +620,22 @@ module Ag2Gest
       @breadcrumb = 'update'
       @invoice = Invoice.find(params[:id])
       @organizations, @include_blank = organizations_according_oco
-      @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : sale_offers_dropdown_edit(@invoice)
       @projects = projects_dropdown_edit(@invoice.bill.project)
       @project = @invoice.bill.project_id
       @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
-      @clients = clients_dropdown
-      @client = @invoice.bill.client_id
       @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
+      if @invoice.bill.client.blank?
+        @sale_offers = sale_offers_dropdown
+        @client = " "
+      else
+        @sale_offers = sale_offers_dropdown_edit(@invoice)
+        @client = @invoice.bill.client.full_name_or_company_and_code
+      end
       @status = invoice_statuses_dropdown if @status.nil?
       @types = invoice_types_dropdown if @types.nil?
       @operations = invoice_operations_dropdown if @operations.nil?
+      # @clients = clients_dropdown
+      # @client = @invoice.bill.client_id
       # @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
       # if @offer_items.blank?
       #   @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)
@@ -670,7 +678,8 @@ module Ag2Gest
           @sale_offers = sale_offers_dropdown
           @projects = projects_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
-          @clients = clients_dropdown
+          # @clients = clients_dropdown
+          @client = " "
           @payment_methods = payment_methods_dropdown
           @status = invoice_statuses_dropdown if @status.nil?
           @types = invoice_types_dropdown if @types.nil?
@@ -719,6 +728,7 @@ module Ag2Gest
           (params[:invoice][:charge_account_id].to_i != @invoice.charge_account_id.to_i) ||
           (params[:invoice][:payment_method_id].to_i != @invoice.payment_method_id.to_i) ||
           (params[:invoice][:discount_pct].to_f != @invoice.discount_pct.to_f) ||
+          (params[:Client].to_i != @invoice.bill.client_id.to_i) ||
           (params[:invoice][:remarks].to_s != @invoice.remarks))
         master_changed = true
       end
@@ -744,11 +754,21 @@ module Ag2Gest
                           notice: (crud_notice('updated', @invoice) + "#{undo_link(@invoice)}").html_safe }
             format.json { head :no_content }
           else
-            @sale_offers = @invoice.bill.client.blank? ? sale_offers_dropdown : sale_offers_dropdown_edit(@invoice)
             @projects = projects_dropdown_edit(@invoice.bill.project)
             @charge_accounts = charge_accounts_dropdown_edit(@invoice.bill.project)
-            @clients = clients_dropdown
             @payment_methods = @invoice.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@invoice.organization_id)
+            if @invoice.bill.client.blank?
+              @sale_offers = sale_offers_dropdown
+              @client = " "
+            else
+              @sale_offers = sale_offers_dropdown_edit(@invoice)
+              @client = @invoice.bill.client.full_name_or_company_and_code
+            end
+            @status = invoice_statuses_dropdown if @status.nil?
+            @types = invoice_types_dropdown if @types.nil?
+            @operations = invoice_operations_dropdown if @operations.nil?
+            # @clients = clients_dropdown
+            # @client = @invoice.bill.client_id
             # @offer_items = @invoice.sale_offer.blank? ? [] : offer_items_dropdown(@invoice.sale_offer)
             # if @offer_items.blank?
             #   @products = @invoice.organization.blank? ? products_dropdown : @invoice.organization.products(:product_code)

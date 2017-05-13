@@ -30,7 +30,93 @@
       $('#icon-new-vehicle-btn').hide();      
     }
   }
-  
+
+  function setupAllSelect2(c, s, m) {
+    clientsSelect2ForNew(c);
+    subscribersSelect2ForNew(s);    
+    metersSelect2ForNew(m);    
+  }
+
+  function clientsSelect2ForNew(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function subscribersSelect2ForNew(intialValue) {
+    $('#Subscriber').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_subscribers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function metersSelect2ForNew(intialValue) {
+    $('#Meter').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_meters",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }  
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -50,6 +136,9 @@
       $(this).val(dt);
       $('.date_picker_time').datepicker('hide');
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @client %>", "<%= @subscriber %>", "<%= @meter %>");
     
     // Save default text color
     text_field_color = $("#work_order_order_no").css('color')
@@ -245,20 +334,20 @@
           });
         }
         // Client
-        $("#work_order_client_id").html("");
-        $("#work_order_client_id").select2("val", "");
-        $("#work_order_client_id").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'client' && option != "") {
-              $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
+        // $("#work_order_client_id").html("");
+        // $("#work_order_client_id").select2("val", "");
+        // $("#work_order_client_id").append($('<option></option>').val("").html(""));
+        // if (!c.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'client' && option != "") {
+        //       $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(c, function(id, option) {
+        //     $("#work_order_client_id").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
         // Charge account
         $("#work_order_charge_account_id").html("");
         $("#work_order_charge_account_id").select2("val", "");
@@ -469,9 +558,10 @@
     });
 
     // when the #work_order_client_id field changes
-    $("#work_order_client_id").change(function() {
+    $("#Client").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_client_id :selected').val();
+      // var order = $('select#work_order_client_id :selected').val();
+      var order = $('#Client').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('wo_update_petitioner_textfield_from_client/' + order, function(data) {
@@ -635,7 +725,11 @@
   <label class="multi-field-label-two"> <%= f.association :store, collection: @stores, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two-table"> <%= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two-table">
+    <%#= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>      
+    <%= label_tag "label_client", t("activerecord.attributes.work_order.client"), :class => 'form-label' %>
+    <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+  </label>
   <label class="multi-field-label-two-table"> <%= f.input :petitioner, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
@@ -659,8 +753,16 @@
 <div id="subscriber_meter">
   <h4><%= t 'ag2_tech.work_orders.meter_subscriber_info' %></h4>
   <div>
-    <label class="multi-field-label-three"> <%= f.association :subscriber, collection: @subscribers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-    <label class="multi-field-label-three"> <%= f.association :meter, collection: @meters, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+    <label class="multi-field-label-three">
+      <%#= f.association :subscriber, collection: @subscribers, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+      <%= label_tag "label_subscriber", t("activerecord.attributes.work_order.subscriber"), :class => 'form-label' %>
+      <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+    </label>
+    <label class="multi-field-label-three">
+      <%#= f.association :meter, collection: @meters, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+      <%= label_tag "label_meter", t("activerecord.attributes.work_order.meter"), :class => 'form-label' %>
+      <%= text_field_tag "Meter", params[:Meter], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+    </label>
     <label class="multi-field-label-three"> <%= f.input :meter_code, input_html: { onkeyup: "caps(this)", class: 'x-large-text-field', maxlength: 20 }, label_html: { class: 'form-label' } %> </label>
   </div>
   <div>

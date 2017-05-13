@@ -48,8 +48,15 @@ class PurchaseOrder < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:order_no) }
+  scope :by_supplier_no, -> { order(:supplier_id, :order_no) }
   #
   scope :these, -> t { where(id: t).by_no }
+  scope :with_supplier, -> { includes(:supplier).by_supplier_no }
+  scope :belongs_to_organization, -> o { includes(:supplier).where("organization_id = ?", o).by_supplier_no }
+  scope :belongs_to_supplier, -> s { includes(:supplier).where("supplier_id = ?", s).by_supplier_no }
+  scope :belongs_to_organization_supplier, -> o,s { includes(:supplier).where("organization_id = ? AND supplier_id = ?", o, s).by_supplier_no }
+  scope :belongs_to_organization_project, -> o,p { includes(:supplier).where("organization_id = ? AND project_id = ?", o, p).by_supplier_no }
+  scope :belongs_to_organization_project_supplier, -> o,p,s { includes(:supplier).where("organization_id = ? AND project_id = ? AND supplier_id = ?", o, p, s).by_supplier_no }
 
   # Callbacks
   before_destroy :check_for_dependent_records

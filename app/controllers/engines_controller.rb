@@ -150,11 +150,24 @@ class EnginesController < ApplicationController
     w = ''
     w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
     if @q != ''
-      w += "(client_code LIKE '%#{@q}%' OR last_name LIKE '%#{@q}%' OR first_name LIKE '%#{@q}%' OR company LIKE '%#{@q}%')"
+      w += "(client_code LIKE '%#{@q}%' OR last_name LIKE '%#{@q}%' OR first_name LIKE '%#{@q}%' OR company LIKE '%#{@q}%' OR fiscal_id LIKE '%#{@q}%')"
       @clients = serialized(Client.where(w).by_code,
                             Api::V1::ClientsSerializer)
     end
     render json: @clients
+  end
+
+  # Subscribers
+  def search_subscribers
+    @subscribers = []
+    w = ''
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(subscriber_code LIKE '%#{@q}%' OR last_name LIKE '%#{@q}%' OR first_name LIKE '%#{@q}%' OR company LIKE '%#{@q}%' OR fiscal_id LIKE '%#{@q}%')"
+      @subscribers = serialized(Subscriber.where(w).by_code,
+                            Api::V1::SubscribersSerializer)
+    end
+    render json: @subscribers
   end
 
   # Companies / Billers
@@ -254,6 +267,21 @@ class EnginesController < ApplicationController
                              Api::V1::BillingPeriodsSerializer)
     end
     render json: @billing_periods
+  end
+
+  # Meters
+  def search_meters
+    @meters = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(meter_code LIKE '%#{@q}%' OR meter_models.model LIKE '%#{@q}%' OR meter_brands.brand LIKE '%#{@q}%' OR calibers.caliber LIKE '%#{@q}%')"
+      @meters = serialized(Meter.g_where(w),
+                            Api::V1::MetersSerializer)
+    end
+    render json: @meters
   end
 
   # Returns JSON list of data
