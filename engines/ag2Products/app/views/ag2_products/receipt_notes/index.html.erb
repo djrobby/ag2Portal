@@ -132,6 +132,7 @@
     // $("#Supplier").select2("val", "<%= params[:Supplier] %>");
     // $("#Project").select2("val", "<%= params[:Project] %>");
     // $("#Order").select2("val", "<%= params[:Order] %>");
+    $("#Balance").val("<%= params[:Balance] %>");
     $("#search").val("<%= params[:search] %>");
   });
 
@@ -156,6 +157,7 @@
       $("#Supplier").select2("val", "");
       $("#Project").select2("val", "");
       $("#Order").select2("val", "");
+      $("#Balance").val("");
       $("#search").val("");
       a = "<%= rn_remove_filters %>";
       setupAllSelect2(a, a, a);
@@ -205,8 +207,11 @@
         <!-- Work order -->
         <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_work_order"), nil, :class => 'form-label-under-sel2' %>
         <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Billing status -->
+        <%= label_tag I18n.t("activerecord.attributes.receipt_note.billing_status"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Balance", options_for_select(@balances), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_products.receipt_notes.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

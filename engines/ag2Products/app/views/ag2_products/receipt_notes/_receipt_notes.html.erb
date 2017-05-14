@@ -22,7 +22,19 @@
   <tbody>
     <% @receipt_notes.each do |note| %>
     <tr>
-      <td><%= note.id %></td>
+      <td><%= note.id %>
+        <% b = note.balance %><% q = note.quantity %>
+        <% if b <= 0 %> <!-- fully billed -->
+        <i class="icon-star" style="margin-left: 0.2em;">
+        <% elsif b == q %> <!-- not billed -->
+        <i class="icon-warning-sign" style="margin-left: 0.2em;"
+        title="<%= number_with_precision(b, precision: 4) %>">
+        <% else %> <!-- partially billed -->
+        <i class="icon-star-empty" style="margin-left: 0.2em;" 
+        title="<%= number_with_precision(b, precision: 4) + 
+        t(:of) + number_with_precision(q, precision: 4) %>">
+        <% end %>
+      </td>
       <td><%= link_to note.partial_no, note %>
         <% if !note.attachment.blank? && note.has_meter %>
         <i class="icon-paperclip-black" style="margin-left: 0.2em;">

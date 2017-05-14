@@ -546,12 +546,14 @@ module Ag2Products
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
+      balance = params[:Balance]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @balances = balances_dropdown if @balances.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -581,6 +583,9 @@ module Ag2Products
         end
         if !order.blank?
           with :work_order_id, order
+        end
+        if !balance.blank?
+          with :billing_status_id, balance
         end
         data_accessor_for(ReceiptNote).include = [:supplier, :project, :products, :purchase_order]
         order_by :id, :desc
@@ -1127,6 +1132,14 @@ module Ag2Products
       Caliber.by_caliber
     end
 
+    def balances_dropdown
+      _array = []
+      _array = _array << [I18n.t("activerecord.attributes.receipt_note.billing_status_total"), 0]
+      _array = _array << [I18n.t("activerecord.attributes.receipt_note.billing_status_partial"), 1]
+      _array = _array << [I18n.t("activerecord.attributes.receipt_note.billing_status_unreceived"), 2]
+      _array
+    end
+
     def orders_array(_orders)
       _array = []
       _orders.each do |i|
@@ -1223,6 +1236,12 @@ module Ag2Products
       elsif session[:Order]
         params[:Order] = session[:Order]
       end
+      # balance
+      if params[:Balance]
+        session[:Balance] = params[:Balance]
+      elsif session[:Balance]
+        params[:Balance] = session[:Balance]
+      end
     end
 
     def rn_remove_filters
@@ -1231,6 +1250,7 @@ module Ag2Products
       params[:Supplier] = ""
       params[:Project] = ""
       params[:Order] = ""
+      params[:Balance] = ""
       return " "
     end
 
@@ -1240,6 +1260,7 @@ module Ag2Products
       params[:Supplier] = session[:Supplier]
       params[:Project] = session[:Project]
       params[:Order] = session[:Order]
+      params[:Balance] = session[:Balance]
     end
   end
 end

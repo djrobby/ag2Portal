@@ -27,15 +27,16 @@
       <tr>
     <% end %>
       <td><%= link_to order.full_no, order %>
-        <% if order.balance <= 0 %> <!-- fully received -->
+        <% b = order.balance %><% q = order.quantity %>
+        <% if b <= 0 %> <!-- fully received -->
         <i class="icon-star" style="margin-left: 0.2em;">
-        <% elsif order.balance == order.quantity %> <!-- not received -->
+        <% elsif b == q %> <!-- not received -->
         <i class="icon-warning-sign" style="margin-left: 0.2em;"
-        title="<%= number_with_precision(order.balance, precision: 4) %>">
+        title="<%= number_with_precision(b, precision: 4) %>">
         <% else %> <!-- partially received -->
         <i class="icon-star-empty" style="margin-left: 0.2em;" 
-        title="<%= number_with_precision(order.balance, precision: 4) + 
-        t(:of) + number_with_precision(order.quantity, precision: 4) %>">
+        title="<%= number_with_precision(b, precision: 4) + 
+        t(:of) + number_with_precision(q, precision: 4) %>">
         <% end %>
       </td>
       <td align="center"><%= formatted_date(order.order_date) unless order.order_date.blank? %></td>

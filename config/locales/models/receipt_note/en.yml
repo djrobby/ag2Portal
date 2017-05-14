@@ -45,3 +45,7 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         attachment: "Attachment (Image)"
+        billing_status: "Billing"
+        billing_status_total: "Total"
+        billing_status_partial: "Partial"
+        billing_status_unreceived: "Unbilled"

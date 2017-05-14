@@ -37,6 +37,19 @@ class ReceiptNote < ActiveRecord::Base
   validates :project,         :presence => true
   validates :organization,    :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:receipt_no) }
+  scope :by_supplier_no, -> { order(:supplier_id, :receipt_no) }
+  #
+  scope :these, -> t { where(id: t).by_no }
+  scope :with_supplier, -> { includes(:supplier).by_supplier_no }
+  scope :belongs_to_organization, -> o { includes(:supplier).where("organization_id = ?", o).by_supplier_no }
+  scope :belongs_to_supplier, -> s { includes(:supplier).where("supplier_id = ?", s).by_supplier_no }
+  scope :belongs_to_organization_supplier, -> o,s { includes(:supplier).where("organization_id = ? AND supplier_id = ?", o, s).by_supplier_no }
+  scope :belongs_to_organization_project, -> o,p { includes(:supplier).where("organization_id = ? AND project_id = ?", o, p).by_supplier_no }
+  scope :belongs_to_organization_project_supplier, -> o,p,s { includes(:supplier).where("organization_id = ? AND project_id = ? AND supplier_id = ?", o, p, s).by_supplier_no }
+  scope :belongs_to_projects, -> p { where("project_id IN (?)", p).by_no }
+
   # Callbacks
   before_destroy :check_for_dependent_records
   before_save :calculate_and_store_totals
@@ -118,6 +131,28 @@ class ReceiptNote < ActiveRecord::Base
     has_meter
   end
 
+  # Billing status based on current balance
+  def billing_status
+    if balance <= 0           # fully received
+      _status = I18n.t("activerecord.attributes.receipt_note.billing_status_total")
+    elsif balance == quantity # unreceived
+      _status = I18n.t("activerecord.attributes.receipt_note.billing_status_unreceived")
+    else                      # partially received
+      _status = I18n.t("activerecord.attributes.receipt_note.billing_status_partial")
+    end
+    _status
+  end
+  def billing_status_id
+    if balance <= 0           # 0
+      _status = 0
+    elsif balance == quantity # 2
+      _status = 2
+    else                      # 1
+      _status = 1
+    end
+    _status
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -169,6 +204,7 @@ class ReceiptNote < ActiveRecord::Base
     integer :purchase_order_id
     date :receipt_date
     integer :organization_id
+    integer :billing_status_id
   end
 
   private
