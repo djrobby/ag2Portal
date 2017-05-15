@@ -36,7 +36,8 @@ Ag2Portal::Application.routes.draw do
     match 'search_projects_expenditure_charge_accounts', :controller => 'engines', :action => 'search_projects_expenditure_charge_accounts'
     match 'search_projects_income_charge_accounts', :controller => 'engines', :action => 'search_projects_income_charge_accounts'
     match 'search_subscribers', :controller => 'engines', :action => 'search_subscribers'
-    match 'search_meters', :controller => 'engines', :action => 'search_meters'
+    match 'search_client_subscribers', :controller => 'engines', :action => 'search_client_subscribers'
+    match 'search_subscriber_meter', :controller => 'engines', :action => 'search_subscriber_meter'
 
     # Routes for custom error pages
     get '/404', to: 'errors#file_not_found'

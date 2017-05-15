@@ -33,8 +33,8 @@
 
   function setupAllSelect2(c, s, m) {
     clientsSelect2ForNew(c);
-    subscribersSelect2ForNew(s);    
-    metersSelect2ForNew(m);    
+    subscribersSelect2ForNew(s, 0);
+    metersSelect2ForNew(m);
   }
 
   function clientsSelect2ForNew(intialValue) {
@@ -64,7 +64,11 @@
     });
   }
 
-  function subscribersSelect2ForNew(intialValue) {
+  function subscribersSelect2ForNew(intialValue, searchClient) {
+    var target_url = "/search_subscribers";
+    if (searchClient > 0) {
+      target_url = "/search_client_subscribers?client=" + searchClient
+    }
     $('#Subscriber').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
@@ -72,7 +76,8 @@
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        url: "/search_subscribers",
+        // url: "/search_subscribers",
+        url: target_url,
         dataType: "json",
         delay: 250,
         data: function(term, page) {

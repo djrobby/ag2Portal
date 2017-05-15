@@ -53,6 +53,11 @@ class Meter < ActiveRecord::Base
     .where(w)
     .by_code
   }
+  scope :g_where_with_subscribers, -> w {
+    includes([meter_model: :meter_brand], :caliber, :subscribers)
+    .where(w)
+    .by_code
+  }
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
