@@ -14,6 +14,33 @@
       $('#icon-new-btn').hide();      
     }
   }
+
+  function clientsSelect2ForNew(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
   
   $(document).ready(function() {
     $('select.sel2').select2({
@@ -29,6 +56,9 @@
     if ($('#delivery_note_delivery_date').val() == "") {
       $('#delivery_note_delivery_date').datepicker('setValue', es_date(new Date()));
     }
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @client %>", "<%= @subscriber %>", "<%= @meter %>");
 
     // Save default text color
     text_field_color = $("#delivery_note_delivery_no").css('color')
