@@ -446,9 +446,11 @@ module Ag2Products
       @offers = offers_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
-      @charge_accounts = projects_charge_accounts(@projects)
+      # @charge_accounts = projects_charge_accounts(@projects) #slow
+      @charge_account = " "
       @stores = stores_dropdown
-      @clients = clients_dropdown
+      # @clients = clients_dropdown #slow
+      @client = " "
       @payment_methods = payment_methods_dropdown
       # @products = products_dropdown
 
@@ -465,9 +467,11 @@ module Ag2Products
       @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
       @projects = projects_dropdown_edit(@delivery_note.project)
       @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
-      @charge_accounts = work_order_charge_account(@delivery_note)
+      # @charge_accounts = work_order_charge_account(@delivery_note)
+      @charge_account = @delivery_note.charge_account.blank? ? " " : @delivery_note.charge_account.full_name
       @stores = work_order_store(@delivery_note)
-      @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
+      # @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
+      @client = @delivery_note.client.blank? ? " " : @delivery_note.client.full_name_or_company_and_code
       @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
       # @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
     end
@@ -487,9 +491,11 @@ module Ag2Products
           @offers = offers_dropdown
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = projects_charge_accounts(@projects)
+          # @charge_accounts = projects_charge_accounts(@projects)
+          @charge_account = " "
           @stores = stores_dropdown
-          @clients = clients_dropdown
+          # @clients = clients_dropdown
+          @client = " "
           @payment_methods = payment_methods_dropdown
           # @products = products_dropdown
           format.html { render action: "new" }

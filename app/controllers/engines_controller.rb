@@ -99,6 +99,21 @@ class EnginesController < ApplicationController
     render json: @charge_accounts
   end
 
+  # Projects charge accounts
+  def search_projects_charge_accounts
+    projects = params[:projects]
+    @charge_accounts = []
+    w = ''
+    w = "charge_accounts.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "(charge_accounts.project_id IN (#{projects}) OR charge_accounts.project_id IS NULL) AND " if !projects.blank?
+    if @q != ''
+      w += "(account_code LIKE '%#{@q}%' OR charge_accounts.name LIKE '%#{@q}%')"
+      @charge_accounts = serialized(ChargeAccount.g_where(w),
+                                    Api::V1::ChargeAccountsSerializer)
+    end
+    render json: @charge_accounts
+  end
+
   # Projects expenditure charge accounts
   def search_projects_expenditure_charge_accounts
     projects = params[:projects]
