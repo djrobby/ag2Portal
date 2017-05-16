@@ -5,7 +5,8 @@ class Meter < ActiveRecord::Base
   belongs_to :organization
   belongs_to :company
   belongs_to :office
-  attr_accessible :expiry_date, :first_installation_date, :last_withdrawal_date, :manufacturing_date, :manufacturing_year, :meter_code, :purchase_date,
+  attr_accessible :expiry_date, :first_installation_date, :last_withdrawal_date, :manufacturing_date, :manufacturing_year,
+                  :meter_code, :purchase_date,
                   :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :company_id, :office_id,
                   :created_by, :updated_by
 
@@ -108,6 +109,14 @@ class Meter < ActiveRecord::Base
 
   def assigned_to_subscriber?
     !subscribers.empty?
+  end
+
+  def active_detail
+    meter_details.where(withdrawal_date: nil).order(:installation_date).last
+  end
+
+  def current_location
+    active_detail.meter_location rescue nil
   end
 
   #

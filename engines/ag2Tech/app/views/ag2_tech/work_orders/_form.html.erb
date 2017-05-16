@@ -34,7 +34,7 @@
   function setupAllSelect2(c, s, m) {
     clientsSelect2ForNew(c);
     subscribersSelect2ForNew(s, 0);
-    metersSelect2ForNew(m);
+    metersSelect2ForNew(m, 0);
   }
 
   function clientsSelect2ForNew(intialValue) {
@@ -64,10 +64,10 @@
     });
   }
 
-  function subscribersSelect2ForNew(intialValue, searchClient) {
+  function subscribersSelect2ForNew(intialValue, searchedClient) {
     var target_url = "/search_subscribers";
-    if (searchClient > 0) {
-      target_url = "/search_client_subscribers?client=" + searchClient
+    if (searchedClient > 0) {
+      target_url = "/search_client_subscribers?client=" + searchedClient
     }
     $('#Subscriber').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -96,7 +96,11 @@
     });
   }
 
-  function metersSelect2ForNew(intialValue) {
+  function metersSelect2ForNew(intialValue, searchedSubscriber) {
+    var target_url = "/search_meters";
+    if (searchedSubscriber > 0) {
+      target_url = "/search_subscriber_meter?subscriber=" + searchedSubscriber
+    }
     $('#Meter').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
@@ -641,7 +645,23 @@
       });
       return false;
     });
-    
+
+    // when the #work_order_meter_id field changes
+    $("#Meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#Meter').val();
+      if (meter == "")
+        meter = "0";
+      jQuery.getJSON('wo_update_meter_textfields_from_meter/' + meter, function(data) {
+        $("#work_order_meter_code").val(data.code);
+        $("#work_order_meter_model_id").select2("val", data.model);
+        $("#work_order_caliber_id").select2("val", data.caliber);
+        $("#work_order_meter_owner_id").select2("val", data.owner);
+        $("#work_order_meter_location_id").select2("val", data.location);
+      });
+      return false;
+    });
+
     // when submit    
     $(_thisForm).on('submit', function() {
       var qty = '';

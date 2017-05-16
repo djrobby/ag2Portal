@@ -17,4 +17,8 @@ class MeterDetail < ActiveRecord::Base
 
   # Scopes
   scope :by_dates, -> { order(:meter_id, :installation_date, :withdrawal_date) }
+
+  def active?
+    withdrawal_date.blank?
+  end
 end

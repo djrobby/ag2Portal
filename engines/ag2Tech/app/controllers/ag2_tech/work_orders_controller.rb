@@ -10,6 +10,7 @@ module Ag2Tech
                                                :wo_update_type_select_from_woarea,
                                                :wo_update_labor_select_from_type,
                                                :wo_update_petitioner_textfield_from_client,
+                                               :wo_update_meter_textfields_from_meter,
                                                :wo_item_totals,
                                                :wo_worker_totals,
                                                :wo_subcontractor_totals,
@@ -621,6 +622,31 @@ module Ag2Tech
       render json: @json_data
     end
 
+    # Update meter textfields at view from meter select
+    def wo_update_meter_textfields_from_meter
+      meter = params[:meter]
+      code = ''
+      model = 0
+      caliber = 0
+      owner = 0
+      location = 0
+      if meter != '0'
+        meter = Meter.find(meter)
+        if !meter.nil?
+          code = meter.meter_code unless meter.meter_code.blank?
+          model = meter.meter_model_id unless meter.meter_model_id.blank?
+          caliber = meter.caliber_id unless meter.caliber_id.blank?
+          owner = meter.meter_owner_id unless meter.meter_owner_id.blank?
+          location = meter.current_location.id unless meter.current_location.blank?
+        end
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "model" => model,
+                     "caliber" => caliber, "owner" => owner,
+                     "location" => location }
+      render json: @json_data
+    end
+
     # Update type select at view from woarea select
     def wo_update_type_select_from_woarea
       woarea = params[:woarea]
@@ -1008,6 +1034,11 @@ module Ag2Tech
           (params[:work_order][:master_order_id].to_i != @work_order.master_order_id.to_i) ||
           (params[:Subscriber].to_i != @work_order.subscriber_id.to_i) ||
           (params[:Meter].to_i != @work_order.meter_id.to_i) ||
+          (params[:work_order][:meter_code] != @work_order.meter_code) ||
+          (params[:work_order][:meter_model_id].to_i != @work_order.meter_model_id.to_i) ||
+          (params[:work_order][:caliber_id].to_i != @work_order.caliber_id.to_i) ||
+          (params[:work_order][:meter_owner_id].to_i != @work_order.meter_owner_id.to_i) ||
+          (params[:work_order][:meter_location_id].to_i != @work_order.meter_location_id.to_i) ||
           (params[:work_order][:remarks].to_s != @work_order.remarks))
         master_changed = true
       end
