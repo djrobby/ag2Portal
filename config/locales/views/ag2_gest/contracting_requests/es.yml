@@ -86,6 +86,8 @@ es:
         change_1: "Se encuentra en buen estado el contador."
         change_2: "Se encuentra en estado la instalación."
         change_3: "Ultima lectura del contador"
+      reading_cancellation_billable: "La lectura de retirada ya se encuentra facturada"
+      work_order_exist: "La orden de trabajo ya fue creada"
       back_to_main_page: "Volver a Solicitudes de contratación"
       generate_code_btn: "Código de Contratación"
       personal_info: "Información del Contratación"

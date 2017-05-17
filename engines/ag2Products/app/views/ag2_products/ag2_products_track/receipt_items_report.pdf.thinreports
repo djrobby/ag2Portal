@@ -61,7 +61,6 @@ report.page.list(:default).header do |header|
 	report.page.values receipt_no_c: I18n.t("activerecord.attributes.receipt_note.receipt_no")
 	report.page.values receipt_date_c: I18n.t("activerecord.attributes.receipt_note.receipt_date")
 	report.page.values supplier_c: I18n.t("activerecord.attributes.receipt_note.supplier")
-	report.page.values charge_account_c: I18n.t("activerecord.attributes.receipt_note.charge_account")
 	report.page.values project_c: I18n.t("activerecord.attributes.receipt_note.project")
 	report.page.values store_c: I18n.t("activerecord.attributes.receipt_note.store")
 	report.page.values quantity_c: I18n.t("activerecord.attributes.receipt_note.quantity")
@@ -98,9 +97,15 @@ receipt_number = @receipt_items_report.first.receipt_note.receipt_no
 
 	report.page.list(:default).add_row do |row|
 		report.page.values receipt_no: i.receipt_note.receipt_no
+		if i.receipt_note.balance <= 0
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/star-point.png'))
+        elsif i.receipt_note.balance == i.receipt_note.quantity
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/warning-sign.png'))
+        else
+			report.page.values img: (URI.decode('app/assets/images/icon/glyph/black/empty-star.png'))
+		end
 		report.page.values receipt_date: formatted_date(i.receipt_note.receipt_date) unless i.receipt_note.receipt_date.blank?
-		report.page.values supplier: i.receipt_note.supplier.partial_name
-		report.page.values charge_account: i.receipt_note.charge_account.partial_name unless i.receipt_note.charge_account.blank?
+		report.page.values supplier: i.receipt_note.supplier.partial_name30
 		report.page.values project: i.receipt_note.project.full_code unless i.receipt_note.project.blank?
 		report.page.values store: i.receipt_note.store.name unless i.receipt_note.store.blank?
 		report.page.values quantity: number_with_precision(i.receipt_note.quantity, precision: 2) unless i.receipt_note.quantity.blank?

@@ -44,6 +44,22 @@ module Ag2Gest
 
     # add mj
     # PDF Biller
+    def biller_contract_pdf
+      # Search invoice & items
+      @biller_printer = Bill.find(params[:id])
+      @invoice = @biller_printer.invoices.first
+      @items = @invoice.invoice_items.order('id')
+
+      title = t("activerecord.models.invoice.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@invoice.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
     def biller_pdf
       @biller_printer = Bill.find(params[:id])
       title = t("activerecord.models.bill.few")

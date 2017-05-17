@@ -3952,6 +3952,28 @@ ActiveRecord::Schema.define(:version => 20170507094332) do
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
 
+  create_table "update_wap", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "reference_price",  :precision => 12, :scale => 4
+    t.decimal "global_wap",       :precision => 12, :scale => 4
+    t.integer "supplier_id"
+    t.decimal "price",            :precision => 12, :scale => 4
+    t.decimal "discount_rate",    :precision => 12, :scale => 2
+    t.decimal "net_price",        :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_0", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_strange", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false
     t.string   "encrypted_password",     :default => "",   :null => false

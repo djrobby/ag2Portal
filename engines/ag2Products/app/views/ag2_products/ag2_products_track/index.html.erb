@@ -29,6 +29,7 @@
           show("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -42,6 +43,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           show("#Status", "<%= t(".label_order_status") %>");
           show("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
@@ -55,6 +57,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           show("#Status", "<%= t(".label_order_status") %>");
           show("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
@@ -68,6 +71,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
+          show("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
@@ -81,6 +85,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           hide("#Family", "<%= t(".label_family") %>");
@@ -94,6 +99,7 @@
           hide("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -107,6 +113,7 @@
           show("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -121,6 +128,7 @@
           show("#Store", "<%= t(".label_store") %>");
           hide("#Order", "<%= t(".label_work_order") %>");
           hide("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -133,6 +141,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
+          hide("#Balance", "<%= t(".label_balance") %>");
           show("#Status", "<%= t(".label_order_status") %>");
           show("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -296,13 +305,14 @@
           var store = $('select#Store :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
+          var balance = $('select#Balance :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == ""))
+          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
             return;
           if (detailed == ""){
-          	window.open("receipt_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          	window.open("receipt_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  "_blank");
           }else {
-		  	window.open("receipt_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+		  	window.open("receipt_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance, "_blank");
           } 
           break;
         case 5:
@@ -416,6 +426,9 @@
       <!-- Charge account -->
       <%= label_tag t(".label_charge_account"), nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Billing status -->
+      <%= label_tag t("activerecord.attributes.receipt_note.billing_status"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Balance", options_for_select(@balances), :prompt => "", :class => 'x-large-text-field shrinked' %>
       <!-- Dates -->
       <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>

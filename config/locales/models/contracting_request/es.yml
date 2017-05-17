@@ -164,6 +164,8 @@ es:
         number_subscriber: "Nº abonado"
         data_meter: "Datos contador"
         meter: "Contador"
+        alert_inspection: "Orden de Inspección no gestionada"
+        alert_instalation: "Orden de Instalación no gestionada"
         invoice_contract: "Factura de contratación"
         invoice_service: "Factura de servicio"
         invoice_contract_c: "Fact. Con"

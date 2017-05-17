@@ -108,7 +108,7 @@
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        url: "/search_meters",
+        url: target_url,
         dataType: "json",
         delay: 250,
         data: function(term, page) {
@@ -653,6 +653,24 @@
       if (meter == "")
         meter = "0";
       jQuery.getJSON('wo_update_meter_textfields_from_meter/' + meter, function(data) {
+        $("#work_order_meter_code").val(data.code);
+        $("#work_order_meter_model_id").select2("val", data.model);
+        $("#work_order_caliber_id").select2("val", data.caliber);
+        $("#work_order_meter_owner_id").select2("val", data.owner);
+        $("#work_order_meter_location_id").select2("val", data.location);
+      });
+      return false;
+    });
+
+    // when the #work_order_subscriber_id field changes
+    $("#Subscriber").change(function() {
+      // make a POST call and replace the content
+      var subscriber = $('#Subscriber').val();
+      if (subscriber == "")
+        subscriber = "0";
+      jQuery.getJSON('wo_update_meter_textfields_from_subscriber/' + subscriber, function(data) {
+        metersSelect2ForNew(data.meter, data.subscriber);        
+        $("#Meter").val(data.meter_id);
         $("#work_order_meter_code").val(data.code);
         $("#work_order_meter_model_id").select2("val", data.model);
         $("#work_order_caliber_id").select2("val", data.caliber);

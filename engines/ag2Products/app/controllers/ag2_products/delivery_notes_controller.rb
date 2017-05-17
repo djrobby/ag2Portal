@@ -272,7 +272,7 @@ module Ag2Products
       organization = params[:org]
       if organization != '0'
         @organization = Organization.find(organization)
-        @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
+        # @clients = @organization.blank? ? clients_dropdown : @organization.clients.order(:client_code)
         @projects = @organization.blank? ? projects_dropdown : @organization.projects.order(:project_code)
         @work_orders = @organization.blank? ? work_orders_dropdown : @organization.work_orders.order(:order_no)
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
@@ -280,7 +280,7 @@ module Ag2Products
         @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
       else
-        @clients = clients_dropdown
+        # @clients = clients_dropdown
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
         @charge_accounts = charge_accounts_dropdown
@@ -293,9 +293,12 @@ module Ag2Products
       # Products array
       @products_dropdown = products_array(@products)
       # Clients array
-      @clients_dropdown = clients_array(@clients)
+      # @clients_dropdown = clients_array(@clients)
       # Setup JSON
-      @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
+      # @json_data = { "client" => @clients_dropdown, "project" => @projects, "work_order" => @orders_dropdown,
+      #                "charge_account" => @charge_accounts, "store" => @stores,
+      #                "payment_method" => @payment_methods, "product" => @products_dropdown }
+      @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
                      "payment_method" => @payment_methods, "product" => @products_dropdown }
       render json: @json_data
@@ -446,8 +449,7 @@ module Ag2Products
       @offers = offers_dropdown
       @projects = projects_dropdown
       @work_orders = work_orders_dropdown
-      # @charge_accounts = projects_charge_accounts(@projects) #slow
-      @charge_account = " "
+      @charge_accounts = projects_charge_accounts(@projects) #slow
       @stores = stores_dropdown
       # @clients = clients_dropdown #slow
       @client = " "
@@ -467,8 +469,7 @@ module Ag2Products
       @offers = @delivery_note.client.blank? ? offers_dropdown : @delivery_note.client.sale_offers.order(:client_id, :offer_no, :id)
       @projects = projects_dropdown_edit(@delivery_note.project)
       @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
-      # @charge_accounts = work_order_charge_account(@delivery_note)
-      @charge_account = @delivery_note.charge_account.blank? ? " " : @delivery_note.charge_account.full_name
+      @charge_accounts = work_order_charge_account(@delivery_note)
       @stores = work_order_store(@delivery_note)
       # @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
       @client = @delivery_note.client.blank? ? " " : @delivery_note.client.full_name_or_company_and_code
@@ -491,8 +492,7 @@ module Ag2Products
           @offers = offers_dropdown
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          # @charge_accounts = projects_charge_accounts(@projects)
-          @charge_account = " "
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           # @clients = clients_dropdown
           @client = " "
@@ -537,7 +537,7 @@ module Ag2Products
           (params[:delivery_note][:project_id].to_i != @delivery_note.project_id.to_i) ||
           (params[:delivery_note][:delivery_no].to_s != @delivery_note.delivery_no) ||
           (params[:delivery_note][:delivery_date].to_date != @delivery_note.delivery_date) ||
-          (params[:delivery_note][:client_id].to_i != @delivery_note.client_id.to_i) ||
+          (params[:Client].to_i != @delivery_note.client_id.to_i) ||
           (params[:delivery_note][:sale_offer_id].to_i != @delivery_note.sale_offer_id.to_i) ||
           (params[:delivery_note][:work_order_id].to_i != @delivery_note.work_order_id.to_i) ||
           (params[:delivery_note][:charge_account_id].to_i != @delivery_note.charge_account_id.to_i) ||
@@ -551,6 +551,7 @@ module Ag2Products
       respond_to do |format|
         if master_changed || items_changed
           @delivery_note.updated_by = current_user.id if !current_user.nil?
+          @delivery_note.client_id = params[:Client].to_i unless params[:Client].blank?
           if @delivery_note.update_attributes(params[:delivery_note])
             format.html { redirect_to @delivery_note,
                           notice: (crud_notice('updated', @delivery_note) + "#{undo_link(@delivery_note)}").html_safe }
@@ -561,7 +562,8 @@ module Ag2Products
             @work_orders = @delivery_note.project.blank? ? work_orders_dropdown : @delivery_note.project.work_orders.order(:order_no)
             @charge_accounts = work_order_charge_account(@delivery_note)
             @stores = work_order_store(@delivery_note)
-            @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
+            # @clients = @delivery_note.organization.blank? ? clients_dropdown : @delivery_note.organization.clients.order(:client_code)
+            @client = @delivery_note.client.blank? ? " " : @delivery_note.client.full_name_or_company_and_code
             @payment_methods = @delivery_note.organization.blank? ? payment_methods_dropdown : collection_payment_methods(@delivery_note.organization_id)
             # @products = @delivery_note.organization.blank? ? products_dropdown : @delivery_note.organization.products.order(:product_code)
             format.html { render action: "edit" }

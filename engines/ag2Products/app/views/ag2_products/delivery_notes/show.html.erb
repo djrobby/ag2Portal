@@ -41,7 +41,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.delivery_note.client' %>:</td>
-      <td><%= @delivery_note.client.full_name unless @delivery_note.client.blank? %></td>
+      <td><%= @delivery_note.client.full_name_or_company_and_code unless @delivery_note.client.blank? %></td>
       <td><%=t 'activerecord.attributes.delivery_note.payment_method' %>:</td>
       <td> <%= @delivery_note.payment_method.description unless @delivery_note.payment_method.blank? %> </td>
     </tr>

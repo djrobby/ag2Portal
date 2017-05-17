@@ -109,6 +109,21 @@ class ReceiptNoteItem < ActiveRecord::Base
     product.product_family.is_meter || false
   end
 
+  #
+  # Class (self) user defined methods
+  #
+  def self.bill_total #billing_status = Total --> 0
+    includes(:receipt_note).joins(:receipt_note_item_balance).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) <= ?', 0)
+  end
+
+  def self.bill_partial #billing_status = Parcial --> 1
+    includes(:receipt_note).joins(:receipt_note_item_balance).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) != sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
+  end
+
+  def self.bill_unbilled #billing_status = No facturado --> 2
+    includes(:receipt_note).joins(:receipt_note_item_balance).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) = sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
+  end
+
   private
 
   # Before destroy

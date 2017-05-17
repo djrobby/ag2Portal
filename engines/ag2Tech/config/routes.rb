@@ -136,10 +136,13 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
     match 'work_orders/:id/wo_generate_no/:project', :controller => 'work_orders', :action => 'wo_generate_no'
-
     match 'work_orders/wo_update_meter_textfields_from_meter/:meter', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_meter'
     match 'wo_update_meter_textfields_from_meter/:meter', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_meter'
     match 'work_orders/:id/wo_update_meter_textfields_from_meter/:meter', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_meter'
+
+    match 'work_orders/wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
+    match 'wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
+    match 'work_orders/:id/wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
     #
     # Work order types
     match 'work_order_types/wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'

@@ -325,7 +325,7 @@ class EnginesController < ApplicationController
     w = "subscribers.id = #{subscriber} AND " if !subscriber.blank?
     if @q != ''
       w += "(meter_code LIKE '%#{@q}%' OR meter_models.model LIKE '%#{@q}%' OR meter_brands.brand LIKE '%#{@q}%' OR calibers.caliber LIKE '%#{@q}%')"
-      @meters = serialized(Meter.g_where(w),
+      @meters = serialized(Meter.g_where_with_subscribers(w),
                             Api::V1::MetersSerializer)
     end
     render json: @meters

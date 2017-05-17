@@ -196,7 +196,7 @@ module Ag2Gest
                 reading_2: rdg_2,
                 created_by: @contracting_request.try(:created_by)
               ) 
-          else
+          elsif @contracting_request.old_subscriber.readings.last.reading_type_id == ReadingType::RETIRADA and @contracting_request.old_subscriber.readings.last.billable?
             @contracting_request.old_subscriber.readings.last.update_attributes(billing_period_id: params[:BillingPeriodForReading],
                 billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
                 reading_type_id: ReadingType::RETIRADA,

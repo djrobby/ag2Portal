@@ -121,6 +121,9 @@ class WaterSupplyContract < ActiveRecord::Base
                               measure_id: tariff.billing_frequency.fix_measure_id,
                               created_by: contracting_request.try(:created_by) )
       end
+      _i = Invoice.find(invoice.id)
+      _i.totals = _i.total
+      _i.save
     end
     self.bill_id = bill.id
     if self.save
@@ -203,6 +206,78 @@ class WaterSupplyContract < ActiveRecord::Base
                                   subcode: i_item.first.try(:subcode),
                                   measure_id: i_item.first.try(:measure_id),
                                   created_by: contracting_request.try(:created_by) )
+      _i = Invoice.find(invoice.id)
+      _i.totals = _i.total
+      _i.save
+      end
+      self.bailback_bill_id = bill_cancellation.id
+      if self.save
+        return bill_cancellation
+      else
+        return nil
+      end
+    elsif old_subscriber.deposit.to_s != "0.0"
+        bill_cancellation = Bill.create( bill_no: bill_next_no(contracting_request.project),
+                            project_id: contracting_request.project_id,
+                            invoice_status_id: InvoiceStatus::PENDING,
+                            bill_date: Date.today,
+                            subscriber_id: subscriber_id, #nil
+                            client_id: old_subscriber.client_id,
+                            last_name: old_subscriber.client.last_name,
+                            first_name: old_subscriber.client.first_name,
+                            company: old_subscriber.client.company,
+                            fiscal_id: old_subscriber.client.fiscal_id,
+                            street_type_id: old_subscriber.client.street_type_id,
+                            street_name: old_subscriber.client.street_name,
+                            street_number: old_subscriber.client.street_number,
+                            building: old_subscriber.client.building,
+                            floor: old_subscriber.client.floor,
+                            floor_office: old_subscriber.client.floor_office,
+                            zipcode_id: old_subscriber.client.zipcode_id,
+                            town_id: old_subscriber.client.town_id,
+                            province_id: old_subscriber.client.province_id,
+                            region_id: old_subscriber.client.region_id,
+                            country_id: old_subscriber.client.country_id,
+                            organization_id: contracting_request.project.organization_id,
+                            created_by: contracting_request.try(:created_by) )
+          tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
+            invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),
+                                    bill_id: bill_cancellation.id,
+                                    invoice_status_id: InvoiceStatus::PENDING,
+                                    invoice_type_id: InvoiceType::CONTRACT,
+                                    invoice_date: Date.today,
+                                    tariff_scheme_id: tariff_scheme.id,
+                                    payday_limit: Date.today,
+                                    invoice_operation_id: InvoiceOperation::INVOICE,
+                                    billing_period_id: nil,
+                                    consumption: nil,
+                                    consumption_real: nil,
+                                    consumption_estimated: nil,
+                                    consumption_other: nil,
+                                    biller_id: tariffs_biller[0],
+                                    discount_pct: 0.0,
+                                    exemption: 0.0,
+                                    original_invoice_id: nil,
+                                    charge_account_id: contracting_request.project.try(:charge_accounts).first.try(:id),
+                                    organization_id: contracting_request.project.organization_id,
+                                    created_by: contracting_request.try(:created_by) )
+            # tariffs_biller[1].each do |tariff|
+              InvoiceItem.create( invoice_id: invoice.id,
+                                  code: "FIA",
+                                  description: "Fianza",
+                                  tariff_id: 427,
+                                  price: old_subscriber.try(:deposit)* -1,
+                                  quantity: 1,
+                                  tax_type_id: 6,
+                                  discount_pct: 0.0,
+                                  discount: 0.0,
+                                  product_id: nil,
+                                  subcode: "FIA",
+                                  measure_id: 15,
+                                  created_by: contracting_request.try(:created_by) )
+      _i = Invoice.find(invoice.id)
+      _i.totals = _i.total
+      _i.save
       end
       self.bailback_bill_id = bill_cancellation.id
       if self.save

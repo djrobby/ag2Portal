@@ -325,6 +325,8 @@ Ag2Gest::Engine.routes.draw do
       get 'bill', on: :member
       get 'bill_cancellation', on: :member
       get 'biller_pdf', on: :member
+      get 'refresh_status', on: :member
+      get 'biller_contract_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member
       post 'subrogation', on: :collection
       resources :water_supply_contracts, except: [:index, :show, :edit, :new]
@@ -386,6 +388,7 @@ Ag2Gest::Engine.routes.draw do
       get 'confirm', on: :collection
       get 'bill_supply_pdf', on: :member
       get 'biller_pdf', on: :member
+      get 'biller_contract_pdf', on: :member
       #get 'void', on: :member
       #get 'rebilling', on: :member
     end

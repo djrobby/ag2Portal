@@ -22,7 +22,7 @@
   </tbody>
 </table>
 
-<% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING %>
+<% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING or @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION or @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>
 
   <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
 

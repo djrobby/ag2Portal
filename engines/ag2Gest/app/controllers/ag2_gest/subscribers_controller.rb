@@ -746,7 +746,7 @@ module Ag2Gest
             created_by: (current_user.id if !current_user.nil?)
           )
           @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
-          if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id.nil?
+          if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id.nil? and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
             @contracting_request.client.client_bank_accounts.where(ending_at: nil,subscriber_id: nil).last.update_attributes(subscriber_id: @subscriber.id)
           end
           if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id == @subscriber.id and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
@@ -762,6 +762,7 @@ module Ag2Gest
               @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
               response_hash = { subscriber: @subscriber }
               response_hash[:bill] = @contracting_request.water_supply_contract.bill
+              response_hash[:contracting_request] = @contracting_request
               response_hash[:reading] = @reading
               respond_to do |format|
                 format.json { render json: response_hash }

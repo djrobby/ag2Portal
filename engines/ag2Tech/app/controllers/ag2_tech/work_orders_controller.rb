@@ -11,6 +11,7 @@ module Ag2Tech
                                                :wo_update_labor_select_from_type,
                                                :wo_update_petitioner_textfield_from_client,
                                                :wo_update_meter_textfields_from_meter,
+                                               :wo_update_meter_textfields_from_subscriber,
                                                :wo_item_totals,
                                                :wo_worker_totals,
                                                :wo_subcontractor_totals,
@@ -644,6 +645,38 @@ module Ag2Tech
       @json_data = { "code" => code, "model" => model,
                      "caliber" => caliber, "owner" => owner,
                      "location" => location }
+      render json: @json_data
+    end
+
+    # Update meter textfields at view from meter select
+    def wo_update_meter_textfields_from_subscriber
+      subscriber = params[:subscriber]
+      meter = 0
+      meter_id = 0
+      meter_full_name = ''
+      code = ''
+      model = 0
+      caliber = 0
+      owner = 0
+      location = 0
+      if subscriber != '0'
+        _subscriber = Subscriber.find(subscriber)
+        if !_subscriber.nil? && !_subscriber.meter.blank?
+          meter = _subscriber.meter
+          meter_id = meter.id
+          meter_full_name = meter.full_name
+          code = meter.meter_code unless meter.meter_code.blank?
+          model = meter.meter_model_id unless meter.meter_model_id.blank?
+          caliber = meter.caliber_id unless meter.caliber_id.blank?
+          owner = meter.meter_owner_id unless meter.meter_owner_id.blank?
+          location = meter.current_location.id unless meter.current_location.blank?
+        end
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "model" => model,
+                     "caliber" => caliber, "owner" => owner,
+                     "location" => location, "subscriber" => subscriber,
+                     "meter_id" => meter_id, "meter" => meter_full_name }
       render json: @json_data
     end
 

@@ -11,7 +11,11 @@
 
 <h3><%= t("activerecord.attributes.contracting_request.bill_name") %></h3>
 
-<%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), class: "btn btn-warning pull-right", target: "_blank" unless @bill.subscriber_id.blank?%>
+<% if @bill.invoices.first.invoice_type.id == InvoiceType::WATER %>
+  <%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" unless @bill.subscriber_id.blank?%>
+<% elsif @bill.invoices.first.invoice_type.id == InvoiceType::CONTRACT %>
+  <%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_contract_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" %>
+<% end %>
 
 <% @bill.invoices.each do |invoice| %>
 	<div class="span3" style="padding: 14px; background-color:#E6E6E6;">

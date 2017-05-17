@@ -8,8 +8,7 @@ var content = '';
     <% @contracting_request.water_supply_contract.bill.invoices.each_with_index do |invoice, index| %>
 
     content += '<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>';
-    content += '<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>';
-    content += '<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>';
+    content += '<h5><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></h5>';
 
     content += `<table class="table table<%= index %>">`;
     content += `<tbody>`;

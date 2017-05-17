@@ -133,11 +133,11 @@ class ReceiptNote < ActiveRecord::Base
 
   # Billing status based on current balance
   def billing_status
-    if balance <= 0           # fully received
+    if balance <= 0           # fully billed
       _status = I18n.t("activerecord.attributes.receipt_note.billing_status_total")
-    elsif balance == quantity # unreceived
+    elsif balance == quantity # unbilled
       _status = I18n.t("activerecord.attributes.receipt_note.billing_status_unreceived")
-    else                      # partially received
+    else                      # partially billed
       _status = I18n.t("activerecord.attributes.receipt_note.billing_status_partial")
     end
     _status
@@ -170,6 +170,18 @@ class ReceiptNote < ActiveRecord::Base
         includes(:supplier).joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
     end
+  end
+
+  def self.bill_total #billing_status = 0
+    joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) <= ?', 0)
+  end
+
+  def self.bill_partial #billing_status = 1
+    joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) != sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
+  end
+
+  def self.bill_unbilled #billing_status = 2
+    joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) = sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
   end
 
   #

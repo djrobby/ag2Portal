@@ -1,4 +1,4 @@
-if @receipt_report.nil?
+if @receipt_report.blank?
 	return
 end
 
@@ -74,8 +74,15 @@ end
 @receipt_report.each do |i|
 	report.page.list(:default).add_row do |row|
 		row.item(:receipt_no).value i.receipt_no
+		if i.balance <= 0
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/star-point.png'))
+        elsif i.balance == i.quantity
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/warning-sign.png'))
+        else
+			row.item(:img).value(URI.decode('app/assets/images/icon/glyph/black/empty-star.png'))
+		end
 		row.item(:receipt_date).value formatted_date(i.receipt_date) unless i.receipt_date.blank?
-		row.item(:supplier).value i.supplier.partial_name
+		row.item(:supplier).value i.supplier.partial_name30
 		row.item(:project).value i.project.full_code unless i.project.blank?
 		row.item(:store).value i.store.name unless i.store.blank?
 		row.item(:charge_account).value i.charge_account.partial_name unless i.charge_account.blank?

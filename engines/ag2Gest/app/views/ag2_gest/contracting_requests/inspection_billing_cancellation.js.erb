@@ -190,10 +190,6 @@ var content_b = '';
   <% end %> /*End Bill.invoices*/
 <% end %> /*End if*/
 
-form_u.append(content_u);
-
-$("#billing-unsubscribe-modal-cancellation").modal("show");
-
 <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:invoices)  %>
   $("#edit-bailback").removeClass("hide");
   form.append(content);
@@ -201,12 +197,20 @@ $("#billing-unsubscribe-modal-cancellation").modal("show");
 <% end %> 
 <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices)  %>
   $("#edit-unsubscribe").removeClass("hide");
+  form_u.append(content_u);
+  $("#billing-unsubscribe-modal-cancellation").modal("hide");
 <% end %> 
 <% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices)  %>
-  $("#edit-bill").removeClass("hide").modal("hide");
+  $("#edit-bill").removeClass("hide");
   form_b.append(content_b);
-  $("#billing-modal");
+  $("#billing-modal").modal("hide");
 <% end %> 
+
+<% if @contracting_request.contracting_request_type_id == ContractingRequestType::ContractingRequestType::CHANGE_OWNERSHIP %>
+  $("#billing-modal").modal("show");
+<% elsif @contracting_request.contracting_request_type_id == ContractingRequestType::ContractingRequestType::CANCELLATION %>
+  $("#billing-unsubscribe-modal-cancellation").modal("show");
+<% end %>  
 
 $("#link-bill-cancellation").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + "<%=@bill.id%>");
 $("#link-bill-cancellation").text("<%=@bill.bill_no%>".substr(0, 12) + "-" + "<%=@bill.bill_no%>".substr(12, 4) + "-" +  "<%=@bill.bill_no%>".substr(16, 6));
