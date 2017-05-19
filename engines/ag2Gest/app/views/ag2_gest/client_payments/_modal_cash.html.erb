@@ -21,7 +21,7 @@
       <div class="control-group string required">
         <label class="form-label"><%= t('activerecord.attributes.client_payment.to_collect') %></label>
         <div class="controls highlighted bolded">
-          <span class="debt-total">0,0000</span>
+          <span class="debt-total">0,00</span>
         </div>
       </div>
       <%= f.input :amount, required: true, label: I18n.t("activerecord.attributes.client_payment.amount"), as: :decimal, inline_label: "Yes", input_html: { class: 'mid-text-field number-text-field', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
@@ -29,7 +29,7 @@
       <div class="control-group string required">
         <label class="form-label-under-sel2"><%= t('activerecord.attributes.client_payment.change') %></label>
         <div class="controls highlighted bolded">
-          <span class="cash-return">0,0000</span>
+          <span class="cash-return">0,00</span>
         </div>
       </div>
     </div>

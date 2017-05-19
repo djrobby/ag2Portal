@@ -113,13 +113,19 @@ module Ag2Gest
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.blank? ? Caliber.find(params[:water_supply_contract][:caliber_id]) : @meter.try(:caliber)
+
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract].except(:meter_code_input))
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
-
+      if !@contracting_request.work_order.blank?
+        if !@contracting_request.work_order.caliber.blank?
+          @caliber = @contracting_request.work_order.caliber
+          @water_supply_contract.update_attributes(caliber_id: @caliber.id)
+        end
+      end
         _tariff_type_ids.each do |r|
           _tariff_type = TariffType.find(r)
           tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
@@ -154,6 +160,7 @@ module Ag2Gest
     # PUT /water_supply_contracts/1.json
     def update
       @breadcrumb = 'update'
+      @water_supply_contract = WaterSupplyContract.find(params[:id])
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
       _tariff_type_ids = params[:TariffType_]
@@ -161,15 +168,21 @@ module Ag2Gest
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.try(:caliber) || Caliber.find(params[:water_supply_contract][:caliber_id])
+    
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
-      @water_supply_contract = WaterSupplyContract.find(params[:id])
       # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
       # data_meters = Array.new
       # @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
       # @water_supply_contract.tariff_id = @tariff.try(:id)
       @water_supply_contract.updated_by = current_user.id if !current_user.nil?
       if @water_supply_contract.update_attributes(params[:water_supply_contract].except(:meter_code_input))
+        if !@contracting_request.work_order.blank?
+          if !@contracting_request.work_order.caliber.blank?
+            @caliber = @contracting_request.work_order.caliber
+            @water_supply_contract.update_attributes(caliber_id: @caliber.id)
+          end
+        end
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
             @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])

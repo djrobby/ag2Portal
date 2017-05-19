@@ -72,11 +72,18 @@ en:
         debt_c: "Your current pending debt is"
       report:
         billable_concept: "Conceptos Facturados"
+        billing_period: "Periodo facturado"
         client: "Datos de Cliente / Abonado"
+        client_code: "Nº Cliente / Abonado"
+        client_code_c: "Nº Cliente"
         type: "Tipo de Facturas"
         subtotal: "Subtotal"
         taxes: "Impuestos"
         status: "Estado"
         debt: "Deuda"
+        debt_c: "Su total pendiente asciende a "
         charged: "Cobrado"
+        detail: "Desglose de Conceptos"
+        remark: "El pago de esta factura se acredita con la posesión del justificante de cobro o el adeudo bancario y no presupone el pago de las facturas anteriores. "
+
 

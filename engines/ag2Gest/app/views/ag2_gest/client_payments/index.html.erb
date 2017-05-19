@@ -1,5 +1,5 @@
 <% session[:return_to] = nil %>
-<% session[:return_to] = nil %>
+<% session[:return_to_url] = nil %>
 
 <script>
   var _thisForm = '';
@@ -8,16 +8,28 @@
   var _delimiter = '.';
   var _separator = ',';
   var _active_tab = 'pendings-tab';
+  var _cashier_shown = false;
 
   function show_cashier() {
     if (_active_tab == "pendings-tab") {
-      <% if !@bills_pending.blank? && !@bills_charged.blank? %>
+      <% if !@bills_pending.blank? %>
       $("#cashier").show();
+      _cashier_shown = true;
       <% else %>
       $("#cashier").hide();
+      _cashier_shown = false;
+      <% end %>
+    } else if (_active_tab == "fractionated-tab") {
+      <% if !@instalment_invoices.blank? %>
+      $("#cashier").show();
+      _cashier_shown = true;
+      <% else %>
+      $("#cashier").hide();
+      _cashier_shown = false;
       <% end %>
     } else {
       $("#cashier").hide();
+      _cashier_shown = false;
     }
   }
 
@@ -170,6 +182,7 @@
       $("#fractionated").html("");
       $("#cashier").hide();
       $("#loader").show();
+      _cashier_shown = false;
     });
 
     // when #submit_btn is clicked
@@ -185,6 +198,7 @@
       $("#fractionated").html("");
       $("#cashier").hide();
       $("#loader").show();
+      _cashier_shown = false;
     });
 
     $("#removeFilter").click(function() {
@@ -490,6 +504,9 @@
         <br /><br />
 
         <!-- <br /> -->
+        <% if !session[:return_to_cr].nil? %>
+        <%= link_to session[:return_to_cr], session[:return_to_cr_url] %> |
+        <% end %>
         <%= link_to t(".back_to_root"), ag2_gest.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->
@@ -545,7 +562,7 @@
                     <td class="text-middle">
                       <div class="control-group string required">
                         <div class="controls string required highlighted bolded">
-                          <span class="debt-total">0,0000</span>
+                          <span class="debt-total">0,00</span>
                         </div>
                       </div>
                     </td>
@@ -559,7 +576,7 @@
                     <td align="right" class="text-middle">
                       <div class="control-group string required">
                         <div class="controls highlighted bolded">
-                          <span class="cash-return">0,0000</span>
+                          <span class="cash-return">0,00</span>
                         </div>
                       </div>
                     </td>
@@ -746,10 +763,11 @@
     e.preventDefault();
     $('input:checkbox').removeAttr('checked');
     $(this).tab('show');
-    if (_active_tab == "pendings-tab") {
+    if (_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") {
       show_cashier();
     } else {
       $("#cashier").hide();
+      _cashier_shown = false;
     }
   });  
 

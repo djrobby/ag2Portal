@@ -47,6 +47,8 @@ module Ag2Gest
     def biller_contract_pdf
       # Search invoice & items
       @biller_printer = Bill.find(params[:id])
+      @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
+      @contracting_request = @water_supply_contract.contracting_request
       @invoice = @biller_printer.invoices.first
       @items = @invoice.invoice_items.order('id')
 

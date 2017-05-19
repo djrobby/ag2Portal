@@ -300,6 +300,14 @@
         $("#status_work_order_inspection").text(data.work_order_status.name);
       };
 
+      if (data.meter_code) {
+        $("#meter_code").text(data.meter_code);
+      };
+
+      if (data.caliber) {
+        $("#caliber").text(data.caliber.caliber);
+      };
+
       if (data.work_order_cancellation) {
         $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6) + "M");
         $("#link_work_order_cancellation").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order_cancellation.id);
@@ -331,6 +339,7 @@
         if (data.invoice_status.id != '1') {
           $("#link-bill-span").hide();
         } else {
+          $("#link-bill-span").show();
           $("#link-bill-span").text(data.invoice_status.code);
         };
       };
@@ -341,6 +350,7 @@
       var currentStepWizard = $('a[href="#step-1"]'),
           nextStepWizard = $('a[href="#step-3"]');
       changeState(currentStepWizard,nextStepWizard)
+      $("#update-new").hide();
       $("#bill-doc").addClass("hide");
       $("#link-bill").addClass("hide");
     });
@@ -352,6 +362,7 @@
         alert('<%= t('ag2_gest.contracting_requests.reading_cancellation_billable') %>');
       } else {
         changeState(currentStepWizard,nextStepWizard)
+        $("#update-new").hide();
       };
     });
 
@@ -362,6 +373,7 @@
         alert('<%= t('ag2_gest.contracting_requests.reading_cancellation_billable') %>');
       } else {
         changeState(currentStepWizard,nextStepWizard)
+        $("#update-new").hide();
       };
     });
 
@@ -370,6 +382,7 @@
       var currentStepWizard = $('a[href="#step-2"]'),
           nextStepWizard = $('a[href="#step-3"]');
       changeState(currentStepWizard,nextStepWizard)
+      $("#update-new").hide();
       $("#bill-doc").addClass("hide");
       $("#link-bill").addClass("hide");
     });
@@ -405,10 +418,15 @@
       if (data.work_order_status.id == '1' || data.work_order_status.id == '2'){
         alert('<%= t('activerecord.attributes.contracting_request.alert_inspection') %>');
       };
-      if (data.invoice_status.id != '1'){
-         $("#ot-installation").removeClass("hide");
-         $("#link-bill-span").hide();
+      if (data.invoice_status.id != '1' && !data.work_order_installation) {
+        $("#ot-installation").removeClass("disabled");
       } else {
+        $("#ot-installation").addClass("disabled");
+      };
+      if (data.invoice_status.id != '1') {
+        $("#link-bill-span").hide();
+      } else {
+        $("#link-bill-span").show();
         $("#link-bill-span").text(data.invoice_status.code);
       };
       // $("#link_work_order_instalation").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
@@ -438,8 +456,16 @@
       if (data.work_order_status.id == '1' || data.work_order_status.id == '2'){
         alert('<%= t('activerecord.attributes.contracting_request.alert_inspection') %>');
       };
-      if (data.invoice_status.id != '1'){
-         $("#ot-installation").removeClass("hide");
+      if (data.invoice_status.id != '1' && !data.work_order_installation) {
+        $("#ot-installation").removeClass("disabled");
+      } else {
+        $("#ot-installation").addClass("disabled");
+      };
+      if (data.invoice_status.id != '1') {
+        $("#link-bill-span").hide();
+      } else {
+        $("#link-bill-span").show();
+        $("#link-bill-span").text(data.invoice_status.code);
       };
       // $("#bill-doc").removeClass("hide");
       // $("#unsubscribe-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id);
@@ -580,9 +606,9 @@
     <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.request')}".html_safe, contracting_request_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
 
     <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bailback_bill.blank? && !@contracting_request.water_supply_contract.bailback_bill.invoices.blank? && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING %>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.invoice_contract_c')}".html_safe, biller_contract_pdf_bill_path(@contracting_request.water_supply_contract.bailback_bill_id, :format => :pdf), id: "bailback-bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bailback_bill)}", target: "_blank"%>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.bailback')}".html_safe, biller_contract_pdf_bill_path(@contracting_request.water_supply_contract.bailback_bill_id, :format => :pdf), id: "bailback-bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bailback_bill)}", target: "_blank"%>
     <% else %>
-        <a target="_blank" id="bailback-bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.invoice_contract_c') %></a>
+        <a target="_blank" id="bailback-bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.bailback') %></a>
     <% end %>
 
     <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.unsubscribe_bill.blank? && !@contracting_request.water_supply_contract.unsubscribe_bill.invoices.blank? && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING %>
@@ -592,9 +618,9 @@
     <% end %>
 
     <% if !@contracting_request.water_supply_contract.blank? && !@contracting_request.water_supply_contract.bill.blank? && !@contracting_request.water_supply_contract.bill.invoices.blank? && @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING %>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.biller')}".html_safe, biller_contract_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill)}", target: "_blank" %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.invoice_contract_c')}".html_safe, biller_contract_pdf_bill_path(@contracting_request.water_supply_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_supply_contract).try(:bill)}", target: "_blank" %>
     <% else %>
-        <a target="_blank" id="bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.biller') %></a>
+        <a target="_blank" id="bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.invoice_contract_c') %></a>
     <% end %>
   </div>
   <!-- step buttons -->
@@ -947,12 +973,12 @@
           <td>
             <% if @contracting_request.try(:water_supply_contract).try(:bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
               <% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
-                <%= link_to @contracting_request.water_supply_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.bill_no), id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
+                <%= link_to @contracting_request.water_supply_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.bill_no), :remote => true, id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
               <% else %>
-                <%= link_to @contracting_request.water_supply_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.bill_no), id: "link-bill" %><span class="yellow" id="link-bill-span"></span>
+                <%= link_to @contracting_request.water_supply_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.bill_no), :remote => true, id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
               <% end %>
             <% else %>
-              <a id="link-bill" href="#"></a><span class="yellow" id="link-bill-span"></span>
+              <a id="link-bill" href="#"></a><span class="yellow hide" id="link-bill-span"><%= " P" %></span>
             <% end %>
           </td>
         <% end %>
@@ -961,7 +987,7 @@
               <td><b><%= t('activerecord.attributes.contracting_request.bailback') %></b></td>
               <td>
               <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING  %>
-              <%= link_to @contracting_request.water_supply_contract.bailback_bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.bailback_bill.bill_no)  %>
+              <%= link_to @contracting_request.water_supply_contract.bailback_bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.bailback_bill.bill_no), :remote => true  %>
               <% else %>
                 <a id="link-bailback-bill" href="#"></a>
               <% end %>
@@ -971,7 +997,7 @@
               <td><b><%= t('activerecord.attributes.contracting_request.invoice_service') %></b></td>
               <td>
               <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING  %>
-              <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no) %>
+              <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no), :remote => true %>
               <% else %>
                 <a id="link-unsubscribe-bill" href="#"></a>
               <% end %>

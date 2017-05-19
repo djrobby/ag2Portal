@@ -287,7 +287,7 @@ end
 #
 # TOTAL BILL AND DEBT AND TARIFF
 report.page.values(tariff: regulation_tariff)
-report.page.values(total_billing_c: I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.bill.one"),
+report.page.values(total_billing_c: I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.invoice.one"),
 				   total_billing: number_with_precision(@biller_printer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				   )
 if @biller_printer.debt != 0

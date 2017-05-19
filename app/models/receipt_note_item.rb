@@ -373,7 +373,9 @@ class ReceiptNoteItem < ActiveRecord::Base
     # Weighted average price
     _new_average_price = 0
     if _is_new
-      _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
+      # _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
+      _new_average_price = (_current_stock + _quantity) != 0 ?
+                           ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity) : _current_average_price
     else
       # _new_average_price = ((_current_average_price * _current_stock) - _amount) / (_current_stock - _quantity)
       _new_average_price = (_current_stock - _quantity) != 0 ?
@@ -427,7 +429,8 @@ class ReceiptNoteItem < ActiveRecord::Base
     # Calc new Weighted average price
     _new_average_price = 0
     if _is_new
-      _new_average_price = ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity)
+      _new_average_price = (_current_stock + _quantity) != 0 ?
+                           ((_current_average_price * _current_stock) + _amount) / (_current_stock + _quantity) : _current_average_price
     else
       _new_average_price = (_current_stock - _quantity) != 0 ?
                            ((_current_average_price * _current_stock) - _amount) / (_current_stock - _quantity) : 0

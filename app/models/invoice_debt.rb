@@ -12,6 +12,10 @@ class InvoiceDebt < ActiveRecord::Base
     "#{full_name}"
   end
 
+  def self.unpaid
+    where('debt > 0')
+  end
+
   def full_name
     full_name = ""
     if !self.invoice_no.blank?

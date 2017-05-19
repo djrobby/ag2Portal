@@ -66,6 +66,8 @@ module Ag2Gest
       response_hash[:work_order_status_cancellation] = WorkOrder.where(master_order_id: @contracting_request.work_order_id,work_order_type_id: 29).first.work_order_status if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP or @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
       response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
       response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+      response_hash[:caliber] = @contracting_request.work_order.caliber if @contracting_request.work_order and @contracting_request.work_order.caliber
+      response_hash[:meter_code] = @contracting_request.work_order.meter_code if @contracting_request.work_order and @contracting_request.work_order.caliber
       respond_to do |format|
         format.json { render json: response_hash }
       end
@@ -520,6 +522,7 @@ module Ag2Gest
                                     )
         if @work_order_cancellation.save(:validate => false)
         end
+
         @billcontract = @water_supply_contract.generate_bill_cancellation
         @bill = @water_supply_contract.generate_bill_cancellation_service
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP

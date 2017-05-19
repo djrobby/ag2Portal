@@ -1,153 +1,230 @@
-if @invoice.nil?
-	return
-end
-if @items.count <= 0
+if @biller_printer.blank?
 	return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
+# Localization for dates
+_format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
 
-report.set_layout tlf: 'reports/contract_billing_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/invoice_form_contract', layout_options: { default: true }
 
-#
-# Report events
-#
-# On page create
-report.events.on :page_create do |e|
-	# Set page-number
-	e.page.item(:page_no).value(e.page.no)
-end
-# On report generate
-report.events.on :generate do |e|
-	e.pages.each do |page|
-		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count)
-	end
-end
-
-#
-# List configuration (stores & events)
-#
-report.layout.config.list(:default) do |c|
-	# Define the variables used in list
-	c.use_stores page_quantity: 0, page_discount: 0, page_amount: 0, page_tax: 0
-
-	# On list page footer insertion
-	c.events.on :page_footer_insert do |e|
-		# Display page sutotals
-		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
-		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4))
-		#e.section.item(:page_discount).value(number_with_precision(e.store.page_discount, precision: 4))
-		#e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4))
-		e.section.item(:page_tax).value(number_with_precision(e.store.page_tax, precision: 4))
-		# Initialize subtotals to 0
-		e.store.page_quantity = 0
-		e.store.page_discount = 0
-		e.store.page_amount = 0
-		e.store.page_tax = 0
-	end
-	# On list footer insertion
-	c.events.on :footer_insert do |e|
-		# Display list totals
-		e.section.item(:subtotal_c).value(I18n.t("activerecord.attributes.commercial_billing.subtotal"))
-		e.section.item(:bonus_c).value(I18n.t("activerecord.attributes.commercial_billing.bonus") + " " + number_with_precision(@invoice.discount_pct, precision: 2) + "%")
-		e.section.item(:taxable_c).value(I18n.t("activerecord.attributes.commercial_billing.taxable"))
-		e.section.item(:taxes_c).value(I18n.t("activerecord.attributes.commercial_billing.taxes"))
-		e.section.item(:total_c).value(I18n.t("activerecord.attributes.commercial_billing.total").upcase)
-		e.section.item(:subtotal).value(number_with_precision(@invoice.subtotal, precision: 2, delimiter: delimiter))
-		e.section.item(:bonus).value(number_with_precision(@invoice.bonus, precision: 2, delimiter: delimiter))
-		e.section.item(:taxable).value(number_with_precision(@invoice.taxable, precision: 2, delimiter: delimiter))
-		e.section.item(:taxes).value(number_with_precision(@invoice.taxes, precision: 2, delimiter: delimiter))
-		e.section.item(:total).value(number_with_precision(@invoice.total, precision: 2, delimiter: delimiter))
-		# Display tax details
-		e.section.item(:tax_details).value(I18n.t("activerecord.attributes.commercial_billing.tax_breakdown"))
-		@invoice.tax_breakdown.each do |tb|
-			e.section.item(:tax_list).value(tb[4] + ": " +
-											number_with_precision(tb[1], precision: 2, delimiter: delimiter) + " × " +
-											number_with_precision(tb[0], precision: 2, delimiter: delimiter) + "% = " +
-											number_with_precision(tb[2], precision: 2, delimiter: delimiter) + "\n")
-		end
-	end
-end
 
 # New page & start
 report.start_new_page
 
 # Page header: Image block for Logo
-report.page.values company_logo: "public/" + @invoice.company.logo.url(:original).split("?").first unless @invoice.company.logo.blank?
-# Page header: Company
-report.page.values(company_name: @invoice.company.name,
-				   company_address_1: @invoice.company.address_1,
-				   company_address_2: @invoice.company.address_2,
-				   company_phones: @invoice.company.phone_and_fax,
-				   company_email: @invoice.company.email_and_website,
-				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @invoice.company.fiscal_id)
-# Page header: Possibly null values
-report.page.values bill: @invoice.bill.full_no unless @invoice.bill.blank?
-report.page.values sale_offer: @invoice.invoice_status.name unless @invoice.invoice_status.blank?
+report.page.values company_logo: "public/" + @biller_printer.project.company.logo.url(:original).split("?").first unless @biller_printer.project.company.logo.blank?
 
-# Page header: Others
-report.page.values(form_title: I18n.t("activerecord.models.invoice.one") + " de " + @biller_printer.invoices.first.try(:invoice_type).try(:name),
-				   cb_no_title: I18n.t("activerecord.attributes.commercial_billing.invoice_no") + ":",
-				   cb_no: @invoice.full_no,
-				   cb_date_title: I18n.t("activerecord.attributes.commercial_billing.invoice_date") + ":",
-				   cb_date: @invoice.invoice_date.strftime("%d/%m/%Y"),
-				   bill_title: I18n.t("activerecord.attributes.commercial_billing.bill") + ":",
-				   client_title: I18n.t("activerecord.attributes.bill.client"),
-				   client_name: @invoice.bill.client.to_name,
-				   client_address_1: @invoice.bill.client.address_1,
-				   client_address_2: @invoice.bill.client.address_2,
-				   client_fiscal_id: I18n.t("activerecord.attributes.client.fiscal_id_c") + ": " + @invoice.bill.client.fiscal_id,
+# Page footer: Image block for Logo
+report.page.values logo_small: "public/" + @biller_printer.project.company.logo.url(:small).split("?").first unless @biller_printer.project.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @biller_printer.project.company.name,
+				   company_address_1: @biller_printer.project.company.address_1,
+				   company_address_2: @biller_printer.project.company.address_2,
+				   company_phones: @biller_printer.project.company.phone_and_fax,
+				   company_email: @biller_printer.project.company.email_and_website
+				   )
+report.page.values(company_data: (@biller_printer.project.company.invoice_footer_complete + "/r90"))
+#
+# Remarks
+
+report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
+				   remark: "* " + I18n.t("activerecord.attributes.bill.payment_note"))
+
+#
+# Lists
+var_bill_date = @biller_printer.bill_date.strftime(_format) unless @biller_printer.bill_date.blank?
+var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
+#
+report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
+				   data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
+				   bill_n_c:  I18n.t("activerecord.attributes.bill.bill_no"),
+				   bill_n: @biller_printer.real_no,
+				   bill_date_c: I18n.t("activerecord.attributes.bill.bill_date"),
+				   bill_date: var_bill_date,
+				   payday_limit_c: I18n.t("ag2_gest.bills.index.payday_limit"),
+				   payday_limit: var_payday_limit,
 				   payment_title: I18n.t("activerecord.attributes.commercial_billing.payment_method"),
 				   payment_method: @invoice.bill.client.payment_method.description,
-				   sale_offer_title: I18n.t("activerecord.attributes.invoice.invoice_status"))
+				   client_code_c: I18n.t("activerecord.attributes.report.client_code_c") + ": ",
+				   client_code: @biller_printer.client.full_code,
+				   client_c: I18n.t("activerecord.attributes.subscriber.titular") + ": ",
+				   client: @biller_printer.client.full_name.upcase,
+				   street_c: I18n.t("activerecord.report.subscriber.direction") + ": ",
+				   street: @biller_printer.try(:client).try(:address_1).upcase,
+				   zipcode: @biller_printer.try(:client).try(:address_2).upcase,
+				   client_code2: @biller_printer.client.full_code,
+				   client2:  @biller_printer.client.full_name.upcase,
+				   street2: @biller_printer.try(:client).try(:address_1).upcase,
+				   zipcode2: @biller_printer.try(:client).try(:zipcode).try(:zipcode).upcase + " " + @biller_printer.try(:client).try(:zipcode).try(:town).try(:name).upcase,
+				   province: @biller_printer.try(:client).try(:zipcode).try(:province).try(:name).upcase
+				   )
 
-# Page footer
-report.page.values(printed_at: Time.now,
-				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"),
-				   currency_note: I18n.t("every_report.currency_note"),
+# contract_data
+report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.contracting_data"),
+				   cr_type_c: I18n.t("activerecord.attributes.contracting_request.type") + ": ",
+				   cr_type: @contracting_request.contracting_request_type.description.capitalize,
+				   cr_no_c: I18n.t("activerecord.report.contracting_request.request_no") + ": ",
+				   cr_no: @contracting_request.full_no,
+				   fiscal_id_c: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ": ",
+				   fiscal_id: @biller_printer.try(:client).try(:fiscal_id),
+				   use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
+				   use: @water_supply_contract.try(:use).try(:name),
+				   caliber_c: I18n.t("activerecord.attributes.subscriber.caliber") + ": ",
+				   caliber: @water_supply_contract.try(:caliber).try(:caliber),
+				   cadastral_reference_c: I18n.t("activerecord.attributes.water_supply_contract.cadastral_reference") + ": ",
+				   cadastral_reference: @water_supply_contract.cadastral_reference,	   				   
+				   meter_code_c: I18n.t("activerecord.models.meter.one") + ": ",
+				   meter_code: @water_supply_contract.try(:meter).try(:meter_code),
+				   dot_c: I18n.t("activerecord.attributes.contracting_request.endowments"),
+				   dot: @water_supply_contract.try(:endowments),
+				   hab_c: I18n.t("activerecord.attributes.contracting_request.inhabitants"),
+				   hab: @water_supply_contract.try(:inhabitants),
 				   remarks_title: I18n.t("activerecord.attributes.commercial_billing.remarks"),
-				   remarks: @invoice.remarks)
-
-# List header
-report.page.list(:default).header do |header|
-	header.item(:no_c).value "#"
-	header.item(:description_c).value I18n.t("activerecord.attributes.invoice_item.description")
-	header.item(:quantity_c).value I18n.t("activerecord.attributes.invoice_item.quantity_c")
-	header.item(:price_c).value I18n.t("activerecord.attributes.invoice_item.price_c")
-	header.item(:discount_c).value I18n.t("activerecord.attributes.invoice_item.discount_pct_c")
-	header.item(:amount_c).value I18n.t("activerecord.attributes.invoice_item.amount_c")
-	header.item(:tax_c).value I18n.t("activerecord.attributes.invoice_item.tax_c")
+				   remarks: @invoice.remarks
+				   )
+if !@contracting_request.service_point.blank?
+	report.page.values(service_point_c: I18n.t("activerecord.attributes.contracting_request.service_point"),
+					   service_point: @contracting_request.service_point.to_full_label
+					   )
 end
-
-
-# List detail
-no = 0
-@items.each do |i|
-	report.page.list(:default).add_row do |row|
-		no = no + 1
-		code = ""
-		if i.thing.blank?
-			code = i.product.full_code unless i.product.blank?
-		else
-			code = i.code
-		end
-
-		row.item(:no).value no
-		row.item(:description).value i.description unless i.description.blank?
-		row.item(:quantity).value number_with_precision(i.quantity, precision: 4) unless i.quantity.blank?
-		row.item(:price).value number_with_precision(i.price, precision: 4) unless i.price.blank?
-		row.item(:discount).value number_with_precision(i.discount_pct, precision: 2) unless i.discount_pct.blank?
-		row.item(:amount).value number_with_precision(i.amount, precision: 4) unless i.amount.blank?
-		row.item(:tax).value number_with_precision(i.tax, precision: 4) unless i.tax.blank?
+#
+# tariff
+report.page.values(tariff_data_c: I18n.t("activerecord.models.tariff.zero"))
+#
+# billing
+report.page.values(billing_c: I18n.t("activerecord.attributes.contracting_request.billing"))
+#
+report.layout.config.list(:default) do |c|
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:total_c).value(I18n.t("activerecord.attributes.bill.total"))
+		e.section.item(:total).value number_with_precision(@biller_printer.invoices.first.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @biller_printer.total.blank?
 	end
-	# Store page subtotals
-    report.page.list(:default) do |list|
-		list.store.page_quantity += i.quantity
-		list.store.page_discount += i.discount
-		list.store.page_amount += i.amount
-		list.store.page_tax += i.tax
-    end
 end
+#
+report.page.list(:default).header do |header|
+	header.item(:title2).value I18n.t("activerecord.models.invoice.one") + " de " + @biller_printer.invoices.first.try(:invoice_type).try(:name)
+	header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+	header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no)
+	header.item(:bill_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
+	header.item(:bill_date).value var_bill_date
+end
+#
+# Factura
+#
+_code = "FIA"
+_number1 = 1
+_bridge = " "
+_array = [ ]
+regulation_tariff = " "
+
+a = @biller_printer.invoices.first
+	a.invoiced_subtotals_by_billable_item.each do |sub_billable_item|
+		regulation = Regulation.find(sub_billable_item[5]) rescue nil
+		if !regulation.blank?
+			if _code != sub_billable_item[3]
+				_number1 = _number1 + 1.to_i
+				_code = sub_billable_item[3]
+			end
+			if sub_billable_item[4] == 1.to_s
+				_number1 = _number1 + 1.to_i
+			end
+				_array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
+
+				regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "." unless regulation.blank?
+
+				_bridge = " // "
+		end
+	end
+
+_number2 = " "
+	a.invoiced_subtotals_by_concept.each do |sub_concept|
+	_array.each do |array|
+		if sub_concept[4] == nil
+			_number2 = " "
+		end
+		if sub_concept[3] == 0.to_s && sub_concept[4] == array[2]
+			_number2 += "(" + array[0] + ")"
+		end
+		if sub_concept[3] == nil && sub_concept[4] == array[2]
+			_number2 = "(" + array[0] + ")"
+		end
+	end
+		report.page.list(:default).add_row do |row|
+			row.item(:sub).value _number2.to_s
+			row.item(:tariff).value I18n.t("activerecord.attributes.contracting_request.amount_title") + sub_concept[1]
+			row.item(:price).value number_with_precision(sub_concept[2], precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		end
+	end
+	report.page.list(:default).add_row do |row|
+		row.item(:subtotal_c).value (I18n.t("activerecord.attributes.bill.subtotal"))
+		row.item(:subtotal).value  number_with_precision(a.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless a.subtotal.blank?
+	end
+	a.tax_breakdown.each do |tax|
+		if tax[0] != TaxType.exempt.tax
+			report.page.list(:default).add_row do |row|
+				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
+				row.item(:iva).value number_with_precision(tax[2], precision: 2)
+			end
+		end
+	end
+#
+#
+# TOTAL BILL AND DEBT AND TARIFF
+report.page.values(tariff: regulation_tariff)
+report.page.values(total_billing_c: I18n.t("activerecord.attributes.bill.total") + " " + I18n.t("activerecord.models.invoice.one"),
+				   total_billing: number_with_precision(@biller_printer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				   )
+if @biller_printer.debt != 0
+	report.page.values(total_debt_c: I18n.t("activerecord.attributes.report.debt_c"),
+				   total_debt: number_with_precision(@biller_printer.client.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				   )
+end
+#
+#
+# Supporting document
+var_invoice_first_date = @biller_printer.invoices.first.invoice_date.strftime(_format) unless @biller_printer.invoices.first.invoice_date.blank?
+var_invoice_first_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
+if @biller_printer.project.company.company_bank_accounts.first.blank?
+	var_issuer = @biller_printer.project.company.fiscal_id[1..9]
+else
+	var_issuer = @biller_printer.project.company.fiscal_id[1..9] + @biller_printer.project.company.company_bank_accounts.first.bank_suffix
+end
+if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
+	var_ident = @biller_printer.client.client_code[5..10]
+else
+	var_ident = @biller_printer.invoices.first.payday_limit.strftime("%d%m%y") unless @biller_printer.invoices.first.payday_limit.blank?
+end
+# payment_data
+#
+report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal") + ": ",
+				   loc_fiscal: @biller_printer.project.company.fiscal_id,
+				   payment_data_c: I18n.t("activerecord.attributes.contracting_request.payment_data"),
+				   pay_sp_c:  I18n.t("activerecord.attributes.report.client_code_c") + ": ",
+				   pay_sp: @biller_printer.client.full_code,
+				   pay_bill_n_c:  I18n.t("activerecord.models.bill.one") + " " + I18n.t("activerecord.attributes.bill.bill_no") + ": ",
+				   pay_bill_n: @biller_printer.try(:to_label),
+				   pay_date_c: I18n.t("activerecord.attributes.bill.bill_date"),
+				   pay_date: var_bill_date,
+				   pay_client_c: I18n.t("activerecord.attributes.subscriber.titular") + ": ",
+				   pay_client: @biller_printer.client.full_name.upcase,
+				   pay_emi_c: I18n.t("activerecord.attributes.bill.issuer").upcase,
+				   pay_emi: var_issuer,
+				   pay_ref_c: I18n.t("activerecord.attributes.work_order_item.code").upcase,
+				   pay_ref: @biller_printer.invoices.first.invoice_no[3..15],
+				   pay_ident_c: I18n.t("activerecord.attributes.bill.ident").upcase,
+				   pay_ident: var_ident,
+				   pay_sum_c: I18n.t("activerecord.attributes.billable_concept.supply").upcase,
+				   pay_sum: @biller_printer.client.client_code[3..10],
+				   pay_date_limit_c: I18n.t("ag2_gest.bills.index.payday_limit").upcase,
+				   pay_date_limit: var_invoice_first_limit,
+				   pay_total_c: I18n.t("activerecord.attributes.bill.total").upcase,
+				   pay_total: number_with_precision(@biller_printer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				   )
+
+
+

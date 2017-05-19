@@ -81,6 +81,7 @@ es:
         billing_period: "Periodo facturado"
         client: "Datos de Cliente / Abonado"
         client_code: "Nº Cliente / Abonado"
+        client_code_c: "Nº Cliente"
         type: "Tipo de Facturas"
         subtotal: "Subtotal"
         taxes: "Impuestos"

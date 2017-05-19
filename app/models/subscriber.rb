@@ -104,7 +104,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   def total_debt_unpaid
-    bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
+    invoice_debts.unpaid.sum(:debt)
   end
 
   def fields_to_uppercase
@@ -240,10 +240,6 @@ class Subscriber < ActiveRecord::Base
       _ret = floor.strip + "\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
     end
     _ret
-  end
-
-  def total_debt_unpaid
-    bills.map(&:invoices).flatten.map{|i| i.debt if !i.payday_limit or i.payday_limit < Date.today}.compact.sum{|i| i}
   end
 
   def meter_code
