@@ -30,8 +30,11 @@ if (_active_tab == "pendings-tab") {
 
 $('#payments-tabs a').click(function (e) {
   _active_tab = $(this).attr("id");
+  total_debt = 0;
   e.preventDefault();
   $('input:checkbox').removeAttr('checked');
+  $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+  $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
   $(this).tab('show');
   if (_active_tab == "pendings-tab") {
     <% if !@bills_pending.blank? %>
@@ -194,6 +197,15 @@ $(".btn-others").click(function (e) {
   $("#client_payment_other_payment_method_id").select2("val", 0);
 });
 
+$(".btn-bank-instalment").click(function (e) {
+  ids = $("#client_payment_bank_invoices_ids").val();
+  if (ids == null || ids == '') {
+    alert('¡Debes seleccionar plazos pendientes de cobrar!');
+    return false;
+  }
+  $("#client_payment_bank_receipt_no").val("");
+});
+
 /* modal_cash form.client_payment: Check required values before submit */
 $("form.cash-form").submit(function(){
   if ($('#client_payment_amount').val() == '' ||
@@ -309,46 +321,128 @@ $("form.instalment-form").submit(function(){
 //   }
 // });
 
-$(".checkbox-master").click(function () {
-  $(this).parents(".accordion").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+/***
+/* Manage checkboxes
+***/
+
+// Item checkbox at pending & bank
+$(".checkbox-slave").click(function () {
+  if (_cashier_shown) {
+    var p = $(this).prop('checked');
+    var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+    var debt = parseFloat($(this).attr('data-debt'));
+    if (p) {
+      // Sum at cashier
+      total_debt += debt
+    } else {
+      // Subtract at cashier
+      total_debt -= debt
+    }
+    total_debt = Math.round(total_debt * 100) / 100
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  }
 });
 
+// Table checkbox at pending: Updates slave
+$(".checkbox-master").click(function () {
+  $(this).parents(".accordion").find("tbody").find("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop('checked'));
+
+  // Totalize and assign to cashier
+  if (_cashier_shown) {
+    var p = $(this).prop('checked');
+    var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+    var debt = 0;
+    $(this).parents(".accordion").find(".pending-invoices-table").find("tr.fields").each(function() {
+      if ($(this).find('.checkbox-slave').is(':enabled')) {
+        debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+      }
+    });
+    if (p) {
+      // Sum at cashier
+      total_debt += debt
+    } else {
+      // Subtract at cashier
+      total_debt -= debt
+    }
+    total_debt = Math.round(total_debt * 100) / 100
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  }
+});
+
+// Global checkbox at pending: Updates master & slave
+$(".checkbox-main").click(function () {
+  $(".checkbox-slave:not(:disabled), .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
+
+  // Totalize and assign to cashier
+  if (_cashier_shown) {
+    var p = $(this).prop('checked');
+    var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+    var debt = 0;
+    $(this).parents(".pendings").find(".accordion").find(".pending-invoices-table").find("tr.fields").each(function() {
+      if ($(this).find('.checkbox-slave').is(':enabled')) {
+        debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+      }
+    });
+    if (p) {
+      // Sum at cashier
+      total_debt += debt
+    } else {
+      // Subtract at cashier
+      total_debt -= debt
+    }
+    total_debt = Math.round(total_debt * 100) / 100
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  }
+});
+
+// Table checkbox at bank
 $(".checkbox-master-table").click(function () {
   $(this).parents(".table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
 });
 
-$(".checkbox-main").click(function () {
-  $(".checkbox-slave, .checkbox-master:not(:disabled)").prop('checked', $(this).prop('checked'));
+// Item checkbox at instalment
+$(".instalment-checkbox-slave").click(function () {
+  if (_cashier_shown) {
+    var p = $(this).prop('checked');
+    var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+    var debt = parseFloat($(this).attr('data-debt'));
+    if (p) {
+      // Sum at cashier
+      total_debt += debt
+    } else {
+      // Subtract at cashier
+      total_debt -= debt
+    }
+    total_debt = Math.round(total_debt * 100) / 100
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  }
+});
+
+// Table checkbox at instalment: Updates slave
+$("#instalments-checkbox-master").click(function () {
+  $(".instalment-checkbox-slave").prop('checked', $(this).prop('checked'));
 
   // Totalize and assign to cashier
   if (_cashier_shown) {
-    var elements = $( "input:checked" );
-    var invoices_id = [];
-    var debts_array = [];
-    if (_active_tab == "pendings-tab") {
-    } else if (_active_tab == "fractionated-tab") {
+    var p = $(this).prop('checked');
+    var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+    var debt = 0;
+    $(this).parents("#fractionated").find(".accordion").find("#instalments-table").find("tr.fields").each(function() {
+      debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+    });
+    if (p) {
+      // Sum at cashier
+      total_debt += debt
+    } else {
+      // Subtract at cashier
+      total_debt -= debt
     }
+    total_debt = Math.round(total_debt * 100) / 100
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
   }
-  if ((_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") && _cashier_shown) {
-    for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
-    for(var i=0;typeof(elements[i])!='undefined';debts_array.push(elements[i++].getAttribute('data-debt')));
-    var total_debt = 0.0;
-    for (var i = 0; i < debts_array.length; i++) {
-      if(debts_array[i] != null){
-        total_debt += parseFloat(debts_array[i]);
-      }
-    }
-    $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
-
-    // Update Ids in the
-    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
-    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
-  }  
 });
 
-$("#instalments-checkbox-master").click(function () {
-  $(".checkbox-slave").prop('checked', $(this).prop('checked'));
-});
+/*** End manage checkboxes ***/
 
 $("#client_payment_amount").change(function() {
   amount = parseFloat(this.value) || 0;

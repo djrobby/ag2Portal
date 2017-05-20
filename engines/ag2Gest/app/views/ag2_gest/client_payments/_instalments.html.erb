@@ -6,11 +6,17 @@
   </b>
 </div>
 
+<div class="row-fluid">
+  <div class="span12">
+    <a href="#modal-bank" role="button" class="btn btn-primary btn-small btn-payment btn-bank-instalment" data-toggle="modal"><%= I18n.t("ag2_gest.client_payments.index.bank") %></a>
+  </div>
+</div>
+
 <% if !@instalments.blank? %>
-<%= simple_form_for :payment_fractionated, url: charge_instalment_client_payments_path, method: :post do |f|  %>
-  <%= f.input :ids, :as => :hidden %>
-  <%= f.button :submit, I18n.t("ag2_gest.client_payments.index.collect_instalments"), :class => 'btn btn-primary btn-small' %>
-<% end %>
+<%#= simple_form_for :payment_fractionated, url: charge_instalment_client_payments_path, method: :post do |f|  %>
+  <%#= f.input :ids, :as => :hidden %>
+  <%#= f.button :submit, I18n.t("ag2_gest.client_payments.index.collect_instalments"), :class => 'btn btn-primary btn-small' %>
+<%# end %>
 
 <table class="form-table shrinked" style="margin-top: -10px !important;">
   <!-- plus -->
@@ -33,7 +39,7 @@
   <col width="9%" />
   <thead>
     <tr>
-      <th align="left"><input type="checkbox" class="checkbox-master-table" id="instalments-checkbox-master"></th>
+      <th align="left"><input type="checkbox" id="instalments-checkbox-master"></th>
       <th align="left"><%= t('activerecord.attributes.instalment_plan.instalment_no') %></th>
       <th align="center"><%= t('activerecord.attributes.instalment_plan.instalment_date') %></th>
       <th align="left"><%= t('activerecord.attributes.instalment_plan.client_id') %></th>
@@ -70,18 +76,20 @@
           <!-- total -->
           <col width="9%" />
           <tbody>
-            <td>
-              <%= check_box_tag 'instalment_id', instalment.id, false, class: "checkbox-slave" %>
-              <a class="accor accordion-toggle collapsed pull-right" data-toggle="collapse" data-parent="#accordion2" href="#collapse-instalment-<%= instalment.id %>"><i class='icon-plus'></i></a>
-            </td>
-            <td><%= instalment.instalment_no %></td>
-            <td align="center"><%= formatted_date(instalment.instalment_date) unless instalment.instalment_date.blank? %></td>
-            <td><%= link_to instalment.client.to_name, client_path(instalment.client) %></td>
-            <td align="right"><%= instalment.instalment %></td>
-            <td align="center"><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
-            <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-            <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-            <td align="right"><%= number_with_precision(instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <tr class="fields">
+              <td>
+                <%= check_box_tag 'instalment_id', instalment.id, false, class: "instalment-checkbox-slave", :data => {amount: instalment.amount, surcharge: instalment.surcharge, debt: instalment.total} %>
+                <a class="accor accordion-toggle collapsed pull-right" data-toggle="collapse" data-parent="#accordion2" href="#collapse-instalment-<%= instalment.id %>"><i class='icon-plus'></i></a>
+              </td>
+              <td><%= instalment.instalment_no %></td>
+              <td align="center"><%= formatted_date(instalment.instalment_date) unless instalment.instalment_date.blank? %></td>
+              <td><%= link_to instalment.client.to_name, client_path(instalment.client) %></td>
+              <td align="right"><%= instalment.instalment %></td>
+              <td align="center"><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
+              <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right" class="debt-field"><%= number_with_precision(instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            </tr>
           </tbody>
         </table> <!-- form-table -->
       </div> <!-- accordion-heading -->
@@ -122,4 +130,4 @@
   </div>
 <% end %> <!-- @instalments.each -->
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @instalments } %>
-<% end %>
+<% end %> <!-- if !@instalments.blank? -->

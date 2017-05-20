@@ -57,7 +57,7 @@
 
     <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
       <div class="accordion-inner">
-        <table class="table table-condensed table-striped">
+        <table class="table table-condensed table-striped pending-invoices-table">
           <thead>
             <tr>
               <th></th>
@@ -72,20 +72,21 @@
           </thead>
           <tbody>
             <% bill.invoices.order(:invoice_no).each do |i| %>
-              <tr class="<%= 'text-error' if i.unpaid? %>">
-                <td><%= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.total, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td>
+              <tr class="<%= 'text-error' if i.unpaid? %> fields">
+                <!-- <td><%#= (check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", :data => {total: i.receivables, collected: i.collected, debt: i.debt}) if i.invoice_status_id == 1 %></td> -->
+                <td><%= check_box_tag 'invoice_id', i.id, false, class: "checkbox-slave", disabled: i.invoice_status_id != 1, :data => {total: i.receivables, collected: i.collected, debt: i.debt} %></td>
                 <td><%= i.full_no %></td>
                 <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
                 <td><%= formatted_date(i.payday_limit) unless i.payday_limit.blank? %></td>
-                <% if i.bill.try(:instalments).blank? %>
+                <%# if i.bill.try(:instalments).blank? %>
                   <td align="right"><%= number_with_precision(i.receivables, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <% else %>
-                  <td align="right"><%= number_with_precision(i.bill.receivable, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <% end %>
+                  <td align="right" class="debt-field"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <%# else %>
+                  <!-- <td align="right"><%= number_with_precision(i.bill.receivable, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td> -->
+                  <!-- <td align="right"><%= number_with_precision(i.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td> -->
+                  <!-- <td align="right"><%= number_with_precision(i.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td> -->
+                <%# end %>
                 <td align="right"><%= i.invoice_status.name %></td>
               </tr>
             <% end %>
