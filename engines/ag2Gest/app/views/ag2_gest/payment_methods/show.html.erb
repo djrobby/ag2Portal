@@ -18,8 +18,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.payment_method.flow' %>:</td>
       <td><%= @payment_method.flow_label unless @payment_method.flow.blank? %></td>
-      <td></td>
-      <td></td>
+      <td><%=t 'activerecord.attributes.payment_method.cashier' %>:</td>
+      <td> <% if @payment_method.cashier %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @payment_method } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @payment_method } %>

@@ -71,7 +71,9 @@ module Ag2Gest
           break
         end
       end
-      redirect_to client_payments_path
+      redirect_to client_payments_path, notice: "Factura/s traspasadas a Caja."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar factura/s a Caja."
     end
 
     def others
@@ -362,6 +364,7 @@ module Ag2Gest
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
       @have_bank_account = have_bank_account_array
       @payment_methods = payment_methods_dropdown
+      @cashier_payment_methods = cashier_payment_methods_dropdown
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -1136,6 +1139,14 @@ module Ag2Gest
 
     def collection_payment_methods(_organization)
       _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
+    end
+
+    def cashier_payment_methods_dropdown
+      session[:organization] != '0' ? collections_used_by_cashier(session[:organization].to_i) : collections_used_by_cashier(0)
+    end
+
+    def collections_used_by_cashier(_organization)
+      _organization != 0 ? PaymentMethod.collections_used_by_cashier(_organization) : PaymentMethod.collections
     end
 
     # Keeps filter state

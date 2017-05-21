@@ -183,6 +183,11 @@
       $("#cashier").hide();
       $("#loader").show();
       _cashier_shown = false;
+      total_debt = 0;
+      invoices_id = [];
+      $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+      $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+      $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
     });
 
     // when #submit_btn is clicked
@@ -244,18 +249,10 @@
     $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
 
     // Update Ids in the
-    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))         // cash
+    $("#client_payment_cash_invoices_ids").val(invoices_id.filter(i=>i!=null))    // cash
     $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
     $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
     $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
-  });
-
-  $("#client_payment_amount").change(function() {
-    amount = parseFloat(this.value) || 0;
-    debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
-    cash_return = debt - amount;
-    // alert(debt + "-" + amount + " = " + cash_return);
-    $(".cash-return").text(cash_return.format(2, 3, _delimiter, _separator));
   });
 
   $("#initial-cash").change(function() {
@@ -280,68 +277,6 @@
    for(var i=0;typeof(elements[i])!='undefined';instalments_ids.push(elements[i++].getAttribute('value')));
    $input.val(instalments_ids);
   });
-
-  /* modal_cash form.client_payment: Check required values before submit */
-  // $("#btn-submit-modal-cash").click(function(){
-  //   alert('html');
-  //   if ($('#client_payment_amount').val() == '' ||
-  //       $('#client_payment_amount').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  //   if ($('#client_payment_payment_method_id').val() == '' ||
-  //       $('#client_payment_payment_method_id').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  // });
-
-  /* modal_others form.client_payment_other: Check required values before submit */
-  // $("#btn-submit-modal-others").click(function(){
-  //   if ($('#client_payment_amount').val() == '' ||
-  //       $('#client_payment_amount').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  //   if ($('#client_payment_payment_method_id').val() == '' ||
-  //       $('#client_payment_payment_method_id').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  // });
-
-  /* modal_bank form.client_payment_bank: Check required values before submit */
-  // $("#btn-submit-modal-bank").click(function(){
-  //   if ($('#client_payment_bank_receipt_no').val() == '' ||
-  //       $('#client_payment_bank_receipt_no').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  // });
-
-  /* modal_instalment form.instalment: Check required values before submit */
-  // $("#btn-submit-modal-fracionated").click(function(){
-  //   if ($('#instalment_number_inst').val() == '' ||
-  //       $('#instalment_number_inst').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  //   if ($('#instalment_amount_first').val() == '' ||
-  //       $('#instalment_amount_first').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  //   if ($('#instalment_charge').val() == '' ||
-  //       $('#instalment_charge').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  //   if ($('#instalment_payment_method_id').val() == '' ||
-  //       $('#instalment_payment_method_id').val() == null) {
-  //     alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
-  //     return false;
-  //   }
-  // });
 
   $("#pages a").on("click", function() {
     $.getScript(this.href);
@@ -571,7 +506,7 @@
                     </td>
                     <!-- <td></td> -->
                     <td align="center">
-                      <%= f.input :payment_method_id, required: true, label: false, collection: @payment_methods %>
+                      <%= f.input :payment_method_id, required: true, label: false, collection: @cashier_payment_methods, selected: 0 %>
                     </td>
                     <td align="right" class="text-middle">
                       <div class="control-group string required">
@@ -775,13 +710,13 @@
   });  
 
   $(".btn-cash").click(function (e) {
-    ids = $("#client_payment_invoices_ids").val();
+    ids = $("#client_payment_cash_invoices_ids").val();
     if (ids == null || ids == '') {
       alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
       return false;
     }
-    $("#client_payment_amount").val(0);
-    $("#client_payment_payment_method_id").select2("val", 0);
+    $("#client_payment_cash_amount").val(0);
+    $("#client_payment_cash_payment_method_id").select2("val", 0);
   });
 
   $(".btn-bank").click(function (e) {
@@ -892,35 +827,166 @@
     }
   });
 
+  /***
+  /* Forms submit
+  ***/
+  /* modal_cash form.client_payment: Check required values before submit */
+  $("form.cash-form").submit(function(){
+    if ($('#client_payment_cash_amount').val() == '' ||
+        $('#client_payment_cash_amount').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_cash_payment_method_id').val() == '' ||
+        $('#client_payment_cash_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* cashier form.client_payment: Check required values before submit */
+  $("form.cashier-form").submit(function() {
+    var debt = parseFloat($('.debt-total-cashier').text());
+    var ids = $("#client_payment_invoices_ids").val();
+    if (ids == null || ids == '') {
+      alert('¡Debes seleccionar recibos o facturas pendientes de cobrar!');
+      return false;
+    }
+    if (isNaN(debt)) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.to_collect') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_amount').val() == '' ||
+        $('#client_payment_amount').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_payment_method_id').val() == '' ||
+        $('#client_payment_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* modal_others form.client_payment_other: Check required values before submit */
+  $("form.others-form").submit(function(){
+    if ($('#client_payment_other_amount').val() == '' ||
+        $('#client_payment_other_amount').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#client_payment_other_payment_method_id').val() == '' ||
+        $('#client_payment_other_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* modal_bank form.client_payment_bank: Check required values before submit */
+  $("form.bank-form").submit(function(){
+    if ($('#client_payment_bank_receipt_no').val() == '' ||
+        $('#client_payment_bank_receipt_no').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.client_payment.bank_order_no') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+
+  /* modal_instalment form.instalment: Check required values before submit */
+  $("form.instalment-form").submit(function(){
+    if ($('#instalment_number_inst').val() == '' ||
+        $('#instalment_number_inst').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.instalments_qty') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_amount_first').val() == '' ||
+        $('#instalment_amount_first').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.amount_first') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_charge').val() == '' ||
+        $('#instalment_charge').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.surcharge_pct') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+    if ($('#instalment_payment_method_id').val() == '' ||
+        $('#instalment_payment_method_id').val() == null) {
+      alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
+      return false;
+    }
+  });
+  /*** End forms submit ***/
+
+  /***
+  /* Manage checkboxes
+  ***/
   // Item checkbox at pending, instalment & bank
   $(".checkbox-slave").click(function () {
-    if (_cashier_shown) {
-      var p = $(this).prop('checked');
-      var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
-      var debt = parseFloat($(this).attr('data-debt'));
-      if (p) {
-        // Sum at cashier
-        total_debt += debt
-      } else {
-        // Subtract at cashier
-        total_debt -= debt
-      }
-      total_debt = Math.round(total_debt * 100) / 100
-      $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+     $(".checkbox-main").prop('checked', false)
+
+     if (_cashier_shown) {
+       var invoices_id = [];
+       var i = 0;
+       var val = $(this).attr('value');
+       var p = $(this).prop('checked');
+       var ids = $("#client_payment_invoices_ids").val();
+       if (ids != null && ids != '') {
+         invoices_id = ids.split(",");
+       }
+       var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+       var debt = parseFloat($(this).attr('data-debt'));
+       if (p) {
+         // Add to ids
+         invoices_id.push(val);
+         // Sum at cashier
+         total_debt += debt
+       } else {
+         // Remove from ids
+         i = invoices_id.indexOf(val);
+         if (i > -1) {
+           invoices_id.splice(i, 1);
+         }
+         // Subtract at cashier
+         total_debt -= debt
+       }
+       total_debt = Math.round(total_debt * 100) / 100
+       $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+       $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+       $('#client_payment_amount').trigger("change");
     }
   });
 
   // Table checkbox at pending: Updates slave
   $(".checkbox-master").click(function () {
     $(this).parents(".accordion").find("tbody").find("input[type=checkbox]:not(:disabled)").prop('checked', $(this).prop('checked'));
+    $(".checkbox-main").prop('checked', false)
 
     // Totalize and assign to cashier
     if (_cashier_shown) {
+      var invoices_id = [];
+      var i = 0;
+      var val = null;
+      var chk = null;
       var p = $(this).prop('checked');
+      var ids = $("#client_payment_invoices_ids").val();
+      if (ids != null && ids != '') {
+        invoices_id = ids.split(",");
+      }
       var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
       var debt = 0;
       $(this).parents(".accordion").find(".pending-invoices-table").find("tr.fields").each(function() {
-        if ($(this).find('.checkbox-slave').is(':enabled')) {
+        chk = $(this).find('.checkbox-slave');
+        if (chk.is(':enabled')) {
+          val = chk.attr('value');
+          if (chk.prop('checked')) {
+            // Add to ids
+            invoices_id.push(val);
+          } else {
+            // Remove from ids
+            i = invoices_id.indexOf(val);
+            if (i > -1) {
+              invoices_id.splice(i, 1);
+            }
+          }
           debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
         }
       });
@@ -933,6 +999,8 @@
       }
       total_debt = Math.round(total_debt * 100) / 100
       $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+      $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+      $('#client_payment_amount').trigger("change");
     }
   });
 
@@ -942,23 +1010,32 @@
 
     // Totalize and assign to cashier
     if (_cashier_shown) {
+      var invoices_id = [];
+      var i = 0;
+      var val = null;
+      var chk = null;
       var p = $(this).prop('checked');
-      var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
       var debt = 0;
       $(this).parents(".pendings").find(".accordion").find(".pending-invoices-table").find("tr.fields").each(function() {
-        if ($(this).find('.checkbox-slave').is(':enabled')) {
-          debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+        chk = $(this).find('.checkbox-slave');
+        if (chk.is(':enabled')) {
+          val = chk.attr('value');
+          if (chk.prop('checked')) {
+            // Add to ids
+            invoices_id.push(val);
+            // Sum
+            debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+          }
         }
       });
-      if (p) {
-        // Sum at cashier
-        total_debt += debt
-      } else {
-        // Subtract at cashier
-        total_debt -= debt
+      debt = Math.round(debt * 100) / 100
+      $(".debt-total-cashier").text(debt.format(2, 3, _delimiter, _separator));
+      $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+      if (debt == 0) {
+        $("#client_payment_amount").val('');
       }
-      total_debt = Math.round(total_debt * 100) / 100
-      $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+      $('#client_payment_amount').trigger("change");
     }
   });
 
@@ -1007,5 +1084,29 @@
       total_debt = Math.round(total_debt * 100) / 100
       $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
     }
+  });
+  /*** End manage checkboxes ***/
+
+  $("#client_payment_cash_amount").change(function() {
+    amount = parseFloat(this.value) || 0;
+    debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
+    cash_return = debt - amount;
+    $(".cash-return").text(cash_return.format(2, 3, _delimiter, _separator));
+  });
+
+  $("#client_payment_amount").change(function() {
+    cash_return = 0;
+    var ids = $("#client_payment_invoices_ids").val();
+    if (ids != null && ids != '') {
+      amount = parseFloat(this.value) || 0;
+      debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text().replace(",", ".")) || 0;
+      cash_return = debt - amount;
+      if (cash_return < 0 && debt > 0) {
+        cash_return = cash_return * (-1);
+      } else {
+        cash_return = 0;
+      }
+    }  
+    $(".cash-return-cashier").text(cash_return.format(2, 3, _delimiter, _separator));
   });
 </script>

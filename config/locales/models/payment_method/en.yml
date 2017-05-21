@@ -26,3 +26,5 @@ en:
         flow_3_show: "Collections & Payments"
         organization: "Organization"
         organization_id: "Organization"
+        subscriber_meter: "Subscriber/Meter required in WO?"
+        cashier: "Used by cashier?"

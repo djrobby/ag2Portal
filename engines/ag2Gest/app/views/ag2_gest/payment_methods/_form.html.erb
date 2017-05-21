@@ -40,8 +40,9 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :expiration_days, input_html: { class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :default_interest, as: :string, input_html: { value: (number_with_precision(f.object.default_interest, precision: 3) if f.object.default_interest), class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :expiration_days, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :default_interest, as: :string, input_html: { value: (number_with_precision(f.object.default_interest, precision: 3) if f.object.default_interest), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.input :cashier, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, boolean_style: :inline %> </label>
 </div>
 <%= f.input :flow,
   collection: [[1, t('activerecord.attributes.payment_method.flow_1')],
