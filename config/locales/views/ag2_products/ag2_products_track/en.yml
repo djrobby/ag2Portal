@@ -10,6 +10,7 @@ en:
         label_store: "Store "
         label_work_order: "Work order"
         label_charge_account: "Analytical account"
+        label_balance: "Billing"
         label_order_status: "Order status"
         label_petitioner: "Petitioner"
         label_family: "Product family"

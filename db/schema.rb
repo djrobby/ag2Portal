@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170521100205) do
+ActiveRecord::Schema.define(:version => 20170522063301) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -471,6 +471,43 @@ ActiveRecord::Schema.define(:version => 20170521100205) do
     t.integer "original_invoice_id"
     t.integer "credit_invoice_id",    :default => 0, :null => false
   end
+
+  create_table "cash_desk_closing_items", :force => true do |t|
+    t.integer  "cash_desk_closing_id"
+    t.integer  "client_payment_id"
+    t.integer  "supplier_payment_id"
+    t.string   "type",                 :limit => 1,                                                 :null => false
+    t.decimal  "amount",                            :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                                        :null => false
+    t.datetime "updated_at",                                                                        :null => false
+  end
+
+  add_index "cash_desk_closing_items", ["cash_desk_closing_id"], :name => "index_cash_desk_closing_items_on_cash_desk_closing_id"
+  add_index "cash_desk_closing_items", ["client_payment_id"], :name => "index_cash_desk_closing_items_on_client_payment_id"
+  add_index "cash_desk_closing_items", ["supplier_payment_id"], :name => "index_cash_desk_closing_items_on_supplier_payment_id"
+
+  create_table "cash_desk_closings", :force => true do |t|
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "office_id"
+    t.integer  "project_id"
+    t.datetime "last_closing"
+    t.decimal  "opening_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "closing_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "amount_collected",   :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "invoices_collected"
+    t.datetime "created_at",                                                         :null => false
+    t.datetime "updated_at",                                                         :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "cash_desk_closings", ["company_id"], :name => "index_cash_desk_closings_on_company_id"
+  add_index "cash_desk_closings", ["created_at"], :name => "index_cash_desk_closings_on_created_at"
+  add_index "cash_desk_closings", ["created_by"], :name => "index_cash_desk_closings_on_created_by"
+  add_index "cash_desk_closings", ["office_id"], :name => "index_cash_desk_closings_on_office_id"
+  add_index "cash_desk_closings", ["organization_id"], :name => "index_cash_desk_closings_on_organization_id"
+  add_index "cash_desk_closings", ["project_id"], :name => "index_cash_desk_closings_on_project_id"
 
   create_table "centers", :force => true do |t|
     t.integer  "town_id"
@@ -2347,6 +2384,16 @@ ActiveRecord::Schema.define(:version => 20170521100205) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3438,6 +3485,19 @@ ActiveRecord::Schema.define(:version => 20170521100205) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

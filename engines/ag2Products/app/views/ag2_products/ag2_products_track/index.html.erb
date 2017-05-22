@@ -141,7 +141,7 @@
           show("#Store", "<%= t(".label_store") %>");
           show("#Order", "<%= t(".label_work_order") %>");
           show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
+          show("#Balance", "<%= t(".label_balance") %>");
           show("#Status", "<%= t(".label_order_status") %>");
           show("#User", "<%= t(".label_petitioner") %>");
           show("#Family", "<%= t(".label_family") %>");
@@ -427,8 +427,8 @@
       <%= label_tag t(".label_charge_account"), nil, :class => 'form-label-under-sel2' %>
       <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Billing status -->
-      <%= label_tag t("activerecord.attributes.receipt_note.billing_status"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Balance", options_for_select(@balances), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <%= label_tag t(".label_balance"), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "Balance", options_for_select(@balances), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Dates -->
       <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>

@@ -10,6 +10,7 @@ es:
         label_store: "Almacén"
         label_work_order: "Orden de trabajo"
         label_charge_account: "Cuenta analítica"
+        label_balance: "Facturación"
         label_order_status: "Estado del pedido"
         label_petitioner: "Peticionario"
         label_family: "Familia de producto"

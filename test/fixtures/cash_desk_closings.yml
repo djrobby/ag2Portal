@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  opening_balance: 9.99
+  closing_balance: 9.99
+  amount_collected: 9.99
+  invoices_collected: 1
+
+two:
+  opening_balance: 9.99
+  closing_balance: 9.99
+  amount_collected: 9.99
+  invoices_collected: 1
