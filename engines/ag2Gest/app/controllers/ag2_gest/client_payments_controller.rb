@@ -11,16 +11,16 @@ module Ag2Gest
                                                :cp_restore_filters,
                                                :cp_format_number,
                                                :cp_format_number_4,
-                                               :cash,
-                                               :others,
                                                :collection_payment_methods,
-                                               :banks,
-                                               :fractionate,
-                                               :charge_instalment,
+                                               :cash,
+                                               :cash_instalments,
                                                :close_cash,
                                                :cash_to_pending,
+                                               :others,
+                                               :banks,
                                                :confirm_bank,
-                                               :bank_to_pending]
+                                               :bank_to_pending,
+                                               :fractionate]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
@@ -39,11 +39,27 @@ module Ag2Gest
       render json: @json_data
     end
 
+    # Payment method for collection
+    def collection_payment_methods(_organization)
+      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
+    end
+
+    #
+    # Cash methods
+    #
     def cash
-      invoices = Invoice.find_all_by_id(params[:client_payment][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      invoice_ids = params[:client_payment][:invoices_ids].split(",")
+      instalment_ids = params[:client_payment][:ids].split(",")
       amount = BigDecimal.new(params[:client_payment][:amount])
       payment_method = params[:client_payment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
+      # If these are instalments, call cash_instalments & exit
+      if !instalment_ids.blank?
+        cash_instalments(instalment_ids, amount, payment_method)
+        return
+      end
+      # If these are invoices, go on from here
+      invoices = Invoice.find_all_by_id(invoice_ids).sort {|a, b| b[:created_at] <=> a[:created_at]}
       acu = amount
       # Receipt No.
       receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
@@ -58,10 +74,9 @@ module Ag2Gest
             acu = 0
             invoice_status = InvoiceStatus::PENDING
           end
-          confirmation_date = nil
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
-                               payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
+                               payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
           if client_payment.save
             i.invoice_status_id = invoice_status
@@ -72,10 +87,92 @@ module Ag2Gest
         end
       end
       redirect_to client_payments_path, notice: "Factura/s traspasadas a Caja."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar factura/s a Caja."
+    # rescue
+    #   redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar factura/s a Caja."
     end
 
+    def cash_instalments(instalment_ids, amount, payment_method)
+      instalments = Instalment.where(id: instalment_ids)
+      op = true
+      acu = amount
+      # Receipt No.
+      invoice_no = instalments.first.instalment_invoices.first.invoice.invoice_no
+      receipt_no = receipt_next_no(invoice_no[3..4]) || '0000000000'
+
+      # Begin the transaction
+      begin
+        ActiveRecord::Base.transaction do
+          instalments.each do |i|
+            if acu > 0
+              if acu >= i.debt
+                amount_paid = i.debt
+                acu -= i.debt
+              else
+                amount_paid = acu
+                acu = 0
+              end
+              i.instalment_invoices.each do |j|
+                client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: j.bill_id, invoice_id: j.invoice_id,
+                                     payment_method_id: payment_method, client_id: j.bill.client_id, subscriber_id: j.bill.subscriber_id,
+                                     payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: i.id,
+                                     client_bank_account_id: nil, charge_account_id: j.invoice.charge_account_id)
+                if !client_payment.save
+                  op = false;
+                  break
+                else
+                  if j.invoice.debt == 0  # No more debt, change invoice status
+                    # j.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+                  end
+                end
+              end
+              if !op
+                redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja."
+                break
+              end
+            else
+              break
+            end
+          end   # instalments.each
+          redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
+        end # ActiveRecord::Base.transaction
+      rescue ActiveRecord::RecordInvalid
+        redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
+      end # begin
+
+    # Generic method rescue
+    # rescue
+    #   redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja."
+    end
+
+    def close_cash
+      client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.update_attributes(confirmation_date: Time.now)
+        if cp.invoice.debt == 0
+          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+        end
+      end
+      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error! Imposible cerrar caja."
+    end
+
+    def cash_to_pending
+      client_payments_ids = params[:cash_to_pending][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+        cp.delete
+      end
+      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
+    end
+
+    #
+    # Others methods
+    #
     def others
       invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       amount = BigDecimal.new(params[:client_payment_other][:amount])
@@ -112,10 +209,9 @@ module Ag2Gest
       redirect_to client_payments_path
     end
 
-    def collection_payment_methods(_organization)
-      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
-    end
-
+    #
+    # Bank methods
+    #
     def banks
       invoices = Invoice.find_all_by_id(params[:client_payment_bank][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
       # Bank order No.
@@ -142,6 +238,31 @@ module Ag2Gest
       redirect_to client_payments_path
     end
 
+    def confirm_bank
+      client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payment_ids)
+      client_payments.each do |cp|
+        cp.update_attributes(confirmation_date: Time.now)
+        cp.invoice.update_attributes(invoice_status_id: 99)
+      end
+      redirect_to client_payments_path, notice: "Cobros confirmados sin incidencias"
+    end
+
+    def bank_to_pending
+      client_payments_ids = params[:bank_to_pending][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+        cp.delete
+      end
+      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
+    end
+
+    #
+    # Instalments methods
+    #
     # Must fractionate invoices from the same client!!
     def fractionate
       # invoices = Invoice.find_all_by_id().sort {|a, b| b[:created_at] <=> a[:created_at]}
@@ -266,80 +387,6 @@ module Ag2Gest
     # Generic method rescue
     # rescue
     #   redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.fractionate_error')
-    end
-
-    def charge_instalment
-      instalment_ids = params[:payment_fractionated][:ids].split(",")
-      instalments = Instalment.where(id: instalment_ids)
-      # Receipt No.
-      receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
-      instalments.each do |instalment|
-        bill = instalment.bill
-        instalment_plan = instalment.instalment_plan
-        client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::FRACTIONATED, bill_id: bill.id, invoice_id: i.invoice.id,
-                             payment_method_id: instalment_plan.payment_method_id, client_id: bill.client_id, subscriber_id: bill.subscriber_id,
-                             payment_date: Time.now, confirmation_date: Time.now, amount: instalment.amount, instalment_id: instalment.id,
-                             client_bank_account_id: nil, charge_account_id: i.invoice.charge_account_id)
-        if client_payment.save
-          if instalment_plan.instalments.count == instalment_plan.instalments.map(&:client_payment).compact.count
-            bill.invoices.each do |i|
-              i.invoice_status_id = 99
-              i.save
-            end
-          end
-        end
-      end
-      redirect_to client_payments_path, notice: "Plazo/s cobrado/s correctamente."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error! Imposible cobrar plazo/s."
-    end
-
-    def close_cash
-      client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
-      client_payments = ClientPayment.where(id: client_payments_ids)
-      client_payments.each do |cp|
-        cp.update_attributes(confirmation_date: Time.now)
-        if cp.invoice.debt == 0
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
-        end
-      end
-      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error! Imposible cerrar caja."
-    end
-
-    def cash_to_pending
-      client_payments_ids = params[:cash_to_pending][:client_payments_ids].split(",")
-      client_payments = ClientPayment.where(id: client_payments_ids)
-      client_payments.each do |cp|
-        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
-        cp.delete
-      end
-      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
-    end
-
-    def confirm_bank
-      client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
-      client_payments = ClientPayment.where(id: client_payment_ids)
-      client_payments.each do |cp|
-        cp.update_attributes(confirmation_date: Time.now)
-        cp.invoice.update_attributes(invoice_status_id: 99)
-      end
-      redirect_to client_payments_path, notice: "Cobros confirmados sin incidencias"
-    end
-
-    def bank_to_pending
-      client_payments_ids = params[:bank_to_pending][:client_payments_ids].split(",")
-      client_payments = ClientPayment.where(id: client_payments_ids)
-      client_payments.each do |cp|
-        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
-        cp.delete
-      end
-      redirect_to client_payments_path, notice: "Factura/s devuelta/s a Pendientes sin incidencias."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s a Pendientes"
     end
 
     #
@@ -1137,16 +1184,12 @@ module Ag2Gest
       session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
     end
 
-    def collection_payment_methods(_organization)
-      _organization != 0 ? PaymentMethod.collections_belong_to_organization(_organization) : PaymentMethod.collections
-    end
-
     def cashier_payment_methods_dropdown
       session[:organization] != '0' ? collections_used_by_cashier(session[:organization].to_i) : collections_used_by_cashier(0)
     end
 
     def collections_used_by_cashier(_organization)
-      _organization != 0 ? PaymentMethod.collections_used_by_cashier(_organization) : PaymentMethod.collections
+      _organization != 0 ? PaymentMethod.collections_by_organization_used_by_cashier(_organization) : PaymentMethod.collections_used_by_cashier
     end
 
     # Keeps filter state
