@@ -27,6 +27,10 @@ class Instalment < ActiveRecord::Base
     !instalment_plan.nil? ? instalment_plan.full_no : "00000000000-0000-0000000"
   end
 
+  def partial_instalment_no
+    !instalment_plan.nil? ? instalment_plan.full_no[12..23] : "0000-0000000"
+  end
+
   def instalment_date
     !instalment_plan.nil? ? instalment_plan.instalment_date : nil
   end

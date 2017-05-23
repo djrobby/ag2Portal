@@ -17,11 +17,11 @@
       <th><input type="checkbox" class="checkbox-master-table"></th>
       <th class="hidden-text-field">Id</th>
       <th>Nº</th>
-      <th>Factura</th>
-      <th>Abonado</th>
-      <th>F. pago</th>
-      <th align="right"><%= t("activerecord.attributes.client_payment.to_collect") %></th>
-      <th align="right">Total</th>
+      <th>Recibo/Factura</th>
+      <th>Aplazamiento</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
+      <th align="right"><%= t("activerecord.attributes.client_payment.collected") %></th>
     </tr>
   </thead>
   <tbody>
@@ -31,10 +31,10 @@
         <td class="cpb-id hidden-text-field"><%= client_payment.id %></td>
         <td><%= client_payment.receipt_no %></td>
         <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
+        <td><%= client_payment.instalment.partial_instalment_no unless client_payment.instalment_id.blank? %></td>
         <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
         <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
         <td class="cpb-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td class="cpb-total" align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
       </tr>
     <% end %>
   </tbody>

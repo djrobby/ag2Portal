@@ -233,6 +233,29 @@
     }
   });
 
+  // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
+  $(".btn-payment").click(function(){
+    var elements = $( "input:checked" );
+    if (elements.length <= 0) return false;
+    var invoices_id = [];
+    var debts_array = [];
+    for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
+    for(var i=0;typeof(elements[i])!='undefined';debts_array.push(elements[i++].getAttribute('data-debt')));
+    var total_debt = 0.0;
+    for (var i = 0; i < debts_array.length; i++) {
+      if(debts_array[i] != null){
+        total_debt += parseFloat(debts_array[i]);
+      }
+    }
+    $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
+
+    // Update Ids in the
+    $("#client_payment_cash_invoices_ids").val(invoices_id.filter(i=>i!=null))    // cash
+    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
+    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
+    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
+  });
+
   $("#initial-cash").change(function() {
     initial_cash = parseFloat(this.value)
     cashed = parseFloat($("#total-cash").text());
@@ -539,7 +562,7 @@
         <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.cash_closing" %></h4>
       </div>
-      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right close-cash-form'} do |f| %>
+      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
@@ -577,7 +600,7 @@
         <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.back_to_pending" %></h4>
       </div>
-      <%= simple_form_for :cash_to_pending, url: cash_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right cash-to-pending-form'} do |f| %>
+      <%= simple_form_for :cash_to_pending, url: cash_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
@@ -600,7 +623,7 @@
         <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.bank_confirm" %></h4>
       </div>
-      <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-confirm-form'} do |f| %>
+      <%= simple_form_for :bank_confirm, url: confirm_bank_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
@@ -630,7 +653,7 @@
         <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.back_to_pending" %></h4>
       </div>
-      <%= simple_form_for :bank_to_pending, url: bank_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-to-pending-form'} do |f| %>
+      <%= simple_form_for :bank_to_pending, url: bank_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
@@ -675,29 +698,6 @@
     }
   });  
 
-  // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
-  $(".btn-payment").click(function(){
-    var elements = $( "input:checked" );
-    if (elements.length <= 0) return false;
-    var invoices_id = [];
-    var debts_array = [];
-    for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
-    for(var i=0;typeof(elements[i])!='undefined';debts_array.push(elements[i++].getAttribute('data-debt')));
-    var total_debt = 0.0;
-    for (var i = 0; i < debts_array.length; i++) {
-      if(debts_array[i] != null){
-        total_debt += parseFloat(debts_array[i]);
-      }
-    }
-    $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
-
-    // Update Ids in the
-    $("#client_payment_cash_invoices_ids").val(invoices_id.filter(i=>i!=null))    // cash
-    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
-    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
-    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
-  });
-
   $(".btn-cash").click(function (e) {
     ids = $("#client_payment_cash_invoices_ids").val();
     if (ids == null || ids == '') {
@@ -739,28 +739,12 @@
     $("#client_payment_other_payment_method_id").select2("val", 0);
   });
 
-  // All checked instalments to Bank
   $(".btn-bank-instalment").click(function (e) {
-    var elements = $( "input:checked" );
-    var invoices_id = [];
-    var debts_array = [];
-    for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
-    for(var i=0;typeof(elements[i])!='undefined';debts_array.push(elements[i++].getAttribute('data-debt')));
-    var total_debt = 0.0;
-    for (var i = 0; i < debts_array.length; i++) {
-      if(debts_array[i] != null){
-        total_debt += parseFloat(debts_array[i]);
-      }
-    }
-    $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
-
-    // Update Ids in Bank
-    $("#client_payment_bank_ids").val(invoices_id.filter(i=>i!=null))
-    if (invoices_id == null || invoices_id == '') {
+    ids = $("#client_payment_bank_invoices_ids").val();
+    if (ids == null || ids == '') {
       alert('¡Debes seleccionar plazos pendientes de cobrar!');
       return false;
     }
-    $("#client_payment_bank_invoices_ids").val("");
     $("#client_payment_bank_receipt_no").val("");
   });
 
@@ -784,10 +768,6 @@
       if (id != null && id != '') cp_ids.push(id);
     });  
     $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
-    if (cp_ids == null || cp_ids == '') {
-      alert('¡Debes seleccionar recibos, facturas o plazos a devolver!');
-      return false;
-    }
   });
 
   $("#bank-confirm").click(function(){
@@ -914,14 +894,6 @@
     }
   });
 
-  $("form.bank_confirm").submit(function(){
-   var $input = $(this).find("input[name='bank_confirm[ids]']");
-   var elements = $( "input.checkbox-slave:checked" );
-   var client_payment_ids = [];
-   for(var i=0;typeof(elements[i])!='undefined';client_payment_ids.push(elements[i++].getAttribute('value')));
-   $input.val(client_payment_ids);
-  });
-
   /* modal_instalment form.instalment: Check required values before submit */
   $("form.instalment-form").submit(function(){
     if ($('#instalment_number_inst').val() == '' ||
@@ -944,6 +916,14 @@
       alert("<%= I18n.t('activerecord.attributes.instalment_plan.payment_method_id') %> <%= I18n.t(:item_error) %>");
       return false;
     }
+  });
+
+  $("form.bank_confirm").submit(function(){
+   var $input = $(this).find("input[name='bank_confirm[ids]']");
+   var elements = $( "input.checkbox-slave:checked" );
+   var client_payment_ids = [];
+   for(var i=0;typeof(elements[i])!='undefined';client_payment_ids.push(elements[i++].getAttribute('value')));
+   $input.val(client_payment_ids);
   });
 
   $("form.payment_fractionated").submit(function(){

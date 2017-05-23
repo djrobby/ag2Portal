@@ -17,7 +17,8 @@
   </div>
   <%= simple_form_for :client_payment_bank, url: banks_client_payments_path, method: :post, :html => { class: 'modal-footer-right bank-form'} do |f| %>
     <div class="modal-body">
-      <%= f.input :invoices_ids, :as => :hidden %>
+      <%= f.input :invoices_ids, :as => :hidden %> <!-- Charge invoices -->
+      <%= f.input :ids, :as => :hidden %>          <!-- Charge instalments -->
       <div class="control-group string required">
         <label class="form-label"><%= t('activerecord.attributes.client_payment.to_collect') %></label>
         <div class="controls highlighted bolded">

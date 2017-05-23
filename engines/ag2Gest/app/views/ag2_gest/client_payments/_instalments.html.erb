@@ -80,6 +80,7 @@
               <td>
                 <%= check_box_tag 'instalment_id', instalment.id, false, class: "instalment-checkbox-slave", :data => {amount: instalment.amount, surcharge: instalment.surcharge, debt: instalment.total} %>
                 <a class="accor accordion-toggle collapsed pull-right" data-toggle="collapse" data-parent="#accordion2" href="#collapse-instalment-<%= instalment.id %>"><i class='icon-plus'></i></a>
+                <% if instalment.instalment_plan.client.active_bank_accounts? %><i class="icon-briefcase"></i><% end %>
               </td>
               <td><%= instalment.instalment_no %></td>
               <td align="center"><%= formatted_date(instalment.instalment_date) unless instalment.instalment_date.blank? %></td>
