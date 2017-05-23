@@ -68,6 +68,13 @@ module Ag2Gest
       response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
       response_hash[:caliber] = @contracting_request.work_order.caliber if @contracting_request.work_order and @contracting_request.work_order.caliber
       response_hash[:meter_code] = @contracting_request.work_order.meter_code if @contracting_request.work_order and @contracting_request.work_order.caliber
+      response_hash[:meter_installation] = @contracting_request.water_supply_contract.work_order.meter if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
+      response_hash[:meter_code_installation] = @contracting_request.water_supply_contract.work_order.meter_code if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
+      response_hash[:meter_location_installation] = @contracting_request.water_supply_contract.work_order.meter_location if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
+      response_hash[:reading_index_installation] = @contracting_request.water_supply_contract.work_order.current_reading_index if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
+      response_hash[:reading_date_installation] = @contracting_request.water_supply_contract.work_order.current_reading_date if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
+      response_hash[:reading_index_cancellation] = WorkOrder.where(master_order_id: @contracting_request.work_order_id,work_order_type_id: 29).first.current_reading_index if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP or @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
+      response_hash[:reading_date_cancellation] = WorkOrder.where(master_order_id: @contracting_request.work_order_id,work_order_type_id: 29).first.current_reading_date if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP or @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
       respond_to do |format|
         format.json { render json: response_hash }
       end
@@ -75,10 +82,23 @@ module Ag2Gest
 
     def update_tariff_type_select_from_billing_concept
       billable_concept_ids = params[:billable_concept_ids]
-      billable_concept_ids = billable_concept_ids.split(",")
+      @billable_concept_ids = billable_concept_ids.split(",")
+
+      # @grouped_options = @billable_concept_ids.inject({}) do |biller, bc|
+      #   _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+      #   _tariff_type_ids.each do |ttt|
+      #     @tariffs = ttt
+      #     (biller[BillableItem.find(bc).to_label_biller] ||= []) << [@tariffs.to_label,@tariffs.id]
+      #   end
+      #   biller
+      # end
+
+      # @tariff_type_dropdown =  @grouped_options
+
       @tariff_type_ids = []
-      billable_concept_ids.each do |bc|
-        @tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      @billable_concept_ids.each do |bc|
+        #@tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+        @tariff_type_ids += BillableItem.find(bc).grouped_tariff_types
       end
       @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
       # Setup JSON
@@ -1209,7 +1229,8 @@ module Ag2Gest
       @projects = current_projects
       @projects_ids = current_projects_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
-      @billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
+      #@billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
+      @billable_concept_availables = BillableItem.joins(:billable_concept).where('billable_concepts.billable_document = 1').group('billable_items.biller_id,billable_items.billable_concept_id ').belongs_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       _tariff_type = []
@@ -1230,8 +1251,8 @@ module Ag2Gest
 
       _billable_concept = []
       @water_supply_contract.contracted_tariffs.each do |tt|
-          if !_billable_concept.include? tt.tariff.billable_concept.id
-            _billable_concept = _billable_concept << tt.tariff.billable_concept.id
+          if !_billable_concept.include? tt.tariff.billable_item.id
+            _billable_concept = _billable_concept << tt.tariff.billable_item.id
           end
       end
       if _billable_concept == []
@@ -1243,11 +1264,22 @@ module Ag2Gest
       end
       @billable_concept_select = _billable_concept
 
-      _tariff_type_ids = []
-      @billable_concept_select.each do |bc|
-        _tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      # _tariff_type_ids = []
+      # @billable_concept_select.each do |bc|
+      #   #_tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      #   _tariff_type_ids += BillableItem.find(bc).grouped_tariff_types
+      # end
+      # @tariff_type_dropdown = _tariff_type_ids
+
+      @grouped_options = @billable_concept_select.inject({}) do |biller, bc|
+        _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+        _tariff_type_ids.each do |ttt|
+          @tariffs = ttt
+          (biller[BillableItem.find(bc).to_label_biller] ||= []) << [@tariffs.to_label,@tariffs.id]
+        end
+        biller
       end
-      @tariff_type_dropdown = _tariff_type_ids
+      @tariff_type_dropdown =  @grouped_options
 
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)

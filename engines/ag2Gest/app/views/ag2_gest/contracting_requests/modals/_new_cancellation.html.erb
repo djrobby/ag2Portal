@@ -148,11 +148,11 @@ jQuery(function($) {
       </div>
       <div>      
       <h3><%= t('activerecord.attributes.contracting_request.data_withdrawal_meter') %></h3>
-      <%= f.input :installation_date, required: true, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: Date.today.strftime("%d/%m/%Y"), class: 'x-large-text-field date_picker' }, label: t('activerecord.attributes.meter_detail.withdrawal_date'), wrapper_html: { class: "span5" } %>
+      <%= f.input :installation_date, required: true, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { id: 'cancellation-date', value: Date.today.strftime("%d/%m/%Y"), class: 'x-large-text-field date_picker' }, label: t('activerecord.attributes.meter_detail.withdrawal_date'), wrapper_html: { class: "span5" } %>
       <% if @water_supply_contract.installation_index.blank? %>
-        <%= f.input :installation_index, required: true, :input_html => { :class => 'x-large-text-field', :value => @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index)}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %>
+        <%= f.input :installation_index, required: true, :input_html => { id: 'cancellation-date', :class => 'x-large-text-field', :value => @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index)}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %>
       <% else %>
-        <%= f.input :installation_index, required: true, :input_html => { :class => 'x-large-text-field'}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %> 
+        <%= f.input :installation_index, required: true, :input_html => { id: 'cancellation-date', :class => 'x-large-text-field'}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %> 
       <% end %>    
       </div>
 

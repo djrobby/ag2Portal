@@ -6,6 +6,11 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+    $('select.sel3').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      closeOnSelect: false,
+      allowClear: true
+    });
 
     // Save default text color
     text_field_color = $("#alert").css('color')
@@ -159,12 +164,13 @@ jQuery(function($) {
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
       
       <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
-      <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+      <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
       
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
 
-      <%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+<!--       <#%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->
 
+      <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
 
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>

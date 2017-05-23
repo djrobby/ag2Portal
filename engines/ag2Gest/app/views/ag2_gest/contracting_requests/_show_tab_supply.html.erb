@@ -296,16 +296,45 @@
         $("#link_work_order_inspection").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
         $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6));
       };
+      
       if (data.work_order_status) {
         $("#status_work_order_inspection").text(data.work_order_status.name);
       };
 
       if (data.meter_code) {
-        $("#meter_code").text(data.meter_code);
+        $("#meter_code").val(data.meter_code);
       };
 
       if (data.caliber) {
-        $("#caliber").text(data.caliber.caliber);
+        $("#caliber").val(data.caliber.caliber);
+      };
+
+      if (data.meter_installation) {
+        $("#sel2_association_change").val(data.meter_installation.id);
+      };
+
+      if (data.meter_code_installation) {
+        $("#input_change_meter").val(data.meter_code);
+      };
+
+      if (data.meter_location_installation) {
+        $("#meter-location-new-subscriber").select2("val",data.meter_location_installation.id);
+      };
+
+      if (data.reading_date_installation) {
+        $("#installation-date-new-subscriber").val(data.reading_date_installation);
+      };
+
+      if (data.reading_index_installation) {
+        $("#installation-reading-new-subscriber").val(data.reading_index_installation);
+      };
+
+      if (data.reading_date_cancellation) {
+        $("#cancellation-date").val(data.reading_date_cancellation);
+      };
+
+      if (data.reading_index_cancellation) {
+        $("#cancellation-index").val(data.reading_index_cancellation);
       };
 
       if (data.work_order_cancellation) {

@@ -29,6 +29,14 @@ class BillableItem < ActiveRecord::Base
     "#{billable_concept.name} (#{billable_concept.code}) - #{biller.name}"
   end
 
+  def to_label_biller
+    if project.company == biller
+      "#{billable_concept.name} (#{billable_concept.code})"
+    else
+      "#{billable_concept.name} (#{billable_concept.code}) - #{biller.name}"
+    end
+  end
+
   def office
     project.office
   end
