@@ -3,6 +3,8 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ClientPaymentsController < ApplicationController
+    @@last_cash_desk_closing = nil
+
     include ActionView::Helpers::NumberHelper
     before_filter :authenticate_user!
     load_and_authorize_resource
@@ -14,6 +16,7 @@ module Ag2Gest
                                                :collection_payment_methods,
                                                :cash,
                                                :cash_instalments,
+                                               :open_cash,
                                                :close_cash,
                                                :cash_to_pending,
                                                :others,
@@ -145,18 +148,71 @@ module Ag2Gest
     #   redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja."
     end
 
-    def close_cash
-      client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
-      client_payments = ClientPayment.where(id: client_payments_ids)
-      client_payments.each do |cp|
-        cp.update_attributes(confirmation_date: Time.now)
-        if cp.invoice.debt == 0
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
-        end
+    def open_cash
+      current_projects = current_projects_ids
+      if !current_projects.blank?
+        CashDeskClosing.last_by_project(current_projects)
+      elsif session[:office] != '0'
+        CashDeskClosing.last_by_office(session[:office].to_i)
+      elsif session[:company] != '0'
+        CashDeskClosing.last_by_company(session[:company].to_i)
+      elsif session[:organization] != '0'
+        CashDeskClosing.last_by_organization(session[:organization].to_i)
+      else
+        CashDeskClosing.last_of_all
       end
-      redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
-    rescue
-      redirect_to client_payments_path, alert: "¡Error! Imposible cerrar caja."
+    end
+
+    def close_cash
+      # Input parameters
+      client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
+      opening_balance = params[:close_cash][:opening_balance].to_d
+      # Last cash desk closing
+      last_cash_desk_closing = open_cash
+      last_closing = last_cash_desk_closing.id rescue nil
+      # Variables
+      closing_balance = 0
+      amount_collected = 0
+      invoices_collected = 0
+      created_by = current_user.id if !current_user.nil?
+      # Data to process
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      first_payment = client_payments.first
+      organization = first_payment.bill.organization_id rescue nil
+      project = first_payment.bill.project_id rescue nil
+      company = project.company_id rescue nil
+      office = project.office_id rescue nil
+
+      # Begin the transaction
+      begin
+        ActiveRecord::Base.transaction do
+          # Update client payments & invoice statuses
+          client_payments.each do |cp|
+            amount_collected += cp.amount
+            invoices_collected += 1
+            cp.update_attributes(confirmation_date: Time.now)
+            if cp.invoice.debt == 0
+              cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+            end
+          end # client_payments.each
+          closing_balance = opening_balance + amount_collected
+          # Create cash desk closing
+          cash_desk_closing = CashDeskClosing.new(organization_id: organization, company_id: company, office_id: office, project_id: project,
+                                                  opening_balance: opening_balance, closing_balance: closing_balance, amount_collected: amount_collected,
+                                                  invoices_collected: invoices_collected, last_closing_id: last_closing, created_by: created_by)
+          if cash_desk_closing.save
+            client_payments.each do |cp|
+              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type: 'C')
+              if !item.save
+                break
+              end
+            end # client_payments.each
+          end
+        end # ActiveRecord::Base.transaction
+        redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
+      rescue ActiveRecord::RecordInvalid
+        redirect_to client_payments_path, alert: "¡Error! Imposible cerrar Caja." and return
+      end # begin
     end
 
     def cash_to_pending
@@ -483,6 +539,7 @@ module Ag2Gest
       @have_bank_account = have_bank_account_array
       @payment_methods = payment_methods_dropdown
       @cashier_payment_methods = cashier_payment_methods_dropdown
+      @no_cashier_payment_methods = no_cashier_payment_methods_dropdown
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -815,6 +872,11 @@ module Ag2Gest
       @instalments_totals = @instalments.select(payments_select).first
       plan_ids = @instalments.map(&:instalment_plan_id).uniq
       @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
+
+      # Open last cash desk closing
+      @last_cash_desk_closing = open_cash
+      @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
+      @closing_balance = @opening_balance + @cash_totals.totals
 
       respond_to do |format|
         format.html # index.html.erb
@@ -1261,6 +1323,14 @@ module Ag2Gest
 
     def collections_used_by_cashier(_organization)
       _organization != 0 ? PaymentMethod.collections_by_organization_used_by_cashier(_organization) : PaymentMethod.collections_used_by_cashier
+    end
+
+    def no_cashier_payment_methods_dropdown
+      session[:organization] != '0' ? collections_not_used_by_cashier(session[:organization].to_i) : collections_not_used_by_cashier(0)
+    end
+
+    def collections_not_used_by_cashier(_organization)
+      _organization != 0 ? PaymentMethod.collections_by_organization_not_used_by_cashier(_organization) : PaymentMethod.collections_not_used_by_cashier
     end
 
     # Keeps filter state

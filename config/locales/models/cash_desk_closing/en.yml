@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing:
+        zero:  Cash desk closings
+        one:   Cash desk closing
+        few:   Cash desk closings
+        other: Cash desk closings
+    attributes:
+      cash_desk_closing:
+        organization: "Organization"
+        organization_id: "Organization"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        project: "Project"
+        project_id: "Project"
+        closing_balance: "Closing balance"
+        opening_balance: "Opening balance"
+        amount_collected: "Amount collected"
+        invoices_collected: "Invoices collected"
+        amount_paid: "Amount paid"
+        invoices_paid: "Invoices paid"

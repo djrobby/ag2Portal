@@ -69,6 +69,9 @@
         <%=t '.caution' %>
       </p>
       <%= form_tag "ag2_purchase_track", :method => 'get' do %>
+      <!-- Export -->
+      <%= label_tag "label_export", t(".label_export"), :class => 'form-label' %>
+      <%= select_tag "Export", options_for_select(@export, 0), :class => 'x-large-text-field' %>
       <!-- Project -->
       <%= label_tag "label_project", t(".label_project"), :class => 'form-label' %>
       <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>

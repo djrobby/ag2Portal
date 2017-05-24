@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170522063301) do
+ActiveRecord::Schema.define(:version => 20170524094257) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -491,20 +491,23 @@ ActiveRecord::Schema.define(:version => 20170522063301) do
     t.integer  "company_id"
     t.integer  "office_id"
     t.integer  "project_id"
-    t.datetime "last_closing"
     t.decimal  "opening_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "closing_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "amount_collected",   :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.integer  "invoices_collected"
+    t.integer  "invoices_collected",                                :default => 0,   :null => false
     t.datetime "created_at",                                                         :null => false
     t.datetime "updated_at",                                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "amount_paid",        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "invoices_paid",                                     :default => 0,   :null => false
+    t.integer  "last_closing_id"
   end
 
   add_index "cash_desk_closings", ["company_id"], :name => "index_cash_desk_closings_on_company_id"
   add_index "cash_desk_closings", ["created_at"], :name => "index_cash_desk_closings_on_created_at"
   add_index "cash_desk_closings", ["created_by"], :name => "index_cash_desk_closings_on_created_by"
+  add_index "cash_desk_closings", ["last_closing_id"], :name => "index_cash_desk_closings_on_last_closing_id"
   add_index "cash_desk_closings", ["office_id"], :name => "index_cash_desk_closings_on_office_id"
   add_index "cash_desk_closings", ["organization_id"], :name => "index_cash_desk_closings_on_organization_id"
   add_index "cash_desk_closings", ["project_id"], :name => "index_cash_desk_closings_on_project_id"
@@ -2153,15 +2156,15 @@ ActiveRecord::Schema.define(:version => 20170522063301) do
 
   create_table "payment_methods", :force => true do |t|
     t.string   "description"
-    t.integer  "expiration_days",                                              :default => 0,   :null => false
-    t.decimal  "default_interest",              :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                                    :null => false
-    t.datetime "updated_at",                                                                    :null => false
+    t.integer  "expiration_days",                                              :default => 0,     :null => false
+    t.decimal  "default_interest",              :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.datetime "created_at",                                                                      :null => false
+    t.datetime "updated_at",                                                                      :null => false
     t.string   "created_by"
     t.string   "updated_by"
     t.integer  "flow",             :limit => 2
     t.integer  "organization_id"
-    t.boolean  "cashier"
+    t.boolean  "cashier",                                                      :default => false, :null => false
   end
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"

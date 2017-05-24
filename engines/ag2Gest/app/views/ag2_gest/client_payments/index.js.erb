@@ -106,7 +106,11 @@ $("#close-cash").click(function(){
     // cp_amount += parseFloat(amount);
   });  
   $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash
-  // $("#close_cash_total-cash").text(cp_amount.format(4, 3, _delimiter, _separator));
+  $("#initial-cash").val("<%= @opening_balance %>");
+  if (cp_ids == null || cp_ids == '') {
+    alert('¡Debes seleccionar recibos, facturas o plazos a confirmar!');
+    return false;
+  }
 });
 
 $("#cash-to-pending").click(function(){

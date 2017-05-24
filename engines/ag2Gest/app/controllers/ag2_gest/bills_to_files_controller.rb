@@ -386,12 +386,20 @@ module Ag2Gest
       authorize! :read, Bill
       # OCO
       init_oco if !session[:organization]
+      @export = formats_array
       @projects = projects_dropdown
       @periods = projects_periods(@projects)
       @billers = billers_dropdown
     end
 
     private
+
+    def formats_array()
+      _array = []
+      _array = _array << t("ag2_gest.bills_to_files.printed_bill")
+      _array = _array << t("ag2_gest.bills_to_files.e_bill")
+      _array
+    end
 
     def set_defaults
       #@company = Company.first

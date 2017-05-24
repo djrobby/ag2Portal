@@ -1,0 +1,24 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing:
+        zero:  Cierres de caja
+        one:   Cierre de caja
+        few:   Cierres de caja
+        other: Cierres de caja
+    attributes:
+      cash_desk_closing:
+        organization: "Organización"
+        organization_id: "Organización"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        closing_balance: "Saldo de cierre"
+        opening_balance: "Saldo de apertura"
+        amount_collected: "Importe cobrado"
+        invoices_collected: "Facturas cobradas"
+        amount_paid: "Importe pagado"
+        invoices_paid: "Facturas pagadas"
