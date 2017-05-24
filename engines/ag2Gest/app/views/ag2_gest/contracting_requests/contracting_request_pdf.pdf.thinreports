@@ -161,13 +161,14 @@ report.page.values(change_c: I18n.t("ag2_gest.contracting_requests.report.change
 									 change_2: I18n.t("ag2_gest.contracting_requests.report.change_2"),
 									 change_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":"
 									 )
-if @contracting_request.contracting_request_type_id == 4
+if @contracting_request.contracting_request_type_id == 4 
 	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:to_label),
 					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
 					)
 end
 if @contracting_request.contracting_request_type_id == 2
-	report.page.values(reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
+	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:full_code) + " " + @contracting_request.try(:old_subscriber).try(:water_supply_contract).try(:client).try(:to_name),
+					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
 					)
 end
 #

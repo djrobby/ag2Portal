@@ -35,3 +35,4 @@ es:
         company_id: "Empresa"
         route: "Ruta"
         is_installed_now: "¿Está instalado ahora?"
+        report_title: "Contadores por Ruta"

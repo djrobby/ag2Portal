@@ -79,6 +79,14 @@ class Meter < ActiveRecord::Base
     end
   end
 
+  def order_sequence
+    if subscribers.first.blank?
+      0
+    else
+      subscribers.first.reading_sequence
+    end
+  end
+
   def fields_to_uppercase
     if !self.meter_code.blank?
       self[:meter_code].upcase!

@@ -108,6 +108,7 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
       _tariff_type_ids = params[:TariffType_]
+      _billable_items = params[:BillableConcept_]
       #@meter = Meter.find params[:water_supply_contract][:meter_id]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
@@ -128,9 +129,12 @@ module Ag2Gest
       end
         _tariff_type_ids.each do |r|
           _tariff_type = TariffType.find(r)
-          tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
+          _billable_items.each do |b|
+            tariffs = Tariff.availables_to_project_type_document_caliber(b,@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
           @water_supply_contract.tariffs << tariffs
+          end
         end
+
         # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
         # data_meters = Array.new
         # @meters_availables_subscriber.each{|m| data_meters << {id: m.id, text: m.to_label}}
@@ -164,6 +168,7 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
       _tariff_type_ids = params[:TariffType_]
+      _billable_items = params[:BillableConcept_]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
@@ -222,8 +227,10 @@ module Ag2Gest
 
           _tariff_type_ids.each do |r|
             _tariff_type = TariffType.find(r)
-            tariffs = Tariff.availables_to_project_type_document_caliber(@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
+            _billable_items.each do |b|
+              tariffs = Tariff.availables_to_project_type_document_caliber(b,@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
             @water_supply_contract.tariffs << tariffs
+            end
           end
         end
 

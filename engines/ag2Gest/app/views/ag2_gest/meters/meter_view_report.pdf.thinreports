@@ -44,7 +44,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_gest.meters.index.title")
+report.page.values report_title: I18n.t("activerecord.attributes.meter.report_title")
 
 # Page footer
 report.page.values(printed_at: formatted_timestamp(Time.now),
@@ -56,10 +56,11 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 report.page.list(:default).header do |header|
 	header.item(:code_c).value I18n.t("activerecord.attributes.meter.meter_code")
 	header.item(:brand_c).value I18n.t("activerecord.attributes.meter.meter_model_id")
+	header.item(:sequence_c).value I18n.t("activerecord.attributes.subscriber.reading_sequence")
 	header.item(:cal_c).value I18n.t("activerecord.attributes.meter.caliber_id")
 	header.item(:manufacturing_year_c).value I18n.t("activerecord.attributes.meter.manufacturing_year_min")
 	header.item(:expiry_date_c).value I18n.t("activerecord.attributes.meter.expiry_date_min")
-	header.item(:purchase_date_c).value I18n.t("activerecord.attributes.meter.purchase_date")
+	header.item(:subscriber_c).value I18n.t("activerecord.attributes.subscriber.subscriber_code2")
 end
 
 
@@ -78,17 +79,18 @@ end
 
 	report.page.list(:default).add_row do |row|
 		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
-		if route_id != "Sin ruta"
+		if route_id != "N/A"
 			report.page.values reading_route: i.details unless i.subscribers.first.reading_route.blank?
 		else
-			report.page.values reading_route: "Sin ruta"
+			report.page.values reading_route: "N/A"
 		end
 		row.item(:code).value i.meter_code
 		row.item(:brand).value i.meter_model.full_name unless i.meter_model.blank?
+		row.item(:sequence).value i.subscribers.first.reading_sequence.to_s unless i.subscribers.first.blank?
 		row.item(:cal).value i.caliber.caliber unless i.caliber.blank?
 		row.item(:manufacturing_year).value i.manufacturing_year unless i.manufacturing_year.blank?
 		row.item(:expiry_date).value formatted_date(i.expiry_date) unless i.expiry_date.blank? 
-		row.item(:purchase_date).value formatted_date(i.purchase_date) unless i.purchase_date.blank?
+		row.item(:subscriber).value i.subscribers.first.full_code unless i.subscribers.first.blank?
 	end
 
 	# Store page subtotals

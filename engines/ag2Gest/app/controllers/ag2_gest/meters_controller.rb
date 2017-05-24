@@ -215,7 +215,7 @@ module Ag2Gest
           paginate :page => params[:page] || 1, :per_page => Meter.count
       end
 
-      @meter_report = @search.results.sort_by(&:order_route)
+      @meter_report = @search.results.sort_by{ |t| [t.order_route, t.order_sequence] }
 
       if !@meter_report.blank?
         title = t("activerecord.models.meter.few")

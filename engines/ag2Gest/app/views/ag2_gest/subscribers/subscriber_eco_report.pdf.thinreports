@@ -59,12 +59,12 @@ report.page.list(:default).header do |header|
 	header.item(:code_c).value I18n.t("activerecord.attributes.subscriber.subscriber_code")
 	header.item(:fiscal_c).value I18n.t("activerecord.attributes.subscriber.fiscal_id_c")
 	header.item(:name_c).value I18n.t("activerecord.attributes.subscriber.full_name")
-	header.item(:street_c).value I18n.t("activerecord.attributes.subscriber.direction")
-	header.item(:tariff_c).value I18n.t("activerecord.attributes.subscriber.tariff_type_id")
+	header.item(:street_c).value I18n.t("activerecord.attributes.subscriber.address_1")
+	header.item(:tariff_c).value I18n.t("activerecord.attributes.subscriber.use_id")
 	header.item(:start_at_c).value I18n.t("activerecord.attributes.subscriber.starting_at")
 	header.item(:end_at_c).value I18n.t("activerecord.attributes.subscriber.ending_at")
 	header.item(:contract_c).value I18n.t("activerecord.attributes.subscriber.data_contract")
-	header.item(:tariff_scheme_c).value I18n.t("activerecord.attributes.subscriber.tariff_scheme_id")
+	header.item(:tariff_scheme_c).value I18n.t("activerecord.attributes.subscriber.tariff_type_id")
 	header.item(:debt_c).value I18n.t("activerecord.attributes.subscriber.debt")
 end
 
@@ -83,6 +83,14 @@ office_id = @subscriber_eco_report.first.office_id
 		office_id = i.office_id
 	end
 
+	_tariff_type = []
+	i.subscriber_tariff.each do |tt|
+		if !_tariff_type.include? tt.tariff.tariff_type.name
+			_tariff_type = _tariff_type << tt.tariff.tariff_type.name
+		end
+	end
+	@tariff_type = _tariff_type.join(",")
+
 	report.page.list(:default).add_row do |row|
 		report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
 		report.page.values project: i.office.name
@@ -90,11 +98,11 @@ office_id = @subscriber_eco_report.first.office_id
 		row.item(:fiscal).value i.fiscal_id
 		row.item(:name).value i.full_name
 		row.item(:street).value i.address_1
-		row.item(:tariff).value i.tariff_scheme.tariff_type.name
+		row.item(:tariff).value i.use.name unless i.use.blank?
 		row.item(:start_at).value formatted_date(i.starting_at) unless i.starting_at.blank?
 		row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
-		row.item(:contract).value i.water_supply_contract.contracting_request.full_no
-		row.item(:tariff_scheme).value i.tariff_scheme.name
+		row.item(:contract).value i.water_supply_contract.contracting_request.full_no unless i.water_supply_contract.blank?
+		row.item(:tariff_scheme).value @tariff_type
 		row.item(:debt).value number_with_precision(i.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_debt_unpaid.blank?
 	end
 

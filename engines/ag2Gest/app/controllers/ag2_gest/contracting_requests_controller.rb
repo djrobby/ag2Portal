@@ -84,26 +84,28 @@ module Ag2Gest
       billable_concept_ids = params[:billable_concept_ids]
       @billable_concept_ids = billable_concept_ids.split(",")
 
-      # @grouped_options = @billable_concept_ids.inject({}) do |biller, bc|
-      #   _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
-      #   _tariff_type_ids.each do |ttt|
-      #     @tariffs = ttt
-      #     (biller[BillableItem.find(bc).to_label_biller] ||= []) << [@tariffs.to_label,@tariffs.id]
-      #   end
-      #   biller
-      # end
-
-      # @tariff_type_dropdown =  @grouped_options
-
-      @tariff_type_ids = []
-      @billable_concept_ids.each do |bc|
-        #@tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
-        @tariff_type_ids += BillableItem.find(bc).grouped_tariff_types
+      @grouped_options = @billable_concept_ids.inject({}) do |biller, bc|
+        _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+        _tariff_type_ids.each do |ttt|
+          @tariffs = ttt
+          _label_biller = BillableItem.find(bc).to_label_biller
+          (biller[_label_biller] ||= []) << {:name => @tariffs.to_label, :id => @tariffs.id}
+        end
+        biller
       end
-      @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
+
+      @tariff_type_dropdown =  @grouped_options
+
+      # @tariff_type_ids = []
+      # billable_concept_ids.each do |bc|
+      #   #@tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+      #   @tariff_type_ids += BillableItem.find(bc).grouped_tariff_types
+      # end
+      # @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
       # Setup JSON
-      @json_data = { "tariff_type_ids" => @tariff_type_dropdown }
-      render json: @json_data
+
+      @json_data = { "tariff_type_ids" => @grouped_options }
+      render json: @grouped_options
     end
 
     def bill

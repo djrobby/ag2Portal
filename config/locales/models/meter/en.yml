@@ -35,3 +35,5 @@ en:
         company_id: "Company"
         route: "Route"
         is_installed_now: "Is installed now?"
+        report_title: "Route Meters"
+
