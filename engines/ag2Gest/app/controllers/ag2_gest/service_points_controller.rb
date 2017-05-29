@@ -7,10 +7,7 @@ module Ag2Gest
     load_and_authorize_resource
     helper_method :sort_column
     skip_load_and_authorize_resource :only => [ :update_offices_textfield_from_company,
-                                                :update_province_textfield_from_town,
                                                 :update_province_textfield_from_zipcode,
-                                                :update_country_textfield_from_region,
-                                                :update_region_textfield_from_province,
                                                 :create,
                                                 :update_province_textfield_from_street_directory
                                                 ]
@@ -28,61 +25,6 @@ module Ag2Gest
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @offices }
-      end
-    end
-
-    #NESTOR METHODS #############################################
-
-    # Update country text field at view from region select
-    def update_country_textfield_from_region
-
-      if params[:id] == "0"
-        @json_data = []
-      else
-        @region = Region.find(params[:id])
-        @country = Country.find(@region.country)
-      end
-
-      respond_to do |format|
-        format.html # update_country_textfield_from_region.html.erb does not exist! JSON only
-        format.json { render json: @country }
-      end
-    end
-
-    # Update region and country text fields at view from town select
-    def update_region_textfield_from_province
-
-      if params[:id] == "0"
-        @json_data = []
-      else
-        @province = Province.find(params[:id])
-        @region = Region.find(@province.region)
-        @country = Country.find(@region.country)
-        @json_data = { "region_id" => @region.id, "country_id" => @country.id }
-      end
-
-      respond_to do |format|
-        format.html # update_province_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
-      end
-    end
-
-    # Update province, region and country text fields at view from town select
-    def update_province_textfield_from_town
-
-      if params[:id] == "0"
-        @json_data = []
-      else
-        @town = Town.find(params[:id])
-        @province = Province.find(@town.province)
-        @region = Region.find(@province.region)
-        @country = Country.find(@region.country)
-        @json_data = { "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
-      end
-
-      respond_to do |format|
-        format.html # update_province_textfield.html.erb does not exist! JSON only
-        format.json { render json: @json_data }
       end
     end
 
@@ -160,7 +102,9 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @service_point = ServicePoint.new
-      set_office_company
+      @companies = companies_dropdown
+      @offices = offices_dropdown
+      @reading_routes = reading_routes_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -172,7 +116,9 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @service_point = ServicePoint.find(params[:id])
-      set_office_company
+      @companies = @service_point.organization.blank? ? companies_dropdown : companies_dropdown_edit(@service_point.organization)
+      @offices = @service_point.organization.blank? ? offices_dropdown : offices_dropdown_edit(@service_point.organization_id)
+      @reading_routes = reading_routes_dropdown
     end
 
     # POST /service
@@ -180,13 +126,15 @@ module Ag2Gest
       @breadcrumb = 'create'
       @service_point = ServicePoint.new(params[:service_point])
       @service_point.created_by = current_user.id if !current_user.nil?
-      set_office_company
 
       respond_to do |format|
         if @service_point.save
           format.json { render json: @service_point.to_json(:methods => :to_full_label) }
           format.html { redirect_to @service_point, notice: t('activerecord.attributes.service_point.create') }
         else
+          @companies = companies_dropdown
+          @offices = offices_dropdown
+          @reading_routes = reading_routes_dropdown
           format.html { render action: "new" }
           format.json { render json: @service_point.errors, status: :unprocessable_entity }
         end
@@ -198,7 +146,6 @@ module Ag2Gest
       @breadcrumb = 'update'
       @service_point = ServicePoint.find(params[:id])
       @service_point.updated_by = current_user.id if !current_user.nil?
-      set_office_company
 
       respond_to do |format|
         if @service_point.update_attributes(params[:service_point])
@@ -206,6 +153,9 @@ module Ag2Gest
                         notice: (crud_notice('updated', @service_point) + "#{undo_link(@service_point)}").html_safe }
           format.json { head :no_content }
         else
+          @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
+          @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
+          @reading_routes = reading_routes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @service_point.errors, status: :unprocessable_entity }
         end
@@ -215,7 +165,6 @@ module Ag2Gest
     # DELETE /service_point
     def destroy
       @service_point = ServicePoint.find(params[:id])
-      @service_point.destroy
 
       respond_to do |format|
         if @service_point.destroy
@@ -231,9 +180,52 @@ module Ag2Gest
 
     private
 
-    def set_office_company
-      @company = Company.find_by_id session[:company]
-      @offices = @company.nil? ? Office.all : @company.offices
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      Office.where(company_id: _company).order(:name)
+    end
+
+    def reading_routes_dropdown
+      if session[:office] != '0'
+        ReadingRoute.by_office(session[:office].to_i)
+      else
+        ReadingRoute.by_code
+      end
     end
 
     def sort_column

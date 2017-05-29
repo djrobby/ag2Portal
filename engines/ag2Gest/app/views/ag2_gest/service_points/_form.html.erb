@@ -10,6 +10,9 @@
       format : 'dd/mm/yyyy',
       weekStart : 1
     });
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
   });
 
   jQuery(function($) {
@@ -42,35 +45,6 @@
       return false;
     });
 
-
-    // when the #fnt_town field changes
-    $("#fnt_town").change(function() {
-
-      // make a POST call and replace the content
-      var contact = $('select#fnt_town :selected').val();
-      if (contact == "")
-        contact = "0";
-      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
-        $("#fnt_province").select2("val", data.province_id);
-        $("#fnt_region").select2("val", data.region_id);
-        $("#fnt_country").select2("val", data.country_id);
-      });
-      return false;
-    });
-
-    // when the #fnt_province field changes
-    $("#fnt_province").change(function() {
-      // make a POST call and replace the content
-      var contact = $('select#fnt_province :selected').val();
-      if (contact == "")
-        contact = "0";
-      jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
-        $("#fnt_region").select2("val", data.region_id);
-        $("#fnt_country").select2("val", data.country_id);
-      });
-      return false;
-    });
-
     // when the #fnt_zipcode field changes
     $("#fnt_zipcode").change(function() {
 
@@ -86,20 +60,6 @@
       });
       return false;
     });
-
-    // when the #fnt_region field changes
-    $("#fnt_region").change(function() {
-      // make a POST call and replace the content
-
-      var contact = $('select#fnt_region :selected').val();
-      if (contact == "")
-        contact = "0";
-      jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
-        $("#fnt_country").select2("val", data.id);
-      });
-      return false;
-    });
-
 
     // when changes street_directory, street_name and street_type changes and disbaled, or enables if empty
     $("#street_directory").change(function() {
@@ -145,110 +105,72 @@
 </script>
 
 <%= simple_form_for @service_point, :html => {:class => 'form-vertical well', :id => 'form_new_service_point' } do |f| %>
-  <%= f.error_notification %>
-  <%= display_base_errors resource %>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.input :code, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%= f.input :reading_variant, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.input :gis_id, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.input :cadastral_reference, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%= f.association :office, label: t('activerecord.attributes.service_point.office_id'), collection: (session[:office].blank? ? Office.all : Office.where(id: session[:office]) ), include_blank: nil, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <% unless session[:organization] == '0' %>
-      <%= f.input :organization_id, :as => :hidden, :input_html => { :value => session[:organization] }  %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:office] != '0' %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.offices.count > 0 %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <div class="span4">
-      <%= f.association :organization, collection: Organization.all, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' }   %>
-    </div>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
-    <% if @company %>
-      <%= f.input :company_id, :as => :hidden, :input_html => { :value => @company.id }  %>
+  </label>
+  <label class="multi-field-label-two">
+    <% if session[:company] != '0' %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.companies.count > 0 %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-      <div class="span4">
-        <%= f.association :company, collection: Company.all, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' }   %>
-      </div>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%= f.association :service_point_location, label: t('activerecord.attributes.service_point.service_point_location_id'), collection: ServicePointLocation.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    </div>
-    <div class="span4">
-      <%= f.association :service_point_purpose, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    </div>
-    <div class="span4">
-      <%= f.association :service_point_type, label: t('activerecord.attributes.service_point.service_point_type_id'), collection: ServicePointType.all(), :input_html => { :class => 'sel2 x-large-text-field', :id => 'service_point_type' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span6">
-      <%= f.association :street_directory, label: t('activerecord.attributes.service_point.street_directory_id'), collection: StreetDirectory.all(), :input_html => { :class => 'sel2 x-large-text-field', :id => 'street_directory' }, :label_html => { :class => 'form-label' }%>
-    </div>
-    <div class="span2">
-      <%= f.input :street_number, required: true, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.association :center, label: t('activerecord.attributes.service_point.center_id'), collection: Center.all(), :input_html => { :class => 'sel2 x-large-text-field', :id => 'center' }, :label_html => { :class => 'form-label' }%>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span3">
-      <%= f.input :building, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span3">
-      <%= f.input :floor, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span3">
-      <%= f.input :floor_office, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span3">
-    <%= f.association :zipcode, label: t('activerecord.attributes.service_point.zipcode_id'), collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |zc| zc.to_label }, value_method: :id, :label_html => { :class => 'form-label' }%>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%= f.association :reading_route, label: t('activerecord.attributes.service_point.reading_route_id'), collection: (session[:office]=='0' ? ReadingRoute.all() : ReadingRoute.where(office_id: session[:office])), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%>
-    </div>
-    <div class="span4">
-      <%= f.input :diameter, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.input :reading_sequence, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-  </div>
-
-  <div class="row-fluid">
-    <div class="span4">
-      <%#= f.association :service_point_purpose, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
-      <%= f.input :available_for_contract, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-    <div class="span4">
-      <%= f.input :verified, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    </div>
-  </div>
-
-  <%= f.button :submit, :class => 'btn-primary' %>
+  </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three"> <%= f.association :service_point_type, collection: ServicePointType.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :service_point_location, collection: ServicePointLocation.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :service_point_purpose, collection: ServicePointPurpose.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :available_for_contract, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :verified, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :street_directory, collection: StreetDirectory.by_name_type, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :center, collection: Center.by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :street_number, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :cadastral_reference, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
+  <label class="multi-field-label-two"> <%= f.association :reading_route, collection: @reading_routes, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :reading_sequence, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :reading_variant, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :diameter, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :gis_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

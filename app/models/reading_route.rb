@@ -16,6 +16,11 @@ class ReadingRoute < ActiveRecord::Base
   validates :route_code,  :presence => true
   validates :office_id,   :presence => true
 
+  # Scopes
+  scope :by_code, -> { order(:routing_code) }
+  #
+  scope :by_office, -> o { where(office_id: o).by_code }
+
   before_create :assign_code_office
 
   def assign_code_office

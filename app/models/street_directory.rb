@@ -17,7 +17,9 @@ class StreetDirectory < ActiveRecord::Base
   before_save :upcase_street_name
 
   # Scopes
-  scope :by_towns, ->(town_ids) { where(town_id: town_ids) }
+  scope :by_name_type, -> { order(:street_name, :street_type_id) }
+  #
+  scope :by_towns, ->(town_ids) { where(town_id: town_ids).by_type_name }
 
   def to_label
     "#{street_type.street_type_code} #{street_name}"
