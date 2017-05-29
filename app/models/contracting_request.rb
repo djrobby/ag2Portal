@@ -105,6 +105,7 @@ class ContractingRequest < ActiveRecord::Base
   validates :subscriber_street_type,      :presence => true
   validates :subscriber_town,             :presence => true
   validates :subscriber_zipcode,          :presence => true
+  validates :service_point_id,               :presence => true  
   # validates :subscriber_id, presence: true, if: "contracting_request_type_id==2"
 
   validate :check_document_required?

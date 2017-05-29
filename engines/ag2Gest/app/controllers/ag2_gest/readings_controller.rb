@@ -51,7 +51,7 @@ module Ag2Gest
         if !route.blank?
           with :reading_route_id, route
         end
-        order_by :sort_no, :desc
+        order_by :reading_date, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @readings = @search.results
@@ -295,7 +295,7 @@ module Ag2Gest
         if !route.blank?
           with :reading_route_id, route
         end
-        order_by :sort_no, :desc
+        order_by :reading_date, :desc
         paginate :page => params[:page] || 1, :per_page => Reading.count
       end
       @reading_report = @search.results
@@ -336,9 +336,9 @@ module Ag2Gest
 
     def periods_dropdown
       if current_projects.blank?
-        BillingPeriod.order(:period)
+        BillingPeriod.order("period DESC")
       else
-        BillingPeriod.where(project_id: current_projects_ids).order(:period)
+        BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
       end
     end
 

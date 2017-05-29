@@ -94,6 +94,7 @@ es:
       commercial_info: "Información Contable y Comercial"
       fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
       code_error: "Imposible generar Código de Contratación: No has elegido Proyecto."
+      debt_error: "Este Cliente tiene una deuda total de: "
       required_error: "Faltan campos por rellenar"
       label_subscriber_search: "Buscar Abonado que causa baja"
       label_service_point_search: "Buscar Punto/s de suministro"

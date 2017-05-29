@@ -189,37 +189,43 @@ module Ag2Gest
           end
         end
         if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
+          @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])
+          @subscriber_r = @contracting_request.old_subscriber
+          @meter_r = @contracting_request.old_subscriber.meter
+          rdg_1 = set_reading_1_to_reading(@subscriber_r,@meter_r,@billing_period)
+          rdg_2 = set_reading_2_to_reading(@subscriber_r,@meter_r,@billing_period)
           if @contracting_request.old_subscriber.readings.last.reading_type_id != ReadingType::RETIRADA
-            @billing_period = BillingPeriod.find(params[:BillingPeriodForReading])
-            pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.previous_period,@billing_period.billing_frequency_id).try(:id)
-            pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.year_period,@billing_period.billing_frequency_id).try(:id)
-            rdg_1 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_period_id).first
-            rdg_2 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_year_id).first
+            # pervious_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.previous_period,@billing_period.billing_frequency_id).try(:id)
+            # pervious_year_id = BillingPeriod.find_by_period_and_billing_frequency_id(@billing_period.year_period,@billing_period.billing_frequency_id).try(:id)
+            # rdg_1 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_period_id).first
+            # rdg_2 = Reading.where(subscriber_id: @contracting_request.old_subscriber, reading_type_id: [ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_year_id).first
             #lectura de retirada
               @reading = Reading.create(
                 subscriber_id: @contracting_request.old_subscriber.id,
                 project_id: @contracting_request.project_id,
-                billing_period_id: params[:BillingPeriodForReading],
+                billing_period_id: @billing_period.id,
                 billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
                 reading_type_id: ReadingType::RETIRADA,
                 meter_id: @contracting_request.old_subscriber.meter_id,
                 reading_route_id: @contracting_request.old_subscriber.reading_route_id,
                 reading_sequence: @contracting_request.old_subscriber.reading_sequence,
                 reading_variant:  @contracting_request.old_subscriber.reading_variant,
-                reading_date: @contracting_request.water_supply_contract.try(:installation_date),
+                reading_date: @contracting_request.water_supply_contract.try(:installation_date).strftime("%d/%m/%Y %H:%M"),
                 reading_index: @contracting_request.water_supply_contract.try(:installation_index),
-                reading_index_1: rdg_1 ? rdg_1.try(:reading_index) : 0 ,
+                reading_index_1: rdg_1 ? rdg_1.try(:reading_index) : 0,
                 reading_index_2: rdg_2 ? rdg_2.try(:reading_index) : 0,
                 reading_1: rdg_1,
                 reading_2: rdg_2,
                 created_by: @contracting_request.try(:created_by)
               ) 
           elsif @contracting_request.old_subscriber.readings.last.reading_type_id == ReadingType::RETIRADA and @contracting_request.old_subscriber.readings.last.billable?
-            @contracting_request.old_subscriber.readings.last.update_attributes(billing_period_id: params[:BillingPeriodForReading],
-                billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
-                reading_type_id: ReadingType::RETIRADA,
-                reading_date: @contracting_request.water_supply_contract.try(:installation_date),
-                reading_index: @contracting_request.water_supply_contract.try(:installation_index)
+            @contracting_request.old_subscriber.readings.last.update_attributes(billing_period_id: @billing_period.id,
+              reading_date: @contracting_request.water_supply_contract.try(:installation_date).strftime("%d/%m/%Y %H:%M"),
+              reading_index: @contracting_request.water_supply_contract.try(:installation_index),
+              reading_index_1: rdg_1 ? rdg_1.try(:reading_index) : 0,
+              reading_index_2: rdg_2 ? rdg_2.try(:reading_index) : 0,
+              reading_1: rdg_1,
+              reading_2: rdg_2
               )
           end
         else

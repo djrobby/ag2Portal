@@ -38,7 +38,7 @@ report.page.values(client2:  @payment.client.full_name.upcase,
 				   street2: @payment.try(:client).try(:address_1).upcase,
 				   zipcode2: @payment.try(:client).try(:zipcode).try(:zipcode).upcase + " " + @payment.try(:client).try(:zipcode).try(:town).try(:name).upcase,
 				   province: @payment.try(:client).try(:zipcode).try(:province).try(:name).upcase,
-				   client_code2: @payment.client.full_code
+				   client_code2: @payment.try(:client).try(:full_code)
 				   )
 #
 #
@@ -71,9 +71,9 @@ end
 @payment_subscribers.each do |subscriber|
 	report.page.list(:default).add_row do |row|
 		row.item(:sup).hide
-		row.item(:subscriber_no).value subscriber.subscriber.full_code
-		row.item(:subscriber_name).value subscriber.subscriber.full_name
-		row.item(:subscriber_address).value subscriber.subscriber.address_1
+		row.item(:subscriber_no).value subscriber.subscriber.full_code unless subscriber.subscriber.blank?
+		row.item(:subscriber_name).value subscriber.subscriber.full_name unless subscriber.subscriber.blank?
+		row.item(:subscriber_address).value subscriber.subscriber.address_1 unless subscriber.subscriber.blank?
 	end
 end
 

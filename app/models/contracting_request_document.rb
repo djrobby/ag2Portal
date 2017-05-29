@@ -5,8 +5,10 @@ class ContractingRequestDocument < ActiveRecord::Base
   attr_accessible :contracting_request_document_type_id, :contracting_request_id, :attachment
 
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
-
+ 
   has_paper_trail
 
   validates :attachment, :contracting_request_document_type_id, :presence => true
+  validates_attachment_content_type :attachment, :content_type => /\Aimage\/.*\Z/, :message => :attachment_invalid
+
 end

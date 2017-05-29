@@ -14,6 +14,7 @@ class BillableItem < ActiveRecord::Base
   validates :project,             :presence => true
   validates :billable_concept,    :presence => true
   validates :biller,              :presence => true
+  validates :regulation,          :presence => true
   validates :billable_concept_id, :uniqueness => { :scope => [:project_id, :biller_id, :regulation_id] }
   validates :regulation_id,       :uniqueness => { :scope => [:project_id, :biller_id, :billable_concept_id] }
 

@@ -637,10 +637,10 @@ module Ag2Gest
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
-          response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill
-          response_hash[:bill] = @contracting_request.water_supply_contract.bill
-          response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first
-          response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status
+          response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+          response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+          response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+          response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
           render json: response_hash
         else
@@ -914,6 +914,8 @@ module Ag2Gest
         if @entity.nil?
           id = '$err'
           fiscal_id = '$err'
+          @client_debt = '0'
+          # @subscriber_debt = '0'
         else
           id = @entity.id
           fiscal_id = @entity.fiscal_id
@@ -940,8 +942,20 @@ module Ag2Gest
           # organization_id = @entity.organization_id
           street_directory = StreetDirectory.find_by_town_id_and_street_type_id_and_street_name(@entity.town_id,@entity.street_type_id,@entity.street_name.try(:upcase))
           service_point = ServicePoint.where( street_directory_id: street_directory.try(:id),street_number: @entity.street_number ,building: @entity.building ,floor: @entity.floor ,floor_office: @entity.floor_office)
+          if !@entity.client.blank? and !@entity.client.invoice_debts.unpaid.blank?
+            @client_debt = number_with_precision(@entity.client.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          else
+            @client_debt = '0'
+          end
+          # @subscriber = ""
+          # @subscriber_office = @entity.client.invoice_debts.joins(:subscriber).group('subscribers.office_id')
+          # @subscriber_office.each do |sb|
+          #     @subscriber = @subscriber  << sb.invoice.bill.project.name + " --> " + number_with_precision(@entity.client.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",") + " // "
+          # end
+          # @subscriber_debt = @subscriber
         end
       end
+
       @json_data = {  "id" => id,
                       "fiscal_id" => fiscal_id,
                       "name" => name,
@@ -961,7 +975,9 @@ module Ag2Gest
                       "cellular" => cellular,
                       "email" => email,
                       "street_directory_id" => street_directory.try(:id),
-                      "service_point" => service_point.try(:first).try(:id)
+                      "service_point" => service_point.try(:first).try(:id),
+                      "client_debt" => @client_debt,
+                      # "subscriber_debt" => @subscriber_debt
                       # "organization_id" => organization_id
                     }
 
@@ -1127,7 +1143,7 @@ module Ag2Gest
           fulltext m
           with :office_id, current_offices_ids
           with :available_for_contract, true
-          # with :assigned_to_subscriber, false
+          with :assigned_to_subscriber, false
           order_by :street_directory_id
           order_by :code
         end
@@ -1232,7 +1248,7 @@ module Ag2Gest
       @projects_ids = current_projects_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
       #@billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
-      @billable_concept_availables = BillableItem.joins(:billable_concept).where('billable_concepts.billable_document = 1').group('billable_items.biller_id,billable_items.billable_concept_id ').belongs_to_project(@contracting_request.project_id)
+      @billable_concept_availables = BillableItem.joins(:billable_concept,:regulation).where('(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND billable_concepts.billable_document = 1', Date.today).belongs_to_project(@contracting_request.project_id)
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       _tariff_type = []

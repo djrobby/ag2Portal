@@ -314,7 +314,7 @@
       };
 
       if (data.meter_code_installation) {
-        $("#input_change_meter").val(data.meter_code);
+        $("#input_change_meter").val(data.meter_code_installation);
       };
 
       if (data.meter_location_installation) {
@@ -380,6 +380,7 @@
           nextStepWizard = $('a[href="#step-3"]');
       changeState(currentStepWizard,nextStepWizard)
       $("#update-new").hide();
+      $("#new").show();
       $("#bill-doc").addClass("hide");
       $("#link-bill").addClass("hide");
     });
@@ -392,6 +393,7 @@
       } else {
         changeState(currentStepWizard,nextStepWizard)
         $("#update-new").hide();
+        $("#new").show();
       };
     });
 
@@ -403,6 +405,7 @@
       } else {
         changeState(currentStepWizard,nextStepWizard)
         $("#update-new").hide();
+        $("#new").show();
       };
     });
 
@@ -412,6 +415,7 @@
           nextStepWizard = $('a[href="#step-3"]');
       changeState(currentStepWizard,nextStepWizard)
       $("#update-new").hide();
+      $("#new").show();
       $("#bill-doc").addClass("hide");
       $("#link-bill").addClass("hide");
     });

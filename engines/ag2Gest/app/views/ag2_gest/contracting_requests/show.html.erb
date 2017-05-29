@@ -29,6 +29,9 @@
     <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
   </div>
 <% else %>
+  <div id="new" class="hide">
+    <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
+  </div>
   <div id="update-new">
     <%= render partial: '/layouts/crud/update_new', locals:
   { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),

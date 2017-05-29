@@ -7,7 +7,7 @@
     <% @contracting_request.contracting_request_documents.each do |document| %>
       <tr>
         <td><%= document.try(:contracting_request_document_type).try(:name) %></td>
-        <td><img id="image_content" src="<%= document.attachment.url(:small) %>"</td>
+        <td><a href="<%= document.attachment.url(:original) %>" target="_blank"><img id="image_content" src="<%= document.attachment.url(:small) %>"</a>
       </tr>
     <% end %>
   </tbody>

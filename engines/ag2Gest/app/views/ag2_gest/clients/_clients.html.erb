@@ -28,7 +28,15 @@
     <tr class="inactive-row">
       <% end %>
       <!--<td><a data-toggle="modal" href="#info<%#= client.id.to_s %>"><%#= client.client_code %></a></td>-->
-      <td><%= link_to client.full_code, client %></td>
+      <td><%= link_to client.full_code, client %>
+        <% b = client.subscribers.count %>
+        <% if b > 0 %>
+        <i class="icon-star-empty" style="margin-left: 0.2em;" 
+        title="<%= b %>">
+        <% end %>
+      </td>
+
+
       <td><%= client.full_name_or_company %></td>
       <td><%= client.fiscal_id %></td>
       <td><%= client.phone unless client.phone.blank? %></td>

@@ -83,13 +83,17 @@ office_id = @subscriber_eco_report.first.office_id
 		office_id = i.office_id
 	end
 
-	_tariff_type = []
-	i.subscriber_tariff.each do |tt|
-		if !_tariff_type.include? tt.tariff.tariff_type.name
-			_tariff_type = _tariff_type << tt.tariff.tariff_type.name
+	if !i.tariffs.blank?
+		_tariff_type = []
+		i.subscriber_tariffs.each do |tt|
+			if !_tariff_type.include? tt.tariff.tariff_type.name
+				_tariff_type = _tariff_type << tt.tariff.tariff_type.name
+			end
 		end
+		@tariff_type = _tariff_type.join(",")
+	else
+		@tariff_type = ""
 	end
-	@tariff_type = _tariff_type.join(",")
 
 	report.page.list(:default).add_row do |row|
 		report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
