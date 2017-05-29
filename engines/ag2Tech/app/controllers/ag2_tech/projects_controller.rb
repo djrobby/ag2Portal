@@ -102,7 +102,7 @@ module Ag2Tech
           charge_account.opened_at = DateTime.now.to_date
           charge_account.project_id = new_id
           charge_account.created_by = current_user.id if !current_user.nil?
-          charge_account.account_code = a.account_code[0..3] + params[:id].rjust(3, '0') + a.account_code[7..8]
+          charge_account.account_code = a.account_code[0..3] + params[:id].rjust(4, '0') + a.account_code[8..9]
           charge_account.organization_id = a.organization_id
           charge_account.charge_group_id = a.charge_group_id
           charge_account.ledger_account_id = a.ledger_account_id

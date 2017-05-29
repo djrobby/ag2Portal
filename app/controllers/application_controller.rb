@@ -442,15 +442,15 @@ end
       code = '$err'
     else
       group = group_code.rjust(4, '0')
-      project = project.rjust(3, '0')
+      project = project.rjust(4, '0')
       if organization == 0
-        if project == '000'
+        if project == '0000'
           last_code = ChargeAccount.where("account_code LIKE ? AND (project_id = ? OR project_id IS NULL)", "#{group}%", "#{project}").order(:account_code).maximum(:account_code)
         else
           last_code = ChargeAccount.where("account_code LIKE ? AND project_id = ?", "#{group}%", "#{project}").order(:account_code).maximum(:account_code)
         end
       else
-        if project == '000'
+        if project == '0000'
           last_code = ChargeAccount.where("account_code LIKE ? AND (project_id = ? OR project_id IS NULL) AND organization_id = ?", "#{group}%", "#{project}", "#{organization}").order(:account_code).maximum(:account_code)
         else
           last_code = ChargeAccount.where("account_code LIKE ? AND project_id = ? AND organization_id = ?", "#{group}%", "#{project}", "#{organization}").order(:account_code).maximum(:account_code)
@@ -460,7 +460,7 @@ end
       if last_code.nil?
         code += '01'
       else
-        last_code = last_code[7..8].to_i + 1
+        last_code = last_code[8..9].to_i + 1
         code += last_code.to_s.rjust(2, '0')
       end
     end

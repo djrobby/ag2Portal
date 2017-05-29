@@ -41,7 +41,7 @@ class ChargeAccount < ActiveRecord::Base
   validates_associated :charge_account_ledger_accounts
 
   validates :account_code,    :presence => true,
-                              :length => { :is => 9 },
+                              :length => { :is => 10 },
                               :format => { with: /\A\d+\Z/, message: :code_invalid },
                               :numericality => { :only_integer => true, :greater_than => 0 },
                               :uniqueness => { :scope => [:organization_id, :charge_group_id] }
@@ -89,8 +89,8 @@ class ChargeAccount < ActiveRecord::Base
   end
 
   def full_code
-    # Account code (Group code & project id & sequential number) => GGGG-PPPNN
-    account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..8]
+    # Account code (Group code & project id & sequential number) => GGGG-PPPPNN
+    account_code.blank? ? "" : account_code[0..3] + '-' + account_code[4..9]
   end
 
   def partial_name
