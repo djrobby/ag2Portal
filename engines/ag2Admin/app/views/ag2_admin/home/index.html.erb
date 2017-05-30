@@ -184,8 +184,22 @@
     <% end %>
   </li>
   <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= currencies_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Currencies.png" width="48" height="48" alt="ag2Currencies" /><h5 class="h5-narrow"><%=t ".currencies" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= currencies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Currencies72.png" width="72" height="72" alt="ag2Currencies" /><h5 class="h5-narrow"><%=t ".currencies" %></h5></a>
+    <% else %>
+    <a href="<%= currencies_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Currencies96.png" width="96" height="96" alt="ag2Currencies" /><h5 class="h5-narrow"><%=t ".currencies" %></h5></a>
+    <% end %>
   </li>
   <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= currency_instruments_path %>" class="thumbnail centered"><img src="/assets/icon/ag2CurrencyInstruments.png" width="48" height="48" alt="ag2CurrencyInstruments" /><h5 class="h5-narrow"><%=t ".currency_instruments" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= currency_instruments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2CurrencyInstruments72.png" width="72" height="72" alt="ag2CurrencyInstruments" /><h5 class="h5-narrow"><%=t ".currency_instruments" %></h5></a>
+    <% else %>
+    <a href="<%= currency_instruments_path %>" class="thumbnail centered"><img src="/assets/pict/ag2CurrencyInstruments96.png" width="96" height="96" alt="ag2CurrencyInstruments" /><h5 class="h5-narrow"><%=t ".currency_instruments" %></h5></a>
+    <% end %>
   </li>
 </ul><!-- /.thumbnails -->
 

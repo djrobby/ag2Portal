@@ -1,0 +1,20 @@
+en:
+  ag2_admin:
+    currencies:
+      index:
+        title: "Currencies"
+        btn_new: "New Currency"
+        go_to: "Go to Regions"
+        back_to_root: "Back to ag2Admin"
+      show:
+        title: "Currency"
+        btn_edit: "Edit Currency"
+        btn_delete: "Delete Currency"
+        subtable_title: "Currency Regions"
+        show_to: "Show Currency"
+      edit:
+        title: "Edit Currency"
+        btn_show: "Show Currency"
+      new:
+        title: "New Currency"
+      back_to_main_page: "Back to Currencies"

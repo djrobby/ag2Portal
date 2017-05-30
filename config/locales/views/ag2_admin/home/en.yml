@@ -21,3 +21,5 @@ en:
         bank_offices: "Bank Offices"
         bank_account_classes: "Bank Acct.Classes"
         zones: "Zones"
+        currencies: "Currencies"
+        currency_instruments: "C.Instruments"

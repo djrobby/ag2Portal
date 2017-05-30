@@ -1,0 +1,20 @@
+es:
+  ag2_admin:
+    currencies:
+      index:
+        title: "Monedas"
+        btn_new: "Nuevo Moneda"
+        go_to: "Ir a Regiones"
+        back_to_root: "Volver a ag2Admin"
+      show:
+        title: "Moneda"
+        btn_edit: "Editar Moneda"
+        btn_delete: "Borrar Moneda"
+        subtable_title: "Regiones del Moneda"
+        show_to: "Ver Moneda"
+      edit:
+        title: "Editar Moneda"
+        btn_show: "Ver Moneda"
+      new:
+        title: "Nuevo Moneda"
+      back_to_main_page: "Volver a Monedas"

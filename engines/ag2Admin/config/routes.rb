@@ -152,6 +152,8 @@ Ag2Admin::Engine.routes.draw do
     resources :bank_offices
     resources :bank_account_classes
     resources :zones
+    resources :currencies
+    resources :currency_instruments
 
     # Root
     root :to => 'home#index'

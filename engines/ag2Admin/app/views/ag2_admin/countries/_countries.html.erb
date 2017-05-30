@@ -12,6 +12,8 @@
     <tr>
       <th><%= sortable "name", t('activerecord.attributes.country.name') %></th>
       <th><%= sortable "code", t('activerecord.attributes.country.code') %></th>
+      <th><%= sortable "prefix", t('activerecord.attributes.country.prefix') %></th>
+      <th><%= sortable "currency", t('activerecord.attributes.country.currency') %></th>
       <th></th>
     </tr>
   </thead>
@@ -20,6 +22,8 @@
     <tr>
       <td><%= link_to country.name, country %></td>
       <td><%= country.code %></td>
+      <td><%= country.prefix unless country.prefix.blank? %></td>
+      <td><%= country.currency.alphabetic_code unless country.currency.blank? %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => Country, :path => edit_country_path(country) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Country, :path => country, :msg => I18n.t("activerecord.models.country.one"), :txt => country.name } %> </td>
     </tr>

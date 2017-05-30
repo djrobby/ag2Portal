@@ -21,4 +21,5 @@ es:
         bank_offices: "Oficinas Bancarias"
         bank_account_classes: "Clases de C.Bancarias"
         zones: "Zonas"
-                
+        currencies: "Monedas"
+        currency_instruments: "I.Monetarios"
