@@ -18,3 +18,5 @@ es:
         name: "Nombre"
         code: "Código ISO"
         prefix: "Prefijo Telefónico"
+        currency: "Moneda"
+        currency_id: "Moneda"

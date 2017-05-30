@@ -1,7 +1,13 @@
 <%= simple_form_for @country, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
-<%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.input :code, :input_html => { class: 'small-text-field', maxlength: 2 }, label_html: { class: 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"><%= f.input :code, :autofocus => true, :input_html => { onkeyup: "caps(this)", class: 'mid-text-field', maxlength: 2 }, label_html: { class: 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.input :name, :input_html => { onkeyup: "caps(this)", :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+</div>
+<div>
+  <label class="multi-field-label-two"><%= f.input :prefix, :input_html => { class: 'mid-text-field number-text-field', maxlength: 5 }, label_html: { class: 'form-label' } %></label>
+  <label class="multi-field-label-two"><%= f.association :currency, collection: Currency.by_code, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+</div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

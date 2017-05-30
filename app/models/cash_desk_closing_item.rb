@@ -3,6 +3,6 @@ class CashDeskClosingItem < ActiveRecord::Base
   belongs_to :client_payment
   belongs_to :supplier_payment
 
-  attr_accessible :amount, :type,
+  attr_accessible :amount, :type_i,
                   :cash_desk_closing_id, :client_payment_id, :supplier_payment_id
 end

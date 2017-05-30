@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  cash_desk_closing: 
+  currency_instrument: 
+  amount: 9.99
+
+two:
+  cash_desk_closing: 
+  currency_instrument: 
+  amount: 9.99

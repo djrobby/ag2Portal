@@ -1,5 +1,6 @@
 class Country < ActiveRecord::Base
-  attr_accessible :name, :code, :prefix,
+  belongs_to :currency
+  attr_accessible :name, :code, :prefix, :currency_id,
                   :created_by, :updated_by
 
   has_many :shared_contacts
@@ -19,6 +20,7 @@ class Country < ActiveRecord::Base
                     :length => { :is => 2 },
                     :uniqueness => true
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 

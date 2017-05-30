@@ -9,6 +9,12 @@
       <td><%=t 'activerecord.attributes.country.code' %>:</td>
       <td class="highlighted bolded"><%= @country.code %></td>
     </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.country.prefix' %>:</td>
+      <td><%= @country.prefix unless @country.prefix.blank? %></td>
+      <td><%=t 'activerecord.attributes.country.currency' %>:</td>
+      <td><%= @country.currency.to_label unless @country.currency.blank? %></td>
+    </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @country } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @country } %>
   </tbody>

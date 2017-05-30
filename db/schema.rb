@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170524094257) do
+ActiveRecord::Schema.define(:version => 20170530115021) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -472,11 +472,23 @@ ActiveRecord::Schema.define(:version => 20170524094257) do
     t.integer "credit_invoice_id",    :default => 0, :null => false
   end
 
+  create_table "cash_desk_closing_instruments", :force => true do |t|
+    t.integer  "cash_desk_closing_id"
+    t.integer  "currency_instrument_id"
+    t.decimal  "amount",                              :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                                          :null => false
+    t.datetime "updated_at",                                                                          :null => false
+    t.integer  "quantity",               :limit => 2,                                :default => 0,   :null => false
+  end
+
+  add_index "cash_desk_closing_instruments", ["cash_desk_closing_id"], :name => "index_cash_desk_closing_instruments_on_cash_desk_closing_id"
+  add_index "cash_desk_closing_instruments", ["currency_instrument_id"], :name => "index_cash_desk_closing_instruments_on_currency_instrument_id"
+
   create_table "cash_desk_closing_items", :force => true do |t|
     t.integer  "cash_desk_closing_id"
     t.integer  "client_payment_id"
     t.integer  "supplier_payment_id"
-    t.string   "type",                 :limit => 1,                                                 :null => false
+    t.string   "type_i",               :limit => 1,                                                 :null => false
     t.decimal  "amount",                            :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.datetime "created_at",                                                                        :null => false
     t.datetime "updated_at",                                                                        :null => false
@@ -485,6 +497,7 @@ ActiveRecord::Schema.define(:version => 20170524094257) do
   add_index "cash_desk_closing_items", ["cash_desk_closing_id"], :name => "index_cash_desk_closing_items_on_cash_desk_closing_id"
   add_index "cash_desk_closing_items", ["client_payment_id"], :name => "index_cash_desk_closing_items_on_client_payment_id"
   add_index "cash_desk_closing_items", ["supplier_payment_id"], :name => "index_cash_desk_closing_items_on_supplier_payment_id"
+  add_index "cash_desk_closing_items", ["type_i"], :name => "index_cash_desk_closing_items_on_type_i"
 
   create_table "cash_desk_closings", :force => true do |t|
     t.integer  "organization_id"
@@ -1141,15 +1154,45 @@ ActiveRecord::Schema.define(:version => 20170524094257) do
 
   create_table "countries", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "code"
-    t.integer  "prefix",     :limit => 2, :default => 0, :null => false
+    t.integer  "prefix",      :limit => 2, :default => 0, :null => false
+    t.integer  "currency_id"
   end
 
   add_index "countries", ["code"], :name => "index_countries_on_code"
+  add_index "countries", ["currency_id"], :name => "index_countries_on_currency_id"
+
+  create_table "currencies", :force => true do |t|
+    t.string   "currency"
+    t.string   "alphabetic_code", :limit => 3
+    t.integer  "numeric_code",    :limit => 2
+    t.integer  "minor_unit",      :limit => 1, :default => 0, :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "currencies", ["alphabetic_code"], :name => "index_currencies_on_alphabetic_code"
+  add_index "currencies", ["currency"], :name => "index_currencies_on_currency"
+  add_index "currencies", ["numeric_code"], :name => "index_currencies_on_numeric_code"
+
+  create_table "currency_instruments", :force => true do |t|
+    t.integer  "currency_id"
+    t.integer  "type_i",      :limit => 1, :default => 1, :null => false
+    t.integer  "value",                    :default => 0, :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "currency_instruments", ["currency_id"], :name => "index_currency_instruments_on_currency_id"
+  add_index "currency_instruments", ["type_i"], :name => "index_currency_instruments_on_type_i"
 
   create_table "data_import_configs", :force => true do |t|
     t.string   "name"

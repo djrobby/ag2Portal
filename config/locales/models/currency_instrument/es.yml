@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      currency_instrument:
+        zero:  Instrumentos monetarios
+        one:   Instrumento monetario
+        few:   Instrumentos monetarios
+        other: Instrumentos monetarios
+        check_for_cash_desk_closings: "Instrumento monetario no puede ser eliminado mientras existan cierres de caja vinculados."
+    attributes:
+      currency_instrument:
+        currency: "Moneda"
+        currency_id: "Moneda"
+        type_i: "Tipo"
+        value: "Valor"

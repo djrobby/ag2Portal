@@ -18,3 +18,5 @@ en:
         name: "Name"
         code: "ISO Code"
         prefix: "Phone Prefix"
+        currency: "Currency"
+        currency_id: "Currency"

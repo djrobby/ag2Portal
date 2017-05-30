@@ -1,0 +1,15 @@
+es:
+  activerecord:
+    models:
+      currency:
+        zero:  Monedas
+        one:   Moneda
+        few:   Monedas
+        other: Monedas
+        check_for_countries: "Moneda no puede ser eliminada mientras existan países vinculados."
+    attributes:
+      currency:
+        currency: "Name"
+        alphabetic_code: "Alpha Code"
+        numeric_code: "Numeric Code"
+        minor_unit: "Minor unit"

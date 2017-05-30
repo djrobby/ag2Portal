@@ -9,6 +9,9 @@ class CashDeskClosing < ActiveRecord::Base
                   :organization_id, :company_id, :office_id, :project_id,
                   :created_by, :updated_by
 
+  has_many :cash_desk_closing_items
+  has_many :cash_desk_closing_instruments
+
   # Self join
   has_one :next_closing, class_name: 'CashDeskClosing', foreign_key: 'last_closing_id'
   belongs_to :last_closing, class_name: 'CashDeskClosing'

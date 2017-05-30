@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing_item:
+        zero:  Items de cierre de caja
+        one:   Item de cierre de caja
+        few:   Items de cierre de caja
+        other: Items de cierre de caja
+    attributes:
+      cash_desk_closing_item:
+        cash_desk_closing: "Cierre de caja"
+        cash_desk_closing_id: "Cierre de caja"
+        client_payment: "Cobro"
+        client_payment_id: "Cobro"
+        supplier_payment: "Pago"
+        supplier_payment_id: "Pago"
+        amount: "Importe"
+        type_i: "Tipo"

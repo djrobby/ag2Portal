@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      currency_instrument:
+        zero:  Currency instruments
+        one:   Currency instrument
+        few:   Currency instruments
+        other: Currency instruments
+        check_for_cash_desk_closings: "Currency instrument cannot be destroyed while linked cash desk closings exist."
+    attributes:
+      currency_instrument:
+        currency: "Currency"
+        currency_id: "Currency"
+        type_i: "Type"
+        value: "Value"

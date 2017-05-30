@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing_instrument:
+        zero:  Instrumentos de cierre de caja
+        one:   Instrumento de cierre de caja
+        few:   Instrumentos de cierre de caja
+        other: Instrumentos de cierre de caja
+    attributes:
+      cash_desk_closing_instrument:
+        cash_desk_closing: "Cierre de caja"
+        cash_desk_closing_id: "Cierre de caja"
+        currency_instrument: "Instrumento monetario"
+        currency_instrument_id: "Instrumento monetario"
+        amount: "Importe"
+        quantity: "Cantidad"

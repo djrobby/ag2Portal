@@ -1,0 +1,18 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing_item:
+        zero:  Cash desk closing items
+        one:   Cash desk closing item
+        few:   Cash desk closing items
+        other: Cash desk closing items
+    attributes:
+      cash_desk_closing_item:
+        cash_desk_closing: "Cash desk closing"
+        cash_desk_closing_id: "Cash desk closing"
+        client_payment: "Collection"
+        client_payment_id: "Collection"
+        supplier_payment: "Payment"
+        supplier_payment_id: "Payment"
+        amount: "Amount"
+        type_i: "Type"

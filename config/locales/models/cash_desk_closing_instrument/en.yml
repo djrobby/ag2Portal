@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      cash_desk_closing_instrument:
+        zero:  Cash desk closing instruments
+        one:   Cash desk closing instrument
+        few:   Cash desk closing instruments
+        other: Cash desk closing instruments
+    attributes:
+      cash_desk_closing_instrument:
+        cash_desk_closing: "Cash desk closing"
+        cash_desk_closing_id: "Cash desk closing"
+        currency_instrument: "Currency instrument"
+        currency_instrument_id: "Currency instrument"
+        amount: "Amount"
+        quantity: "Quantity"

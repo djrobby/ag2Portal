@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      currency:
+        zero:  Currencies
+        one:   Currency
+        few:   Currencies
+        other: Currencies
+        check_for_countries: "Currency cannot be destroyed while linked countries exist."
+    attributes:
+      currency:
+        currency: "Name"
+        alphabetic_code: "Alpha Code"
+        numeric_code: "Numeric Code"
+        minor_unit: "Minor unit"
