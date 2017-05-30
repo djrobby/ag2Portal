@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  currency: 
+  type: 1
+  value: 1
+
+two:
+  currency: 
+  type: 1
+  value: 1

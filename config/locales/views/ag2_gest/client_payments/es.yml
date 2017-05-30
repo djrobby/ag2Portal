@@ -23,6 +23,8 @@ es:
         bank_order_c: "Remesa"
         bank_return_c: "Devolución"
         bank_counter_c: "Ventanilla"
+        cash_operations: "Operaciones de caja"
+        cash_closing_c: "Cierres"
         cash_closing: "Cerrar caja"
         collect_instalments: "Cobrar cuotas"
         back_to_pending: "Devolver a pendientes"

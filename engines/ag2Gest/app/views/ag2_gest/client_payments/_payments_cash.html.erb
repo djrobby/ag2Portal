@@ -7,9 +7,12 @@
 
 <a href="#modal-close-cash" id="close-cash" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.cash_closing" %></a>
 <a href="#modal-cash-to-pending" id="cash-to-pending" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.back_to_pending" %></a>
+<button id="cash_close" type="button" class="btn btn-primary btn-small right-floated-and-separator" data-dismiss="modal" aria-hidden="true"><%= t "ag2_gest.client_payments.index.cash_closing_c" %></button>
+<span class="btn-small right-floated"><%= t "ag2_gest.client_payments.index.cash_operations" %> <span class="divider">></span></span>
 <table id="cash-table" class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
+      <th><input type="checkbox" id="cash-checkbox-master"></th>
       <th class="hidden-text-field">Id</th>
       <th>Nº</th>
       <th>Recibo/Factura</th>
@@ -23,6 +26,7 @@
   <tbody>
     <% @client_payments_cash.each do |client_payment| %>
       <tr>
+        <td class="cp-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "cash-checkbox-slave" %></td>
         <td class="cp-id hidden-text-field"><%= client_payment.id %></td>
         <td class="cp-receipt-no"><%= client_payment.receipt_no %></td>
         <td class="cp-bill"><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>

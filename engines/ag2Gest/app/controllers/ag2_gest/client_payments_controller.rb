@@ -226,8 +226,8 @@ module Ag2Gest
           cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
           cp_instalment = cp.instalment
         end
-        cp.delete
-        Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
+        cp.destroy
+        # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
       end
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
@@ -379,8 +379,8 @@ module Ag2Gest
           cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
           cp_instalment = cp.instalment
         end
-        cp.delete
-        Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
+        cp.destroy
+        # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
       end
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue

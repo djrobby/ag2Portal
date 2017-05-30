@@ -59,9 +59,29 @@ class Bill < ActiveRecord::Base
     full_no
   end
 
+  # Formal No
+  def full_no
+    # Bill no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
+    if bill_no == "$err"
+      "000000000000-0000-0000000"
+    else
+      bill_no.blank? ? "" : bill_no[0..11] + '-' + bill_no[12..15] + '-' + bill_no[16..22]
+    end
+  end
+
   # First invoice no. (own service)
   def real_no
     invoices.first.full_no rescue full_no
+  end
+
+  # Short No
+  def short_no
+    # Bill no (Project ID & year & sequential number) => PPPP-YYYY-NNNNNNN
+    code = "0000-0000-0000000"
+    if bill_no != "$err" && !bill_no.blank? && !project_id.blank?
+      code = project_id.to_s.rjust(4, '0') + '-' + bill_no[12..15] + '-' + bill_no[16..22]
+    end
+    code
   end
 
   def nullable?
@@ -209,15 +229,6 @@ class Bill < ActiveRecord::Base
       end
     end
     _codes
-  end
-
-  def full_no
-    # Bill no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
-    if bill_no == "$err"
-      "000000000000-0000-0000000"
-    else
-      bill_no.blank? ? "" : bill_no[0..11] + '-' + bill_no[12..15] + '-' + bill_no[16..22]
-    end
   end
 
   def total

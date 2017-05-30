@@ -541,6 +541,13 @@
           <%= f.input :opening_balance, required: true, label: I18n.t("activerecord.attributes.cash_desk_closing.opening_balance"), as: :decimal, inline_label: "Yes", input_html: { id: 'initial-cash', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
 
           <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bills-cash"><%= @cash_totals.payments %></span>
+            </div>
+          </div>
+
+          <div class="control-group string required">
             <label class="form-label">Total cobrado</label>
             <div class="controls highlighted bolded">
               <span id="total-cash"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
@@ -571,6 +578,12 @@
       <%= simple_form_for :cash_to_pending, url: cash_to_pending_client_payments_path, method: :post, :html => {:class => 'modal-footer-right cash-to-pending-form'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bills-cash-to-pending"><%= @cash_totals.payments %></span>
+            </div>
+          </div>
           <div class="control-group string required">
             <label class="string control-label">Total a devolver</label>
             <div class="controls highlighted bolded">
@@ -757,31 +770,48 @@
 
   $("#close-cash").click(function(){
     var cp_ids = [];
-    var cp_amount = 0;
+    var cp_amount = 0.0;
     $('#cash-table tr').each(function() {
-      id = $(this).find('td.cp-id').text();
-      if (id != null && id != '') cp_ids.push(id);
-      // amount = $(this).find('td.cp-amount').val();
-      // cp_amount += parseFloat(amount);
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cp-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cp-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
     });
-    $("#close_cash_client_payments_ids").val(cp_ids.filter(i=>i!=null))   // modal-cash
-    $("#initial-cash").val("<%= @opening_balance %>");
-    if (cp_ids == null || cp_ids == '') {
-      alert('¡Debes seleccionar recibos, facturas o plazos a confirmar!');
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros a confirmar!');
       return false;
+    } else {
+      $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash
+      $("#initial-cash").val("<%= @opening_balance %>");
+      $("#bills-cash").html(cp_ids.length);
+      $("#total-cash").html(cp_amount.format(4, 3, _delimiter, _separator));
     }
   });
 
   $("#cash-to-pending").click(function(){
     var cp_ids = [];
+    var cp_amount = 0.0;
     $('#cash-table tr').each(function() {
-      id = $(this).find('td.cp-id').text();
-      if (id != null && id != '') cp_ids.push(id);
-    });  
-    $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
-    if (cp_ids == null || cp_ids == '') {
-      alert('¡Debes seleccionar recibos, facturas o plazos a devolver!');
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cp-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cp-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros a devolver!');
       return false;
+    } else {
+      $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
+      $("#bills-cash-to-pending").html(cp_ids.length);
+      $("#total-cash-to-pending").html(cp_amount.format(4, 3, _delimiter, _separator));
     }
   });
 
@@ -799,7 +829,7 @@
       }
     });
     if (cp_ids.length <= 0) {
-      alert('¡Debes seleccionar cobros pendientes de confirmar!');
+      alert('¡Debes seleccionar cobros a confirmar!');
       return false;
     } else {
       $("#bank_confirm_client_payments_ids").val(cp_ids)   // modal-bank
@@ -822,7 +852,7 @@
       }
     });
     if (cp_ids.length <= 0) {
-      alert('¡Debes seleccionar cobros pendientes de confirmar!');
+      alert('¡Debes seleccionar cobros a devolver!');
       return false;
     } else {
       $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
@@ -1077,6 +1107,16 @@
   // Table checkbox at bank
   $(".checkbox-master-table").click(function () {
     $(this).parents(".table").find("tbody").find("input[type=checkbox]").prop('checked', $(this).prop('checked'));
+  });
+
+  // Item checkbox at cash
+  $(".cash-checkbox-slave").click(function () {
+    $("#cash-checkbox-master").prop('checked', false)
+  });
+
+  // Table checkbox at cash: Updates slave
+  $("#cash-checkbox-master").click(function () {
+    $(".cash-checkbox-slave").prop('checked', $(this).prop('checked'));
   });
 
   // Item checkbox at instalment
