@@ -2,6 +2,7 @@ class Currency < ActiveRecord::Base
   attr_accessible :alphabetic_code, :currency, :minor_unit, :numeric_code
 
   has_many :countries
+  has_many :currency_instruments
 
   has_paper_trail
 
@@ -11,8 +12,10 @@ class Currency < ActiveRecord::Base
                               :uniqueness => true
   validates :numeric_code,    :presence => true,
                               :length => { :is => 3 },
+                              :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 },
                               :uniqueness => true
-  validates :minor_unit,      :length => { :is => 1 }
+  validates :minor_unit,      :length => { :is => 1 },
+                              :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 
   # Scopes
   scope :by_code, -> { order(:alphabetic_code) }

@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "currency_id", t('activerecord.attributes.currency_instrument.currency') %></th>
+      <th><%= sortable "type_i", t('activerecord.attributes.currency_instrument.type_i') %></th>
+      <th align="right"><%= sortable "value_i", t('activerecord.attributes.currency_instrument.value_i') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @currency_instruments.each do |t| %>
+    <tr>
+      <td><%= t.currency.to_label unless t.currency.blank? %></td>
+      <td><%= t.type_label unless t.type_i.blank? %></td>
+      <td align="right"><%= number_with_precision(t.value_i, precision: t.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") unless t.value_i.blank? %></td>
+      <td>
+        <%= render :partial => '/layouts/crud/read', :locals => { :model => CurrencyInstrument, :path => currency_instrument_path(t) } %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => CurrencyInstrument, :path => edit_currency_instrument_path(t) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => CurrencyInstrument, :path => t, :msg => t("activerecord.models.currency_instrument.one"), :txt => t.to_label } %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @currency_instruments } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => CurrencyInstrument, :path => new_currency_instrument_path, :txt => I18n.t("ag2_admin.currency_instruments.index.btn_new") } %>
+<%= link_to I18n.t("ag2_admin.currency_instruments.index.go_to"), currencies_path %> |
+<%= link_to I18n.t("ag2_admin.currency_instruments.index.back_to_root"), ag2_admin.root_path %>

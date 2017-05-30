@@ -1,5 +1,28 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_admin/cinstrumentsbreadcrumb' %>
 
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @currency_instrument.id %></td>
+      <td><%=t 'activerecord.attributes.currency_instrument.value_i' %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@currency_instrument.value_i, precision: @currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") unless @currency_instrument.value_i.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.currency_instrument.currency' %>:</td>
+      <td><%= @currency_instrument.currency.to_label unless @currency_instrument.currency.blank? %></td>
+      <td><%=t 'activerecord.attributes.currency_instrument.type_i' %>:</td>
+      <td><%= @currency_instrument.type_label unless @currency_instrument.type_i.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @currency_instrument } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @currency_instrument } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_currency_instrument_path(@currency_instrument) %> |
-<%= link_to 'Back', currency_instruments_path %>
+<%= render :partial => '/layouts/crud/update_delete_new', locals:
+{ model: CurrencyInstrument, update_path: edit_currency_instrument_path(@currency_instrument), update_txt: t('ag2_admin.currency_instruments.show.btn_edit'),
+delete_path: @currency_instrument, delete_txt: t('ag2_admin.currency_instruments.show.btn_delete'), msg: t("activerecord.models.currency_instrument.one"), :txt => @currency_instrument.to_label,
+new_path: new_currency_instrument_path, new_txt: t('ag2_admin.currency_instruments.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_admin.currency_instruments.back_to_main_page'), currency_instruments_path %>

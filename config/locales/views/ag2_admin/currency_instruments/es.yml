@@ -4,13 +4,12 @@ es:
       index:
         title: "Instrumentos monetarios"
         btn_new: "Nuevo Instrumento"
-        go_to: "Ir a Regiones"
+        go_to: "Ir a Monedas"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Instrumento"
         btn_edit: "Editar Instrumento"
         btn_delete: "Borrar Instrumento"
-        subtable_title: "Regiones del Instrumento"
         show_to: "Ver Instrumento"
       edit:
         title: "Editar Instrumento"

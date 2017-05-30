@@ -4,13 +4,12 @@ en:
       index:
         title: "Currency instruments"
         btn_new: "New Instrument"
-        go_to: "Go to Regions"
+        go_to: "Go to Currencies"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Instrument"
         btn_edit: "Edit Instrument"
         btn_delete: "Delete Instrument"
-        subtable_title: "Instrument Regions"
         show_to: "Show Instrument"
       edit:
         title: "Edit Instrument"

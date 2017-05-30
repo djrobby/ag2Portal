@@ -12,4 +12,6 @@ es:
         currency: "Moneda"
         currency_id: "Moneda"
         type_i: "Tipo"
-        value: "Valor"
+        value_i: "Valor"
+        type_1: "Billete"
+        type_2: "Moneda"

@@ -1,21 +1,6 @@
-<h1>Listing currency_instruments</h1>
+<%= render '/layouts/ag2_admin/cinstrumentsbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @currency_instruments.each do |currency_instrument| %>
-  <tr>
-    <td><%= link_to 'Show', currency_instrument %></td>
-    <td><%= link_to 'Edit', edit_currency_instrument_path(currency_instrument) %></td>
-    <td><%= link_to 'Destroy', currency_instrument, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Currency instrument', new_currency_instrument_path %>
+<h3><%=t '.title' %></h3>
+<div class="span9" id="div_table">
+  <%= render 'currency_instruments' %>
+</div>

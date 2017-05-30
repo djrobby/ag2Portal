@@ -55,11 +55,11 @@ class Ability
       can :crud, BankOffice
       can :crud, BankAccountClass
       can :crud, Company
-      #can :crud, CompanyNotification
       can :read, CompanyNotification
       can :crud, Country
+      can :crud, Currency
+      can :crud, CurrencyInstrument
       can :crud, Office
-      #can :crud, OfficeNotification
       can :read, OfficeNotification
       can :crud, Province
       can :crud, Region
@@ -83,6 +83,8 @@ class Ability
       can :read, Company
       can :read, CompanyNotification
       can :read, Country
+      can :read, Currency
+      can :read, CurrencyInstrument
       can :read, Office
       can :read, OfficeNotification
       can :read, Province
@@ -107,6 +109,8 @@ class Ability
       cannot :manage, Company
       cannot :manage, CompanyNotification
       cannot :manage, Country
+      cannot :manage, Currency
+      cannot :manage, CurrencyInstrument
       cannot :manage, Office
       cannot :manage, OfficeNotification
       cannot :manage, Province

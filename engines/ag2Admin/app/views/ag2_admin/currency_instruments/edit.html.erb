@@ -1,6 +1,8 @@
-<h1>Editing currency_instrument</h1>
+<%= render '/layouts/ag2_admin/cinstrumentsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @currency_instrument %> |
-<%= link_to 'Back', currency_instruments_path %>
+<%= link_to I18n.t('ag2_admin.currency_instruments.edit.btn_show'), @currency_instrument %> |
+<%= link_to I18n.t('ag2_admin.currency_instruments.back_to_main_page'), currency_instruments_path %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170530115021) do
+ActiveRecord::Schema.define(:version => 20170530181240) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1183,10 +1183,10 @@ ActiveRecord::Schema.define(:version => 20170530115021) do
 
   create_table "currency_instruments", :force => true do |t|
     t.integer  "currency_id"
-    t.integer  "type_i",      :limit => 1, :default => 1, :null => false
-    t.integer  "value",                    :default => 0, :null => false
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.integer  "type_i",      :limit => 1,                                :default => 1,   :null => false
+    t.decimal  "value_i",                  :precision => 14, :scale => 6, :default => 0.0, :null => false
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
   end

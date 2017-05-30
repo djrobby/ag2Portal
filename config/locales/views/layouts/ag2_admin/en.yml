@@ -85,3 +85,9 @@ en:
       zones:
         items: "Zones"
         item: "Zone"
+      currencies:
+        items: "Currencies"
+        item: "Currency"
+      currency_instruments:
+        items: "Currency instruments"
+        item: "Instrument"

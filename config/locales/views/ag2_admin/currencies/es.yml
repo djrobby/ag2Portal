@@ -4,13 +4,13 @@ es:
       index:
         title: "Monedas"
         btn_new: "Nuevo Moneda"
-        go_to: "Ir a Regiones"
+        go_to: "Ir a Instrumentos monetarios"
         back_to_root: "Volver a ag2Admin"
       show:
         title: "Moneda"
         btn_edit: "Editar Moneda"
         btn_delete: "Borrar Moneda"
-        subtable_title: "Regiones del Moneda"
+        subtable_title: "Instrumentos de la Moneda"
         show_to: "Ver Moneda"
       edit:
         title: "Editar Moneda"

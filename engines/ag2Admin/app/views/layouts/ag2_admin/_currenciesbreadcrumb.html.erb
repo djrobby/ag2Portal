@@ -1,0 +1,32 @@
+<% content_for :title, "aGestiona2 | ag2Currencies" %>
+<% content_for :icon, "/assets/icon/ag2Currencies.png" %>
+<% content_for :alt, "ag2Currencies" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_admin.root_path %>">ag2Admin</a><span class="divider">></span>
+  </li>
+  <% if @currencies %>
+  <li>
+    <%=t "ag2_admin.breadcrumb.currencies.items" %>
+  </li>
+  <% end %>
+  <% if @currency %>
+  <li>
+    <a href="<%= currencies_path %>"><%=t "ag2_admin.breadcrumb.currencies.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t "ag2_admin.breadcrumb.currencies.item"%>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%=t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <a class="close" href="<%= ag2_admin.root_path %>">&#215;</a>
+</ul>

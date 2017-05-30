@@ -1,21 +1,6 @@
-<h1>Listing currencies</h1>
+<%= render '/layouts/ag2_admin/currenciesbreadcrumb' %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @currencies.each do |currency| %>
-  <tr>
-    <td><%= link_to 'Show', currency %></td>
-    <td><%= link_to 'Edit', edit_currency_path(currency) %></td>
-    <td><%= link_to 'Destroy', currency, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Currency', new_currency_path %>
+<h3><%=t '.title' %></h3>
+<div class="span10" id="div_table">
+  <%= render 'currencies' %>
+</div>

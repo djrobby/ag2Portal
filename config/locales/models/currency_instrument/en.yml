@@ -12,4 +12,6 @@ en:
         currency: "Currency"
         currency_id: "Currency"
         type_i: "Type"
-        value: "Value"
+        value_i: "Value"
+        type_1: "Bill"
+        type_2: "Coin"

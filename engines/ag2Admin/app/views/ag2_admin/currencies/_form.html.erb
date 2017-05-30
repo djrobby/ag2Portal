@@ -1,17 +1,13 @@
-<%= form_for(@currency) do |f| %>
-  <% if @currency.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@currency.errors.count, "error") %> prohibited this currency from being saved:</h2>
-
-      <ul>
-      <% @currency.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @currency, :html => {:class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :alphabetic_code, :autofocus => true, :input_html => { onkeyup: "caps(this)", class: 'mid-text-field', maxlength: 3 }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :numeric_code, :input_html => { class: 'mid-text-field number-text-field', maxlength: 3 }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :currency, :input_html => { :class => 'x-large-text-field', maxlength: 40 }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :minor_unit, :input_html => { class: 'mid-text-field number-text-field', maxlength: 1 }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

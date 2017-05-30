@@ -1,17 +1,24 @@
-<%= form_for(@currency_instrument) do |f| %>
-  <% if @currency_instrument.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@currency_instrument.errors.count, "error") %> prohibited this currency_instrument from being saved:</h2>
+<script>
+  $(document).ready(function() {
+    $('#submit-instrument').click(function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('.value-field').val().replace(",", ".");
+      $('.value-field').val(num);
+    });
+  });
+</script>
 
-      <ul>
-      <% @currency_instrument.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @currency_instrument, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :currency, :autofocus => true, collection: Currency.by_code, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :value_i, as: :string, :input_html => { value: (number_with_precision(f.object.value_i, precision: @minor_unit) if f.object.value_i), class: 'mid-text-field number-text-field value-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<%= f.input :type_i,
+  collection: [[1, t('activerecord.attributes.currency_instrument.type_1')],
+               [2, t('activerecord.attributes.currency_instrument.type_2')]],
+               as: :radio_buttons, label_method: :last, value_method: :first, label_html: { class: 'form-label' }, item_wrapper_class: 'inline' %>
+<br />
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit-instrument' %>
 <% end %>

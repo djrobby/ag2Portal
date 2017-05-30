@@ -9,7 +9,7 @@ es:
         check_for_countries: "Moneda no puede ser eliminada mientras existan países vinculados."
     attributes:
       currency:
-        currency: "Name"
-        alphabetic_code: "Alpha Code"
-        numeric_code: "Numeric Code"
-        minor_unit: "Minor unit"
+        currency: "Nombre"
+        alphabetic_code: "Código Alfa"
+        numeric_code: "Código Numérico"
+        minor_unit: "Unidad menor"

@@ -4,13 +4,13 @@ en:
       index:
         title: "Currencies"
         btn_new: "New Currency"
-        go_to: "Go to Regions"
+        go_to: "Go to Currency instruments"
         back_to_root: "Back to ag2Admin"
       show:
         title: "Currency"
         btn_edit: "Edit Currency"
         btn_delete: "Delete Currency"
-        subtable_title: "Currency Regions"
+        subtable_title: "Currency Instruments"
         show_to: "Show Currency"
       edit:
         title: "Edit Currency"
