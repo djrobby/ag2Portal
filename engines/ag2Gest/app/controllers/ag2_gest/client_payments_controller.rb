@@ -1,4 +1,17 @@
 # encoding: utf-8
+
+# Replaceable latin symbols UTF-8 = ASCII-8BIT (ISO-8859-1)
+# Á = \xC1  á = \xE1
+# É = \xC9  é = \xE9
+# Í = \xCD  í = \xED
+# Ó = \xD3  ó = \xF3
+# Ú = \xDA  ú = \xFA
+# Ü = \xDC  ü = \xFC
+# Ñ = \xD1  ñ = \xF1
+# Ç = \xC7  ç = \xE7
+# ¿ = \xBF  ¡ = \xA1
+# ª = \xAA  º = \xBA
+
 require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
@@ -24,7 +37,8 @@ module Ag2Gest
                                                :bank_instalments,
                                                :confirm_bank,
                                                :bank_to_pending,
-                                               :fractionate]
+                                               :fractionate,
+                                               :export_sepa_xml]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
@@ -385,6 +399,18 @@ module Ag2Gest
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
+    end
+
+    # Export SEPA XML file
+    def export_sepa_xml (order)
+    end
+
+    # Import SEPA XML file
+    def export_sepa_xml (return)
+    end
+
+    # Import Counter text file
+    def export_sepa_xml
     end
 
     #

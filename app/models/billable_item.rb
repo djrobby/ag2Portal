@@ -6,6 +6,7 @@ class BillableItem < ActiveRecord::Base
 
   has_many :tariffs
   has_many :tariff_types, through: :tariffs
+  has_many :uses, through: :tariff_types
 
   has_paper_trail
 

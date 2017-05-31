@@ -4,6 +4,7 @@ class Use < ActiveRecord::Base
   has_many :water_supply_contracts
   has_many :subscribers
   has_many :tariff_schemes
+  has_many :tariff_types
 
   has_paper_trail
 

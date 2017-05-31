@@ -1,5 +1,6 @@
 class TariffType < ActiveRecord::Base
-  attr_accessible :code, :name
+  belongs_to :use
+  attr_accessible :code, :name, :use_id
 
   #has_many :tariff_schemes
   has_many :tariffs

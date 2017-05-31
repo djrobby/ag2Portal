@@ -864,6 +864,31 @@ end
   end
 
   #
+  # File operations
+  #
+  # Upload XML file to Rails server (public/uploads)
+  def upload_xml_file(file_name, xml)
+    # Creates directory if it doesn't exist
+    create_upload_dir
+    # Save file to server's uploads dir
+    file_to_upload = File.open(Rails.root.join('public', 'uploads', file_name), "wb")
+    file_to_upload.write(xml)
+    file_to_upload.close()
+  end
+
+  def create_upload_dir
+    dir = Rails.root.join('public', 'uploads')
+    Dir.mkdir(dir) unless File.exists?(dir)
+  end
+
+  # Save local XML file
+  def save_xml_file(file_name, xml)
+    file_to_upload = File.open(file_name, "w")
+    file_to_upload.write(xml)
+    file_to_upload.close()
+  end
+
+  #
   # Privates
   #
   private
