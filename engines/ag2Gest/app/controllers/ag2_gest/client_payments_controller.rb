@@ -38,7 +38,9 @@ module Ag2Gest
                                                :confirm_bank,
                                                :bank_to_pending,
                                                :fractionate,
-                                               :export_sepa_xml]
+                                               :export_sepa_xml,
+                                               :import_sepa_xml,
+                                               :import_counter_txt]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
@@ -401,16 +403,16 @@ module Ag2Gest
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
-    # Export SEPA XML file
-    def export_sepa_xml (order)
-    end
-
-    # Import SEPA XML file
-    def export_sepa_xml (return)
-    end
-
-    # Import Counter text file
+    # Export SEPA XML file (order, direct debit)
     def export_sepa_xml
+    end
+
+    # Import SEPA XML file (return, rejections)
+    def import_sepa_xml
+    end
+
+    # Import Counter text file (bank counter operations)
+    def import_counter_txt
     end
 
     #
