@@ -183,6 +183,9 @@ module Ag2Gest
       # Input parameters
       client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
       opening_balance = params[:close_cash][:opening_balance].to_d
+      currency_instrument_quantities = params[:currency_instrument][:quantities]
+      currency_instrument_ids = params[:currency_instrument][:ids]
+      currency_instrument_values = params[:currency_instrument][:values]
       # Last cash desk closing
       last_cash_desk_closing = open_cash
       last_closing = last_cash_desk_closing.id rescue nil
@@ -217,12 +220,23 @@ module Ag2Gest
                                                   opening_balance: opening_balance, closing_balance: closing_balance, amount_collected: amount_collected,
                                                   invoices_collected: invoices_collected, last_closing_id: last_closing, created_by: created_by)
           if cash_desk_closing.save
+            # Items
             client_payments.each do |cp|
-              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type: 'C')
+              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type_i: 'C')
               if !item.save
                 break
               end
             end # client_payments.each
+            # Instruments
+            currency_instrument_ids.each_with_index do |id, i|
+              quantity = currency_instrument_quantities[i].to_i
+              value = currency_instrument_values[i].to_d
+              amount = quantity * value
+              instrument = CashDeskClosingInstrument.new(cash_desk_closing_id: cash_desk_closing.id, currency_instrument_id: id.to_i, amount: amount, quantity: quantity)
+              if !instrument.save
+                break
+              end
+            end # currency_instrument_ids.each_with_index
           end
         end # ActiveRecord::Base.transaction
         redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
@@ -905,6 +919,10 @@ module Ag2Gest
       @last_cash_desk_closing = open_cash
       @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
       @closing_balance = @opening_balance + @cash_totals.totals
+
+      # Currencies & instruments
+      @currency = Currency.find_by_alphabetic_code('EUR')
+      @currency_instruments = CurrencyInstrument.having_currency(@currency.id)
 
       respond_to do |format|
         format.html # index.html.erb

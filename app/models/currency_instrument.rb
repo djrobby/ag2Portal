@@ -1,4 +1,6 @@
 class CurrencyInstrument < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :currency
   attr_accessible :type_i, :value_i, :currency_id
 
@@ -16,6 +18,8 @@ class CurrencyInstrument < ActiveRecord::Base
 
   # Scopes
   scope :by_value, -> { order(type_i: :desc, value_i: :asc) }
+  #
+  scope :having_currency, -> c { where(currency_id: c).by_value }
 
   # Callbacks
   before_destroy :check_for_dependent_records
@@ -32,6 +36,10 @@ class CurrencyInstrument < ActiveRecord::Base
     currency.blank? ? "" : currency.alphabetic_code
   end
 
+  def currency_minor_unit
+    currency.blank? ? 2 : currency.minor_unit
+  end
+
   def type_label
     case type_i
       when 1 then I18n.t('activerecord.attributes.currency_instrument.type_1')
@@ -41,7 +49,7 @@ class CurrencyInstrument < ActiveRecord::Base
   end
 
   def value_label
-    value_i.blank? ? "" : value_i.to_s
+    value_i.blank? ? "" : formatted_number(value_i, currency_minor_unit)
   end
 
   private

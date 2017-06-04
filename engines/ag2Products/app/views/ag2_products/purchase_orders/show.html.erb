@@ -9,11 +9,13 @@
     $("#check_price").hide();
     // Hide proc_mesage div
     $("#proc_mesage").hide();
+    // Show notify_btn
+    $('#notify_btn').show();
     // Show approve_order_btn based on approval
     approver = $('#approver').html();
     if (approver == "") {
       $('#print_report_btn').hide();
-      $('#notify_btn').hide();
+      // $('#notify_btn').hide();
       $('#send_report_btn').hide();
       $('#approve_order_btn').show();
       $('#check_stock_btn').show();
@@ -21,7 +23,7 @@
       approve_isvisible = true;
     } else {
       $('#print_report_btn').show();
-      $('#notify_btn').show();
+      // $('#notify_btn').show();
       $('#send_report_btn').show();
       $('#approve_order_btn').hide();
       $('#check_stock_btn').hide();

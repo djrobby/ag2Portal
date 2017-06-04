@@ -561,6 +561,18 @@
             </div>
           </div>
 
+          <!-- Currency instruments -->
+          <% if !@currency_instruments.blank? %>
+          <div class="control-group">
+            <h4><%= t "activerecord.models.currency_instrument.few" %></h4>
+            <% @currency_instruments.each do |i| %>
+            <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+            <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
+            <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label' } %>
+            <% end %>
+          </div>
+          <% end %>
+
         </div>
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>

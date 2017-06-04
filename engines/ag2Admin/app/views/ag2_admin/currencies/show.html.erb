@@ -35,14 +35,14 @@ new_path: new_currency_path, new_txt: t('ag2_admin.currencies.index.btn_new') } 
   <thead>
     <tr>
       <th><%= t 'activerecord.attributes.currency_instrument.type_i' %></th>
-      <th align="right"><%= t 'activerecord.attributes.currency_instrument.value' %></th>
+      <th align="right"><%= t 'activerecord.attributes.currency_instrument.value_i' %></th>
     </tr>
   </thead>
   <tbody>
     <% @currency_instruments.each do |t| %>
     <tr>
       <td><%= t.type_label unless t.type_i.blank? %></td>
-      <td align="right"><%= number_with_precision(t.value_i, precision: t.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") unless t.value_i.blank? %></td>
+      <td align="right"><%= t.value_label unless t.value_i.blank? %></td>
     </tr>
     <% end %>
   </tbody>

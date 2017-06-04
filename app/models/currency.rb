@@ -19,6 +19,8 @@ class Currency < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:alphabetic_code) }
+  #
+  scope :having_code, -> c { where(alphabetic_code: c).by_code }
 
   # Callbacks
   before_validation :fields_to_uppercase
