@@ -1,0 +1,122 @@
+
+<script>
+  $(document).ready(function() {
+  });
+
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      //window.open("invoice_form.pdf?id=" + id, "_blank");
+      $("#notfound").modal('show');
+      return false;
+    });
+  });
+</script>
+
+<%= render '/layouts/ag2_gest/cashdeskclosingsbreadcrumb' %>
+
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h3><%=t '.title' %></h3>
+      </td>
+      <td class="form-td-two right-winged">
+        <%=link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, close_cash_form_cash_desk_closing_path(@cash_desk_closing, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.cash_desk_closing.id" %></td>
+      <td id="id"><%= @cash_desk_closing.id %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.opening_balance' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.closing_balance' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.invoices_collected' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.amount_collected' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.invoices_paid' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.amount_paid' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.amount_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.project' %>:</td>
+      <td><%= @cash_desk_closing.try(:project).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.office' %>:</td>
+      <td><%= @cash_desk_closing.try(:office).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.company' %>:</td>
+      <td><%= @cash_desk_closing.try(:company).try(:name) %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.organization' %>:</td>
+      <td><%= @cash_desk_closing.try(:organization).try(:name) %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @cash_desk_closing } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @cash_desk_closing } %>
+  </tbody>
+</table>
+
+<div class="container-fluid">
+<!-- Items -->
+  <div class="row-fluid">
+    <div class="span7">
+      <% if (@cash_desk_closing_items.count > 0) %>
+      <h4><%= t 'activerecord.models.cash_desk_closing_item.zero' %></h4>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <%= render partial: 'items_header', :locals => { cash_desk_closing: @cash_desk_closing } %>
+        </thead>
+        <tfoot>
+          <%= render partial: 'items_footer', :locals => { cash_desk_closing: @cash_desk_closing } %>
+        </tfoot>
+        <tbody>
+          <%= render partial: 'item', collection: @cash_desk_closing_items %>
+        </tbody>
+      </table>
+      <!-- <#%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_items } %> -->
+      <% end %>
+    </div>
+
+  <!-- Instruments -->
+    <div class="span5">
+      <% if (@cash_desk_closing_instruments.count > 0) %>
+      <h4><%= t 'activerecord.attributes.cash_desk_closing_instrument.currency_instruments' %></h4>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <%= render partial: 'instruments_header', :locals => { cash_desk_closing: @cash_desk_closing } %>
+        </thead>
+        <tfoot>
+          <%= render partial: 'instruments_footer', :locals => { cash_desk_closing: @cash_desk_closing } %>
+        </tfoot>
+        <tbody>
+          <%= render partial: 'instrument', collection: @cash_desk_closing_instruments %>
+        </tbody>
+      </table>
+      <!-- <#%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_instruments } %> -->
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+<%= link_to t("ag2_gest.cash_desk_closings.back_to_main_page"), cash_desk_closings_path %>

@@ -1,8 +1,8 @@
 es:
   ag2_gest:
-    client_payments:
+    cash_desk_closings:
       index:
-        title: "Cobros"
+        title: "Cierres"
         btn_new: "Nuevo Cobro"
         back_to_root: "Volver a ag2Gest"
         amount: "Importe"
@@ -32,16 +32,22 @@ es:
         deferrals: "Aplazamientos"
         pending: "Pendientes"
         charged: "Cobradas"
+        label_project: "Proyecto"
+        label_office: "Oficina"
+        label_company: "Compañia"
+        label_from: "Creado desde"
+        label_to: "Creado hasta"
       show:
-        title: "Cobro"
-        btn_edit: "Editar Cobro"
-        btn_delete: "Borrar Cobro"
-        return_to: "Volver a Cobro"
+        title: "Cierre de Caja"
+        print: "Imprimir"
+        btn_edit: "Editar Cierre"
+        btn_delete: "Borrar Cierre"
+        return_to: "Volver a Cierre"
       edit:
-        title: "Editar Cobro"
-        btn_show: "Ver Cobro"
+        title: "Editar Cierre"
+        btn_show: "Ver Cierre"
       new:
-        title: "Nuevo Cobro"
+        title: "Nuevo Cierre"
       report:
         report: "Elige el Informe:"
         bill_report: "Facturas"
@@ -56,7 +62,7 @@ es:
         receipt_detail: "Recibimos la cantidad de "
         receipt_detail2: ", en pago de la/s siguiente/s factura/s:"
         total_bill_payment: "Recibos Cobrados"
-      back_to_main_page: "Volver a Cobros"
+      back_to_main_page: "Volver a Cierres"
       generate_error_payment: "¡Oh oh!... No has seleccionado la forma de pago."
       fractionate_error: "<b>¡Oh oh!</b> Imposible aplazar deuda."
       fractionate_ok: "Has creado el Aplazamiento Nº %{var} correctamente."

@@ -134,6 +134,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
     match 'contracting_requests/:id/update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
     match 'update_tariff_type_select_from_billing_concept/:billable_concept_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'contracting_requests/update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'contracting_requests/:id/update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
     #
     # Tariff
     match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
@@ -421,6 +424,10 @@ Ag2Gest::Engine.routes.draw do
       post 'bank_to_pending', on: :collection
     end
     resources :payment_methods
+    #
+    resources :cash_desk_closings do
+      get 'close_cash_form', on: :member
+    end
     #
     resources :formalities
     resources :formality_types

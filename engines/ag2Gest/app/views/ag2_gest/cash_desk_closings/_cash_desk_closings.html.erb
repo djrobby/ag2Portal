@@ -1,0 +1,40 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t "activerecord.attributes.cash_desk_closing.id" %></th>
+      <th><%= t "activerecord.attributes.cash_desk_closing.opening_balance" %></th>
+      <th><%= t "activerecord.attributes.cash_desk_closing.closing_balance" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_desk_closing.invoices_collected" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_desk_closing.invoices_paid" %></th>
+      <th align="center"><%= t :created_at %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cash_desk_closings.each do |cash_desk_closing| %>
+      <td><%= cash_desk_closing.id %></td>
+      <td><%= number_with_precision(cash_desk_closing.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= number_with_precision(cash_desk_closing.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td align="right"><%= number_with_precision(cash_desk_closing.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_desk_closing.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <% if cash_desk_closing == @time_record %>
+        <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at) %></td>
+      <% else %>
+        <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at.utc.getlocal) %></td>
+      <% end %>
+      <td><%= render :partial => '/layouts/crud/read', :locals => { :model => CashDeskClosing, :path => cash_desk_closing_path(cash_desk_closing) } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closings } %>
+

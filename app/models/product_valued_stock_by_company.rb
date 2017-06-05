@@ -19,4 +19,12 @@ class ProductValuedStockByCompany < ActiveRecord::Base
   scope :belongs_to_company_store_family, -> company, store, family { belongs_to_company_store(company, store).where("product_family_id = ?", family).ordered_by_store_family }
   scope :belongs_to_company_store_product, -> company, store, product { belongs_to_company_store(company, store).where("product_id = ?", product).ordered_by_store_family }
   scope :belongs_to_company_family_product, -> company, family, product { belongs_to_company_family(company, family).where("product_id = ?", product).ordered_by_store_family }
+  #
+  scope :belongs_to_store, -> store { where("store_id = ?", store).ordered_by_store_family }
+  scope :belongs_to_family, -> family { where("product_family_id = ?", family).ordered_by_store_family }
+  scope :belongs_to_product, -> product { where("product_id = ?", product).ordered_by_store_family }
+  #
+  scope :belongs_to_store_family, -> store, family { belongs_to_store(store).where("product_family_id = ?", family).ordered_by_store_family }
+  scope :belongs_to_store_product, -> store, product { belongs_to_store(store).where("product_id = ?", product).ordered_by_store_family }
+  scope :belongs_to_family_product, -> family, product { belongs_to_family(family).where("product_id = ?", product).ordered_by_store_family }
 end

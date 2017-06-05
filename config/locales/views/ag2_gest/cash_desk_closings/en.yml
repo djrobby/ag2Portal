@@ -1,6 +1,6 @@
 en:
   ag2_gest:
-    client_payments:
+    cash_desk_closings:
       index:
         title: "Bill Collections"
         btn_new: "New Bill Collection"
@@ -32,8 +32,14 @@ en:
         deferrals: "Deferrals"
         pending: "Pending"
         charged: "Charged"
+        label_project: "Project"
+        label_office: "Office"
+        label_company: "Company"
+        label_from: "Created from"
+        label_to: "Created to"
       show:
         title: "Bill Collection"
+        print: "Print"
         btn_edit: "Edit Bill Collection"
         btn_delete: "Delete Bill Collection"
         return_to: "Back to Bill Collection"

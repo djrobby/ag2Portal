@@ -8,6 +8,7 @@ es:
         other: Cash desk closings
     attributes:
       cash_desk_closing:
+        id: "Id"
         organization: "Organization"
         organization_id: "Organization"
         company: "Company"
@@ -22,3 +23,5 @@ es:
         invoices_collected: "Invoices collected"
         amount_paid: "Amount paid"
         invoices_paid: "Invoices paid"
+        last_closing: "Last_closing"
+        last_closing_id: "Last_closing"

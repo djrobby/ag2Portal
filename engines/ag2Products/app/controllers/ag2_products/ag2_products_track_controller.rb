@@ -937,9 +937,6 @@ module Ag2Products
       elsif !store.blank?
         company = Store.find(store).company rescue nil
       end
-      if company.nil?
-        return
-      end
 
       # Dates are mandatory
       from = Date.today.to_s
@@ -952,14 +949,27 @@ module Ag2Products
       # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
-      if !product.blank?  # By Product: In one store or in every stores
-        @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product(company, product)
-      else
-        if !family.blank?   # By Family: In one store on in every stores
-          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family(company, family)
+      if company != nil
+        if !product.blank?  # By Product: In one store or in every stores
+          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product(company, product)
         else
-          # By Store: In one store on in every stores
-          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store(company, store) : ProductValuedStockByCompany.belongs_to_company(company)
+          if !family.blank?   # By Family: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family(company, family)
+          else
+            # By Store: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store(company, store) : ProductValuedStockByCompany.belongs_to_company(company)
+          end
+        end
+      else
+        if !product.blank?  # By Product: In one store or in every stores
+          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_product(store, product) : ProductValuedStockByCompany.belongs_to_product(product)
+        else
+          if !family.blank?   # By Family: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family(store, family) : ProductValuedStockByCompany.belongs_to_family(family)
+          else
+            # By Store: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store(store) : ProductValuedStockByCompany.all
+          end
         end
       end
 

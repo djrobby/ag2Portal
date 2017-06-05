@@ -1,0 +1,146 @@
+<script type="text/javascript">
+  var _thisForm = '';
+  var changing = false;
+
+  function setupAllSelect2(p) {
+    projectsSelect2(p);
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    $('.sel3').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    $('.sel4').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
+    // Date picker
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>");
+
+    // Initialized form variable
+    _thisForm = $("#removeFilter").closest('form')[0];
+  });
+
+  $(document).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    $("#Office").select2("val", "<%= params[:Office] %>");
+    $("#Project").select2("val", "<%= params[:Project] %>");
+    $("#Company").select2("val", "<%= params[:Company] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+  });
+
+  jQuery(function($) {
+    $("#removeFilter").click(function() {
+      $("#Office").select2("val", "");
+      $("#Project").select2("val", "");
+      $("#Company").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      $("#No").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+
+</script>
+
+<%= render '/layouts/ag2_gest/cashdeskclosingsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.cash_desk_closings_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "cash_desk_closings", :method => 'get', :remote => true do %>
+        <!-- Project -->
+        <%= label_tag "label_project", I18n.t("ag2_gest.invoices.index.label_project"), :class => 'form-label' %>
+        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Office -->
+        <%= label_tag I18n.t("ag2_gest.cash_desk_closings.index.label_office"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Office", options_from_collection_for_select(@offices, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Company -->
+        <%= label_tag I18n.t("ag2_gest.cash_desk_closings.index.label_company"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Company", options_from_collection_for_select(@companies, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.cash_desk_closings.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.cash_desk_closings.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <br><br>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <%= link_to t("ag2_gest.client_payments.back_to_main_page"), ag2_gest.client_payments_path %>
+
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'cash_desk_closings' %>
+      </div>
+    </div>
+
+  </div>
+</div>

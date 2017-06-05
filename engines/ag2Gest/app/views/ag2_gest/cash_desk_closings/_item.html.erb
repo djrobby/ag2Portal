@@ -1,0 +1,5 @@
+<tr>
+  <td><%= item.try(:client_payment).try(:payment_method).try(:to_label) %></td>
+  <td><%= item.try(:client_payment).try(:invoice).try(:full_no)  %></td>
+  <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+</tr>

@@ -1,0 +1,5 @@
+<tr>
+  <td><%= instrument.try(:quantity) %></td>
+  <td><%= instrument.currency_instrument.type_label + " " + number_with_precision(instrument.currency_instrument.value_i, precision: instrument.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_with_precision(instrument.amount, precision: instrument.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") %></td>
+</tr>

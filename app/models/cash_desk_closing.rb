@@ -48,4 +48,20 @@ class CashDeskClosing < ActiveRecord::Base
   def self.last_of_all
     by_date.last
   end
+
+  def total_instruments
+    cash_desk_closing_instruments.sum(:amount)
+  end
+
+  def total_items
+    cash_desk_closing_items.sum(:amount)
+  end
+
+  searchable do
+    integer :id
+    integer :office_id
+    integer :organization_id
+    integer :project_id
+    date :created_at
+  end
 end

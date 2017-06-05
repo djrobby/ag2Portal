@@ -31,8 +31,14 @@
     <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.company') %>:</td>
       <td><%= @tariff_scheme.try(:project).try(:company).try(:name) unless @tariff_scheme.try(:project).try(:company).blank? %></td>
+      <td></td>
+      <td ></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %>:</td>
       <td ><%= @tariff_scheme.try(:tariff_type).try(:name) %></td>
+      <td><%= t('activerecord.attributes.tariff_scheme.use_id') %>:</td>
+      <td ><%= @tariff_scheme.try(:use).try(:name) %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff_scheme.starting_at') %>:</td>

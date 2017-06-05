@@ -128,7 +128,7 @@ class TariffScheme < ActiveRecord::Base
   def check_for_dependent_records
     # Check for invoices
     if invoices.count > 0
-      errors.add(:base, I18n.t('activerecord.models.tariff.check_for_invoices'))
+      errors.add(:base, I18n.t('activerecord.models.tariff_scheme.check_for_invoices'))
       return false
     end
   end

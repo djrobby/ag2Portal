@@ -8,6 +8,7 @@ es:
         other: Cierres de caja
     attributes:
       cash_desk_closing:
+        id: "Id"
         organization: "Organización"
         organization_id: "Organización"
         company: "Empresa"
@@ -22,3 +23,5 @@ es:
         invoices_collected: "Facturas cobradas"
         amount_paid: "Importe pagado"
         invoices_paid: "Facturas pagadas"
+        last_closing: "Cierre anterior"
+        last_closing_id: "Cierre Ant."

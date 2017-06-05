@@ -1,0 +1,223 @@
+if @close_cash.nil?
+	return
+end
+if @close_cash_items.count <= 0
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/close_cash_form', layout_options: { default: true }
+report.set_layout tlf: 'reports/close_cash_form1', layout_options: { id: :other }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+p_total = 0
+p_item = 0
+p_total_amount = 0
+
+# New page & start
+report.start_new_page
+
+# Page footer:
+report.page.list(:default).on_page_footer_insert do |page_footer|
+	page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total") + " (" + p_item.to_s + ")"
+	page_footer.item(:total_full).value number_with_precision(p_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+end
+
+report.page.list(:instrument).on_page_footer_insert do |page_footer|
+	page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total")
+	page_footer.item(:total_amount).value number_with_precision(p_total_amount, precision: @instrument.first.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",")
+end
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @close_cash.company.logo.url(:original).split("?").first unless @close_cash.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @close_cash.company.name,
+				   company_address_1: @close_cash.company.address_1,
+				   company_address_2: @close_cash.company.address_2,
+				   company_phones: @close_cash.company.phone_and_fax,
+				   company_email: @close_cash.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.company.fiscal_id)
+
+# Page header: Others
+_last_closing_created = formatted_timestamp(CashDeskClosing.find(@close_cash.last_closing_id).created_at) unless @close_cash.last_closing_id.blank?
+_last_closing = @close_cash.last_closing_id.to_s
+
+report.page.values(form_title: I18n.t("activerecord.attributes.cash_desk_closing_instrument.cash_desk_closing"),
+				   created_by_c: I18n.t(:created_by) + ":",
+				   created_by: User.find(@close_cash.created_by).email,
+				   created_at_c:  I18n.t(:created_at) + ":",
+				   created_at: formatted_timestamp(@close_cash.created_at)
+				   )
+if !@close_cash.last_closing_id.to_s.blank?
+	report.page.values(last_closing_id_c: I18n.t("activerecord.attributes.cash_desk_closing.last_closing_id") + ":",
+				   	   last_closing_id: _last_closing + " (" + _last_closing_created + ") "
+				       )
+end
+
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"))
+
+# Details
+report.page.list(:instrument).on_footer_insert do |footer|
+	footer.item(:detail).value I18n.t("ag2_gest.bills.index.totals")
+	footer.item(:closing_balance_c).value I18n.t("activerecord.attributes.cash_desk_closing.closing_balance") + ":"
+	footer.item(:closing_balance).value number_with_precision(@close_cash.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	footer.item(:opening_balance_c).value  I18n.t("activerecord.attributes.cash_desk_closing.opening_balance") + ":"
+	footer.item(:opening_balance).value number_with_precision(@close_cash.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	footer.item(:amount_collected_c).value I18n.t("activerecord.attributes.cash_desk_closing.amount_collected") + ":"
+	footer.item(:amount_collected).value number_with_precision(@close_cash.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	footer.item(:invoices_collected_c).value I18n.t("activerecord.attributes.cash_desk_closing.invoices_collected") + ":"
+	footer.item(:invoices_collected).value number_with_precision(@close_cash.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
+	footer.item(:amount_paid_c).value I18n.t("activerecord.attributes.cash_desk_closing.amount_paid") + ":"
+	footer.item(:amount_paid).value number_with_precision(@close_cash.amount_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	footer.item(:invoices_paid_c).value I18n.t("activerecord.attributes.cash_desk_closing.invoices_paid") + ":"
+	footer.item(:invoices_paid).value number_with_precision(@close_cash.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
+end
+
+# Instruments
+report.page.list(:instrument).header do |header|
+	header.item(:instrument_title).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.currency_instruments")
+	header.item(:currency_c).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.currency")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.quantity")
+end
+
+@instrument.each do |i|
+	report.page.list(:instrument).add_row do |row|
+		row.item(:currency).value i.currency_instrument.type_label + " " + number_with_precision(i.currency_instrument.value_i, precision: i.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") unless i.currency_instrument.value_i.blank?
+		row.item(:quantity).value i.quantity unless i.quantity.blank?
+	end
+	report.page.list(:instrument) do |list|
+		p_total_amount += i.amount unless i.amount.blank?
+	end
+end
+
+# Default
+report.page.list(:default).header do |header|
+	header.item(:item_title).value I18n.t("activerecord.models.cash_desk_closing_item.zero")
+	header.item(:payment_method_c).value I18n.t("activerecord.attributes.client_payment.payment_method_id")
+	header.item(:no_c).value I18n.t("activerecord.attributes.invoice.invoice_no") + " " + I18n.t("activerecord.attributes.invoice_item.invoice")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.cash_desk_closing_item.amount")
+end
+
+_total = 0
+_payment_method = "first"
+_old_method = " "
+
+
+@close_cash_items.each do |cc|
+if report.page_count == 1 && report.list.overflow?
+	report.start_new_page layout: :other
+
+	# Page footer:
+	report.page.list(:default).on_page_footer_insert do |page_footer|
+		page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total") + " (" + p_item.to_s + ")"
+		page_footer.item(:total_full).value number_with_precision(p_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	end
+
+	# Page header: Image block for Logo
+	report.page.values company_logo: "public/" + @close_cash.company.logo.url(:original).split("?").first unless @close_cash.company.logo.blank?
+
+	# Page header: Company
+	report.page.values(company_name: @close_cash.company.name,
+					   company_address_1: @close_cash.company.address_1,
+					   company_address_2: @close_cash.company.address_2,
+					   company_phones: @close_cash.company.phone_and_fax,
+					   company_email: @close_cash.company.email_and_website,
+					   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.company.fiscal_id)
+
+	# Page header: Others
+	_last_closing_created = formatted_timestamp(CashDeskClosing.find(@close_cash.last_closing_id).created_at) unless @close_cash.last_closing_id.blank?
+	_last_closing = @close_cash.last_closing_id.to_s
+
+	report.page.values(form_title: I18n.t("activerecord.attributes.cash_desk_closing_instrument.cash_desk_closing"),
+					   created_by_c: I18n.t(:created_by) + ":",
+					   created_by: User.find(@close_cash.created_by).email,
+					   created_at_c:  I18n.t(:created_at) + ":",
+					   created_at: formatted_timestamp(@close_cash.created_at)
+					   )
+	if !@close_cash.last_closing_id.to_s.blank?
+		report.page.values(last_closing_id_c: I18n.t("activerecord.attributes.cash_desk_closing.last_closing_id") + ":",
+					   	   last_closing_id: _last_closing + " (" + _last_closing_created + ") "
+					       )
+	end
+
+	# Page footer
+	report.page.values(printed_at: Time.now,
+					   pt: I18n.t("every_report.pt"),
+					   pd: I18n.t("every_report.pd"),
+					   currency_note: I18n.t("every_report.currency_note"))
+
+	report.page.list(:default).header do |header|
+		header.item(:item_title).value I18n.t("activerecord.models.cash_desk_closing_item.zero")
+		header.item(:payment_method_c).value I18n.t("activerecord.attributes.client_payment.payment_method_id")
+		header.item(:no_c).value I18n.t("activerecord.attributes.invoice.invoice_no") + " " + I18n.t("activerecord.attributes.invoice_item.invoice")
+		header.item(:amount_c).value I18n.t("activerecord.attributes.cash_desk_closing_item.amount")
+	end
+end
+	report.page.list(:default).add_row do |row|
+		if _payment_method == "first"
+			row.item(:payment_method).value cc.client_payment.payment_method.to_label unless cc.client_payment.payment_method.blank?
+			row.item(:no).value cc.client_payment.invoice.full_no unless cc.client_payment.blank?
+			row.item(:amount).value number_with_precision(cc.client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cc.client_payment.blank?
+			_total += cc.client_payment.amount unless cc.client_payment.blank?
+			_old_method = cc.client_payment.payment_method.to_label
+		elsif _payment_method == cc.client_payment.payment_method_id
+			row.item(:payment_method).hide
+			row.item(:no).value cc.client_payment.invoice.full_no unless cc.client_payment.blank?
+			row.item(:amount).value number_with_precision(cc.client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cc.client_payment.blank?
+			_total += cc.client_payment.amount unless cc.client_payment.blank?
+			_old_method = cc.client_payment.payment_method.to_label
+		else
+			report.page.list(:default).add_row do |row2|
+				row2.item(:payment_method).value I18n.t("activerecord.attributes.bill.total") + " " + _old_method
+				row2.item(:no).hide
+				row2.item(:amount).hide
+				row2.item(:amount_total).value number_with_precision(_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				_total = 0
+			end
+			row.item(:payment_method).value cc.client_payment.payment_method.to_label unless cc.client_payment.payment_method.blank?
+			row.item(:no).value cc.client_payment.invoice.full_no unless cc.client_payment.blank?
+			row.item(:amount).value number_with_precision(cc.client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cc.client_payment.blank?
+			_total += cc.client_payment.amount unless cc.client_payment.blank?
+		end
+		_payment_method = cc.client_payment.payment_method_id
+	end
+
+	report.page.list(:default) do |list|
+		p_total += cc.client_payment.amount unless cc.client_payment.blank?
+		p_item += 1
+	end
+end
+
+report.page.list(:default).add_row do |row2|
+	row2.item(:payment_method).value I18n.t("activerecord.attributes.bill.total") + " " + _old_method
+	row2.item(:no).hide
+	row2.item(:amount).hide
+	row2.item(:amount_total).value number_with_precision(_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+end
+
+

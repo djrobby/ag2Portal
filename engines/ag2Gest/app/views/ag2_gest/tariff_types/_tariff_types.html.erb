@@ -12,6 +12,8 @@
     <tr>
       <th><%= sortable "code", t('activerecord.attributes.tariff_type.code') %></th>
       <th><%= sortable "name", t('activerecord.attributes.tariff_type.name') %></th>
+      <th><%= sortable "use", t('activerecord.attributes.tariff_type.use') %></th>
+
     </tr>
   </thead>
   <tbody>
@@ -19,6 +21,7 @@
     <tr>
       <td><%= link_to tariff.try(:code), tariff_type_path(tariff) %></td>
       <td><%= tariff.try(:name) %></td>
+      <td><%= tariff.try(:use).try(:code) %></td>
       <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => TariffType, :path => edit_tariff_type_path(tariff) } %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => TariffType, :path => tariff, :msg => t("activerecord.models.tariff_type.one"), :txt => tariff.name } %> </td>
     </tr>

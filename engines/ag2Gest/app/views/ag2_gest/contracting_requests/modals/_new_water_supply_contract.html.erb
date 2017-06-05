@@ -113,6 +113,58 @@ jQuery(function($) {
       return false;
     });
 
+    $("#use_id").change(function() {
+      // make a POST call and replace the content
+      var use_ids = $('select#use_id :selected').val();
+      if (use_ids == "")
+        use_ids = "0";
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_tariff_schemes_from_use/' + use_ids, function(data) {
+        var o = data.tariff_scheme;
+        $("#tariff_scheme_id").html("");
+        $("#tariff_scheme_id").select2("val", "");
+        $("#tariff_scheme_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'tariff_scheme' && option != "") {
+              $("#tariff_scheme_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#tariff_scheme_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids + '/' + use_ids, function(data) {
+        var o = data;
+
+        var product = $('#TariffType_');
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        } else {
+          $.each(o, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        }
+      });
+      return false;
+    });
 
     $("#BillableConcept_").change(function() {
       // make a POST call and replace the content
@@ -166,9 +218,9 @@ jQuery(function($) {
       <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
       <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
 
-      <%= f.association :use, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :use, collection: Use.all, input_html: { :id => 'use_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
       
       <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
       <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>

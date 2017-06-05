@@ -12,5 +12,6 @@ es:
         id: "Id"
         code: "Código"
         name: "Descripción"
+        use: "Uso"
         successfully: "Tipo de tarifa se ha actualizado correctamente."
         create: "Tipo de tarifa se ha creado correctamente."

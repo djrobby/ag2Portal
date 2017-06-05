@@ -12,5 +12,6 @@ en:
         id: "Id"
         code: "Code"
         name: "Description"
+        use: "Use"
         successfully: "Tariff type was successfully updated."
         create: "Tariff type was successfully created."

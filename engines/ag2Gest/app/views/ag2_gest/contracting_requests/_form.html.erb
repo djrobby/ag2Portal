@@ -108,8 +108,8 @@
         }
         else {
           if (data.client_debt != '0'){
-            alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt);
-            // alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt + '\n' + data.subscriber_debt);
+            //alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt);
+            alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt + '\n' + data.project_debt);
           };
           // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
           //   $("#subrogation-form input, #subrogation-form select").prop("disabled", false);

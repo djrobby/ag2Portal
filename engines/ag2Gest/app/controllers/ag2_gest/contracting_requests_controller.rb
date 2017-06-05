@@ -13,6 +13,7 @@ module Ag2Gest
                                                 :update_region_textfield_from_province,
                                                 :update_subscriber_from_service_point,
                                                 :update_bank_offices_from_bank,
+                                                :update_tariff_schemes_from_use,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
                                                 :et_validate_fiscal_id_textfield,
@@ -82,10 +83,17 @@ module Ag2Gest
 
     def update_tariff_type_select_from_billing_concept
       billable_concept_ids = params[:billable_concept_ids]
+      use = params[:use_ids]
       @billable_concept_ids = billable_concept_ids.split(",")
 
+      @use = use.blank? ? '0' : Use.find(use)
+
       @grouped_options = @billable_concept_ids.inject({}) do |biller, bc|
-        _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+        if @use == '0'
+          _tariff_type_ids = BillableItem.find(bc).tariff_types.group(:tariff_type_id)
+        else
+          _tariff_type_ids = BillableItem.find(bc).tariff_types.where("use_id =? OR use_id IS NULL",@use.id).group(:tariff_type_id)
+        end
         _tariff_type_ids.each do |ttt|
           @tariffs = ttt
           _label_biller = BillableItem.find(bc).to_label_biller
@@ -720,6 +728,23 @@ module Ag2Gest
       render json: @json_data
     end
 
+    def update_tariff_schemes_from_use
+      use = params[:id]
+      @projects_ids = current_projects_ids
+
+      if use != '0'
+        @use = Use.find(use)
+        @tariff_schemes = TariffScheme.belongs_to_projects(@projects_ids).where("use_id =? OR use_id IS NULL",@use.id).actives
+      else
+        @tariff_schemes = TariffScheme.belongs_to_projects(@projects_ids).actives
+      end
+      # Offers array
+      @tariff_schemes_dropdown = tariff_schemes_array(@tariff_schemes)
+      # Setup JSON
+      @json_data = { "tariff_scheme" => @tariff_schemes_dropdown }
+      render json: @json_data
+    end
+
     # Update subscriber from service point
     def update_subscriber_from_service_point
       @service_point = ServicePoint.find(params[:id])
@@ -915,7 +940,7 @@ module Ag2Gest
           id = '$err'
           fiscal_id = '$err'
           @client_debt = '0'
-          # @subscriber_debt = '0'
+          @project_debt = '0'
         else
           id = @entity.id
           fiscal_id = @entity.fiscal_id
@@ -947,12 +972,13 @@ module Ag2Gest
           else
             @client_debt = '0'
           end
-          # @subscriber = ""
-          # @subscriber_office = @entity.client.invoice_debts.joins(:subscriber).group('subscribers.office_id')
-          # @subscriber_office.each do |sb|
-          #     @subscriber = @subscriber  << sb.invoice.bill.project.name + " --> " + number_with_precision(@entity.client.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",") + " // "
-          # end
-          # @subscriber_debt = @subscriber
+          @project_d = ""
+          @project_group = @entity.client.invoice_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+          @project_group.each do |pd|
+            _pd_project = Project.find(pd.project).name
+            @project_d = @project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+          end
+          @project_debt = @project_d[0..-4]
         end
       end
 
@@ -977,7 +1003,7 @@ module Ag2Gest
                       "street_directory_id" => street_directory.try(:id),
                       "service_point" => service_point.try(:first).try(:id),
                       "client_debt" => @client_debt,
-                      # "subscriber_debt" => @subscriber_debt
+                      "project_debt" => @project_debt
                       # "organization_id" => organization_id
                     }
 
@@ -1767,6 +1793,14 @@ module Ag2Gest
       _array = []
       _offices.each do |i|
         _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      end
+      _array
+    end
+
+    def tariff_schemes_array(_tariff_schemes)
+      _array = []
+      _tariff_schemes.each do |i|
+        _array = _array << [i.id, i.to_label]
       end
       _array
     end

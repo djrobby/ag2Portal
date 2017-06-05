@@ -12,7 +12,9 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.tariff_type.name') %>:</td>
-      <td colspan="3"><%= @tariff_type.try(:name) %></td>
+      <td><%= @tariff_type.try(:name) %></td>
+      <td><%= t('activerecord.attributes.tariff_type.use') %>:</td>
+      <td><%= @tariff_type.try(:use).try(:name) %></td>
     </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff_type } %>
       <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff_type } %>
