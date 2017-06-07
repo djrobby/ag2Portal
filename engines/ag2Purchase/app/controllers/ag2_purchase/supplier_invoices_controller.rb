@@ -22,6 +22,7 @@ module Ag2Purchase
                                                :si_update_charge_account_from_order,
                                                :si_update_charge_account_from_project,
                                                :si_format_number,
+                                               :si_format_number_4,
                                                :si_current_stock,
                                                :si_update_project_textfields_from_organization,
                                                :si_update_product_select_from_organization,
@@ -183,6 +184,7 @@ module Ag2Purchase
       amount = params[:amount].to_f / 10000
       tax = params[:tax].to_f / 10000
       discount_p = params[:discount_p].to_f / 100
+      withholding = params[:withholding].to_f / 10000
       # Bonus
       discount = discount_p != 0 ? amount * (discount_p / 100) : 0
       # Taxable
@@ -190,7 +192,7 @@ module Ag2Purchase
       # Taxes
       tax = tax - (tax * (discount_p / 100)) if discount_p != 0
       # Total
-      total = taxable + tax
+      total = taxable + tax + withholding
       # Format output values
       qty = number_with_precision(qty.round(4), precision: 4)
       amount = number_with_precision(amount.round(4), precision: 4)
@@ -413,6 +415,12 @@ module Ag2Purchase
     def si_format_number
       num = params[:num].to_f / 100
       num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
+    def si_format_number_4
+      num = params[:num].to_f / 10000
+      num = number_with_precision(num.round(4), precision: 4)
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end
@@ -1002,6 +1010,7 @@ module Ag2Purchase
           (params[:supplier_invoice][:work_order_id].to_i != @supplier_invoice.work_order_id.to_i) ||
           (params[:supplier_invoice][:charge_account_id].to_i != @supplier_invoice.charge_account_id.to_i) ||
           (params[:supplier_invoice][:payment_method_id].to_i != @supplier_invoice.payment_method_id.to_i) ||
+          (params[:supplier_invoice][:withholding].to_f != @supplier_invoice.withholding.to_f) ||
           (params[:supplier_invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
           (params[:supplier_invoice][:internal_no].to_s != @supplier_invoice.internal_no) ||
           (params[:supplier_invoice][:remarks].to_s != @supplier_invoice.remarks))

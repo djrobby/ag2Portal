@@ -36,6 +36,10 @@ class SupplierInvoiceItem < ActiveRecord::Base
     end
   end
 
+  def charge_account_code
+    charge_account.blank? ? '' : charge_account.full_code
+  end
+
   #
   # Calculated fields
   #

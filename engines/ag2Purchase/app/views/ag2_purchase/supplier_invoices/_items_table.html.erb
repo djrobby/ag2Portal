@@ -32,7 +32,13 @@
       if (discount_p == "")
         discount_p = "0";
       discount_p = parseInt(right_number(discount_p, 2) * 100);
-      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p, function(data) {
+      // Withholding
+      var withholding = $('#supplier_invoice_withholding').val();
+      if (withholding == "")
+        withholding = "0";
+      withholding = parseInt(right_number(withholding, 4) * 10000);
+      if (withholding > 0) withholding = withholding * (-1);
+      jQuery.getJSON('si_item_totals/' + qty + '/' + amount + '/' + tax + '/' + discount_p + '/' + withholding, function(data) {
         document.getElementById('foot-quantity').innerHTML = data.qty;
         document.getElementById('foot-amount').innerHTML = data.amount;
         document.getElementById('foot-tax').innerHTML = data.tax;

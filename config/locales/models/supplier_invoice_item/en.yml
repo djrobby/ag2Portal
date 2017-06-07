@@ -43,3 +43,4 @@ en:
         work_order_id: "Work order"
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
+        charge_account_c: "Account"

@@ -45,7 +45,7 @@ class SupplierInvoice < ActiveRecord::Base
 
   # Callbacks
   before_destroy :check_for_dependent_records
-  before_save :calculate_and_store_totals
+  before_save :calculate_and_store_totals # must include withholding to negative
   after_create :notify_on_create
   after_update :notify_on_update
 
@@ -87,7 +87,7 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def total
-    taxable + taxes
+    taxable + taxes + withholding
   end
 
   def quantity
@@ -161,6 +161,7 @@ class SupplierInvoice < ActiveRecord::Base
   private
 
   def calculate_and_store_totals
+    self.withholding = self.withholding * (-1) if self.withholding > 0
     self.totals = total
   end
 

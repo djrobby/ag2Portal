@@ -4,6 +4,9 @@
   <% end %>
   <th><%= t "activerecord.attributes.supplier_invoice_item.product_c" %></th>
   <th><%= t "activerecord.attributes.supplier_invoice_item.description_c" %></th>
+  <% if @breadcrumb == 'read' %>
+  <th><%= t "activerecord.attributes.supplier_invoice_item.charge_account_c" %></th>
+  <% end %>
   <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.quantity_c" %></th>
   <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.price_c" %></th>
   <th align="right"><%= t "activerecord.attributes.supplier_invoice_item.discount_pct_c" %></th>

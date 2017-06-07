@@ -451,6 +451,21 @@
       $('#items-table').trigger('totals');
       return false;
     });
+
+    // when the #supplier_invoice_withholding field changes
+    $("#supplier_invoice_withholding").change(function() {
+      var num = $('#supplier_invoice_withholding').val();
+      if (num == "") num = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 4) * 10000);
+      if (num > 0) num = num * (-1);
+      jQuery.getJSON('si_format_number_4/' + num, function(data) {
+        $('#supplier_invoice_withholding').val(data.num);
+      });
+      // Update and display totals
+      $('#items-table').trigger('totals');
+      return false;
+    });
     
     // when submit    
     $(_thisForm).on('submit', function() {
@@ -475,8 +490,10 @@
         $(this).find('input.fnt-approved-amount').val(price);
       });
       // Must change decimal separator, if comma, in numeric fields
-      var num = $('#supplier_invoice_discount_pct').val().replace(",", ".");
-      $('#supplier_invoice_discount_pct').val(num);
+      var discount_pct = $('#supplier_invoice_discount_pct').val().replace(",", ".");
+      var withholding = $('#supplier_invoice_withholding').val().replace(",", ".");
+      $('#supplier_invoice_discount_pct').val(discount_pct);
+      $('#supplier_invoice_withholding').val(withholding);
       //e.preventDefault();
     });
   });
