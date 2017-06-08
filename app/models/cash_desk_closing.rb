@@ -57,6 +57,22 @@ class CashDeskClosing < ActiveRecord::Base
     cash_desk_closing_items.sum(:amount)
   end
 
+  def to_first
+    CashDeskClosing.order("id").first
+  end
+
+  def to_prev
+    CashDeskClosing.where("id < ?", id).order("id").last
+  end
+
+  def to_next
+    CashDeskClosing.where("id > ?", id).order("id").first
+  end
+
+  def to_last
+    CashDeskClosing.order("id").last
+  end
+
   searchable do
     integer :id
     integer :office_id

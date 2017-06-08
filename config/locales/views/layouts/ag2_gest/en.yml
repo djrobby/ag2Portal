@@ -4,6 +4,9 @@ en:
       clients:
         items: "Clients"
         item: "Client"
+      cash_desk_closings:
+        items: "Cash closings"
+        item: "Cash closing"
       payment_methods:
         items: "Payment methods"
         item: "Payment method"

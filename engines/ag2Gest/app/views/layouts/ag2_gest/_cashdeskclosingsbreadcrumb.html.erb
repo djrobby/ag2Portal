@@ -2,6 +2,7 @@
 <% content_for :icon, "/assets/icon/ag2BillCollectionsB.png" %>
 <% content_for :alt, "ag2ClientPayments" %>
 
+<!-- Breadcrumb -->
 <ul class="breadcrumb">
   <li>
     <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
@@ -12,10 +13,50 @@
   <li>
     <a href="<%= ag2_gest.client_payments_path %>">Cobros</a><span class="divider">></span>
   </li>
+  <% if @cash_desk_closings %>
   <li>
-    Cierres
+    <%=t "ag2_gest.breadcrumb.cash_desk_closings.items" %>
   </li>
-
+  <% end %>
+  <% if @cash_desk_closing %>
+  <li>
+    <a href="<%= cash_desk_closings_path %>"><%=t "ag2_gest.breadcrumb.cash_desk_closings.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t "ag2_gest.breadcrumb.cash_desk_closings.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <!-- Records navigator -->
+  <% if @breadcrumb == 'read' %>
+  <li>
+    <span class="divider"></span>
+  </li>
+  <li>
+    <%= link_to @cash_desk_closing.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
+    <i class="icon-fast-backward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @cash_desk_closing.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
+    <i class="icon-backward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @cash_desk_closing.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
+    <i class="icon-forward"></i>
+    <% end %>
+  </li>
+  <li>
+    <%= link_to @cash_desk_closing.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
+    <i class="icon-fast-forward"></i>
+    <% end %>
+  </li>
+  <% end %>
+  <% end %>
   <!-- Close -->
   <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
 </ul>

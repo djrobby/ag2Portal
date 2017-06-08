@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  inventory_transfer: 
+  product: 
+  quantity: 9.99
+  outbound_current: 9.99
+  inbound_current: 9.99
+  price: 9.99
+  average_price: 9.99
+
+two:
+  inventory_transfer: 
+  product: 
+  quantity: 9.99
+  outbound_current: 9.99
+  inbound_current: 9.99
+  price: 9.99
+  average_price: 9.99

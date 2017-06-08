@@ -75,6 +75,10 @@ family_id = @stocks_report.first.product_family_id
 
 # List detail
 @stocks_report.each do |i|
+  co = i.company_id
+  st = i.store_id
+  co_id = Store.find(st).company
+  if co == co_id.id
 	if !i.company_id.nil? && !i.company_current_value.nil?
 		pmpstock = i.company_current_value
 	else
@@ -148,4 +152,5 @@ family_id = @stocks_report.first.product_family_id
 		d = list.store.f_calc += pmpstock
 		list.store.f_average_price = (d / c)
 	end
+  end
 end

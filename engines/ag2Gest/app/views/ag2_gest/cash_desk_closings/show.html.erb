@@ -92,7 +92,7 @@
           <%= render partial: 'item', collection: @cash_desk_closing_items %>
         </tbody>
       </table>
-      <!-- <#%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_items } %> -->
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_items } %>
       <% end %>
     </div>
 
@@ -111,7 +111,7 @@
           <%= render partial: 'instrument', collection: @cash_desk_closing_instruments %>
         </tbody>
       </table>
-      <!-- <#%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_instruments } %> -->
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_desk_closing_instruments } %>
       <% end %>
     </div>
   </div>

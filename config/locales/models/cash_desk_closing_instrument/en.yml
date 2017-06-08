@@ -11,6 +11,8 @@ es:
         cash_desk_closing: "Cash desk closing"
         cash_desk_closing_id: "Cash desk closing"
         currency_instrument: "Currency instrument"
+        currency_instruments: "Currency instruments"
         currency_instrument_id: "Currency instrument"
+        currency: "Denomination"
         amount: "Amount"
         quantity: "Quantity"

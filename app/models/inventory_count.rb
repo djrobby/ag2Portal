@@ -32,6 +32,7 @@ class InventoryCount < ActiveRecord::Base
   validates :inventory_count_type,  :presence => true
   validates :organization,          :presence => true
 
+  # Callbacks
   after_create :notify_on_create
   after_update :notify_on_update
 

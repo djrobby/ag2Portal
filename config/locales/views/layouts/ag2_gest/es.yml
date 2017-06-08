@@ -4,6 +4,9 @@ es:
       clients:
         items: "Clientes"
         item: "Cliente"
+      cash_desk_closings:
+        items: "Cierres de Caja"
+        item: "Cierre de Caja"
       payment_methods:
         items: "Formas de pago"
         item: "Forma de pago"

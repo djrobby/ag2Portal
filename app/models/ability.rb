@@ -568,6 +568,8 @@ class Ability
       can :read, InventoryCountType
       can :crud, InventoryCount
       can :crud, InventoryCountItem
+      can :crud, InventoryTransfer
+      can :crud, InventoryTransferItem
       # CRUD only for Product_Manager role
       can :read, ProductFamily
       can :read, ProductType
@@ -595,6 +597,8 @@ class Ability
       can :read, InventoryCountType
       can :read, InventoryCount
       can :read, InventoryCountItem
+      can :read, InventoryTransfer
+      can :read, InventoryTransferItem
     elsif user.has_role? :ag2Logistics_Banned
       cannot :manage, DeliveryNote
       cannot :manage, DeliveryNoteItem
@@ -615,6 +619,8 @@ class Ability
       cannot :manage, InventoryCountType
       cannot :manage, InventoryCount
       cannot :manage, InventoryCountItem
+      cannot :manage, InventoryTransfer
+      cannot :manage, InventoryTransferItem
     end
     # ag2Tech
     if user.has_role? :ag2Tech_User

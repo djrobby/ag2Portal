@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170531084425) do
+ActiveRecord::Schema.define(:version => 20170608104433) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1639,6 +1639,46 @@ ActiveRecord::Schema.define(:version => 20170531084425) do
   add_index "inventory_movements", ["product_id"], :name => "index_inventory_movements_on_product_id"
   add_index "inventory_movements", ["store_id", "product_id", "type", "parent_id", "item_id"], :name => "index_inventory_movements_unique", :unique => true
   add_index "inventory_movements", ["store_id"], :name => "index_inventory_movements_on_store_id"
+
+  create_table "inventory_transfer_items", :force => true do |t|
+    t.integer  "inventory_transfer_id"
+    t.integer  "product_id"
+    t.decimal  "quantity",              :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "decimal",               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "outbound_current",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "inbound_current",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "price",                 :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "average_price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                            :null => false
+    t.datetime "updated_at",                                                            :null => false
+  end
+
+  add_index "inventory_transfer_items", ["inventory_transfer_id"], :name => "index_inventory_transfer_items_on_inventory_transfer_id"
+  add_index "inventory_transfer_items", ["product_id"], :name => "index_inventory_transfer_items_on_product_id"
+
+  create_table "inventory_transfers", :force => true do |t|
+    t.string   "transfer_no"
+    t.date     "transfer_date"
+    t.integer  "organization_id"
+    t.integer  "company_id"
+    t.integer  "outbound_store_id"
+    t.integer  "inbound_store_id"
+    t.integer  "approver_id"
+    t.datetime "approval_date"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "inventory_transfers", ["approver_id"], :name => "index_inventory_transfers_on_approver_id"
+  add_index "inventory_transfers", ["company_id"], :name => "index_inventory_transfers_on_company_id"
+  add_index "inventory_transfers", ["inbound_store_id"], :name => "index_inventory_transfers_on_inbound_store_id"
+  add_index "inventory_transfers", ["organization_id", "transfer_no"], :name => "index_inventory_transfers_on_organization_id_and_transfer_no", :unique => true
+  add_index "inventory_transfers", ["organization_id"], :name => "index_inventory_transfers_on_organization_id"
+  add_index "inventory_transfers", ["outbound_store_id"], :name => "index_inventory_transfers_on_outbound_store_id"
+  add_index "inventory_transfers", ["transfer_date"], :name => "index_inventory_transfers_on_transfer_date"
+  add_index "inventory_transfers", ["transfer_no"], :name => "index_inventory_transfers_on_transfer_no"
 
   create_table "invoice_bills", :id => false, :force => true do |t|
     t.integer "invoice_id",                                        :default => 0, :null => false

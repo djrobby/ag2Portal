@@ -35,6 +35,8 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_request_complete_report', :controller => 'contracting_requests', :action => 'contracting_request_complete_report'
     # report meter
     match 'meter_view_report', :controller => 'meters', :action => 'meter_view_report'
+    #report cash_desk_closing
+    match 'close_cash_report', :controller => 'cash_desk_closings', :action => 'close_cash_report'
 
     # Routes for jQuery POSTs
     #

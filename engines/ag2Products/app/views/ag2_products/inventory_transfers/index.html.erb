@@ -1,0 +1,21 @@
+<h1>Listing inventory_transfers</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @inventory_transfers.each do |inventory_transfer| %>
+  <tr>
+    <td><%= link_to 'Show', inventory_transfer %></td>
+    <td><%= link_to 'Edit', edit_inventory_transfer_path(inventory_transfer) %></td>
+    <td><%= link_to 'Destroy', inventory_transfer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Inventory transfer', new_inventory_transfer_path %>

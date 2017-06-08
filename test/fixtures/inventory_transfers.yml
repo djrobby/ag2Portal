@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  transfer_no: MyString
+  transfer_date: 2017-06-08
+  organization: 
+  outbound_store: 
+  inbound_store: 
+  approver: 
+  approval_date: 2017-06-08 12:35:40
+
+two:
+  transfer_no: MyString
+  transfer_date: 2017-06-08
+  organization: 
+  outbound_store: 
+  inbound_store: 
+  approver: 
+  approval_date: 2017-06-08 12:35:40
