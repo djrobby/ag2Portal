@@ -52,7 +52,7 @@ class InventoryTransfer < ActiveRecord::Base
   end
 
   def full_no
-    # Transfer no (Company id & year & sequential number) => CCCC-YYYY-NNNNNN
+    # Transfer no (Outbound store id & year & sequential number) => SSSS-YYYY-NNNNNN
     transfer_no.blank? ? "" : transfer_no[0..3] + '-' + transfer_no[4..7] + '-' + transfer_no[8..13]
   end
 

@@ -324,6 +324,9 @@ Ag2Products::Engine.routes.draw do
       get "edit_nc", on: :member
     end
     resources :product_company_prices
+    resources :inventory_transfers do
+      get 'inventory_transfer_form', on: :collection
+    end
 
     # Root
     root :to => 'home#index'

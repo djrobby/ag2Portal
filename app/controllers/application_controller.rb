@@ -622,6 +622,24 @@ end
     code
   end
 
+  # Inventory transfer no
+  def it_next_no(store)
+    year = Time.new.year
+    code = ''
+    store = store.to_s if store.is_a? Fixnum
+    store = store.rjust(4, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = InventoryTransfer.where("count_no LIKE ?", "#{store}#{year}%").order(:count_no).maximum(:count_no)
+    if last_no.nil?
+      code = store + year + '000001'
+    else
+      last_no = last_no[8..13].to_i + 1
+      code = store + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
+
   # Supplier payment no
   def sp_next_no(organization)
     year = Time.new.year

@@ -34,6 +34,10 @@ class Store < ActiveRecord::Base
   has_many :store_offices, dependent: :destroy
   has_many :product_valued_stocks
   has_many :product_valued_stock_by_companies
+  has_many :outbound_inventory_transfers, class_name: 'InventoryTransfer', foreign_key: :outbound_store_id
+  has_many :outbound_inventory_transfer_items, :through => :outbound_inventory_transfers
+  has_many :inbound_inventory_transfers, class_name: 'InventoryTransfer', foreign_key: :inbound_store_id
+  has_many :inbound_inventory_transfer_items, :through => :inbound_inventory_transfers
 
   # Nested attributes
   accepts_nested_attributes_for :store_offices,
