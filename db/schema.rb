@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170608104433) do
+ActiveRecord::Schema.define(:version => 20170609082703) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -549,6 +549,7 @@ ActiveRecord::Schema.define(:version => 20170608104433) do
     t.integer  "updated_by"
   end
 
+  add_index "charge_account_ledger_accounts", ["charge_account_id", "ledger_account_id"], :name => "index_charge_account_ledger_accounts_unique", :unique => true
   add_index "charge_account_ledger_accounts", ["charge_account_id"], :name => "index_charge_account_ledger_accounts_on_charge_account_id"
   add_index "charge_account_ledger_accounts", ["ledger_account_id"], :name => "index_charge_account_ledger_accounts_on_ledger_account_id"
 
@@ -648,6 +649,7 @@ ActiveRecord::Schema.define(:version => 20170608104433) do
     t.integer  "updated_by"
   end
 
+  add_index "client_ledger_accounts", ["client_id", "ledger_account_id"], :name => "index_client_ledger_accounts_unique", :unique => true
   add_index "client_ledger_accounts", ["client_id"], :name => "index_client_ledger_accounts_on_client_id"
   add_index "client_ledger_accounts", ["ledger_account_id"], :name => "index_client_ledger_accounts_on_ledger_account_id"
 
@@ -3680,6 +3682,7 @@ ActiveRecord::Schema.define(:version => 20170608104433) do
   end
 
   add_index "supplier_ledger_accounts", ["ledger_account_id"], :name => "index_supplier_ledger_accounts_on_ledger_account_id"
+  add_index "supplier_ledger_accounts", ["supplier_id", "ledger_account_id"], :name => "index_supplier_ledger_accounts_unique", :unique => true
   add_index "supplier_ledger_accounts", ["supplier_id"], :name => "index_supplier_ledger_accounts_on_supplier_id"
 
   create_table "supplier_payments", :force => true do |t|
@@ -3871,6 +3874,21 @@ ActiveRecord::Schema.define(:version => 20170608104433) do
   add_index "tariffs", ["tax_type_f_id"], :name => "index_tariffs_on_tax_type_f_id"
   add_index "tariffs", ["tax_type_p_id"], :name => "index_tariffs_on_tax_type_p_id"
   add_index "tariffs", ["tax_type_v_id"], :name => "index_tariffs_on_tax_type_v_id"
+
+  create_table "tax_type_ledger_accounts", :force => true do |t|
+    t.integer  "tax_type_id"
+    t.integer  "input_ledger_account_id"
+    t.integer  "output_ledger_account_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "tax_type_ledger_accounts", ["input_ledger_account_id"], :name => "index_tax_type_ledger_accounts_on_input_ledger_account_id"
+  add_index "tax_type_ledger_accounts", ["output_ledger_account_id"], :name => "index_tax_type_ledger_accounts_on_output_ledger_account_id"
+  add_index "tax_type_ledger_accounts", ["tax_type_id", "input_ledger_account_id", "output_ledger_account_id"], :name => "index_tax_type_ledger_accounts_unique", :unique => true
+  add_index "tax_type_ledger_accounts", ["tax_type_id"], :name => "index_tax_type_ledger_accounts_on_tax_type_id"
 
   create_table "tax_types", :force => true do |t|
     t.string   "description"

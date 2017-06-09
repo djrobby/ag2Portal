@@ -49,7 +49,7 @@ class ChargeAccount < ActiveRecord::Base
   validates :opened_at,       :presence => true
   validates :organization,    :presence => true
   validates :charge_group,    :presence => true
-  validates :ledger_account,  :presence => true
+  # validates :ledger_account,  :presence => true
 
   # Scopes
   scope :by_code, -> { order(:account_code) }

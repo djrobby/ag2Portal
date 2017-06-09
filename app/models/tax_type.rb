@@ -15,6 +15,7 @@ class TaxType < ActiveRecord::Base
   has_many :offer_items
   has_many :supplier_invoice_items
   has_many :sale_offer_items
+  has_many :tax_type_ledger_accounts, dependent: :destroy
 
   has_paper_trail
 
