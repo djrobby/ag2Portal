@@ -1,5 +1,185 @@
-<p id="notice"><%= notice %></p>
+<script>
+  $(document).ready(function() {
+    // Hide proc_mesage div
+    $("#proc_mesage").hide();
+    // Show confirm_btn based on approval
+    approver = $('#approver').html();
+    if (approver == "") {
+      $('#print_report_btn').hide();
+      $('#approve_count_btn').show();
+    } else {
+      $('#print_report_btn').show();
+      $('#approve_count_btn').hide();
+    }
+  });
 
+  jQuery(function($) {
+    // when #approve_count_btn is clicked
+    $("#approve_count_btn").click(function() {
+      // Show message
+      $("#proc_mesage").show();
+      // make a POST call and replace the content
+      var order = $('#id').html();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('ic_approve_count/' + order, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_products.inventory_transfers.approve_count_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_products.inventory_transfers.approve_count_write") %>');
+        } else if (data.code == "$warn") {
+          alert('<%= I18n.t("ag2_products.inventory_transfers.approve_count_warn") %>');
+        } else {
+          alert(data.code);
+          $('#approver').text(data.approver);
+          $('#approval_date').text(data.approval_date);
+          $('#approve_count_btn').hide();
+          $('#print_report_btn').show();
+        }
+      });
+      return false;
+    });
 
-<%= link_to 'Edit', edit_inventory_transfer_path(@inventory_transfer) %> |
-<%= link_to 'Back', inventory_transfers_path %>
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("inventory_transfer_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+
+    // when #print_report_btn_dif is clicked
+    $("#print_report_btn_dif").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("inventory_transfer_form_dif.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
+
+<div id="proc_mesage" class="alert alert-info">
+  <%= t(:approving) %>
+</div>
+
+<%= render '/layouts/ag2_products/icountsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td id="id"><%= @inventory_transfer.id %></td>
+      <td><%=t 'activerecord.attributes.inventory_transfer.count_no' %>:</td>
+      <td class="highlighted bolded">
+        <%= @inventory_transfer.full_no %>
+        <% if @inventory_transfer.quick %> <%=t 'activerecord.attributes.inventory_transfer.quick_c' %><% end %>
+      </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_transfer.count_date' %>:</td>
+      <td><%= formatted_date(@inventory_transfer.count_date) unless @inventory_transfer.count_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.inventory_transfer.inventory_transfer_type' %>:</td>
+      <td><%= @inventory_transfer.inventory_transfer_type.name unless @inventory_transfer.inventory_transfer_type.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_transfer.store' %>:</td>
+      <td> <%= @inventory_transfer.store.name unless @inventory_transfer.store.blank? %> </td>
+      <td><%=t 'activerecord.attributes.inventory_transfer.product_family' %>:</td>
+      <td> <%= @inventory_transfer.product_family.full_name unless @inventory_transfer.product_family.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.inventory_transfer.approval_date' %>:</td>
+      <td id="approval_date"><%= formatted_timestamp(@inventory_transfer.approval_date.utc.getlocal) unless @inventory_transfer.approval_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.inventory_transfer.approver' %>:</td>
+      <td id="approver"><%= @inventory_transfer.approver.email unless @inventory_transfer.approver.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @inventory_transfer } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @inventory_transfer } %>
+  </tbody>
+</table>
+
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_products.inventory_transfers.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+        <a href="#" id="print_report_btn_dif" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_dif' %></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { note: @inventory_transfer } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.inventory_transfer.remarks" %>:</td>
+      <td style="width: 88%"><%= @inventory_transfer.remarks unless @inventory_transfer.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-two left-winged">
+        <% if cannot_edit(@inventory_transfer) %>
+        <%= render partial: '/layouts/crud/new_no_br', locals: { model: InventoryCount, path: new_inventory_transfer_path, txt: t('ag2_products.inventory_transfers.index.btn_new') } %>
+        <% else %>
+          <% if @inventory_transfer.quick %>
+          <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+          { model: InventoryCount, update_path: edit_nc_inventory_transfer_path(@inventory_transfer), update_txt: t('.btn_edit'),
+          delete_path: @inventory_transfer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_transfer.one"), txt: @inventory_transfer.full_no,
+          new_path: new_inventory_transfer_path, new_txt: t('ag2_products.inventory_transfers.index.btn_new') } %>
+          <% else %>
+          <%= render partial: '/layouts/crud/update_delete_new_no_br', locals:
+          { model: InventoryCount, update_path: edit_inventory_transfer_path(@inventory_transfer), update_txt: t('.btn_edit'),
+          delete_path: @inventory_transfer, delete_txt: t('.btn_delete'), msg: t("activerecord.models.inventory_transfer.one"), txt: @inventory_transfer.full_no,
+          new_path: new_inventory_transfer_path, new_txt: t('ag2_products.inventory_transfers.index.btn_new') } %>
+          <% end %>
+        <% end %>
+      </td>
+      <td class="form-td-two right-winged">
+        <!-- Approve inventory count -->
+        <% if @is_approver %>
+          <a href="#" id="approve_count_btn" class="btn btn-warning"><i class="icon-ok icon-white"></i> <%=t :approve %></a>
+          <br />
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
+<% if !session[:return_to_prod].nil? %>
+<%= link_to session[:return_to_prod], session[:return_to_prod_url] %> |
+<% end %>
+<%= link_to t("ag2_products.inventory_transfers.back_to_main_page"), inventory_transfers_path %>

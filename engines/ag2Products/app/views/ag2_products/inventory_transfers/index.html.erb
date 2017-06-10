@@ -1,21 +1,123 @@
-<h1>Listing inventory_transfers</h1>
+<script>
+  var _thisForm = '';
+  var changing = false;
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    // Initialized form variable
+    _thisForm = $("#Store").closest('form')[0];
+  }); 
 
-<% @inventory_transfers.each do |inventory_transfer| %>
-  <tr>
-    <td><%= link_to 'Show', inventory_transfer %></td>
-    <td><%= link_to 'Edit', edit_inventory_transfer_path(inventory_transfer) %></td>
-    <td><%= link_to 'Destroy', inventory_transfer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
-<br />
+  $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
+    $("#Type").select2("val", "<%= params[:Type] %>");
+    $("#Store").select2("val", "<%= params[:Store] %>");
+    $("#Family").select2("val", "<%= params[:Family] %>");
+  });
 
-<%= link_to 'New Inventory transfer', new_inventory_transfer_path %>
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#No").val("");
+      $("#Type").select2("val", "");
+      $("#Store").select2("val", "");
+      $("#Family").select2("val", "");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+
+    // when the #new_from_family field changes
+    $("#new_from_family").click(function() {
+      $("#new-offer-from-family").modal('show');
+    });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("inventory_transfers_report.pdf", "_blank");
+      return false;
+    });
+  });
+</script>
+
+<% session[:return_to_prod] = nil %>
+<% session[:return_to_prod_url] = nil %>
+<%= render '/layouts/ag2_products/itransfersbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_products.inventory_transfers_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "inventory_transfers", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.count_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- Type -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.inventory_transfer_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Store -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.store"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Family -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.product_family"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Family", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_products.inventory_transfers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => new_inventory_transfer_path, :txt => t(".btn_new") } %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => inventory_transfers_new_nc_path, :txt => t(".btn_new_nc") } %>
+        <% if can? :update, InventoryCount %>
+        <button id="new_from_family" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_family") %></button>
+        <br /><br />
+        <% end %>
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <br /><br />
+        <!-- Back -->
+        <%= link_to t(".back_to_root"), ag2_products.root_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'inventory_transfers' %>
+      </div>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->
+<!-- Modal: New offer from request -->
+<%= render 'new_offer_from_family' %>

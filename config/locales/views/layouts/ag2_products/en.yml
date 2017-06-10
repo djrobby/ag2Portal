@@ -40,6 +40,9 @@ en:
       inventory_counts:
         items: "Inventory counts"
         item: "Count"
+      inventory_transfers:
+        items: "Inventory transfers"
+        item: "Transfer"
       product_company_prices:
         items: "Purchase prices by company"
         item: "Price"

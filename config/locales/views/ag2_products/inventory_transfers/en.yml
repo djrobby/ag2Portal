@@ -1,0 +1,40 @@
+en:
+  ag2_products:
+    inventory_transfers:
+      index:
+        title: "Inventory transfers"
+        btn_new: "New Inventory transfer"
+        back_to_root: "Back to ag2Logistics"
+        label_others: "Others"
+        btn_apply: "Apply Filter"
+      show:
+        title: "Inventory transfer"
+        btn_edit: "Edit Inventory transfer"
+        btn_delete: "Delete Inventory transfer"
+        print: "Print"
+      edit:
+        title: "Edit Inventory transfer"
+        btn_show: "Show Inventory transfer"
+      new:
+        title: "New Inventory transfer"
+        title_nc: "New Quick Inventory transfer"
+      back_to_main_page: "Back to Inventory transfers"
+      generate_code_btn: "Inventory transfer No."
+      no_error: "Unable to generate Inventory transfer No.: No Store chosen."
+      items_info: "Inventory transfer Items"
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Count %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      generate_count_error: "Inventory transfer can not be generated: Store or Family invalid."
+      generate_count_write: "Unable to save new Inventory transfer."
+      generate_count_no_products: "Inventory transfer can not be generated: No products."
+      generate_count_ok: "Inventory transfer %{var} has been generated."
+      approve_count_error: "Inventory transfer not found."
+      approve_count_write: "Unable to save Inventory transfer."
+      approve_count_warn: "This Inventory transfer is already approved."
+      approve_count_ok: "Inventory transfer %{var} has been approved & confirmed."
+      type_i: "All products of the chosen family."
+      type_r: "Only products of the chosen family and store."

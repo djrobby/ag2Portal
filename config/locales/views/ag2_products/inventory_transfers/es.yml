@@ -1,0 +1,40 @@
+es:
+  ag2_products:
+    inventory_transfers:
+      index:
+        title: "Traspasos de inventario"
+        btn_new: "Nuevo Traspaso"
+        back_to_root: "Volver a ag2Logistics"
+        label_others: "Otros"
+        btn_apply: "Aplicar Filtro"
+      show:
+        title: "Traspaso de inventario"
+        btn_edit: "Editar Traspaso"
+        btn_delete: "Borrar Traspaso"
+        print: "Imprimir"
+      edit:
+        title: "Editar Traspaso de inventario"
+        btn_show: "Ver Traspaso de inventario"
+      new:
+        title: "Nuevo Traspaso de inventario"
+        title_nc: "Nuevo Traspaso Rápido de inventario"
+      back_to_main_page: "Volver a Traspasos de inventario"
+      generate_code_btn: "Nº de Traspaso de inventario"
+      no_error: "Imposible generar Nº de Traspaso: No has elegido Almacén."
+      items_info: "Items del Traspaso de inventario"
+      delete_item: "Borrar este Item"
+      add_item: "Agregar nuevo Item"
+      add_item_to: "Traspaso %{var}"
+      btn_new_item: "Nuevo Item"
+      btn_add_item: "Agregar"
+      item_error: "no puede estar en blanco"
+      generate_count_error: "Imposible generar Traspaso de inventario: Almacén o Familia inválida."
+      generate_count_write: "Imposible guardar nuevo Traspaso de inventario."
+      generate_count_no_products: "Imposible generar Traspaso de inventario: Sin productos."
+      generate_count_ok: "Traspaso de inventario %{var} ha sido generado."
+      approve_count_error: "Traspaso de inventario no encontrado."
+      approve_count_write: "Imposible guardar Traspaso de inventario."
+      approve_count_warn: "Este Traspaso de inventario ya está aprobado."
+      approve_count_ok: "Traspaso de inventario %{var} ha sido aprobado y confirmado."
+      type_i: "Todos los productos de la familia elegida."
+      type_r: "Solo productos de la familia y almacén elegidos."

@@ -1,0 +1,25 @@
+es:
+  activerecord:
+    models:
+      inventory_transfer:
+        zero:  Traspasos de inventario
+        one:   Traspaso de inventario
+        few:   Traspasos de inventario
+        other: Traspasos de inventario
+    attributes:
+      inventory_transfer:
+        transfer_no: "Nº"
+        transfer_no_report: "Nº"
+        transfer_date: "Fecha"
+        outbound_store: "Almacén origen"
+        outbound_store_id: "Almacén origen"
+        inbound_store: "Almacén destino"
+        inbound_store_id: "Almacén destino"
+        organization: "Organización"
+        organization_id: "Organización"
+        remarks: "Comentarios"
+        office: "Oficina"
+        company: "Empresa"
+        quantity: "Artículos"
+        approval_date: "Aprobado el"
+        approver: "Aprobado por"

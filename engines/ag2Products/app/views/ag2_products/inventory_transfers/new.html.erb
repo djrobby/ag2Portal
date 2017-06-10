@@ -1,5 +1,7 @@
-<h1>New inventory_transfer</h1>
+<%= render '/layouts/ag2_products/itransfersbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', inventory_transfers_path %>
+<%= link_to t("ag2_products.inventory_transfers.back_to_main_page"), inventory_transfers_path %>

@@ -1,0 +1,14 @@
+<tr>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
+  <th><%= t "activerecord.attributes.inventory_transfer_item.product" %></th>
+  <th align="right"><%= t "activerecord.attributes.inventory_transfer_item.initial" %></th>
+  <th align="right"><%= t "activerecord.attributes.inventory_transfer_item.current" %></th>
+  <th align="right"><%= t "activerecord.attributes.inventory_transfer_item.average_price" %></th>
+  <th align="right"><%= t "activerecord.attributes.inventory_transfer_item.quantity" %></th>
+  <th align="right"><%= t "activerecord.attributes.inventory_transfer_item.price" %></th>
+  <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+  <th></th>
+  <% end %>
+</tr>

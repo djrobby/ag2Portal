@@ -101,6 +101,10 @@ en:
           attributes:
             count_no:
               code_invalid: "invalid"
+        inventory_transfer:
+          attributes:
+            transfer_no:
+              code_invalid: "invalid"
         supplier_payment:
           attributes:
             payment_no:

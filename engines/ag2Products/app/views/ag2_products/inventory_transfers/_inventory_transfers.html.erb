@@ -1,0 +1,50 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.inventory_transfer.count_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.inventory_transfer.count_date' %></th>
+      <th><%= t 'activerecord.attributes.inventory_transfer.inventory_transfer_type' %></th>
+      <th><%= t 'activerecord.attributes.inventory_transfer.store' %></th>
+      <th><%= t 'activerecord.attributes.inventory_transfer.product_family' %></th>
+      <th align="right"><%= t 'activerecord.attributes.inventory_transfer.quantity' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @inventory_transfers.each do |note| %>
+    <% if !note.approver_id.blank? %>
+      <tr class="approved-tr">
+    <% else %>
+      <tr>
+    <% end %>
+      <td>
+        <%= link_to note.full_no, note %>
+        <% if note.quick %> <span class="default-link"><%=t 'activerecord.attributes.inventory_transfer.quick_c' %></span><% end %>
+      </td>
+      <td align="center"><%= formatted_date(note.count_date) unless note.count_date.blank? %></td>
+      <td><%= note.inventory_transfer_type.name unless note.inventory_transfer_type.blank? %></td>
+      <td><%= note.store.name unless note.store.blank? %></td>
+      <td><%= note.product_family.full_name unless note.product_family.blank? %></td>
+      <td align="right"><%= number_with_precision(note.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless note.quantity.blank? %></td>
+      <td>
+        <% if note.quick %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_nc_inventory_transfer_path(note) } unless cannot_edit(note) %>
+        <% else %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => InventoryCount, :path => edit_inventory_transfer_path(note) } unless cannot_edit(note) %>
+        <% end %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => InventoryCount, :path => note, :msg => t("activerecord.models.inventory_transfer.one"), :txt => note.full_no } unless cannot_edit(note) %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @inventory_transfers } %>

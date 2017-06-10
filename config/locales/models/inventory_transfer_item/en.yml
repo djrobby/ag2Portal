@@ -1,0 +1,25 @@
+en:
+  activerecord:
+    models:
+      inventory_transfer_item:
+        zero:  Inventory transfer items
+        one:   Inventory transfer item
+        few:   Inventory transfer items
+        other: Inventory transfer items
+    attributes:
+      inventory_transfer_item:
+        inventory_transfer: "Inventory transfer"
+        inventory_transfer_id: "Inventory transfer"
+        product: "Product"
+        product_id: "Product"
+        product_c: "Code"
+        quantity: "Quantity"
+        quantity_c: "Qty."
+        initial: "Initial"
+        current: "Current"
+        initial_stock_by_store: "Initial now"
+        current_stock_by_store: "Current now"
+        price: "WAP"
+        average_price: "Current WAP"
+        difference: "Difference"
+        difference_c: "Dif."

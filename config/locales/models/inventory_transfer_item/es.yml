@@ -1,0 +1,25 @@
+es:
+  activerecord:
+    models:
+      inventory_transfer_item:
+        zero:  Items de traspaso de inventario
+        one:   Item de traspaso de inventario
+        few:   Items de traspaso de inventario
+        other: Items de traspaso de inventario
+    attributes:
+      inventory_transfer_item:
+        inventory_transfer: "Traspaso de inventario"
+        inventory_transfer_id: "Traspaso de inventario"
+        product: "Producto"
+        product_id: "Producto"
+        product_c: "Cód."
+        quantity: "Cantidad"
+        quantity_c: "Cant."
+        initial: "Inicial"
+        current: "Actual"
+        initial_stock_by_store: "Inicial ahora"
+        current_stock_by_store: "Actual ahora"
+        price: "PMP"
+        average_price: "PMP Actual"
+        difference: "Diferencia"
+        difference_c: "Dif."

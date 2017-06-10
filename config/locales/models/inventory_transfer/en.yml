@@ -1,0 +1,25 @@
+en:
+  activerecord:
+    models:
+      inventory_transfer:
+        zero:  Inventory transfers
+        one:   Inventory transfer
+        few:   Inventory transfers
+        other: Inventory transfers
+    attributes:
+      inventory_transfer:
+        transfer_no: "No."
+        transfer_no_report: "No"
+        transfer_date: "Date"
+        outbound_store: "Outbound store"
+        outbound_store_id: "Outbound store"
+        inbound_store: "Inbound store"
+        inbound_store_id: "Inbound store"
+        organization: "Organization"
+        organization_id: "Organization"
+        remarks: "Remarks"
+        office: "Office"
+        company: "Company"
+        quantity: "Articles"
+        approval_date: "Approved on"
+        approver: "Approved by"
