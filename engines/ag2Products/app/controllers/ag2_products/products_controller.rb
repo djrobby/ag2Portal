@@ -266,15 +266,24 @@ module Ag2Products
     # GET /receipts_deliveries.json
     def receipts_deliveries
       @product = Product.find(params[:id])
+      @stores = stores_dropdown if @stores.nil?
+      store = params[:Store]
       from = params[:from]
       to = params[:to]
       # OCO
       init_oco if !session[:organization]
       # Receipts, Deliveries & Counts
-      #@receipts = product.receipt_note_items.includes(:receipt_note).order(:receipt_date)
       @receipts = @product.receipt_note_items.includes(:receipt_note, :store).order('receipt_notes.receipt_date desc, receipt_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
       @deliveries = @product.delivery_note_items.includes(:delivery_note, :store).order('delivery_notes.delivery_date desc, delivery_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
       @counts = @product.inventory_count_items.includes(inventory_count: [:store, :inventory_count_type]).order('inventory_counts.count_date desc, inventory_count_items.id desc').paginate(:page => params[:page], :per_page => per_page)
+      # Filter by store
+      if (!store.nil? && store != "")
+        store = store.to_i
+        @receipts = @receipts.where('receipt_note_items.store_id = ?', store)
+        @deliveries = @deliveries.where('delivery_note_items.store_id = ?', store)
+        @counts = @counts.where('inventory_counts.store_id = ?', store)
+      end
+      # Filter by dates
       if (!from.nil? && from != "") && (!to.nil? && to != "")
         from = from.to_date
         to = to.to_date
@@ -384,8 +393,52 @@ module Ag2Products
       _numbers = _numbers.blank? ? no : _numbers
     end
 
+    def stores_dropdown
+      _array = []
+      _stores = nil
+      _store_offices = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _stores = Store.where(office_id: session[:office].to_i)
+        _store_offices = StoreOffice.where("office_id = ?", session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = Store.where(company_id: session[:company].to_i)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _stores = Store.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+          _store_offices = StoreOffice.where("office_id IN (?)", _offices)
+        else
+          _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i) : Store.order
+        end
+      end
+
+      # Returning founded stores
+      ret_array(_array, _stores, 'id')
+      ret_array(_array, _store_offices, 'store_id')
+      _stores = Store.where(id: _array).order(:name)
+    end
+
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
     end
 
     # Keeps filter state

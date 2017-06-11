@@ -53,6 +53,28 @@
   </li>
   <li class="span4">
     <% if (session[:resolution] == "LD")%>
+    <a href="<%= inventory_transfers_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Transfers.png" width="48" height="48" alt="ag2InventoryTransfers" /><h5 class="h5-narrow"><%=t ".inventory_transfers" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= inventory_transfers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Transfers.png" width="96" height="96" alt="ag2InventoryTransfers" /><h5 class="h5-narrow"><%=t ".inventory_transfers" %></h5></a>
+    <% else %>
+    <a href="<%= inventory_transfers_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Transfers.png" width="128" height="128" alt="ag2InventoryTransfers" /><h5 class="h5-narrow"><%=t ".inventory_transfers" %></h5></a>
+    <% end %>
+  </li>
+</ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 3 -->
+  <li class="span2"></li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/icon/ag2Stores.png" width="48" height="48" alt="ag2Stores" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2Stores.png" width="96" height="96" alt="ag2Stores" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
+    <% else %>
+    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/pict/ag2Stores.png" width="128" height="128" alt="ag2Stores" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span4">
+    <% if (session[:resolution] == "LD")%>
     <a href="<%= ag2_products.ag2_products_track_path %>" class="thumbnail centered"><img src="/assets/icon/ag2LogisticsTrack.png" width="48" height="48" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a href="<%= ag2_products.ag2_products_track_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2LogisticsTrack.png" width="96" height="96" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
@@ -60,9 +82,11 @@
     <a href="<%= ag2_products.ag2_products_track_path %>" class="thumbnail centered"><img src="/assets/pict/ag2LogisticsTrack.png" width="128" height="128" alt="Control Tracking" /><h5 class="h5-narrow"><%=t ".control" %></h5></a>
     <% end %>
   </li>
+  <li class="span2"></li>
 </ul><!-- /.thumbnails -->
 <ul class="thumbnails">
-  <!-- Apps 3 -->
+  <!-- Apps 4 -->
+  <li class="span1"></li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
     <a href="<%= product_families_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".families" %></h5></a>
@@ -101,15 +125,6 @@
   </li>
   <li class="span2">
     <% if (session[:resolution] == "LD")%>
-    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
-    <% elsif session[:resolution] == "SD" %>
-    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
-    <% else %>
-    <a href="<%= stores_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".stores" %></h5></a>
-    <% end %>
-  </li>
-  <li class="span2">
-    <% if (session[:resolution] == "LD")%>
     <a href="<%= inventory_count_types_path %>" class="thumbnail centered"><img src="/assets/icon/TableA.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".inventory_count_types" %></h5></a>
     <% elsif session[:resolution] == "SD" %>
     <a href="<%= inventory_count_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/TableA72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".inventory_count_types" %></h5></a>
@@ -117,4 +132,5 @@
     <a href="<%= inventory_count_types_path %>" class="thumbnail centered"><img src="/assets/pict/TableA96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".inventory_count_types" %></h5></a>
     <% end %>
   </li>
+  <li class="span1"></li>
 </ul><!-- /.thumbnails -->

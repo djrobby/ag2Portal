@@ -188,6 +188,8 @@ module Ag2Products
     # GET /receipts_deliveries.json
     def receipts_deliveries
       @store = Store.find(params[:id])
+      @products = products_dropdown if @products.nil?
+      product = params[:Product]
       from = params[:from]
       to = params[:to]
       # OCO
@@ -196,6 +198,14 @@ module Ag2Products
       @receipts = @store.receipt_note_items.includes(:receipt_note, :store).order('receipt_notes.receipt_date desc, receipt_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
       @deliveries = @store.delivery_note_items.includes(:delivery_note, :store).order('delivery_notes.delivery_date desc, delivery_note_items.id desc').paginate(:page => params[:page], :per_page => per_page)
       @counts = @store.inventory_count_items.includes(inventory_count: [:store, :inventory_count_type]).order('inventory_counts.count_date desc, inventory_count_items.id desc').paginate(:page => params[:page], :per_page => per_page)
+      # Filter by product
+      if (!product.nil? && product != "")
+        product = product.to_i
+        @receipts = @receipts.where('receipt_note_items.product_id = ?', product)
+        @deliveries = @deliveries.where('delivery_note_items.product_id = ?', product)
+        @counts = @counts.where('inventory_count_items.product_id = ?', product)
+      end
+      # Filter by dates
       if (!from.nil? && from != "") && (!to.nil? && to != "")
         from = from.to_date
         to = to.to_date
@@ -216,7 +226,7 @@ module Ag2Products
 
       respond_to do |format|
         format.html # receipts_deliveries.html.erb
-        format.json { render json: { :store => @store, :receipts => @receipts, :deliveries => @deliveries } }
+        format.js
       end
     end
 
@@ -250,7 +260,11 @@ module Ag2Products
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:name) : Supplier.order(:name)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:name) : Supplier.order(:name)
+    end
+
+    def products_dropdown
+      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
     end
 
     def companies_dropdown_edit(_organization)
@@ -280,7 +294,7 @@ module Ag2Products
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)
+      Office.where(company_id: _company).order(:name)
     end
 
     # Keeps filter state

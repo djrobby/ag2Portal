@@ -107,8 +107,9 @@
             <li><%= link_to_resetting_filters(Ag2Products, ag2_products.purchase_orders_path, '<i class="ico-orders"></i>'.html_safe + " " + t("ag2_products.home.index.purchase_orders")) %></li>
             <li><%= link_to_resetting_filters(Ag2Products, ag2_products.receipt_notes_path, '<i class="ico-receipts"></i>'.html_safe + " " + t("ag2_products.home.index.receipt_notes")) %></li>
             <li><%= link_to_resetting_filters(Ag2Products, ag2_products.delivery_notes_path, '<i class="ico-deliveries"></i>'.html_safe + " " + t("ag2_products.home.index.delivery_notes")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Products, ag2_products.inventory_transfers_path, '<i class="ico-transfers"></i>'.html_safe + " " + t("ag2_products.home.index.inventory_transfers")) %></li>
+            <li><%= link_to_resetting_filters(Ag2Products, ag2_products.stores_path, '<i class="ico-stores"></i>'.html_safe + " " + t("ag2_products.home.index.stores")) %></li>
             <li><%= link_to_resetting_filters(Ag2Products, ag2_products.product_families_path, '<i class="ico-table"></i>'.html_safe + " " + t("ag2_products.home.index.families")) %></li>
-            <li><%= link_to_resetting_filters(Ag2Products, ag2_products.stores_path, '<i class="ico-table"></i>'.html_safe + " " + t("ag2_products.home.index.stores")) %></li>
             <li class="divider"></li>
             <li><a href="<%= ag2_products.ag2_products_track_path %>"><i class="ico-track"></i> <%=t "control_tracking.track" %></a></li>
           </ul>

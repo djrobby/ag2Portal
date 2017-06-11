@@ -1,5 +1,13 @@
 <script>
+  var changing = false;
+
   $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      allowClear: true
+    });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
@@ -8,20 +16,39 @@
     });
   }); 
 
-  $(document).ajaxStart(function() {
-    // show loader on start
-    if (changing == false) {
-      $("#div_table").html("");
-      $("#loader").show();
-    }
-  }).ajaxSuccess(function() {
+  // $(document).ajaxStart(function() {
+  //   // show loader on start
+  //   if (changing == false) {
+  //     $("#div_table").html("");
+  //     $("#loader").show();
+  //   }
+  // });
+  $(document).ajaxSuccess(function() {
     // hide loader on success
     $("#loader").hide();
   });
 
+  $(window).bind("load", function() {
+    $("#Product").select2("val", "<%= params[:Product] %>");
+  });
+
   jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function(event) {
+      // event.preventDefault();
+      $( "#store_receipts_deliveries_form").submit();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
+      $("#Product").select2("val", "");
       $("#from").val("");
       $("#to").val("");
       // no AJAX
@@ -55,13 +82,16 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <!-- Refresh -->
-        <%= link_to receipts_deliveries_products_path(id: @product), title: I18n.t(:refresh), class: "icon-refresh-link", :remote => true do %> <i class="icon-refresh"></i> <% end %>
+        <%= link_to "javascript:void(0)", title: I18n.t(:refresh), class: "icon-refresh-link", :remote => true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
-        <%= form_tag "receipts_deliveries", :method => 'get', :remote => true do %>
+        <%= form_tag "receipts_deliveries", :id => 'store_receipts_deliveries_form', :method => 'get', :remote => true do %>
         <!-- Id -->
         <%= hidden_field_tag "id", params[:id] %>
+        <!-- Product -->
+        <%= label_tag 'label_product', t("activerecord.attributes.stock.product"), :class => 'form-label' %>
+        <%= select_tag "Product", options_from_collection_for_select(@products, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Dates -->
-        <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label' %>
+        <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag "from", params[:from], :class =>  'x-large-text-field-text-field date_picker' %>
         <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
         <%= text_field_tag "to", params[:to], :class =>  'x-large-text-field-text-field date_picker' %>

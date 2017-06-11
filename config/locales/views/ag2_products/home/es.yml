@@ -18,3 +18,4 @@ es:
         receipt_notes: "Notas de Recepción"
         delivery_notes: "Notas de Entrega"
         inventory_counts: "Recuentos de Inventario"
+        inventory_transfers: "Traspasos de Inventario"
