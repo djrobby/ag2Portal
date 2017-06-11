@@ -262,7 +262,7 @@ module Ag2Products
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = InventoryTransfer.search do
-        with :store_id, current_stores
+        with :outbound_store_id, current_stores
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -275,7 +275,7 @@ module Ag2Products
           end
         end
         if !store.blank?
-          with :store_id, store
+          with :outbound_store_id, store
         end
         data_accessor_for(InventoryTransfer).include = [:store]
         order_by :sort_no, :desc

@@ -29,18 +29,14 @@
 
   $(window).bind("load", function() {
     $("#No").val("<%= params[:No] %>");
-    $("#Type").select2("val", "<%= params[:Type] %>");
     $("#Store").select2("val", "<%= params[:Store] %>");
-    $("#Family").select2("val", "<%= params[:Family] %>");
   });
 
   jQuery(function($) {
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#No").val("");
-      $("#Type").select2("val", "");
       $("#Store").select2("val", "");
-      $("#Family").select2("val", "");
       $("#search").val("");
       // no AJAX
       //_thisForm.submit();
@@ -77,17 +73,14 @@
         <!-- Search form -->
         <%= form_tag "inventory_transfers", :method => 'get', :remote => true do %>
         <!-- No -->
-        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.count_no"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.transfer_no"), nil, :class => 'form-label' %>
         <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
-        <!-- Type -->
-        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.inventory_transfer_type"), nil, :class => 'form-label' %>
-        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Store -->
-        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.store"), nil, :class => 'form-label-under-sel2' %>
+        <!-- Outbound store -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.outbound_store"), nil, :class => 'form-label' %>
         <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
-        <!-- Family -->
-        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.product_family"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Family", options_from_collection_for_select(@families, "id", "full_name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Inbound store -->
+        <%= label_tag I18n.t("activerecord.attributes.inventory_transfer.inbound_store"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_products.inventory_transfers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
@@ -97,12 +90,7 @@
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => new_inventory_transfer_path, :txt => t(".btn_new") } %>
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryCount, :path => inventory_transfers_new_nc_path, :txt => t(".btn_new_nc") } %>
-        <% if can? :update, InventoryCount %>
-        <button id="new_from_family" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_family") %></button>
-        <br /><br />
-        <% end %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => InventoryTransfer, :path => new_inventory_transfer_path, :txt => t(".btn_new") } %>
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
         <br /><br />
@@ -119,5 +107,3 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
-<!-- Modal: New offer from request -->
-<%= render 'new_offer_from_family' %>
