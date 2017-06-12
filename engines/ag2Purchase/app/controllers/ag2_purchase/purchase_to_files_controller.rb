@@ -24,13 +24,26 @@ module Ag2Purchase
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
       @json_data = { "DataExport" => message, "Result" => "OK" }
 
-      @suppliers = Supplier.by_code
-      # render text: Supplier.to_csv(@suppliers)
-      save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(@suppliers))
+      suppliers = Supplier.by_code
+      save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
+      render json: @json_data
+    rescue
+      message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
+      @json_data = { "DataExport" => message, "Result" => "ERROR" }
       render json: @json_data
     end
 
     def export_supplier_invoices
+      message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
+      @json_data = { "DataExport" => message, "Result" => "OK" }
+
+      supplier_invoices = SupplierInvoice.by_created_at
+      save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
+      render json: @json_data
+    rescue
+      message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
+      @json_data = { "DataExport" => message, "Result" => "ERROR" }
+      render json: @json_data
     end
 
     # Generate & export XML file
