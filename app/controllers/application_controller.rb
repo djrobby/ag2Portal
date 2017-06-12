@@ -899,8 +899,8 @@ end
     Dir.mkdir(dir) unless File.exists?(dir)
   end
 
-  # Save local XML file
-  def save_xml_file(file_name, xml)
+  # Save local file
+  def save_local_file(file_name, xml)
     file_to_upload = File.open(file_name, "w")
     file_to_upload.write(xml)
     file_to_upload.close()

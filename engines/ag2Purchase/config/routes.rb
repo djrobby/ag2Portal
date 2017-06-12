@@ -3,6 +3,11 @@ Ag2Purchase::Engine.routes.draw do
     # Get
     get "home/index"
 
+    # Routes to export
+    match 'purchase_to_file' => 'purchase_to_files#index', :as => :purchase_to_file
+    match 'export_suppliers', :controller => 'purchase_to_files', :action => 'export_suppliers'
+    match 'export_supplier_invoices', :controller => 'purchase_to_files', :action => 'export_supplier_invoices'
+
     # Routes to Control&Tracking
     match 'ag2_purchase_track' => 'ag2_purchase_track#index', :as => :ag2_purchase_track
     #
@@ -363,6 +368,7 @@ Ag2Purchase::Engine.routes.draw do
     resources :offers
     resources :supplier_invoices
     resources :supplier_payments
+    resources :purchase_to_files
 
     # Root
     root :to => 'home#index'

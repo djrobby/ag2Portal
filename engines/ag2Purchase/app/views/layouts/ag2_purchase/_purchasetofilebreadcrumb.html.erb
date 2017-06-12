@@ -1,0 +1,17 @@
+<% content_for :title, "aGestiona2 | ag2PurchaseToFiles" %>
+<% content_for :icon, "/assets/icon/ag2BillsToFile.png" %>
+<% content_for :alt, "ag2PurchaseToFiles" %>
+
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_purchase.root_path %>">ag2Purchase</a><span class="divider">></span>
+  </li>
+  <li>
+    <%= t "ag2_purchase.home.index.purchase_to_file" %>
+  </li>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_purchase.root_path %>">&#215;</a>
+</ul>

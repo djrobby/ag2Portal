@@ -189,6 +189,157 @@ class Supplier < ActiveRecord::Base
   end
 
   #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    column_names = [I18n.t('activerecord.csv_sage200.supplier.c001'),
+                    I18n.t('activerecord.csv_sage200.supplier.c002'),
+                    I18n.t('activerecord.csv_sage200.supplier.c003'),
+                    I18n.t('activerecord.csv_sage200.supplier.c004'),
+                    I18n.t('activerecord.csv_sage200.supplier.c005'),
+                    I18n.t('activerecord.csv_sage200.supplier.c006'),
+                    I18n.t('activerecord.csv_sage200.supplier.c007'),
+                    I18n.t('activerecord.csv_sage200.supplier.c008'),
+                    I18n.t('activerecord.csv_sage200.supplier.c009'),
+                    I18n.t('activerecord.csv_sage200.supplier.c010'),
+                    I18n.t('activerecord.csv_sage200.supplier.c011'),
+                    I18n.t('activerecord.csv_sage200.supplier.c012'),
+                    I18n.t('activerecord.csv_sage200.supplier.c013'),
+                    I18n.t('activerecord.csv_sage200.supplier.c014'),
+                    I18n.t('activerecord.csv_sage200.supplier.c015'),
+                    I18n.t('activerecord.csv_sage200.supplier.c016'),
+                    I18n.t('activerecord.csv_sage200.supplier.c017'),
+                    I18n.t('activerecord.csv_sage200.supplier.c018'),
+                    I18n.t('activerecord.csv_sage200.supplier.c019'),
+                    I18n.t('activerecord.csv_sage200.supplier.c020'),
+                    I18n.t('activerecord.csv_sage200.supplier.c021'),
+                    I18n.t('activerecord.csv_sage200.supplier.c022'),
+                    I18n.t('activerecord.csv_sage200.supplier.c023'),
+                    I18n.t('activerecord.csv_sage200.supplier.c024'),
+                    I18n.t('activerecord.csv_sage200.supplier.c025'),
+                    I18n.t('activerecord.csv_sage200.supplier.c026'),
+                    I18n.t('activerecord.csv_sage200.supplier.c027'),
+                    I18n.t('activerecord.csv_sage200.supplier.c028'),
+                    I18n.t('activerecord.csv_sage200.supplier.c029'),
+                    I18n.t('activerecord.csv_sage200.supplier.c030'),
+                    I18n.t('activerecord.csv_sage200.supplier.c031'),
+                    I18n.t('activerecord.csv_sage200.supplier.c032'),
+                    I18n.t('activerecord.csv_sage200.supplier.c033'),
+                    I18n.t('activerecord.csv_sage200.supplier.c034'),
+                    I18n.t('activerecord.csv_sage200.supplier.c035'),
+                    I18n.t('activerecord.csv_sage200.supplier.c036'),
+                    I18n.t('activerecord.csv_sage200.supplier.c037'),
+                    I18n.t('activerecord.csv_sage200.supplier.c038'),
+                    I18n.t('activerecord.csv_sage200.supplier.c039'),
+                    I18n.t('activerecord.csv_sage200.supplier.c040'),
+                    I18n.t('activerecord.csv_sage200.supplier.c041'),
+                    I18n.t('activerecord.csv_sage200.supplier.c042'),
+                    I18n.t('activerecord.csv_sage200.supplier.c043'),
+                    I18n.t('activerecord.csv_sage200.supplier.c044'),
+                    I18n.t('activerecord.csv_sage200.supplier.c045'),
+                    I18n.t('activerecord.csv_sage200.supplier.c046'),
+                    I18n.t('activerecord.csv_sage200.supplier.c047'),
+                    I18n.t('activerecord.csv_sage200.supplier.c048'),
+                    I18n.t('activerecord.csv_sage200.supplier.c049'),
+                    I18n.t('activerecord.csv_sage200.supplier.c050'),
+                    I18n.t('activerecord.csv_sage200.supplier.c051'),
+                    I18n.t('activerecord.csv_sage200.supplier.c052'),
+                    I18n.t('activerecord.csv_sage200.supplier.c053'),
+                    I18n.t('activerecord.csv_sage200.supplier.c054'),
+                    I18n.t('activerecord.csv_sage200.supplier.c055'),
+                    I18n.t('activerecord.csv_sage200.supplier.c056'),
+                    I18n.t('activerecord.csv_sage200.supplier.c057'),
+                    I18n.t('activerecord.csv_sage200.supplier.c058'),
+                    I18n.t('activerecord.csv_sage200.supplier.c059'),
+                    I18n.t('activerecord.csv_sage200.supplier.c060'),
+                    I18n.t('activerecord.csv_sage200.supplier.c061'),
+                    I18n.t('activerecord.csv_sage200.supplier.c062'),
+                    I18n.t('activerecord.csv_sage200.supplier.c063'),
+                    I18n.t('activerecord.csv_sage200.supplier.c064'),
+                    I18n.t('activerecord.csv_sage200.supplier.c065'),
+                    I18n.t('activerecord.csv_sage200.supplier.c066'),
+                    I18n.t('activerecord.csv_sage200.supplier.c067'),
+                    I18n.t('activerecord.csv_sage200.supplier.c068'),
+                    I18n.t('activerecord.csv_sage200.supplier.c069'),
+                    I18n.t('activerecord.csv_sage200.supplier.c070')]
+    CSV.generate(headers: true) do |csv|
+      csv << column_names
+      array.each do |i|
+        csv << ['1',  # 001
+                'P',  # 002
+                i.supplier_code,  # 003
+                nil,  # 004
+                nil,  # 005
+                nil,  # 006
+                nil,  # 007
+                nil,  # 008
+                nil,  # 009
+                nil,  # 010
+                nil,  # 011
+                nil,  # 012
+                nil,  # 013
+                nil,  # 014
+                nil,  # 015
+                nil,  # 016
+                nil,  # 017
+                nil,  # 018
+                nil,  # 019
+                nil,  # 020
+                nil,  # 021
+                nil,  # 022
+                nil,  # 023
+                nil,  # 024
+                nil,  # 025
+                nil,  # 026
+                nil,  # 027
+                nil,  # 028
+                nil,  # 029
+                nil,  # 030
+                nil,  # 031
+                nil,  # 032
+                nil,  # 033
+                nil,  # 034
+                nil,  # 035
+                nil,  # 036
+                nil,  # 037
+                nil,  # 038
+                nil,  # 039
+                nil,  # 040
+                nil,  # 041
+                nil,  # 042
+                nil,  # 043
+                nil,  # 044
+                nil,  # 045
+                nil,  # 046
+                nil,  # 047
+                nil,  # 048
+                nil,  # 049
+                nil,  # 050
+                nil,  # 051
+                nil,  # 052
+                nil,  # 053
+                nil,  # 054
+                nil,  # 055
+                nil,  # 056
+                nil,  # 057
+                nil,  # 058
+                nil,  # 059
+                nil,  # 060
+                nil,  # 061
+                nil,  # 062
+                nil,  # 063
+                nil,  # 064
+                nil,  # 065
+                nil,  # 066
+                nil,  # 067
+                nil,  # 068
+                nil,  # 069
+                nil]  # 070
+      end # array.each
+    end # CSV.generate
+  end
+
+  #
   # Records navigator
   #
   def to_first

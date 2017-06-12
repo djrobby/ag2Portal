@@ -1,0 +1,40 @@
+es:
+  ag2_purchase:
+    purchase_to_files:
+      index:
+        title: "ag2DataExport"
+        task: "Generador de Archivos de Compras"
+        description: "ag2DataExport generará archivos de compras en formato CSV, para ser enviados a otras plataformas o aplicaciones, usando datos actualizados."
+        description_html: "Indica los datos que quieras buscar en el cuadro Filtros, y luego pulsa sobre el botón <b>Sí</b> para procesar."
+        do_not_interrupt: "Esta operación puede tardar un rato: ¡No la interrumpas una vez puesta en marcha!"
+        caution: "Filtros"
+        warning: "¡Esta acción no se puede deshacer!"
+        are_you_sure: "¿Estás seguro/a de continuar?"
+        btn_yes: "Sí, adelante"
+        btn_no: "No, gracias"
+        message: "Espera, exportando..."
+        go_to_target: "¿Deseas ver a los trabajadores actualizados?"
+        result_ok_message_html: "Generador de Archivos de Compras ha generado el fichero correctamente."
+        result_ok_with_error_message_html: "<b>Generador de Archivos de Compras finalizó con incidencias:</b><br/>"
+        result_error_message_html: "<b>Error: ¡Generador de Archivos de Compras finalizó inesperadamente!</b>"
+        back_to_root: "Volver a ag2Purchase"
+        back_to_management: "Volver a Facturación"
+        label_export: "Tipo"
+        label_biller: "Empresa"
+        label_from: "Desde"
+        label_to: "Hasta"
+      show:
+        title: "Tipo de Factura"
+        btn_edit: "Editar Tipo de Factura"
+        btn_delete: "Borrar Tipo de Factura"
+        return_to: "Volver a Tipo de Factura"
+      edit:
+        title: "Editar Tipo de Factura"
+        btn_show: "Ver Tipo de Factura"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nuevo Tipo de Factura"
+      back_to_main_page: "Volver a Tipos de Factura"
+      suppliers_file: "Proveedores"
+      invoices_file: "Facturas"
