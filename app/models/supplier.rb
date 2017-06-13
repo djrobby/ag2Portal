@@ -72,6 +72,8 @@ class Supplier < ActiveRecord::Base
   #
   scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
   scope :actives, -> { where(active: true).by_code }
+  scope :active_by_organization, -> o { where(active: true, organization_id: o).by_code }
+  scope :by_organization_and_creation_date, -> o, f, t { where("organization_id = ? AND created_at BETWEEN ? AND ?", o, f, t).by_code }
 
   # Callbacks
   before_validation :fields_to_uppercase

@@ -17,15 +17,40 @@ require_dependency "ag2_purchase/application_controller"
 module Ag2Purchase
   class PurchaseToFilesController < ApplicationController
     before_filter :authenticate_user!
-    before_filter :set_defaults
+    # before_filter :set_defaults
+    before_filter :set_params
     skip_load_and_authorize_resource :only => [:export_suppliers, :export_supplier_invoices]
 
     def export_suppliers
+      message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
+      @json_data = { "DataExport" => message, "Result" => "ERROR" }
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        render json: @json_data and return
+      end
+      # Search necessary data
+      organization = Company.find(@company_id).organization_id rescue nil
+      if organization.blank?
+        render json: @json_data and return
+      end
+
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
       @json_data = { "DataExport" => message, "Result" => "OK" }
 
-      suppliers = Supplier.by_code
-      save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
+      suppliers = Supplier.by_organization_and_creation_date(organization, from, to)
+      if suppliers.blank?
+        message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_with_error_message_html")
+        @json_data = { "DataExport" => message, "Result" => "ERROR" }
+        render json: @json_data and return
+      end
+      upload_xml_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
+      @bl_file = '/uploads/SIS_CLIENTES_PROVEEDORES.csv'
+      # save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
       render json: @json_data
     rescue
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
@@ -34,10 +59,40 @@ module Ag2Purchase
     end
 
     def export_supplier_invoices
+      message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
+      @json_data = { "DataExport" => message, "Result" => "ERROR" }
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        render json: @json_data and return
+      end
+      # Search necessary data
+      organization = nil
+      projects = nil
+      company = Company.find(@company_id) rescue nil
+      if company.blank?
+        render json: @json_data and return
+      else
+        organization = company.organization_id rescue nil
+        projects = company.projects rescue nil
+        if organization.blank? || projects.blank?
+          render json: @json_data and return
+        end
+      end
+
+      # Format dates
+      from = Time.parse(@from).strftime("%Y-%m-%d")
+      to = Time.parse(@to).strftime("%Y-%m-%d")
+
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
       @json_data = { "DataExport" => message, "Result" => "OK" }
 
-      supplier_invoices = SupplierInvoice.by_created_at
+      supplier_invoices = SupplierInvoice.by_projects_and_creation_date(projects, from, to)
+      if supplier_invoices.blank?
+        message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_with_error_message_html")
+        @json_data = { "DataExport" => message, "Result" => "ERROR" }
+        render json: @json_data and return
+      end
       save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
       render json: @json_data
     rescue
@@ -401,6 +456,14 @@ module Ag2Purchase
       _array = _array << t("ag2_purchase.purchase_to_files.suppliers_file")
       _array = _array << t("ag2_purchase.purchase_to_files.invoices_file")
       _array
+    end
+
+    def set_params
+      @company_id = params[:company]
+      @from = params[:from]
+      @to = params[:to]
+
+      @company_id = @company_id.to_i
     end
 
     def set_defaults

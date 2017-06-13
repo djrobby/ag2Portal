@@ -12,6 +12,14 @@
       allowClear: true
     });
 
+    // Set default dates
+    if ($('#From').val() == "") {
+      $('#From').datepicker('setValue', es_date(new Date()));
+    }
+    if ($('#To').val() == "") {
+      $('#To').datepicker('setValue', es_date(new Date()));
+    }
+
     //$("#progressbar").css("width", "0%");
     $("#message_area").children().hide();
   });
@@ -19,29 +27,34 @@
   jQuery(function($) {
     // when #data_export_btn is clicked
     $("#data_export_btn").click(function() {
-      $('#message_area').children().show();
-      $('#buttons').children().hide();
       // Choose method to execute based on selected type
       var method = 'export_suppliers';
       var type = $('#Export :selected').index();
-      if (type == "")
-        type = 0;
+      if (type == "") type = 0;
       if (type == 1) {
         method = 'export_supplier_invoices';
       }
+      // Parameters
+      var biller = $('#Biller :selected').val();
+      var from = $('#From').val();
+      var to = $('#To').val();
+      if ((biller == "") || (from == "") || (to == ""))
+        return;
       // make a POST call and executes action
-      jQuery.getJSON(method, function(data) {
+      $('#message_area').children().show();
+      $('#buttons').children().hide();
+      jQuery.getJSON(method + "?company=" + biller + "&from=" + from + "&to=" + to, function(data) {
         $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
-          $('#message_area').children().hide();
-          // $("#message").html('<%#= link_to I18n.t("ag2_gest.bills_to_files.index.go_to_target"), bill_management_path %>');
+          // $("#message").html('<%#= link_to I18n.t("ag2_purchase.purchase_to_files.index.go_to_target"), "#{@bl_file}" %>');
+          $("#message").html('<%= link_to I18n.t("ag2_purchase.purchase_to_files.index.go_to_target"), "#{@bl_file}" %>');
+          // $('#message_area').children().hide();
           $("#progressbar").hide();
         }
         else {
           $('#message_area').children().hide();
         }
-        // $("#data_export_btn").text(I18n["try_again"]);
         $('#buttons').children().show();
       })
       return false;
@@ -65,6 +78,9 @@
       <p>
         <%=t '.description' %>
         <%=t '.description_html' %>
+      </p>
+      <p class="track-caution">
+        <%= t '.dates_caution' %>
       </p>
       <p class="bolded">
         <%=t '.do_not_interrupt' %>
