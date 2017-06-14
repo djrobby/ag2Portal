@@ -54,6 +54,14 @@ class SupplierBankAccount < ActiveRecord::Base
     full_name = e_format
   end
 
+  def ccc_dc
+    account_no[0..1]
+  end
+
+  def ccc_account_no
+    account_no[2..-1]
+  end
+
   def e_format
     _f = ""
     if !self.country.blank?
@@ -114,11 +122,11 @@ class SupplierBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     if !_f.blank?
       _f = "IBAN " + _f

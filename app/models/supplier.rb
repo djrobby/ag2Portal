@@ -118,6 +118,18 @@ class Supplier < ActiveRecord::Base
     full_name
   end
 
+  def partial_name40
+    full_name = full_code
+    if !self.name.blank?
+      full_name += " " + self.name[0,40]
+    end
+    full_name
+  end
+
+  def name40
+    !self.name.blank? ? self.name[40] : ''
+  end
+
   def full_code
     # Supplier code (Organization id & Main activity & sequential number) => OOOO-AAAA-NNNNNN
     supplier_code.blank? || supplier_code == "$ERR" ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
@@ -183,6 +195,10 @@ class Supplier < ActiveRecord::Base
     _ret
   end
 
+  def ine_town_code
+    town.ine_cmun + town.ine_dc
+  end
+
   # Obtaining ledger account
   def ledger_account_id_by_company_id(company_id=nil)
     if company_id.nil?
@@ -193,6 +209,38 @@ class Supplier < ActiveRecord::Base
   end
   def ledger_account_code(company_id=nil)
     LedgerAccount.find(ledger_account_id_by_company_id(company_id)).code rescue nil
+  end
+
+  def european_fiscal_id
+    country.code + fiscal_id
+  end
+
+  # Obtaining active bank account
+  def active_bank_account
+    supplier_bank_accounts.where(ending_at: nil).order(:starting_at).last
+  end
+  def active_bank_account_bank_code
+    active_bank_account.bank.code rescue nil
+  end
+  def active_bank_account_bank_code
+    active_bank_account.bank.code rescue nil
+  end
+  def active_bank_account_office_code
+    active_bank_account.office.code rescue nil
+  end
+  def active_bank_account_ccc_dc
+    active_bank_account.ccc_dc rescue nil
+  end
+  def active_bank_account_ccc_account_no
+    active_bank_account.ccc_account_no rescue nil
+  end
+
+  # Obtaining entity type
+  def entity_type
+    entity.entity_type.id rescue 1
+  end
+  def entity_type_letter
+    entity_type == 1 ? 'F' : 'J'
   end
 
   #
@@ -282,50 +330,50 @@ class Supplier < ActiveRecord::Base
       array.each do |i|
         lac = ledger_account_code(company_id)
         if !lac.nil?
-          csv << ['1',  # 001
-                  'P',  # 002
-                  i.supplier_code,  # 003
-                  lac,              # 004
+          csv << ['1',                                    # 001
+                  'P',                                    # 002
+                  i.supplier_code,                        # 003
+                  lac,                                    # 004
                   nil,  # 005
                   nil,  # 006
                   nil,  # 007
-                  nil,  # 008
-                  nil,  # 009
-                  nil,  # 010
-                  nil,  # 011
+                  i.country.code,                         # 008
+                  i.fiscal_id,                            # 009
+                  i.european_fiscal_id,                   # 010
+                  i.name40,                               # 011
                   nil,  # 012
                   nil,  # 013
                   nil,  # 014
                   nil,  # 015
                   nil,  # 016
-                  nil,  # 017
-                  nil,  # 018
-                  nil,  # 019
-                  nil,  # 020
+                  i.name,                                 # 017
+                  i.street_type.street_type_code,         # 018
+                  i.street_name,                          # 019
+                  i.street_number,                        # 020
                   nil,  # 021
-                  nil,  # 022
-                  nil,  # 023
-                  nil,  # 024
+                  i.building,                             # 022
+                  i.floor,                                # 023
+                  i.floor_office,                         # 024
                   nil,  # 025
-                  nil,  # 026
-                  nil,  # 027
-                  nil,  # 028
-                  nil,  # 029
-                  nil,  # 030
-                  nil,  # 031
-                  nil,  # 032
-                  nil,  # 033
+                  i.address_1,                            # 026
+                  i.zipcode.zipcode,                      # 027
+                  i.ine_town_code,                        # 028
+                  i.town.name,                            # 029
+                  i.province.ine_cpro,                    # 030
+                  i.province.name,                        # 031
+                  i.country.code,                         # 032
+                  i.country.name,                         # 033
                   nil,  # 034
                   nil,  # 035
                   nil,  # 036
                   nil,  # 037
                   nil,  # 038
                   nil,  # 039
-                  nil,  # 040
-                  nil,  # 041
-                  nil,  # 042
-                  nil,  # 043
-                  nil,  # 044
+                  i.active_bank_account_bank_code,        # 040
+                  i.active_bank_account_bank_office_code, # 041
+                  i.active_bank_account_ccc_dc,           # 042
+                  i.active_bank_account_ccc_account_no,   # 043
+                  i.active_bank_account.e_format,         # 044
                   nil,  # 045
                   nil,  # 046
                   nil,  # 047
@@ -340,13 +388,13 @@ class Supplier < ActiveRecord::Base
                   nil,  # 056
                   nil,  # 057
                   nil,  # 058
-                  nil,  # 059
+                  i.province.territory_code,              # 059
                   nil,  # 060
-                  nil,  # 061
+                  '1',                                    # 061
                   nil,  # 062
                   nil,  # 063
                   nil,  # 064
-                  nil,  # 065
+                  i.entity_type_letter,                   # 065
                   nil,  # 066
                   nil,  # 067
                   nil,  # 068

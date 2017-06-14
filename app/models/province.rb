@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Province < ActiveRecord::Base
   belongs_to :region
   attr_accessible :ine_cpro, :name, :region_id,
@@ -31,6 +33,24 @@ class Province < ActiveRecord::Base
 
   def name_region_country
     self.name + " (" + self.region.name_and_country + ")"
+  end
+
+  def territory_code
+    _ret = '1'
+    if region.name.upcase.include? 'CANARIAS'
+      _ret = '2'
+    elsif (region.name.upcase.include? 'EUSKADI') || (region.name.upcase.include? 'VASCO')
+      if (self.name.upcase.include? 'ARABA') || (self.name.upcase.include? 'ALAVA') || (self.name.upcase.include? 'ÁLAVA')
+        _ret = '3'
+      elsif (self.name.upcase.include? 'BIZKAIA') || (self.name.upcase.include? 'VIZCAYA')
+        _ret = '4'
+      elsif (self.name.upcase.include? 'GIPUZKOA') || (self.name.upcase.include? 'GUIPUZCOA') || (self.name.upcase.include? 'GUIPÚZCOA')
+        _ret = '5'
+      end
+    elsif region.name.upcase.include? 'NAVARRA'
+      _ret = '6'
+    end
+    _ret
   end
 
   private
