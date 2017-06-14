@@ -183,6 +183,18 @@ class Supplier < ActiveRecord::Base
     _ret
   end
 
+  # Obtaining ledger account
+  def ledger_account_id_by_company_id(company_id=nil)
+    if company_id.nil?
+      ledger_account_id
+    else
+      supplier_ledger_accounts.where(company_id: company_id).first.ledger_account_id rescue ledger_account_id
+    end
+  end
+  def ledger_account_code(company_id=nil)
+    LedgerAccount.find(ledger_account_id_by_company_id(company_id)).code rescue nil
+  end
+
   #
   # Calculated fields
   #
@@ -193,7 +205,7 @@ class Supplier < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
-  def self.to_csv(array)
+  def self.to_csv(array, company_id=nil)
     column_names = [I18n.t('activerecord.csv_sage200.supplier.c001'),
                     I18n.t('activerecord.csv_sage200.supplier.c002'),
                     I18n.t('activerecord.csv_sage200.supplier.c003'),
@@ -266,77 +278,81 @@ class Supplier < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier.c070')]
     CSV.generate(headers: true) do |csv|
       csv << column_names
+      lac = nil
       array.each do |i|
-        csv << ['1',  # 001
-                'P',  # 002
-                i.supplier_code,  # 003
-                nil,  # 004
-                nil,  # 005
-                nil,  # 006
-                nil,  # 007
-                nil,  # 008
-                nil,  # 009
-                nil,  # 010
-                nil,  # 011
-                nil,  # 012
-                nil,  # 013
-                nil,  # 014
-                nil,  # 015
-                nil,  # 016
-                nil,  # 017
-                nil,  # 018
-                nil,  # 019
-                nil,  # 020
-                nil,  # 021
-                nil,  # 022
-                nil,  # 023
-                nil,  # 024
-                nil,  # 025
-                nil,  # 026
-                nil,  # 027
-                nil,  # 028
-                nil,  # 029
-                nil,  # 030
-                nil,  # 031
-                nil,  # 032
-                nil,  # 033
-                nil,  # 034
-                nil,  # 035
-                nil,  # 036
-                nil,  # 037
-                nil,  # 038
-                nil,  # 039
-                nil,  # 040
-                nil,  # 041
-                nil,  # 042
-                nil,  # 043
-                nil,  # 044
-                nil,  # 045
-                nil,  # 046
-                nil,  # 047
-                nil,  # 048
-                nil,  # 049
-                nil,  # 050
-                nil,  # 051
-                nil,  # 052
-                nil,  # 053
-                nil,  # 054
-                nil,  # 055
-                nil,  # 056
-                nil,  # 057
-                nil,  # 058
-                nil,  # 059
-                nil,  # 060
-                nil,  # 061
-                nil,  # 062
-                nil,  # 063
-                nil,  # 064
-                nil,  # 065
-                nil,  # 066
-                nil,  # 067
-                nil,  # 068
-                nil,  # 069
-                nil]  # 070
+        lac = ledger_account_code(company_id)
+        if !lac.nil?
+          csv << ['1',  # 001
+                  'P',  # 002
+                  i.supplier_code,  # 003
+                  lac,              # 004
+                  nil,  # 005
+                  nil,  # 006
+                  nil,  # 007
+                  nil,  # 008
+                  nil,  # 009
+                  nil,  # 010
+                  nil,  # 011
+                  nil,  # 012
+                  nil,  # 013
+                  nil,  # 014
+                  nil,  # 015
+                  nil,  # 016
+                  nil,  # 017
+                  nil,  # 018
+                  nil,  # 019
+                  nil,  # 020
+                  nil,  # 021
+                  nil,  # 022
+                  nil,  # 023
+                  nil,  # 024
+                  nil,  # 025
+                  nil,  # 026
+                  nil,  # 027
+                  nil,  # 028
+                  nil,  # 029
+                  nil,  # 030
+                  nil,  # 031
+                  nil,  # 032
+                  nil,  # 033
+                  nil,  # 034
+                  nil,  # 035
+                  nil,  # 036
+                  nil,  # 037
+                  nil,  # 038
+                  nil,  # 039
+                  nil,  # 040
+                  nil,  # 041
+                  nil,  # 042
+                  nil,  # 043
+                  nil,  # 044
+                  nil,  # 045
+                  nil,  # 046
+                  nil,  # 047
+                  nil,  # 048
+                  nil,  # 049
+                  nil,  # 050
+                  nil,  # 051
+                  nil,  # 052
+                  nil,  # 053
+                  nil,  # 054
+                  nil,  # 055
+                  nil,  # 056
+                  nil,  # 057
+                  nil,  # 058
+                  nil,  # 059
+                  nil,  # 060
+                  nil,  # 061
+                  nil,  # 062
+                  nil,  # 063
+                  nil,  # 064
+                  nil,  # 065
+                  nil,  # 066
+                  nil,  # 067
+                  nil,  # 068
+                  nil,  # 069
+                  nil]  # 070
+        end # !lac.nil?
       end # array.each
     end # CSV.generate
   end

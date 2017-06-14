@@ -47,9 +47,7 @@
         $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
-          // $("#message").html('<%#= link_to I18n.t("ag2_purchase.purchase_to_files.index.go_to_target"), "#{@bl_file}" %>');
-          $("#message").html('<%= link_to I18n.t("ag2_purchase.purchase_to_files.index.go_to_target"), "#{@bl_file}" %>');
-          // $('#message_area').children().hide();
+          $("#message").html('<a href="' + data.File + '" download>' + data.LinkMessage + '</a>');
           $("#progressbar").hide();
         }
         else {

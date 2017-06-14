@@ -14,7 +14,7 @@ es:
         btn_yes: "Sí, adelante"
         btn_no: "No, gracias"
         message: "Espera, exportando..."
-        go_to_target: "Descarga el archivo generado"
+        go_to_target: "Descarga archivo %{var} generado"
         result_ok_message_html: "Generador de Archivos de Compras ha generado el fichero correctamente."
         result_ok_with_error_message_html: "<b>Generador de Archivos de Compras finalizó con incidencias: Sin datos</b>"
         result_error_message_html: "<b>Error: ¡Generador de Archivos de Compras finalizó inesperadamente!</b>"
