@@ -8,6 +8,7 @@ Ag2Gest::Engine.routes.draw do
     # Routes to export
     match 'bills_to_file' => 'bills_to_files#index', :as => :bills_to_file
     match 'export_bills', :controller => 'bills_to_files', :action => 'export_bills'
+    match 'export_ebills', :controller => 'bills_to_files', :action => 'export_ebills'
 
     # Routes to search
 

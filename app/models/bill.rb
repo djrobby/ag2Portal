@@ -52,8 +52,18 @@ class Bill < ActiveRecord::Base
   #
   scope :none, where("1 = 0")
   scope :commercial, -> { joins(:invoices).where("invoices.invoice_type_id != ? AND invoices.invoice_type_id != ?", InvoiceType::WATER, InvoiceType::CONTRACT).by_no }
-  scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
   scope :contracting, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::CONTRACT}).by_no }
+  scope :service, -> { joins(:invoices).where(invoices: {invoice_type_id: InvoiceType::WATER}).by_no }
+  scope :service_by_project_period, -> p, b {
+    joins(:invoices)
+    .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ?', InvoiceType::WATER, p, b)
+    .by_no
+  }
+  scope :service_by_project_period_no, -> p, b, f, t {
+    joins(:invoices)
+    .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ? AND bills.bill_no BETWEEN ? AND ?', InvoiceType::WATER, p, b, f, t)
+    .by_no
+  }
 
   def to_label
     full_no

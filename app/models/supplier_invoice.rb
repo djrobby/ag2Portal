@@ -131,10 +131,30 @@ class SupplierInvoice < ActiveRecord::Base
     total - approved_to_pay
   end
 
+  # Obtaining ledger account
+  def ledger_account_id_by_charge_account_id(charge_account_id=nil, company_id=nil)
+    if charge_account_id.nil?
+      charge_account.ledger_account_id
+    else
+      charge_account_ledger_accounts.where(charge_account_id: charge_account_id, company_id: company_id).first.ledger_account_id rescue charge_account.ledger_account_id
+    end
+  end
+  def ledger_account_code(charge_account_id=nil, company_id=nil)
+    LedgerAccount.find(ledger_account_id_by_charge_account_id(charge_account_id, company_id)).code rescue nil
+  end
+
+  # Formatted attributes
+  def format_date(_date)
+    formatted_date(_date)
+  end
+  def format_number(_number, _d)
+    formatted_number(_number, _d)
+  end
+
   #
   # Class (self) user defined methods
   #
-  def self.to_csv(array)
+  def self.to_csv(array, company_id=nil)
     column_names = [I18n.t('activerecord.csv_sage200.supplier_invoice.c001'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c002'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c003'),
@@ -195,69 +215,76 @@ class SupplierInvoice < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c058'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c059'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c060')]
-    CSV.generate(headers: true) do |csv|
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep) do |csv|
       csv << column_names
+      lac = nil
+      entry = 0
       array.each do |i|
-        csv << ['1',  # 001
-                '2017',  # 002
-                '1',  # 003
-                'D',  # 004
-                nil,  # 005
-                nil,  # 006
-                nil,  # 007
-                nil,  # 008
-                nil,  # 009
-                nil,  # 010
-                nil,  # 011
-                nil,  # 012
-                nil,  # 013
-                nil,  # 014
-                nil,  # 015
-                nil,  # 016
-                nil,  # 017
-                nil,  # 018
-                nil,  # 019
-                nil,  # 020
-                nil,  # 021
-                nil,  # 022
-                nil,  # 023
-                nil,  # 024
-                nil,  # 025
-                nil,  # 026
-                nil,  # 027
-                nil,  # 028
-                nil,  # 029
-                nil,  # 030
-                nil,  # 031
-                nil,  # 032
-                nil,  # 033
-                nil,  # 034
-                nil,  # 035
-                nil,  # 036
-                nil,  # 037
-                nil,  # 038
-                nil,  # 039
-                nil,  # 040
-                nil,  # 041
-                nil,  # 042
-                nil,  # 043
-                nil,  # 044
-                nil,  # 045
-                nil,  # 046
-                nil,  # 047
-                nil,  # 048
-                nil,  # 049
-                nil,  # 050
-                nil,  # 051
-                nil,  # 052
-                nil,  # 053
-                nil,  # 054
-                nil,  # 055
-                nil,  # 056
-                nil,  # 057
-                nil,  # 058
-                nil,  # 059
-                nil]  # 060
+        entry += 1
+        lac = i.ledger_account_code(i.charge_account_id, company_id)
+        if !lac.nil?
+          csv << ['1',                                      # 001
+                  i.created_at.year.to_s,                   # 002
+                  entry.to_s,                               # 003
+                  'D',  # 004
+                  lac,                                      # 005
+                  nil,  # 006
+                  i.format_date(Time.new),                  # 007
+                  nil,  # 008
+                  i.invoice_no,                             # 009
+                  i.format_number(i.totals, 2),             # 010
+                  nil,  # 011
+                  nil,  # 012
+                  nil,  # 013
+                  nil,  # 014
+                  nil,  # 015
+                  nil,  # 016
+                  nil,  # 017
+                  i.created_at.month.to_s,                  # 018
+                  '2',                                      # 019
+                  '0',                                      # 020
+                  '0',                                      # 021
+                  nil,  # 022
+                  nil,  # 023
+                  nil,  # 024
+                  nil,  # 025
+                  nil,  # 026
+                  nil,  # 027
+                  nil,  # 028
+                  nil,  # 029
+                  nil,  # 030
+                  nil,  # 031
+                  nil,  # 032
+                  nil,  # 033
+                  nil,  # 034
+                  nil,  # 035
+                  nil,  # 036
+                  nil,  # 037
+                  nil,  # 038
+                  nil,  # 039
+                  nil,  # 040
+                  nil,  # 041
+                  nil,  # 042
+                  nil,  # 043
+                  nil,  # 044
+                  nil,  # 045
+                  nil,  # 046
+                  nil,  # 047
+                  nil,  # 048
+                  nil,  # 049
+                  nil,  # 050
+                  nil,  # 051
+                  nil,  # 052
+                  nil,  # 053
+                  nil,  # 054
+                  nil,  # 055
+                  nil,  # 056
+                  nil,  # 057
+                  nil,  # 058
+                  nil,  # 059
+                  '0']                                    # 060
+        end # !lac.nil?
       end # array.each
     end # CSV.generate
   end

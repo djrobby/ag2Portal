@@ -100,15 +100,15 @@ module Ag2Purchase
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
-      upload_xml_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
+      upload_xml_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
                      "File" => "/uploads/SIS_MOVCONTA.csv", "LinkMessage" => link_message }
       # save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
       render json: @json_data
-    rescue
-      message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
-      @json_data = { "DataExport" => message, "Result" => "ERROR" }
-      render json: @json_data
+    # rescue
+    #   message = I18n.t("ag2_purchase.purchase_to_files.index.result_error_message_html")
+    #   @json_data = { "DataExport" => message, "Result" => "ERROR" }
+    #   render json: @json_data
     end
 
     # GET /bills_to_files

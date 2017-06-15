@@ -19,10 +19,25 @@
   jQuery(function($) {
     // when #data_export_btn is clicked
     $("#data_export_btn").click(function() {
+      // Choose method to execute based on selected type
+      var method = 'export_bills';
+      var type = $('#Export :selected').index();
+      if (type == "") type = 0;
+      if (type == 1) {
+        method = 'export_ebills';
+      }
+      // Parameters
+      var project = $('#Project :selected').val();
+      var period = $('#Period :selected').val();
+      var biller = $('#Biller :selected').val();
+      var from = $('#From').val();
+      var to = $('#To').val();
+      if ((project == "") || (period == ""))
+        return;
+      // make a POST call and executes action
       $('#message_area').children().show();
       $('#buttons').children().hide();
-      // make a POST call and executes action
-      jQuery.getJSON('export_bills', function(data) {
+      jQuery.getJSON(method + "?project=" + project + "&period=" + period + "&biller=" + biller + "&from=" + from + "&to=" + to, function(data) {
         $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {

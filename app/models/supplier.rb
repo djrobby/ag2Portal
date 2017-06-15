@@ -222,9 +222,6 @@ class Supplier < ActiveRecord::Base
   def active_bank_account_bank_code
     active_bank_account.bank.code rescue nil
   end
-  def active_bank_account_bank_code
-    active_bank_account.bank.code rescue nil
-  end
   def active_bank_account_office_code
     active_bank_account.office.code rescue nil
   end
@@ -233,6 +230,9 @@ class Supplier < ActiveRecord::Base
   end
   def active_bank_account_ccc_account_no
     active_bank_account.ccc_account_no rescue nil
+  end
+  def active_bank_account_iban_no
+    active_bank_account.e_format rescue nil
   end
 
   # Obtaining entity type
@@ -324,11 +324,12 @@ class Supplier < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier.c068'),
                     I18n.t('activerecord.csv_sage200.supplier.c069'),
                     I18n.t('activerecord.csv_sage200.supplier.c070')]
-    CSV.generate(headers: true) do |csv|
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep) do |csv|
       csv << column_names
       lac = nil
       array.each do |i|
-        lac = ledger_account_code(company_id)
+        lac = i.ledger_account_code(company_id)
         if !lac.nil?
           csv << ['1',                                    # 001
                   'P',                                    # 002
@@ -370,10 +371,10 @@ class Supplier < ActiveRecord::Base
                   nil,  # 038
                   nil,  # 039
                   i.active_bank_account_bank_code,        # 040
-                  i.active_bank_account_bank_office_code, # 041
+                  i.active_bank_account_office_code,      # 041
                   i.active_bank_account_ccc_dc,           # 042
                   i.active_bank_account_ccc_account_no,   # 043
-                  i.active_bank_account.e_format,         # 044
+                  i.active_bank_account_iban_no,          # 044
                   nil,  # 045
                   nil,  # 046
                   nil,  # 047

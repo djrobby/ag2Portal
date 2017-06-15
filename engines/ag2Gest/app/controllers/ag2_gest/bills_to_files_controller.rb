@@ -18,24 +18,62 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class BillsToFilesController < ApplicationController
     before_filter :authenticate_user!
-    before_filter :set_defaults
+    # before_filter :set_defaults
+    before_filter :set_params
     # load_and_authorize_resource :worker
-    skip_load_and_authorize_resource :only => :export_bills
+    skip_load_and_authorize_resource :only => [:export_ebills, :export_bills]
 
-    # Generate & export XML file
-    def export_bills
+    # Generate & export XML file (electronic format)
+    def export_ebills
       message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
       @json_data = { "DataExport" => message, "Result" => "OK" }
+      render json: @json_data
+    end
+
+    # Generate & export XML file (printed format)
+    def export_bills
       $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
       $gamma = 'AEIOUUNCaeiouunc?!ao'
       $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
       $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
       incidents = false
-      message = ''
+      message = I18n.t("ag2_gest.bills_to_files.index.result_error_message_html")
+      @json_data = { "DataExport" => message, "Result" => "ERROR" }
 
-      bills = Bill.service.includes(:project, :reading_1, :reading_2, :client,
-                                    subscriber: [:use, meter: [:caliber]], invoices:
-                                   [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]]).last(2)
+      # Mandatory params
+      if @project_id == 0 || @period_id == 0
+        render json: @json_data and return
+      end
+      if (@from != 0 && @to != 0) && @from > @to
+        render json: @json_data and return
+      end
+      # Search necessary data
+      project = Project.find(@project_id) rescue nil
+      period = BillingPeriod.find(@period_id) rescue nil
+      # company = Company.find(@biller_id) rescue nil
+      if project.blank? || period.blank?
+        render json: @json_data and return
+      end
+
+      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
+      @json_data = { "DataExport" => message, "Result" => "OK" }
+
+      bills = nil
+      if @from > @to
+        project_code = project.project_code
+        year = period.period.to_s[0..3]
+        from = project_code + year + @from.to_s.rjust(7, '0')
+        to = project_code + year + @to.to_s.rjust(7, '0')
+        bills = Bill.service_by_project_period_no(project, period, from, to).
+                     includes(:project, :reading_1, :reading_2, :client,
+                     subscriber: [:use, meter: [:caliber]], invoices:
+                     [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
+      else
+        bills = Bill.service_by_project_period(project, period).
+                     includes(:project, :reading_1, :reading_2, :client,
+                     subscriber: [:use, meter: [:caliber]], invoices:
+                     [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
+      end
       xml = service_bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
 
@@ -357,28 +395,6 @@ module Ag2Gest
       #+++ End +++
     end
 
-    # # Upload XML file to Rails server (public/uploads)
-    # def upload_xml_file(file_name, xml)
-    #   # Creates directory if it doesn't exist
-    #   create_upload_dir
-    #   # Save file to server's uploads dir
-    #   file_to_upload = File.open(Rails.root.join('public', 'uploads', file_name), "wb")
-    #   file_to_upload.write(xml)
-    #   file_to_upload.close()
-    # end
-
-    # def create_upload_dir
-    #   dir = Rails.root.join('public', 'uploads')
-    #   Dir.mkdir(dir) unless File.exists?(dir)
-    # end
-
-    # # Save local XML file
-    # def save_xml_file(file_name, xml)
-    #   file_to_upload = File.open(file_name, "w")
-    #   file_to_upload.write(xml)
-    #   file_to_upload.close()
-    # end
-
     # GET /bills_to_files
     # GET /bills_to_files.json
     def index
@@ -399,6 +415,26 @@ module Ag2Gest
       _array = _array << t("ag2_gest.bills_to_files.printed_bill")
       _array = _array << t("ag2_gest.bills_to_files.e_bill")
       _array
+    end
+
+    def set_params
+      @project_id = params[:project]
+      @period_id = params[:period]
+      @biller_id = params[:biller]
+      @from = params[:from]
+      @to = params[:to]
+
+      @project_id = '0' if @project_id.blank?
+      @period_id = '0' if @period_id.blank?
+      @biller_id = '0' if @biller_id.blank?
+      @from = '0' if @from.blank?
+      @to = '0' if @to.blank?
+
+      @project_id = @project_id.to_i
+      @period_id = @period_id.to_i
+      @biller_id = @biller_id.to_i
+      @from = @from.to_i
+      @to = @to.to_i
     end
 
     def set_defaults
