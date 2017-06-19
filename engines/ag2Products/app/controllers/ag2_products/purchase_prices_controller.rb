@@ -22,7 +22,7 @@ module Ag2Products
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end
-    
+
     # GET /purchase_prices
     # GET /purchase_prices.json
     def index
@@ -41,7 +41,7 @@ module Ag2Products
       else
         supplier = params[:Suppliers]
       end
-  
+
       @search = PurchasePrice.search do
         fulltext params[:search]
         if !product.blank?
@@ -55,14 +55,14 @@ module Ag2Products
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @purchase_prices = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @purchase_prices }
         format.js
       end
     end
-  
+
     # GET /purchase_prices/1
     # GET /purchase_prices/1.json
     def show
@@ -70,13 +70,13 @@ module Ag2Products
       @product = $product
       @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @purchase_price }
       end
     end
-  
+
     # GET /purchase_prices/new
     # GET /purchase_prices/new.json
     def new
@@ -84,13 +84,13 @@ module Ag2Products
       @product = $product
       @supplier = $supplier
       @purchase_price = PurchasePrice.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @purchase_price }
       end
     end
-  
+
     # GET /purchase_prices/1/edit
     def edit
       @breadcrumb = 'update'
@@ -98,7 +98,7 @@ module Ag2Products
       @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
     end
-  
+
     # POST /purchase_prices
     # POST /purchase_prices.json
     def create
@@ -107,7 +107,7 @@ module Ag2Products
       @supplier = $supplier
       @purchase_price = PurchasePrice.new(params[:purchase_price])
       @purchase_price.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @purchase_price.save
           format.html { redirect_to @purchase_price, notice: crud_notice('created', @purchase_price) }
@@ -118,7 +118,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /purchase_prices/1
     # PUT /purchase_prices/1.json
     def update
@@ -126,7 +126,7 @@ module Ag2Products
       @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @purchase_price.update_attributes(params[:purchase_price])
           format.html { redirect_to @purchase_price,
@@ -138,7 +138,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /purchase_prices/1
     # DELETE /purchase_prices/1.json
     def destroy
@@ -146,29 +146,34 @@ module Ag2Products
       @supplier = $supplier
       @purchase_price = PurchasePrice.find(params[:id])
       @purchase_price.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to purchase_prices_url,
+        if @purchase_price.destroy
+          format.html { redirect_to purchase_prices_url,
                       notice: (crud_notice('destroyed', @purchase_price) + "#{undo_link(@purchase_price)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to purchase_prices_url, alert: "#{@purchase_price.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @purchase_price.errors, status: :unprocessable_entity }
+        end
       end
     end
 
     private
-    
+
     def current_product_supplier
       if !params[:product].blank?
         $product = Product.find(params[:product])
       else
         $product = nil;
-      end 
+      end
       if !params[:supplier].blank?
         $supplier = Supplier.find(params[:supplier])
       else
         $supplier = nil;
-      end 
+      end
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # products

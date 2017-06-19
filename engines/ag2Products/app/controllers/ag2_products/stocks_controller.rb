@@ -16,7 +16,7 @@ module Ag2Products
       @json_data = { "num" => num.to_s }
       render json: @json_data
     end
-    
+
     # GET /stocks
     # GET /stocks.json
     def index
@@ -36,7 +36,7 @@ module Ag2Products
       else
         store = params[:Stores]
       end
-        
+
       @search = Stock.search do
         #fulltext params[:search]
         if !product.blank?
@@ -50,14 +50,14 @@ module Ag2Products
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @stocks = @search.results
-  
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @stocks }
         format.js
       end
     end
-  
+
     # GET /stocks/1
     # GET /stocks/1.json
     def show
@@ -68,13 +68,13 @@ module Ag2Products
       # Receipts & Deliveries
       @receipts = ReceiptNoteItem.joins(:receipt_note).where(product_id: @stock.product, store_id: @stock.store).order('receipt_date desc').paginate(:page => params[:page], :per_page => per_page)
       @deliveries = DeliveryNoteItem.joins(:delivery_note).where(product_id: @stock.product, store_id: @stock.store).order('delivery_date desc').paginate(:page => params[:page], :per_page => per_page)
-  
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @stock }
       end
     end
-  
+
     # GET /stocks/new
     # GET /stocks/new.json
     def new
@@ -82,13 +82,13 @@ module Ag2Products
       @product = $product
       @store = $store
       @stock = Stock.new
-  
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @stock }
       end
     end
-  
+
     # GET /stocks/1/edit
     def edit
       @breadcrumb = 'update'
@@ -96,7 +96,7 @@ module Ag2Products
       @store = $store
       @stock = Stock.find(params[:id])
     end
-  
+
     # POST /stocks
     # POST /stocks.json
     def create
@@ -105,7 +105,7 @@ module Ag2Products
       @store = $store
       @stock = Stock.new(params[:stock])
       @stock.created_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @stock.save
           format.html { redirect_to @stock, notice: crud_notice('created', @stock) }
@@ -116,7 +116,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # PUT /stocks/1
     # PUT /stocks/1.json
     def update
@@ -124,7 +124,7 @@ module Ag2Products
       @store = $store
       @stock = Stock.find(params[:id])
       @stock.updated_by = current_user.id if !current_user.nil?
-  
+
       respond_to do |format|
         if @stock.update_attributes(params[:stock])
           format.html { redirect_to @stock,
@@ -136,7 +136,7 @@ module Ag2Products
         end
       end
     end
-  
+
     # DELETE /stocks/1
     # DELETE /stocks/1.json
     def destroy
@@ -144,11 +144,16 @@ module Ag2Products
       @store = $store
       @stock = Stock.find(params[:id])
       @stock.destroy
-  
+
       respond_to do |format|
-        format.html { redirect_to stocks_url,
+        if @stock.destroy
+          format.html { redirect_to stocks_url,
                       notice: (crud_notice('destroyed', @stock) + "#{undo_link(@stock)}").html_safe }
-        format.json { head :no_content }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to stocks_url, alert: "#{@stock.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @stock.errors, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -169,20 +174,20 @@ module Ag2Products
     end
 
     private
-    
+
     def current_product_store
       if !params[:product].blank?
         $product = Product.find(params[:product])
       else
         $product = nil;
-      end 
+      end
       if !params[:store].blank?
         $store = Store.find(params[:store])
       else
         $store = nil;
-      end 
+      end
     end
-    
+
     # Keeps filter state
     def manage_filter_state
       # products
