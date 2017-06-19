@@ -158,7 +158,7 @@ class SupplierInvoice < ActiveRecord::Base
         .select('tax_type_id, tax_types.tax AS tax_rate, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount, (sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)))*(tax_types.tax/100) AS item_tax')
     else
       supplier_invoice_items
-        .joins("INNER JOIN (tax_types LEFT JOIN (tax_type_ledger_accounts INNER JOIN ledger_accounts ON tax_type_ledger_accounts.output_ledger_account_id=ledger_accounts.id) ON tax_types.output_ledger_account_id=tax_type_ledger_accounts.output_ledger_account_id) ON supplier_invoice_items.tax_type_id=tax_types.id")
+        .joins("INNER JOIN (tax_types LEFT JOIN (tax_type_ledger_accounts INNER JOIN ledger_accounts ON tax_type_ledger_accounts.output_ledger_account_id=ledger_accounts.id) ON tax_types.id=tax_type_ledger_accounts.tax_type_id) ON supplier_invoice_items.tax_type_id=tax_types.id")
         .where("tax_type_ledger_accounts.company_id = ?", company_id)
         .group(:tax_type_id)
         .select('supplier_invoice_items.tax_type_id, tax_types.tax AS tax_rate, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount, (sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)))*(tax_types.tax/100) AS item_tax')
@@ -361,13 +361,7 @@ class SupplierInvoice < ActiveRecord::Base
         end # !lac.nil?
         # Group 6 lines: charge_accounts
         i.items_group_by_charge_account(company_id).each do |g|
-          lac = nil
-          if g.code.blank?
-            lac = i.ledger_account_code(i.charge_account_id, company_id)
-          else
-            lac = g.code
-          end
-          if !lac.nil?
+          if !g.code.blank?
             csv << ['1',                                      # 001
                     i.created_at.year.to_s,                   # 002
                     entry.to_s,                               # 003
@@ -428,7 +422,7 @@ class SupplierInvoice < ActiveRecord::Base
                     nil,  # 058
                     nil,  # 059
                     nil]  # 060
-          end # !lac.nil?
+          end # !g.code.blank?
         end # i.items_group_by_charge_account.each
         # Group 4 (47) lines: taxes
         i.items_group_by_tax_type(company_id).each do |g|

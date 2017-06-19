@@ -127,7 +127,7 @@ class Supplier < ActiveRecord::Base
   end
 
   def name40
-    !self.name.blank? ? self.name[40] : ''
+    !self.name.blank? ? self.name[0,40].strip : ''
   end
 
   def full_code

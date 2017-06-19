@@ -2476,16 +2476,6 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
-  end
-
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3577,19 +3567,6 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
-  end
-
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
