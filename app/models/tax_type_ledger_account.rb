@@ -1,7 +1,7 @@
 class TaxTypeLedgerAccount < ActiveRecord::Base
   belongs_to :tax_type
-  belongs_to :input_ledger_account, class_name: 'TaxType'
-  belongs_to :output_ledger_account, class_name: 'TaxType'
+  belongs_to :input_ledger_account, class_name: 'LedgerAccount'
+  belongs_to :output_ledger_account, class_name: 'LedgerAccount'
   belongs_to :company
 
   attr_accessor :thing

@@ -64,6 +64,9 @@ module ModelsModule
     _delimiter = I18n.locale == :es ? "." : ","
     number_with_precision(_number.round(_decimals), precision: _decimals, delimiter: _delimiter)
   end
+  def formatted_number_without_delimiter(_number, _decimals)
+    number_with_precision(_number.round(_decimals), precision: _decimals)
+  end
 
   #
   # Family Breakdown

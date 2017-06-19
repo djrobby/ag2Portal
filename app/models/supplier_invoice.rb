@@ -131,6 +131,40 @@ class SupplierInvoice < ActiveRecord::Base
     total - approved_to_pay
   end
 
+  def items_order_by_charge_account
+    supplier_invoice_items.order(:charge_account_id, :id)
+  end
+
+  def items_group_by_charge_account(company_id=nil)
+    if company_id.nil?
+      supplier_invoice_items
+        .joins("INNER JOIN (charge_accounts LEFT JOIN ledger_accounts ON charge_accounts.ledger_account_id=ledger_accounts.id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
+        .group(:charge_account_id)
+        .select('charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
+    else
+      supplier_invoice_items
+        .joins("INNER JOIN (charge_accounts LEFT JOIN (charge_account_ledger_accounts INNER JOIN ledger_accounts ON charge_account_ledger_accounts.ledger_account_id=ledger_accounts.id) ON charge_accounts.ledger_account_id=charge_account_ledger_accounts.ledger_account_id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
+        .where("charge_account_ledger_accounts.company_id = ?", company_id)
+        .group(:charge_account_id)
+        .select('supplier_invoice_items.charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
+    end
+  end
+
+  def items_group_by_tax_type(company_id=nil)
+    if company_id.nil?
+      supplier_invoice_items
+        .joins("INNER JOIN (tax_types LEFT JOIN ledger_accounts ON tax_types.output_ledger_account_id=ledger_accounts.id) ON supplier_invoice_items.tax_type_id=tax_types.id")
+        .group(:tax_type_id)
+        .select('tax_type_id, tax_types.tax AS tax_rate, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount, (sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)))*(tax_types.tax/100) AS item_tax')
+    else
+      supplier_invoice_items
+        .joins("INNER JOIN (tax_types LEFT JOIN (tax_type_ledger_accounts INNER JOIN ledger_accounts ON tax_type_ledger_accounts.output_ledger_account_id=ledger_accounts.id) ON tax_types.output_ledger_account_id=tax_type_ledger_accounts.output_ledger_account_id) ON supplier_invoice_items.tax_type_id=tax_types.id")
+        .where("tax_type_ledger_accounts.company_id = ?", company_id)
+        .group(:tax_type_id)
+        .select('supplier_invoice_items.tax_type_id, tax_types.tax AS tax_rate, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount, (sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)))*(tax_types.tax/100) AS item_tax')
+    end
+  end
+
   # Obtaining ledger account
   def ledger_account_id_by_charge_account_id(charge_account_id=nil, company_id=nil)
     if charge_account_id.nil?
@@ -149,6 +183,9 @@ class SupplierInvoice < ActiveRecord::Base
   end
   def format_number(_number, _d)
     formatted_number(_number, _d)
+  end
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
   end
 
   #
@@ -216,24 +253,61 @@ class SupplierInvoice < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c059'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c060')]
     col_sep = I18n.locale == :es ? ";" : ","
+    taxable1 = nil
+    tax1 = nil
+    taxcode1 = nil
+    taxrate1 = nil
+    taxable2 = nil
+    tax2 = nil
+    taxcode2 = nil
+    taxrate2 = nil
+    taxable3 = nil
+    tax3 = nil
+    taxcode3 = nil
+    taxrate3 = nil
     CSV.generate(headers: true, col_sep: col_sep) do |csv|
       csv << column_names
       lac = nil
       entry = 0
       array.each do |i|
         entry += 1
-        lac = i.ledger_account_code(i.charge_account_id, company_id)
+        _g = 1
+        # Gross & Net amounts
+        i.items_group_by_tax_type(company_id).each do |g|
+          if !g.code.blank?
+            case _g
+            when 1
+              taxable1 = i.raw_number(g.item_amount, 2)
+              tax1 = i.raw_number(g.item_tax, 2)
+              taxcode1 = g.tax_rate.to_i.to_s
+              taxrate1 = i.raw_number(g.tax_rate, 2)
+            when 2
+              taxable2 = i.raw_number(g.item_amount, 2)
+              tax2 = i.raw_number(g.item_tax, 2)
+              taxcode2 = g.tax_rate.to_i.to_s
+              taxrate2 = i.raw_number(g.tax_rate, 2)
+            when 3
+              taxable3 = i.raw_number(g.item_amount, 2)
+              tax3 = i.raw_number(g.item_tax, 2)
+              taxcode3 = g.tax_rate.to_i.to_s
+              taxrate3 = i.raw_number(g.tax_rate, 2)
+            end
+          end
+          _g += 1
+        end
+        # Group 4 (40) lines: supplier
+        lac = i.supplier.ledger_account_code(company_id)
         if !lac.nil?
           csv << ['1',                                      # 001
                   i.created_at.year.to_s,                   # 002
                   entry.to_s,                               # 003
-                  'D',  # 004
+                  'H',                                      # 004
                   lac,                                      # 005
                   nil,  # 006
                   i.format_date(Time.new),                  # 007
                   nil,  # 008
                   i.invoice_no,                             # 009
-                  i.format_number(i.totals, 2),             # 010
+                  i.raw_number(i.totals, 2),                # 010
                   nil,  # 011
                   nil,  # 012
                   nil,  # 013
@@ -245,46 +319,182 @@ class SupplierInvoice < ActiveRecord::Base
                   '2',                                      # 019
                   '0',                                      # 020
                   '0',                                      # 021
-                  nil,  # 022
-                  nil,  # 023
-                  nil,  # 024
-                  nil,  # 025
+                  taxable1,                                 # 022
+                  taxcode1,                                 # 023
+                  taxrate1,                                 # 024
+                  tax1,                                     # 025
                   nil,  # 026
                   nil,  # 027
                   nil,  # 028
-                  nil,  # 029
-                  nil,  # 030
-                  nil,  # 031
-                  nil,  # 032
+                  taxable2,                                 # 029
+                  taxcode2,                                 # 030
+                  taxrate2,                                 # 031
+                  tax2,                                     # 032
                   nil,  # 033
                   nil,  # 034
                   nil,  # 035
-                  nil,  # 036
-                  nil,  # 037
-                  nil,  # 038
-                  nil,  # 039
+                  taxable3,                                 # 036
+                  taxcode3,                                 # 037
+                  taxrate3,                                 # 038
+                  tax3,                                     # 039
                   nil,  # 040
                   nil,  # 041
                   nil,  # 042
                   nil,  # 043
                   nil,  # 044
-                  nil,  # 045
-                  nil,  # 046
-                  nil,  # 047
-                  nil,  # 048
-                  nil,  # 049
-                  nil,  # 050
+                  i.invoice_no,                             # 045
+                  i.format_date(Time.new),                  # 046
+                  i.raw_number(i.totals, 2),                # 047
+                  'R',                                      # 048
+                  i.supplier.fiscal_id,                     # 049
+                  i.supplier.name40,                        # 050
                   nil,  # 051
                   nil,  # 052
                   nil,  # 053
                   nil,  # 054
-                  nil,  # 055
-                  nil,  # 056
+                  i.supplier.province.territory_code,     # 055
+                  i.supplier.country.code,                # 056
                   nil,  # 057
                   nil,  # 058
-                  nil,  # 059
+                  'P',                                    # 059
                   '0']                                    # 060
         end # !lac.nil?
+        # Group 6 lines: charge_accounts
+        i.items_group_by_charge_account(company_id).each do |g|
+          lac = nil
+          if g.code.blank?
+            lac = i.ledger_account_code(i.charge_account_id, company_id)
+          else
+            lac = g.code
+          end
+          if !lac.nil?
+            csv << ['1',                                      # 001
+                    i.created_at.year.to_s,                   # 002
+                    entry.to_s,                               # 003
+                    'D',  # 004
+                    lac,                                      # 005
+                    nil,  # 006
+                    i.format_date(Time.new),                  # 007
+                    nil,  # 008
+                    i.invoice_no,                             # 009
+                    i.raw_number(g.item_amount, 2),           # 010
+                    nil,  # 011
+                    nil,  # 012
+                    nil,  # 013
+                    nil,  # 014
+                    nil,  # 015
+                    nil,  # 016
+                    nil,  # 017
+                    i.created_at.month.to_s,                  # 018
+                    '0',                                      # 019
+                    '0',                                      # 020
+                    '0',                                      # 021
+                    nil,  # 022
+                    nil,  # 023
+                    nil,  # 024
+                    nil,  # 025
+                    nil,  # 026
+                    nil,  # 027
+                    nil,  # 028
+                    nil,  # 029
+                    nil,  # 030
+                    nil,  # 031
+                    nil,  # 032
+                    nil,  # 033
+                    nil,  # 034
+                    nil,  # 035
+                    nil,  # 036
+                    nil,  # 037
+                    nil,  # 038
+                    nil,  # 039
+                    nil,  # 040
+                    nil,  # 041
+                    nil,  # 042
+                    nil,  # 043
+                    nil,  # 044
+                    nil,  # 045
+                    nil,  # 046
+                    nil,  # 047
+                    nil,  # 048
+                    nil,  # 049
+                    nil,  # 050
+                    nil,  # 051
+                    nil,  # 052
+                    nil,  # 053
+                    nil,  # 054
+                    nil,  # 055
+                    nil,  # 056
+                    nil,  # 057
+                    nil,  # 058
+                    nil,  # 059
+                    nil]  # 060
+          end # !lac.nil?
+        end # i.items_group_by_charge_account.each
+        # Group 4 (47) lines: taxes
+        i.items_group_by_tax_type(company_id).each do |g|
+          if !g.code.blank?
+            csv << ['1',                                      # 001
+                    i.created_at.year.to_s,                   # 002
+                    entry.to_s,                               # 003
+                    'D',  # 004
+                    g.code,                                   # 005
+                    nil,  # 006
+                    i.format_date(Time.new),                  # 007
+                    nil,  # 008
+                    i.invoice_no,                             # 009
+                    i.raw_number(g.item_tax, 2),              # 010
+                    nil,  # 011
+                    nil,  # 012
+                    nil,  # 013
+                    nil,  # 014
+                    nil,  # 015
+                    nil,  # 016
+                    nil,  # 017
+                    i.created_at.month.to_s,                  # 018
+                    '0',                                      # 019
+                    '0',                                      # 020
+                    '0',                                      # 021
+                    nil,  # 022
+                    nil,  # 023
+                    nil,  # 024
+                    nil,  # 025
+                    nil,  # 026
+                    nil,  # 027
+                    nil,  # 028
+                    nil,  # 029
+                    nil,  # 030
+                    nil,  # 031
+                    nil,  # 032
+                    nil,  # 033
+                    nil,  # 034
+                    nil,  # 035
+                    nil,  # 036
+                    nil,  # 037
+                    nil,  # 038
+                    nil,  # 039
+                    nil,  # 040
+                    nil,  # 041
+                    nil,  # 042
+                    nil,  # 043
+                    nil,  # 044
+                    nil,  # 045
+                    nil,  # 046
+                    nil,  # 047
+                    nil,  # 048
+                    nil,  # 049
+                    nil,  # 050
+                    nil,  # 051
+                    nil,  # 052
+                    nil,  # 053
+                    nil,  # 054
+                    nil,  # 055
+                    nil,  # 056
+                    nil,  # 057
+                    nil,  # 058
+                    nil,  # 059
+                    nil]  # 060
+          end # !g.code.blank?
+        end # i.items_group_by_tax_type.each
       end # array.each
     end # CSV.generate
   end

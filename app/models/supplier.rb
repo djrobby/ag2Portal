@@ -16,7 +16,7 @@ class Supplier < ActiveRecord::Base
                   :region_id, :country_id, :payment_method_id, :ledger_account_id, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
                   :created_by, :updated_by, :entity_id, :organization_id,
-                  :is_contact, :shared_contact_id, :order_authorization, :free_shipping_sum
+                  :is_contact, :shared_contact_id, :order_authorization, :free_shipping_sum, :withholding_rate
   attr_accessible :activity_ids
   attr_accessible :supplier_bank_accounts_attributes
 
