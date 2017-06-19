@@ -44,8 +44,8 @@
       <td></td>
       <td></td>
       <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
-      <td align="right"><%= number_with_precision(@product.counts, precision: 4) unless @product.counts.blank? %></td>
-      <td align="right"><%= number_with_precision(@product.counts_price_avg, precision: 4) unless @product.counts_price_avg.blank? %></td>
+      <td align="right"><%= number_with_precision(@counts_quantity, precision: 4) unless @counts_quantity.blank? %></td>
+      <td align="right"><%= number_with_precision(@counts_price_avg, precision: 4) unless @counts_price_avg.blank? %></td>
     </tr>
   </tfoot>
   <tbody>
@@ -105,11 +105,10 @@
       <td></td>
       <td></td>
       <td align="right"><%= t :"activerecord.attributes.product.stock" %></td>
-      <td align="right"><%= number_with_precision(@product.receipts, precision: 4) unless @product.receipts.blank? %></td>
-      <td align="right"><%= number_with_precision(@product.receipts_price_avg_total, precision: 4) unless @product.receipts_price_avg_total.blank? %></td>
+      <td align="right"><%= number_with_precision(@receipts_quantity, precision: 4) unless @receipts_quantity.blank? %></td>
+      <td align="right"><%= number_with_precision(@receipts_price_avg, precision: 4) unless @receipts_price_avg.blank? %></td>
       <td align="right"></td>
-      <!--<td align="right"><%#= number_with_precision(@product.receipts_discount_avg, precision: 4) unless @product.receipts_discount_avg.blank? %></td>-->
-      <td align="right"><%= number_with_precision(@product.receipts_amount, precision: 4) unless @product.receipts_amount.blank? %></td>
+      <td align="right"><%= number_with_precision(@receipts_amount, precision: 4) unless @receipts_amount.blank? %></td>
     </tr>
   </tfoot>
   <tbody>
@@ -176,13 +175,12 @@
       <td></td>
       <td></td>
       <td align="right"><%=t "activerecord.attributes.product.stock" %></td>
-      <td align="right"><%= number_with_precision(@product.deliveries, precision: 4) unless @product.deliveries.blank? %></td>
-      <td align="right"><%= number_with_precision(@product.deliveries_cost_avg_total, precision: 4) unless @product.deliveries_cost_avg.blank? %></td>
-      <td align="right"><%= number_with_precision(@product.deliveries_costs, precision: 4) unless @product.deliveries_costs.blank? %></td>
-      <td align="right"><%= number_with_precision(@product.deliveries_price_avg_total, precision: 4) unless @product.deliveries_price_avg.blank? %></td>
-      <!--<td align="right"><%#= number_with_precision(@product.deliveries_discount_avg, precision: 4) unless @product.deliveries_discount_avg.blank? %></td>-->
+      <td align="right"><%= number_with_precision(@deliveries_quantity, precision: 4) unless @deliveries_quantity.blank? %></td>
+      <td align="right"><%= number_with_precision(@deliveries_cost_avg, precision: 4) unless @deliveries_cost_avg.blank? %></td>
+      <td align="right"><%= number_with_precision(@deliveries_costs, precision: 4) unless @deliveries_costs.blank? %></td>
+      <td align="right"><%= number_with_precision(@deliveries_price_avg, precision: 4) unless @deliveries_price_avg.blank? %></td>
       <td align="right"></td>
-      <td align="right"><%= number_with_precision(@product.deliveries_amount, precision: 4) unless @product.deliveries_amount.blank? %></td>
+      <td align="right"><%= number_with_precision(@deliveries_amount, precision: 4) unless @deliveries_amount.blank? %></td>
     </tr>
   </tfoot>
   <tbody>

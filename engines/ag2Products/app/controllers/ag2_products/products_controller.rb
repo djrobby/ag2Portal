@@ -302,6 +302,20 @@ module Ag2Products
         @counts = @counts.where('inventory_counts.count_date <= ?', to)
       end
 
+      # Totals
+      @receipts_count = @receipts.count != 0 ? @receipts.count : 1
+      @receipts_quantity = @receipts.sum("quantity")
+      @receipts_amount = @receipts.sum("(price-receipt_note_items.discount)*quantity")
+      @receipts_price_avg = (@receipts_amount == '0' ? 0 : @receipts_amount) / (@receipts_quantity != 0 ? @receipts_quantity : 1)
+      @deliveries_count = @deliveries.count != 0 ? @deliveries.count : 1
+      @deliveries_quantity = @deliveries.sum("quantity")
+      @deliveries_amount = @deliveries.sum("(price-delivery_note_items.discount)*quantity")
+      @deliveries_price_avg = (@deliveries_amount == '0' ? 0 : @deliveries_amount) / (@deliveries_quantity != 0 ? @deliveries_quantity : 1)
+      @deliveries_costs = @deliveries.sum("cost*quantity")
+      @deliveries_cost_avg = (@deliveries_costs == '0' ? 0 : @deliveries_costs) / (@deliveries_quantity != 0 ? @deliveries_quantity : 1)
+      @counts_quantity = @counts.sum("quantity")
+      @counts_price_avg = @counts.sum("price") / (@counts.count != 0 ? @counts.count : 1)
+
       respond_to do |format|
         format.html # receipts_deliveries.html.erb
         format.js
