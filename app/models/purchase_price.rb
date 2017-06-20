@@ -8,8 +8,8 @@ class PurchasePrice < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :product,   :presence => true,
-                        :uniqueness => { :scope => [:supplier_id, :measure_id] }
+  validates :product,   :presence => true
+                        # :uniqueness => { :scope => [:supplier_id, :measure_id] }
   validates :supplier,  :presence => true
   validates :measure,   :presence => true
   #validates :code,     :presence => true
