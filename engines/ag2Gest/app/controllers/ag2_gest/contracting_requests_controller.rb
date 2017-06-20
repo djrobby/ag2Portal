@@ -1652,7 +1652,7 @@ module Ag2Gest
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = ContractingRequest.search do
-        if :contracting_request_status_id == 0..10
+        if [0..10].include? :contracting_request_status_id
           return
         else
           with :contracting_request_status_id, 11

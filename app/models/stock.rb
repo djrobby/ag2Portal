@@ -6,8 +6,9 @@ class Stock < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :product,  :presence => true
-  validates :store,    :presence => true
+  validates :product,   :presence => true,
+                        :uniqueness => { :scope => :store_id }
+  validates :store,     :presence => true
 
   # Receipts
   def receipt_note_items

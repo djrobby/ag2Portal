@@ -8,9 +8,10 @@ class PurchasePrice < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :product,  :presence => true
-  validates :supplier, :presence => true
-  validates :measure,  :presence => true
+  validates :product,   :presence => true,
+                        :uniqueness => { :scope => [:supplier_id, :measure_id] }
+  validates :supplier,  :presence => true
+  validates :measure,   :presence => true
   #validates :code,     :presence => true
 
   after_save :update_reference_price_if_favorite

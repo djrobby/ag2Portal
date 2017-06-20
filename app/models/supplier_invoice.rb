@@ -139,13 +139,13 @@ class SupplierInvoice < ActiveRecord::Base
     if company_id.nil?
       supplier_invoice_items
         .joins("INNER JOIN (charge_accounts LEFT JOIN ledger_accounts ON charge_accounts.ledger_account_id=ledger_accounts.id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
-        .group(:charge_account_id)
+        .group("ledger_accounts.code")
         .select('charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
     else
       supplier_invoice_items
-        .joins("INNER JOIN (charge_accounts LEFT JOIN (charge_account_ledger_accounts INNER JOIN ledger_accounts ON charge_account_ledger_accounts.ledger_account_id=ledger_accounts.id) ON charge_accounts.ledger_account_id=charge_account_ledger_accounts.ledger_account_id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
+        .joins("INNER JOIN (charge_accounts LEFT JOIN (charge_account_ledger_accounts INNER JOIN ledger_accounts ON charge_account_ledger_accounts.ledger_account_id=ledger_accounts.id) ON charge_accounts.id=charge_account_ledger_accounts.charge_account_id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
         .where("charge_account_ledger_accounts.company_id = ?", company_id)
-        .group(:charge_account_id)
+        .group("ledger_accounts.code")
         .select('supplier_invoice_items.charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
     end
   end
@@ -253,26 +253,26 @@ class SupplierInvoice < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c059'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c060')]
     col_sep = I18n.locale == :es ? ";" : ","
-    taxable1 = nil
-    tax1 = nil
-    taxcode1 = nil
-    taxrate1 = nil
-    taxable2 = nil
-    tax2 = nil
-    taxcode2 = nil
-    taxrate2 = nil
-    taxable3 = nil
-    tax3 = nil
-    taxcode3 = nil
-    taxrate3 = nil
     CSV.generate(headers: true, col_sep: col_sep) do |csv|
       csv << column_names
       lac = nil
       entry = 0
       array.each do |i|
         entry += 1
-        _g = 1
         # Gross & Net amounts
+        _g = 1
+        taxable1 = nil
+        tax1 = nil
+        taxcode1 = nil
+        taxrate1 = nil
+        taxable2 = nil
+        tax2 = nil
+        taxcode2 = nil
+        taxrate2 = nil
+        taxable3 = nil
+        tax3 = nil
+        taxcode3 = nil
+        taxrate3 = nil
         i.items_group_by_tax_type(company_id).each do |g|
           if !g.code.blank?
             case _g
@@ -297,7 +297,7 @@ class SupplierInvoice < ActiveRecord::Base
         end
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
-        if !lac.nil?
+        if !lac.nil? && !taxable1.nil?
           csv << ['1',                                      # 001
                   i.created_at.year.to_s,                   # 002
                   entry.to_s,                               # 003
@@ -366,7 +366,7 @@ class SupplierInvoice < ActiveRecord::Base
                     i.created_at.year.to_s,                   # 002
                     entry.to_s,                               # 003
                     'D',  # 004
-                    lac,                                      # 005
+                    g.code,                                   # 005
                     nil,  # 006
                     i.format_date(Time.new),                  # 007
                     nil,  # 008

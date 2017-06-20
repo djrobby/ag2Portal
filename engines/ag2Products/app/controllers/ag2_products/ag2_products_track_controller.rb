@@ -872,7 +872,7 @@ module Ag2Products
 
     # Stock report
     def stock_report
-      detailed = params[:detailed]  # Not used!
+      detailed = params[:detailed]
       store = params[:store]
       family = params[:family]
       product = params[:product]
@@ -888,14 +888,27 @@ module Ag2Products
       # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
-      if !product.blank?  # By Product: In one store or in every stores
-        @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_product(store, product) : ProductValuedStock.belongs_to_product(product)
-      else
-        if !family.blank?   # By Family: In one store on in every stores
-          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_family(store, family) : ProductValuedStock.belongs_to_family(family)
+      if detailed == "false"
+        if !product.blank?  # By Product: In one store or in every stores
+          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_product_stock(store, product) : ProductValuedStock.belongs_to_product_stock(product)
         else
-          # By Store: In one store on in every stores
-          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store(store) : ProductValuedStock.ordered_by_store_family
+          if !family.blank?   # By Family: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_family_stock(store, family) : ProductValuedStock.belongs_to_family_stock(family)
+          else
+            # By Store: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_stock(store) : ProductValuedStock.ordered_by_store_family_stock
+          end
+        end
+      else
+        if !product.blank?  # By Product: In one store or in every stores
+          @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_product(store, product) : ProductValuedStock.belongs_to_product(product)
+        else
+          if !family.blank?   # By Family: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_family(store, family) : ProductValuedStock.belongs_to_family(family)
+          else
+            # By Store: In one store on in every stores
+            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store(store) : ProductValuedStock.ordered_by_store_family
+          end
         end
       end
 
@@ -927,7 +940,7 @@ module Ag2Products
 
     # Stock Companies report
     def stock_companies_report
-      detailed = params[:detailed]  # Not used!
+      detailed = params[:detailed]
       store = params[:store]
       family = params[:family]
       product = params[:product]
@@ -949,26 +962,52 @@ module Ag2Products
       # to = Time.parse(@to).strftime("%Y-%m-%d")
 
       # Setup instance variable for report
-      if company != nil
-        if !product.blank?  # By Product: In one store or in every stores
-          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product(company, product)
-        else
-          if !family.blank?   # By Family: In one store on in every stores
-            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family(company, family)
+      if detailed == "false"
+        if company != nil
+          if !product.blank?  # By Product: In one store or in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product_stock(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product_stock(company, product)
           else
-            # By Store: In one store on in every stores
-            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store(company, store) : ProductValuedStockByCompany.belongs_to_company(company)
+            if !family.blank?   # By Family: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family_stock(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family_stock(company, family)
+            else
+              # By Store: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_stock(company, store) : ProductValuedStockByCompany.belongs_to_company_stock(company)
+            end
+          end
+        else
+          if !product.blank?  # By Product: In one store or in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_product_stock(store, product) : ProductValuedStockByCompany.belongs_to_product_stock(product)
+          else
+            if !family.blank?   # By Family: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family_stock(store, family) : ProductValuedStockByCompany.belongs_to_family_stock(family)
+            else
+              # By Store: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_stock(store) : ProductValuedStockByCompany.all
+            end
           end
         end
       else
-        if !product.blank?  # By Product: In one store or in every stores
-          @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_product(store, product) : ProductValuedStockByCompany.belongs_to_product(product)
-        else
-          if !family.blank?   # By Family: In one store on in every stores
-            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family(store, family) : ProductValuedStockByCompany.belongs_to_family(family)
+        if company != nil
+          if !product.blank?  # By Product: In one store or in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_product(company, store, product) : ProductValuedStockByCompany.belongs_to_company_product(company, product)
           else
-            # By Store: In one store on in every stores
-            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store(store) : ProductValuedStockByCompany.all
+            if !family.blank?   # By Family: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store_family(company, store, family) : ProductValuedStockByCompany.belongs_to_company_family(company, family)
+            else
+              # By Store: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_company_store(company, store) : ProductValuedStockByCompany.belongs_to_company(company)
+            end
+          end
+        else
+          if !product.blank?  # By Product: In one store or in every stores
+            @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_product(store, product) : ProductValuedStockByCompany.belongs_to_product(product)
+          else
+            if !family.blank?   # By Family: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family(store, family) : ProductValuedStockByCompany.belongs_to_family(family)
+            else
+              # By Store: In one store on in every stores
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store(store) : ProductValuedStockByCompany.all
+            end
           end
         end
       end
