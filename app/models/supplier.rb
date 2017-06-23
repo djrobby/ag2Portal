@@ -147,6 +147,11 @@ class Supplier < ActiveRecord::Base
     !self.name.blank? ? self.name[0,40].strip : ''
   end
 
+  def name35
+    # sanitize_string(self.name[0,40].strip, true, true, false, true) unless self.name.blank?
+    !self.name.blank? ? self.name[0,35].strip : ''
+  end
+
   def full_code
     # Supplier code (Organization id & Main activity & sequential number) => OOOO-AAAA-NNNNNN
     supplier_code.blank? || supplier_code == "$ERR" ? "" : supplier_code[0..3] + '-' + supplier_code[4..7] + '-' + supplier_code[8..13]
@@ -357,7 +362,7 @@ class Supplier < ActiveRecord::Base
       array.each do |i|
         lac = i.ledger_account_code(company_id)
         if !lac.nil?
-          csv << [ledger_account_company_code(company_id),# 001
+          csv << [i.ledger_account_company_code(company_id),  # 001
                   'P',                                    # 002
                   i.supplier_code,                        # 003
                   lac,                                    # 004
@@ -373,7 +378,7 @@ class Supplier < ActiveRecord::Base
                   nil,  # 014
                   nil,  # 015
                   nil,  # 016
-                  i.name,                                 # 017
+                  i.name35,                               # 017
                   i.street_type.street_type_code,         # 018
                   i.street_name,                          # 019
                   i.street_number,                        # 020

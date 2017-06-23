@@ -191,6 +191,15 @@ class SupplierInvoice < ActiveRecord::Base
     LedgerAccount.find(ledger_account_id_by_charge_account_id(charge_account_id, company_id)).code rescue nil
   end
 
+  # Obtaining ledger account app company code
+  def ledger_account_company_code(company_id=nil)
+    _ret = '9999'
+    if !company_id.nil?
+      _ret = Company.find(company_id).ledger_account_app_code rescue '9999'
+    end
+    _ret.blank? ? '9999' : _ret
+  end
+
   # Formatted attributes
   def format_date(_date)
     formatted_date(_date)
@@ -287,6 +296,8 @@ class SupplierInvoice < ActiveRecord::Base
         tax3 = nil
         taxcode3 = nil
         taxrate3 = nil
+        taxable_sum = 0
+        tax_sum = 0
         i.items_group_by_tax_type(company_id).each do |g|
           if !g.code.blank?
             case _g
@@ -295,16 +306,22 @@ class SupplierInvoice < ActiveRecord::Base
               tax1 = i.raw_number(g.item_tax, 2)
               taxcode1 = g.tax_rate.to_i.to_s
               taxrate1 = i.raw_number(g.tax_rate, 2)
+              taxable_sum += taxable1
+              tax_sum += tax1
             when 2
               taxable2 = i.raw_number(g.item_amount, 2)
               tax2 = i.raw_number(g.item_tax, 2)
               taxcode2 = g.tax_rate.to_i.to_s
               taxrate2 = i.raw_number(g.tax_rate, 2)
+              taxable_sum += taxable2
+              tax_sum += tax2
             when 3
               taxable3 = i.raw_number(g.item_amount, 2)
               tax3 = i.raw_number(g.item_tax, 2)
               taxcode3 = g.tax_rate.to_i.to_s
               taxrate3 = i.raw_number(g.tax_rate, 2)
+              taxable_sum += taxable3
+              tax_sum += tax3
             end
           end
           _g += 1
@@ -312,7 +329,7 @@ class SupplierInvoice < ActiveRecord::Base
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
         if !lac.nil? && !taxable1.nil?
-          csv << ['1',                                      # 001
+          csv << [i.ledger_account_company_code(company_id),  # 001
                   i.created_at.year.to_s,                   # 002
                   entry.to_s,                               # 003
                   'H',                                      # 004
@@ -329,7 +346,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 015
                   nil,  # 016
                   nil,  # 017
-                  i.created_at.month.to_s,                  # 018
+                  Time.new.month.to_s,                      # 018
                   '2',                                      # 019
                   '0',                                      # 020
                   '0',                                      # 021
@@ -361,22 +378,23 @@ class SupplierInvoice < ActiveRecord::Base
                   i.raw_number(i.totals, 2),                # 047
                   'R',                                      # 048
                   i.supplier.fiscal_id,                     # 049
-                  i.supplier.name40,                        # 050
+                  i.supplier.name35,                        # 050
                   nil,  # 051
                   nil,  # 052
                   nil,  # 053
                   nil,  # 054
-                  i.supplier.province.territory_code,     # 055
-                  i.supplier.country.code,                # 056
+                  i.supplier.province.territory_code,       # 055
+                  i.supplier.country.code,                  # 056
+                  Time.new.year.to_s,                       # 018
                   nil,  # 057
                   nil,  # 058
-                  'P',                                    # 059
-                  '0']                                    # 060
+                  'P',                                      # 059
+                  '0']                                      # 060
         end # !lac.nil?
         # Group 6 lines: charge_accounts
         i.items_group_by_charge_account(company_id).each do |g|
           if !g.code.blank?
-            csv << ['1',                                      # 001
+            csv << [i.ledger_account_company_code(company_id),  # 001
                     i.created_at.year.to_s,                   # 002
                     entry.to_s,                               # 003
                     'D',  # 004
@@ -441,7 +459,7 @@ class SupplierInvoice < ActiveRecord::Base
         # Group 4 (47) lines: taxes
         i.items_group_by_tax_type(company_id).each do |g|
           if !g.code.blank?
-            csv << ['1',                                      # 001
+            csv << [i.ledger_account_company_code(company_id),  # 001
                     i.created_at.year.to_s,                   # 002
                     entry.to_s,                               # 003
                     'D',  # 004
