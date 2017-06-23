@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170619102845) do
+ActiveRecord::Schema.define(:version => 20170623095042) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -765,8 +765,8 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",                                                           :null => false
-    t.datetime "updated_at",                                                           :null => false
+    t.datetime "created_at",                                                                :null => false
+    t.datetime "updated_at",                                                                :null => false
     t.integer  "street_type_id"
     t.string   "street_name"
     t.string   "street_number"
@@ -792,21 +792,27 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.string   "hd_email"
-    t.decimal  "max_order_total",      :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price",      :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_total",           :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",           :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "website"
-    t.decimal  "overtime_pct",         :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "overtime_pct",              :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.string   "commercial_bill_code"
+    t.string   "void_invoice_code"
+    t.string   "void_commercial_bill_code"
+    t.string   "ledger_account_app_code"
   end
 
   add_index "companies", ["commercial_bill_code"], :name => "index_companies_on_commercial_bill_code"
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
+  add_index "companies", ["ledger_account_app_code"], :name => "index_companies_on_ledger_account_app_code"
   add_index "companies", ["organization_id", "fiscal_id"], :name => "index_companies_on_organization_id_and_fiscal_id", :unique => true
   add_index "companies", ["organization_id"], :name => "index_companies_on_organization_id"
   add_index "companies", ["province_id"], :name => "index_companies_on_province_id"
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
+  add_index "companies", ["void_commercial_bill_code"], :name => "index_companies_on_void_commercial_bill_code"
+  add_index "companies", ["void_invoice_code"], :name => "index_companies_on_void_invoice_code"
   add_index "companies", ["zipcode_id"], :name => "index_companies_on_zipcode_id"
 
   create_table "company_bank_accounts", :force => true do |t|
@@ -2476,6 +2482,16 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3567,6 +3583,19 @@ ActiveRecord::Schema.define(:version => 20170619102845) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

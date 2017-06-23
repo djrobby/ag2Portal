@@ -1,3 +1,17 @@
+# encoding: utf-8
+
+# Replaceable latin symbols UTF-8 = ASCII-8BIT (ISO-8859-1)
+# Á = \xC1  á = \xE1
+# É = \xC9  é = \xE9
+# Í = \xCD  í = \xED
+# Ó = \xD3  ó = \xF3
+# Ú = \xDA  ú = \xFA
+# Ü = \xDC  ü = \xFC
+# Ñ = \xD1  ñ = \xF1
+# Ç = \xC7  ç = \xE7
+# ¿ = \xBF  ¡ = \xA1
+# ª = \xAA  º = \xBA
+
 class SupplierInvoice < ActiveRecord::Base
   include ModelsModule
 

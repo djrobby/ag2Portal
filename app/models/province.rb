@@ -36,7 +36,7 @@ class Province < ActiveRecord::Base
   end
 
   def territory_code
-    _ret = '1'
+    _ret = '0'
     if region.name.upcase.include? 'CANARIAS'
       _ret = '2'
     elsif (region.name.upcase.include? 'EUSKADI') || (region.name.upcase.include? 'VASCO')

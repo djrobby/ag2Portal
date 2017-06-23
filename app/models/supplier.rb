@@ -1,4 +1,20 @@
+# encoding: utf-8
+
+# Replaceable latin symbols UTF-8 = ASCII-8BIT (ISO-8859-1)
+# Á = \xC1  á = \xE1
+# É = \xC9  é = \xE9
+# Í = \xCD  í = \xED
+# Ó = \xD3  ó = \xF3
+# Ú = \xDA  ú = \xFA
+# Ü = \xDC  ü = \xFC
+# Ñ = \xD1  ñ = \xF1
+# Ç = \xC7  ç = \xE7
+# ¿ = \xBF  ¡ = \xA1
+# ª = \xAA  º = \xBA
+
 class Supplier < ActiveRecord::Base
+  include ModelsModule
+
   has_and_belongs_to_many :activities, :join_table => :suppliers_activities
   belongs_to :country
   belongs_to :region
@@ -127,6 +143,7 @@ class Supplier < ActiveRecord::Base
   end
 
   def name40
+    # sanitize_string(self.name[0,40].strip, true, true, false, true) unless self.name.blank?
     !self.name.blank? ? self.name[0,40].strip : ''
   end
 
@@ -243,6 +260,15 @@ class Supplier < ActiveRecord::Base
     entity_type == 1 ? 'F' : 'J'
   end
 
+  # Obtaining ledger account app company code
+  def ledger_account_company_code(company_id=nil)
+    _ret = '9999'
+    if !company_id.nil?
+      _ret = Company.find(company_id).ledger_account_app_code rescue '9999'
+    end
+    _ret.blank? ? '9999' : _ret
+  end
+
   #
   # Calculated fields
   #
@@ -331,7 +357,7 @@ class Supplier < ActiveRecord::Base
       array.each do |i|
         lac = i.ledger_account_code(company_id)
         if !lac.nil?
-          csv << ['1',                                    # 001
+          csv << [ledger_account_company_code(company_id),# 001
                   'P',                                    # 002
                   i.supplier_code,                        # 003
                   lac,                                    # 004
@@ -362,7 +388,7 @@ class Supplier < ActiveRecord::Base
                   i.town.name,                            # 029
                   i.province.ine_cpro,                    # 030
                   i.province.name,                        # 031
-                  i.country.code,                         # 032
+                  nil,  # 032
                   i.country.name,                         # 033
                   nil,  # 034
                   nil,  # 035

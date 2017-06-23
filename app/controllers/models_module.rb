@@ -68,6 +68,32 @@ module ModelsModule
     number_with_precision(_number.round(_decimals), precision: _decimals)
   end
 
+  def sanitize_string(str, encode, latin, all, capitalized)
+    if !str.blank?
+      if encode
+        # Change encode
+        if str.encoding.name != "UTF-8"
+          str = str.force_encoding('ISO-8859-1').encode('UTF-8')
+        end
+      end
+      if latin
+        # Replace offending latin symbols
+        str = str.tr($alpha, $gamma)
+      end
+      if all
+        # Replace all non ASCII symbols
+        str = str.gsub(/[^0-9A-Za-z ,;.:-_!?@#%&]/, '')
+      end
+      if capitalized
+        # Capitalize (must be apply with encode!)
+        str = str.downcase
+        str = str.tr($ucase, $lcase)
+        str = str.titleize
+      end
+    end
+    str
+  end
+
   #
   # Family Breakdown
   #

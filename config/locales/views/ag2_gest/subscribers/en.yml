@@ -25,8 +25,8 @@ en:
         pendig_only: "Pendientes"
         unpaid_only: "Impagadas"
         charged_only: "Cobradas"
-        are_you_sure_to_void: "¿Estás seguro/a de abonar este "
-        are_you_sure_to_rebill: "¿Estás seguro/a de refacturar este "
+        are_you_sure_to_void: "Are you sure to void this "
+        are_you_sure_to_rebill: "Are you sure to rebill this "
       edit:
         title: "Editar Subscriber"
         btn_show: "Ver Subscriber"
