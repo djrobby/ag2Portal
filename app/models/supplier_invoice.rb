@@ -325,8 +325,8 @@ class SupplierInvoice < ActiveRecord::Base
               taxcode3 = g.tax_rate.to_i.to_s
               taxrate3 = i.raw_number(g.tax_rate, 2)
             end
-            taxable_sum += g.item_amount
-            tax_sum += g.item_tax
+            taxable_sum += g.item_amount.round(2)
+            tax_sum += g.item_tax.round(2)
           end
           _g += 1
         end
@@ -380,7 +380,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 044
                   i.invoice_no,                             # 045
                   i.format_date(Time.new),                  # 046
-                  i.raw_number(i.totals, 2),                # 047
+                  totals,                                   # 047
                   'R',                                      # 048
                   i.supplier.fiscal_id,                     # 049
                   i.supplier.name35,                        # 050
