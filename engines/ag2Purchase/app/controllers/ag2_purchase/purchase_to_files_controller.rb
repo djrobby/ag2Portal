@@ -101,6 +101,7 @@ module Ag2Purchase
         render json: @json_data and return
       end
       upload_xml_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices, company.id))
+      upload_xml_file('SIS_CARTERAEFECTOS.csv', SupplierInvoice.effects_portfolio_to_csv(supplier_invoices, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
                      "File" => "/uploads/SIS_MOVCONTA.csv", "LinkMessage" => link_message }
       # save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))

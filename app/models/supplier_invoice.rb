@@ -214,6 +214,78 @@ class SupplierInvoice < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+  def self.effects_portfolio_to_csv(array, company_id=nil)
+    column_names = [I18n.t('activerecord.csv_sage200.supplier_invoice.c001'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c002'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c003'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c004'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c005'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c006'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c007'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c008'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c009'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c010'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c011'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c012'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c013'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c014'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c015'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c016'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c017'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c018'),
+                    I18n.t('activerecord.csv_sage200.supplier_invoice.c019')]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep) do |csv|
+      csv << column_names
+      lac = nil
+      entry = 0
+      array.each do |i|
+        entry += 1
+        # Load tax_type lines
+        ttl = i.items_group_by_tax_type(company_id)
+        if ttl.to_a.count <= 0
+          # No ttl records found
+          break
+        end
+        # Totals for effect line
+        taxable_sum = 0
+        tax_sum = 0
+        totals = 0
+        ttl.each do |g|
+          if !g.code.blank?
+            taxable_sum += g.item_amount.round(2)
+            tax_sum += g.item_tax.round(2)
+          end
+        end
+        totals = i.raw_number(taxable_sum + tax_sum, 2)
+        # Effect line
+        lac = i.supplier.ledger_account_code(company_id)
+        expiration = i.created_at + i.payment_method.expiration_days.days
+        if !lac.nil?
+          csv << [i.ledger_account_company_code(company_id),  # 001
+                  nil,  # 002
+                  nil,  # 003
+                  'P',                                        # 004
+                  entry.to_s,                                 # 005
+                  i.created_at.year.to_s,                     # 006
+                  nil,  # 007
+                  nil,  # 008
+                  i.invoice_no,                               # 009
+                  i.supplier.supplier_code,                   # 010
+                  lac,                                        # 011
+                  nil,  # 012
+                  i.format_date(i.created_at),                # 013
+                  i.format_date(i.invoice_date),              # 014
+                  i.format_date(expiration),                  # 015
+                  totals,                                     # 016
+                  '-1',                                       # 017
+                  i.invoice_no,                               # 018
+                  '0']                                        # 019
+        end # !lac.nil?
+      end # array.each
+    end # CSV.generate
+  end
+
   def self.to_csv(array, company_id=nil)
     column_names = [I18n.t('activerecord.csv_sage200.supplier_invoice.c001'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c002'),
@@ -379,7 +451,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 043
                   nil,  # 044
                   i.invoice_no,                             # 045
-                  i.format_date(Time.new),                  # 046
+                  i.format_date(i.invoice_date),            # 046
                   totals,                                   # 047
                   'R',                                      # 048
                   i.supplier.fiscal_id,                     # 049
