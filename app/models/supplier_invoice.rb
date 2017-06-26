@@ -260,7 +260,8 @@ class SupplierInvoice < ActiveRecord::Base
         totals = i.raw_number(taxable_sum + tax_sum, 2)
         # Effect line
         lac = i.supplier.ledger_account_code(company_id)
-        expiration = i.created_at + i.payment_method.expiration_days.days
+        days_to_expiration = i.payment_method.expiration_days.blank? ? 0 : i.payment_method.expiration_days
+        expiration = i.created_at + days_to_expiration.days
         if !lac.nil?
           csv << [i.ledger_account_company_code(company_id),  # 001
                   nil,  # 002
