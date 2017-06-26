@@ -282,7 +282,14 @@ class SupplierInvoice < ActiveRecord::Base
       entry = 0
       array.each do |i|
         entry += 1
-        # Gross & Net amounts
+        # Load charge_account & tax_type lines
+        cal = i.items_group_by_charge_account(company_id)
+        ttl = i.items_group_by_tax_type(company_id)
+        if cal.to_a.count <= 0 || ttl.to_a.count <= 0
+          # No cal or ttl records found
+          break
+        end
+        # Gross & Net amounts for supplier line
         _g = 1
         taxable1 = nil
         tax1 = nil
@@ -298,7 +305,8 @@ class SupplierInvoice < ActiveRecord::Base
         taxrate3 = nil
         taxable_sum = 0
         tax_sum = 0
-        i.items_group_by_tax_type(company_id).each do |g|
+        totals = 0
+        ttl.each do |g|
           if !g.code.blank?
             case _g
             when 1
@@ -306,26 +314,23 @@ class SupplierInvoice < ActiveRecord::Base
               tax1 = i.raw_number(g.item_tax, 2)
               taxcode1 = g.tax_rate.to_i.to_s
               taxrate1 = i.raw_number(g.tax_rate, 2)
-              taxable_sum += taxable1
-              tax_sum += tax1
             when 2
               taxable2 = i.raw_number(g.item_amount, 2)
               tax2 = i.raw_number(g.item_tax, 2)
               taxcode2 = g.tax_rate.to_i.to_s
               taxrate2 = i.raw_number(g.tax_rate, 2)
-              taxable_sum += taxable2
-              tax_sum += tax2
             when 3
               taxable3 = i.raw_number(g.item_amount, 2)
               tax3 = i.raw_number(g.item_tax, 2)
               taxcode3 = g.tax_rate.to_i.to_s
               taxrate3 = i.raw_number(g.tax_rate, 2)
-              taxable_sum += taxable3
-              tax_sum += tax3
             end
+            taxable_sum += g.item_amount
+            tax_sum += g.item_tax
           end
           _g += 1
         end
+        totals = i.raw_number(taxable_sum + tax_sum, 2)
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
         if !lac.nil? && !taxable1.nil?
@@ -338,7 +343,7 @@ class SupplierInvoice < ActiveRecord::Base
                   i.format_date(Time.new),                  # 007
                   nil,  # 008
                   i.invoice_no,                             # 009
-                  i.raw_number(i.totals, 2),                # 010
+                  totals,                                   # 010
                   nil,  # 011
                   nil,  # 012
                   nil,  # 013
@@ -392,7 +397,7 @@ class SupplierInvoice < ActiveRecord::Base
                   '0']                                      # 060
         end # !lac.nil?
         # Group 6 lines: charge_accounts
-        i.items_group_by_charge_account(company_id).each do |g|
+        cal.each do |g|
           if !g.code.blank?
             csv << [i.ledger_account_company_code(company_id),  # 001
                     i.created_at.year.to_s,                   # 002
@@ -457,7 +462,7 @@ class SupplierInvoice < ActiveRecord::Base
           end # !g.code.blank?
         end # i.items_group_by_charge_account.each
         # Group 4 (47) lines: taxes
-        i.items_group_by_tax_type(company_id).each do |g|
+        ttl.each do |g|
           if !g.code.blank?
             csv << [i.ledger_account_company_code(company_id),  # 001
                     i.created_at.year.to_s,                   # 002
