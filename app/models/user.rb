@@ -33,6 +33,31 @@ class User < ActiveRecord::Base
   has_one :technician
   has_many :tickets, foreign_key: :created_by
   has_many :cc_tickets, class_name: 'Ticket', foreign_key: :cc_id
+  has_many :background_works
+
+  def works_pending
+    background_works.where(complete: false)
+  end
+
+  def creating_prebills?
+    works_pending.any?{|w| w.type_work == "create_prebills"}
+  end
+
+  def confirming_prebills?
+    works_pending.any?{|w| w.type_work == "confirm_prebills"}
+  end
+
+  def wcreating_pending
+    works_pending.where(type_work: "create_prebills")
+  end
+
+  def wconfirm_pending
+    works_pending.where(type_work: "confirm_prebills")
+  end
+
+  def prebill_pending?(group_no)
+    !background_works.where(complete: false, group_no: group_no).first.blank?
+  end
 
   def to_label
     "#{name} (#{email})"

@@ -1,0 +1,13 @@
+# :verbose: false
+# :concurrency:  2
+# :logfile: ./log/sidekiq.log
+# :pidfile: ./tmp/pids/sidekiq.pid
+
+:verbose: false
+:concurrency:  10
+# :logfile: ./log/sidekiq.log
+# :pidfile: ./tmp/pids/sidekiq.pid
+:queues:
+  - [default, 2]
+  - [activities_create_queue, 5]
+  - [activities_general_queue, 7]

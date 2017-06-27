@@ -1,0 +1,97 @@
+<% unless session[:prebills_job_no].blank? %>
+  <div id="job-proccess" class="alert alert-danger">
+    <a class="close" data-dismiss="alert">×</a>
+    <div id="flash_notice">Tarea en segundo plano</div>
+  </div>
+<% end %>
+
+<div id="job-success" class="alert alert-success hide">
+  <a class="close" data-dismiss="alert">×</a>
+</div>
+
+<script>
+function setupPolling(options){
+  if (!options || !options.remote_url){
+    console.error('An option object with at least a `remote_url` paramter is required');
+    return;
+  }
+
+  var polling = {};
+  polling.remoteUrl = options.remote_url;
+  polling.interval = options.interval || 10000;
+  polling.waitingMsgClass = options.waitingMsgClass || '#job-proccess';
+  polling.insertInTo = options.insertInTo || 'body';
+  polling.successSelector = options.successSelector || '#job-success';
+  polling.successMsgElement = options.successMsgElement || '<div></div>';
+  polling.hideClass = options.hideClass || 'hide';
+  polling.showClass = options.showClass || '';
+  polling.scheduled = null;
+
+  polling.processSuccess = function(response){
+    var hasMessage = response.message;
+    var hasResumeLink = response.link_resume;
+
+    $(this.waitingMsgClass).remove();
+    $success = $(this.successSelector);
+    $successMsg = $(this.successMsgElement);
+    if(hasMessage){
+      $successMsg.text(response.message);
+    }
+    if(hasResumeLink){
+      $resumeLink = $('<a href="' + response.link_resume + '">' + response.text_resume + '</a>');
+      $successMsg.append($resumeLink);
+    }
+
+    $success
+      .removeClass(this.hideClass)
+      .addClass(this.showClass)
+      .append($successMsg);
+
+  };
+
+  polling.checkTaskStatus = function checkTaskStatus(poll){
+    return function(){
+      $.ajax(poll.remoteUrl, {
+        dataType: 'json',
+        method: 'GET',
+        global: false
+      })
+      .done((data, textStatus, jqXHR)=>{
+        if(jqXHR.statusCode().status === 202){
+          poll.subscribeCheck();
+        } else {
+          poll.processSuccess(data);
+        }
+      })
+      .fail(()=>{
+        poll.subscribeCheck();
+      });
+    };
+  };
+
+  polling.subscribeCheck = function subscribeCheck(){
+    this.scheduled = window.setTimeout(this.checkTaskStatus(this), this.interval);
+  };
+
+  polling.start = function start(){
+    this.subscribeCheck();
+  };
+
+  polling.stop = function(){
+    window.clearTimeout(this.scheduled);
+  };
+
+  return polling;
+}
+<% unless current_user and current_user.works_pending.blank? #session[:prebills_job_no].blank? %>
+  $(document).ready(function(){
+    setupPolling({
+      <% if !current_user.blank? and current_user.creating_prebills? %>
+        remote_url: '/ag2_gest/es/bills/status_prebills'
+      <% elsif !current_user.blank? and current_user.confirming_prebills? %>
+        remote_url: '/ag2_gest/es/bills/status_confirm'
+      <% end %>
+    }).start();
+  })
+<% end %>
+</script>

@@ -62,6 +62,8 @@ gem "paper_trail"
 gem 'thinreports-rails'
 gem "select2-rails"
 gem 'active_model_serializers'
+gem 'sidekiq', '~> 3.1.0'
+gem 'sidekiq-status'
 
 # Own required gems
 gem 'ag2_admin', :path => 'engines/ag2Admin'

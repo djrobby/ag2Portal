@@ -17,6 +17,8 @@ en:
         create: "Bill created correctly."
         billing: "Mass Billing"
         invoices_created: "Invoices created"
+        invoices_query: "Prebilling process is running. You will receive a message when this process is finished."
+        confirm_query: "Confirmation process is running. You will receive a message when this process is finished."
         export_google: "Export to Google Sheets"
         massive_billing_consumption: "Mass Billing - Consumption"
         id: "Id"

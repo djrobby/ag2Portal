@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170623095042) do
+ActiveRecord::Schema.define(:version => 20170627063220) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -139,6 +139,26 @@ ActiveRecord::Schema.define(:version => 20170623095042) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+  end
+
+  create_table "background_works", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "work_no"
+    t.integer  "group_no"
+    t.integer  "total"
+    t.text     "failure"
+    t.string   "status"
+    t.string   "type_work"
+    t.boolean  "complete",                                       :default => false
+    t.integer  "consumption"
+    t.decimal  "price_total",     :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.integer  "total_confirmed"
+    t.date     "invoice_date"
+    t.date     "payday_limit"
+    t.string   "first_bill"
+    t.string   "last_bill"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
   end
 
   create_table "bank_account_classes", :force => true do |t|
@@ -962,8 +982,6 @@ ActiveRecord::Schema.define(:version => 20170623095042) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -2484,6 +2502,16 @@ ActiveRecord::Schema.define(:version => 20170623095042) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3575,6 +3603,19 @@ ActiveRecord::Schema.define(:version => 20170623095042) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

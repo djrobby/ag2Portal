@@ -41,13 +41,18 @@
       if ((biller == "") || (from == "") || (to == ""))
         return;
       // make a POST call and executes action
+      $('#message').html('<%=t '.message' %>');
       $('#message_area').children().show();
       $('#buttons').children().hide();
       jQuery.getJSON(method + "?company=" + biller + "&from=" + from + "&to=" + to, function(data) {
         $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
-          $("#message").html('<a href="' + data.File + '" download>' + data.LinkMessage + '</a>');
+          if (typeof data.LinkMessage2 === 'undefined') {
+            $("#message").html('<a href="' + data.File1 + '" download>' + data.LinkMessage1 + '</a>');
+          } else {
+            $("#message").html('<a href="' + data.File1 + '" download>' + data.LinkMessage1 + '</a><br /><a href="' + data.File2 + '" download>' + data.LinkMessage2 + '</a>');
+          }
           $("#progressbar").hide();
         }
         else {
@@ -109,7 +114,7 @@
         </p>
         <p>
           <a href="#" id="data_export_btn" class="btn btn-primary"><%=t '.btn_yes' %></a>
-          <a href="<%= ag2_gest.bill_management_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>
+          <a href="<%= ag2_purchase.root_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>
           <!--<a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%#= t '.report_btn' %></a>-->
         </p>
       </div>

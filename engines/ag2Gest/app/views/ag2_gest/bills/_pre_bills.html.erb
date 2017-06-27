@@ -21,15 +21,22 @@
   </thead>
   <tbody>
     <% @pre_bills.each do |pre_bill| %>
-      <tr>
-        <td align="right"><%= pre_bill.pre_group_no %></td>
-        <td align="center"><%=l pre_bill.billing_date %></td>
-        <td align="right"><%= pre_bill.billing_count %></td>
-        <td align="center"><%= pre_bill.billing_period %></td>    
-        <td align="center"><% if !pre_bill.billed_id.nil? %><i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
-        <td align="right"><%= number_with_precision(pre_bill.billing_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= link_to bills_path(:bills => pre_bill.pre_group_no), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %></td>
-      </tr>
+      <% if !current_user.prebill_pending?(pre_bill.pre_group_no) #if session[:prebills_group_no].nil? or session[:prebills_group_no] != pre_bill[1].first.pre_group_no %>
+        <tr>
+          <td align="right"><%= pre_bill.pre_group_no %></td>
+          <td align="center"><%=l pre_bill.billing_date %></td>
+          <td align="right"><%= pre_bill.billing_count %></td>
+          <td align="center"><%= pre_bill.billing_period %></td>
+          <td align="center"><% if !pre_bill.billed_id.nil? %><i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
+          <td align="right"><%= number_with_precision(pre_bill.billing_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td align="right"><%= link_to bills_path(:bills => pre_bill.pre_group_no), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %></td>
+        </tr>
+      <% else %>
+        <tr class="warning">
+          <td align="right"><%= pre_bill.pre_group_no %></td>
+          <td align="center" colspan="6">En Proceso</td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

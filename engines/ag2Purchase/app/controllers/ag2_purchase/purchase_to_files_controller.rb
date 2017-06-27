@@ -46,7 +46,7 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
-      link_message = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CLIENTES_PROVEEDORES')
+      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CLIENTES_PROVEEDORES')
 
       suppliers = Supplier.by_organization_and_creation_date(organization, from, to)
       if suppliers.blank?
@@ -56,7 +56,7 @@ module Ag2Purchase
       end
       upload_xml_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
-                     "File" => "/uploads/SIS_CLIENTES_PROVEEDORES.csv", "LinkMessage" => link_message }
+                     "File1" => "/uploads/SIS_CLIENTES_PROVEEDORES.csv", "LinkMessage1" => link_message1 }
       # save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
       render json: @json_data
     rescue
@@ -92,7 +92,8 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
-      link_message = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_MOVCONTA')
+      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_MOVCONTA')
+      link_message2 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CARTERAEFECTOS')
 
       supplier_invoices = SupplierInvoice.by_projects_and_creation_date(projects, from, to)
       if supplier_invoices.blank?
@@ -103,7 +104,8 @@ module Ag2Purchase
       upload_xml_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices, company.id))
       upload_xml_file('SIS_CARTERAEFECTOS.csv', SupplierInvoice.effects_portfolio_to_csv(supplier_invoices, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
-                     "File" => "/uploads/SIS_MOVCONTA.csv", "LinkMessage" => link_message }
+                     "File1" => "/uploads/SIS_MOVCONTA.csv", "LinkMessage1" => link_message1,
+                     "File2" => "/uploads/SIS_CARTERAEFECTOS.csv", "LinkMessage2" => link_message2 }
       # save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
       render json: @json_data
     # rescue
