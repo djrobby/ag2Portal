@@ -9,9 +9,9 @@
     <company_data>Empresa Mixta de Servicios Municipales de El Ejido S.A. - CIF: A04241147 - Inscrita en el R.M. Almería, Tomo 256, Sección 8a, Folio 78, Hoja 8120</company_data>
   </company>
   <bill description="Factura">
-    <bill_no description="Nº">00EL2-0160-00009</bill_no>
+    <bill_no description="Nº">00EL2-0160-00004</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
-    <billing_period description="Periodo facturado">201602 (Trimestral)</billing_period>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha límite pago"></payday_limit>
     <subscriber description="Datos Cliente">
       <code description="Código">0001-0000001</code>
@@ -38,61 +38,63 @@
     </meter>
     <consumption description="Datos Consumo">
       <previous_reading description="Lect. Anterior">
-        <index>80</index>
-        <date>24/10/2016</date>
+        <index>50</index>
+        <date>01/10/2016</date>
       </previous_reading>
       <current_reading description="Lect. Actual">
-        <index>100</index>
+        <index>80</index>
         <date>24/10/2016</date>
       </current_reading>
-      <read description="M3 registrados">20</read>
+      <read description="M3 registrados">30</read>
       <estimated description="M3 estimados">0</estimated>
       <others description="Otros consumos">0</others>
-      <invoiced description="M3 facturados">20</invoiced>
-      <average description="Consumo medio">26</average>
+      <invoiced description="M3 facturados">30</invoiced>
+      <average description="Consumo medio">30</average>
     </consumption>
     <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
-    <total description="Total Factura/s">36,27</total>
-    <receivable description="Total A Pagar">36,27</receivable>
-    <pending_debt description="Su total pendiente asciende a">36,27</pending_debt>
+    <total description="Total Factura/s">51,89</total>
+    <receivable description="Total A Pagar">51,89</receivable>
+    <pending_debt description="Su total pendiente asciende a">0,00</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
     <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
     <payment_data description="Datos de pago">
       <supply_no description="Nº de Suministro">0001-0000001</supply_no>
-      <bill_no description="Factura Nº">00EL2-0160-00009</bill_no>
+      <bill_no description="Factura Nº">00EL2-0160-00004</bill_no>
       <bill_date description="Fecha">24/10/2016</bill_date>
       <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
       <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
       <barcode>
         <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">L2016000009</reference>
+        <reference description="REFERENCIA">L2016000004</reference>
         <ident description="IDENTIF.">000001</ident>
         <supply description="SUMINISTRO">10000001</supply>
         <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
-        <total description="TOTAL">36,27</total>
+        <total description="TOTAL">51,89</total>
       </barcode>
     </payment_data>
     <invoices description="Facturación">
       <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">00EL2-0160-00009</invoice_no>
+        <invoice_no description="Factura Nº">00EL2-0160-00004</invoice_no>
         <invoice_date description="Fecha">24/10/2016</invoice_date>
         <payday_limit description="Fecha de vencimiento"></payday_limit>
         <biller>
           <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
           <fiscal_id>A04241147</fiscal_id>
         </biller>
-        <subtotal description="Subtotal">32,97</subtotal>
+        <subtotal description="Subtotal">47,17</subtotal>
         <vat_rates>
-          <vat_rate description="Cuota de IVA (10,00% de 32,97)">3,30</vat_rate>
+          <vat_rate description="Cuota de IVA (10,00% de 47,17)">4,72</vat_rate>
         </vat_rates>
-        <total description="Total">36,27</total>
+        <total description="Total">51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
-            <tariffs></tariffs>
-            <amount>18,12</amount>
+            <tariffs>(1)</tariffs>
+            <amount>32,32</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(1)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>1,320000</price>
@@ -101,7 +103,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="De 0 a 6">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,250000</price>
@@ -109,7 +111,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL2" description="De 7 a 10">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>4,00</quantity>
                 <price>0,470000</price>
@@ -117,7 +119,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL3" description="De 11 a 16">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,850000</price>
@@ -125,20 +127,20 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL4" description="Más de 17">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
-                <quantity>4,00</quantity>
+                <quantity>14,00</quantity>
                 <price>1,420000</price>
-                <amount>5,6800</amount>
+                <amount>19,8800</amount>
                 <tax_pct>10,00</tax_pct>
               </item>
             </consumption>
           </concept>
           <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
-            <tariffs></tariffs>
+            <tariffs>(2)</tariffs>
             <amount>7,56</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(2)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>2,520000</price>
@@ -147,9 +149,9 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Bloque único">
-                <tariff></tariff>
+                <tariff>(2)</tariff>
                 <measure>m3</measure>
-                <quantity>20,00</quantity>
+                <quantity>30,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -171,7 +173,7 @@
               <item code="BL1" description="Más de 0">
                 <tariff></tariff>
                 <measure>m3</measure>
-                <quantity>20,00</quantity>
+                <quantity>30,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -185,7 +187,7 @@
               <item code="BL1" description="Más de 0">
                 <tariff></tariff>
                 <measure>m3</measure>
-                <quantity>20,00</quantity>
+                <quantity>30,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -197,9 +199,199 @@
     </invoices>
   </bill>
   <bill description="Factura">
-    <bill_no description="Nº">00EL2-0160-00010</bill_no>
+    <bill_no description="Nº">00EL2-0160-00004</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
-    <billing_period description="Periodo facturado">201602 (Trimestral)</billing_period>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
+    <payday_limit description="Fecha límite pago"></payday_limit>
+    <subscriber description="Datos Cliente">
+      <code description="Código">0001-0000001</code>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <address description="Dirección">
+        <address_1>CL. Cervantes 8</address_1>
+        <address_2>04700 El Ejido, Almería (España)</address_2>
+      </address>
+      <supply description="Datos Suministro">
+        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
+        <use description="Uso">bonificado</use>
+      </supply>
+    </subscriber>
+    <client>
+      <code>0001-0000003</code>
+      <name>Camacho Sanchez, Manuel Jesus</name>
+      <address_1>Cl. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+    </client>
+    <meter description="Datos contador">
+      <code>C14CA000001K</code>
+      <caliber>15</caliber>
+    </meter>
+    <consumption description="Datos Consumo">
+      <previous_reading description="Lect. Anterior">
+        <index>50</index>
+        <date>01/10/2016</date>
+      </previous_reading>
+      <current_reading description="Lect. Actual">
+        <index>80</index>
+        <date>24/10/2016</date>
+      </current_reading>
+      <read description="M3 registrados">30</read>
+      <estimated description="M3 estimados">0</estimated>
+      <others description="Otros consumos">0</others>
+      <invoiced description="M3 facturados">30</invoiced>
+      <average description="Consumo medio">30</average>
+    </consumption>
+    <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
+    </tariffs>
+    <total description="Total Factura/s">-51,89</total>
+    <receivable description="Total A Pagar">-51,89</receivable>
+    <pending_debt description="Su total pendiente asciende a">0,00</pending_debt>
+    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
+    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
+    <payment_data description="Datos de pago">
+      <supply_no description="Nº de Suministro">0001-0000001</supply_no>
+      <bill_no description="Factura Nº">00EL2-0160-00004</bill_no>
+      <bill_date description="Fecha">24/10/2016</bill_date>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
+      <barcode>
+        <issuer description="EMISORA">04241147</issuer>
+        <reference description="REFERENCIA">L2016000004</reference>
+        <ident description="IDENTIF.">000001</ident>
+        <supply description="SUMINISTRO">10000001</supply>
+        <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
+        <total description="TOTAL">-51,89</total>
+      </barcode>
+    </payment_data>
+    <invoices description="Facturación">
+      <invoice description="Factura de Servicio">
+        <invoice_no description="Factura Nº">00EL2-0160-00004</invoice_no>
+        <invoice_date description="Fecha">24/10/2016</invoice_date>
+        <payday_limit description="Fecha de vencimiento"></payday_limit>
+        <biller>
+          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+          <fiscal_id>A04241147</fiscal_id>
+        </biller>
+        <subtotal description="Subtotal">-47,17</subtotal>
+        <vat_rates>
+          <vat_rate description="Cuota de IVA (10,00% de -47,17)">-4,72</vat_rate>
+        </vat_rates>
+        <total description="Total">-51,89</total>
+        <items description="DESGLOSE DE CONCEPTOS">
+          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
+            <tariffs>(1)</tariffs>
+            <amount>-32,32</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(1)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-1,320000</price>
+              <amount>-3,9600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,250000</price>
+                <amount>-1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>-0,470000</price>
+                <amount>-1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,850000</price>
+                <amount>-5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>14,00</quantity>
+                <price>-1,420000</price>
+                <amount>-19,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
+            <tariffs>(2)</tariffs>
+            <amount>-7,56</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(2)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,520000</price>
+              <amount>-7,5600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Bloque único">
+                <tariff>(2)</tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
+            <tariffs></tariffs>
+            <amount>-7,29</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff></tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,430000</price>
+              <amount>-7,2900</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="CAN" name="CANON" description="Importe por CANON">
+            <tariffs></tariffs>
+            <amount>0,00</amount>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+        </items>
+      </invoice>
+    </invoices>
+  </bill>
+  <bill description="Factura">
+    <bill_no description="Nº">00EL2-0160-00005</bill_no>
+    <bill_date description="Fecha">24/10/2016</bill_date>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha límite pago"></payday_limit>
     <subscriber description="Datos Cliente">
       <code description="Código">0001-0000002</code>
@@ -226,61 +418,63 @@
     </meter>
     <consumption description="Datos Consumo">
       <previous_reading description="Lect. Anterior">
-        <index>97</index>
+        <index>63</index>
         <date>24/10/2016</date>
       </previous_reading>
       <current_reading description="Lect. Actual">
         <index>97</index>
         <date>24/10/2016</date>
       </current_reading>
-      <read description="M3 registrados">0</read>
+      <read description="M3 registrados">34</read>
       <estimated description="M3 estimados">0</estimated>
       <others description="Otros consumos">0</others>
-      <invoiced description="M3 facturados">0</invoiced>
+      <invoiced description="M3 facturados">34</invoiced>
       <average description="Consumo medio">34</average>
     </consumption>
     <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
-    <total description="Total Factura/s">20,69</total>
-    <receivable description="Total A Pagar">20,69</receivable>
+    <total description="Total Factura/s">58,14</total>
+    <receivable description="Total A Pagar">58,14</receivable>
     <pending_debt description="Su total pendiente asciende a">0,00</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
     <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
     <payment_data description="Datos de pago">
       <supply_no description="Nº de Suministro">0001-0000002</supply_no>
-      <bill_no description="Factura Nº">00EL2-0160-00010</bill_no>
+      <bill_no description="Factura Nº">00EL2-0160-00005</bill_no>
       <bill_date description="Fecha">24/10/2016</bill_date>
       <holder description="Titular">Rodríguez Maldonado, Néstor Fabián</holder>
       <bank_account description="Cuenta bancaria de cliente">Rodríguez Maldonado, Néstor Fabián</bank_account>
       <barcode>
         <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">L2016000010</reference>
+        <reference description="REFERENCIA">L2016000005</reference>
         <ident description="IDENTIF.">000002</ident>
         <supply description="SUMINISTRO">10000002</supply>
         <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
-        <total description="TOTAL">20,69</total>
+        <total description="TOTAL">58,14</total>
       </barcode>
     </payment_data>
     <invoices description="Facturación">
       <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">00EL2-0160-00010</invoice_no>
+        <invoice_no description="Factura Nº">00EL2-0160-00005</invoice_no>
         <invoice_date description="Fecha">24/10/2016</invoice_date>
         <payday_limit description="Fecha de vencimiento"></payday_limit>
         <biller>
           <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
           <fiscal_id>A04241147</fiscal_id>
         </biller>
-        <subtotal description="Subtotal">18,81</subtotal>
+        <subtotal description="Subtotal">52,85</subtotal>
         <vat_rates>
-          <vat_rate description="Cuota de IVA (10,00% de 18,81)">1,88</vat_rate>
+          <vat_rate description="Cuota de IVA (10,00% de 52,85)">5,29</vat_rate>
         </vat_rates>
-        <total description="Total">20,69</total>
+        <total description="Total">58,14</total>
         <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
-            <tariffs></tariffs>
-            <amount>3,96</amount>
+            <tariffs>(1)</tariffs>
+            <amount>38,00</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(1)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>1,320000</price>
@@ -288,21 +482,45 @@
               <tax_pct>10,00</tax_pct>
             </item>
             <consumption description="Consumo">
-              <item code="BL1" description="De 0 a 0">
-                <tariff></tariff>
+              <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
-                <quantity>0,00</quantity>
+                <quantity>6,00</quantity>
                 <price>0,250000</price>
-                <amount>0,0000</amount>
+                <amount>1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>0,470000</price>
+                <amount>1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>0,850000</price>
+                <amount>5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>18,00</quantity>
+                <price>1,420000</price>
+                <amount>25,5600</amount>
                 <tax_pct>10,00</tax_pct>
               </item>
             </consumption>
           </concept>
           <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
-            <tariffs></tariffs>
+            <tariffs>(2)</tariffs>
             <amount>7,56</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(2)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>2,520000</price>
@@ -311,9 +529,9 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Bloque único">
-                <tariff></tariff>
+                <tariff>(2)</tariff>
                 <measure>m3</measure>
-                <quantity>0,00</quantity>
+                <quantity>34,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -335,7 +553,7 @@
               <item code="BL1" description="Más de 0">
                 <tariff></tariff>
                 <measure>m3</measure>
-                <quantity>0,00</quantity>
+                <quantity>34,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -349,7 +567,7 @@
               <item code="BL1" description="Más de 0">
                 <tariff></tariff>
                 <measure>m3</measure>
-                <quantity>0,00</quantity>
+                <quantity>34,00</quantity>
                 <price>0,000000</price>
                 <amount>0,0000</amount>
                 <tax_pct>0,00</tax_pct>
@@ -361,345 +579,9 @@
     </invoices>
   </bill>
   <bill description="Factura">
-    <bill_no description="Nº">00EL2-0160-00011</bill_no>
+    <bill_no description="Nº">00EL2-0160-00006</bill_no>
     <bill_date description="Fecha">24/10/2016</bill_date>
-    <billing_period description="Periodo facturado">201602 (Trimestral)</billing_period>
-    <payday_limit description="Fecha límite pago"></payday_limit>
-    <subscriber description="Datos Cliente">
-      <code description="Código">0001-0000004</code>
-      <holder description="Titular">Informatica Sanchez</holder>
-      <address description="Dirección">
-        <address_1>CL. Bulevar de El Ejido 44</address_1>
-        <address_2>04700 El Ejido, Almería (España)</address_2>
-      </address>
-      <supply description="Datos Suministro">
-        <fiscal_id description="CIF/NIF">D6778843J</fiscal_id>
-        <use description="Uso">bonificado</use>
-      </supply>
-    </subscriber>
-    <client>
-      <code>0001-0000006</code>
-      <name></name>
-      <address_1>Cl. Bulevar de El Ejido 44</address_1>
-      <address_2>04700 El Ejido, Almería (España)</address_2>
-      <fiscal_id>D6778843J</fiscal_id>
-    </client>
-    <meter description="Datos contador">
-      <code>C15CA000001K</code>
-      <caliber>15</caliber>
-    </meter>
-    <consumption description="Datos Consumo">
-      <previous_reading description="Lect. Anterior">
-        <index>660</index>
-        <date>24/10/2016</date>
-      </previous_reading>
-      <current_reading description="Lect. Actual">
-        <index>700</index>
-        <date>24/10/2016</date>
-      </current_reading>
-      <read description="M3 registrados">40</read>
-      <estimated description="M3 estimados">0</estimated>
-      <others description="Otros consumos">0</others>
-      <invoiced description="M3 facturados">40</invoiced>
-      <average description="Consumo medio">0</average>
-    </consumption>
-    <tariffs description="Tarifas" separator=" | ">
-    </tariffs>
-    <total description="Total Factura/s">69,21</total>
-    <receivable description="Total A Pagar">69,21</receivable>
-    <pending_debt description="Su total pendiente asciende a">69,21</pending_debt>
-    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
-    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
-    <payment_data description="Datos de pago">
-      <supply_no description="Nº de Suministro">0001-0000004</supply_no>
-      <bill_no description="Factura Nº">00EL2-0160-00011</bill_no>
-      <bill_date description="Fecha">24/10/2016</bill_date>
-      <holder description="Titular">Informatica Sanchez</holder>
-      <bank_account description="Cuenta bancaria de cliente">Informatica Sanchez</bank_account>
-      <barcode>
-        <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">L2016000011</reference>
-        <ident description="IDENTIF.">000004</ident>
-        <supply description="SUMINISTRO">10000004</supply>
-        <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
-        <total description="TOTAL">69,21</total>
-      </barcode>
-    </payment_data>
-    <invoices description="Facturación">
-      <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">00EL2-0160-00011</invoice_no>
-        <invoice_date description="Fecha">24/10/2016</invoice_date>
-        <payday_limit description="Fecha de vencimiento"></payday_limit>
-        <biller>
-          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
-          <fiscal_id>A04241147</fiscal_id>
-        </biller>
-        <subtotal description="Subtotal">62,92</subtotal>
-        <vat_rates>
-          <vat_rate description="Cuota de IVA (10,00% de 62,92)">6,29</vat_rate>
-        </vat_rates>
-        <total description="Total">69,21</total>
-        <items description="DESGLOSE DE CONCEPTOS">
-          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
-            <tariffs></tariffs>
-            <amount>42,58</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>3,150000</price>
-              <amount>9,4500</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="De 0 a 33">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>33,00</quantity>
-                <price>0,760000</price>
-                <amount>25,0800</amount>
-                <tax_pct>10,00</tax_pct>
-              </item>
-              <item code="BL2" description="Más de 34">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>7,00</quantity>
-                <price>1,150000</price>
-                <amount>8,0500</amount>
-                <tax_pct>10,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
-            <tariffs></tariffs>
-            <amount>10,89</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>3,630000</price>
-              <amount>10,8900</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>40,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
-            <tariffs></tariffs>
-            <amount>9,45</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>3,150000</price>
-              <amount>9,4500</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>40,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="CAN" name="CANON" description="Importe por CANON">
-            <tariffs></tariffs>
-            <amount>0,00</amount>
-            <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>40,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-        </items>
-      </invoice>
-    </invoices>
-  </bill>
-  <bill description="Factura">
-    <bill_no description="Nº">00EL2-0160-00012</bill_no>
-    <bill_date description="Fecha">24/10/2016</bill_date>
-    <billing_period description="Periodo facturado">201602 (Trimestral)</billing_period>
-    <payday_limit description="Fecha límite pago"></payday_limit>
-    <subscriber description="Datos Cliente">
-      <code description="Código">0001-0000005</code>
-      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
-      <address description="Dirección">
-        <address_1>CL. Cervantes 9</address_1>
-        <address_2>04700 El Ejido, Almería (España)</address_2>
-      </address>
-      <supply description="Datos Suministro">
-        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
-        <use description="Uso">bonificado</use>
-      </supply>
-    </subscriber>
-    <client>
-      <code>0001-0000003</code>
-      <name>Camacho Sanchez, Manuel Jesus</name>
-      <address_1>Cl. Cervantes 8</address_1>
-      <address_2>04700 El Ejido, Almería (España)</address_2>
-      <fiscal_id>48991284L</fiscal_id>
-    </client>
-    <meter description="Datos contador">
-      <code>C15CA000002K</code>
-      <caliber>15</caliber>
-    </meter>
-    <consumption description="Datos Consumo">
-      <previous_reading description="Lect. Anterior">
-        <index>30</index>
-        <date>24/10/2016</date>
-      </previous_reading>
-      <current_reading description="Lect. Actual">
-        <index>30</index>
-        <date>24/10/2016</date>
-      </current_reading>
-      <read description="M3 registrados">0</read>
-      <estimated description="M3 estimados">0</estimated>
-      <others description="Otros consumos">0</others>
-      <invoiced description="M3 facturados">0</invoiced>
-      <average description="Consumo medio">0</average>
-    </consumption>
-    <tariffs description="Tarifas" separator=" | ">
-    </tariffs>
-    <total description="Total Factura/s">20,69</total>
-    <receivable description="Total A Pagar">20,69</receivable>
-    <pending_debt description="Su total pendiente asciende a">20,69</pending_debt>
-    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
-    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
-    <payment_data description="Datos de pago">
-      <supply_no description="Nº de Suministro">0001-0000005</supply_no>
-      <bill_no description="Factura Nº">00EL2-0160-00012</bill_no>
-      <bill_date description="Fecha">24/10/2016</bill_date>
-      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
-      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
-      <barcode>
-        <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">L2016000012</reference>
-        <ident description="IDENTIF.">000005</ident>
-        <supply description="SUMINISTRO">10000005</supply>
-        <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
-        <total description="TOTAL">20,69</total>
-      </barcode>
-    </payment_data>
-    <invoices description="Facturación">
-      <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">00EL2-0160-00012</invoice_no>
-        <invoice_date description="Fecha">24/10/2016</invoice_date>
-        <payday_limit description="Fecha de vencimiento"></payday_limit>
-        <biller>
-          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
-          <fiscal_id>A04241147</fiscal_id>
-        </biller>
-        <subtotal description="Subtotal">18,81</subtotal>
-        <vat_rates>
-          <vat_rate description="Cuota de IVA (10,00% de 18,81)">1,88</vat_rate>
-        </vat_rates>
-        <total description="Total">20,69</total>
-        <items description="DESGLOSE DE CONCEPTOS">
-          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
-            <tariffs></tariffs>
-            <amount>3,96</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>1,320000</price>
-              <amount>3,9600</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="De 0 a 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>0,00</quantity>
-                <price>0,250000</price>
-                <amount>0,0000</amount>
-                <tax_pct>10,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
-            <tariffs></tariffs>
-            <amount>7,56</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>2,520000</price>
-              <amount>7,5600</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="Bloque único">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>0,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
-            <tariffs></tariffs>
-            <amount>7,29</amount>
-            <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
-              <measure>Mes</measure>
-              <quantity>3,00</quantity>
-              <price>2,430000</price>
-              <amount>7,2900</amount>
-              <tax_pct>10,00</tax_pct>
-            </item>
-            <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>0,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-          <concept code="CAN" name="CANON" description="Importe por CANON">
-            <tariffs></tariffs>
-            <amount>0,00</amount>
-            <consumption description="Consumo">
-              <item code="BL1" description="Más de 0">
-                <tariff></tariff>
-                <measure>m3</measure>
-                <quantity>0,00</quantity>
-                <price>0,000000</price>
-                <amount>0,0000</amount>
-                <tax_pct>0,00</tax_pct>
-              </item>
-            </consumption>
-          </concept>
-        </items>
-      </invoice>
-    </invoices>
-  </bill>
-  <bill description="Factura">
-    <bill_no description="Nº">00EL2-0160-00013</bill_no>
-    <bill_date description="Fecha">24/10/2016</bill_date>
-    <billing_period description="Periodo facturado">201602 (Trimestral)</billing_period>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
     <payday_limit description="Fecha límite pago"></payday_limit>
     <subscriber description="Datos Cliente">
       <code description="Código">0001-0000003</code>
@@ -726,46 +608,428 @@
     </meter>
     <consumption description="Datos Consumo">
       <previous_reading description="Lect. Anterior">
-        <index>870</index>
+        <index>799</index>
         <date>24/10/2016</date>
       </previous_reading>
       <current_reading description="Lect. Actual">
-        <index>900</index>
+        <index>870</index>
+        <date>24/10/2016</date>
+      </current_reading>
+      <read description="M3 registrados">71</read>
+      <estimated description="M3 estimados">0</estimated>
+      <others description="Otros consumos">0</others>
+      <invoiced description="M3 facturados">71</invoiced>
+      <average description="Consumo medio">71</average>
+    </consumption>
+    <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
+    </tariffs>
+    <total description="Total Factura/s">115,93</total>
+    <receivable description="Total A Pagar">115,93</receivable>
+    <pending_debt description="Su total pendiente asciende a">0,00</pending_debt>
+    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
+    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
+    <payment_data description="Datos de pago">
+      <supply_no description="Nº de Suministro">0001-0000003</supply_no>
+      <bill_no description="Factura Nº">00EL2-0160-00006</bill_no>
+      <bill_date description="Fecha">24/10/2016</bill_date>
+      <holder description="Titular">Perez Garcia, Julia</holder>
+      <bank_account description="Cuenta bancaria de cliente">Perez Garcia, Julia</bank_account>
+      <barcode>
+        <issuer description="EMISORA">04241147</issuer>
+        <reference description="REFERENCIA">L2016000006</reference>
+        <ident description="IDENTIF.">000003</ident>
+        <supply description="SUMINISTRO">10000003</supply>
+        <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
+        <total description="TOTAL">115,93</total>
+      </barcode>
+    </payment_data>
+    <invoices description="Facturación">
+      <invoice description="Factura de Servicio">
+        <invoice_no description="Factura Nº">00EL2-0160-00006</invoice_no>
+        <invoice_date description="Fecha">24/10/2016</invoice_date>
+        <payday_limit description="Fecha de vencimiento"></payday_limit>
+        <biller>
+          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+          <fiscal_id>A04241147</fiscal_id>
+        </biller>
+        <subtotal description="Subtotal">105,39</subtotal>
+        <vat_rates>
+          <vat_rate description="Cuota de IVA (10,00% de 105,39)">10,54</vat_rate>
+        </vat_rates>
+        <total description="Total">115,93</total>
+        <items description="DESGLOSE DE CONCEPTOS">
+          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
+            <tariffs>(1)</tariffs>
+            <amount>90,54</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(1)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>1,320000</price>
+              <amount>3,9600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>0,250000</price>
+                <amount>1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>0,470000</price>
+                <amount>1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>0,850000</price>
+                <amount>5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>55,00</quantity>
+                <price>1,420000</price>
+                <amount>78,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
+            <tariffs>(2)</tariffs>
+            <amount>7,56</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(2)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>2,520000</price>
+              <amount>7,5600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Bloque único">
+                <tariff>(2)</tariff>
+                <measure>m3</measure>
+                <quantity>71,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
+            <tariffs></tariffs>
+            <amount>7,29</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff></tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>2,430000</price>
+              <amount>7,2900</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>71,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="CAN" name="CANON" description="Importe por CANON">
+            <tariffs></tariffs>
+            <amount>0,00</amount>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>71,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+        </items>
+      </invoice>
+    </invoices>
+  </bill>
+  <bill description="Factura">
+    <bill_no description="Nº">00EL2-0160-00023</bill_no>
+    <bill_date description="Fecha">24/10/2016</bill_date>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
+    <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
+    <subscriber description="Datos Cliente">
+      <code description="Código">0001-0000001</code>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <address description="Dirección">
+        <address_1>CL. Cervantes 8</address_1>
+        <address_2>04700 El Ejido, Almería (España)</address_2>
+      </address>
+      <supply description="Datos Suministro">
+        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
+        <use description="Uso">bonificado</use>
+      </supply>
+    </subscriber>
+    <client>
+      <code>0001-0000003</code>
+      <name>Camacho Sanchez, Manuel Jesus</name>
+      <address_1>Cl. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+    </client>
+    <meter description="Datos contador">
+      <code>C14CA000001K</code>
+      <caliber>15</caliber>
+    </meter>
+    <consumption description="Datos Consumo">
+      <previous_reading description="Lect. Anterior">
+        <index>50</index>
+        <date>01/10/2016</date>
+      </previous_reading>
+      <current_reading description="Lect. Actual">
+        <index>80</index>
         <date>24/10/2016</date>
       </current_reading>
       <read description="M3 registrados">30</read>
       <estimated description="M3 estimados">0</estimated>
       <others description="Otros consumos">0</others>
       <invoiced description="M3 facturados">30</invoiced>
-      <average description="Consumo medio">71</average>
+      <average description="Consumo medio">30</average>
     </consumption>
     <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
     </tariffs>
-    <total description="Total Factura/s">51,89</total>
-    <receivable description="Total A Pagar">51,89</receivable>
-    <pending_debt description="Su total pendiente asciende a">0,00</pending_debt>
+    <total description="Total Factura/s">-51,89</total>
+    <receivable description="Total A Pagar">-51,89</receivable>
+    <pending_debt description="Su total pendiente asciende a">-51,89</pending_debt>
     <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
     <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
     <payment_data description="Datos de pago">
-      <supply_no description="Nº de Suministro">0001-0000003</supply_no>
-      <bill_no description="Factura Nº">00EL2-0160-00013</bill_no>
+      <supply_no description="Nº de Suministro">0001-0000001</supply_no>
+      <bill_no description="Factura Nº">00EL2-0160-00023</bill_no>
       <bill_date description="Fecha">24/10/2016</bill_date>
-      <holder description="Titular">Perez Garcia, Julia</holder>
-      <bank_account description="Cuenta bancaria de cliente">Perez Garcia, Julia</bank_account>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
       <barcode>
         <issuer description="EMISORA">04241147</issuer>
-        <reference description="REFERENCIA">L2016000013</reference>
-        <ident description="IDENTIF.">000003</ident>
-        <supply description="SUMINISTRO">10000003</supply>
-        <payday_limit description="FECHA LíMITE PAGO"></payday_limit>
+        <reference description="REFERENCIA">L2016000023</reference>
+        <ident description="IDENTIF.">000001</ident>
+        <supply description="SUMINISTRO">10000001</supply>
+        <payday_limit description="FECHA LíMITE PAGO">24/10/2016</payday_limit>
+        <total description="TOTAL">-51,89</total>
+      </barcode>
+    </payment_data>
+    <invoices description="Facturación">
+      <invoice description="Factura de Servicio">
+        <invoice_no description="Factura Nº">00EL2-0160-00023</invoice_no>
+        <invoice_date description="Fecha">24/10/2016</invoice_date>
+        <payday_limit description="Fecha de vencimiento">24/10/2016</payday_limit>
+        <biller>
+          <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
+          <fiscal_id>A04241147</fiscal_id>
+        </biller>
+        <subtotal description="Subtotal">-47,17</subtotal>
+        <vat_rates>
+          <vat_rate description="Cuota de IVA (10,00% de -47,17)">-4,72</vat_rate>
+        </vat_rates>
+        <total description="Total">-51,89</total>
+        <items description="DESGLOSE DE CONCEPTOS">
+          <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
+            <tariffs>(1)</tariffs>
+            <amount>-32,32</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(1)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-1,320000</price>
+              <amount>-3,9600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="De 0 a 6">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,250000</price>
+                <amount>-1,5000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL2" description="De 7 a 10">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>4,00</quantity>
+                <price>-0,470000</price>
+                <amount>-1,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL3" description="De 11 a 16">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>6,00</quantity>
+                <price>-0,850000</price>
+                <amount>-5,1000</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+              <item code="BL4" description="Más de 17">
+                <tariff>(1)</tariff>
+                <measure>m3</measure>
+                <quantity>14,00</quantity>
+                <price>-1,420000</price>
+                <amount>-19,8800</amount>
+                <tax_pct>10,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
+            <tariffs>(2)</tariffs>
+            <amount>-7,56</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff>(2)</tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,520000</price>
+              <amount>-7,5600</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Bloque único">
+                <tariff>(2)</tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="SAN" name="SANEAMIENTO" description="Importe por SANEAMIENTO">
+            <tariffs></tariffs>
+            <amount>-7,29</amount>
+            <item code="CF" description="Cuota de Servicio">
+              <tariff></tariff>
+              <measure>Mes</measure>
+              <quantity>3,00</quantity>
+              <price>-2,430000</price>
+              <amount>-7,2900</amount>
+              <tax_pct>10,00</tax_pct>
+            </item>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+          <concept code="CAN" name="CANON" description="Importe por CANON">
+            <tariffs></tariffs>
+            <amount>0,00</amount>
+            <consumption description="Consumo">
+              <item code="BL1" description="Más de 0">
+                <tariff></tariff>
+                <measure>m3</measure>
+                <quantity>30,00</quantity>
+                <price>0,000000</price>
+                <amount>0,0000</amount>
+                <tax_pct>0,00</tax_pct>
+              </item>
+            </consumption>
+          </concept>
+        </items>
+      </invoice>
+    </invoices>
+  </bill>
+  <bill description="Factura">
+    <bill_no description="Nº">00EL2-0160-00024</bill_no>
+    <bill_date description="Fecha">24/10/2016</bill_date>
+    <billing_period description="Periodo facturado">201601 (Trimestral)</billing_period>
+    <payday_limit description="Fecha límite pago">24/10/2016</payday_limit>
+    <subscriber description="Datos Cliente">
+      <code description="Código">0001-0000001</code>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <address description="Dirección">
+        <address_1>CL. Cervantes 8</address_1>
+        <address_2>04700 El Ejido, Almería (España)</address_2>
+      </address>
+      <supply description="Datos Suministro">
+        <fiscal_id description="CIF/NIF">48991284L</fiscal_id>
+        <use description="Uso">bonificado</use>
+      </supply>
+    </subscriber>
+    <client>
+      <code>0001-0000003</code>
+      <name>Camacho Sanchez, Manuel Jesus</name>
+      <address_1>Cl. Cervantes 8</address_1>
+      <address_2>04700 El Ejido, Almería (España)</address_2>
+      <fiscal_id>48991284L</fiscal_id>
+    </client>
+    <meter description="Datos contador">
+      <code>C14CA000001K</code>
+      <caliber>15</caliber>
+    </meter>
+    <consumption description="Datos Consumo">
+      <previous_reading description="Lect. Anterior">
+        <index>50</index>
+        <date>01/10/2016</date>
+      </previous_reading>
+      <current_reading description="Lect. Actual">
+        <index>80</index>
+        <date>24/10/2016</date>
+      </current_reading>
+      <read description="M3 registrados">30</read>
+      <estimated description="M3 estimados">0</estimated>
+      <others description="Otros consumos">0</others>
+      <invoiced description="M3 facturados">30</invoiced>
+      <average description="Consumo medio">30</average>
+    </consumption>
+    <tariffs description="Tarifas" separator=" | ">
+      <tariff code="SUM">(1) OF AEE - Art 17 03/10/2016</tariff>
+      <tariff code="DEP">(2) BOE AEE - Art 249 15/06/2016</tariff>
+    </tariffs>
+    <total description="Total Factura/s">51,89</total>
+    <receivable description="Total A Pagar">51,89</receivable>
+    <pending_debt description="Su total pendiente asciende a">51,89</pending_debt>
+    <currency_note>* Todos los importes están expresados en Euros (salvo indicación en contrario)</currency_note>
+    <payment_note>* El pago de este recibo/factura se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de recibos/facturas anteriores.</payment_note>
+    <payment_data description="Datos de pago">
+      <supply_no description="Nº de Suministro">0001-0000001</supply_no>
+      <bill_no description="Factura Nº">00EL2-0160-00024</bill_no>
+      <bill_date description="Fecha">24/10/2016</bill_date>
+      <holder description="Titular">Camacho Sanchez, Manuel Jesus</holder>
+      <bank_account description="Cuenta bancaria de cliente">Camacho Sanchez, Manuel Jesus</bank_account>
+      <barcode>
+        <issuer description="EMISORA">04241147</issuer>
+        <reference description="REFERENCIA">L2016000024</reference>
+        <ident description="IDENTIF.">000001</ident>
+        <supply description="SUMINISTRO">10000001</supply>
+        <payday_limit description="FECHA LíMITE PAGO">24/10/2016</payday_limit>
         <total description="TOTAL">51,89</total>
       </barcode>
     </payment_data>
     <invoices description="Facturación">
       <invoice description="Factura de Servicio">
-        <invoice_no description="Factura Nº">00EL2-0160-00013</invoice_no>
+        <invoice_no description="Factura Nº">00EL2-0160-00024</invoice_no>
         <invoice_date description="Fecha">24/10/2016</invoice_date>
-        <payday_limit description="Fecha de vencimiento"></payday_limit>
+        <payday_limit description="Fecha de vencimiento">24/10/2016</payday_limit>
         <biller>
           <name>Empresa Mixta de Servicios Municipales de El Ejido S.A.</name>
           <fiscal_id>A04241147</fiscal_id>
@@ -777,10 +1041,10 @@
         <total description="Total">51,89</total>
         <items description="DESGLOSE DE CONCEPTOS">
           <concept code="SUM" name="SUMINISTRO" description="Importe por SUMINISTRO">
-            <tariffs></tariffs>
+            <tariffs>(1)</tariffs>
             <amount>32,32</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(1)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>1,320000</price>
@@ -789,7 +1053,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="De 0 a 6">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,250000</price>
@@ -797,7 +1061,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL2" description="De 7 a 10">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>4,00</quantity>
                 <price>0,470000</price>
@@ -805,7 +1069,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL3" description="De 11 a 16">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>6,00</quantity>
                 <price>0,850000</price>
@@ -813,7 +1077,7 @@
                 <tax_pct>10,00</tax_pct>
               </item>
               <item code="BL4" description="Más de 17">
-                <tariff></tariff>
+                <tariff>(1)</tariff>
                 <measure>m3</measure>
                 <quantity>14,00</quantity>
                 <price>1,420000</price>
@@ -823,10 +1087,10 @@
             </consumption>
           </concept>
           <concept code="DEP" name="DEPURACION" description="Importe por DEPURACION">
-            <tariffs></tariffs>
+            <tariffs>(2)</tariffs>
             <amount>7,56</amount>
             <item code="CF" description="Cuota de Servicio">
-              <tariff></tariff>
+              <tariff>(2)</tariff>
               <measure>Mes</measure>
               <quantity>3,00</quantity>
               <price>2,520000</price>
@@ -835,7 +1099,7 @@
             </item>
             <consumption description="Consumo">
               <item code="BL1" description="Bloque único">
-                <tariff></tariff>
+                <tariff>(2)</tariff>
                 <measure>m3</measure>
                 <quantity>30,00</quantity>
                 <price>0,000000</price>

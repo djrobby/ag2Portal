@@ -55,9 +55,6 @@ module Ag2Gest
         render json: @json_data and return
       end
 
-      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
-      @json_data = { "DataExport" => message, "Result" => "OK" }
-
       bills = nil
       if @from > @to
         project_code = project.project_code
@@ -74,8 +71,19 @@ module Ag2Gest
                      subscriber: [:use, meter: [:caliber]], invoices:
                      [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
       end
+      if bills.blank?
+        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") + message
+        @json_data = { "DataExport" => message, "Result" => "ERROR" }
+        render json: @json_data and return
+      end
+
+      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
+      link_message = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'some-file-name')
+
       xml = service_bills_to_xml(bills)
       upload_xml_file("some-file-name.xml", xml)
+      @json_data = { "DataExport" => message, "Result" => "OK",
+                     "File" => "/uploads/some-file-name.xml", "LinkMessage" => link_message }
 
       if incidents
         message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") + message

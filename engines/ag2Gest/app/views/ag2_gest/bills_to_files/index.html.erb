@@ -35,14 +35,15 @@
       if ((project == "") || (period == ""))
         return;
       // make a POST call and executes action
+      $('#message').html('<%=t '.message' %>');
       $('#message_area').children().show();
       $('#buttons').children().hide();
       jQuery.getJSON(method + "?project=" + project + "&period=" + period + "&biller=" + biller + "&from=" + from + "&to=" + to, function(data) {
         $(".modal-body > p").html(data.DataExport);
         $("#exportinfo").modal("show");
         if (data.Result == 'OK') {
-          $('#message_area').children().hide();
-          // $("#message").html('<%#= link_to I18n.t("ag2_gest.bills_to_files.index.go_to_target"), bill_management_path %>');
+          $("#message").html('<a href="' + data.File + '" download>' + data.LinkMessage + '</a>');
+          // $('#message_area').children().hide();
           $("#progressbar").hide();
         }
         else {
