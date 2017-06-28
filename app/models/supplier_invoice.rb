@@ -235,7 +235,7 @@ class SupplierInvoice < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c018'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c019')]
     col_sep = I18n.locale == :es ? ";" : ","
-    CSV.generate(headers: true, col_sep: col_sep) do |csv|
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << column_names
       lac = nil
       entry = 0
@@ -349,7 +349,7 @@ class SupplierInvoice < ActiveRecord::Base
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c059'),
                     I18n.t('activerecord.csv_sage200.supplier_invoice.c060')]
     col_sep = I18n.locale == :es ? ";" : ","
-    CSV.generate(headers: true, col_sep: col_sep) do |csv|
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << column_names
       lac = nil
       entry = 0
