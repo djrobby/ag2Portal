@@ -54,9 +54,10 @@ module Ag2Purchase
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
-      upload_xml_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers, company.id))
+      file_name = 'SIS_CLIENTES_PROVEEDORES_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
+      upload_xml_file(file_name, Supplier.to_csv(suppliers, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
-                     "File1" => "/uploads/SIS_CLIENTES_PROVEEDORES.csv", "LinkMessage1" => link_message1 }
+                     "File1" => "/uploads/" + file_name, "LinkMessage1" => link_message1 }
       # save_local_file('SIS_CLIENTES_PROVEEDORES.csv', Supplier.to_csv(suppliers))
       render json: @json_data
     rescue
@@ -101,11 +102,13 @@ module Ag2Purchase
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
-      upload_xml_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices, company.id))
-      upload_xml_file('SIS_CARTERAEFECTOS.csv', SupplierInvoice.effects_portfolio_to_csv(supplier_invoices, company.id))
+      file_name1 = 'SIS_MOVCONTA_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
+      file_name2 = 'SIS_CARTERAEFECTOS_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
+      upload_xml_file(file_name1, SupplierInvoice.to_csv(supplier_invoices, company.id))
+      upload_xml_file(file_name2, SupplierInvoice.effects_portfolio_to_csv(supplier_invoices, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
-                     "File1" => "/uploads/SIS_MOVCONTA.csv", "LinkMessage1" => link_message1,
-                     "File2" => "/uploads/SIS_CARTERAEFECTOS.csv", "LinkMessage2" => link_message2 }
+                     "File1" => "/uploads/" + file_name1, "LinkMessage1" => link_message1,
+                     "File2" => "/uploads/" + file_name2, "LinkMessage2" => link_message2 }
       # save_local_file('SIS_MOVCONTA.csv', SupplierInvoice.to_csv(supplier_invoices))
       render json: @json_data
     # rescue
