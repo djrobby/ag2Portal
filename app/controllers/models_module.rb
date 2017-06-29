@@ -69,6 +69,11 @@ module ModelsModule
   end
 
   def sanitize_string(str, encode, latin, all, capitalized)
+    alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    gamma = 'AEIOUUNCaeiouunc?!ao'
+    ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
+    lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+
     if !str.blank?
       if encode
         # Change encode
@@ -78,16 +83,16 @@ module ModelsModule
       end
       if latin
         # Replace offending latin symbols
-        str = str.tr($alpha, $gamma)
+        str = str.tr(alpha, gamma)
       end
       if all
         # Replace all non ASCII symbols
-        str = str.gsub(/[^0-9A-Za-z ,;.:-_!?@#%&]/, '')
+        str = str.gsub(/[^0-9A-Za-z ,;.:_-!?@#%&]/, '')
       end
       if capitalized
         # Capitalize (must be apply with encode!)
         str = str.downcase
-        str = str.tr($ucase, $lcase)
+        str = str.tr(ucase, lcase)
         str = str.titleize
       end
     end

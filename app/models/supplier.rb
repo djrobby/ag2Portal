@@ -143,13 +143,31 @@ class Supplier < ActiveRecord::Base
   end
 
   def name40
-    # sanitize_string(self.name[0,40].strip, true, true, false, true) unless self.name.blank?
-    !self.name.blank? ? self.name[0,40].strip : ''
+    !self.name.blank? ? sanitize_string(self.name[0,40].strip, true, true, true, false) : ''
   end
 
   def name35
-    # sanitize_string(self.name[0,40].strip, true, true, false, true) unless self.name.blank?
-    !self.name.blank? ? self.name[0,35].strip : ''
+    !self.name.blank? ? sanitize_string(self.name[0,35].strip, true, true, true, false) : ''
+  end
+
+  def sanitize_street_name
+    !self.street_name.blank? ? sanitize_string(self.street_name.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_address_1
+    !self.address_1.blank? ? sanitize_string(self.address_1.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_town_name
+    !self.town.name.blank? ? sanitize_string(self.town.name.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_province_name
+    !self.province.name.blank? ? sanitize_string(self.province.name.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_country_name
+    !self.country.name.blank? ? sanitize_string(self.country.name.strip, true, true, true, false) : ''
   end
 
   def full_code
@@ -380,21 +398,21 @@ class Supplier < ActiveRecord::Base
                   nil,  # 016
                   i.name35,                               # 017
                   i.street_type.street_type_code,         # 018
-                  i.street_name,                          # 019
+                  i.sanitize_street_name,                 # 019
                   i.street_number,                        # 020
                   nil,  # 021
                   i.building,                             # 022
                   i.floor,                                # 023
                   i.floor_office,                         # 024
                   nil,  # 025
-                  i.address_1,                            # 026
+                  i.sanitize_address_1,                   # 026
                   i.zipcode.zipcode,                      # 027
                   i.ine_town_code,                        # 028
-                  i.town.name,                            # 029
+                  i.sanitize_town_name,                   # 029
                   i.province.ine_cpro,                    # 030
-                  i.province.name,                        # 031
+                  i.sanitize_province_name,               # 031
                   nil,  # 032
-                  i.country.name,                         # 033
+                  i.sanitize_country_name,                # 033
                   nil,  # 034
                   nil,  # 035
                   nil,  # 036

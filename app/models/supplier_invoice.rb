@@ -240,7 +240,7 @@ class SupplierInvoice < ActiveRecord::Base
       lac = nil
       entry = 0
       array.each do |i|
-        entry += 1
+        entry = 1
         # Load tax_type lines
         ttl = i.items_group_by_tax_type(company_id)
         if ttl.to_a.count <= 0
@@ -269,8 +269,8 @@ class SupplierInvoice < ActiveRecord::Base
                   'P',                                        # 004
                   entry.to_s,                                 # 005
                   i.created_at.year.to_s,                     # 006
-                  nil,  # 007
-                  nil,  # 008
+                  i.created_at.year.to_s[2..3],               # 007
+                  i.id.to_s,                                  # 008
                   i.invoice_no,                               # 009
                   i.supplier.supplier_code,                   # 010
                   lac,                                        # 011
@@ -449,8 +449,8 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 040
                   nil,  # 041
                   nil,  # 042
-                  nil,  # 043
-                  nil,  # 044
+                  i.created_at.year.to_s[2..3],             # 043
+                  i.id.to_s,                                # 044
                   i.invoice_no,                             # 045
                   i.format_date(i.invoice_date),            # 046
                   totals,                                   # 047
@@ -463,8 +463,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 054
                   i.supplier.province.territory_code,       # 055
                   i.supplier.country.code,                  # 056
-                  Time.new.year.to_s,                       # 018
-                  nil,  # 057
+                  Time.new.year.to_s,                       # 057
                   nil,  # 058
                   'P',                                      # 059
                   '0']                                      # 060
