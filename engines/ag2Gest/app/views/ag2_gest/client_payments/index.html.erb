@@ -668,6 +668,35 @@
         </div>
       <% end %>
     </div><!-- Bank To Pending -->
+
+    <!-- Bank To Order (modal) -->
+    <div id="modal-bank-to-order" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h4><%= t "ag2_gest.client_payments.index.bank_order" %></h4>
+      </div>
+      <%= simple_form_for :bank_to_order, url: bank_to_order_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-to-order-form'} do |f| %>
+        <div class="modal-body">
+          <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-to-order-bills-selected"><%= @bank_totals.payments %></span>
+            </div>
+          </div>
+          <div class="control-group string required">
+            <label class="string control-label">Total a remesar</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Bank To Order -->
   </div><!-- row-fluid -->
 </div><!-- container-fluid -->
 

@@ -38,9 +38,9 @@ module Ag2Gest
                                                :confirm_bank,
                                                :bank_to_pending,
                                                :fractionate,
-                                               :export_sepa_xml,
-                                               :import_sepa_xml,
-                                               :import_counter_txt]
+                                               :bank_to_order,
+                                               :bank_from_return,
+                                               :bank_from_counter]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
@@ -421,12 +421,51 @@ module Ag2Gest
     def export_sepa_xml
     end
 
+    # Generates & Export SEPA XML file (order, direct debit)
+    def bank_to_order
+      client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+
+      # Process only if there is unconfirmed payments
+      if client_payments.count > 0
+        identificacion_fichero = "PRE"
+        fecha_hora_confeccion = Time.new.strftime("%Y-%m-%d") + "T" + Time.new.strftime("%H:%M:%S")
+        numero_total_adeudos = client_payments.count.to_s
+        importe_total = client_payments.sum('amount+surcharge')
+
+        # Initialize Builder
+        xml = Builder::XmlMarkup.new(:indent => 2)
+        xml.instruct!
+
+        #+++ Begin +++
+        xml.Document(xmlns: "urn:iso:std:iso:20022:tech:xsd:pain.008.001.02") do
+          xml.CstmrDrctDbtInitn do
+            xml.GrpHdr do
+              xml.MsgId(identificacion_fichero)
+              xml.CreDtTm(fecha_hora_confeccion)
+              xml.NbOfTxs(numero_total_adeudos)
+              xml.CtrlSum(importe_total)
+            end # xml.GrpHdr
+          end # xml.CstmrDrctDbtInitn
+          # Loop thru payments
+          client_payments.each do |cp|
+          end # client_payments.each
+        end # xml.Document do
+        #+++ End +++
+
+        redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
+      end
+
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s."
+    end
+
     # Import SEPA XML file (return, rejections)
-    def import_sepa_xml
+    def bank_from_return
     end
 
     # Import Counter text file (bank counter operations)
-    def import_counter_txt
+    def bank_from_counter
     end
 
     #
