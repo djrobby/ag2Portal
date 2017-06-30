@@ -87,7 +87,7 @@ module ModelsModule
       end
       if all
         # Replace all non ASCII symbols
-        str = str.gsub(/[^0-9A-Za-z ,;.:_-!?@#%&]/, '')
+        str = str.gsub(/[^0-9A-Za-z ,;.:-_!?@#%&]/, '')
       end
       if capitalized
         # Capitalize (must be apply with encode!)

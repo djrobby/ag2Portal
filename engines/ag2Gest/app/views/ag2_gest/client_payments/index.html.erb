@@ -670,7 +670,7 @@
     </div><!-- Bank To Pending -->
 
     <!-- Bank To Order (modal) -->
-    <div id="modal-bank-to-order" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+    <div id="modal-bank-to-order" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Remesar" aria-hidden="true">
       <div class="modal-header">
         <a class="close" data-dismiss="modal">&#215;</a>
         <h4><%= t "ag2_gest.client_payments.index.bank_order" %></h4>
@@ -899,6 +899,29 @@
       $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
       $("#bank-to-pending-bills-selected").html(cp_ids.length);
       $("#bank-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    }
+  });
+
+  $("#bank-to-order").click(function(){
+    var cp_ids = [];
+    var cp_amount = 0.0;
+    $('#bank-table tr').each(function() {
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cpb-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros a remesar!');
+      return false;
+    } else {
+      $("#bank_to_order_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-order
+      $("#bank-to-order-bills-selected").html(cp_ids.length);
+      $("#bank-to-order-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
     }
   });
 

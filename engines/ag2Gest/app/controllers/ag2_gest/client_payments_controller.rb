@@ -13,6 +13,7 @@
 # ª = \xAA  º = \xBA
 
 require_dependency "ag2_gest/application_controller"
+require_dependency "ag2_gest/sepa_order"
 
 module Ag2Gest
   class ClientPaymentsController < ApplicationController
@@ -417,10 +418,6 @@ module Ag2Gest
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
-    # Export SEPA XML file (order, direct debit)
-    def export_sepa_xml
-    end
-
     # Generates & Export SEPA XML file (order, direct debit)
     def bank_to_order
       client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
@@ -428,31 +425,20 @@ module Ag2Gest
 
       # Process only if there is unconfirmed payments
       if client_payments.count > 0
-        identificacion_fichero = "PRE"
-        fecha_hora_confeccion = Time.new.strftime("%Y-%m-%d") + "T" + Time.new.strftime("%H:%M:%S")
-        numero_total_adeudos = client_payments.count.to_s
-        importe_total = client_payments.sum('amount+surcharge')
+        # Instantiate Class
+        sepa = SepaOrder.new(client_payments)
 
-        # Initialize Builder
-        xml = Builder::XmlMarkup.new(:indent => 2)
-        xml.instruct!
+        # Initialize class attributes
+        sepa.identificacion_fichero = "PRE"
+        sepa.fecha_hora_confeccion = Time.new.strftime("%Y-%m-%d") + "T" + Time.new.strftime("%H:%M:%S")
 
-        #+++ Begin +++
-        xml.Document(xmlns: "urn:iso:std:iso:20022:tech:xsd:pain.008.001.02") do
-          xml.CstmrDrctDbtInitn do
-            xml.GrpHdr do
-              xml.MsgId(identificacion_fichero)
-              xml.CreDtTm(fecha_hora_confeccion)
-              xml.NbOfTxs(numero_total_adeudos)
-              xml.CtrlSum(importe_total)
-            end # xml.GrpHdr
-          end # xml.CstmrDrctDbtInitn
-          # Loop thru payments
-          client_payments.each do |cp|
-          end # client_payments.each
-        end # xml.Document do
-        #+++ End +++
+        # Generate XML object
+        xml = sepa.write_xml
 
+        # Write & Upload XML file
+        upload_xml_file("bank-to-order.xml", xml)
+
+        # Notify successful ending
         redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
       end
 

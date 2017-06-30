@@ -427,6 +427,7 @@ Ag2Gest::Engine.routes.draw do
       get 'payment_receipt', on: :member
       post 'cash_to_pending', on: :collection
       post 'bank_to_pending', on: :collection
+      post 'bank_to_order', on: :collection
     end
     resources :payment_methods
     #

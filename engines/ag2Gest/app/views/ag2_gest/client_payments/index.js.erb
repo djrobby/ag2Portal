@@ -189,6 +189,29 @@ $("#bank-to-pending").click(function(){
   }
 });
 
+$("#bank-to-order").click(function(){
+  var cp_ids = [];
+  var cp_amount = 0.0;
+  $('#bank-table tr').each(function() {
+    if ($(this).find('td input:checkbox').is(':checked')) {
+      id = $(this).find('td.cpb-id').text();
+      if (id != null && id != '') {
+        cp_ids.push(id);
+        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        cp_amount += parseFloat(amount);
+      }
+    }
+  });
+  if (cp_ids.length <= 0) {
+    alert('¡Debes seleccionar cobros a remesar!');
+    return false;
+  } else {
+    $("#bank_to_order_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-order
+    $("#bank-to-order-bills-selected").html(cp_ids.length);
+    $("#bank-to-order-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+  }
+});
+
 $(".btn-cash").click(function (e) {
   ids = $("#client_payment_cash_invoices_ids").val();
   if (ids == null || ids == '') {
