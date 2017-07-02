@@ -41,6 +41,9 @@ set :scm_verbose, true
 set :use_sudo, false
 set :bundle_flags,    ""
 
+before "deploy", "deploy:check_revision"
+after "deploy", "deploy:cleanup" # keep only the last 5 releases
+
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
@@ -56,5 +59,4 @@ namespace :deploy do
       exit
     end
   end
-  before "deploy", "deploy:check_revision"
 end
