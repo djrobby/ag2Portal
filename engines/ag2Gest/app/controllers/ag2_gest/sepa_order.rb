@@ -79,12 +79,45 @@ module Ag2Gest
             end
             @xml.SeqTp(SECUENCIA_ADEUDO)
           end # @xml.PmtInf
+          @xml.ReqdColltnDt(self.fecha_cobro)
+          @xml.Cdtr do
+            @xml.Nm(self.nombre_presentador)
+            @xml.PstlAdr do
+              @xml.Ctry(PAIS)
+            end
+          end # @xml.Cdtr
+          @xml.CdtrAcct do
+            @xml.Id do
+              @xml.IBAN(self.cuenta_acreedor)
+            end
+            @xml.Ccy(MONEDA)
+          end # @xml.CdtrAcct
+          @xml.CdtrAgt do
+            @xml.FinInstnId do
+              @xml.BIC(BIC)
+            end
+          end # @xml.CdtrAgt
+          @xml.ChrgBr(GASTOS)
+          @xml.CdtrSchmeId do
+            @xml.Id do
+              @xml.PrvtId do
+                @xml.Othr do
+                  @xml.Id(self.identificacion_presentador)
+                  @xml.SchmeNm do
+                    @xml.Prtry(SIEMPRE_SEPA)
+                  end
+                end
+              end
+            end
+          end # @xml.CdtrSchmeId
+
+          # Loop thru payments
+          @client_payments.each do |cp|
+          end # @client_payments.each
+
         end # @xml.CstmrDrctDbtInitn
       end # @xml.Document do
 
-      # Loop thru payments
-      @client_payments.each do |cp|
-      end # @client_payments.each
     end
 
     def read_xml
