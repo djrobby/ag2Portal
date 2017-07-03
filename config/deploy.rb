@@ -1,4 +1,4 @@
-# LAMP including Sidekiq (redis-server must be installed in LAMP previously)
+# ag2Front including Sidekiq (redis-server must be installed in ag2Front previously)
 # Choose a Ruby explicitly, or read from an environment variable.
 set :rvm_ruby_string, :local               # use the same ruby as used locally for deployment
 set :rvm_type, :user
@@ -16,8 +16,8 @@ require "bundler/capistrano"
 require 'capistrano/sidekiq'
 
 # be sure to change these
-set :user, 'nestor'
-set :domain, 'lamp'
+set :user, 'administrador'
+set :domain, 'ag2front'
 set :application, 'agestiona2'
 
 # file paths
@@ -28,7 +28,8 @@ set :deploy_to, "/home/#{user}/#{application}"
 # all on the same server, defined above as 'domain', adjust as necessary)
 role :app, domain
 role :web, domain
-role :db, "lamp", :primary => true
+# Nothing to deploy to 'ag2back' - Migrations must run using: rake db:migrate RAILS_ENV=production
+# role :db, "ag2back", :primary => true
 
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true

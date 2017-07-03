@@ -28,6 +28,7 @@ set :deploy_to, "/home/#{user}/#{application}"
 # all on the same server, defined above as 'domain', adjust as necessary)
 role :app, domain
 role :web, domain
+# Deploy DB to 'lamp'
 role :db, "lamp", :primary => true
 
 ssh_options[:forward_agent] = true
