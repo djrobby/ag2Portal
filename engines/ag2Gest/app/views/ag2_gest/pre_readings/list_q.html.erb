@@ -51,5 +51,6 @@
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @pre_readings } %>
     </div>
   </div>
+  <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
   <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>
 </div>

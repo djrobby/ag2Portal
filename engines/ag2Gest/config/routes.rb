@@ -378,6 +378,7 @@ Ag2Gest::Engine.routes.draw do
       get 'to_pdf', on: :collection
       get 'list', on: :collection
       get 'list_q', on: :collection
+      get 'show_list', on: :collection
       #get 'new_pre_readings' on: :member
     end
     resources :readings

@@ -33,6 +33,21 @@ module Ag2Gest
       @pre_readings = @pre_readings.paginate(:page => params[:page], :per_page => per_page)
     end
 
+    def show_list
+      pre_readings = []
+
+      @pre_readings.each do |pr|
+        pre_readings << pr
+      end
+      @p_r = PreReading.where(id: pre_readings)
+      @pre_readings = @p_r.order(:reading_route_id, :reading_sequence)
+
+      respond_to do |format|
+        format.html
+        format.csv { render text: PreReading.to_csv(@pre_readings) }
+      end
+    end
+
     def to_reading
       @to_readings = @pre_readings
       # .select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
