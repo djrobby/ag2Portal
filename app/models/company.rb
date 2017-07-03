@@ -11,7 +11,8 @@ class Company < ActiveRecord::Base
                   :invoice_code, :invoice_header, :invoice_footer, :invoice_left_margin,
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
                   :max_order_total, :max_order_price, :overtime_pct, :commercial_bill_code,
-                  :void_invoice_code, :void_commercial_bill_code, :ledger_account_app_code
+                  :void_invoice_code, :void_commercial_bill_code, :ledger_account_app_code,
+                  :r_last_name, :r_first_name, :r_fiscal_id
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
   attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes
 
