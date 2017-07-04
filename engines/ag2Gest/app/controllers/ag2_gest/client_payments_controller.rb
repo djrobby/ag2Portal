@@ -425,7 +425,7 @@ module Ag2Gest
 
       # Process only if there is unconfirmed payments
       if client_payments.count > 0
-        # Instantiate Class
+        # Instantiate class
         sepa = SepaOrder.new(client_payments)
 
         # Initialize class attributes

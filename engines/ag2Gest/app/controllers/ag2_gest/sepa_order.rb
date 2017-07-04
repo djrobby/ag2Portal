@@ -40,12 +40,15 @@ module Ag2Gest
       @xml = Builder::XmlMarkup.new(:indent => 2)
       @xml.instruct!
 
-      # Initialize attributes default value
+      # Initialize attribute default values
       self.fecha_firma_mandato = '2009-10-31'
       self.numero_total_adeudos = @client_payments.count
       self.importe_total = @client_payments.sum('amount+surcharge')
     end
 
+    #
+    # *** Writes & returns XML stream
+    #
     def write_xml
       @xml.Document(xmlns: "urn:iso:std:iso:20022:tech:xsd:pain.008.001.02") do
         @xml.CstmrDrctDbtInitn do
@@ -76,50 +79,84 @@ module Ag2Gest
               @xml.LclInstrm do
                 @xml.Cd(self.tipo_esquema)
               end
-            end
-            @xml.SeqTp(SECUENCIA_ADEUDO)
-          end # @xml.PmtInf
-          @xml.ReqdColltnDt(self.fecha_cobro)
-          @xml.Cdtr do
-            @xml.Nm(self.nombre_presentador)
-            @xml.PstlAdr do
-              @xml.Ctry(PAIS)
-            end
-          end # @xml.Cdtr
-          @xml.CdtrAcct do
-            @xml.Id do
-              @xml.IBAN(self.cuenta_acreedor)
-            end
-            @xml.Ccy(MONEDA)
-          end # @xml.CdtrAcct
-          @xml.CdtrAgt do
-            @xml.FinInstnId do
-              @xml.BIC(BIC)
-            end
-          end # @xml.CdtrAgt
-          @xml.ChrgBr(GASTOS)
-          @xml.CdtrSchmeId do
-            @xml.Id do
-              @xml.PrvtId do
-                @xml.Othr do
-                  @xml.Id(self.identificacion_presentador)
-                  @xml.SchmeNm do
-                    @xml.Prtry(SIEMPRE_SEPA)
+              @xml.SeqTp(SECUENCIA_ADEUDO)
+            end # @xml.PmtTpInf
+            @xml.ReqdColltnDt(self.fecha_cobro)
+            @xml.Cdtr do
+              @xml.Nm(self.nombre_presentador)
+              @xml.PstlAdr do
+                @xml.Ctry(PAIS)
+              end
+            end # @xml.Cdtr
+            @xml.CdtrAcct do
+              @xml.Id do
+                @xml.IBAN(self.cuenta_acreedor)
+              end
+              @xml.Ccy(MONEDA)
+            end # @xml.CdtrAcct
+            @xml.CdtrAgt do
+              @xml.FinInstnId do
+                @xml.BIC(BIC)
+              end
+            end # @xml.CdtrAgt
+            @xml.ChrgBr(GASTOS)
+            @xml.CdtrSchmeId do
+              @xml.Id do
+                @xml.PrvtId do
+                  @xml.Othr do
+                    @xml.Id(self.identificacion_presentador)
+                    @xml.SchmeNm do
+                      @xml.Prtry(SIEMPRE_SEPA)
+                    end
                   end
                 end
               end
-            end
-          end # @xml.CdtrSchmeId
-
-          # Loop thru payments
-          @client_payments.each do |cp|
-          end # @client_payments.each
-
+            end # @xml.CdtrSchmeId
+            #
+            # Loop thru payments
+            #
+            @client_payments.each do |cp|
+              @xml.DrctDbtTxInf do
+                @xml.PmtId do
+                  @xml.InstrId(self.identificacion_instruccion)
+                  @xml.EndToEndId(self.referencia_adeudo)
+                end # @xml.PmtId
+                @xml.InstdAmt({ Ccy: MONEDA }, self.importe_adeudo)
+                @xml.DrctDbtTx do
+                  @xml.MndtRltdInf do
+                    @xml.MndtId(self.referencia_mandato)
+                    @xml.DtOfSgntr(self.fecha_firma_mandato)
+                    @xml.AmdmntInd('false')
+                  end
+                end # @xml.DrctDbtTx
+                @xml.DbtrAgt do
+                  @xml.FinInstnId do
+                    @xml.Othr do
+                      @xml.Id(BIC)
+                    end
+                  end
+                end # @xml.DbtrAgt
+                @xml.Dbtr do
+                  @xml.Nm(self.nombre_deudor)
+                end # @xml.Dbtr
+                @xml.DbtrAcct do
+                  @xml.Id do
+                    @xml.IBAN(self.cuenta_deudor)
+                  end
+                end # @xml.DbtrAcct
+                @xml.RmtInf do
+                  @xml.Ustrd(self.concepto)
+                end # @xml.RmtInf
+              end # @xml.DrctDbtTxInf
+            end # @client_payments.each
+          end # @xml.PmtInf
         end # @xml.CstmrDrctDbtInitn
       end # @xml.Document do
+    end # write_xml
 
-    end
-
+    #
+    # *** Returns current XML stream
+    #
     def read_xml
       @xml
     end
