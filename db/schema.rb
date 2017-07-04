@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170704115830) do
+ActiveRecord::Schema.define(:version => 20170704121914) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -4341,6 +4341,9 @@ ActiveRecord::Schema.define(:version => 20170704115830) do
     t.integer  "tariff_type_id"
     t.integer  "unsubscribe_bill_id"
     t.integer  "bailback_bill_id"
+    t.string   "max_pressure"
+    t.string   "min_pressure"
+    t.string   "contract_term"
   end
 
   add_index "water_supply_contracts", ["bailback_bill_id"], :name => "index_water_supply_contracts_on_bailback_bill_id"

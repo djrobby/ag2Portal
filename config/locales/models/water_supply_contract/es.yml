@@ -45,6 +45,9 @@ es:
         created: "Creado"
         label_others: "Otros"
         code: "Código"
+        min_pressure: "Presión mínima"
+        min_pressure: "Presión máxima"
+        contract_term: "Duración del contrato"
         #mj
         installation_index: "Index de instalación"
         meters: "Contador"

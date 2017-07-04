@@ -35,6 +35,9 @@ en:
         successfully: "Contrato de suminitro se ha actualizado correctamente."
         create: "Contrato de suminitro se ha creado correctamente."
         code: "Code"
+        min_pressure: "Minimum pressure"
+        min_pressure: "Maximum pressure"
+        contract_term: "Contract term"
         #mj
         installation_index: "Installation index"
         meters: "Meter"
