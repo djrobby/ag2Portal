@@ -111,6 +111,17 @@ class Office < ActiveRecord::Base
     _ret
   end
 
+  def r_full_name
+    full_name = ""
+    if !self.r_last_name.blank?
+      full_name += self.r_last_name
+    end
+    if !self.r_first_name.blank?
+      full_name += ", " + self.r_first_name
+    end
+    full_name[0,40]
+  end
+
   searchable do
     text :office_code, :name
     string :office_code

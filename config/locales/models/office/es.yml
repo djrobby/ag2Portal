@@ -49,3 +49,4 @@ es:
         r_first_name_c: "Nombre/s"
         r_fiscal_id_c: "CIF/NIF"
         r_position: "Cargo"
+        r_full_name: "Apellido y Nombre"

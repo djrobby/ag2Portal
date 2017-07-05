@@ -78,6 +78,25 @@
   </tbody>
 </table>
 
+<!-- Representative info -->
+<h4><%=t 'activerecord.attributes.company.representative' %></h4>
+<table class="table odd_even_table">
+  <!-- name -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- fiscal id -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.company.r_full_name" %>:</td>
+      <td><%= @company.r_full_name %></td>
+      <td><%= t :"activerecord.attributes.company.r_fiscal_id_c" %>:</td>
+      <td><%= @company.r_fiscal_id %></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- Invoices info -->
 <h4><%= t 'ag2_admin.companies.invoices_info' %></h4>
 <table class="table table-condensed odd_even_table">

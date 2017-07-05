@@ -64,6 +64,29 @@
   </tbody>
 </table>
 
+<!-- Representative info -->
+<h4><%=t 'activerecord.attributes.office.representative' %></h4>
+<table class="table odd_even_table">
+  <!-- name -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- fiscal id -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.office.r_full_name" %>:</td>
+      <td><%= @office.r_full_name %></td>
+      <td><%= t "activerecord.attributes.office.r_fiscal_id_c" %>:</td>
+      <td><%= @office.r_fiscal_id %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.office.r_position" %>:</td>
+      <td colspan="3"><%= @office.r_position %></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- Commercial info -->
 <h4><%=t 'ag2_admin.offices.commercial_info' %></h4>
 <table class="table odd_even_table">
