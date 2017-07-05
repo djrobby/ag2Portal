@@ -26,7 +26,7 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding, :totals
+                  :internal_no, :withholding, :totals, :payday_limit
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 

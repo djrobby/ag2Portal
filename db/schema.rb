@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170704121914) do
+ActiveRecord::Schema.define(:version => 20170705163746) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3120,6 +3120,12 @@ ActiveRecord::Schema.define(:version => 20170704121914) do
   add_index "sale_offers", ["store_id"], :name => "index_sale_offers_on_store_id"
   add_index "sale_offers", ["work_order_id"], :name => "index_sale_offers_on_work_order_id"
 
+  create_table "sepa_scheme_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "service_point_locations", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -3692,6 +3698,7 @@ ActiveRecord::Schema.define(:version => 20170704121914) do
     t.string   "internal_no"
     t.integer  "purchase_order_id"
     t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.date     "payday_limit"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"

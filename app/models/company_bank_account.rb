@@ -1,4 +1,6 @@
 class CompanyBankAccount < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :company
   belongs_to :bank_account_class
   belongs_to :country
@@ -59,6 +61,14 @@ class CompanyBankAccount < ActiveRecord::Base
       full_name += self.bank_account_class_id + ": "
     end
     full_name = e_format
+  end
+
+  def company_name
+    !self.company.blank? ? self.company.name.strip : ''
+  end
+
+  def sanitized_company_name
+    sanitize_string(company_name, true, true, true, false)
   end
 
   def e_format
@@ -131,5 +141,13 @@ class CompanyBankAccount < ActiveRecord::Base
       _f = "IBAN " + _f
     end
     _f
+  end
+
+  # Generates ControlDigit for SEPA identifier
+  # Returns SEPA Id
+  def sepa_id
+    country = self.country.code
+    suffix = self.bank_suffix
+    fiscal_id = self.holder_fiscal_id
   end
 end

@@ -67,6 +67,9 @@ module ModelsModule
   def formatted_number_without_delimiter(_number, _decimals)
     number_with_precision(_number.round(_decimals), precision: _decimals)
   end
+  def en_formatted_number_without_delimiter(_number, _decimals)
+    number_with_precision(_number.round(_decimals), precision: _decimals, locale: :en)
+  end
 
   def sanitize_string(str, encode, latin, all, capitalized)
     alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')

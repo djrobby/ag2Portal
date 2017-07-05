@@ -43,7 +43,7 @@ module Ag2Gest
       # Initialize attribute default values
       self.fecha_firma_mandato = '2009-10-31'
       self.numero_total_adeudos = @client_payments.count
-      self.importe_total = @client_payments.sum('amount+surcharge')
+      self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge'), 2)
     end
 
     #

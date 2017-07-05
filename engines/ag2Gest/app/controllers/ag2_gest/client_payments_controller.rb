@@ -421,16 +421,39 @@ module Ag2Gest
     # Generates & Export SEPA XML file (order, direct debit)
     def bank_to_order
       client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
+      bank_account_id = params[:bank_to_order][:bank_account_id]
+      scheme_type_id = params[:bank_to_order][:scheme_type_id]
+      presentation_date = params[:bank_to_order][:presentation_date]
+      charge_date = params[:bank_to_order][:charge_date]
       client_payments = ClientPayment.where(id: client_payments_ids)
+      bank_account = CompanyBankAccount.find(bank_account_id)
+      scheme_type = SepaSchemeType.find(scheme_type_id)
 
       # Process only if there is unconfirmed payments
-      if client_payments.count > 0
+      if client_payments.count > 0 && !bank_account.blank? && !scheme_type.blank?
+        time_now = Time.new
+
+        # SEPA Creditor Id
+        creditor_id = bank_account.sepa_id
+        if creditor_id.blank? || bank_account.bank_suffix.blank? || bank_account.holder_fiscal_id.blank?
+          redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s." and return
+        end
+
         # Instantiate class
         sepa = SepaOrder.new(client_payments)
 
         # Initialize class attributes
-        sepa.identificacion_fichero = "PRE"
-        sepa.fecha_hora_confeccion = Time.new.strftime("%Y-%m-%d") + "T" + Time.new.strftime("%H:%M:%S")
+        sepa.identificacion_fichero = "PRE" + time_now.strftime("%Y%m%d%H%M%S%L") + "00" +
+                                      bank_account.bank_suffix.strip! + bank_account.holder_fiscal_id.strip!
+        sepa.fecha_hora_confeccion = time_now.strftime("%Y-%m-%d") + "T" + time_now.strftime("%H:%M:%S")
+        # sepa.numero_total_adeudos = client_payments.count
+        # sepa.importe_total = en_formatted_number_without_delimiter(client_payments.sum('amount+surcharge'), 2)
+        sepa.nombre_presentador = bank_account.sanitized_company_name
+        sepa.identificacion_presentador = creditor_id
+        sepa.tipo_esquema = scheme_type.name
+        sepa.identificacion_info_pago = creditor_id + time_now.strftime("%Y%m%d%H%M%S%L") + "00"
+        sepa.fecha_cobro = charge_date.strftime("%Y-%m-%d")
+        sepa.cuenta_acreedor = bank_account.e_format
 
         # Generate XML object
         xml = sepa.write_xml
