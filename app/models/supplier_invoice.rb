@@ -137,6 +137,11 @@ class SupplierInvoice < ActiveRecord::Base
     (invoice_date - payment_avg_date).to_i rescue 0
   end
 
+  def calc_payday_limit
+    days_to_expiration = self.payment_method.expiration_days.blank? ? 0 : self.payment_method.expiration_days
+    self.created_at.blank? ? Time.new + days_to_expiration.days : self.created_at + days_to_expiration.days
+  end
+
   def approved_to_pay
     supplier_invoice_approvals.sum(:approved_amount)
   end
@@ -640,6 +645,8 @@ class SupplierInvoice < ActiveRecord::Base
   def calculate_and_store_totals
     self.withholding = self.withholding * (-1) if self.withholding > 0
     self.totals = total
+    # Payday limit
+    self.payday_limit = calc_payday_limit if self.payday_limit.blank?
   end
 
   def check_for_dependent_records

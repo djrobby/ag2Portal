@@ -31,7 +31,8 @@ module Ag2Purchase
                                                :si_generate_invoice,
                                                :si_generate_invoice_from_order,
                                                :si_attachment_changed,
-                                               :si_update_attachment]
+                                               :si_update_attachment,
+                                               :si_update_payday_limit_from_method]
     # Helper methods for
     # => index filters
     helper_method :si_remove_filters, :si_restore_filters
@@ -513,6 +514,19 @@ module Ag2Purchase
       current_balance = number_with_precision(current_balance.round(4), precision: 4)
       # Setup JSON
       @json_data = { "balance" => current_balance.to_s }
+      render json: @json_data
+    end
+
+    def si_update_payday_limit_from_method
+      order = params[:order]
+      payday_limit = Time.new
+      if order != '0'
+        payment_method = PaymentMethod.find(order)
+        days_to_expiration = payment_method.expiration_days.blank? ? 0 : payment_method.expiration_days
+        payday_limit = payday_limit + days_to_expiration.days
+      end
+      # Setup JSON
+      @json_data = { "payday_limit" => payday_limit.strftime("%Y-%m-%d") }
       render json: @json_data
     end
 

@@ -16,8 +16,12 @@
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.invoice_date' %>:</td>
       <td><%= formatted_date(@supplier_invoice.invoice_date) unless @supplier_invoice.invoice_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.supplier_invoice.payday_limit' %>:</td>
+      <td><%= formatted_date(@supplier_invoice.payday_limit) unless @supplier_invoice.payday_limit.blank? %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.receipt_note' %>:</td>
-      <td><%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %></td>
+      <td colspan="3"><%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.supplier' %>:</td>

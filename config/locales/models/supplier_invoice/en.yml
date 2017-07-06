@@ -51,6 +51,7 @@ en:
         attachment: "Attachment (Image)"
         internal_no: "Internal No."
         withholding: "Withholding"
+        payday_limit: "Payday limit"
     csv_sage200:
       supplier_invoice:
         c001: "CodigoEmpresa"

@@ -224,6 +224,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     match 'si_current_balance_order/:order', :controller => 'supplier_invoices', :action => 'si_current_balance_order'
     match 'supplier_invoices/:id/si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
+    match 'supplier_invoices/si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
+    match 'si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
+    match 'supplier_invoices/:id/si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
