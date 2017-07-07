@@ -51,32 +51,44 @@
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.caliber_id' %>:</td>
       <td><%= @water_supply_contract.caliber.try(:to_label) %></td>
-      <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
-      <td><%= @water_supply_contract.contract_date %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.reading_sequence' %>:</td>
       <td><%= @water_supply_contract.reading_sequence %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
+      <td><%= formatted_date(@water_supply_contract.contract_date) if @water_supply_contract.contract_date %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contract_term' %>:</td>
+      <td><%= @water_supply_contract.contract_term %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.cadastral_reference' %>:</td>
       <td><%= @water_supply_contract.cadastral_reference %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.gis_id' %>:</td>
       <td><%= @water_supply_contract.gis_id %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.endowments' %>:</td>
       <td><%= @water_supply_contract.endowments %></td>
-    </tr>
-    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.inhabitants' %>:</td>
       <td><%= @water_supply_contract.inhabitants %></td>
-      <td><%=t 'activerecord.attributes.water_supply_contract.installation_date' %>:</td>
-      <td><%= @water_supply_contract.formatted_date(installation_date) if @water_supply_contract.installation_date %></td>
     </tr>
     <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.min_pressure' %>:</td>
+      <td><%= @water_supply_contract.min_pressure %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.max_pressure' %>:</td>
+      <td><%= @water_supply_contract.max_pressure %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_supply_contract.installation_date' %>:</td>
+      <td><%= formatted_date(@water_supply_contract.installation_date) if @water_supply_contract.installation_date %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.installation_index' %>:</td>
       <td><%= @water_supply_contract.installation_index %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.remarks' %>:</td>
       <td><%= @water_supply_contract.remarks %></td>
+      <td></td>
+      <td></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_supply_contract } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_supply_contract } %>

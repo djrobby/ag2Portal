@@ -34,7 +34,7 @@
         <tbody>
           <% @pre_readings.each do |pre_reading| %>
             <tr>
-              <td ><%= pre_reading.reading_route.try(:name) %></td>
+              <td ><%= pre_reading.reading_route.try(:to_label) %></td>
               <td align="center"><%= pre_reading.billing_period.try(:period) %></td>
               <td align="center"><%= pre_reading.COUNTER %></td>
               <td><%= render :partial => '/layouts/crud/read', :locals => { :model => PreReading, :path => list_q_pre_readings_path(prereading: {reading_routes: [pre_reading.reading_route_id], period: pre_reading.billing_period_id }) } %></td>

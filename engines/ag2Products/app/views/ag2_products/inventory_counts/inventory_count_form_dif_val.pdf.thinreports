@@ -1,0 +1,141 @@
+if @inventory_count.nil?
+	return
+end
+if @items.count <= 0
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/inventory_count_form_dif_val', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_quantity: 0, page_difference: 0, page_amount: 0, page_price: 0,page_quantity1: 0, page_difference1: 0, page_amount1: 0, page_price1: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:page_subtotals).value(I18n.t("every_report.page_subtotals"))
+		e.section.item(:page_cumulative).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
+		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_difference).value(number_with_precision(e.store.page_difference, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_price).value(number_with_precision(e.store.page_price, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_quantity1).value(number_with_precision(e.store.page_quantity1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_difference1).value(number_with_precision(e.store.page_difference1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_amount1).value(number_with_precision(e.store.page_amount1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_price1).value(number_with_precision(e.store.page_price1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		# Initialize subtotals to 0
+		e.store.page_quantity = 0
+		e.store.page_difference = 0
+		e.store.page_amount = 0
+		e.store.page_price = 0
+	end
+	# On list footer insertion
+	c.events.on :footer_insert do |e|
+		# Display list totals
+		e.section.item(:articles_c).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
+		e.section.item(:articles).value(number_with_precision(@inventory_count.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:articles2).value(number_with_precision(@inventory_count.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+
+	end
+end
+
+# New page & start
+report.start_new_page
+
+if !@inventory_count.store.company.blank?
+	# Page header: Image block for Logo
+	report.page.values company_logo: "public/" + @inventory_count.store.company.logo.url(:original).split("?").first unless @inventory_count.store.company.logo.blank?
+	# Page header: Company
+	report.page.values(company_name: @inventory_count.store.company.name,
+					   company_address_1: @inventory_count.store.company.address_1,
+					   company_address_2: @inventory_count.store.company.address_2,
+					   company_phones: @inventory_count.store.company.phone_and_fax,
+					   company_email: @inventory_count.store.company.email_and_website,
+					   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @inventory_count.store.company.fiscal_id)
+end
+# Page header: Possibly null values
+report.page.values family: @inventory_count.product_family.full_name unless @inventory_count.product_family.blank?
+report.page.values approval_date: @inventory_count.approval_date.strftime("%d/%m/%Y %H:%M:%S") unless @inventory_count.approval_date.blank?
+report.page.values approver: @inventory_count.approver.email unless @inventory_count.approver.blank?
+# Page header: Others
+report.page.values(form_title: I18n.t("activerecord.models.inventory_count.one"),
+				   count_no_title: I18n.t("activerecord.attributes.inventory_count.count_no_report") + ":",
+				   count_no: @inventory_count.full_no,
+				   count_date_title: I18n.t("activerecord.attributes.inventory_count.count_date") + ":",
+				   count_date: @inventory_count.count_date.strftime("%d/%m/%Y"),
+				   approval_date_title: I18n.t("activerecord.attributes.inventory_count.approval_date") + ":",
+				   approver_title: I18n.t("activerecord.attributes.inventory_count.approver") + ":",
+				   type_title: I18n.t("activerecord.attributes.inventory_count.inventory_count_type") + ":",
+				   store_title: I18n.t("activerecord.attributes.inventory_count.store") + ":",
+				   family_title: I18n.t("activerecord.attributes.inventory_count.product_family") + ":",
+				   type: @inventory_count.inventory_count_type.name,
+				   store: @inventory_count.store.name)
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: I18n.t("every_report.currency_note"),
+				   remarks_title: I18n.t("activerecord.attributes.inventory_count.remarks"),
+				   remarks: @inventory_count.remarks)
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:no_c).value "#"
+	header.item(:product_c).value I18n.t("activerecord.attributes.inventory_count_item.product")
+	header.item(:initial_c).value I18n.t("activerecord.attributes.inventory_count_item.initial")
+	header.item(:current_c).value I18n.t("activerecord.attributes.inventory_count_item.current")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.inventory_count_item.quantity")
+	header.item(:difference_c).value I18n.t("activerecord.attributes.inventory_count_item.difference")
+	header.item(:amount_c).value I18n.t("activerecord.attributes.inventory_count_item.amount")
+	header.item(:price_c).value I18n.t("activerecord.attributes.inventory_count_item.price")
+end
+
+# List detail
+no = 0
+@items.each do |i|
+	report.page.list(:default).add_row do |row|
+		no = no + 1
+    	row.item(:no).value no
+    	row.item(:product).value i.product.full_name unless i.product.blank?
+    	row.item(:initial).value number_with_precision(i.initial, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.initial.blank?
+    	row.item(:current).value number_with_precision(i.current, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.current.blank?
+    	row.item(:quantity).value number_with_precision(i.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.quantity.blank?
+    	row.item(:difference).value number_with_precision(i.difference, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.difference.blank?
+    	row.item(:amount).value number_with_precision(i.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.amount.blank?
+    	row.item(:price).value number_with_precision(i.price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.price.blank?
+	end
+	# Store page subtotals
+    report.page.list(:default) do |list|
+		list.store.page_quantity += i.quantity
+		list.store.page_difference += i.difference
+		list.store.page_amount += i.amount
+		list.store.page_price += i.price
+		list.store.page_quantity1 += i.quantity
+		list.store.page_difference1 += i.difference
+		list.store.page_amount1 += i.amount
+		list.store.page_price1 += i.price
+    end
+end

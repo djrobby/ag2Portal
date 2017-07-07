@@ -15,6 +15,7 @@ es:
         btn_delete: "Borrar Recuento"
         print: "Imprimir"
         print_dif: "Con diferencias"
+        print_dif_val: "Valorado Con diferencias"
       edit:
         title: "Editar Recuento de inventario"
         title_nc: "Editar Recuento Rápido de inventario"

@@ -761,6 +761,10 @@
     <table class="table table-center table-condensed">
       <tbody>
         <tr>
+          <td><b><%= t('activerecord.attributes.water_supply_contract.contract_term') %></b></td>
+          <td id="water_supply_contract_contract_term"><%= @water_supply_contract.contract_term.capitalize %></td>
+        </tr>
+        <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.cadastral_reference') %></b></td>
           <td id="water_supply_contract_cadastral_reference"><%= @water_supply_contract.cadastral_reference %></td>
         </tr>
@@ -775,6 +779,14 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.inhabitants') %></b></td>
           <td id="water_supply_contract_inhabitants"><%= @water_supply_contract.inhabitants %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_supply_contract.min_pressure') %></b></td>
+          <td id="water_supply_contract_min_pressure"><%= @water_supply_contract.min_pressure %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_supply_contract.max_pressure') %></b></td>
+          <td id="water_supply_contract_max_pressure"><%= @water_supply_contract.max_pressure %></td>
         </tr>
         <% if @contracting_request.old_subscriber %>
           <tr>

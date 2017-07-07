@@ -16,6 +16,7 @@ module Ag2Products
                                                :ic_update_product_select_from_organization,
                                                :inventory_count_form,
                                                :inventory_count_form_dif,
+                                               :inventory_count_form_dif_val,
                                                :inventory_counts_report,
                                                :ic_products_from_organization,
                                                :new_nc, :edit_nc]
@@ -659,6 +660,23 @@ module Ag2Products
       end
     end
 
+    # Inventory count form (report Valuated with differences)
+    def inventory_count_form_dif_val
+      # Search inventory count & items
+      @inventory_count = InventoryCount.find(params[:id])
+      @items = @inventory_count.inventory_count_items
+
+      title = t("activerecord.models.inventory_count.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@inventory_count.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+    
     # Inventory counts report
     def inventory_counts_report
       manage_filter_state

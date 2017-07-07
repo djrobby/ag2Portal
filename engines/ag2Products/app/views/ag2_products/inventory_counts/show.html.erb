@@ -61,6 +61,14 @@
       window.open("inventory_count_form_dif.pdf?id=" + id, "_blank");
       return false;
     });
+    $("#print_report_btn_dif_val").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("inventory_count_form_dif_val.pdf?id=" + id, "_blank");
+      return false;
+    });
   });  
 </script>
 
@@ -115,6 +123,7 @@
       <td class="form-td-two right-winged">
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
         <a href="#" id="print_report_btn_dif" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_dif' %></a>
+        <a href="#" id="print_report_btn_dif_val" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print_dif_val' %></a>
       </td>
     </tr>
   </tbody>

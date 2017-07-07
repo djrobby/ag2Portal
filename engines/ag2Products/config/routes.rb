@@ -321,6 +321,7 @@ Ag2Products::Engine.routes.draw do
     resources :inventory_counts do
       get 'inventory_count_form', on: :collection
       get 'inventory_count_form_dif', on: :collection
+      get 'inventory_count_form_dif_val', on: :collection
       get "edit_nc", on: :member
     end
     resources :product_company_prices

@@ -131,6 +131,7 @@ jQuery(function($) {
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
 
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       </div>
       <div>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
@@ -144,6 +145,8 @@ jQuery(function($) {
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wsc_remarks', rows: 5 }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       </div>
       <div>      
