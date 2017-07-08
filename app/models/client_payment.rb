@@ -1,4 +1,6 @@
 class ClientPayment < ActiveRecord::Base
+  include ModelsModule
+
   # CONSTANTS (payment_type model)
   CASH = 1          # CAJA
   BANK = 2          # BANCO
@@ -31,8 +33,60 @@ class ClientPayment < ActiveRecord::Base
     receipt_no.blank? ? "" : receipt_no[0.1] + '-' + receipt_no[2..5] + '-' + receipt_no[6..9]
   end
 
+  def total
+    amount + surcharge
+  end
+
   def instalment_invoices
     instalment.instalment_invoices if instalment
+  end
+
+  def subscriber_name
+    !self.subscriber.blank? ? self.subscriber.name.strip : ''
+  end
+
+  def sanitized_subscriber_name
+    sanitize_string(subscriber_name, true, true, true, false)
+  end
+
+  def subscriber_address
+    !self.subscriber.blank? ? self.subscriber.address_1.strip : ''
+  end
+
+  def sanitized_subscriber_address
+    sanitize_string(subscriber_address, true, true, true, false)
+  end
+
+  def client_name
+    !self.client.blank? ? self.client.name.strip : ''
+  end
+
+  def sanitized_client_name
+    sanitize_string(client_name, true, true, true, false)
+  end
+
+  def client_address
+    !self.client.blank? ? self.client.address_1.strip : ''
+  end
+
+  def sanitized_client_address
+    sanitize_string(client_address, true, true, true, false)
+  end
+
+  def client_bank_account_iban
+    !self.client_bank_account.blank? ? self.client_bank_account.e_format : ''
+  end
+
+  def client_bank_account_swift
+    !self.client_bank_account.blank? ? self.client_bank_account.swift : ''
+  end
+
+  def client_bank_account_start
+    !self.client_bank_account.blank? ? self.client_bank_account.starting_at.strftime("%Y-%m-%d") : ''
+  end
+
+  def client_bank_account_holder
+    !self.client_bank_account.blank? ? self.client_bank_account.holder_name.strip : ''
   end
 
   searchable do

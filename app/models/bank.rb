@@ -30,6 +30,10 @@ class Bank < ActiveRecord::Base
     full_name
   end
 
+  def swift_to_label
+    swift.blank? ? '' : swift.strip
+  end
+
   private
 
   def check_for_dependent_records

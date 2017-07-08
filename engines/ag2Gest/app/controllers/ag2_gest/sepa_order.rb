@@ -30,6 +30,7 @@ module Ag2Gest
     attr_accessor :cuenta_deudor
     attr_accessor :entidad_deudor
     attr_accessor :concepto
+    attr_accessor :time_now
 
 
     def initialize(client_payments)
@@ -115,7 +116,30 @@ module Ag2Gest
             #
             # Loop thru payments
             #
+            i = 0
             @client_payments.each do |cp|
+              # Look for data & Set attribute values
+              anombre = ''
+              adirecc = ''
+              i += 1
+              if !cp.subscriber.blank?
+                anombre = cp.sanitized_subscriber_name
+                adirecc = cp.sanitized_subscriber_address
+              else
+                anombre = cp.sanitized_client_name
+                adirecc = cp.sanitized_client_address
+              end
+              self.concepto = "FRA.AGUA " + cp.bill.real_no_unformatted + " " + cp.bill.billing_period_code + " " + adirecc + " " + anombre
+              self.entidad_deudor = cp.client_bank_account_swift.ljust(11)
+              self.importe_adeudo = en_formatted_number_without_delimiter(cp.total, 2)
+              self.referencia_mandato = ¿¿¿refere???
+              self.fecha_firma_mandato = cp.client_bank_account_start
+              self.identificacion_instruccion = self.time_now.strftime("%Y%m%d%H%M%S%L") + i.to_s.rjust(4,'0')
+              self.nombre_deudor = cp.client_bank_account_holder
+              self.cuenta_deudor = cp.client_bank_account_iban
+              # Max. 35: invoice_no 16 + receipt_no 6 + date 12 + 1
+              self.referencia_adeudo = cp.bill.real_no_unformatted + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%Y%m%d%H%M") + "0"
+              # Write payment line
               @xml.DrctDbtTxInf do
                 @xml.PmtId do
                   @xml.InstrId(self.identificacion_instruccion)

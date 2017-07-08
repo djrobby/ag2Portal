@@ -79,9 +79,13 @@ class Bill < ActiveRecord::Base
     end
   end
 
-  # First invoice no. (own service)
+  # First invoice no. (own, service)
   def real_no
     invoices.first.full_no rescue full_no
+  end
+  # 16 characters unformatted invoice_no
+  def real_no_unformatted
+    invoices.first.invoice_no rescue bill_no.last(16)
   end
 
   # Short No

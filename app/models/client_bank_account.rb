@@ -6,7 +6,8 @@ class ClientBankAccount < ActiveRecord::Base
   belongs_to :bank
   belongs_to :bank_office
   attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
-                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id, :holder_fiscal_id, :holder_name, :created_by, :updated_by
+                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id,
+                  :holder_fiscal_id, :holder_name, :created_by, :updated_by
 
   alias_attribute :cb, :bank_id
   alias_attribute :cs, :bank_office_id
@@ -75,9 +76,9 @@ class ClientBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
       _f += self.account_no.strip
     end
@@ -98,11 +99,11 @@ class ClientBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     _f
   end
@@ -121,11 +122,11 @@ class ClientBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     if !_f.blank?
       _f = "IBAN " + _f
@@ -147,15 +148,19 @@ class ClientBankAccount < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,2] + " " +  self.account_no[4,2].tr(account_no, "*") + " " +self.account_no[6,4].tr(account_no, "*")
+      _f += self.account_no[0,4] + " " + self.account_no[4,2] + self.account_no[6,2].tr(account_no, "*") + " " + self.account_no[8,4].tr(account_no, "*")
     end
     if !_f.blank?
       _f = "IBAN " + _f
     end
     _f
+  end
+
+  def swift
+    !self.bank.blank? ? self.bank.swift_to_label : ''
   end
 end
