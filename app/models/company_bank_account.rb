@@ -37,6 +37,7 @@ class CompanyBankAccount < ActiveRecord::Base
 
   # Scopes
   scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
+  scope :active_by_company, -> c { where("company_id = ? AND (ending_at IS NULL OR ending_at > ?)", c, Date.today) }
 
   before_validation :fields_to_uppercase
 

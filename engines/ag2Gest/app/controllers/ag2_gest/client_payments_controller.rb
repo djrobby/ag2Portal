@@ -631,6 +631,8 @@ module Ag2Gest
       @payment_methods = payment_methods_dropdown
       @cashier_payment_methods = cashier_payment_methods_dropdown
       @no_cashier_payment_methods = no_cashier_payment_methods_dropdown
+      @bank_accounts = bank_accounts_dropdown
+      @scheme_types = SepaSchemeType.by_id
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -1426,6 +1428,10 @@ module Ag2Gest
 
     def collections_not_used_by_cashier(_organization)
       _organization != 0 ? PaymentMethod.collections_by_organization_not_used_by_cashier(_organization) : PaymentMethod.collections_not_used_by_cashier
+    end
+
+    def bank_accounts_dropdown
+      session[:company] != '0' ? CompanyBankAccount.active_by_company(session[:company].to_i) : CompanyBankAccount.active
     end
 
     # Keeps filter state

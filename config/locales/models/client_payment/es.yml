@@ -37,3 +37,7 @@ es:
         change: "Cambio"
         successfully: "Pago de cliente se ha actualizado correctamente."
         create: "Pago de cliente se ha creado correctamente."
+        bank_account_id: "Cuenta bancaria a utilizar"
+        scheme_type_id: "Esquema SEPA"
+        presentation_date: "Fecha de presentación"
+        charge_date: "Fecha de cargo"
