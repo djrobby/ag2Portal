@@ -242,7 +242,7 @@ module Ag2Gest
                 xml.issuer({ description: payment_issuer_d.upcase }, bill.issuer)
                 xml.reference({ description: payment_reference_d.upcase }, bill.reference)
                 xml.ident({ description: payment_ident_d.upcase }, bill.ident)
-                xml.supply({ description: payment_supply_d.upcase }, bill.subscriber.subscriber_code[3..10])
+                xml.supply({ description: payment_supply_d.upcase }, bill.subscriber.diput)
                 xml.payday_limit({ description: bill_payday_limit_d.upcase }, bill.formatted_payday_limit)
                 xml.total({ description: total_invoice_d.upcase }, number_with_precision(bill.total, precision: 2))
               end

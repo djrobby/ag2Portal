@@ -31,7 +31,7 @@ end
 #
 report.layout.config.list(:default) do |c|
 	# Define the variables used in list
-	c.use_stores page_quantity: 0, page_difference: 0, page_amount: 0, page_price: 0,page_quantity1: 0, page_difference1: 0, page_amount1: 0, page_price1: 0
+	c.use_stores page_quantity: 0, page_difference: 0, page_amount: 0,page_quantity1: 0, page_difference1: 0, page_amount1: 0
 
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
@@ -41,24 +41,13 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:page_quantity).value(number_with_precision(e.store.page_quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
 		e.section.item(:page_difference).value(number_with_precision(e.store.page_difference, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
 		e.section.item(:page_amount).value(number_with_precision(e.store.page_amount, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:page_price).value(number_with_precision(e.store.page_price, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:page_quantity1).value(number_with_precision(e.store.page_quantity1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:page_difference1).value(number_with_precision(e.store.page_difference1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:page_amount1).value(number_with_precision(e.store.page_amount1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:page_price1).value(number_with_precision(e.store.page_price1, precision: 4, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_quantity1).value(number_with_precision(e.store.page_quantity1, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_difference1).value(number_with_precision(e.store.page_difference1, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+		e.section.item(:page_amount1).value(number_with_precision(e.store.page_amount1, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
 		# Initialize subtotals to 0
 		e.store.page_quantity = 0
 		e.store.page_difference = 0
 		e.store.page_amount = 0
-		e.store.page_price = 0
-	end
-	# On list footer insertion
-	c.events.on :footer_insert do |e|
-		# Display list totals
-		e.section.item(:articles_c).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
-		e.section.item(:articles).value(number_with_precision(@inventory_count.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
-		e.section.item(:articles2).value(number_with_precision(@inventory_count.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
-
 	end
 end
 
@@ -132,10 +121,8 @@ no = 0
 		list.store.page_quantity += i.quantity
 		list.store.page_difference += i.difference
 		list.store.page_amount += i.amount
-		list.store.page_price += i.price
 		list.store.page_quantity1 += i.quantity
 		list.store.page_difference1 += i.difference
 		list.store.page_amount1 += i.amount
-		list.store.page_price1 += i.price
     end
 end

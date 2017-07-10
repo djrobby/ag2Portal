@@ -93,6 +93,10 @@ class ClientPayment < ActiveRecord::Base
     sanitize_string(client_bank_account_holder, true, true, true, false)
   end
 
+  def client_bank_account_refere
+    !self.client_bank_account.blank? ? self.client_bank_account.refere.to_s.strip : ''
+  end
+
   searchable do
     text :receipt_no
     integer :payment_type

@@ -132,7 +132,7 @@ module Ag2Gest
               self.concepto = "FRA.AGUA " + cp.bill.real_no_unformatted + " " + cp.bill.billing_period_code + " " + adirecc + " " + anombre
               self.entidad_deudor = cp.client_bank_account_swift.ljust(11)
               self.importe_adeudo = en_formatted_number_without_delimiter(cp.total, 2)
-              self.referencia_mandato = "0" # ¿¿¿refere???
+              self.referencia_mandato = cp.client_bank_account_refere
               self.fecha_firma_mandato = cp.client_bank_account_start
               self.identificacion_instruccion = self.time_now.strftime("%Y%m%d%H%M%S%L") + i.to_s.rjust(4,'0')
               self.nombre_deudor = cp.sanitized_client_bank_account_holder

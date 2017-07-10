@@ -62,6 +62,20 @@ class ClientBankAccount < ActiveRecord::Base
     full_name = e_format
   end
 
+  # Reference for SEPA mandate
+  def refere
+    yy = self.starting_at.year
+    mm = self.starting_at.month
+    if yy >= 2000
+      yy = yy - 2000
+    end
+    if yy > 1900
+      yy = yy - 1900
+    end
+    diput = !self.subscriber.blank? ? self.subscriber.diput : self.client.diput
+    (yy * 10000000000) + (mm * 100000000) + diput.to_i
+  end
+
   def e_format
     _f = ""
     if !self.country.blank?

@@ -185,6 +185,10 @@ class Subscriber < ActiveRecord::Base
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
   end
 
+  def diput
+    subscriber_code.blank? ? "" : subscriber_code[2..3] + subscriber_code[5..10]
+  end
+
   def client_first_name
     self.client.first_name
   end

@@ -158,6 +158,10 @@ class Client < ActiveRecord::Base
     client_code.blank? || client_code == "$ERR" ? "" : client_code[0..3] + '-' + client_code[4..10]
   end
 
+  def diput
+    client_code.blank? || client_code == "$ERR" ? "" : client_code[2..3] + client_code[5..10]
+  end
+
   def entity_first_name
     self.entity.first_name
   end
