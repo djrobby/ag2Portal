@@ -698,8 +698,8 @@
               <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
-          <%= f.input :bank_account_id, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_account_id"), collection: @bank_accounts, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
-          <%= f.input :scheme_type_id, required: true, label: I18n.t("activerecord.attributes.client_payment.scheme_type_id"), collection: @scheme_types, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :bank_account_id, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_account_id"), collection: @bank_accounts, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :scheme_type_id, required: true, label: I18n.t("activerecord.attributes.client_payment.scheme_type_id"), collection: @scheme_types, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :presentation_date, required: true, label: I18n.t("activerecord.attributes.client_payment.presentation_date"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :charge_date, required: true, label: I18n.t("activerecord.attributes.client_payment.charge_date"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
         </div><!-- modal-body -->

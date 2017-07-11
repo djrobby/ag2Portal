@@ -132,7 +132,7 @@ class Bill < ActiveRecord::Base
   end
 
   def billing_period_code
-    invoices.first.billing_period.period rescue ''
+    invoices.first.billing_period.period.to_s rescue ''
   end
 
   def bill_type

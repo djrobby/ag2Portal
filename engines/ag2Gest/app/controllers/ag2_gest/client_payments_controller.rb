@@ -440,11 +440,11 @@ module Ag2Gest
         end
 
         # Instantiate class
-        sepa = SepaOrder.new(client_payments)
+        sepa = Ag2Gest::SepaOrder.new(client_payments)
 
         # Initialize class attributes
         sepa.identificacion_fichero = "PRE" + time_now.strftime("%Y%m%d%H%M%S%L") + "00" +
-                                      bank_account.bank_suffix.strip! + bank_account.holder_fiscal_id.strip!
+                                      bank_account.bank_suffix.strip + bank_account.holder_fiscal_id.strip
         sepa.fecha_hora_confeccion = time_now.strftime("%Y-%m-%d") + "T" + time_now.strftime("%H:%M:%S")
         # sepa.numero_total_adeudos = client_payments.count
         # sepa.importe_total = en_formatted_number_without_delimiter(client_payments.sum('amount+surcharge'), 2)
@@ -452,7 +452,7 @@ module Ag2Gest
         sepa.identificacion_presentador = creditor_id
         sepa.tipo_esquema = scheme_type.name
         sepa.identificacion_info_pago = creditor_id + time_now.strftime("%Y%m%d%H%M%S%L") + "00"
-        sepa.fecha_cobro = charge_date.strftime("%Y-%m-%d")
+        sepa.fecha_cobro = charge_date.to_date.strftime("%Y-%m-%d")
         sepa.cuenta_acreedor = bank_account.e_format
         sepa.time_now = time_now
 

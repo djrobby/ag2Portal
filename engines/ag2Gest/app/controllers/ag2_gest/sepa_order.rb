@@ -1,5 +1,7 @@
 module Ag2Gest
   class SepaOrder
+    include ModelsModule
+
     # Constants
     METODO_PAGO ||= 'DD'
     INDICADOR_APUNTE_CUENTA ||= 'true'

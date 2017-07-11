@@ -42,7 +42,7 @@ class ClientPayment < ActiveRecord::Base
   end
 
   def subscriber_name
-    !self.subscriber.blank? ? self.subscriber.name.strip : ''
+    !self.subscriber.blank? ? self.subscriber.full_name.strip : ''
   end
 
   def sanitized_subscriber_name

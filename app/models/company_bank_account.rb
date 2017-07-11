@@ -59,7 +59,7 @@ class CompanyBankAccount < ActiveRecord::Base
   def full_name
     full_name = ""
     if !self.bank_account_class.blank?
-      full_name += self.bank_account_class_id + ": "
+      full_name += self.bank_account_class_id.to_s + ": "
     end
     full_name = e_format
   end

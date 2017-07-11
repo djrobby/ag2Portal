@@ -26,7 +26,7 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding, :totals, :payday_limit
+                  :internal_no, :withholding, :totals, :payday_limit, :posted_at
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -266,21 +266,22 @@ class SupplierInvoice < ActiveRecord::Base
         # Effect line
         lac = i.supplier.ledger_account_code(company_id)
         days_to_expiration = i.payment_method.expiration_days.blank? ? 0 : i.payment_method.expiration_days
-        expiration = i.created_at + days_to_expiration.days
+        expiration = i.payday_limit.blank? ? i.invoice_date + days_to_expiration.days : i.payday_limit
+        posting_date = i.posted_at.blank? ? i.created_at : i.posted_at
         if !lac.nil?
           csv << [i.ledger_account_company_code(company_id),  # 001
                   nil,  # 002
                   nil,  # 003
                   'P',                                        # 004
                   entry.to_s,                                 # 005
-                  i.created_at.year.to_s,                     # 006
-                  i.created_at.year.to_s[2..3],               # 007
+                  posting_date.year.to_s,                     # 006
+                  posting_date.year.to_s[2..3],               # 007
                   i.id.to_s,                                  # 008
                   i.invoice_no,                               # 009
                   i.supplier.supplier_code,                   # 010
                   lac,                                        # 011
                   nil,  # 012
-                  i.format_date(i.created_at),                # 013
+                  i.format_date(posting_date),                # 013
                   i.format_date(i.invoice_date),              # 014
                   i.format_date(expiration),                  # 015
                   totals,                                     # 016
@@ -411,14 +412,15 @@ class SupplierInvoice < ActiveRecord::Base
         totals = i.raw_number(taxable_sum + tax_sum, 2)
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
+        posting_date = i.posted_at.blank? ? i.created_at : i.posted_at
         if !lac.nil? && !taxable1.nil?
           csv << [i.ledger_account_company_code(company_id),  # 001
-                  i.created_at.year.to_s,                   # 002
+                  posting_date.year.to_s,                   # 002
                   entry.to_s,                               # 003
                   'H',                                      # 004
                   lac,                                      # 005
                   nil,  # 006
-                  i.format_date(Time.new),                  # 007
+                  i.format_date(posting_date),              # 007
                   nil,  # 008
                   i.invoice_no,                             # 009
                   totals,                                   # 010
@@ -429,7 +431,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 015
                   nil,  # 016
                   nil,  # 017
-                  Time.new.month.to_s,                      # 018
+                  posting_date.month.to_s,                  # 018
                   '2',                                      # 019
                   '0',                                      # 020
                   '0',                                      # 021
@@ -454,7 +456,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 040
                   nil,  # 041
                   nil,  # 042
-                  i.created_at.year.to_s[2..3],             # 043
+                  posting_date.year.to_s[2..3],             # 043
                   i.id.to_s,                                # 044
                   i.invoice_no,                             # 045
                   i.format_date(i.invoice_date),            # 046
