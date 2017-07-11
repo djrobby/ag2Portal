@@ -182,7 +182,7 @@
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (product == ""))
             return;
-          window.open("request_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("request_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 2:
           // Offer
@@ -194,7 +194,7 @@
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (product == ""))
             return;
-          window.open("offer_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("offer_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 3:
           // Purchase order
@@ -207,7 +207,7 @@
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (order == "") && (account == "") && (status == "") && (product == ""))
             return;
-          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
           break;
         case 4:
           // Supplier invoice
@@ -218,7 +218,7 @@
           var product = $('select#Product :selected').val();
           if ((project == "") && (supplier == "") && (order == "") && (account == "") && (product == ""))
             return;
-          window.open("invoice_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          window.open("invoice_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
           break;
         case 5:
           // Supplier payment
@@ -226,14 +226,15 @@
           var supplier = $('select#Supplier :selected').val();
           if ((project == "") && (supplier == ""))
             return;
-          window.open("payment_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          window.open("payment_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
           break;
         case 6:
           // Supplier
+          var project = $('select#Project :selected').val();
           var supplier = $('select#Supplier :selected').val();
           if ((project == "") && (supplier == ""))
             return;
-          window.open("supplier_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          window.open("supplier_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
           break;
       }
       return false;

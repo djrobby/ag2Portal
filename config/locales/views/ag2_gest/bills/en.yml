@@ -41,6 +41,7 @@ en:
         btn_delete: "Delete Bill"
         subtable_title: "Bill Invoices"
         return_to: "Back to Bill"
+        print: "Print"
       edit:
         title: "Edit Bill"
         btn_show: "Show Bill"

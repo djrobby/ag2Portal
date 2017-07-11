@@ -28,12 +28,12 @@
         <h3><%=t '.title' %></h3>
       </td>
       <td class="form-td-two right-winged">
-        <% if @invoice.invoice_type.id == InvoiceType::WATER %>
-          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
-        <% elsif @invoice.invoice_type.id == InvoiceType::CONTRACT %>
-          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_contract_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+        <% if @bill.invoices.first.invoice_type.id == InvoiceType::WATER %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+        <% elsif @bill.invoices.first.invoice_type.id == InvoiceType::CONTRACT %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_contract_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
         <% else %>
-          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, invoice_form_commercial_billing_path(@invoice, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, invoice_form_commercial_billing_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
         <% end %>
       </td>
     </tr>

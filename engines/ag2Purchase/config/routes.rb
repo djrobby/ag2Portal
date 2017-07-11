@@ -369,7 +369,9 @@ Ag2Purchase::Engine.routes.draw do
       get 'offer_request_form_no_prices', on: :collection
     end
     resources :offers
-    resources :supplier_invoices
+    resources :supplier_invoices do
+      get 'export_invoices_csv', on: :collection
+    end
     resources :supplier_payments
     resources :purchase_to_files
 

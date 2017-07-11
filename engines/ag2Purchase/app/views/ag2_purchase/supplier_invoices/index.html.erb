@@ -217,6 +217,9 @@
         <button id="new_from_purchase_order" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_purchase_order") %></button>
         <br /><br />
         <% end %>
+        <!-- Control&Tracking -->
+        <a href="<%= export_invoices_csv_supplier_invoices_path(format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+        <br /><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

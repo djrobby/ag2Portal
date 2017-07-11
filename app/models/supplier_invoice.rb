@@ -26,7 +26,7 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding, :totals, :payday_limit, :posted_at
+                  :internal_no, :withholding, :totals, :payday_limit
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -607,6 +607,55 @@ class SupplierInvoice < ActiveRecord::Base
         end # i.items_group_by_tax_type.each
       end # array.each
     end # CSV.generate
+  end
+
+  def self.to_report_invoices_csv(array)
+    attributes = [I18n.t('activerecord.attributes.supplier_invoice.invoice_no'),
+                  I18n.t('activerecord.attributes.supplier_invoice.invoice_date'),
+                  I18n.t('activerecord.attributes.supplier_invoice.payday_limit'),
+                  I18n.t('activerecord.attributes.supplier_invoice.receipt_note'),
+                  I18n.t('activerecord.attributes.supplier_invoice.supplier'),
+                  I18n.t('activerecord.attributes.supplier_invoice.payment_method'),
+                  I18n.t('activerecord.attributes.supplier_invoice.project'),
+                  I18n.t('activerecord.attributes.supplier_invoice.work_order'),
+                  I18n.t('activerecord.attributes.supplier_invoice.charge_account'),
+                  I18n.t('activerecord.attributes.supplier_invoice.purchase_order'),
+                  I18n.t('activerecord.attributes.supplier_invoice.internal_no'),
+                  I18n.t('activerecord.attributes.supplier_invoice.debt'),
+                  I18n.t('activerecord.attributes.supplier_invoice.quantity'),
+                  I18n.t('activerecord.attributes.supplier_invoice.subtotal'),
+                  I18n.t('activerecord.attributes.supplier_invoice.withholding'),
+                  I18n.t('activerecord.attributes.supplier_invoice.discount_pct'),
+                  I18n.t('activerecord.attributes.supplier_invoice.bonus'),
+                  I18n.t('activerecord.attributes.supplier_invoice.taxable'),
+                  I18n.t('activerecord.attributes.supplier_invoice.taxes'),
+                  I18n.t('activerecord.attributes.supplier_invoice.total')]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |supplier_invoices_report|
+        csv << [  supplier_invoices_report.invoice_no,
+                  supplier_invoices_report.invoice_date,
+                  supplier_invoices_report.payday_limit,
+                  supplier_invoices_report.try(:receipt_note).try(:receipt_no),
+                  supplier_invoices_report.try(:supplier).try(:full_name),
+                  supplier_invoices_report.try(:payment_method).try(:description) ,
+                  supplier_invoices_report.try(:project).try(:full_name),
+                  supplier_invoices_report.try(:work_order).try(:full_name),
+                  supplier_invoices_report.try(:charge_account).try(:full_name),
+                  supplier_invoices_report.try(:purchase_order).try(:full_no),
+                  supplier_invoices_report.internal_no,
+                  supplier_invoices_report.debt,
+                  supplier_invoices_report.quantity,
+                  supplier_invoices_report.subtotal,
+                  supplier_invoices_report.withholding,
+                  supplier_invoices_report.discount_pct,
+                  supplier_invoices_report.bonus,
+                  supplier_invoices_report.taxable,
+                  supplier_invoices_report.taxes,
+                  supplier_invoices_report.total]
+      end
+    end
   end
 
   #

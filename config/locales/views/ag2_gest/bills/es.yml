@@ -41,6 +41,7 @@ es:
         btn_delete: "Borrar Recibo"
         subtable_title: "Facturas del Recibo"
         return_to: "Volver a Recibo"
+        print: "Imprimir"
       edit:
         title: "Editar Recibo"
         btn_show: "Ver Recibo"

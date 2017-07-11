@@ -250,13 +250,21 @@ module Ag2Purchase
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? && !supplier.blank?
+        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ? AND suppliers.id = ? AND suppliers.created_at >= ? AND suppliers.created_at <= ?",project,supplier,from,to).order("suppliers.supplier_code")
+      elsif project.blank? && !supplier.blank?
+        @supplier_report = Supplier.where("id = ? AND created_at >= ? AND created_at <= ?",supplier,from,to).order(:supplier_code)
+      elsif !project.blank? && supplier.blank?
+        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ? AND suppliers.created_at >= ? AND suppliers.created_at <= ?",project,from,to).order("suppliers.supplier_code")
+      elsif project.blank? && supplier.blank?
+        @supplier_report = Supplier.where("created_at >= ? AND created_at <= ?",from,to).order(:supplier_code)
+      end
+
       # Setup filename
       title = t("activerecord.models.supplier.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",

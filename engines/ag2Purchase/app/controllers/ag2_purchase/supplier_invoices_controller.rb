@@ -796,6 +796,62 @@ module Ag2Purchase
       return invoice_item
     end
 
+    def export_invoices_csv
+      manage_filter_state
+      no = params[:No]
+      supplier = params[:Supplier]
+      project = params[:Project]
+      order = params[:Order]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @receipt_notes = receipts_dropdown if @receipt_notes.nil?
+      @purchase_orders = purchase_orders_dropdown if @purchase_orders.nil?
+
+      # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = SupplierInvoice.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        data_accessor_for(SupplierInvoice).include = [:supplier_invoice_approvals, :supplier, :project]
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => SupplierInvoice.count
+      end
+      @supplier_invoices = @search.results
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.csv { render text: SupplierInvoice.to_report_invoices_csv(@supplier_invoices) }
+        format.js
+      end
+    end
+
     #
     # Default Methods
     #
@@ -1027,6 +1083,8 @@ module Ag2Purchase
           (params[:supplier_invoice][:withholding].to_f != @supplier_invoice.withholding.to_f) ||
           (params[:supplier_invoice][:discount_pct].to_f != @supplier_invoice.discount_pct.to_f) ||
           (params[:supplier_invoice][:internal_no].to_s != @supplier_invoice.internal_no) ||
+          (params[:supplier_invoice][:payday_limit].to_s != @supplier_invoice.payday_limit) ||
+          (params[:supplier_invoice][:posted_at].to_s != @supplier_invoice.posted_at) ||
           (params[:supplier_invoice][:remarks].to_s != @supplier_invoice.remarks))
         master_changed = true
       end

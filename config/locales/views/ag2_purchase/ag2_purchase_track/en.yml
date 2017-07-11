@@ -47,3 +47,6 @@ en:
         sum_rec_count_title: "Total Records:"
         sum_rows_title: "Total Rows (Days):"
         average_title: "Average Worked Time: "
+        full_total: "Totals:"
+        cumulative_total: "Cumulative Total:"
+        cumulative_items: "Items Total:"
