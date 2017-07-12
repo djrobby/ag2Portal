@@ -220,25 +220,30 @@ class SupplierInvoice < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.effects_portfolio_to_csv(array, company_id=nil)
-    column_names = [I18n.t('activerecord.csv_sage200.supplier_invoice.c001'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c002'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c003'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c004'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c005'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c006'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c007'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c008'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c009'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c010'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c011'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c012'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c013'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c014'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c015'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c016'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c017'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c018'),
-                    I18n.t('activerecord.csv_sage200.supplier_invoice.c019')]
+    column_names = [I18n.t('activerecord.csv_sage200.effects_portfolio.c001'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c002'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c003'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c004'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c005'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c006'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c007'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c008'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c009'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c010'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c011'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c012'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c013'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c014'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c015'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c016'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c017'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c018'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c019'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c020'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c021'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c022'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c023'),
+                    I18n.t('activerecord.csv_sage200.effects_portfolio.c024')]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << column_names
@@ -287,7 +292,12 @@ class SupplierInvoice < ActiveRecord::Base
                   totals,                                     # 016
                   '-1',                                       # 017
                   i.invoice_no,                               # 018
-                  '0']                                        # 019
+                  '0',                                        # 019
+                  i.supplier.active_bank_account_bank_code,       # 020
+                  i.supplier.active_bank_account_office_code,     # 021
+                  i.supplier.active_bank_account_ccc_dc,          # 022
+                  i.supplier.active_bank_account_ccc_account_no,  # 023
+                  i.supplier.active_bank_account_iban_no]         # 024
         end # !lac.nil?
       end # array.each
     end # CSV.generate
@@ -476,8 +486,12 @@ class SupplierInvoice < ActiveRecord::Base
                   '0']                                      # 060
         end # !lac.nil?
         # Group 6 lines: charge_accounts
+        taxable_sum_dif = taxable_sum
         cal.each do |g|
           if !g.code.blank?
+            g_item_amount = g.item_amount.round(2)
+            amount_to_inform = taxable_sum_dif < g_item_amount ? i.raw_number(taxable_sum_dif, 2) : i.raw_number(g_item_amount, 2)
+            taxable_sum_dif -= g_item_amount
             csv << [i.ledger_account_company_code(company_id),  # 001
                     i.created_at.year.to_s,                   # 002
                     entry.to_s,                               # 003
@@ -487,7 +501,7 @@ class SupplierInvoice < ActiveRecord::Base
                     i.format_date(Time.new),                  # 007
                     nil,  # 008
                     i.invoice_no,                             # 009
-                    i.raw_number(g.item_amount, 2),           # 010
+                    amount_to_inform,                         # 010
                     nil,  # 011
                     nil,  # 012
                     nil,  # 013

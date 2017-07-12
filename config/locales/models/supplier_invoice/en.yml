@@ -134,3 +134,8 @@ en:
         c017: "Remesable"
         c018: "SuFacturaNo"
         c019: "TipoImportacionIME"
+        c020: "CodigoBanco"
+        c021: "CodigoAgencia"
+        c022: "DC"
+        c023: "CCC"
+        c024: "IBAN"
