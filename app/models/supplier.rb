@@ -244,7 +244,8 @@ class Supplier < ActiveRecord::Base
     if company_id.nil?
       ledger_account_id
     else
-      supplier_ledger_accounts.where(company_id: company_id).first.ledger_account_id rescue ledger_account_id
+      # supplier_ledger_accounts.where(company_id: company_id).first.ledger_account_id rescue ledger_account_id
+      supplier_ledger_accounts.where(company_id: company_id).first.ledger_account_id rescue nil
     end
   end
   def ledger_account_code(company_id=nil)

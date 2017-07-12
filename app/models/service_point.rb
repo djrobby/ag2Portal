@@ -21,7 +21,7 @@ class ServicePoint < ActiveRecord::Base
   has_many :subscribers
 
   validates :code,                    :presence => true,
-                                      :length => { :minimum => 3 }
+                                      :length => { :minimum => 3, :maximum => 11 }
   validates :service_point_type,      :presence => true
   validates :service_point_location,  :presence => true
   validates :service_point_purpose,   :presence => true
@@ -45,6 +45,11 @@ class ServicePoint < ActiveRecord::Base
     else
       "#{street_directory.street_type.street_type_code} #{street_directory.street_name}, #{street_number} #{floor} #{floor_office}, (#{street_directory.town.name})"
     end
+  end
+
+  def full_code
+    # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
+    code.blank? ? "" : code[0..3] + '-' + code[4..10]
   end
 
   def full_address
