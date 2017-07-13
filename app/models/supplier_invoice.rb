@@ -61,7 +61,11 @@ class SupplierInvoice < ActiveRecord::Base
   scope :by_no, -> { order(:invoice_no) }
   scope :by_date, -> { order(:invoice_date) }
   scope :by_created_at, -> { order(:created_at) }
-  scope :by_projects_and_creation_date, -> p, f, t { where("project_id IN (?) AND created_at BETWEEN ? AND ?", p, f, t).by_created_at }
+  # scope :by_projects_and_creation_date, -> p, f, t { where("project_id IN (?) AND created_at BETWEEN ? AND ?", p, f, t).by_created_at }
+  scope :by_projects_and_creation_date, -> p, f, t {
+    where("project_id IN (?) AND ((posted_at IS NULL AND created_at BETWEEN ? AND ?) OR (NOT posted_at IS NULL AND posted_at BETWEEN ? AND ?))", p, f, t, f, t)
+    .by_created_at
+  }
 
   # Callbacks
   before_destroy :check_for_dependent_records
