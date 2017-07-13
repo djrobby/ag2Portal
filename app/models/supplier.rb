@@ -264,7 +264,7 @@ class Supplier < ActiveRecord::Base
     active_bank_account.bank.code rescue nil
   end
   def active_bank_account_office_code
-    active_bank_account.office.code rescue nil
+    active_bank_account.bank_office.code rescue nil
   end
   def active_bank_account_ccc_dc
     active_bank_account.ccc_dc rescue nil
