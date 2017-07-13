@@ -19,8 +19,8 @@ es:
       new:
         title: "Nuevo Punto de Suministro"
       back_to_main_page: "Volver a Puntos de Suministro"
-      # generate_code_btn: "Código de Emisor de la factura"
+      generate_code_btn: "Código Punto de Suministro"
       # personal_info: "Información del Cliente"
       # commercial_info: "Información Contable y Comercial"
       # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."
+      code_error: "Imposible generar Código de Punto de Suministro: No has elegido Oficina."

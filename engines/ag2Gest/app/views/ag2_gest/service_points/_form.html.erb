@@ -1,4 +1,6 @@
 <script type="text/javascript">
+var text_field_color;
+
   $(document).ready(function() {
     // Select2
     $('select.sel2').select2({
@@ -10,6 +12,14 @@
       format : 'dd/mm/yyyy',
       weekStart : 1
     });
+
+    // Save default text color
+    text_field_color = $("#service_point_code").css('color')
+    // Icon inside text field: Validate Fiscal Id
+    $('input.geniconify_serpoint').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_serpoint_code_btn').trigger("click");
+      return false;
+    }));
     
     // Set initial focus
     $(this).find(".form-label:first").focus();
@@ -42,6 +52,25 @@
         $('#office').append(content);
 
       });
+      return false;
+    });
+
+    // when #generate_code_btn is clicked
+    $("#generate_serpoint_code_btn").click(function() {
+      // make a POST call and replace the content
+      var office = $('#service_point_office_id').val();
+      if (office == "")
+        office = "$";
+      jQuery.getJSON('serpoint_generate_no/' + office, function(data) {
+        $("#service_point_code").val(data.code);
+        if ($("#service_point_code").val() == "$err") {
+          $("#service_point_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_gest.service_points.code_error") %>');
+        }
+        else
+          $("#service_point_code").css('color', text_field_color);
+        $('#service_point_code').select();
+      })
       return false;
     });
 
@@ -135,7 +164,7 @@
   </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'mid-text-field iconify' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field geniconify_serpoint', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
@@ -172,5 +201,15 @@
   <label class="multi-field-label-two"> <%= f.input :diameter, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :gis_id, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.button :submit, :class => 'btn-primary' %>
+<!-- Buttons -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr">
+      <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+      <% if @breadcrumb == 'create'%>
+      <td class="form-td-three right-winged"><a href="#" id="generate_serpoint_code_btn" class="btn btn-warning"><%=t 'ag2_gest.service_points.generate_code_btn' %></a></td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 <% end %>

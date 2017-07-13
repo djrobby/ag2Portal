@@ -7,7 +7,7 @@
       <td><%= t('activerecord.attributes.service_point.id') %>:</td>
       <td><%= @service_point.try(:id) %></td>
       <td><%= t('activerecord.attributes.service_point.code') %>:</td>
-      <td class="highlighted bolded"><%= @service_point.code %></td>
+      <td class="highlighted bolded"><%= @service_point.full_code %></td>
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.service_point.name') %>:</td>

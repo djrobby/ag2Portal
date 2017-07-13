@@ -1,4 +1,6 @@
 <script type="text/javascript">
+var text_field_color;
+
   $(document).ready(function() {
     // Select2
     $('select.sel2').select2({
@@ -20,6 +22,14 @@
       $("#new-service-point .sel2").select2("val", "");
     });
     //Update offices for each company selected
+
+    // Save default text color
+    text_field_color = $("#service_point_code").css('color')
+    // Icon inside text field: Validate Fiscal Id
+    $('input.geniconify_serpoint').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      $('#generate_serpoint_code_btn').trigger("click");
+      return false;
+    }));
 
   });
   jQuery(function($) {
@@ -47,6 +57,7 @@
       });
       return false;
     });
+
     // when the #fnt_town field changes
     $("#fnt_town").change(function() {
 
@@ -90,6 +101,26 @@
       });
       return false;
     });
+
+    // when #generate_code_btn is clicked
+    $("#generate_serpoint_code_btn").click(function() {
+      // make a POST call and replace the content
+      var office = $('#service_point_office_id').val();
+      if (office == "")
+        office = "$";
+      jQuery.getJSON('serpoint_generate_no/' + office, function(data) {
+        $("#service_point_code").val(data.code);
+        if ($("#service_point_code").val() == "$err") {
+          $("#service_point_code").css('color', 'red');
+          alert('<%= I18n.t("ag2_gest.service_points.code_error") %>');
+        }
+        else
+          $("#service_point_code").css('color', text_field_color);
+        $('#service_point_code').select();
+      })
+      return false;
+    });
+
     // when the #fnt_region field changes
     $("#fnt_region").change(function() {
       // make a POST call and replace the content
@@ -154,7 +185,7 @@
     <%= f.input :company_id, :as => :hidden, :input_html => { :value => session[:company] }  %>
     <%= f.input :office_id, :as => :hidden, :input_html => { :value => session[:office] }  %>
     <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :code, :required => true, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'x-medium-text-field geniconify_serpoint', maxlength: 11 }, label_html: { class: 'form-label' } %>
     <%= f.input :gis_id, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :cadastral_reference, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :reading_variant, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -178,8 +209,8 @@
     <%= f.association :service_point_location, :required => true, label: t('activerecord.attributes.service_point.service_point_location_id'), collection: ServicePointLocation.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <%= f.association :service_point_purpose, :required => true, label: t('activerecord.attributes.service_point.service_point_purpose_id'), collection: ServicePointPurpose.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <%= f.input :diameter, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :verified, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :available_for_contract, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :verified, :input_html => { :checked => true, :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :available_for_contract, :input_html => { :checked => true, :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <% if session[:organization] != '0' %>
       <%= f.association :reading_route, label: t('activerecord.attributes.service_point.reading_route_id'), collection: Organization.find(session[:organization]).projects.map{|p| p.reading_routes}.flatten, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% elsif current_user.organizations.count > 0 %>
@@ -188,7 +219,15 @@
       <%= f.association :reading_route, label: t('activerecord.attributes.service_point.reading_route_id'), collection: ReadingRoute.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <% end %>
     <%= f.input :reading_sequence, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
-    <%= f.button :submit, :class => 'btn-primary' %>
+    <!-- Buttons -->
+    <table class="form-table">
+      <tbody>
+        <tr class="form-tr">
+          <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn btn-primary' %> </td>
+          <td class="form-td-three right-winged"><a href="#" id="generate_serpoint_code_btn" class="btn btn-warning"><%=t 'ag2_gest.service_points.generate_code_btn' %></a></td>
+        </tr>
+      </tbody>
+    </table>
   <% end %>
   </div>
 </div>

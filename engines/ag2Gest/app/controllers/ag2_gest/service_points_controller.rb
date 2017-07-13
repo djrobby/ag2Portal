@@ -9,8 +9,8 @@ module Ag2Gest
     skip_load_and_authorize_resource :only => [ :update_offices_textfield_from_company,
                                                 :update_province_textfield_from_zipcode,
                                                 :create,
-                                                :update_province_textfield_from_street_directory
-                                                ]
+                                                :update_province_textfield_from_street_directory,
+                                                :serpoint_generate_no]
 
 
     # Update province text field at view from town select
@@ -69,6 +69,16 @@ module Ag2Gest
         format.json { render json: @json_data }
       end
     end
+
+    # Update service point code at view (generate_code_sp_btn)
+    def serpoint_generate_no
+      office = params[:id]
+      # Builds code, if possible
+      code = office == '$' ? '$err' : serpoint_next_no(office)
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
 
     # GET /service_point
     def index

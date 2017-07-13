@@ -838,6 +838,21 @@ end
     code
   end
 
+  # Service point code
+  def serpoint_next_no(office)
+    code = ''
+    office = office.to_s if office.is_a? Fixnum
+    office = office.rjust(4, '0')
+    last_no = ServicePoint.where("code LIKE ?", "#{office}%").order(:code).maximum(:code)
+    if last_no.nil?
+      code = office + '0000001'
+    else
+      last_no = last_no[4..10].to_i + 1
+      code = office +  last_no.to_s.rjust(7, '0')
+    end
+    code
+  end
+
   # Instalment plan no
   def instalment_plan_next_no(client)
     year = Time.new.year

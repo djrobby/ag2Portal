@@ -49,7 +49,8 @@ module Ag2Gest
                                                 :contracting_request_pdf,
                                                 :contracting_subscriber_pdf,
                                                 :refresh_status,
-                                                :contract_pdf ]
+                                                :contract_pdf,
+                                                :serpoint_generate_no]
     # Helper methods for
     helper_method :sort_column
     # => search available meters
@@ -79,6 +80,15 @@ module Ag2Gest
       respond_to do |format|
         format.json { render json: response_hash }
       end
+    end
+
+    # Update service point code at view (generate_code_sp_btn)
+    def serpoint_generate_no
+      office = params[:id]
+      # Builds code, if possible
+      code = office == '$' ? '$err' : serpoint_next_no(office)
+      @json_data = { "code" => code }
+      render json: @json_data
     end
 
     def update_tariff_type_select_from_billing_concept
@@ -973,12 +983,16 @@ module Ag2Gest
             @client_debt = '0'
           end
           @project_d = ""
-          @project_group = @entity.client.invoice_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
-          @project_group.each do |pd|
-            _pd_project = Project.find(pd.project).name
-            @project_d = @project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+          if !@entity.client.blank? and !@entity.client.invoice_debts.unpaid.blank?
+            @project_group = @entity.client.invoice_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+            @project_group.each do |pd|
+              _pd_project = Project.find(pd.project).name
+              @project_d = @project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+            end
+            @project_debt = @project_d[0..-4]
+          else
+            @project_debt = '0'
           end
-          @project_debt = @project_d[0..-4]
         end
       end
 

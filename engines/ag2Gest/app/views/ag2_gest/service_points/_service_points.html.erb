@@ -24,7 +24,7 @@
   <tbody>
     <% @service_points.each do |service_point| %>
       <tr>
-        <td><%= link_to service_point.try(:code), service_point_path(service_point) %></td>
+        <td><%= link_to service_point.try(:full_code), service_point_path(service_point) %></td>
         <td><%= service_point.try(:address_1)%></td>
         <td><%= service_point.try(:service_point_location).try(:name) %></td>
         <td><%= service_point.try(:diameter) %></td>

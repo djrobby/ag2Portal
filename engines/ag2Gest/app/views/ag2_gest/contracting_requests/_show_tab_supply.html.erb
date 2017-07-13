@@ -835,7 +835,7 @@
       <tbody>
         <tr>
           <td><b>Referencia</b></td>
-          <td><%= link_to @contracting_request.service_point.code, ag2_gest.service_point_path(@contracting_request.service_point) unless @contracting_request.service_point.blank? %></td>
+          <td><%= link_to @contracting_request.service_point.full_code, ag2_gest.service_point_path(@contracting_request.service_point) unless @contracting_request.service_point.blank? %></td>
         </tr>
         <tr>
           <td><b>Dirección</b></td>

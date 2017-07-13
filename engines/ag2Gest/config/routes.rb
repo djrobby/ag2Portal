@@ -140,6 +140,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
     match 'contracting_requests/:id/update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
     match 'update_tariff_type_select_from_billing_concept/:billable_concept_ids/:use_ids', :controller => 'contracting_requests', :action => 'update_tariff_type_select_from_billing_concept'
+    match 'contracting_requests/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
+    match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'contracting_requests'
+    match 'contracting_requests/:id/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
     #
     # Tariff
     match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
@@ -184,6 +187,9 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/update_region_textfield_from_province/:id', :controller => 'service_points', :action => 'update_region_textfield_from_province'
     match 'service_points/update_province_textfield_from_street_directory/:id', :controller => 'service_points', :action => 'update_province_textfield_from_street_directory'
     match 'service_points/:id/update_province_textfield_from_street_directory/:id', :controller => 'service_points', :action => 'update_province_textfield_from_street_directory'
+    match 'service_points/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
+    match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
+    match 'service_points/:id/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     #
     # Subscriber
     match 'subscribers/add_meter/:id', :controller => 'subscribers', :action => 'add_meter', :via => [:post]

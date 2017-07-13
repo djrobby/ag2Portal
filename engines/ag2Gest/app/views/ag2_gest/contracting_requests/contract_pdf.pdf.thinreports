@@ -245,7 +245,7 @@ report.page.values(sp_c: I18n.t("activerecord.attributes.water_supply_contract.i
 									 nominal_flow_c: I18n.t("activerecord.attributes.caliber.nominal_flow") + ":",
 									 nominal_flow: @contracting_request.try(:water_supply_contract).try(:meter).try(:caliber).try(:nominal_flow),
 									 sp_code_c: I18n.t("activerecord.attributes.service_point.code") + ":",
-									 sp_code: @contracting_request.try(:service_point).try(:code),
+									 sp_code: @contracting_request.try(:service_point).try(:full_code),
 									 use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
 									 use: @water_supply_contract.try(:subscriber).try(:use).try(:name),
 									 tariff_type_c: I18n.t("activerecord.attributes.contracting_request.tariff_type") + ": ",
