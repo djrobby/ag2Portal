@@ -45,15 +45,16 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
-      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CLIENTES_PROVEEDORES')
-
       suppliers = Supplier.by_organization_and_creation_date(organization, from, to)
       if suppliers.blank?
         message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_with_error_message_html")
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
+
+      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html',total: suppliers.count)
+      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CLIENTES_PROVEEDORES')
+
       file_name = 'SIS_CLIENTES_PROVEEDORES_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
       upload_xml_file(file_name, Supplier.to_csv(suppliers, company.id))
       @json_data = { "DataExport" => message, "Result" => "OK",
@@ -92,16 +93,17 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_message_html")
-      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_MOVCONTA')
-      link_message2 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CARTERAEFECTOS')
-
       supplier_invoices = SupplierInvoice.by_projects_and_creation_date(projects, from, to)
       if supplier_invoices.blank?
         message = I18n.t("ag2_purchase.purchase_to_files.index.result_ok_with_error_message_html")
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
+
+      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html',__total: suppliers.count)
+      link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_MOVCONTA')
+      link_message2 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CARTERAEFECTOS')
+
       file_name1 = 'SIS_MOVCONTA_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
       file_name2 = 'SIS_CARTERAEFECTOS_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
       upload_xml_file(file_name1, SupplierInvoice.to_csv(supplier_invoices, company.id))
