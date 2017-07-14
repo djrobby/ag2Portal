@@ -32,7 +32,8 @@ module Ag2Purchase
                                                :si_generate_invoice_from_order,
                                                :si_attachment_changed,
                                                :si_update_attachment,
-                                               :si_update_payday_limit_from_method]
+                                               :si_update_payday_limit_from_method,
+                                               :si_generate_no]
     # Helper methods for
     # => index filters
     helper_method :si_remove_filters, :si_restore_filters
@@ -852,6 +853,20 @@ module Ag2Purchase
       end
     end
 
+    # Update internal number at view (generate_code_btn)
+    def si_generate_no
+      company = params[:company]
+      posted_at = params[:posted_at]
+
+      # Builds no, if possible
+      code = '$err'
+      if company != '$' && posted_at != '$'
+        code = si_next_no(company, Time.parse(posted_at))
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -946,6 +961,7 @@ module Ag2Purchase
       # @note_items = []
       # Special to approvals
       @users = User.where('id = ?', current_user.id)
+      @companies = companies_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -981,6 +997,7 @@ module Ag2Purchase
       @is_approver = company_approver(@supplier_invoice, @supplier_invoice.project.company, current_user.id) ||
                      office_approver(@supplier_invoice, @supplier_invoice.project.office, current_user.id) ||
                      (current_user.has_role? :Approver)
+      @companies = @supplier_invoice.organization.blank? ? companies_dropdown : companies_dropdown_edit(@supplier_invoice.organization)
     end
 
     # POST /supplier_invoices
@@ -1328,15 +1345,15 @@ module Ag2Purchase
     end
 
     def stores_dropdown
-      _stores = session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
+      session[:organization] != '0' ? Store.where(organization_id: session[:organization].to_i).order(:name) : Store.order(:name)
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
     def payment_payment_methods(_organization)
@@ -1350,6 +1367,22 @@ module Ag2Purchase
 
     def products_dropdown
       session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+    end
+
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
     end
 
     def notes_array(_notes)

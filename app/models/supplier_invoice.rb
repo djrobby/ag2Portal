@@ -23,10 +23,11 @@ class SupplierInvoice < ActiveRecord::Base
   belongs_to :organization
   belongs_to :receipt_note
   belongs_to :purchase_order
+  belongs_to :company
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding, :totals, :payday_limit
+                  :internal_no, :withholding, :totals, :payday_limit, :company_id
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -55,7 +56,11 @@ class SupplierInvoice < ActiveRecord::Base
   validates :payment_method, :presence => true
   validates :project,        :presence => true
   validates :organization,   :presence => true
-  validates :internal_no,    :uniqueness => { :scope => :project_id }, :if => "!internal_no.nil?"
+  validates :company,        :presence => true
+  validates :internal_no,    :presence => true,
+                             :length => { :minimum => 8, :maximum => 13 },
+                             :uniqueness => { :scope => :company_id }
+
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
@@ -89,6 +94,20 @@ class SupplierInvoice < ActiveRecord::Base
       full_name += " " + self.supplier.full_name
     end
     full_name
+  end
+
+  def full_internal_no
+    # Internal no (Company id & year & sequential number) => CCC-YYYY-NNNNNN
+    internal_no.blank? ? "" : internal_no[0..2] + '-' + internal_no[3..6] + '-' + internal_no[7..12]
+  end
+
+  def serial_from_internal_no
+    posting_date = posted_at.blank? ? created_at : posted_at
+    internal_no.blank? ? posting_date.year.to_s[2..3] : internal_no[5..6]
+  end
+
+  def number_from_internal_no
+    internal_no.blank? ? id.to_s : internal_no[7..12]
   end
 
   #

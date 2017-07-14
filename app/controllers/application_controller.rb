@@ -648,6 +648,24 @@ end
     code
   end
 
+  # Supplier invoice internal no
+  def si_next_no(company, posted_at)
+    code = ''
+    year = posted_at.year
+    company = company.to_s if company.is_a? Fixnum
+    company = company.rjust(3, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = SupplierInvoice.where("internal_no LIKE ?", "#{company}#{year}%").order(:internal_no).maximum(:internal_no)
+    if last_no.nil?
+      code = company + year + '000001'
+    else
+      last_no = last_no[7..12].to_i + 1
+      code = company + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
+
   # Supplier payment no
   def sp_next_no(organization)
     year = Time.new.year

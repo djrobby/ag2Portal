@@ -34,6 +34,7 @@ class Company < ActiveRecord::Base
   has_many :invoices, foreign_key: :biller_id
   has_many :ledger_accounts
   has_many :inventory_transfers
+  has_many :supplier_invoices
 
   # Nested attributes
   accepts_nested_attributes_for :company_notifications,

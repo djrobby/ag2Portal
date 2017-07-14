@@ -24,7 +24,7 @@ en:
         title: "New Invoice"
       back_to_main_page: "Back to Invoices"
       generate_code_btn: "Invoice No."
-      code_error: "Unable to generate Invoice No.: No Activity chosen."
+      no_error: "Unable to generate Internal No.: No Company or Posted date chosen."
       items_info: "Invoice Items"
       delete_item: "Delete this Item"
       add_item: "Add new Item"

@@ -227,6 +227,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
     match 'si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
     match 'supplier_invoices/:id/si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
+    match 'supplier_invoices/si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
+    match 'si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
+    match 'supplier_invoices/:id/si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'

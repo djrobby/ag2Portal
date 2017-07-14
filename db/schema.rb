@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170705163746) do
+ActiveRecord::Schema.define(:version => 20170714092834) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2455,8 +2455,8 @@ ActiveRecord::Schema.define(:version => 20170705163746) do
   add_index "pre_readings", ["meter_id"], :name => "index_pre_readings_on_meter_id"
   add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "subscriber_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
   add_index "pre_readings", ["project_id"], :name => "index_pre_readings_on_project_id"
-  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_2_id"
-  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_1_id"
+  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_1_id"
+  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_2_id"
   add_index "pre_readings", ["reading_date"], :name => "index_pre_readings_on_reading_date"
   add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
   add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
@@ -2509,16 +2509,6 @@ ActiveRecord::Schema.define(:version => 20170705163746) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
-  end
-
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -3620,19 +3610,6 @@ ActiveRecord::Schema.define(:version => 20170705163746) do
     t.decimal "debt",                :precision => 65, :scale => 20
   end
 
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",                                              :default => 0, :null => false
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",        :precision => 47, :scale => 8
-    t.decimal "taxes",           :precision => 65, :scale => 20
-    t.decimal "bonus",           :precision => 57, :scale => 14
-    t.decimal "taxable",         :precision => 58, :scale => 14
-    t.decimal "total",           :precision => 65, :scale => 20
-    t.decimal "paid",            :precision => 35, :scale => 4
-    t.decimal "debt",            :precision => 65, :scale => 20
-  end
-
   create_table "supplier_invoice_items", :force => true do |t|
     t.integer  "supplier_invoice_id"
     t.integer  "receipt_note_id"
@@ -3701,9 +3678,11 @@ ActiveRecord::Schema.define(:version => 20170705163746) do
     t.integer  "purchase_order_id"
     t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.date     "payday_limit"
+    t.integer  "company_id"
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
+  add_index "supplier_invoices", ["company_id"], :name => "index_supplier_invoices_on_company_id"
   add_index "supplier_invoices", ["internal_no"], :name => "index_supplier_invoices_on_internal_no"
   add_index "supplier_invoices", ["invoice_date"], :name => "index_supplier_invoices_on_invoice_date"
   add_index "supplier_invoices", ["invoice_no"], :name => "index_supplier_invoices_on_invoice_no"
@@ -4168,6 +4147,28 @@ ActiveRecord::Schema.define(:version => 20170705163746) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
+
+  create_table "update_wap", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "reference_price",  :precision => 12, :scale => 4
+    t.decimal "global_wap",       :precision => 12, :scale => 4
+    t.integer "supplier_id"
+    t.decimal "price",            :precision => 12, :scale => 4
+    t.decimal "discount_rate",    :precision => 12, :scale => 2
+    t.decimal "net_price",        :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_0", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_strange", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false

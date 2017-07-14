@@ -24,7 +24,7 @@ es:
         title: "Nueva Factura"
       back_to_main_page: "Volver a Facturas"
       generate_code_btn: "Nº de Factura"
-      code_error: "Imposible generar Nº de Factura: No has elegido Actividad."
+      no_error: "Imposible generar Nº Interno: No has elegido Empresa o Fecha contabilización."
       items_info: "Items de la Factura"
       delete_item: "Borrar este Item"
       add_item: "Agregar nuevo Item"

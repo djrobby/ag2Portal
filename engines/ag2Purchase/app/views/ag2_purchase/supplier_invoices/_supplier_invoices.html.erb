@@ -26,8 +26,12 @@
     <% else %>
       <tr>
     <% end %>
+      <% b = invoice.invoice_no %>
+      <% if !invoice.internal_no.blank? %>
+      <% b = invoice.internal_no %>
+      <% end %>
       <td><%= invoice.id %></td>
-      <td><%= link_to invoice.invoice_no, invoice %>
+      <td><%= link_to b, invoice %>
         <% if !invoice.attachment.blank? %><i class="icon-paperclip-black" style="margin-left: 0.2em;"><% end %>
       </td>
       <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
