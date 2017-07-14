@@ -44,6 +44,8 @@ Ag2Gest::Engine.routes.draw do
     # Clients
     match 'clients/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
     match 'clients/:id/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
+    match 'clients/check_client_depent_subscribers/:id', :controller => 'clients', :action => 'check_client_depent_subscribers'
+    match 'clients/:id/check_client_depent_subscribers/:id', :controller => 'clients', :action => 'check_client_depent_subscribers'
     match 'clients/update_province_textfield_from_zipcode/:id', :controller => 'clients', :action => 'update_province_textfield_from_zipcode'
     match 'clients/:id/update_province_textfield_from_zipcode/:id', :controller => 'clients', :action => 'update_province_textfield_from_zipcode'
     match 'clients/update_country_textfield_from_region/:id', :controller => 'clients', :action => 'update_country_textfield_from_region'

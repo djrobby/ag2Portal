@@ -10,6 +10,8 @@ en:
         check_for_sale_offers: "Client cannot be destroyed while linked offers exist."
         check_for_client_invoices: "Client cannot be destroyed while linked C invoices exist."
         check_for_client_charges: "Client cannot be destroyed while linked charges exist."
+        check_for_subscribers: "Client cannot be destroyed while linked subscribers exist."
+        check_active_for_client_subscribers: "Client cannot be deactivate while linked subscribers exist."
     attributes:
       client:
         entity: "Entity"

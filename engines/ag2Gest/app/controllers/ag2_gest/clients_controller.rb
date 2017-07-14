@@ -11,7 +11,21 @@ module Ag2Gest
                                                :update_region_textfield_from_province,
                                                :cl_generate_code,
                                                :et_validate_fiscal_id_textfield,
-                                               :cl_validate_fiscal_id_textfield]
+                                               :cl_validate_fiscal_id_textfield,
+                                               :check_client_depent_subscribers]
+    # not desactive client if client.subscribers.count > 0
+    def check_client_depent_subscribers
+      client_id = params[:id]
+      @client = Client.find(client_id)
+      @subscriber = @client.subscribers.activated.count
+      @json_data = { "subscriber_count" => @subscriber}
+
+      respond_to do |format|
+        format.html # 
+        format.json { render json: @json_data }
+      end
+    end
+
     # Update payment method and ledger account text fields at view from organization select
     def cl_update_textfields_from_organization
       organization = params[:org]

@@ -72,6 +72,20 @@
   });
   
   jQuery(function($) {
+    // not desactive client if client.subscribers.count > 0
+    $("#client_active").change(function() {
+      if ('<%= @breadcrumb %>' == "update") {
+        var  client_id = $('#client_id').val();
+        jQuery.getJSON('check_client_depent_subscribers/' + client_id, function(data) {
+          if (data.subscriber_count > '0') {
+            $("#client_active").prop('checked', true);
+            alert('<%= I18n.t("activerecord.models.client.check_active_for_client_subscribers") %>');
+          }
+        })
+      };
+      return false;
+    });
+
     // when the #client_organization_id field changes
     $("#client_organization_id").change(function() {
       // make a POST call and replace the content
@@ -326,6 +340,7 @@
 <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
 <% end %>
 <div>
+  <%= f.input :id, :as => :hidden%>
   <label class="multi-field-label-two"><%= f.input :fiscal_id, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field geniconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
 </div>
