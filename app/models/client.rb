@@ -17,7 +17,7 @@ class Client < ActiveRecord::Base
 
   has_many :delivery_notes
   has_many :sale_offers
-  has_many :client_bank_accounts
+  has_many :client_bank_accounts, dependent: :destroy
   has_many :subscribers
   has_many :bills
   has_many :invoices, through: :bills
@@ -293,13 +293,22 @@ class Client < ActiveRecord::Base
       errors.add(:base, I18n.t('activerecord.models.client.check_for_sale_offers'))
       return false
     end
+    # Check for subscribers
+    if subscribers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_subscribers'))
+      return false
+    end
     # Check for invoices
-    if delivery_notes.count > 0
+    if bills.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_client_invoices'))
+      return false
+    end
+    if invoices.count > 0
       errors.add(:base, I18n.t('activerecord.models.client.check_for_client_invoices'))
       return false
     end
     # Check for charges
-    if delivery_notes.count > 0
+    if client_payments.count > 0
       errors.add(:base, I18n.t('activerecord.models.client.check_for_client_charges'))
       return false
     end
