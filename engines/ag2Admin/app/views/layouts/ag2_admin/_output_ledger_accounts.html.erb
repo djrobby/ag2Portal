@@ -1,0 +1,8 @@
+<% output_ledger_accounts.each do |w| %>
+<tr>
+  <td><%= w.output_ledger_account.code unless w.output_ledger_account.code.blank? %></td>
+  <td><%= w.output_ledger_account.name unless w.output_ledger_account.name.blank? %></td>
+  <td><%= w.output_ledger_account.accounting_group.to_label unless w.output_ledger_account.accounting_group.blank? %></td>
+  <td><%= w.company.full_name unless w.company.blank? %></td>
+</tr>
+<% end %>

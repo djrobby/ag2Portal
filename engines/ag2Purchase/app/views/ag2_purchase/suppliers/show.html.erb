@@ -171,6 +171,19 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 <br />
 <br />
 
+<!-- Ledger Account -->
+<% if @supplier.supplier_ledger_accounts.count > 0 %>
+  <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <%= render '/layouts/ag2_purchase/ledger_account_header' %>
+    </thead>
+    <tbody>
+      <%= render :partial => '/layouts/ag2_purchase/ledger_accounts', :locals => { :ledger_accounts => @supplier.supplier_ledger_accounts } %>
+    </tbody>
+  </table>
+<% end %>
+
 <!-- Contacts -->
 <% if (@contacts.count > 0) %>
 <h4><%=t '.subtable_title' %></h4>

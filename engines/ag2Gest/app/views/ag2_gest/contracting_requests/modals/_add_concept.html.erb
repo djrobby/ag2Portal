@@ -1,0 +1,239 @@
+<script type="text/javascript">
+  var text_field_color;
+
+  $(document).ready(function(){
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('select.sel3').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      closeOnSelect: false,
+      allowClear: true
+    });
+
+    // Save default text color
+    text_field_color = $("#alert").css('color')
+
+
+  $("#wsc_meter").select2().on("change", function(e) {
+    $("#input_add_meter").val("");
+  })
+
+  $("#form_add_concept")
+    .bind("ajax:success", function(xhr, data, status) {
+      location.reload();
+      return;
+      // modal water supply contract hide
+      $("#add-concept").modal('hide');
+      // if form is post
+      if ($("#form_add_concept").attr("method") == "post"){
+        // change form action and method
+        $("#form_add_concept").attr("action", "/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/<%= @contracting_request.id %>/water_supply_contracts/" + data.water_supply_contract.id);
+        $("#form_add_concept").attr("method", "put");
+        // show crear factura Nestor
+        // $("#inspection-billing").text("Crear Factura");
+        // $("#inspection-billing").attr("href","<%= params[:id] %>/inspection_billing");
+        $("#inspection-billing").removeClass("disabled");
+        // $("#initial-billing").text("Crear Factura");
+        // $("#initial-billing").attr("href","<%= params[:id] %>/initial_billing");
+        $("#initial-billing").removeClass("disabled");
+      }
+      // update data fields
+      $("#water_supply_contract_cadastral_reference").text(data.water_supply_contract.cadastral_reference);
+      $("#water_supply_contract_gis_id").text(data.water_supply_contract.gis_id);
+      $("#water_supply_contract_endowments").text(data.water_supply_contract.endowments);
+      $("#water_supply_contract_inhabitants").text(data.water_supply_contract.inhabitants);
+      $("#water_supply_contract_remarks").text(data.water_supply_contract.remarks);
+      $("#tariff_scheme").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/tariff_schemes/" + data.tariff_scheme.id);
+      $("#tariff_scheme").text(data.tariff_scheme.name);
+      $("#tariff_type").text(data.tariff_type.name);
+      // $("#tariff_fixed_fee").text(data.tariff+' ');
+      // $("#billing_frequency").text(data.billing_frequency);
+      $("#caliber").text(data.caliber);
+      $("#meter_model").text(data.meter_brand + "/" + data.meter_model.model);
+      $("#meter_code").text(data.meter.meter_code);
+      //update select values for meter subscriber, based on caliber
+      // $('#subscriber_meter_id').select2({
+      //   data: function() { return {results: data.meters_subscriber}; }
+      // });
+      // change meter to new subscriber
+      $("#subscriber_meter_id").val(data.meter_id);
+
+      /*changeState(currentStepWizard,nextStepWizard);*/
+    })
+    .bind("ajax:error", function(xhr, data, status) {
+      alert('<%= I18n.t("ag2_gest.contracting_requests.required_error") %>');
+    });
+  });
+
+jQuery(function($) {
+    // when #input_add_meter changes
+    $("#input_add_meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#input_add_meter').val();
+      if (meter == "")
+        meter = "$";
+      jQuery.getJSON('cr_find_meter/' + meter, function(data) {
+        $("#alert").html(data.alert);
+        if (data.code == "$err") {
+          $("#alert").css('color', 'red');
+          alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
+          $('#input_add_meter').select();
+        } else {
+          $("#alert").css('color', text_field_color);
+          $('#sel2_association').val(data.meter_id);
+          jQuery.getJSON('get_caliber/' + data.meter_id, function(data2) {
+            $("#wsc_meter").select2("val",data2.id);
+          });
+        }
+      });
+      return false;
+    });
+
+    $("#use_id").change(function() {
+      // make a POST call and replace the content
+      var use_ids = $('select#use_id :selected').val();
+      if (use_ids == "")
+        use_ids = "0";
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_tariff_schemes_from_use/' + use_ids, function(data) {
+        var o = data.tariff_scheme;
+        $("#tariff_scheme_id").html("");
+        $("#tariff_scheme_id").select2("val", "");
+        $("#tariff_scheme_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'tariff_scheme' && option != "") {
+              $("#tariff_scheme_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#tariff_scheme_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids + '/' + use_ids, function(data) {
+        var o = data;
+
+        var product = $('#TariffType_');
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        } else {
+          $.each(o, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        }
+      });
+      return false;
+    });
+
+    $("#BillableConcept_").change(function() {
+      // make a POST call and replace the content
+      $("#TariffType_").removeClass("disabled");
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids, function(data) {
+        var o = data;
+
+        var product = $('#TariffType_');
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        } else {
+          $.each(o, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        }
+      });
+      return false;
+    });
+
+  });
+
+//End jQuery function, exclusive $ jQuery function
+</script>
+
+<div id="add-concept" class="modal fade" style="display: none;">
+  <%= simple_form_for [@contracting_request, @water_supply_contract], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_add_concept' } do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= I18n.t('ag2_gest.contracting_requests.new_water_supply_contract.title') %></h3>
+    </div>
+    <div class="modal-body">
+      <%#= f.association :tariff, :autofocus => true, collection: Tariffs.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+      <%#= f.association :tariff, :autofocus => true, collection: ["DOMESTICA", "INDUSTRIAL"], :input_html => { :class => 'x-large-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :contracting_request_id, :as => :hidden, :input_html => { :value => @contracting_request.id } %>
+      <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
+      <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
+      
+      <%= f.input :use_id, :as => :hidden, :input_html => { :value => @water_supply_contract.use_id } %>
+      <%= f.association :use, :disabled => true, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
+
+      <%= f.input :tariff_scheme_id, :as => :hidden, :input_html => { :value => @water_supply_contract.tariff_scheme_id } %>
+      <%= f.association :tariff_scheme, required: true, :disabled => true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }  %>
+
+      <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+      <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+      
+      <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+
+<!--       <#%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->
+
+      <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
+
+      <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' } %>
+      <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
+
+      <%= f.input :meter_id, :as => :hidden, :input_html => { :value => @water_supply_contract.meter_id } %>
+      <%= f.input :meter_code_input, :disabled => true, input_html: { class: 'x-large-text-field', maxlength: 20, id: 'input_add_meter', :value => @water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f'), wrapper_html: { class: "span5" } %>
+
+      <%= f.input :caliber_id, :as => :hidden, :input_html => { :value => @water_supply_contract.caliber_id } %>
+      <%= f.association :caliber, :disabled => true, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+
+      <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
+      <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wsc_remarks', rows: 5 }, :label_html => { :class => 'form-label' } %>
+
+    </div>
+    <div class="modal-footer">
+      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert"></span>
+      <%= f.submit t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+    </div>
+  <% end %>
+</div>

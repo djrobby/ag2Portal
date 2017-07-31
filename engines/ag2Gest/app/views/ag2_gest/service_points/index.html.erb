@@ -4,11 +4,10 @@
 <% session[:return_to_subscriber_url] = nil %>
 
 <%= render '/layouts/ag2_gest/servicepointbreadcrumb' %>
+<%= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => service_points_path } %>
 
-<%#= render :partial => '/layouts/searchhead_remote', :locals => { :title => t(".title"), :path => calibers_path } %>
 
-<h3><%= t(".title") %></h3>
-
+<!-- <h3><%#= t(".title") %></h3> -->
 <div class="span11" id="div_table">
   <%= render 'service_points' %>
 </div>

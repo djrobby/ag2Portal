@@ -21,3 +21,5 @@ en:
         tax: "Rate"
         description: "Description"
         expiration: "Expired on"
+        input_ledger_account: "Cuenta contable para Impuesto Repercutido"
+        output_ledger_account: "Cuenta contable para Impuesto Soportado"

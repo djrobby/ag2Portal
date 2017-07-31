@@ -1,5 +1,6 @@
 <!-- Modal -->
 <script>
+var text_field_color;
   function suppliers_Select2(intialValue) {
     $('#Supplier_').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -33,9 +34,56 @@
       $('#Date_').datepicker('setValue', es_date(new Date()));
     }
     suppliers_Select2("<%= @supplier %>");
+
+    // Icon inside text field: Generate No
+    $('input.iconify_r').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
+      // $('#generate_code_btn').trigger("click");
+      // make a POST call and replace the content
+      var company = $('#Company_').val();
+      if (company == "")
+        company = "$";
+      var posted_at = $('#PostedDate_').val();
+      if (posted_at == "")
+        posted_at = "$";
+      jQuery.getJSON('si_generate_no?company=' + company + "&posted_at=" + posted_at, function(data) {
+        $("#InternalNo_").val(data.code);
+        if ($("#InternalNo_").val() == "$err") {
+          $("#InternalNo_").css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.supplier_invoices.no_error") %>');
+          $('#InternalNo_').select();
+        } else {
+          $("#InternalNo_").css('color', text_field_color);
+          // $('#InternalNo_').trigger("change");
+        }
+      });
+      return false;
+    }));
   });
 
   jQuery(function($) {
+    // when #generate_code_btn is clicked
+    $("#generate_code_btn").click(function() {
+      // make a POST call and replace the content
+      var company = $('#Company_').val();
+      if (company == "")
+        company = "$";
+      var posted_at = $('#PostedDate_').val();
+      if (posted_at == "")
+        posted_at = "$";
+      jQuery.getJSON('si_generate_no/' + company + '/' + posted_at, function(data) {
+        $("#supplier_invoice_internal_no").val(data.code);
+        if ($("#InternalNo_").val() == "$err") {
+          $("#InternalNo_").css('color', 'red');
+          alert('<%= I18n.t("ag2_purchase.purchase_orders.no_error") %>');
+          $('#InternalNo_').select();
+        } else {
+          $("#InternalNo_").css('color', text_field_color);
+          // $('#InternalNo_').trigger("change");
+        }
+      });
+      return false;
+    });
+
     $('#btn_accept').click(function() {
       var supplier = $('#Supplier_').val();
       var request = $('#Request_').val();
@@ -125,8 +173,15 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <!-- Company -->
+    <label for="Company_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.company") %></label>
+    <% if session[:company] != '0' %>
+      <%= select_tag "Company_", options_from_collection_for_select(Company.where("id = ?", "#{session[:company]}").all, "id", "full_name", session[:company]), :prompt => "", :class => 'x-large-text-field nsel2', include_blank: false %>
+    <% else %>
+      <%= select_tag "Company_", options_from_collection_for_select(Company.all, "id", "full_name"), :prompt => "", :class => 'x-large-text-field nsel2', include_blank: false %>
+    <% end %>
     <!-- Supplier -->
-    <label for="Supplier_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.supplier") %></label>
+    <label for="Supplier_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.supplier") %></label>
     <%= hidden_field_tag "Supplier_", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
     <!-- Receipt note -->
     <label for="Request_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.receipt_note") %></label>
@@ -137,6 +192,12 @@
     <!-- Invoice date -->
     <label for="Date_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.invoice_date_c") %></label>
     <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
+    <!-- Posted date -->
+    <label for="PostedDate_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.posted_at") %></label>
+    <%= text_field_tag "PostedDate_", nil, class: 'mid-text-field ndate_picker' %>
+    <!-- Internal Invoice No -->
+    <label for="InternalNo_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.supplier_invoice.internal_no") %></label>
+    <%= text_field_tag "InternalNo_", nil, :class => 'mid-text-field iconify_r' %>
   </div>
   <div class="modal-footer">
     <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.receipt_note.balance_c") %>=</span>

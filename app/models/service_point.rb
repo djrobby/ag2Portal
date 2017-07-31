@@ -118,6 +118,9 @@ class ServicePoint < ActiveRecord::Base
   # Searchable attributes
   searchable do
     text :code
+    string :service_address do
+      street_directory.street_name
+    end
     text :service_point_full_address do
       full_address
     end
@@ -134,5 +137,6 @@ class ServicePoint < ActiveRecord::Base
     integer :street_directory_id
     integer :zipcode_id
     integer :reading_route_id
+    integer :organization_id
   end
 end

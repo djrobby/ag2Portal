@@ -83,12 +83,25 @@ module Ag2Gest
     # GET /service_point
     def index
       manage_filter_state
-
-      if session[:company] != '0'
-        @service_points = ServicePoint.where(company_id: session[:company]).includes(:subscribers, :service_point_location, :reading_route, street_directory: [:street_type, :town]).paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction) #Array de ServicePoints
-      else
-        @service_points = ServicePoint.includes(:subscribers, :service_point_location, :reading_route, street_directory: [:street_type, :town]).paginate(:page => params[:page], :per_page => per_page || 10).order(sort_column + ' ' + sort_direction)
+      letter = params[:letter]
+      if !session[:organization]
+        init_oco
       end
+
+      @search = ServicePoint.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !letter.blank? && letter != "%"
+          any_of do
+            with(:service_address).starting_with(letter)
+          end
+        end
+        order_by :code, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @service_points = @search.results
 
       respond_to do |format|
         format.html # index.html.erb
@@ -96,6 +109,7 @@ module Ag2Gest
         format.js
       end
     end
+
 
     # GET /service_point
     def show
@@ -244,6 +258,23 @@ module Ag2Gest
 
     # Keeps filter state
     def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # letter
+      if params[:letter]
+        if params[:letter] == '%'
+          session[:letter] = nil
+          params[:letter] = nil
+        else
+          session[:letter] = params[:letter]
+        end
+      elsif session[:letter]
+        params[:letter] = session[:letter]
+      end
       # sort
       if params[:sort]
         session[:sort] = params[:sort]

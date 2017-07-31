@@ -255,6 +255,10 @@
       $("#modal-data").modal('hide');
     });
 
+    $("#form_add_concept").bind("ajax:success", function(xhr, data, status) {
+      $("#modal-data").modal('hide');
+    });
+
     // ajax success for initial_inspection
     $("#initial-inspection").bind("ajax:success", function(xhr, data, status) {
       var currentStepWizard = $('a[href="#step-1"]'),
@@ -514,6 +518,13 @@
       alert('<%= t('activerecord.attributes.contracting_request.alert_subscriber_id') %>');
     });
 
+    $("#complete-add-concept").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-1"]'),
+          nextStepWizard = $('a[href="#step-5"]');
+      changeState(currentStepWizard,nextStepWizard);
+      alert('<%= t('activerecord.attributes.contracting_request.alert_edit_subscriber_id') %>');
+    });
+
     // ajax success for instalation_subscriber
     $("#form_new_subscriber").bind("ajax:success", function(xhr, data, status) {
       var currentStepWizard = $('a[href="#step-4"]'),
@@ -661,6 +672,10 @@
 
     <!-- step 1 -->
     <div class="setup-content" id="step-1">
+    <% if (@contracting_request.contracting_request_type_id == ContractingRequestType::ADD_CONCEPT) %>
+      <a id="modal-data" href="#add-concept" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
+      <a id="complete-add-concept" class="btn btn-primary nextBtn" href="<%= params[:id] %>/complete_status" data-remote="true"><%= t('activerecord.attributes.contracting_request.edit_subscriber') %></a>
+    <% else %>
       <!-- Hidden if not water_supply_contract, show when create -->
       <% if (@contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION) or (@contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP) %>
         <a id="modal-data" href="#new-cancellation" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.supply_data') %></a>
@@ -675,7 +690,7 @@
       <% else %>
         <a id="initial-billing" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.nil? or @contracting_request.water_supply_contract.tariffs.blank? %>" href="<%= params[:id] %>/initial_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
       <% end %>
-
+    <% end %>
     </div>
 
     <!-- step 2 -->
@@ -762,7 +777,7 @@
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.water_supply_contract.contract_term') %></b></td>
-          <td id="water_supply_contract_contract_term"><%= @water_supply_contract.contract_term.capitalize %></td>
+          <td id="water_supply_contract_contract_term"><%= @water_supply_contract.contract_term.capitalize unless @water_supply_contract.contract_term.blank? %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.cadastral_reference') %></b></td>
@@ -1105,6 +1120,8 @@
 <%= render '/ag2_gest/contracting_requests/modals/new_water_supply_contract' %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_cancellation' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/add_concept' %>
 
 <%= render '/ag2_gest/contracting_requests/modals/new_bill' %>
 

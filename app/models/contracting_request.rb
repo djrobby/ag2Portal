@@ -518,6 +518,58 @@ class ContractingRequest < ActiveRecord::Base
     self.save
   end
 
+  #to_add_concept
+  def to_add_concept
+    water_supply_contract = WaterSupplyContract.create(
+                              contracting_request_id: id,
+                              client_id: client.id,
+                              subscriber_id: old_subscriber.id,
+                              reading_route_id: old_subscriber.reading_route_id,
+                              work_order_id: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.work_order_id : nil,
+                              tariff_scheme_id: old_subscriber.tariff_scheme_id,
+                              bill_id: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.bill_id : nil,
+                              meter_id: old_subscriber.meter_id,
+                              contract_date: request_date,
+                              reading_sequence: old_subscriber.reading_sequence,
+                              cadastral_reference: old_subscriber.cadastral_reference,
+                              gis_id: old_subscriber.gis_id,
+                              remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
+                              caliber_id: old_subscriber.meter.caliber_id,
+                              #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
+                              use_id:old_subscriber.use_id,
+                              endowments: old_subscriber.endowments,
+                              inhabitants: old_subscriber.inhabitants,
+                              installation_date: old_subscriber.meter_details.first.installation_date,
+                              installation_index: old_subscriber.meter_details.first.installation_reading,
+                              created_by: created_by
+                            )
+    old_subscriber.subscriber_tariffs.where(ending_at: nil).each do |st|
+        _subscriber_tariffs = st.tariff
+        water_supply_contract.tariffs << _subscriber_tariffs
+    end
+
+    subscriber = old_subscriber
+    subscriber.update_attributes(
+      client_id: client.id,
+      first_name: client.first_name,
+      last_name: client.last_name,
+      company: client.company,
+      fiscal_id: client.fiscal_id,
+      cellular: client.cellular,
+      email: client.email,
+      phone: client.phone,
+      fax: client.fax,
+      updated_by: created_by
+    )
+    if old_subscriber.water_supply_contract
+      self.work_order_id = old_subscriber.water_supply_contract.contracting_request.work_order_id || nil
+    else
+      self.work_order_id = nil
+    end
+    self.contracting_request_status_id = ContractingRequestStatus::INITIAL
+    self.save
+  end
+
   def to_change_ownership
     # assign water_supply_contract to the new subscriber
     # IMPORTANTE COPIAR DATOS DE UNO A UNO Y NO COGERLOS DE WaterSupplyContract

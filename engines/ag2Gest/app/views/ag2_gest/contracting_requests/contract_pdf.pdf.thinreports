@@ -286,6 +286,7 @@ report.page.values(pay_method: I18n.t("activerecord.models.payment_method.one"),
 #
 # Factura
 #
+if !@water_supply_contract.bill.blank?
 report.layout.config.list(:default) do |c|
 	# On list page footer insertion
 	c.events.on :page_footer_insert do |e|
@@ -320,6 +321,7 @@ a = @water_supply_contract.bill.invoices.first
 			end
 		end
 	end	
+end
 #
 #
 # General Condition
@@ -383,7 +385,7 @@ _con15 = "15. " + I18n.t("activerecord.attributes.water_supply_contract._con15")
 _con16 = "16. " + I18n.t("activerecord.attributes.water_supply_contract._con16")
 
 
-report.page.values(general_condition1: _con1 + "\n" + _con2 + "\n" + _con3 + "\n" + _con4 + "\n" + _con5 + "\n" + _con6 + "\n" + _con7 + "\n" + _con8 + "\n" + _con9 + "\n" + _con10 + "\n" + _con11 + "\n" + _con12 + "\n" + _con13 + "\n" + _con14 + "\n" + _con15 + "\n" + _con16)
+report.page.values(general_condition1: _con1 + "\r\n" + _con2 + "\r\n" + _con3 + "\r\n" + _con4 + "\r\n" + _con5 + "\r\n" + _con6 + "\r\n" + _con7 + "\r\n" + _con8 + "\r\n" + _con9 + "\r\n" + _con10 + "\r\n" + _con11 + "\r\n" + _con12 + "\r\n" + _con13 + "\r\n" + _con14 + "\r\n" + _con15 + "\r\n" + _con16)
 #
 #
 _con17 = "17. " + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con17")
@@ -396,4 +398,4 @@ _con23 = "23. " + I18n.t("activerecord.attributes.water_supply_contract._con23")
 _con24 = "24. " + I18n.t("activerecord.attributes.water_supply_contract._con24") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con24_1")
 _con25 = "25. " + I18n.t("activerecord.attributes.water_supply_contract._con25") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_1") + addres_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_2") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_3") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_4") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_5") + mail_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_6") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_7")
 
-report.page.values(general_condition2: _con17 + "\n" + _con18 + "\n" + _con19 + "\n" + _con20 + "\n" + _con21 + "\n" + _con22 + "\n" + _con23 + "\n" + _con24 + "\n" + _con25)
+report.page.values(general_condition2: _con17 + "\r\n" + _con18 + "\r\n" + _con19 + "\r\n" + _con20 + "\r\n" + _con21 + "\r\n" + _con22 + "\r\n" + _con23 + "\r\n" + _con24 + "\r\n" + _con25)

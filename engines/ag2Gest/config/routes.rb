@@ -109,6 +109,7 @@ Ag2Gest::Engine.routes.draw do
     match 'et_validate_fiscal_id_textfield/:id', :controller => 'contracting_requests', :action => 'et_validate_fiscal_id_textfield'
     match 'contracting_requests/:id/et_validate_fiscal_id_textfield/:id', :controller => 'contracting_requests', :action => 'et_validate_fiscal_id_textfield'
     match 'contracting_requests/:id/next_status', :controller => 'contracting_requests', :action => 'next_status'
+    match 'contracting_requests/:id/complete_status', :controller => 'contracting_requests', :action => 'complete_status'
     match 'contracting_requests/:id/initial_inspection', :controller => 'contracting_requests', :action => 'initial_inspection'
     match 'contracting_requests/:id/inspection_billing', :controller => 'contracting_requests', :action => 'inspection_billing'
     match 'contracting_requests/:id/inspection_billing_cancellation', :controller => 'contracting_requests', :action => 'inspection_billing_cancellation'

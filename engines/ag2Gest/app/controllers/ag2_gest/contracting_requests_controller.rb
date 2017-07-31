@@ -20,6 +20,7 @@ module Ag2Gest
                                                 :cr_generate_no,
                                                 :show_test,
                                                 :next_status,
+                                                :complete_status,
                                                 :initial_inspection,
                                                 :ot_cancellation,
                                                 :ot_installation,
@@ -206,6 +207,21 @@ module Ag2Gest
         format.json { render json: response_hash }
       end
     end
+
+    def complete_status
+      @contracting_request = ContractingRequest.find(params[:id])
+      @contracting_request.status_control("complete");
+      if @contracting_request.save
+        respond_to do |format|
+          format.json { render json: @contracting_request }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: @contracting_request.errors.as_json, status: :unprocessable_entity }
+        end
+      end
+    end
+
 
     def initial_complete
       @contracting_request = ContractingRequest.find(params[:id])
@@ -1429,6 +1445,7 @@ module Ag2Gest
           @contracting_request.to_change_ownership if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
           @contracting_request.to_subrogation if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION
           @contracting_request.to_cancellation if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
+          @contracting_request.to_add_concept if @contracting_request.contracting_request_type_id == ContractingRequestType::ADD_CONCEPT
           format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.create')}
           format.json { render json: @contracting_request, status: :created, location: @contracting_request }
         else

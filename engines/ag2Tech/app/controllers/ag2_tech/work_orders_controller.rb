@@ -38,6 +38,7 @@ module Ag2Tech
                                                :work_order_form_empty,
                                                :work_order_form_empty_sm,
                                                :work_order_report,
+                                               :export_work_order_csv,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -1213,6 +1214,66 @@ module Ag2Tech
                      filename: "#{title}_#{@work_order.full_no}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
+      end
+    end
+
+    # work order report csv
+    def export_work_order_csv
+      manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      area = params[:Area]
+      type = params[:Type]
+      labor = params[:Labor]
+      status = params[:Status]
+      # OCO
+      init_oco if !session[:organization]
+
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = WorkOrder.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :order_no, no
+          else
+            with(:order_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !area.blank?
+          with :work_order_area_id, area
+        end
+        if !type.blank?
+          with :work_order_type_id, type
+        end
+        if !labor.blank?
+          with :work_order_labor_id, labor
+        end
+        if !status.blank?
+          with :work_order_status_id, status
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
+      end
+
+      @work_order_report = @search.results
+
+      if !@work_order_report.blank?
+        title = t("activerecord.models.work_order.few")
+        @from = formatted_date(@work_order_report.first.created_at)
+        @to = formatted_date(@work_order_report.last.created_at)
+        respond_to do |format|
+          format.html # index.html.erb
+          format.csv { render text: WorkOrder.to_report_work_order_csv(@work_order_report) }
+          format.js
+        end
       end
     end
 

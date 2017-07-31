@@ -6,6 +6,7 @@ class ContractingRequestType < ActiveRecord::Base
   CHANGE_OWNERSHIP = 4
   CHANGE_USE_AND_TARIFF = 5 #Cambio de uso y se cambiaran tarifas // Cambio de tarifa por cambio de calibre del contador y no tiene por que cambiar el uso.
   CANCELLATION = 6 #Baja de servicio.
+  ADD_CONCEPT = 7 #Añadir conceptos contratable a un abonado.
 
   attr_accessible :description
 

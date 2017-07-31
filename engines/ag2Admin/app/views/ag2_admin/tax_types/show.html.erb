@@ -20,6 +20,29 @@
   </tbody>
 </table>
 
+<!-- Ledger Account -->
+<% if @tax_type.tax_type_ledger_accounts.count > 0 %>
+  <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
+  <h5><%= t 'activerecord.attributes.tax_type.input_ledger_account' %></h5>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <%= render '/layouts/ag2_admin/ledger_account_header' %>
+    </thead>
+    <tbody>
+      <%= render :partial => '/layouts/ag2_admin/input_ledger_accounts', :locals => { :input_ledger_accounts => @tax_type.tax_type_ledger_accounts } %>
+    </tbody>
+  </table>
+  <h5><%= t 'activerecord.attributes.tax_type.output_ledger_account' %></h5>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <%= render '/layouts/ag2_admin/ledger_account_header' %>
+    </thead>
+    <tbody>
+      <%= render :partial => '/layouts/ag2_admin/output_ledger_accounts', :locals => { :output_ledger_accounts => @tax_type.tax_type_ledger_accounts } %>
+    </tbody>
+  </table>
+<% end %>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: TaxType, update_path: edit_tax_type_path(@tax_type), update_txt: t('.btn_edit'),
 delete_path: @tax_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.tax_type.one"), :txt => @tax_type.description,

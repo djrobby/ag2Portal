@@ -31,6 +31,19 @@
   </tbody>
 </table>
 
+<!-- Ledger Account -->
+<% if @charge_account.charge_account_ledger_accounts.count > 0 %>
+  <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <%= render '/layouts/ag2_tech/ledger_account_header' %>
+    </thead>
+    <tbody>
+      <%= render :partial => '/layouts/ag2_tech/ledger_accounts', :locals => { :ledger_accounts => @charge_account.charge_account_ledger_accounts } %>
+    </tbody>
+  </table>
+<% end %>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: ChargeAccount, update_path: edit_charge_account_path(@charge_account), update_txt: t('.btn_edit'),
 delete_path: @charge_account, delete_txt: t('.btn_delete'), msg: t("activerecord.models.charge_account.one"), txt: @charge_account.full_name,

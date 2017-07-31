@@ -198,6 +198,43 @@ class WorkOrder < ActiveRecord::Base
     project.nil? ? nil : project.company
   end
 
+  def self.to_report_work_order_csv(array)
+    attributes = [I18n.t("activerecord.attributes.work_order.order_no"),
+                  I18n.t("activerecord.attributes.work_order.description"),
+                  I18n.t("activerecord.attributes.work_order.petitioner"),
+                  I18n.t("activerecord.attributes.work_order.work_order_status"),
+                  I18n.t("activerecord.attributes.work_order.charge_account_report"),
+                  I18n.t("activerecord.attributes.work_order.area"),
+                  I18n.t("activerecord.attributes.work_order.work_order_area"),
+                  I18n.t("activerecord.attributes.work_order.work_order_type"),
+                  I18n.t("activerecord.attributes.work_order.work_order_labor"),
+                  I18n.t("activerecord.attributes.work_order.location"),
+                  I18n.t("activerecord.attributes.work_order.created_at"),
+                  I18n.t("activerecord.attributes.work_order.closed_at"),
+                  I18n.t("activerecord.attributes.work_order.total_costs"),
+                  I18n.t("activerecord.attributes.work_order.project")]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        csv << [  i.full_no,
+                  i.summary,
+                  i.petitioner,
+                  i.try(:work_order_status).try(:name),
+                  i.try(:charge_account).try(:full_code),
+                  i.try(:area).try(:name),
+                  i.try(:work_order_area).try(:short_name),
+                  i.try(:work_order_type).try(:short_name),
+                  i.try(:work_order_labor).try(:short_name),
+                  i.location,
+                  i.created_at,
+                  i.closed_at,
+                  i.total_costs,
+                  i.project.name]
+      end
+    end
+  end
+
   #
   # Calculated fields
   #
