@@ -445,16 +445,18 @@ class SupplierInvoice < ActiveRecord::Base
         totals = i.raw_number(taxable_sum + tax_sum, 2)
         # Withholding
         withholding_invoiced = 0
+        withholding_tax_pct = 0
         withholding_code = nil
         withholding_taxable = nil
         withholding_tax = nil
         withholding_amount = nil
         if !i.withholding.blank? && i.withholding < 0
           withholding_invoiced = i.withholding * (-1)
+          withholding_tax_pct = ((withholding_invoiced / taxable_sum) * 100).round(1)
           withholding_taxable = i.raw_number(taxable_sum, 2)
-          withholding_tax = i.raw_number((withholding_invoiced / taxable_sum) * 100, 1)
+          withholding_tax = i.raw_number(withholding_tax_pct, 1)
           withholding_amount = i.raw_number(withholding_invoiced, 2)
-          withholding_code = WithholdingType.find_by_tax(withholding_tax).ledger_account_app_code_formatted rescue ''
+          withholding_code = WithholdingType.find_by_tax(withholding_tax_pct).ledger_account_app_code_formatted rescue withholding_tax_pct.round(0).to_s
         end
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
