@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: MyString
+  tax: 9.99
+  expiration: 2017-08-02
+
+two:
+  description: MyString
+  tax: 9.99
+  expiration: 2017-08-02

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170714092834) do
+ActiveRecord::Schema.define(:version => 20170802081423) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3776,6 +3776,7 @@ ActiveRecord::Schema.define(:version => 20170714092834) do
     t.integer  "ledger_account_id"
     t.decimal  "free_shipping_sum",   :precision => 13, :scale => 4, :default => 0.0,  :null => false
     t.decimal  "withholding_rate",    :precision => 6,  :scale => 2, :default => 0.0,  :null => false
+    t.integer  "withholding_type_id"
   end
 
   add_index "suppliers", ["active"], :name => "index_suppliers_on_active"
@@ -3800,6 +3801,7 @@ ActiveRecord::Schema.define(:version => 20170714092834) do
   add_index "suppliers", ["street_type_id"], :name => "index_suppliers_on_street_type_id"
   add_index "suppliers", ["supplier_code"], :name => "index_suppliers_on_supplier_code"
   add_index "suppliers", ["town_id"], :name => "index_suppliers_on_town_id"
+  add_index "suppliers", ["withholding_type_id"], :name => "index_suppliers_on_withholding_type_id"
   add_index "suppliers", ["zipcode_id"], :name => "index_suppliers_on_zipcode_id"
 
   create_table "suppliers_activities", :id => false, :force => true do |t|
@@ -4369,6 +4371,19 @@ ActiveRecord::Schema.define(:version => 20170714092834) do
   add_index "water_supply_contracts", ["unsubscribe_bill_id"], :name => "index_water_supply_contracts_on_unsubscribe_bill_id"
   add_index "water_supply_contracts", ["use_id"], :name => "index_water_supply_contracts_on_use_id"
   add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
+
+  create_table "withholding_types", :force => true do |t|
+    t.string   "description"
+    t.decimal  "tax",                     :precision => 6, :scale => 2, :default => 0.0, :null => false
+    t.date     "expiration"
+    t.datetime "created_at",                                                             :null => false
+    t.datetime "updated_at",                                                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "ledger_account_app_code"
+  end
+
+  add_index "withholding_types", ["tax"], :name => "index_withholding_types_on_tax"
 
   create_table "work_order_areas", :force => true do |t|
     t.string   "name"

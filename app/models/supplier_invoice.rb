@@ -443,6 +443,19 @@ class SupplierInvoice < ActiveRecord::Base
           _g += 1
         end
         totals = i.raw_number(taxable_sum + tax_sum, 2)
+        # Withholding
+        withholding_invoiced = 0
+        withholding_code = nil
+        withholding_taxable = nil
+        withholding_tax = nil
+        withholding_amount = nil
+        if !i.withholding.blank? && i.withholding < 0
+          withholding_invoiced = i.withholding * (-1)
+          withholding_taxable = i.raw_number(taxable_sum, 2)
+          withholding_tax = i.raw_number((withholding_invoiced / taxable_sum) * 100, 1)
+          withholding_amount = i.raw_number(withholding_invoiced, 2)
+          withholding_code = WithholdingType.find_by_tax(withholding_tax).ledger_account_app_code_formatted rescue ''
+        end
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
         posting_date = i.posted_at.blank? ? i.created_at : i.posted_at
@@ -497,10 +510,10 @@ class SupplierInvoice < ActiveRecord::Base
                   'R',                                      # 048
                   i.supplier.fiscal_id,                     # 049
                   i.supplier.name35,                        # 050
-                  nil,  # 051
-                  nil,  # 052
-                  nil,  # 053
-                  nil,  # 054
+                  withholding_code,                         # 051
+                  withholding_taxable,                      # 052
+                  withholding_tax,                          # 053
+                  withholding_amount,                       # 054
                   i.supplier.province.territory_code,       # 055
                   i.supplier.country.code,                  # 056
                   Time.new.year.to_s,                       # 057

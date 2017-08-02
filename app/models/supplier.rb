@@ -26,13 +26,15 @@ class Supplier < ActiveRecord::Base
   belongs_to :entity
   belongs_to :organization
   belongs_to :ledger_account
+  belongs_to :withholding_type
   attr_accessible :fiscal_id, :name, :supplier_code,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :region_id, :country_id, :payment_method_id, :ledger_account_id, :discount_rate,
                   :active, :max_orders_count, :max_orders_sum, :contract_number, :remarks,
                   :created_by, :updated_by, :entity_id, :organization_id,
-                  :is_contact, :shared_contact_id, :order_authorization, :free_shipping_sum, :withholding_rate
+                  :is_contact, :shared_contact_id, :order_authorization, :free_shipping_sum,
+                  :withholding_rate, :withholding_type_id
   attr_accessible :activity_ids
   attr_accessible :supplier_bank_accounts_attributes
 
@@ -291,6 +293,18 @@ class Supplier < ActiveRecord::Base
       _ret = Company.find(company_id).ledger_account_app_code rescue '9999'
     end
     _ret.blank? ? '9999' : _ret
+  end
+
+  # Obtaining withholding type data
+  def withholding_tax
+    if withholding_type.blank?
+      withholding_rate.blank? ? 0 : withholding_rate
+    else
+      withholding_type.tax
+    end
+  end
+  def withholding_ledger_account_app_code
+    withholding_type.blank? ? '' : withholding_type.ledger_account_app_code_formatted
   end
 
   #
