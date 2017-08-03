@@ -14,6 +14,7 @@
 
 require_dependency "ag2_gest/application_controller"
 require_dependency "ag2_gest/sepa_order"
+require_dependency "ag2_gest/sepa_return"
 
 module Ag2Gest
   class ClientPaymentsController < ApplicationController
@@ -460,7 +461,7 @@ module Ag2Gest
         xml = sepa.write_xml
 
         # Write & Upload XML file
-        upload_xml_file("bank-to-order.xml", xml)
+        upload_xml_file(sepa.identificacion_fichero + ".xml", xml)
 
         # Notify successful ending
         redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
@@ -472,6 +473,15 @@ module Ag2Gest
 
     # Import SEPA XML file (return, rejections)
     def bank_from_return
+      file_to_process = params[:bank_to_return][:file_to_process]
+
+        # Instantiate class
+        sepa = Ag2Gest::SepaReturn.new(file_to_process)
+
+        # Reead XML object
+        xml = sepa.read_xml
+
+        puts xml
     end
 
     # Import Counter text file (bank counter operations)

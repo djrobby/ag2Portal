@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'csv'
+require "rexml/document"
 require 'active_support/builder'
 require 'rails/all'
 

@@ -34,7 +34,6 @@ module Ag2Gest
     attr_accessor :concepto
     attr_accessor :time_now
 
-
     def initialize(client_payments)
       # Receive unconfirmed payments to write
       @client_payments = client_payments
