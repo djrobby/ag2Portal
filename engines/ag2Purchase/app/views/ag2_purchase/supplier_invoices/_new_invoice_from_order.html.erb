@@ -90,17 +90,21 @@ var text_field_color;
       if (order == null) order = "";
       var offer_no = $('#NoO_').val();
       var offer_date = $('#DateO_').val();
-      if ((supplier == "") || (order == "")  || (offer_no == "")  || (offer_date == "")) {
+      var internal_no = $('#InternalNoO_').val();
+      var posted_at = $('#PostedDateO_').val();
+      var company = $('#CompanyO_').val();
+      if ((supplier == "") || (order == "")  || (offer_no == "")  || (offer_date == "") || (internal_no == "") || (posted_at == "") || (company == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');
         return false;
       }
       // Right formatted date
       offer_date = right_date(offer_date, "<%= I18n.locale %>");
+      posted_at = right_date(posted_at, "<%= I18n.locale %>");
       // Show message
       $("#proc_mesage_o").show();
       // make the POST call
-      jQuery.getJSON('si_generate_invoice_from_order?supplier=' + supplier + '&order=' + order + '&offer_no=' + offer_no + '&offer_date=' + offer_date, function(data) {
+      jQuery.getJSON('si_generate_invoice_from_order?supplier=' + supplier + '&order=' + order + '&offer_no=' + offer_no + '&offer_date=' + offer_date + '&internal_no=' + internal_no + '&posted_at=' + posted_at + '&company=' + company, function(data) {
         // Hide message
         $("#proc_mesage_o").hide();
         // AJAX refresh index table is necessary

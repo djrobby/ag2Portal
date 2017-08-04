@@ -537,6 +537,9 @@ module Ag2Purchase
       notes = params[:request]
       invoice_no = params[:offer_no]
       invoice_date = params[:offer_date]  # YYYYMMDD
+      internal_no = params[:internal_no]
+      posted_at = params[:posted_at]  # YYYYMMDD
+      company = params[:company]
       invoice = nil
       invoice_item = nil
       code = ''
@@ -547,6 +550,7 @@ module Ag2Purchase
 
       # Format offer_date
       invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
+      posted_at = (posted_at[0..3] + '-' + posted_at[4..5] + '-' + posted_at[6..7]).to_date
 
       if notes.count == 1
         # Only one note
@@ -555,7 +559,7 @@ module Ag2Purchase
           receipt_note_items = receipt_note.receipt_note_items rescue nil
           if !receipt_note.nil? && !receipt_note_items.nil?
             # Try to save new invoice
-            invoice = new_invoice(receipt_note, invoice_no, invoice_date)
+            invoice = new_invoice(receipt_note, invoice_no, invoice_date, internal_no, posted_at, company)
             # One note only: Must save receipt_note_id, work_order_id & charge_account_id
             invoice.receipt_note_id = receipt_note.id
             invoice.work_order_id = receipt_note.work_order_id
@@ -598,7 +602,7 @@ module Ag2Purchase
             if !receipt_note.nil? && !receipt_note_items.nil?
               # If it's first note, must initialize new invoice; if not, update already initialized one
               if first
-                invoice = new_invoice(receipt_note, invoice_no, invoice_date)
+                invoice = new_invoice(receipt_note, invoice_no, invoice_date, internal_no, posted_at, company)
                 invoice.remarks = I18n.t("activerecord.attributes.supplier_invoice.receipt_notes") + ': ' + receipt_note.receipt_no
                 first = false
               else
@@ -649,6 +653,9 @@ module Ag2Purchase
       orders = params[:order]
       invoice_no = params[:offer_no]
       invoice_date = params[:offer_date]  # YYYYMMDD
+      internal_no = params[:internal_no]
+      posted_at = params[:posted_at]  # YYYYMMDD
+      company = params[:company]
       invoice = nil
       invoice_item = nil
       code = ''
@@ -658,6 +665,7 @@ module Ag2Purchase
 
       # Format offer_date
       invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
+      posted_at = (posted_at[0..3] + '-' + posted_at[4..5] + '-' + posted_at[6..7]).to_date
 
       if orders.count == 1
         # Only one order
@@ -666,7 +674,7 @@ module Ag2Purchase
           purchase_order_items = purchase_order.purchase_order_items rescue nil
           if !purchase_order.nil? && !purchase_order_items.nil?
             # Try to save new invoice
-            invoice = new_invoice(purchase_order, invoice_no, invoice_date)
+            invoice = new_invoice(purchase_order, invoice_no, invoice_date, internal_no, posted_at, company)
             # One order only: Must save purchase_order_id, work_order_id & charge_account_id
             invoice.purchase_order_id = purchase_order.id
             invoice.work_order_id = purchase_order.work_order_id
@@ -709,7 +717,7 @@ module Ag2Purchase
             if !purchase_order.nil? && !purchase_order_items.nil?
               # If it's first order, must initialize new invoice; if not, update already initialized one
               if first
-                invoice = new_invoice(purchase_order, invoice_no, invoice_date)
+                invoice = new_invoice(purchase_order, invoice_no, invoice_date, internal_no, posted_at, company)
                 invoice.remarks = I18n.t("activerecord.attributes.supplier_invoice.purchase_orders") + ': ' + purchase_order.order_no
                 first = false
               else
@@ -755,14 +763,17 @@ module Ag2Purchase
     end
 
     # Initialize new invoice
-    def new_invoice(rnote_or_porder, invoice_no, invoice_date)
+    def new_invoice(rnote_or_porder, invoice_no, invoice_date, internal_no, posted_at, company)
       invoice = SupplierInvoice.new
       invoice.invoice_no = invoice_no
+      invoice.internal_no = internal_no
       invoice.supplier_id = rnote_or_porder.supplier_id
       invoice.payment_method_id = rnote_or_porder.payment_method_id
       invoice.invoice_date = invoice_date
+      invoice.posted_at = posted_at
       invoice.project_id = rnote_or_porder.project_id
       invoice.organization_id = rnote_or_porder.organization_id
+      invoice.company_id = company.to_i
       invoice.created_by = current_user.id if !current_user.nil?
       return invoice
     end
