@@ -69,17 +69,15 @@ module Ag2Gest
         concepto = e.elements['OrgnlTxRef'].elements['RmtInf'].elements['Ustrd'].text
         nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
-        numero_factura = referencia_adeudo.first(16)
+        id_bill = referencia_adeudo.first(16)
         codigo_cliente = referencia_mandato.last(8)
 
         # *** Save in returns array ***
         self.lista_devoluciones = self.lista_devoluciones << [referencia_adeudo, codigo_rechazo, importe_adeudo,
                                                               fecha_cobro, referencia_mandato, fecha_firma_mandato,
                                                               concepto, nombre_deudor, cuenta_deudor,
-                                                              numero_factura, codigo_cliente]
+                                                              id_bill, codigo_cliente]
       end
-
-      @doc
     end # read_xml
   end
 end

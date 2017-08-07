@@ -139,7 +139,7 @@ module Ag2Gest
               self.nombre_deudor = cp.sanitized_client_bank_account_holder
               self.cuenta_deudor = cp.client_bank_account_iban
               # Max. 35: invoice_no 16 + receipt_no 6 + date 12 + 1
-              self.referencia_adeudo = cp.bill.real_no_unformatted + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%Y%m%d%H%M") + "0"
+              self.referencia_adeudo = cp.bill.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%Y%m%d%H%M") + "0"
               # *** Write payment line ***
               @xml.DrctDbtTxInf do
                 @xml.PmtId do

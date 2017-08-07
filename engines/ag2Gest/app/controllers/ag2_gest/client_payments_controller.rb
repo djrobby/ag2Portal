@@ -475,13 +475,13 @@ module Ag2Gest
     def bank_from_return
       file_to_process = params[:bank_to_return][:file_to_process]
 
-        # Instantiate class
-        sepa = Ag2Gest::SepaReturn.new(file_to_process)
+      # Instantiate class
+      sepa = Ag2Gest::SepaReturn.new(file_to_process)
 
-        # Reead XML object
-        xml = sepa.read_xml
+      # Read XML object
+      xml = sepa.read_xml
 
-        puts xml
+      puts xml
     end
 
     # Import Counter text file (bank counter operations)
