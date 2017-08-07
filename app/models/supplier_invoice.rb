@@ -458,9 +458,10 @@ class SupplierInvoice < ActiveRecord::Base
           withholding_amount = i.raw_number(withholding_invoiced, 2)
           withholding_code = WithholdingType.find_by_tax(withholding_tax_pct).ledger_account_app_code_formatted rescue withholding_tax_pct.round(0).to_s
         end
+        # Posting date
+        posting_date = i.posted_at.blank? ? i.created_at : i.posted_at
         # Group 4 (40) lines: supplier
         lac = i.supplier.ledger_account_code(company_id)
-        posting_date = i.posted_at.blank? ? i.created_at : i.posted_at
         if !lac.nil? && !taxable1.nil?
           csv << [i.ledger_account_company_code(company_id),  # 001
                   posting_date.year.to_s,                   # 002
@@ -504,8 +505,8 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 040
                   nil,  # 041
                   nil,  # 042
-                  posting_date.year.to_s[2..3],             # 043
-                  i.id.to_s,                                # 044
+                  i.serial_from_internal_no,                # 043
+                  i.number_from_internal_no,                # 044
                   i.invoice_no,                             # 045
                   i.format_date(i.invoice_date),            # 046
                   totals,                                   # 047
@@ -522,7 +523,7 @@ class SupplierInvoice < ActiveRecord::Base
                   nil,  # 058
                   'P',                                      # 059
                   '0']                                      # 060
-        end # !lac.nil?
+        end # !lac.nil? && !taxable1.nil?
         # Group 6 lines: charge_accounts
         taxable_sum_dif = taxable_sum
         cal.each do |g|
@@ -531,12 +532,12 @@ class SupplierInvoice < ActiveRecord::Base
             amount_to_inform = taxable_sum_dif < g_item_amount ? i.raw_number(taxable_sum_dif, 2) : i.raw_number(g_item_amount, 2)
             taxable_sum_dif -= g_item_amount
             csv << [i.ledger_account_company_code(company_id),  # 001
-                    i.created_at.year.to_s,                   # 002
+                    posting_date.year.to_s,                   # 002
                     entry.to_s,                               # 003
                     'D',  # 004
                     g.code,                                   # 005
                     nil,  # 006
-                    i.format_date(Time.new),                  # 007
+                    i.format_date(posting_date),              # 007
                     nil,  # 008
                     i.invoice_no,                             # 009
                     amount_to_inform,                         # 010
@@ -547,7 +548,7 @@ class SupplierInvoice < ActiveRecord::Base
                     nil,  # 015
                     nil,  # 016
                     nil,  # 017
-                    i.created_at.month.to_s,                  # 018
+                    posting_date.month.to_s,                  # 018
                     '0',                                      # 019
                     '0',                                      # 020
                     '0',                                      # 021
@@ -596,12 +597,12 @@ class SupplierInvoice < ActiveRecord::Base
         ttl.each do |g|
           if !g.code.blank?
             csv << [i.ledger_account_company_code(company_id),  # 001
-                    i.created_at.year.to_s,                   # 002
+                    posting_date.year.to_s,                   # 002
                     entry.to_s,                               # 003
                     'D',  # 004
                     g.code,                                   # 005
                     nil,  # 006
-                    i.format_date(Time.new),                  # 007
+                    i.format_date(posting_date),              # 007
                     nil,  # 008
                     i.invoice_no,                             # 009
                     i.raw_number(g.item_tax, 2),              # 010
@@ -612,7 +613,7 @@ class SupplierInvoice < ActiveRecord::Base
                     nil,  # 015
                     nil,  # 016
                     nil,  # 017
-                    i.created_at.month.to_s,                  # 018
+                    posting_date.month.to_s,                  # 018
                     '0',                                      # 019
                     '0',                                      # 020
                     '0',                                      # 021
