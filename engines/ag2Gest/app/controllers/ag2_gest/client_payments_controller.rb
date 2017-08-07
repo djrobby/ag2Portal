@@ -479,9 +479,18 @@ module Ag2Gest
       sepa = Ag2Gest::SepaReturn.new(file_to_process)
 
       # Read XML object
-      xml = sepa.read_xml
+      sepa.read_xml
 
-      puts xml
+      # Check:
+      # Has not been proccessed previously
+      # Belongs to current company & bank suffix
+      if sepa.nif != self.nif || sepa.suffix != self.suffix
+      end
+
+      # Loop thru return/reject items
+      sepa.lista_devoluciones.each do |i|
+      end
+
     end
 
     # Import Counter text file (bank counter operations)
