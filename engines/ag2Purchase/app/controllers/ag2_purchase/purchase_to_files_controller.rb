@@ -52,7 +52,7 @@ module Ag2Purchase
         render json: @json_data and return
       end
 
-      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html',total: suppliers.count)
+      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html', total: suppliers.count)
       link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CLIENTES_PROVEEDORES')
 
       file_name = 'SIS_CLIENTES_PROVEEDORES_' + Time.new.strftime("%Y%m%d%H%M%S") + '.csv'
@@ -100,7 +100,7 @@ module Ag2Purchase
         render json: @json_data and return
       end
 
-      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html',__total: suppliers.count)
+      message = I18n.t('ag2_purchase.purchase_to_files.index.result_ok_message_html', total: supplier_invoices.count)
       link_message1 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_MOVCONTA')
       link_message2 = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'SIS_CARTERAEFECTOS')
 
