@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170802081423) do
+ActiveRecord::Schema.define(:version => 20170808102152) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2459,6 +2459,28 @@ ActiveRecord::Schema.define(:version => 20170802081423) do
   add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
   add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
   add_index "pre_readings", ["subscriber_id"], :name => "index_pre_readings_on_subscriber_id"
+
+  create_table "processed_file_types", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "processed_file_types", ["name"], :name => "index_processed_file_types_on_name"
+
+  create_table "processed_files", :force => true do |t|
+    t.string   "filename"
+    t.integer  "processed_file_type_id"
+    t.integer  "flow",                   :limit => 2
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "processed_files", ["filename"], :name => "index_processed_files_on_filename"
+  add_index "processed_files", ["flow"], :name => "index_processed_files_on_flow"
+  add_index "processed_files", ["processed_file_type_id"], :name => "index_processed_files_on_processed_file_type_id"
 
   create_table "product_company_prices", :force => true do |t|
     t.integer  "product_id"

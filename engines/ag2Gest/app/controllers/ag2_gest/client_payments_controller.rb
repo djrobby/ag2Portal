@@ -484,13 +484,43 @@ module Ag2Gest
       # Check:
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
-      if sepa.nif != self.nif || sepa.suffix != self.suffix
+      bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.suffix)
+      if bank_account.nil?
+        # Can't go on if bank account doesn't exist
+        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta de empresa con los datos del fichero indicado." and return
+      end
+      if session[:company] != '0' && bank_account.company_id != session[:company].to_i
+        # Can't go on if it's not the right bank account
+        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
+      end
+      processed_file = ProcessedFile.find_by_filename(file_to_process)
+      if !processed_file.blank?
+        # Can't go on because file has already been processed
+        created_at = formatted_timestamp(processed_file.created_at)
+        created_by = User.find(processed_file.created_by).email rescue 'N/A'
+        warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
+        redirect_to client_payments_path, alert: warning and return
       end
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
       end
 
+      # Save processed file
+      created_by = !current_user.nil? ? current_user.id : nil
+      processed_file = ProcessedFile.new(filename: file_to_process,
+                                         processed_file_type_id: ProcessedFileType::BANK_RETURN,
+                                         flow: ProcessedFile::INPUT,
+                                         created_by: created_by)
+      if !processed_file.save
+        redirect_to client_payments_path, alert: "¡Advertencia!: Devoluciones procesadas correctamente, pero el fichero no ha podido ser catalogado." and return
+      end
+
+      # Notify successful ending
+      redirect_to client_payments_path, notice: "Devoluciones procesadas sin incidencias."
+
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones."
     end
 
     # Import Counter text file (bank counter operations)

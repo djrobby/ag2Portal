@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      processed_file:
+        zero:  Ficheros procesados
+        one:   Fichero procesado
+        few:   Ficheros procesados
+        other: Ficheros procesados
+    attributes:
+      processed_file:
+        filename: "Nombre de archivo"
+        processed_file_type: "Tipo de archivo"
+        processed_file_type_id: "Tipo de archivo"
+        flow: "Flujo"
+        input: "ENTRADA"
+        output: "SALIDA"

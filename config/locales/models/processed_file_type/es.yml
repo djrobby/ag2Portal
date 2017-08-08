@@ -1,0 +1,12 @@
+es:
+  activerecord:
+    models:
+      processed_file_type:
+        zero:  Tipos de fichero procesado
+        one:   Tipo de fichero procesado
+        few:   Tipos de fichero procesado
+        other: Tipos de fichero procesado
+        check_for_processed_files: "Tipo de fichero no puede ser eliminado mientras existan ficheros procesados vinculados."
+    attributes:
+      processed_file_type:
+        name: "Descripción"

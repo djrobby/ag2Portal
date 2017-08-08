@@ -1,0 +1,12 @@
+en:
+  activerecord:
+    models:
+      processed_file_type:
+        zero:  Processed file types
+        one:   Processed file type
+        few:   Processed file types
+        other: Processed file types
+        check_for_processed_files: "File type cannot be destroyed while linked processed files exist."
+    attributes:
+      processed_file_type:
+        name: "Description"

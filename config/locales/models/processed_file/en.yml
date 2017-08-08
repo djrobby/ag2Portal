@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      processed_file:
+        zero:  Processed files
+        one:   Processed file
+        few:   Processed files
+        other: Processed files
+    attributes:
+      processed_file:
+        filename: "File name"
+        processed_file_type: "File type"
+        processed_file_type_id: "File type"
+        flow: "Flow"
+        input: "INPUT"
+        output: "OUTPUT"
