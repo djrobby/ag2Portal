@@ -303,8 +303,8 @@ class SupplierInvoice < ActiveRecord::Base
                   'P',                                        # 004
                   entry.to_s,                                 # 005
                   posting_date.year.to_s,                     # 006
-                  posting_date.year.to_s[2..3],               # 007
-                  i.id.to_s,                                  # 008
+                  i.serial_from_internal_no,                  # 007
+                  i.number_from_internal_no,                  # 008
                   i.invoice_no,                               # 009
                   i.supplier.supplier_code,                   # 010
                   lac,                                        # 011
