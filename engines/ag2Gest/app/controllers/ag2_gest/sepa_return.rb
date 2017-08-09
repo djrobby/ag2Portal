@@ -17,10 +17,14 @@ module Ag2Gest
     attr_accessor :fichero
     attr_accessor :OrgnlMsgId
     attr_accessor :OrgnlPmtInfId
+    attr_accessor :fecha_hora_confeccion
+    attr_accessor :numero_total_adeudos
+    attr_accessor :importe_total
     attr_accessor :sufijo
     attr_accessor :nif
     attr_accessor :fecha_cobro
     attr_accessor :lista_devoluciones
+    attr_accessor :remesa
 
     def initialize(file_to_process)
       # Open XML file
@@ -56,9 +60,13 @@ module Ag2Gest
         self.nif = self.OrgnlMsgId[25,9]
         self.fecha_cobro = self.OrgnlMsgId[3,8]
       end
+      # Original file data
+      self.numero_total_adeudos = @doc.elements['CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlNbOfTxs'].text
+      self.importe_total = @doc.elements['CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlCtrlSum'].text
       #
       # Loop thru rejections (TxInfAndSts)
       #
+      id_remesa = ''
       @doc.elements.each('//TxInfAndSts') do |e|
         referencia_adeudo = e.elements['OrgnlEndToEndId'].text
         codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
@@ -71,6 +79,7 @@ module Ag2Gest
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
         id_bill = referencia_adeudo.first(16)
         codigo_cliente = referencia_mandato.last(8)
+        id_remesa = referencia_adeudo[16,6]
 
         # *** Save in returns array ***
         self.lista_devoluciones = self.lista_devoluciones << [referencia_adeudo, codigo_rechazo, importe_adeudo,
@@ -78,6 +87,7 @@ module Ag2Gest
                                                               concepto, nombre_deudor, cuenta_deudor,
                                                               id_bill, codigo_cliente]
       end
+      self.remesa = id_remesa
     end # read_xml
   end
 end

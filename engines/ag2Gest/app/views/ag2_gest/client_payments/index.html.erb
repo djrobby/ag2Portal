@@ -709,6 +709,24 @@
         </div>
       <% end %>
     </div><!-- Bank To Order -->
+
+    <!-- Bank From Return (modal) -->
+    <div id="modal-bank-from-return" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h4><%= t "ag2_gest.client_payments.index.bank_return" %></h4>
+      </div>
+      <%= simple_form_for :bank_from_return, url: bank_from_return_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-from-return-form'} do |f| %>
+        <div class="modal-body">
+          <%#= f.input :file_to_process, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
+          <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.return_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+        </div><!-- modal-body -->
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Bank From Return -->
   </div><!-- row-fluid -->
 </div><!-- container-fluid -->
 

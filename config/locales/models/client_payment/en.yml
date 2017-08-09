@@ -41,3 +41,4 @@ es:
         scheme_type_id: "SEPA Scheme"
         presentation_date: "Presentation date"
         charge_date: "Charge date"
+        return_file: "Unpaid/Rejected Receipts File"

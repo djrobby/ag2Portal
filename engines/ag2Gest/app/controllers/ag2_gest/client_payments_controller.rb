@@ -437,7 +437,7 @@ module Ag2Gest
         # SEPA Creditor Id
         creditor_id = bank_account.sepa_id
         if creditor_id.blank? || bank_account.bank_suffix.blank? || bank_account.holder_fiscal_id.blank?
-          redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s." and return
+          redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s: Datos bancarios incorrectos." and return
         end
 
         # Instantiate class
@@ -473,7 +473,7 @@ module Ag2Gest
 
     # Import SEPA XML file (return, rejections)
     def bank_from_return
-      file_to_process = params[:bank_to_return][:file_to_process]
+      file_to_process = params[:bank_from_return][:file_to_process]
 
       # Instantiate class
       sepa = Ag2Gest::SepaReturn.new(file_to_process)
@@ -487,7 +487,7 @@ module Ag2Gest
       bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.suffix)
       if bank_account.nil?
         # Can't go on if bank account doesn't exist
-        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta de empresa con los datos del fichero indicado." and return
+        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
       if session[:company] != '0' && bank_account.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account
@@ -504,6 +504,7 @@ module Ag2Gest
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
+        # Add rejections to client payments
       end
 
       # Save processed file
@@ -517,7 +518,8 @@ module Ag2Gest
       end
 
       # Notify successful ending
-      redirect_to client_payments_path, notice: "Devoluciones procesadas sin incidencias."
+      notice = sepa.lista_devoluciones.size.to_s + "Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
+      redirect_to client_payments_path, notice: notice
 
     rescue
       redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones."

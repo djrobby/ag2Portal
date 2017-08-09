@@ -71,6 +71,11 @@ module ModelsModule
     number_with_precision(_number.round(_decimals), precision: _decimals, locale: :en)
   end
 
+  # IS NUMERIC
+  def is_numeric?(object)
+    true if Float(object) rescue false
+  end
+
   def sanitize_string(str, encode, latin, all, capitalized)
     alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
     gamma = 'AEIOUUNCaeiouunc?!ao'
@@ -321,5 +326,71 @@ module ModelsModule
 
     # Returns a
     a
+  end
+
+  #
+  # SEPA ID
+  #
+  # Returns bank account SEPA Id, generating CD
+  def sepa_account_id(country, suffix, fiscal_id)
+    sLetters = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" ]
+    iLetters = [ 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 20, 30, 31, 32, 33, 34, 35 ]
+
+    fiscal_id = fiscal_id.gsub(/[^0-9A-Za-z]/, '')
+    source = fiscal_id + country + "00";
+    well = ''
+
+    # letters to numbers
+    for i in 0..source.length-1
+      if is_numeric?(source[i])
+        well += source[i]
+      else
+        j = sLetters.index(source[i])
+        if j.nil?
+          well = ''
+          break
+        else
+          well += iLetters[j].to_s
+        end
+      end
+    end
+
+    # Obtain remainder (mod 97)
+    mod = 0
+    if well.length > 0
+      mod = mod97(well);
+    end
+
+    # CD calc
+    mod = (98 - mod).to_s.rjust(2,'0')
+
+    # SEPA Id & returns
+    well = country + mod + suffix + fiscal_id;
+  end
+
+  # MOD 97-10
+  def mod97(w)
+    m = 0
+    if w.length > 9
+      p = 0;
+      l = 9;
+      r = w.length - l;
+      sm = ''
+      while (p < w.length)
+        sa = (sm + w[p,l]).to_i
+        m = sa % 97;
+        sm = m.to_s
+        p += l;
+        l = sm.length==1 ? 8 : 7
+        if (r - l) > 0
+          r -= l
+        else
+          l = r
+        end
+      end
+    else
+      m = (w.to_i) % 97
+    end
+    m
   end
 end

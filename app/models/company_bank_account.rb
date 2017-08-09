@@ -149,8 +149,10 @@ class CompanyBankAccount < ActiveRecord::Base
   # Generates ControlDigit for SEPA identifier
   # Returns SEPA Id
   def sepa_id
-    country = self.country.code
-    suffix = self.bank_suffix
-    fiscal_id = self.holder_fiscal_id
+    if self.country.code.blank? || self.bank_suffix.blank? || self.holder_fiscal_id.blank?
+      nil
+    else
+      sepa_account_id(self.country.code, self.bank_suffix, self.holder_fiscal_id)
+    end
   end
 end

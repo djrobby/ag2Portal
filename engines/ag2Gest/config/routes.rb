@@ -438,6 +438,7 @@ Ag2Gest::Engine.routes.draw do
       post 'cash_to_pending', on: :collection
       post 'bank_to_pending', on: :collection
       post 'bank_to_order', on: :collection
+      post 'bank_from_return', on: :collection
     end
     resources :payment_methods
     #

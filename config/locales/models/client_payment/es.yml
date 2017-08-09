@@ -41,3 +41,4 @@ es:
         scheme_type_id: "Esquema SEPA"
         presentation_date: "Fecha de presentación"
         charge_date: "Fecha de cargo"
+        return_file: "Archivo de Devoluciones/Rechazos"
