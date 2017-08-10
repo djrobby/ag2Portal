@@ -12,6 +12,8 @@ class PaymentMethod < ActiveRecord::Base
   has_many :supplier_invoices
   has_many :delivery_notes
   has_many :sale_offers
+  has_many :payment_types
+  has_many :return_payment_types, :class_name => 'PaymentType', foreign_key: "return_payment_method_id"
 
   has_paper_trail
 

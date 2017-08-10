@@ -22,7 +22,7 @@ module Ag2Gest
     attr_accessor :importe_total
     attr_accessor :sufijo
     attr_accessor :nif
-    attr_accessor :fecha_cobro
+    attr_accessor :fecha_devolucion
     attr_accessor :lista_devoluciones
     attr_accessor :remesa
 
@@ -54,11 +54,11 @@ module Ag2Gest
       begin   # based on OrgnlPmtInfId
         self.sufijo = self.OrgnlPmtInfId[4,3]
         self.nif = self.OrgnlPmtInfId[7,9]
-        self.fecha_cobro = self.OrgnlPmtInfId[16,8]
+        self.fecha_devolucion = self.OrgnlPmtInfId[16,8].to_date
       rescue  # based on OrgnlMsgId
         self.sufijo = self.OrgnlMsgId[22,3]
         self.nif = self.OrgnlMsgId[25,9]
-        self.fecha_cobro = self.OrgnlMsgId[3,8]
+        self.fecha_devolucion = self.OrgnlMsgId[3,8].to_date
       end
       # Original file data
       self.numero_total_adeudos = @doc.elements['CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlNbOfTxs'].text
@@ -66,28 +66,38 @@ module Ag2Gest
       #
       # Loop thru rejections (TxInfAndSts)
       #
-      id_remesa = ''
+      receipt_no = ''
       @doc.elements.each('//TxInfAndSts') do |e|
         referencia_adeudo = e.elements['OrgnlEndToEndId'].text
         codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
-        importe_adeudo = e.elements['OrgnlTxRef'].elements['Amt'].elements['InstdAmt'].text.to_d
+        importe_adeudo = (e.elements['OrgnlTxRef'].elements['Amt'].elements['InstdAmt'].text.to_d) * (-1)
         fecha_cobro = e.elements['OrgnlTxRef'].elements['ReqdColltnDt'].text.to_date
         referencia_mandato = e.elements['OrgnlTxRef'].elements['MndtRltdInf'].elements['MndtId'].text
         fecha_firma_mandato = e.elements['OrgnlTxRef'].elements['MndtRltdInf'].elements['DtOfSgntr'].text.to_date
         concepto = e.elements['OrgnlTxRef'].elements['RmtInf'].elements['Ustrd'].text
         nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
-        id_bill = referencia_adeudo.first(16)
-        codigo_cliente = referencia_mandato.last(8)
-        id_remesa = referencia_adeudo[16,6]
+        id_bill = referencia_adeudo.first(10).to_i
+        id_client_payment = referencia_adeudo[10,9].to_i
+        receipt_no = referencia_adeudo[19,6]
+        id_client = referencia_mandato.last(8).to_i
 
         # *** Save in returns array ***
-        self.lista_devoluciones = self.lista_devoluciones << [referencia_adeudo, codigo_rechazo, importe_adeudo,
-                                                              fecha_cobro, referencia_mandato, fecha_firma_mandato,
-                                                              concepto, nombre_deudor, cuenta_deudor,
-                                                              id_bill, codigo_cliente]
+        self.lista_devoluciones.push(referencia_adeudo: referencia_adeudo,
+                                     codigo_rechazo: codigo_rechazo,
+                                     importe_adeudo: importe_adeudo,
+                                     fecha_cobro: fecha_cobro,
+                                     referencia_mandato:referencia_mandato,
+                                     fecha_firma_mandato: fecha_firma_mandato,
+                                     concepto: concepto,
+                                     nombre_deudor: nombre_deudor,
+                                     cuenta_deudor: cuenta_deudor,
+                                     bill_id: id_bill,
+                                     client_payment_id: id_client_payment,
+                                     receipt_no: receipt_no,
+                                     client_id: id_client)
       end
-      self.remesa = id_remesa
+      self.remesa = receipt_no
     end # read_xml
   end
 end

@@ -13,7 +13,8 @@ class Client < ActiveRecord::Base
   attr_accessible :active, :building, :cellular, :client_code, :email, :fax, :fiscal_id, :floor, :floor_office,
                   :first_name, :last_name, :company, :phone, :remarks, :street_name, :street_number, :organization_id,
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
-                  :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id, :payment_method_id
+                  :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id, :payment_method_id,
+                  :old_code
 
   has_many :delivery_notes
   has_many :sale_offers
@@ -159,7 +160,11 @@ class Client < ActiveRecord::Base
   end
 
   def diput
-    client_code.blank? || client_code == "$ERR" ? "" : client_code[2..3] + client_code[5..10]
+    client_code.blank? || client_code == "$ERR" ? "00000000" : client_code[2..3] + client_code[5..10]
+  end
+
+  def for_sepa_mandate_id
+    self.id.blank? ? '00000000' : self.id.to_s.rjust(8,'0')
   end
 
   def entity_first_name

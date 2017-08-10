@@ -18,7 +18,7 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id, :use_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
-                  :readings_attributes, :meter_details_attributes, :deposit
+                  :readings_attributes, :meter_details_attributes, :deposit, :old_code
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -188,7 +188,11 @@ class Subscriber < ActiveRecord::Base
   end
 
   def diput
-    subscriber_code.blank? ? "" : subscriber_code[2..3] + subscriber_code[5..10]
+    subscriber_code.blank?  || subscriber_code == "$ERR" ? "00000000" : subscriber_code[2..3] + subscriber_code[5..10]
+  end
+
+  def for_sepa_mandate_id
+    self.id.blank? ? '00000000' : self.id.to_s.rjust(8,'0')
   end
 
   def client_first_name

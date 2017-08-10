@@ -33,6 +33,11 @@ class ClientPayment < ActiveRecord::Base
     receipt_no.blank? ? "" : receipt_no[0.1] + '-' + receipt_no[2..5] + '-' + receipt_no[6..9]
   end
 
+  # 9 digits Id for bank orders
+  def full_id
+    self.id.blank? ? '000000000' : self.id.to_s.rjust(9,'0')
+  end
+
   def total
     amount + surcharge
   end

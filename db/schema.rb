@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170808102152) do
+ActiveRecord::Schema.define(:version => 20170810090337) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -744,6 +744,7 @@ ActiveRecord::Schema.define(:version => 20170808102152) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "company"
+    t.string   "old_code"
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
@@ -754,6 +755,7 @@ ActiveRecord::Schema.define(:version => 20170808102152) do
   add_index "clients", ["fiscal_id"], :name => "index_clients_on_fiscal_id"
   add_index "clients", ["last_name"], :name => "index_clients_on_last_name"
   add_index "clients", ["ledger_account_id"], :name => "index_clients_on_ledger_account_id"
+  add_index "clients", ["old_code"], :name => "index_clients_on_old_code"
   add_index "clients", ["organization_id", "client_code"], :name => "index_clients_on_organization_id_and_client_code", :unique => true
   add_index "clients", ["organization_id", "fiscal_id"], :name => "index_clients_on_organization_id_and_fiscal_id", :unique => true
   add_index "clients", ["organization_id"], :name => "index_clients_on_organization_id"
@@ -2297,12 +2299,14 @@ ActiveRecord::Schema.define(:version => 20170808102152) do
     t.string   "name"
     t.integer  "payment_method_id"
     t.integer  "organization_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "return_payment_method_id"
   end
 
   add_index "payment_types", ["organization_id"], :name => "index_payment_types_on_organization_id"
   add_index "payment_types", ["payment_method_id"], :name => "index_payment_types_on_payment_method_id"
+  add_index "payment_types", ["return_payment_method_id"], :name => "index_payment_types_on_return_payment_method_id"
 
   create_table "pre_bills", :force => true do |t|
     t.string   "bill_no"
@@ -3521,6 +3525,7 @@ ActiveRecord::Schema.define(:version => 20170808102152) do
     t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.decimal  "deposit",                             :precision => 13, :scale => 4, :default => 0.0,  :null => false
+    t.string   "old_code"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3538,6 +3543,7 @@ ActiveRecord::Schema.define(:version => 20170808102152) do
   add_index "subscribers", ["meter_id"], :name => "index_subscribers_on_meter_id"
   add_index "subscribers", ["office_id", "subscriber_code"], :name => "index_subscribers_unique", :unique => true
   add_index "subscribers", ["office_id"], :name => "index_subscribers_on_office_id"
+  add_index "subscribers", ["old_code"], :name => "index_subscribers_on_old_code"
   add_index "subscribers", ["phone"], :name => "index_subscribers_on_phone"
   add_index "subscribers", ["pub_record"], :name => "index_subscribers_on_pub_record"
   add_index "subscribers", ["reading_route_id"], :name => "index_subscribers_on_reading_route_id"

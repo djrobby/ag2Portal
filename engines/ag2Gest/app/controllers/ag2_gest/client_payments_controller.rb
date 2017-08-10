@@ -490,10 +490,10 @@ module Ag2Gest
         redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
       if session[:company] != '0' && bank_account.company_id != session[:company].to_i
-        # Can't go on if it's not the right bank account
+        # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
-      processed_file = ProcessedFile.find_by_filename(file_to_process)
+      processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_RETURN).first rescue nil
       if !processed_file.blank?
         # Can't go on because file has already been processed
         created_at = formatted_timestamp(processed_file.created_at)
@@ -501,13 +501,42 @@ module Ag2Gest
         warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
         redirect_to client_payments_path, alert: warning and return
       end
+      # Search payment method for returns
+      organization_id = bank_account.company.organization_id
+      payment_method_id = PaymentType.find(ClientPayment::BANK).return_payment_method_id rescue collection_payment_methods(organization_id).first.id
+      if payment_method_id.nil?
+        payment_method_id = collection_payment_methods(organization_id).first.id
+      end
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
-        # Add rejections to client payments
+        # Search original client payment
+        original_client_payment = ClientPayment.find(i['client_payment_id'])
+        if !original_client_payment.nil?
+          # If original payment is not confirmed, set confirmation date
+          original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
+          # Add rejections to client payments
+          return_client_payment = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
+                                                    payment_type: ClientPayment::BANK,
+                                                    bill_id: original_client_payment.bill_id,
+                                                    invoice_id: original_client_payment.invoice_id,
+                                                    payment_method_id: payment_method_id,
+                                                    client_id: original_client_payment.client.id,
+                                                    subscriber_id: original_client_payment.subscriber.id,
+                                                    payment_date: sepa.fecha_devolucion,
+                                                    confirmation_date: Time.now,
+                                                    amount: i['importe_adeudo'],
+                                                    instalment_id: original_client_payment.instalment_id,
+                                                    client_bank_account_id: original_client_payment.client_bank_account_id,
+                                                    charge_account_id: original_client_payment.charge_account_id)
+          if return_client_payment.save
+            # Set related invoice status to pending
+            original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          end
+        end
       end
 
-      # Save processed file
+      # Catalogs the processed file
       created_by = !current_user.nil? ? current_user.id : nil
       processed_file = ProcessedFile.new(filename: file_to_process,
                                          processed_file_type_id: ProcessedFileType::BANK_RETURN,

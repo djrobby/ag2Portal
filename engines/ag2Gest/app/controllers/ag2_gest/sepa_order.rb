@@ -133,13 +133,14 @@ module Ag2Gest
               self.concepto = "FRA.AGUA " + cp.bill.real_no_unformatted + " " + cp.bill.billing_period_code + " " + adirecc + " " + anombre
               self.entidad_deudor = cp.client_bank_account_swift.ljust(11)
               self.importe_adeudo = en_formatted_number_without_delimiter(cp.total, 2)
+              # Max. 35: based on client or subscriber for_sepa_mandate_id method (last 8 digits = Client Id or Subscriber Id)
               self.referencia_mandato = cp.client_bank_account_refere
               self.fecha_firma_mandato = cp.client_bank_account_start
               self.identificacion_instruccion = self.time_now.strftime("%Y%m%d%H%M%S%L") + i.to_s.rjust(4,'0')
               self.nombre_deudor = cp.sanitized_client_bank_account_holder
               self.cuenta_deudor = cp.client_bank_account_iban
-              # Max. 35: invoice_no 16 + receipt_no 6 + date 12 + 1
-              self.referencia_adeudo = cp.bill.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%Y%m%d%H%M") + "0"
+              # Max. 35: bill_id 10 + client_payment_id 9 + receipt_no 6 + date 10
+              self.referencia_adeudo = cp.bill.full_id + cp.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%y%m%d%H%M")
               # *** Write payment line ***
               @xml.DrctDbtTxInf do
                 @xml.PmtId do

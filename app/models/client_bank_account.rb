@@ -63,7 +63,7 @@ class ClientBankAccount < ActiveRecord::Base
   end
 
   # Reference for SEPA mandate
-  def refere
+  def refere_based_on_diput
     yy = self.starting_at.year
     mm = self.starting_at.month
     if yy >= 2000
@@ -74,6 +74,18 @@ class ClientBankAccount < ActiveRecord::Base
     end
     diput = !self.subscriber.blank? ? self.subscriber.diput : self.client.diput
     (yy * 10000000000) + (mm * 100000000) + diput.to_i
+  end
+  def refere
+    yy = self.starting_at.year
+    mm = self.starting_at.month
+    if yy >= 2000
+      yy = yy - 2000
+    end
+    if yy > 1900
+      yy = yy - 1900
+    end
+    refere = !self.subscriber.blank? ? self.subscriber.for_sepa_mandate_id : self.client.for_sepa_mandate_id
+    (yy * 10000000000) + (mm * 100000000) + refere.to_i
   end
 
   def e_format
