@@ -55,10 +55,16 @@
         <%=t '.caution' %>
       </p>
       <p>
+        <!-- Type -->
+        <%= label_tag "label_type", t(".label_type"), :class => 'form-label' %>
+        <%= select_tag "Import_HR", options_for_select(@import, 0), :class => 'x-large-text-field' %>
+      </p>
+      <p>
         <%=t '.warning' %>
         <br />
         <%=t '.are_you_sure' %>
       </p>
+      <!-- Buttons -->
       <div id="buttons">
         <a href="#" id="data_import_btn" class="btn btn-primary"><%=t '.btn_yes' %></a>
         <a href="<%= ag2_human.root_path %>" id="exit_btn" class="btn btn-primary"><%=t '.btn_no' %></a>

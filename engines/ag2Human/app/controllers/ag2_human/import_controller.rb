@@ -13,6 +13,7 @@
 # ª = \xAA  º = \xBA
 
 require_dependency "ag2_human/application_controller"
+require_dependency "ag2_human/soap_request"
 require "dbf"
 
 module Ag2Human
@@ -21,21 +22,79 @@ module Ag2Human
     before_filter :set_defaults
     # load_and_authorize_resource :worker
     skip_load_and_authorize_resource :only => :data_import
+
+    include REXML
+
+    # Public variables
+    $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+    $gamma = 'AEIOUUNCaeiouunc?!ao'
+    $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
+    $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+    $positions = "presidentedirectorjeferesponsablegerentetecnicoauxauxiliaradmadminadministrativoadministrativa"
+
     def index
+      # Authorize only if current user can update Worker
       authorize! :update, Worker
+      # OCO
+      init_oco if !session[:organization]
+      @import = formats_array
     end
 
     #
-    # Import DBF files from external source
+    # Import XML files from external source (200c)
+    #
+    def data_import_2
+      # Instantiate class
+      soap = Ag2Human::SoapRequest.new
+
+      # Set envelope attributes
+      codigo_usuario = 'API'
+      password = 'qMqnpx4cJ4heWc'
+      codigo_cliente = '48646'
+      codigo_empresa = '3'
+      codigo_centro_trabajo = '1'
+      anyo = '2016'
+      mes = '12'
+      tipo_paga = '1'
+      activo = '1'
+
+      # Initialize class attributes
+      soap.uri = 'http://81.46.192.208:81/A3satelWSEquipo.asmx'
+      soap.body = "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">
+                    <soap12:Body>
+                      <Int_Empleados_Y_Coste_Nomina xmlns=\"http://localhost/SiuReAut/Servicios/\">
+                        <CodigoUsuario>#{codigo_usuario}</CodigoUsuario>
+                        <Password>#{password}</Password>
+                        <CodigoCliente>#{codigo_cliente}</CodigoCliente>
+                        <CodigoEmpresa>#{codigo_empresa}</CodigoEmpresa>
+                        <CodigoCentroTrabajo>#{codigo_centro_trabajo}</CodigoCentroTrabajo>
+                        <Anyo>#{anyo}</Anyo>
+                        <Mes>#{mes}</Mes>
+                        <TipoPaga>#{tipo_paga}</TipoPaga>
+                        <Activo>#{activo}</Activo>
+                      </Int_Empleados_Y_Coste_Nomina>
+                    </soap12:Body>
+                  </soap12:Envelope>"
+
+        # Fetch response
+        r = soap.send_request
+        if r == 'OK'
+          # Process the XML object
+          xml = soap.response.body
+        end
+    end
+
+    #
+    # Import DBF files from external source (N+)
     #
     def data_import
       message = I18n.t("ag2_human.import.index.result_ok_message_html")
       @json_data = { "DataImport" => message, "Result" => "OK" }
-      $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
-      $gamma = 'AEIOUUNCaeiouunc?!ao'
-      $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
-      $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
-      $positions = "presidentedirectorjeferesponsablegerentetecnicoauxauxiliaradmadminadministrativoadministrativa"
+      # $alpha = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7\xBF\xA1\xAA\xBA".force_encoding('ISO-8859-1').encode('UTF-8')
+      # $gamma = 'AEIOUUNCaeiouunc?!ao'
+      # $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
+      # $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+      # $positions = "presidentedirectorjeferesponsablegerentetecnicoauxauxiliaradmadminadministrativoadministrativa"
       incidents = false
       message = ''
       first_name = ''
@@ -106,7 +165,7 @@ module Ag2Human
                 worker = Worker.new
                 worker_item = WorkerItem.new
                 worker_salary = WorkerSalary.new
-                # Initialize worker (fiscal_id) & worker item (nomina_id) 
+                # Initialize worker (fiscal_id) & worker item (nomina_id)
                 worker.fiscal_id = fiscal_id
                 worker_item.nomina_id = nomina_id
               else  # Worker exists, check for item
@@ -312,10 +371,10 @@ render json: @json_data
         cpuesto = sanitize_string(source.cpuesto, true, false, false, false).split(" ").first.downcase
         if $positions.include? cpuesto
           # Empleado
-          @worker_type = WorkerType.find_by_description('Empleado') 
+          @worker_type = WorkerType.find_by_description('Empleado')
         else
           # Operario
-          @worker_type = WorkerType.find_by_description('Operario') 
+          @worker_type = WorkerType.find_by_description('Operario')
         end
         if @worker_type.nil?
           @worker_type = WorkerType.first
@@ -331,7 +390,7 @@ render json: @json_data
       # Degree type
       # Where is it in trabaja.dbf?
     end
-    
+
     # Second, update worker item(s) RESET aux data...
     def update_worker_item(worker, source, company, office, new, cctagene)
       # Dont't need to look for auxiliary data, already done at update_worker
@@ -397,7 +456,7 @@ render json: @json_data
       # Bye
       return worker
     end
-    
+
     # First, update worker SEARCH aux data...
     def update_worker(worker, source, company, office, new, cctagene)
       # Look for auxiliary data (other tables)
@@ -513,14 +572,14 @@ render json: @json_data
         #if !@professional_group.id.blank? && worker.professional_group_id != @professional_group.id
         #  worker.professional_group_id = @professional_group.id
         #end
-        
+
         #if !@contract_type.id.blank? && worker.contract_type_id != @contract_type.id
         #  worker.contract_type_id = @contract_type.id
         #end
         #if !@collective_agreement.id.blank? && worker.collective_agreement_id != @collective_agreement.id
         #  worker.collective_agreement_id = @collective_agreement.id
         #end
-        
+
         #if !@degree_type.id.blank? && worker.degree_type_id != @degree_type.id
         #  worker.degree_type_id = @degree_type.id
         #end
@@ -563,7 +622,7 @@ render json: @json_data
       #if worker.issue_starting_at.blank? && !source.dfecalta.blank?
       #  worker.issue_starting_at = source.dfecalta
       #end
-      
+
       # Bye
       return worker
     end
@@ -593,7 +652,7 @@ render json: @json_data
       end
       return str
     end
-    
+
     def phone(pre, num)
       phone = ''
       if !pre.blank?
@@ -602,11 +661,11 @@ render json: @json_data
       end
       if !num.blank?
         num = sanitize_string(num, true, false, false, false)
-        phone += num      
+        phone += num
       end
       return phone
     end
-    
+
     def generate_worker_code(lastname, firstname)
       code = ''
       lastname1 = lastname.split(" ").first
@@ -631,7 +690,7 @@ render json: @json_data
         end
       end
       code.upcase!
-      
+
       # Code should be unique
       #s = 0
       #w = Worker.find_by_worker_code(code)
@@ -640,16 +699,25 @@ render json: @json_data
       #  s += 1
       #  w = Worker.find_by_worker_code(code)
       #end
-      
+
       return code
     end
-    
+
     def find_user_by_email(email)
       user = User.find_by_email(email)
       if user.nil?
         return 0, 0
       end
       return user.id, user.real_email
+    end
+
+    private
+
+    def formats_array()
+      _array = []
+      _array = _array << t("ag2_human.import.sage_200c")
+      _array = _array << t("ag2_human.import.nomina_plus")
+      _array
     end
   end
 end

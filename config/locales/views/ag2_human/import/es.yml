@@ -15,3 +15,6 @@ es:
         result_ok_message_html: "Actualizador de Trabajadores ha finalizado con éxito."
         result_ok_with_error_message_html: "<b>Actualizador de Trabajadores finalizó con incidencias:</b><br/>"
         result_error_message_html: "<b>Error: ¡Actualizador de Trabajadores finalizó inesperadamente!</b>"
+        label_type: "Tipo"
+      sage_200c: "Sage 200c"
+      nomina_plus: "NominaPlus"

@@ -8,10 +8,11 @@ module Ag2Human
     # METODO_PAGO ||= 'DD'
 
     # Attributes
+    attr_accessor :time_now
     attr_accessor :uri
     attr_accessor :body
-    attr_accessor :response
-    attr_accessor :time_now
+    # attr_accessor :response
+    attr_reader :response
 
     def initialize
       # Initialize attribute default values
@@ -59,8 +60,7 @@ module Ag2Human
       req.body = self.body
 
       # Fetch Request
-      res = http.request(req)
-      self.response = res
+      self.response = http.request(req)
       return "OK"
     rescue StandardError => e
       self.response = nil
@@ -71,7 +71,6 @@ module Ag2Human
     # *** Returns current XML stream
     #
     def read_xml
-      @xml
     end
   end
 end

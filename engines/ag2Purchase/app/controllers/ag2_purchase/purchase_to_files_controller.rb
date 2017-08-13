@@ -122,8 +122,8 @@ module Ag2Purchase
     # GET /bills_to_files
     # GET /bills_to_files.json
     def index
-      # Authorize only if current user can read Bill
-      authorize! :read, Bill
+      # Authorize only if current user can read Supplier
+      authorize! :read, Supplier
       # OCO
       init_oco if !session[:organization]
       @export = formats_array
