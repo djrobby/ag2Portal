@@ -21,7 +21,8 @@ module Ag2Human
     before_filter :authenticate_user!
     before_filter :set_defaults
     # load_and_authorize_resource :worker
-    skip_load_and_authorize_resource :only => :data_import
+    skip_load_and_authorize_resource :only => [:data_import,
+                                               :data_import_2]
 
     include REXML
 
@@ -44,6 +45,9 @@ module Ag2Human
     # Import XML files from external source (200c)
     #
     def data_import_2
+      message = I18n.t("ag2_human.import.index.result_ok_message_html")
+      @json_data = { "DataImport" => message, "Result" => "OK" }
+
       # Instantiate class
       soap = Ag2Human::SoapRequest.new
 
@@ -76,12 +80,17 @@ module Ag2Human
                     </soap12:Body>
                   </soap12:Envelope>"
 
-        # Fetch response
-        r = soap.send_request
-        if r == 'OK'
-          # Process the XML object
-          xml = soap.response.body
-        end
+      # Fetch response
+      r = soap.send_request
+      if r == 'OK'
+        # Process the XML object
+        xml = soap.response.body
+        puts xml
+      else
+        message = I18n.t("ag2_human.import.index.result_error_message_html")
+        @json_data = { "DataImport" => message, "Result" => "ERROR" }
+      end
+      render json: @json_data
     end
 
     #
@@ -715,8 +724,8 @@ render json: @json_data
 
     def formats_array()
       _array = []
-      _array = _array << t("ag2_human.import.sage_200c")
       _array = _array << t("ag2_human.import.nomina_plus")
+      _array = _array << t("ag2_human.import.a3_equipo")
       _array
     end
   end

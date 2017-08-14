@@ -11,8 +11,8 @@ module Ag2Human
     attr_accessor :time_now
     attr_accessor :uri
     attr_accessor :body
-    # attr_accessor :response
-    attr_reader :response
+    attr_accessor :response
+    # attr_reader :response
 
     def initialize
       # Initialize attribute default values

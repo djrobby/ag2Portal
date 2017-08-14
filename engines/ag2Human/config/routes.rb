@@ -55,6 +55,7 @@ Ag2Human::Engine.routes.draw do
     #
     # Data import
     match 'data_import', :controller => 'import', :action => 'data_import'
+    match 'data_import_2', :controller => 'import', :action => 'data_import_2'
     #
     # Departments
     match 'departments/de_update_worker_select_from_company/:department', :controller => 'departments', :action => 'de_update_worker_select_from_company'
@@ -80,7 +81,7 @@ Ag2Human::Engine.routes.draw do
     resources :worker_items
     resources :worker_salaries
     resources :worker_salary_items
-    
+
     # Root
     root :to => 'home#index'
   end

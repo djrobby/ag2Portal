@@ -7,10 +7,16 @@
   jQuery(function($) {
     // when #data_import_btn is clicked
     $("#data_import_btn").click(function() {
+      method = 'data_import_2';
+      var type = $('#Import_HR :selected').index();
+      if (type == "") type = 0;
+      if (type == 0) {
+        method = 'data_import';        
+      }
       $('#message_area').children().show();
       $('#buttons').children().hide();
       // make a POST call and executes action
-      jQuery.getJSON('data_import', function(data) {
+      jQuery.getJSON(method, function(data) {
         $(".modal-body > p").html(data.DataImport);
         $("#importinfo").modal("show");
         if (data.Result == 'OK') {
@@ -57,7 +63,7 @@
       <p>
         <!-- Type -->
         <%= label_tag "label_type", t(".label_type"), :class => 'form-label' %>
-        <%= select_tag "Import_HR", options_for_select(@import, 0), :class => 'x-large-text-field' %>
+        <%= select_tag "Import_HR", options_for_select(@import, t("ag2_human.import.a3_equipo")), :class => 'x-large-text-field' %>
       </p>
       <p>
         <%=t '.warning' %>
