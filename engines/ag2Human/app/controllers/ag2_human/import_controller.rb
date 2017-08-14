@@ -86,6 +86,36 @@ module Ag2Human
         # Process the XML object
         xml = soap.response.body
         puts xml
+        xml.elements.each('//Record') do |e|
+          referencia_adeudo = e.elements['OrgnlEndToEndId'].text
+          codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
+          importe_adeudo = (e.elements['OrgnlTxRef'].elements['Amt'].elements['InstdAmt'].text.to_d) * (-1)
+          fecha_cobro = e.elements['OrgnlTxRef'].elements['ReqdColltnDt'].text.to_date
+          referencia_mandato = e.elements['OrgnlTxRef'].elements['MndtRltdInf'].elements['MndtId'].text
+          fecha_firma_mandato = e.elements['OrgnlTxRef'].elements['MndtRltdInf'].elements['DtOfSgntr'].text.to_date
+          concepto = e.elements['OrgnlTxRef'].elements['RmtInf'].elements['Ustrd'].text
+          nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
+          cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
+          id_bill = referencia_adeudo.first(10).to_i
+          id_client_payment = referencia_adeudo[10,9].to_i
+          receipt_no = referencia_adeudo[19,6]
+          id_client = referencia_mandato.last(8).to_i
+
+          # *** Save in returns array ***
+          self.lista_devoluciones.push(referencia_adeudo: referencia_adeudo,
+                                       codigo_rechazo: codigo_rechazo,
+                                       importe_adeudo: importe_adeudo,
+                                       fecha_cobro: fecha_cobro,
+                                       referencia_mandato:referencia_mandato,
+                                       fecha_firma_mandato: fecha_firma_mandato,
+                                       concepto: concepto,
+                                       nombre_deudor: nombre_deudor,
+                                       cuenta_deudor: cuenta_deudor,
+                                       bill_id: id_bill,
+                                       client_payment_id: id_client_payment,
+                                       receipt_no: receipt_no,
+                                       client_id: id_client)
+        end
       else
         message = I18n.t("ag2_human.import.index.result_error_message_html")
         @json_data = { "DataImport" => message, "Result" => "ERROR" }

@@ -65,7 +65,7 @@ module Ag2Human
     rescue StandardError => e
       self.response = nil
       return "HTTP Request failed (#{e.message})"
-    end
+    end # send_request
 
     #
     # *** Returns current XML stream
