@@ -38,17 +38,17 @@ class Province < ActiveRecord::Base
   def territory_code
     _ret = '0'
     if region.name.upcase.include? 'CANARIAS'
-      _ret = '2'
+      _ret = '1'
     elsif (region.name.upcase.include? 'EUSKADI') || (region.name.upcase.include? 'VASCO')
       if (self.name.upcase.include? 'ARABA') || (self.name.upcase.include? 'ALAVA') || (self.name.upcase.include? 'ÁLAVA')
-        _ret = '3'
+        _ret = '2'
       elsif (self.name.upcase.include? 'BIZKAIA') || (self.name.upcase.include? 'VIZCAYA')
-        _ret = '4'
+        _ret = '3'
       elsif (self.name.upcase.include? 'GIPUZKOA') || (self.name.upcase.include? 'GUIPUZCOA') || (self.name.upcase.include? 'GUIPÚZCOA')
-        _ret = '5'
+        _ret = '4'
       end
     elsif region.name.upcase.include? 'NAVARRA'
-      _ret = '6'
+      _ret = '5'
     end
     _ret
   end
