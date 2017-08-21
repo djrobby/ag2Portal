@@ -25,6 +25,7 @@ class Organization < ActiveRecord::Base
   has_many :invoice_credits
   has_many :invoice_rebills
   has_many :instalment_plans
+  has_many :contract_templates
   # helpdesk
   has_many :technicians
   has_many :tickets

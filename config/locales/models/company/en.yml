@@ -58,3 +58,7 @@ en:
         r_first_name_c: "First Name"
         r_fiscal_id_c: "Fiscal Id"
         r_full_name: "Full name"
+        water_supply_contract_template: "Supply Contract Template"
+        water_supply_contract_template_id: "Supply Contract Template"
+        water_connection_contract_template: "Connection Contract Template"
+        water_connection_contract_template_id: "Connection Contract Template"

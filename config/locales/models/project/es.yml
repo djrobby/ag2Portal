@@ -32,3 +32,7 @@ es:
         project_type_id: "Tipo"
         max_order_total: "Importe máx. por pedido €"
         max_order_price: "Precio máx. por ítem pedido €"
+        water_supply_contract_template: "Plantilla Contrato de Suministro"
+        water_supply_contract_template_id: "Plantilla Contrato de Suministro"
+        water_connection_contract_template: "Plantilla Contrato de Acometida"
+        water_connection_contract_template_id: "Plantilla Contrato de Acometida"

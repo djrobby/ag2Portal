@@ -18,6 +18,8 @@ class Province < ActiveRecord::Base
   has_many :entities
   has_many :suppliers
   has_many :clients
+  has_many :contract_templates
+  has_many :contract_template_terms, through: :contract_templates
 
   has_paper_trail
 

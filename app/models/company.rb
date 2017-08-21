@@ -5,6 +5,9 @@ class Company < ActiveRecord::Base
   belongs_to :zipcode
   belongs_to :street_type
   belongs_to :organization
+  belongs_to :water_supply_contract_template, class_name: "ContractTemplate", foreign_key: "water_supply_contract_template_id"
+  belongs_to :water_connection_contract_template, class_name: "ContractTemplate", foreign_key: "water_connection_contract_template_id"
+
   attr_accessible :fiscal_id, :name,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email, :logo,
@@ -12,7 +15,8 @@ class Company < ActiveRecord::Base
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
                   :max_order_total, :max_order_price, :overtime_pct, :commercial_bill_code,
                   :void_invoice_code, :void_commercial_bill_code, :ledger_account_app_code,
-                  :r_last_name, :r_first_name, :r_fiscal_id
+                  :r_last_name, :r_first_name, :r_fiscal_id,
+                  :water_supply_contract_template_id, :water_connection_contract_template_id
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
   attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes
 

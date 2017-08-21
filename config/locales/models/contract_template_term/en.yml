@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    models:
+      contract_template_term:
+        zero:  Contract templates
+        one:   Contract template
+        few:   Contract templates
+        other: Contract templates
+    attributes:
+      contract_template_term:
+        description: "Description"
+        term_type: "Type"
+        term_no: "No."

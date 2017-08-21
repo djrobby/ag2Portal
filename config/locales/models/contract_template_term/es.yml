@@ -1,0 +1,13 @@
+es:
+  activerecord:
+    models:
+      contract_template_term:
+        zero:  Plantillas de contrato
+        one:   Plantilla de contrato
+        few:   Plantillas de contrato
+        other: Plantillas de contrato
+    attributes:
+      contract_template_term:
+        description: "Descripción"
+        term_type: "Tipo"
+        term_no: "Nº"

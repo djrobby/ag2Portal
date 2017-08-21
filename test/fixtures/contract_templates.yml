@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  for_contract: 1
+  country: 
+  region: 
+  province: 
+  town: 
+
+two:
+  name: MyString
+  for_contract: 1
+  country: 
+  region: 
+  province: 
+  town: 

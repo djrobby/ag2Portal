@@ -5,9 +5,13 @@ class Project < ActiveRecord::Base
   belongs_to :office
   belongs_to :project_type
   belongs_to :ledger_account
+  belongs_to :water_supply_contract_template, class_name: "ContractTemplate", foreign_key: "water_supply_contract_template_id"
+  belongs_to :water_connection_contract_template, class_name: "ContractTemplate", foreign_key: "water_connection_contract_template_id"
+
   attr_accessible :closed_at, :ledger_account_id, :name, :opened_at, :project_code,
                   :office_id, :company_id, :organization_id, :project_type_id,
-                  :max_order_total, :max_order_price
+                  :max_order_total, :max_order_price,
+                  :water_supply_contract_template_id, :water_connection_contract_template_id
 
   has_many :charge_accounts
   has_many :work_orders

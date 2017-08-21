@@ -6,12 +6,15 @@ class Office < ActiveRecord::Base
   belongs_to :zipcode
   belongs_to :street_type
   belongs_to :zone
+  belongs_to :water_supply_contract_template, class_name: "ContractTemplate", foreign_key: "water_supply_contract_template_id"
+  belongs_to :water_connection_contract_template, class_name: "ContractTemplate", foreign_key: "water_connection_contract_template_id"
 
   attr_accessible :name, :company_id, :office_code, :zone_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price, :overtime_pct,
-                  :r_last_name, :r_first_name, :r_fiscal_id, :r_position
+                  :r_last_name, :r_first_name, :r_fiscal_id, :r_position,
+                  :water_supply_contract_template_id, :water_connection_contract_template_id
   attr_accessible :office_notifications_attributes
 
   has_many :workers

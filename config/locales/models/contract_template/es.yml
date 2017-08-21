@@ -1,0 +1,26 @@
+es:
+  activerecord:
+    models:
+      contract_template:
+        zero:  Plantillas de contrato
+        one:   Plantilla de contrato
+        few:   Plantillas de contrato
+        other: Plantillas de contrato
+        check_for_terms: "Plantilla no puede ser eliminada mientras existan condiciones vinculadas."
+        check_for_companies: "Plantilla no puede ser eliminada mientras existan empresas vinculadas."
+        check_for_offices: "Plantilla no puede ser eliminada mientras existan oficinas vinculadas."
+        check_for_projects: "Plantilla no puede ser eliminada mientras existan proyectos vinculados."
+    attributes:
+      contract_template:
+        name: "Name"
+        for_contract: "Para contrato"
+        organization: "Organización"
+        organization_id: "Organización"
+        country: "País"
+        country_id: "País"
+        region: "Región"
+        region_id: "Región"
+        province: "Provincia"
+        province_id: "Provincia"
+        town: "Población"
+        town_id: "Población"

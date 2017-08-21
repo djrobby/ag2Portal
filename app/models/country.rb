@@ -12,6 +12,8 @@ class Country < ActiveRecord::Base
   has_many :supplier_bank_accounts
   has_many :client_bank_accounts
   has_many :provinces, through: :regions
+  has_many :contract_templates
+  has_many :contract_template_terms, through: :contract_templates
 
   has_paper_trail
 

@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       water_connection_contract:
-        zero:  Contratos de tipo de acometida
-        one:   Contrato de tipo de acometida
-        few:   Contratos de tipo de acometida
-        other: Contratos de tipo de acometida
+        zero:  Connection contracts
+        one:   Connection contract
+        few:   Connection contracts
+        other: Connection contracts
     attributes:
       water_connection_contract:
         id: "Id"

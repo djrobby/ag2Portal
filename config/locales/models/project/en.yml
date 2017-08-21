@@ -32,3 +32,7 @@ en:
         project_type_id: "Type"
         max_order_total: "Max amount per order €"
         max_order_price: "Max price per order item €"
+        water_supply_contract_template: "Supply Contract Template"
+        water_supply_contract_template_id: "Supply Contract Template"
+        water_connection_contract_template: "Connection Contract Template"
+        water_connection_contract_template_id: "Connection Contract Template"

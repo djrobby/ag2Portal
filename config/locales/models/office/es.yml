@@ -50,3 +50,7 @@ es:
         r_fiscal_id_c: "CIF/NIF"
         r_position: "Cargo"
         r_full_name: "Apellido y Nombre"
+        water_supply_contract_template: "Plantilla Contrato de Suministro"
+        water_supply_contract_template_id: "Plantilla Contrato de Suministro"
+        water_connection_contract_template: "Plantilla Contrato de Acometida"
+        water_connection_contract_template_id: "Plantilla Contrato de Acometida"

@@ -1,0 +1,26 @@
+en:
+  activerecord:
+    models:
+      contract_template:
+        zero:  Contract templates
+        one:   Contract template
+        few:   Contract templates
+        other: Contract templates
+        check_for_terms: "Template cannot be destroyed while linked terms codes exist."
+        check_for_companies: "Template cannot be destroyed while linked companies exist."
+        check_for_offices: "Template cannot be destroyed while linked offices exist."
+        check_for_projects: "Template cannot be destroyed while linked projects exist."
+    attributes:
+      contract_template:
+        name: "Name"
+        for_contract: "For contract"
+        organization: "Organization"
+        organization_id: "Organization"
+        country: "Country"
+        country_id: "Country"
+        region: "Region"
+        region_id: "Region"
+        province: "Province"
+        province_id: "Province"
+        town: "Town"
+        town_id: "Town"

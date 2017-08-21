@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170810090337) do
+ActiveRecord::Schema.define(:version => 20170821101722) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -787,8 +787,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   create_table "companies", :force => true do |t|
     t.string   "name"
     t.string   "fiscal_id"
-    t.datetime "created_at",                                                                :null => false
-    t.datetime "updated_at",                                                                :null => false
+    t.datetime "created_at",                                                                            :null => false
+    t.datetime "updated_at",                                                                            :null => false
     t.integer  "street_type_id"
     t.string   "street_name"
     t.string   "street_number"
@@ -814,10 +814,10 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
     t.integer  "updated_by"
     t.integer  "organization_id"
     t.string   "hd_email"
-    t.decimal  "max_order_total",           :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price",           :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_total",                       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.string   "website"
-    t.decimal  "overtime_pct",              :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "overtime_pct",                          :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.string   "commercial_bill_code"
     t.string   "void_invoice_code"
     t.string   "void_commercial_bill_code"
@@ -825,6 +825,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
     t.string   "r_last_name"
     t.string   "r_first_name"
     t.string   "r_fiscal_id"
+    t.integer  "water_supply_contract_template_id"
+    t.integer  "water_connection_contract_template_id"
   end
 
   add_index "companies", ["commercial_bill_code"], :name => "index_companies_on_commercial_bill_code"
@@ -838,6 +840,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
   add_index "companies", ["void_commercial_bill_code"], :name => "index_companies_on_void_commercial_bill_code"
   add_index "companies", ["void_invoice_code"], :name => "index_companies_on_void_invoice_code"
+  add_index "companies", ["water_connection_contract_template_id"], :name => "index_companies_on_water_connection_contract_template_id"
+  add_index "companies", ["water_supply_contract_template_id"], :name => "index_companies_on_water_supply_contract_template_id"
   add_index "companies", ["zipcode_id"], :name => "index_companies_on_zipcode_id"
 
   create_table "company_bank_accounts", :force => true do |t|
@@ -959,6 +963,42 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   add_index "complaints", ["official_sheet"], :name => "index_complaints_on_official_sheet"
   add_index "complaints", ["project_id"], :name => "index_complaints_on_project_id"
   add_index "complaints", ["subscriber_id"], :name => "index_complaints_on_subscriber_id"
+
+  create_table "contract_template_terms", :force => true do |t|
+    t.integer  "contract_template_id"
+    t.integer  "term_type",            :limit => 2, :default => 0, :null => false
+    t.text     "description"
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.string   "term_no",              :limit => 4
+  end
+
+  add_index "contract_template_terms", ["contract_template_id"], :name => "index_contract_template_terms_on_contract_template_id"
+  add_index "contract_template_terms", ["term_no"], :name => "index_contract_template_terms_on_term_no"
+  add_index "contract_template_terms", ["term_type"], :name => "index_contract_template_terms_on_term_type"
+
+  create_table "contract_templates", :force => true do |t|
+    t.string   "name"
+    t.integer  "for_contract",    :limit => 2, :default => 0, :null => false
+    t.integer  "organization_id"
+    t.integer  "country_id"
+    t.integer  "region_id"
+    t.integer  "province_id"
+    t.integer  "town_id"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "contract_templates", ["country_id"], :name => "index_contract_templates_on_country_id"
+  add_index "contract_templates", ["name"], :name => "index_contract_templates_on_name"
+  add_index "contract_templates", ["organization_id"], :name => "index_contract_templates_on_organization_id"
+  add_index "contract_templates", ["province_id"], :name => "index_contract_templates_on_province_id"
+  add_index "contract_templates", ["region_id"], :name => "index_contract_templates_on_region_id"
+  add_index "contract_templates", ["town_id"], :name => "index_contract_templates_on_town_id"
 
   create_table "contract_types", :force => true do |t|
     t.string   "name"
@@ -2217,8 +2257,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at",                                                                            :null => false
+    t.datetime "updated_at",                                                                            :null => false
     t.string   "office_code"
     t.integer  "street_type_id"
     t.string   "street_name"
@@ -2236,14 +2276,16 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
-    t.decimal  "max_order_total", :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price", :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "overtime_pct",    :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "max_order_total",                       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "overtime_pct",                          :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "zone_id"
     t.string   "r_last_name"
     t.string   "r_first_name"
     t.string   "r_fiscal_id"
     t.string   "r_position"
+    t.integer  "water_supply_contract_template_id"
+    t.integer  "water_connection_contract_template_id"
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
@@ -2252,6 +2294,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   add_index "offices", ["province_id"], :name => "index_offices_on_province_id"
   add_index "offices", ["street_type_id"], :name => "index_offices_on_street_type_id"
   add_index "offices", ["town_id"], :name => "index_offices_on_town_id"
+  add_index "offices", ["water_connection_contract_template_id"], :name => "index_offices_on_water_connection_contract_template_id"
+  add_index "offices", ["water_supply_contract_template_id"], :name => "index_offices_on_water_supply_contract_template_id"
   add_index "offices", ["zipcode_id"], :name => "index_offices_on_zipcode_id"
   add_index "offices", ["zone_id"], :name => "index_offices_on_zone_id"
 
@@ -2662,16 +2706,18 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
     t.date     "closed_at"
     t.integer  "office_id"
     t.integer  "company_id"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
+    t.datetime "created_at",                                                                            :null => false
+    t.datetime "updated_at",                                                                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "project_code"
     t.integer  "organization_id"
     t.integer  "project_type_id"
-    t.decimal  "max_order_total",   :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price",   :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_total",                       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "max_order_price",                       :precision => 12, :scale => 4, :default => 0.0, :null => false
     t.integer  "ledger_account_id"
+    t.integer  "water_supply_contract_template_id"
+    t.integer  "water_connection_contract_template_id"
   end
 
   add_index "projects", ["company_id"], :name => "index_projects_on_company_id"
@@ -2682,6 +2728,8 @@ ActiveRecord::Schema.define(:version => 20170810090337) do
   add_index "projects", ["organization_id"], :name => "index_projects_on_organization_id"
   add_index "projects", ["project_code"], :name => "index_projects_on_project_code"
   add_index "projects", ["project_type_id"], :name => "index_projects_on_project_type_id"
+  add_index "projects", ["water_connection_contract_template_id"], :name => "index_projects_on_water_connection_contract_template_id"
+  add_index "projects", ["water_supply_contract_template_id"], :name => "index_projects_on_water_supply_contract_template_id"
 
   create_table "provinces", :force => true do |t|
     t.string   "name"

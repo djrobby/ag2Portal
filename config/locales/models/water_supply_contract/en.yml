@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       water_supply_contract:
-        zero:  Contratos de suminitro
-        one:   Contrato de suminitro
-        few:   Contratos de suminitro
-        other: Contratos de suminitro
+        zero:  Supply contracts
+        one:   Supply contract
+        few:   Supply contracts
+        other: Supply contracts
     attributes:
       water_supply_contract:
         bill_id: "Factura"
