@@ -29,7 +29,7 @@ class ClientBankAccount < ActiveRecord::Base
   #                                 :length => { :is => 2 },
   #                                 :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :account_no,          :presence => true,
-                                  :length => { :is => 10 },
+                                  :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
                                   :uniqueness => { :scope => [:bank_account_class_id, :country_id,
                                                               :iban_dc, :bank_id, :bank_office_id, :ccc_dc] }
@@ -129,7 +129,7 @@ class ClientBankAccount < ActiveRecord::Base
     #   _f += " " + self.ccc_dc.strip
     # end
     if !self.account_no.blank?
-      _f += self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
+      _f +=  " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     _f
   end
@@ -152,7 +152,7 @@ class ClientBankAccount < ActiveRecord::Base
     #   _f += " " + self.ccc_dc.strip
     # end
     if !self.account_no.blank?
-      _f += self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
+      _f += " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     if !_f.blank?
       _f = "IBAN " + _f
@@ -160,7 +160,7 @@ class ClientBankAccount < ActiveRecord::Base
     _f
   end
 
-  def p_format_hiden_account
+  def p_format_hidden_account
     _f = ""
     if !self.country.blank?
       _f += self.country.code.strip
@@ -178,7 +178,7 @@ class ClientBankAccount < ActiveRecord::Base
     #   _f += " " + self.ccc_dc.strip
     # end
     if !self.account_no.blank?
-      _f += self.account_no[0,4] + " " + self.account_no[4,2] + self.account_no[6,2].tr(account_no, "*") + " " + self.account_no[8,4].tr(account_no, "*")
+      _f +=  " " + self.account_no[0,4] + " " + self.account_no[4,2] + self.account_no[6,2].tr(account_no, "*") + " " + self.account_no[8,4].tr(account_no, "*")
     end
     if !_f.blank?
       _f = "IBAN " + _f
