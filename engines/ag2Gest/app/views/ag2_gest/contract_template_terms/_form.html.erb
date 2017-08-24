@@ -1,0 +1,17 @@
+<%= form_for(@contract_template_term) do |f| %>
+  <% if @contract_template_term.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@contract_template_term.errors.count, "error") %> prohibited this contract_template_term from being saved:</h2>
+
+      <ul>
+      <% @contract_template_term.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
