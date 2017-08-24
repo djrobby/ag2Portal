@@ -2,10 +2,10 @@ es:
   activerecord:
     models:
       contract_template_term:
-        zero:  Plantillas de contrato
-        one:   Plantilla de contrato
-        few:   Plantillas de contrato
-        other: Plantillas de contrato
+        zero:  Condiciones de contrato
+        one:   Condición de contrato
+        few:   Condiciones de contrato
+        other: Condiciones de contrato
     attributes:
       contract_template_term:
         description: "Descripción"

@@ -52,6 +52,8 @@ es:
         contracting_request_types: "Tipos de Solicitud"
         contracting_request_statuses: "Estados de Solicitud"
         contracting_request_document_types: "Tipos Documentación"
+        contract_templates: "Plantillas de Contrato"
+        contract_template_terms: "Condiciones de Contrato"
       service_point:
         service_points: "Puntos de Suministro"
         service_point_types: "Tipos de PS"

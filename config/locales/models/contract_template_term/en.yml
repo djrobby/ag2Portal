@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       contract_template_term:
-        zero:  Contract templates
-        one:   Contract template
-        few:   Contract templates
-        other: Contract templates
+        zero:  Contract terms
+        one:   Contract term
+        few:   Contract terms
+        other: Contract terms
     attributes:
       contract_template_term:
         description: "Description"

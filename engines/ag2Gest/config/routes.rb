@@ -353,6 +353,8 @@ Ag2Gest::Engine.routes.draw do
     resources :contracting_request_types
     resources :contracting_request_statuses
     resources :contracting_request_document_types
+    resources :contract_templates
+    resources :contract_template_terms
     #
     resources :tariff_schemes do
       post 'create_pct', on: :collection

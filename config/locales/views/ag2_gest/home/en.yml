@@ -52,6 +52,8 @@ en:
         contracting_request_types: "Request Types"
         contracting_request_statuses: "Request Statuses"
         contracting_request_document_types: "Documentation Types"
+        contract_templates: "Contract Templates"
+        contract_template_terms: "Contract Terms"
       service_point:
         service_points: "Supply Points"
         service_point_types: "SP Types"
