@@ -39,13 +39,44 @@ report.page.values(company_name: @contracting_request.project.company.name,
 				   )
 
 # Page header
-var_contract_date = @water_supply_contract.contract_date.strftime("%d/%m/%Y") unless @water_supply_contract.contract_date.blank?
-report.page.values(form_title: I18n.t("activerecord.models.water_supply_contract.one"),
-				   request_no_c: I18n.t("activerecord.attributes.water_supply_contract.code") + ":",
+if @contracting_request.contracting_request_type_id == 2
+	var_title = I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation")
+else
+	var_title = I18n.t("activerecord.models.water_supply_contract.one")
+end
+
+report.page.values(form_title: var_title,
+				   request_no_c: I18n.t("activerecord.attributes.contracting_request.request_no") + " :",
 				   request_no: @water_supply_contract.contracting_request.full_no,
-				   request_date_c: I18n.t("activerecord.attributes.contracting_request.request_date") + ":",
-				   request_date: var_contract_date
+				   change_owner_c: I18n.t("activerecord.attributes.contracting_request.type") + " :",
+				   change_owner: @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? I18n.t("ag2_gest.contracting_requests.report.change_c") : I18n.t("activerecord.attributes.water_supply_contract.change_c_up")
 				  )
+#
+# Special Condition
+report.page.values(special_condition_c: I18n.t("activerecord.attributes.water_supply_contract.special_condition_c"))
+if !@contracting_request.project.water_supply_contract_template.blank?
+	terms = @contracting_request.project.water_supply_contract_template.contract_template_terms.particular_terms
+	terms_items = ""
+	terms.each do |a|
+		terms_items += a.term_no + " " + a.description + "\r\n"
+	end
+	report.page.values(special_condition: terms_items)
+elsif !@contracting_request.project.office.water_supply_contract_template.blank?
+	terms = @contracting_request.project.office.water_supply_contract_template.contract_template_terms.particular_terms
+	terms_items = ""
+	terms.each do |a|
+		terms_items += a.term_no + " " + a.description + "\r\n"
+	end
+	report.page.values(special_condition: terms_items)
+elsif !@contracting_request.project.company.water_supply_contract_template.blank?
+	terms = @contracting_request.project.company.water_supply_contract_template.contract_template_terms.particular_terms
+	terms_items = ""
+	terms.each do |a|
+		terms_items += a.term_no + " " + a.description + "\r\n"
+	end
+	report.page.values(special_condition: terms_items)
+end
+#
 # Page footer
 var_full_date = I18n.l(@water_supply_contract.contract_date, format: :long_whit_day) unless @water_supply_contract.contract_date.blank?
 report.page.values(printed_at: Time.now,
@@ -55,15 +86,13 @@ report.page.values(printed_at: Time.now,
 				   full_date: @contracting_request.project.company.town.name + ", " + var_full_date.to_s,
 				   company_sign: I18n.t("activerecord.attributes.water_supply_contract.company_sign"),
 				   subscriber_sign: I18n.t("activerecord.attributes.water_supply_contract.subscriber_sign"),
-				   special_condition_c: I18n.t("activerecord.attributes.water_supply_contract.special_condition_c"),
-				   special_condition: I18n.t("activerecord.attributes.water_supply_contract.special_condition") + @contracting_request.contracting_request_type.description.upcase + I18n.t("activerecord.attributes.water_supply_contract.special_condition2")
-				   )
+				   r_company_sign: @contracting_request.project.office.r_first_name.to_s + " " + @contracting_request.project.office.r_last_name.to_s + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_6") + " " + @contracting_request.project.office.r_fiscal_id.to_s + "\r\n" + @contracting_request.project.office.r_position.to_s,
+				   r_company_sign_lopd: I18n.t("activerecord.attributes.water_supply_contract.lopd") + ": " + I18n.t("activerecord.attributes.water_supply_contract.lopd_2")
+					)
 #
 # Lists
 if @contracting_request.contracting_request_type_id == 2
 	var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.subscriber_id).where('client_id != ?', @water_supply_contract.client_id).order(:contract_date)
-		report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation").upcase
-		)
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
 				   					 request_no_master: var_master.last.contracting_request.full_no,
@@ -73,7 +102,7 @@ if @contracting_request.contracting_request_type_id == 2
 									 old_fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
 									 old_fiscal_id: var_master.last.client.fiscal_id,
 									 old_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
-									 old_name: var_master.last.client.full_name,
+									 old_name: var_master.last.client.to_name,
 									 old_street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
 									 old_street: var_master.last.client.address_1,
 									 old_phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
@@ -81,31 +110,36 @@ if @contracting_request.contracting_request_type_id == 2
 									 old_zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
 									 old_zipcode: var_master.last.client.address_2,
 			   						)
-	end
-	if !var_master.last.subscriber.total_debt_unpaid.blank?
-		report.layout.config.list(:default) do |c|
-		# On list footer insertion
-			c.events.on :footer_insert do |e|
-			# Display page sutotals
-				e.section.item(:debt_subrogation).value "* " + I18n.t("activerecord.attributes.water_supply_contract.debt_subrogation") + ":"
-				e.section.item(:debt).value number_with_precision(var_master.last.subscriber.total_debt_unpaid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		if !var_master.last.subscriber.total_debt_unpaid.blank?
+			report.layout.config.list(:default) do |c|
+			# On list footer insertion
+				c.events.on :footer_insert do |e|
+				# Display page sutotals
+					e.section.item(:debt_subrogation).value "* " + I18n.t("activerecord.attributes.water_supply_contract.debt_subrogation") + ":"
+					e.section.item(:debt).value number_with_precision(var_master.last.subscriber.total_debt_unpaid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				end
 			end
+			report.page.item(:special_condition_subrogation).style(:bold, true).value(" *" + I18n.t("activerecord.attributes.water_supply_contract.special_condition_subrogation"))
 		end
-		report.page.item(:special_condition_subrogation).style(:bold, true).value(" *" + I18n.t("activerecord.attributes.water_supply_contract.special_condition_subrogation"))
 	end
 elsif @contracting_request.contracting_request_type_id == 4
 	var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
-		report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase)
-
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
 				   			request_no_master: var_master.first.contracting_request.full_no)
 	end
-else
-	report.page.values(contract_title: I18n.t("activerecord.attributes.water_supply_contract.title_contract").upcase)
 end
 #
-#
+# general_conditioncontract_service_c
+if @contracting_request.contracting_request_type_id == 2
+	report.page.values(contract_service_c: I18n.t("activerecord.attributes.water_supply_contract.contract_service_subrogation"),
+					   contract_remark: I18n.t("activerecord.attributes.water_supply_contract.contract_remark_subr") + I18n.t("activerecord.attributes.water_supply_contract.contract_service_subrogation") + I18n.t("activerecord.attributes.water_supply_contract.contract_remark_2") + @contracting_request.project.company.name + I18n.t("activerecord.attributes.water_supply_contract.company_text_3") + " " + @contracting_request.project.company.fiscal_id + I18n.t("activerecord.attributes.water_supply_contract.company_text_8") + " " + @contracting_request.project.company.town.name + ".")
+else
+	report.page.values(contract_service_c: I18n.t("activerecord.attributes.water_supply_contract.contract_service"),
+					   contract_remark: I18n.t("activerecord.attributes.water_supply_contract.contract_remark") + I18n.t("activerecord.attributes.water_supply_contract.contract_service") + I18n.t("activerecord.attributes.water_supply_contract.contract_remark_2") + @contracting_request.project.company.name + I18n.t("activerecord.attributes.water_supply_contract.company_text_3") + " " + @contracting_request.project.company.fiscal_id + I18n.t("activerecord.attributes.water_supply_contract.company_text_8") + " " + @contracting_request.project.company.town.name + ".")
+end
+
+
 var_array = ""
 ContractedTariff.where(water_supply_contract_id: @water_supply_contract.id).each do |t|
 	if t.tariff.billable_item.biller_id == t.water_supply_contract.contracting_request.project.company_id
@@ -119,61 +153,71 @@ var_array
 end
 
 var_billable_concept_array = var_array.split("-")
+var_billable_concept_array_can = var_billable_concept_array -= %w{CAN} 
 var_billable_concept_array_destroy = var_billable_concept_array -= %w{SUM SAN DEP} 
+var_img = "app/assets/images/icon/glyph/black/ok.png"
 
 
-var_sum = var_array.split("-").include? "SUM" 
-var_sum_img = var_sum == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
-var_san = var_array.split("-").include? "SAN"
-var_san_img = var_san == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
-var_dep = var_array.split("-").include? "DEP"
-var_dep_img = var_dep == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
-var_other_img = !var_billable_concept_array_destroy.blank? ? "app/assets/images/icon/glyph/black/ok.png" : ""
+arr = []
+i = -1
 
-var_change_owner_img = @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? "app/assets/images/icon/glyph/black/ok.png" : ""
+var_billable_concept_array_can.each do |vbca|
+	i += 1
+	if vbca == "SUM" || vbca == "SAN" || vbca == "DEP"
+		arr[i] = BillableConcept.where("code = ?",vbca).first.name
+	else
+		arr[i] = I18n.t("ag2_gest.contracting_requests.report.other_c")
+	end
+end
+
+arr = arr.map do |e|
+  if e == "Suministro"
+    I18n.t("ag2_gest.contracting_requests.report.abast_c")
+  else
+    e
+  end
+end
+
+
 #
 # details
-if var_sum_img == ""
-	report.page.item(:sum).hide
-	report.page.item(:sum_img).hide
-	report.page.item(:sum_border).hide
+if arr[0] == nil
+	report.page.item(:cs1).hide
+	report.page.item(:cs1_img).hide
+	report.page.item(:cs1_border).hide
 else
-	report.page.values(sum: I18n.t("ag2_gest.contracting_requests.report.abast_c"),
-										 sum_img: var_sum_img
+	report.page.values(cs1: arr[0] ,
+					   cs1_img: var_img
+					   )
+end
+if arr[1] == nil
+	report.page.item(:cs2).hide
+	report.page.item(:cs2_img).hide
+	report.page.item(:cs2_border).hide
+else
+	report.page.values(cs2: arr[1] ,
+						cs2_img: var_img
 						)
 end
-if var_san_img == ""
-	report.page.item(:san).hide
-	report.page.item(:san_img).hide
-	report.page.item(:san_border).hide
+if arr[2] == nil
+	report.page.item(:cs3).hide
+	report.page.item(:cs3_img).hide
+	report.page.item(:cs3_border).hide
 else
-	report.page.values(san: I18n.t("ag2_gest.contracting_requests.report.san_c"),
-						san_img: var_san_img
+	report.page.values(cs3: arr[2] ,
+						cs3_img: var_img
 						)
 end
-if var_dep_img == ""
-	report.page.item(:dep).hide
-	report.page.item(:dep_img).hide
-	report.page.item(:dep_border).hide				   
+if arr[3] == nil
+	report.page.item(:cs4).hide
+	report.page.item(:cs4_img).hide
+	report.page.item(:cs4_border).hide
 else
-	report.page.values(dep: I18n.t("ag2_gest.contracting_requests.report.dep_c"),
-						dep_img: var_dep_img
-						)
-end
-if var_other_img == ""
-	report.page.item(:other).hide
-	report.page.item(:other_img).hide
-	report.page.item(:other_border).hide	
-else
-	report.page.values(other: I18n.t("ag2_gest.contracting_requests.report.other_c") + " ( " + var_billable_concept_array_destroy.join(', ') + " )",
-						other_img: var_other_img
+	report.page.values(cs4: arr[3] ,
+						cs4_img: var_img
 						)
 end
 
-
-report.page.values(change_owner: I18n.t("ag2_gest.contracting_requests.report.change_c"),
-				   change_owner_img: var_change_owner_img
-				   )
 #
 # r_client
 report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_entity_description"),
@@ -182,16 +226,7 @@ report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_enti
 									 r_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
 									 r_name: @contracting_request.entity_info,
 									 r_remark: "* " + I18n.t("activerecord.attributes.water_supply_contract.r_remark")
-									 )
-#
-# company_data
-office_name_contract =  I18n.t("activerecord.attributes.water_supply_contract.office_name_contract") + @contracting_request.project.company.town.name
-first_company_data = I18n.t("activerecord.attributes.water_supply_contract.company_text") + " " + @contracting_request.project.company.name + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_1") + " " + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_2") + " " + @contracting_request.project.company.town.name + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_3") + " " + @contracting_request.project.company.fiscal_id + I18n.t("activerecord.attributes.water_supply_contract.company_text_4") + " " + @contracting_request.project.company.address_1 + @contracting_request.project.company.address_2
-
-second_company_data = I18n.t("activerecord.attributes.water_supply_contract.company_text_5") + " " + @contracting_request.project.office.r_first_name.to_s + " " + @contracting_request.project.office.r_last_name.to_s + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_6") + " " + @contracting_request.project.office.r_fiscal_id.to_s + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_7") + " " + @contracting_request.project.office.r_position.to_s
-
-report.page.values(company: @contracting_request.project.office.r_first_name.to_s.blank? ? first_company_data + "." : first_company_data + second_company_data + ".")
-							 
+									 )							 
 #
 # client
 report.page.values(client_c: I18n.t("activerecord.attributes.water_supply_contract.info_contract"),
@@ -200,7 +235,7 @@ report.page.values(client_c: I18n.t("activerecord.attributes.water_supply_contra
 									 fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
 									 fiscal_id: @contracting_request.client.fiscal_id,
 									 name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
-									 name: @contracting_request.try(:client).try(:full_name),
+									 name: @contracting_request.try(:client).try(:to_name),
 									 street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
 									 street: @contracting_request.try(:client).try(:address_1),
 									 phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
@@ -251,7 +286,7 @@ report.page.values(sp_c: I18n.t("activerecord.attributes.water_supply_contract.i
 									 tariff_type_c: I18n.t("activerecord.attributes.contracting_request.tariff_type") + ": ",
 									 tariff_type: @tariff_type,
 									 min_pressure_c: I18n.t("activerecord.attributes.water_supply_contract.min_pressure") + ": ",
-									 min_pressure: @water_supply_contract.try(:max_pressure),
+									 min_pressure: @water_supply_contract.try(:min_pressure),
 									 max_pressure_c: I18n.t("activerecord.attributes.water_supply_contract.max_pressure") + ": ",
 									 max_pressure: @water_supply_contract.try(:max_pressure),
 									 info_meter: I18n.t("activerecord.attributes.water_supply_contract.info_meter"),
@@ -266,26 +301,21 @@ report.page.values(sp_c: I18n.t("activerecord.attributes.water_supply_contract.i
 									 instalation_index_c: I18n.t("activerecord.attributes.contracting_request.initial_reading") + ":",
 									 instalation_index: @contracting_request.try(:subscriber).try(:meter_details).try(:last).try(:installation_reading)
 									 )
-#
-# contract term
-report.page.values(contract_term_c: I18n.t("activerecord.attributes.water_supply_contract.contract_term"),
-				   contract_term: @water_supply_contract.try(:contract_term).capitalize )
 #								 
 #
-# pay method
-var_client_bank = ClientBankAccount.where(subscriber_id: @water_supply_contract.subscriber_id,ending_at: nil)
-var_client_bank_full = var_client_bank.first.try(:p_format_hiden_account)
-if var_client_bank.blank?
-	var_client_bank_full = @water_supply_contract.client.payment_method.to_label
-end
-report.page.values(pay_method: I18n.t("activerecord.models.payment_method.one"),
-									pay_bank: var_client_bank_full
-									)
+# contract_term
+report.page.values(contract_term_c: I18n.t("activerecord.attributes.water_supply_contract.contract_term") + " :",
+				   contract_term: @water_supply_contract.try(:contract_term).blank? ? @water_supply_contract.try(:contract_term) : @water_supply_contract.try(:contract_term).capitalize)
 
 #
 #
 # Factura
 #
+var_client_bank = ClientBankAccount.where(subscriber_id: @water_supply_contract.subscriber_id,ending_at: nil)
+var_client_bank_full = var_client_bank.first.try(:p_format)
+var_client_bank_titular = var_client_bank.first.try(:holder_name)
+var_client_bank_nif = var_client_bank.first.try(:holder_fiscal_id)
+
 if !@water_supply_contract.bill.blank?
 report.layout.config.list(:default) do |c|
 	# On list page footer insertion
@@ -293,6 +323,17 @@ report.layout.config.list(:default) do |c|
 		# Display page sutotals
 		e.section.item(:total_c).value(I18n.t("activerecord.attributes.water_supply_contract.total_pay") + ":")
 		e.section.item(:total).value number_with_precision(@water_supply_contract.bill.invoices.first.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @water_supply_contract.bill.total.blank?
+		e.section.item(:fact_condition_c).value( I18n.t("activerecord.attributes.water_supply_contract.fact_condition"))
+		e.section.item(:billing_frequency_c).value (I18n.t("activerecord.attributes.water_supply_contract.billing_frequency_c") + ": ")
+		e.section.item(:billing_frequency).value @tariff_type_billing_frequency.tariff.billing_frequency.name
+		e.section.item(:pay_method_c).value (I18n.t("activerecord.models.payment_method.one") + ": ")
+		e.section.item(:pay_method).value !var_client_bank_full.blank? ? I18n.t("activerecord.attributes.water_supply_contract.bank") : I18n.t("activerecord.attributes.water_supply_contract.cash")
+		e.section.item(:pay_sepa_order).value !var_client_bank_full.blank? ? I18n.t("activerecord.attributes.water_supply_contract.pay_sepa_order") : ""
+		e.section.item(:pay_bank).value var_client_bank_full
+		e.section.item(:pay_bank_tit_c).value !var_client_bank_full.blank? ? I18n.t("activerecord.attributes.supplier_bank_account.holder_name") + " :" : ""
+		e.section.item(:pay_bank_tit).value var_client_bank_titular
+		e.section.item(:pay_bank_nif_c).value !var_client_bank_full.blank? ? I18n.t("activerecord.attributes.supplier_bank_account.holder_fiscal_id_c") + " :" : ""
+		e.section.item(:pay_bank_nif).value var_client_bank_nif
 	end
 end
 #
@@ -345,12 +386,21 @@ report.page.values(company_name: @contracting_request.project.company.name,
 				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @contracting_request.project.company.fiscal_id
 				   )
 # Page header
-var_contract_date = @water_supply_contract.contract_date.strftime("%d/%m/%Y") unless @water_supply_contract.contract_date.blank?
-report.page.values(form_title: I18n.t("activerecord.models.water_supply_contract.one"),
-				   request_no_c: I18n.t("activerecord.attributes.water_supply_contract.code") + ":",
+if @contracting_request.contracting_request_type_id == 2
+var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.subscriber_id).where('client_id != ?', @water_supply_contract.client_id).order(:contract_date)
+	if !var_master.last.blank?
+		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
+			   					 request_no_master: var_master.last.contracting_request.full_no)
+	end
+	var_title = I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation")
+else
+	var_title = I18n.t("activerecord.models.water_supply_contract.one")
+end
+report.page.values(form_title: var_title,
+				   request_no_c: I18n.t("activerecord.attributes.contracting_request.request_no") + " :",
 				   request_no: @water_supply_contract.contracting_request.full_no,
-				   request_date_c: I18n.t("activerecord.attributes.contracting_request.request_date") + ":",
-				   request_date: var_contract_date
+				   change_owner_c: I18n.t("activerecord.attributes.contracting_request.type") + " :",
+				   change_owner: @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? I18n.t("ag2_gest.contracting_requests.report.change_c") : I18n.t("activerecord.attributes.water_supply_contract.change_c_up")
 				  )
 # Page footer
 report.page.values(printed_at: Time.now,
@@ -358,44 +408,92 @@ report.page.values(printed_at: Time.now,
 				   pd: I18n.t("every_report.pd"),
 				   currency_note: @contracting_request.project.company.invoice_footer,
 				   )
+
 #
+#_con1 = "1. " + I18n.t("activerecord.attributes.water_supply_contract._con1")
+#_con2 = "2. " + I18n.t("activerecord.attributes.water_supply_contract._con2")
+#_con3 = "3. " + I18n.t("activerecord.attributes.water_supply_contract._con3")
+#_con4 = "4. " + I18n.t("activerecord.attributes.water_supply_contract._con4")
+#_con5 = "5. " + I18n.t("activerecord.attributes.water_supply_contract._con5")
+#_con6 = "6. " + I18n.t("activerecord.attributes.water_supply_contract._con6")
+#_con7 = "7. " + I18n.t("activerecord.attributes.water_supply_contract._con7")
+#_con8 = "8. " + I18n.t("activerecord.attributes.water_supply_contract._con8")
+#_con9 = "9. " + I18n.t("activerecord.attributes.water_supply_contract._con9")
+#_con10 = "10. " + I18n.t("activerecord.attributes.water_supply_contract._con10")
+#_con11 = "11. " + I18n.t("activerecord.attributes.water_supply_contract._con11")
+#_con12 = "12. " + I18n.t("activerecord.attributes.water_supply_contract._con12")
+#_con13 = "13. " + I18n.t("activerecord.attributes.water_supply_contract._con13")
+#_con14 = "14. " + I18n.t("activerecord.attributes.water_supply_contract._con14")
+#_con15 = "15. " + I18n.t("activerecord.attributes.water_supply_contract._con15")
+#_con16 = "16. " + I18n.t("activerecord.attributes.water_supply_contract._con16")
+#_con17 = "17. " + I18n.t("activerecord.attributes.water_supply_contract._con17")
+#_con18 = "18. " + I18n.t("activerecord.attributes.water_supply_contract._con18")
+#_con19 = "19. " + I18n.t("activerecord.attributes.water_supply_contract._con19")
+#_con20 = "20. " + I18n.t("activerecord.attributes.water_supply_contract._con20")
+#_con21 = "21. " + I18n.t("activerecord.attributes.water_supply_contract._con21")
+#_con22 = "22. " + I18n.t("activerecord.attributes.water_supply_contract._con22")
+#_con23 = "23. " + I18n.t("activerecord.attributes.water_supply_contract._con23")
+#_con24 = "24. " + I18n.t("activerecord.attributes.water_supply_contract.special_condition") + @contracting_request.contracting_request_type.description.upcase + I18n.t("activerecord.attributes.water_supply_contract.special_condition2")
+
+
+#
+# General Condition
 report.page.values(general_condition: I18n.t("activerecord.attributes.water_supply_contract.general_condition"))
-#
-office_contract =  @contracting_request.project.company.town.name
-office_name_contract =  I18n.t("activerecord.attributes.water_supply_contract.office_name_contract") + @contracting_request.project.company.town.name
-addres_name_contract = @contracting_request.project.company.address_1 + " " + @contracting_request.project.company.address_2
-mail_name_contract = @contracting_request.project.company.email
 
-#
-_con1 = "1. " + I18n.t("activerecord.attributes.water_supply_contract._con1")
-_con2 = "2. " + I18n.t("activerecord.attributes.water_supply_contract._con2") + office_contract + I18n.t("activerecord.attributes.water_supply_contract._con2_1")
-_con3 = "3. " + I18n.t("activerecord.attributes.water_supply_contract._con3") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con3_1") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con3_2")
-_con4 = "4. " + I18n.t("activerecord.attributes.water_supply_contract._con4")
-_con5 = "5. " + I18n.t("activerecord.attributes.water_supply_contract._con5") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con5_1") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con5_2") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con5_3")
-_con6 = "6. " + I18n.t("activerecord.attributes.water_supply_contract._con6")
-_con7 = "7. " + I18n.t("activerecord.attributes.water_supply_contract._con7") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con7_1")
-_con8 = "8. " + I18n.t("activerecord.attributes.water_supply_contract._con8")
-_con9 = "9. " + I18n.t("activerecord.attributes.water_supply_contract._con9") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con9_1")
-_con10 = "10. " + I18n.t("activerecord.attributes.water_supply_contract._con10") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con10_1")  + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con10_2")
-_con11 = "11. " + I18n.t("activerecord.attributes.water_supply_contract._con11")
-_con12 = "12. " + I18n.t("activerecord.attributes.water_supply_contract._con12")
-_con13 = "13. " + I18n.t("activerecord.attributes.water_supply_contract._con13")
-_con14 = "14. " + I18n.t("activerecord.attributes.water_supply_contract._con14") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con14_1")
-_con15 = "15. " + I18n.t("activerecord.attributes.water_supply_contract._con15")
-_con16 = "16. " + I18n.t("activerecord.attributes.water_supply_contract._con16")
+character_term = 0
+character_term_total = 6000
+general_terms_items = ""
+general_terms_items_2 = ""
 
+if !@contracting_request.project.water_supply_contract_template.blank?
+	general_terms = @contracting_request.project.water_supply_contract_template.contract_template_terms.general_terms
 
-report.page.values(general_condition1: _con1 + "\r\n" + _con2 + "\r\n" + _con3 + "\r\n" + _con4 + "\r\n" + _con5 + "\r\n" + _con6 + "\r\n" + _con7 + "\r\n" + _con8 + "\r\n" + _con9 + "\r\n" + _con10 + "\r\n" + _con11 + "\r\n" + _con12 + "\r\n" + _con13 + "\r\n" + _con14 + "\r\n" + _con15 + "\r\n" + _con16)
-#
-#
-_con17 = "17. " + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con17")
-_con18 = "18. " + I18n.t("activerecord.attributes.water_supply_contract._con18") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con18_1") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con18_2")
-_con19 = "19. " + I18n.t("activerecord.attributes.water_supply_contract._con19") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con19_1")
-_con20 = "20. " + I18n.t("activerecord.attributes.water_supply_contract._con20") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con20_1")
-_con21 = "21. " + I18n.t("activerecord.attributes.water_supply_contract._con21")
-_con22 = "22. " + I18n.t("activerecord.attributes.water_supply_contract._con22") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con22_1")
-_con23 = "23. " + I18n.t("activerecord.attributes.water_supply_contract._con23") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con23_1") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con23_2")
-_con24 = "24. " + I18n.t("activerecord.attributes.water_supply_contract._con24") + office_name_contract + I18n.t("activerecord.attributes.water_supply_contract._con24_1")
-_con25 = "25. " + I18n.t("activerecord.attributes.water_supply_contract._con25") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_1") + addres_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_2") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_3") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_4") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_5") + mail_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_6") + office_name_contract + " " + I18n.t("activerecord.attributes.water_supply_contract._con25_7")
+	general_terms.each do |gt|
+		_var = gt.term_no + " " + gt.description
+		_size = character_term + _var.size
+			
+			if _size < character_term_total
+				general_terms_items += _var + "\r\n"
+				character_term = general_terms_items.size
+			else
+				general_terms_items_2 += _var + "\r\n"
+				character_term += general_terms_items_2.size
+			end
+	end
+	report.page.values(general_condition1: general_terms_items)
+	report.page.values(general_condition2: general_terms_items_2)
+elsif !@contracting_request.project.office.water_supply_contract_template.blank?
+	general_terms = @contracting_request.project.office.water_supply_contract_template.contract_template_terms.general_terms
 
-report.page.values(general_condition2: _con17 + "\r\n" + _con18 + "\r\n" + _con19 + "\r\n" + _con20 + "\r\n" + _con21 + "\r\n" + _con22 + "\r\n" + _con23 + "\r\n" + _con24 + "\r\n" + _con25)
+	general_terms.each do |gt|
+		_var = gt.term_no + " " + gt.description
+		_size = character_term + _var.size
+			
+			if _size < character_term_total
+				general_terms_items += _var + "\r\n"
+				character_term = general_terms_items.size
+			else
+				general_terms_items_2 += _var + "\r\n"
+				character_term += general_terms_items_2.size
+			end
+	end
+	report.page.values(general_condition1: general_terms_items)
+	report.page.values(general_condition2: general_terms_items_2)
+elsif !@contracting_request.project.company.water_supply_contract_template.blank?
+	general_terms = @contracting_request.project.company.water_supply_contract_template.contract_template_terms.general_terms
+
+	general_terms.each do |gt|
+		_var = gt.term_no + " " + gt.description
+		_size = character_term + _var.size
+			
+			if _size < character_term_total
+				general_terms_items += _var + "\r\n"
+				character_term = general_terms_items.size
+			else
+				general_terms_items_2 += _var + "\r\n"
+				character_term += general_terms_items_2.size
+			end
+	end
+	report.page.values(general_condition1: general_terms_items)
+	report.page.values(general_condition2: general_terms_items_2)
+end

@@ -358,7 +358,7 @@ class ContractingRequest < ActiveRecord::Base
       region_id: client_region_id,
       country_id: client_country_id,
       created_by: created_by,
-      payment_method_id: 1
+      payment_method_id: account_no.blank? ? 1 : 6
     )
     if self.contracting_request_type_id != ContractingRequestType::CANCELLATION
       client.client_bank_accounts.where(ending_at: nil, subscriber_id: subscriber_id).update_all(ending_at: request_date, updated_by: self.created_by)
@@ -437,6 +437,9 @@ class ContractingRequest < ActiveRecord::Base
                               reading_sequence: old_subscriber.reading_sequence,
                               cadastral_reference: old_subscriber.cadastral_reference,
                               gis_id: old_subscriber.gis_id,
+                              min_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.min_pressure : nil,
+                              max_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.max_pressure : nil,
+                              contract_term: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_term : nil,
                               remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
                               caliber_id: old_subscriber.meter.caliber_id,
                               endowments: old_subscriber.endowments,
@@ -481,6 +484,9 @@ class ContractingRequest < ActiveRecord::Base
                               reading_sequence: old_subscriber.reading_sequence,
                               cadastral_reference: old_subscriber.cadastral_reference,
                               gis_id: old_subscriber.gis_id,
+                              min_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.min_pressure : nil,
+                              max_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.max_pressure : nil,
+                              contract_term: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_term : nil,
                               remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
                               caliber_id: old_subscriber.meter.caliber_id,
                               #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
@@ -533,6 +539,9 @@ class ContractingRequest < ActiveRecord::Base
                               reading_sequence: old_subscriber.reading_sequence,
                               cadastral_reference: old_subscriber.cadastral_reference,
                               gis_id: old_subscriber.gis_id,
+                              min_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.min_pressure : nil,
+                              max_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.max_pressure : nil,
+                              contract_term: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_term : nil,
                               remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
                               caliber_id: old_subscriber.meter.caliber_id,
                               #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id,
@@ -585,6 +594,9 @@ class ContractingRequest < ActiveRecord::Base
                               reading_sequence: old_subscriber.reading_sequence,
                               cadastral_reference: old_subscriber.cadastral_reference,
                               gis_id: old_subscriber.gis_id,
+                              min_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.min_pressure : nil,
+                              max_pressure: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.max_pressure : nil,
+                              contract_term: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_term : nil,
                               remarks: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.remarks : nil,
                               caliber_id: old_subscriber.meter.caliber_id,
                               endowments: old_subscriber.endowments,

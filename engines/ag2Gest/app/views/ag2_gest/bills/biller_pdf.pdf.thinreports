@@ -194,7 +194,7 @@ else
 end
 # payment_data
 var_client_bank = ClientBankAccount.where(subscriber_id: @biller_printer.subscriber_id,ending_at: nil)
-var_client_bank_full = var_client_bank.first.p_format_hiden_account unless var_client_bank.blank?
+var_client_bank_full = var_client_bank.first.p_format_hidden_account unless var_client_bank.blank?
 #
 report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal") + ": ",
 				   loc_fiscal: @biller_printer.project.company.fiscal_id,

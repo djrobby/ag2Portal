@@ -219,6 +219,20 @@ class Client < ActiveRecord::Base
     _ret
   end
 
+  def address_3
+    _ret = ""
+    if !zipcode.blank?
+      _ret += zipcode.zipcode + " "
+    end
+    if !town.blank?
+      _ret += town.name + ", "
+    end
+    if !province.blank?
+      _ret += province.name + " "
+    end
+    _ret
+  end
+
   def floor_human
     _ret = floor
     _floor_is_numeric = true if Float(floor) rescue false

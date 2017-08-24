@@ -51,6 +51,7 @@ module Ag2Gest
                                                 :contracting_subscriber_pdf,
                                                 :refresh_status,
                                                 :contract_pdf,
+                                                :sepa_pdf,
                                                 :serpoint_generate_no]
     # Helper methods for
     helper_method :sort_column
@@ -156,13 +157,33 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
       _tariff_type = []
-      @water_supply_contract.contracted_tariffs.each do |tt|
+      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !_tariff_type.include? tt.tariff.tariff_type.name
             _tariff_type = _tariff_type << tt.tariff.tariff_type.name
           end
       end
       @tariff_type = _tariff_type.join(", ")
+      @tariff_type_billing_frequency = @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").first
       title = t("activerecord.models.water_supply_contract.one")
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
+
+    def sepa_pdf
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_supply_contract = @contracting_request.water_supply_contract
+      _tariff_type = []
+      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
+          if !_tariff_type.include? tt.tariff.tariff_type.name
+            _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+          end
+      end
+      @tariff_type = _tariff_type.join(", ")
+      @tariff_type_billing_frequency = @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").first
+      title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
       respond_to do |format|
         format.pdf {
           send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
@@ -1302,13 +1323,13 @@ module Ag2Gest
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = current_projects
       @projects_ids = current_projects_ids
-      @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id)
+      @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id).order("billable_items.billable_concept_id")
       #@billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
-      @billable_concept_availables = BillableItem.joins(:billable_concept,:regulation).where('(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND billable_concepts.billable_document = 1', Date.today).belongs_to_project(@contracting_request.project_id)
+      @billable_concept_availables = BillableItem.joins(:billable_concept,:regulation).where('(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND billable_concepts.billable_document = 1 AND billable_items.project_id = ?', Date.today,@contracting_request.project_id).order("billable_concepts.id")
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       _tariff_type = []
-      @water_supply_contract.contracted_tariffs.each do |tt|
+      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !_tariff_type.include? tt.tariff.tariff_type.name
             _tariff_type = _tariff_type << tt.tariff.tariff_type.name
           end
@@ -1316,7 +1337,7 @@ module Ag2Gest
       @tariff_type = _tariff_type.join(", ")
 
       tariff_type_select = []
-      @water_supply_contract.contracted_tariffs.each do |tt|
+      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !tariff_type_select.include? tt.tariff.tariff_type.id
             tariff_type_select = tariff_type_select << tt.tariff.tariff_type.id
           end
@@ -1324,7 +1345,7 @@ module Ag2Gest
       @tariff_type_select = tariff_type_select
 
       _billable_concept = []
-      @water_supply_contract.contracted_tariffs.each do |tt|
+      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !_billable_concept.include? tt.tariff.billable_item.id
             _billable_concept = _billable_concept << tt.tariff.billable_item.id
           end
