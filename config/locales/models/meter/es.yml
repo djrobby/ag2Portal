@@ -36,3 +36,6 @@ es:
         route: "Ruta"
         is_installed_now: "¿Está instalado ahora?"
         report_title: "Contadores por Ruta"
+        master_meter: "Contador maestro"
+        master_meter_id: "Contador maestro"
+        child_meters: "Contadores secundarios"

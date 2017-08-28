@@ -36,4 +36,6 @@ en:
         route: "Route"
         is_installed_now: "Is installed now?"
         report_title: "Route Meters"
-
+        master_meter: "Master meter"
+        master_meter_id: "Master meter"
+        child_meters: "Child meters"

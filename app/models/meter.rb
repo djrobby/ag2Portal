@@ -8,12 +8,16 @@ class Meter < ActiveRecord::Base
   attr_accessible :expiry_date, :first_installation_date, :last_withdrawal_date, :manufacturing_date, :manufacturing_year,
                   :meter_code, :purchase_date,
                   :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :company_id, :office_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :master_meter_id
 
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
   has_many :readings
   has_many :subscribers
+
+  # Self join
+  has_many :child_meters, class_name: 'Meter', foreign_key: 'master_meter_id'
+  belongs_to :master_meter, class_name: 'Meter'
 
   has_paper_trail
 
@@ -59,6 +63,11 @@ class Meter < ActiveRecord::Base
     .where(w)
     .by_code
   }
+  scope :master_meters,
+    joins(:child_meters)
+    .select("meters.*")
+    .group("meters.meter_code")
+    .having("count(child_meters_meters.id) > 0")
 
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
@@ -119,10 +128,10 @@ class Meter < ActiveRecord::Base
     !subscribers.empty?
   end
 
+  # Shared meter
   def shared_coefficient
-    subscribers.count
+    subscribers.size
   end
-
   def is_shared?
     shared_coefficient > 1
   end
@@ -133,6 +142,14 @@ class Meter < ActiveRecord::Base
 
   def current_location
     active_detail.meter_location rescue nil
+  end
+
+  # Have child meters? (Is master?)
+  def have_child_meters?
+    child_meters.size > 0
+  end
+  def is_master?
+    have_child_meters?
   end
 
   #

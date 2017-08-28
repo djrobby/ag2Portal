@@ -49,57 +49,6 @@ class Reading < ActiveRecord::Base
   scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
   scope :by_id_desc, -> { order('id desc') }
 
-  #
-  # Class (self) user defined methods
-  #
-  def self.to_csv(array)
-    attributes = [I18n.t('activerecord.attributes.reading.reading_route_id'),
-                  I18n.t('activerecord.attributes.reading.sequence'),
-                  I18n.t('activerecord.attributes.reading.subscriber'),
-                  I18n.t('activerecord.attributes.reading.address'),
-                  I18n.t('activerecord.attributes.reading.meter'),
-                  I18n.t('activerecord.attributes.reading.billing_period_2'),
-                  I18n.t('activerecord.attributes.reading.reading_2_date'),
-                  I18n.t('activerecord.attributes.reading.reading_2_index'),
-                  I18n.t('activerecord.attributes.reading.reading_days'),
-                  I18n.t('activerecord.attributes.reading.consumption_2'),
-                  I18n.t('activerecord.attributes.reading.billing_period_1'),
-                  I18n.t('activerecord.attributes.reading.reading_1_date'),
-                  I18n.t('activerecord.attributes.reading.reading_1_index'),
-                  I18n.t('activerecord.attributes.reading.billing_period_id'),
-                  I18n.t('activerecord.attributes.reading.reading_date'),
-                  I18n.t('activerecord.attributes.reading.reading'),
-                  I18n.t('activerecord.attributes.reading.reading_days'),
-                  I18n.t('activerecord.attributes.reading.consumption'),
-                  I18n.t('activerecord.report.reading.incidences') ]
-    col_sep = I18n.locale == :es ? ";" : ","
-    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
-      csv << attributes
-      array.each do |reading|
-        csv << [  reading.try(:reading_route).try(:to_label),
-                  reading.reading_sequence,
-                  reading.try(:subscriber).try(:to_label),
-                  reading.try(:subscriber).try(:address_1),
-                  reading.try(:meter).try(:to_label),
-                  reading.reading_2.try(:billing_period).try(:period),
-                  reading.reading_2.try(:to_reading_date),
-                  reading.reading_2.try(:reading_index),
-                  reading.reading_2.try(:reading_days),
-                  reading.reading_2.try(:consumption_total_period),
-                  reading.reading_1.try(:billing_period).try(:period),
-                  reading.reading_1.try(:to_reading_date),
-                  reading.reading_1.try(:reading_index),
-                  reading.try(:billing_period).try(:period),
-                  reading.to_reading_date,
-                  reading.reading_index,
-                  reading.try(:reading_days),
-                  reading.try(:consumption_total_period),
-                  reading.reading_incidence_types.pluck(:name).join(", ")]
-        # csv << [ reading.try(:reading_route).try(:to_label),reading.reading_sequence, reading.try(:subscriber).try(:to_label), reading.try(:subscriber).try(:address_1), reading.try(:meter).try(:to_label), reading.try(:billing_period).try(:period),reading.reading_index_2,reading.reading_index_1,reading.reading_index,reading.consumption_total_period]
-      end
-    end
-  end
-
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
   end
@@ -185,7 +134,8 @@ class Reading < ActiveRecord::Base
   # Generates only one Prebill & associated invoices & items, based on current reading data
   #
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
-    cr = consumption_total_period   # consumption real
+    cr = consumption_total_period_to_invoice  # consumption to invoice
+    # cr = consumption_total_period   # consumption real
     ce = estimated_consumption      # consumption estimated
     co = 0                          # consumption other
     cf = cr + ce + co               # consumption invoiced
@@ -280,7 +230,8 @@ class Reading < ActiveRecord::Base
   # Generates non-bulk individual bill/invoice
   #
   def generate_bill(next_bill_no=nil,user_id=nil,operation_id=1,payday_limit=nil,invoice_date=nil)
-    cr = consumption_total_period   # consumption real
+    cr = consumption_total_period_to_invoice  # consumption to invoice
+    # cr = consumption_total_period   # consumption real
     ce = estimated_consumption      # consumption estimated
     co = 0                          # consumption other
     cf = cr + ce + co               # consumption invoiced
@@ -383,6 +334,13 @@ class Reading < ActiveRecord::Base
       total += reading[1].last.consumption
     end
     return total
+  end
+
+  #
+  # Consumption to invoice (by period)
+  #
+  def consumption_total_period_to_invoice
+    meter.is_shared? ? (consumption_total_period / meter.shared_coefficient).round : consumption_total_period
   end
 
   #
@@ -987,6 +945,57 @@ class Reading < ActiveRecord::Base
                       .where('tariffs.caliber_id = ?', _caliber)
                       .order('subscriber_tariffs.starting_at')
                       .last rescue nil
+    end
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [I18n.t('activerecord.attributes.reading.reading_route_id'),
+                  I18n.t('activerecord.attributes.reading.sequence'),
+                  I18n.t('activerecord.attributes.reading.subscriber'),
+                  I18n.t('activerecord.attributes.reading.address'),
+                  I18n.t('activerecord.attributes.reading.meter'),
+                  I18n.t('activerecord.attributes.reading.billing_period_2'),
+                  I18n.t('activerecord.attributes.reading.reading_2_date'),
+                  I18n.t('activerecord.attributes.reading.reading_2_index'),
+                  I18n.t('activerecord.attributes.reading.reading_days'),
+                  I18n.t('activerecord.attributes.reading.consumption_2'),
+                  I18n.t('activerecord.attributes.reading.billing_period_1'),
+                  I18n.t('activerecord.attributes.reading.reading_1_date'),
+                  I18n.t('activerecord.attributes.reading.reading_1_index'),
+                  I18n.t('activerecord.attributes.reading.billing_period_id'),
+                  I18n.t('activerecord.attributes.reading.reading_date'),
+                  I18n.t('activerecord.attributes.reading.reading'),
+                  I18n.t('activerecord.attributes.reading.reading_days'),
+                  I18n.t('activerecord.attributes.reading.consumption'),
+                  I18n.t('activerecord.report.reading.incidences') ]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |reading|
+        csv << [  reading.try(:reading_route).try(:to_label),
+                  reading.reading_sequence,
+                  reading.try(:subscriber).try(:to_label),
+                  reading.try(:subscriber).try(:address_1),
+                  reading.try(:meter).try(:to_label),
+                  reading.reading_2.try(:billing_period).try(:period),
+                  reading.reading_2.try(:to_reading_date),
+                  reading.reading_2.try(:reading_index),
+                  reading.reading_2.try(:reading_days),
+                  reading.reading_2.try(:consumption_total_period),
+                  reading.reading_1.try(:billing_period).try(:period),
+                  reading.reading_1.try(:to_reading_date),
+                  reading.reading_1.try(:reading_index),
+                  reading.try(:billing_period).try(:period),
+                  reading.to_reading_date,
+                  reading.reading_index,
+                  reading.try(:reading_days),
+                  reading.try(:consumption_total_period),
+                  reading.reading_incidence_types.pluck(:code).join(" ")]
+        # csv << [ reading.try(:reading_route).try(:to_label),reading.reading_sequence, reading.try(:subscriber).try(:to_label), reading.try(:subscriber).try(:address_1), reading.try(:meter).try(:to_label), reading.try(:billing_period).try(:period),reading.reading_index_2,reading.reading_index_1,reading.reading_index,reading.consumption_total_period]
+      end
     end
   end
 

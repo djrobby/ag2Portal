@@ -127,6 +127,11 @@ class WorkOrder < ActiveRecord::Base
     .where(w)
     .by_no
   }
+  scope :master_orders,
+    joins(:suborders)
+    .select("work_orders.*")
+    .group("work_orders.order_no")
+    .having("count(suborders_work_orders.id) > 0")
 
   # Callbacks
   before_destroy :check_for_dependent_records
@@ -319,9 +324,12 @@ class WorkOrder < ActiveRecord::Base
     suborders.unclosed_only.count > 0 ? true : false
   end
 
-  # Have suborders?
+  # Have suborders? (Is master?)
   def have_suborders?
-    suborders.size > 0 ? true : false
+    suborders.size > 0
+  end
+  def is_master?
+    have_suborders?
   end
 
   # Are there unclosed linked suborders?

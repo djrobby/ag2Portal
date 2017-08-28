@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170821101722) do
+ActiveRecord::Schema.define(:version => 20170828163909) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2071,11 +2071,13 @@ ActiveRecord::Schema.define(:version => 20170821101722) do
     t.integer  "updated_by"
     t.integer  "company_id"
     t.integer  "office_id"
+    t.integer  "master_meter_id"
   end
 
   add_index "meters", ["caliber_id"], :name => "index_meters_on_caliber_id"
   add_index "meters", ["company_id"], :name => "index_meters_on_company_id"
   add_index "meters", ["manufacturing_year"], :name => "index_meters_on_manufacturing_year"
+  add_index "meters", ["master_meter_id"], :name => "index_meters_on_master_meter_id"
   add_index "meters", ["meter_code"], :name => "index_meters_on_meter_code"
   add_index "meters", ["meter_model_id"], :name => "index_meters_on_meter_model_id"
   add_index "meters", ["meter_owner_id"], :name => "index_meters_on_meter_owner_id"
@@ -2577,16 +2579,6 @@ ActiveRecord::Schema.define(:version => 20170821101722) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
-  end
-
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -3692,19 +3684,6 @@ ActiveRecord::Schema.define(:version => 20170821101722) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
-  end
-
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
