@@ -119,6 +119,14 @@ class Meter < ActiveRecord::Base
     !subscribers.empty?
   end
 
+  def shared_coefficient
+    subscribers.count
+  end
+
+  def is_shared?
+    shared_coefficient > 1
+  end
+
   def active_detail
     meter_details.where(withdrawal_date: nil).order(:installation_date).last
   end
