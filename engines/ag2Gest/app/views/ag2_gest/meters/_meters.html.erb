@@ -30,7 +30,11 @@
   </thead>
   <tbody>
     <% @meters.each do |meter| %>
-    <tr>
+    <% if !meter.is_master? %>
+      <tr>
+    <% else %>
+      <tr class="attention-row">
+    <% end %>
       <td><%= link_to meter.try(:meter_code), ag2_gest.meter_path(meter) %></td>
       <td><% if meter.is_installed_now? %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></td>      
       <td><%= meter.try(:meter_model).try(:full_name) %></td>

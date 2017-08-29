@@ -91,6 +91,8 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @meter = Meter.new
+      @companies = companies_dropdown
+      @master_meter = master_meters_dropdown(nil)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -102,6 +104,8 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @meter = Meter.find(params[:id])
+      @companies = @meter.organization.blank? ? companies_dropdown : companies_dropdown_edit(@meter.organization)
+      @master_meter = master_meters_dropdown(@meter.id)
     end
 
     # POST /meters
@@ -233,7 +237,6 @@ module Ag2Gest
 
     private
 
-
     def sort_column
       Meter.column_names.include?(params[:sort]) ? params[:sort] : "meter_code"
     end
@@ -245,6 +248,44 @@ module Ag2Gest
         _numbers = _numbers << i.meter_code
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def master_meters_dropdown(_this = nil)
+      if !_this.blank?
+        # Not including current meter
+        if session[:office] != '0'
+          Meter.where('(office_id = ? OR (office_id IS NULL AND organization_id = ?)) AND id <> ?', session[:office].to_i, session[:organization].to_i, _this).by_code
+        elsif session[:company] != '0'
+          Meter.where('(company_id = ? OR (company_id IS NULL AND organization_id = ?)) AND id <> ?', session[:company].to_i, session[:organization].to_i, _this).by_code
+        else
+          session[:organization] != '0' ? Meter.where('organization_id = ? AND id <> ?', session[:organization].to_i, _this).by_code : Meter.where('id <> ?', _this).by_code
+        end
+      else
+        # All organization's meters
+        if session[:office] != '0'
+          Meter.where('office_id = ? OR (office_id IS NULL AND organization_id = ?)', session[:office].to_i, session[:organization].to_i).by_code
+        elsif session[:company] != '0'
+          Meter.where('company_id = ? OR (company_id IS NULL AND organization_id = ?)', session[:company].to_i, session[:organization].to_i).by_code
+        else
+          session[:organization] != '0' ? Meter.where(organization_id: session[:organization].to_i).by_code : Meter.by_code
+        end
+      end
+    end
+
+    def companies_dropdown
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
     end
 
     # Keeps filter state
