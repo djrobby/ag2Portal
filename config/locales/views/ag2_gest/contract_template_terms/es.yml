@@ -1,0 +1,24 @@
+es:
+  ag2_gest:
+    contract_template_terms:
+      index:
+        title: "Condiciones Contractuales"
+        btn_new: "Nueva Condicion Contractual"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
+        back_to_contract_template: "Volver a Plantillas de Contratos"
+      show:
+        title: "Condicion Contractual"
+        btn_new: "Nueva Condicion Contractual"
+        btn_edit: "Editar Condicion Contractual"
+        btn_delete: "Borrar Condicion Contractual"
+        return_to: "Volver a Condicion Contractual"
+      edit:
+        title: "Editar Condicion Contractual"
+        btn_show: "Ver Condicion Contractual"
+        update: "Actualizar Condicion Contractual"
+        show: "Mostrar"
+        back: "Atrás"
+      new:
+        title: "Nueva Condiciones Contractuales"
+      back_to_main_page: "Volver a Condiciones Contractuales"

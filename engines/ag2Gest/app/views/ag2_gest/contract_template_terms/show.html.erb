@@ -1,5 +1,41 @@
-<p id="notice"><%= notice %></p>
+<% session[:return_to_contract_template_term] = I18n.t('ag2_gest.contract_template_terms.show.return_to') %>
+<% session[:return_to_contract_template_term_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
+<%= render '/layouts/ag2_gest/contracttemplatetermsbreadcrumb' %>
 
-<%= link_to 'Edit', edit_contract_template_term_path(@contract_template_term) %> |
-<%= link_to 'Back', contract_template_terms_path %>
+<h3><%= t('.title')%></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.contract_template_term.id') %>:</td>
+      <td><%= @contract_template_term.try(:id) %></td>
+      <td><%= t('activerecord.models.contract_template.one') %>:</td>
+      <td><%= link_to @contract_template_term.try(:contract_template).try(:name), contract_template_path(@contract_template_term.contract_template) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.contract_template_term.term_type') %></td>
+      <td><%= ContractTemplateTerm::CONSTANTS.select{ |k,v| v == @contract_template_term.term_type }.first.first %></td>
+      <td><%= t('activerecord.attributes.contract_template_term.term_no') %></td>
+      <td><%= @contract_template_term.try(:term_no) %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @contract_template_term } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @contract_template_term } %>
+  </tbody>
+</table>
+
+<!-- Body -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 7%"><%= t('activerecord.attributes.contract_template_term.description') %>:</td>
+      <td style="width: 93%"><%= @contract_template_term.try(:description)%></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: ContractTemplateTerm, update_path: edit_contract_template_term_path(@contract_template_term), update_txt: t('.btn_edit'),
+delete_path: @contract_template_term, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contract_template_term.one"), :txt => @contract_template_term.term_no,
+new_path: new_contract_template_term_path, new_txt: t('ag2_gest.contract_template_terms.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.contract_templates.back_to_main_page'), contract_templates_path %>

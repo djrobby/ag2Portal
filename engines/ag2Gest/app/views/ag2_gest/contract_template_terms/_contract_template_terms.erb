@@ -1,0 +1,40 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.contract_template_term.id') %></th>
+      <th><%= t('activerecord.models.contract_template.one') %>
+      <th><%= sortable "term_type", t('activerecord.attributes.contract_template_term.term_type') %></th>
+      <th><%= sortable "term_no", t('activerecord.attributes.contract_template_term.term_no') %></th>
+      <th><%= t('activerecord.attributes.contract_template_term.description') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contract_template_terms.each do |contract_template_term| %>
+    <tr>
+      <td><%= contract_template_term.try(:id)  %></td>
+      <td><%= contract_template_term.try(:contract_template).try(:name)  %></td>
+      <td><%= ContractTemplateTerm::CONSTANTS.select{ |k,v| v == contract_template_term.term_type }.first.first %></td>
+      <td><%= contract_template_term.try(:term_no)%></td>
+      <td><%= contract_template_term.try(:partial_name)%></td>
+      <td> 
+        <%= render :partial => '/layouts/crud/read', :locals => { :model => ContractTemplateTerm, :path => contract_template_term_path(contract_template_term) } %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => ContractTemplateTerm, :path =>  edit_contract_template_term_path(contract_template_term) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ContractTemplateTerm, :path => contract_template_term, :msg => t("activerecord.models.contract_template_term.one"), :txt => contract_template_term.id } %> </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contract_template_terms } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractTemplateTerm, :path => new_contract_template_term_path, :txt => t("ag2_gest.contract_template_terms.index.btn_new") } %>
+<%= link_to t("ag2_gest.contract_template_terms.index.back_to_contract_template"), contract_templates_path %> |

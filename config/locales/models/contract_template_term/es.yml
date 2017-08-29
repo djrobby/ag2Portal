@@ -8,6 +8,7 @@ es:
         other: Condiciones de contrato
     attributes:
       contract_template_term:
+        id: "Id"
         description: "Descripción"
         term_type: "Tipo"
         term_no: "Nº"

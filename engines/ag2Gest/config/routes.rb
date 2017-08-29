@@ -41,6 +41,13 @@ Ag2Gest::Engine.routes.draw do
 
     # Routes for jQuery POSTs
     #
+    # Contract_Templates
+    match 'contract_templates/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
+    match 'contract_templates/:id/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
+    match 'contract_templates/update_country_textfield_from_region/:id', :controller => 'contract_templates', :action => 'update_country_textfield_from_region'
+    match 'contract_templates/:id/update_country_textfield_from_region/:id', :controller => 'contract_templates', :action => 'update_country_textfield_from_region'
+    match 'contract_templates/update_region_textfield_from_province/:id', :controller => 'contract_templates', :action => 'update_region_textfield_from_province'
+    match 'contract_templates/:id/update_region_textfield_from_province/:id', :controller => 'contract_templates', :action => 'update_region_textfield_from_province'
     # Clients
     match 'clients/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
     match 'clients/:id/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'

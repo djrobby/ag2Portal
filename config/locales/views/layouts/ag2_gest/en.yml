@@ -25,6 +25,12 @@ en:
       contracting_request_document_types:
         items: "Request document types"
         item: "Type"
+      contract_templates:
+        items: "Contract Templates"
+        item: "Contract Template"
+      contract_template_terms:
+        items: "Contract Template Terms"
+        item: "Contract Template Term"
       tariff_schemes:
         items: "Tariff Schemes (contracting)"
         item: "Scheme"

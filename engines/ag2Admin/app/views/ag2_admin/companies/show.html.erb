@@ -203,6 +203,25 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
 <% end %> <!-- end @accounts.count > 0 -->
 
+<!-- Contract Template -->
+<h4><%=t 'activerecord.models.contract_template.zero' %></h4>
+<table class="table odd_even_table">
+  <!-- name -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- fiscal id -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.company.water_supply_contract_template" %>:</td>
+      <td><%= @company.water_supply_contract_template.name unless @company.water_supply_contract_template.blank? %></td>
+      <td><%= t :"activerecord.attributes.company.water_connection_contract_template" %>:</td>
+      <td><%= @company.water_connection_contract_template.name unless @company.water_connection_contract_template.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= render :partial => '/layouts/crud/update_delete_new', locals:
 { model: Company, update_path: edit_company_path(@company), update_txt: t('ag2_admin.companies.show.btn_edit'),
 delete_path: @company, delete_txt: t('ag2_admin.companies.show.btn_delete'), msg: t("activerecord.models.company.one"), :txt => @company.name,

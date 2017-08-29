@@ -1,0 +1,24 @@
+en:
+  ag2_gest:
+    contract_template_terms:
+      index:
+        title: "Contract Template Terms"
+        btn_new: "New Contract Template Term"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Contracting"
+        back_to_contract_template: "Back to Contract Templates"
+      show:
+        title: "Contract Template Term"
+        btn_new: "New Contract Template Term"
+        btn_edit: "Edit Contract Template Term"
+        btn_delete: "Delete Contract Template Term"
+        return_to: "Back to Contract Template Terms"
+      edit:
+        title: "Edit Contract Template Term"
+        btn_show: "Show Contract Template Term"
+        update: "Update Contract Template Term"
+        show: "Show"
+        back: "Back"
+      new:
+        title: "New Contract Template Terms"
+      back_to_main_page: "Back to Contract Template Terms"

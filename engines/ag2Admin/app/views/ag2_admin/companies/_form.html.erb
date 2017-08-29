@@ -184,6 +184,7 @@
 <% if (current_user.has_role? :Administrator) %>
 <%= f.input :hd_email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <% end %>
+
 <!-- Representative info -->
 <h4><%=t 'activerecord.attributes.company.representative' %></h4>
 <div>
@@ -247,6 +248,14 @@
   </tbody>
 </table>
 <%= render 'accounts_table', f: f %>
+
+<!-- Contract Template -->
+<h4><%=t 'activerecord.models.contract_template.zero' %></h4>
+<div>
+  <label class="multi-field-label-two"><%= f.association :water_supply_contract_template, collection: ContractTemplate.all, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.association :water_connection_contract_template, collection: ContractTemplate.all, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+
 <!-- Notifications -->
 <% if can? :crud, CompanyNotification %>
   <table class="form-table">

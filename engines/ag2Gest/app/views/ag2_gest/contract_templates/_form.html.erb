@@ -1,17 +1,77 @@
-<%= form_for(@contract_template) do |f| %>
-  <% if @contract_template.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@contract_template.errors.count, "error") %> prohibited this contract_template from being saved:</h2>
+<script>
+  var text_field_color;
 
-      <ul>
-      <% @contract_template.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  jQuery(function($) {
+    // when the #contract_template_town_id field changes
+    $("#contract_template_town_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contract_template_town_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
+        $("#contract_template_province_id").select2("val", data.province_id);
+        $("#contract_template_region_id").select2("val", data.region_id);
+        $("#contract_template_country_id").select2("val", data.country_id);
+      })
+      return false;
+    });
+
+    // when the #contract_template_province_id field changes
+    $("#contract_template_province_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contract_template_province_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
+        $("#contract_template_region_id").select2("val", data.region_id);
+        $("#contract_template_country_id").select2("val", data.country_id);
+      })
+      return false;
+    });
+
+    // when the #contract_template_region_id field changes
+    $("#contract_template_region_id").change(function() {
+      // make a POST call and replace the content
+      var contact = $('select#contract_template_region_id :selected').val();
+      if (contact == "")
+        contact = "0";
+      jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
+        $("#contract_template_country_id").select2("val", data.country_id);
+      })
+      return false;
+    });
+
+  })
+</script>
+
+<%= simple_form_for @contract_template, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+<% if session[:organization] != '0' %>
+<%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% elsif current_user.organizations.count > 0 %>
+<%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+<% else %>
+<%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+<% end %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :name, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :for_contract, :as => :select, :collection => ContractTemplate::CONSTANTS %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

@@ -12,7 +12,8 @@ es:
         check_for_projects: "Plantilla no puede ser eliminada mientras existan proyectos vinculados."
     attributes:
       contract_template:
-        name: "Name"
+        id: "Id"
+        name: "Nombre"
         for_contract: "Para contrato"
         organization: "Organización"
         organization_id: "Organización"
@@ -24,3 +25,5 @@ es:
         province_id: "Provincia"
         town: "Población"
         town_id: "Población"
+        sort_order: "Orden"
+

@@ -1,21 +1,10 @@
-<h1>Listing contract_templates</h1>
+<% session[:return_to_contract_template_term] = nil %>
+<% session[:return_to_contract_template_term_url] = nil %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<%= render '/layouts/ag2_gest/contracttemplatesbreadcrumb' %>
 
-<% @contract_templates.each do |contract_template| %>
-  <tr>
-    <td><%= link_to 'Show', contract_template %></td>
-    <td><%= link_to 'Edit', edit_contract_template_path(contract_template) %></td>
-    <td><%= link_to 'Destroy', contract_template, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<h3><%= t(".title") %></h3>
 
-<br />
-
-<%= link_to 'New Contract template', new_contract_template_path %>
+<div class="span11" id="div_table">
+  <%= render 'contract_templates' %>
+</div>

@@ -167,6 +167,14 @@
 <div>
   <label class="multi-field-label-two"> <%= f.input :overtime_pct, as: :string, input_html: { value: (number_with_precision(f.object.overtime_pct, precision: 2) if f.object.overtime_pct), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+
+<!-- Contract Template -->
+<h4><%=t 'activerecord.models.contract_template.zero' %></h4>
+<div>
+  <label class="multi-field-label-two"><%= f.association :water_supply_contract_template, collection: ContractTemplate.all, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"><%= f.association :water_connection_contract_template, collection: ContractTemplate.all, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+
 <!-- Notifications -->
 <% if can? :crud, OfficeNotification %>
   <table class="form-table">

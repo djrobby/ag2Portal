@@ -71,6 +71,25 @@
   </tbody>
 </table>
 
+<!-- Contract Template -->
+<h4><%=t 'activerecord.models.contract_template.zero' %></h4>
+<table class="table odd_even_table">
+  <!-- name -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- fiscal id -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.project.water_supply_contract_template" %>:</td>
+      <td><%= @project.water_supply_contract_template.name unless @project.water_supply_contract_template.blank? %></td>
+      <td><%= t :"activerecord.attributes.project.water_connection_contract_template" %>:</td>
+      <td><%= @project.water_connection_contract_template.name unless @project.water_connection_contract_template.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Project, update_path: edit_project_path(@project), update_txt: t('.btn_edit'),
 delete_path: @project, delete_txt: t('.btn_delete'), msg: t("activerecord.models.project.one"), txt: @project.full_name,

@@ -25,6 +25,12 @@ es:
       contracting_request_document_types:
         items: "Tipos de documentación"
         item: "Tipo"
+      contract_templates:
+        items: "Plantillas de Contratos"
+        item: "Plantilla de Contrato"
+      contract_template_terms:
+        items: "Condiciones Contractuales"
+        item: "Condicion Contractual"
       tariff_schemes:
         items: "Esquemas Tarifarios (contratación)"
         item: "Esquema"

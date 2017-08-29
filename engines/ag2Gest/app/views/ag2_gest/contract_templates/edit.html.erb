@@ -1,6 +1,8 @@
-<h1>Editing contract_template</h1>
+<%= render '/layouts/ag2_gest/contracttemplatesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @contract_template %> |
-<%= link_to 'Back', contract_templates_path %>
+<%= link_to t('.show'), @contract_template %> |
+<%= link_to t('.back'), contract_templates_path %>

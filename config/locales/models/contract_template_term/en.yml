@@ -8,6 +8,7 @@ en:
         other: Contract terms
     attributes:
       contract_template_term:
+        id: "Id"
         description: "Description"
         term_type: "Type"
         term_no: "No."

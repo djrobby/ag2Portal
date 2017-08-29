@@ -125,6 +125,25 @@
   </tbody>
 </table>
 
+<!-- Contract Template -->
+<h4><%=t 'activerecord.models.contract_template.zero' %></h4>
+<table class="table odd_even_table">
+  <!-- name -->
+  <col width="25%" />
+  <col width="25%" />
+  <!-- fiscal id -->
+  <col width="25%" />
+  <col width="25%" />
+  <tbody>
+    <tr>
+      <td><%= t :"activerecord.attributes.office.water_supply_contract_template" %>:</td>
+      <td><%= @office.water_supply_contract_template.name unless @office.water_supply_contract_template.blank? %></td>
+      <td><%= t :"activerecord.attributes.office.water_connection_contract_template" %>:</td>
+      <td><%= @office.water_connection_contract_template.name unless @office.water_connection_contract_template.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: Office, update_path: edit_office_path(@office), update_txt: t('.btn_edit'),
 delete_path: @office, delete_txt: t('.btn_delete'), msg: t("activerecord.models.office.one"), :txt => @office.name,

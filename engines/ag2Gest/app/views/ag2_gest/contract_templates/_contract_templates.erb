@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "id", t('activerecord.attributes.contract_template.id') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.contract_template.name') %></th>
+      <th><%= t('activerecord.attributes.contract_template.for_contract') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contract_templates.each do |contract_template| %>
+    <tr>
+      <td><%= contract_template.try(:id)  %></td>
+      <td><%= contract_template.try(:name)%></td>
+      <td><%= ContractTemplate::CONSTANTS.select{ |k,v| v == contract_template.for_contract }.first.first %></td>
+      <td> 
+        <%= render :partial => '/layouts/crud/read', :locals => { :model => ContractTemplate, :path => contract_template_path(contract_template) } %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => ContractTemplate, :path =>  edit_contract_template_path(contract_template) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => ContractTemplate, :path => contract_template, :msg => t("activerecord.models.contract_template.one"), :txt => contract_template.name } %> </td>
+    </tr>
+   <% end %>
+  </tbody>
+</table>
+
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @contract_templates } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => ContractTemplate, :path => new_contract_template_path, :txt => t("ag2_gest.contract_templates.index.btn_new") } %>
+<%= link_to t("ag2_gest.contract_templates.index.go_to"), contract_template_terms_path %> |
+<%= link_to t("ag2_gest.contract_templates.index.back_to_management"), ag2_gest.contracting_management_path %>

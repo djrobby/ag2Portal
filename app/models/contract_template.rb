@@ -1,5 +1,7 @@
 class ContractTemplate < ActiveRecord::Base
   # CONSTANTS
+  CONSTANTS = {:All => 0, :WATER_SUPPLY => 1, :WATER_CONNECTION => 2 }
+
   ALL = 0
   WATER_SUPPLY = 1
   WATER_CONNECTION = 2
@@ -20,6 +22,8 @@ class ContractTemplate < ActiveRecord::Base
   has_many :water_connection_offices, :class_name => 'Office', foreign_key: "water_connection_contract_template_id"
   has_many :water_supply_projects, :class_name => 'Project', foreign_key: "water_supply_contract_template_id"
   has_many :water_connection_projects, :class_name => 'Project', foreign_key: "water_connection_contract_template_id"
+
+  has_paper_trail
 
   validates :name,          :presence => true
   validates :organization,  :presence => true

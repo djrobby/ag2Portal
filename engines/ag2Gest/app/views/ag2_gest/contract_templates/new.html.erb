@@ -1,5 +1,7 @@
-<h1>New contract_template</h1>
+<%= render '/layouts/ag2_gest/contracttemplatesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Back', contract_templates_path %>
+<%= link_to I18n.t('ag2_gest.contract_templates.back_to_main_page'), contract_templates_path %>

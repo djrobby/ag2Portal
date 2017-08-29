@@ -1,17 +1,28 @@
-<%= form_for(@contract_template_term) do |f| %>
-  <% if @contract_template_term.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@contract_template_term.errors.count, "error") %> prohibited this contract_template_term from being saved:</h2>
+<script>
+  var text_field_color;
 
-      <ul>
-      <% @contract_template_term.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+  });
+</script>
 
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+<%= simple_form_for @contract_template_term, :html => { :class => 'form-vertical well' } do |f| %>
+<%= f.error_notification %>
+<%= display_base_errors resource %>
+
+<div>
+  <label class="multi-field-label-one"> <%= f.association :contract_template, :autofocus => true, collection: ContractTemplate.all(order: 'id'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :term_type, :as => :select, :collection => ContractTemplateTerm::CONSTANTS %> </label>
+  <label class="multi-field-label-two"> <%= f.input :term_no, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-one"> <%= f.input :description, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+
+<%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %>
 <% end %>

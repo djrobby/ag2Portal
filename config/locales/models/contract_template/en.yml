@@ -12,6 +12,7 @@ en:
         check_for_projects: "Template cannot be destroyed while linked projects exist."
     attributes:
       contract_template:
+        id: "Id"
         name: "Name"
         for_contract: "For contract"
         organization: "Organization"
@@ -24,3 +25,5 @@ en:
         province_id: "Province"
         town: "Town"
         town_id: "Town"
+        sort_order: "Order"
+
