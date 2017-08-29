@@ -18,7 +18,8 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id, :use_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
-                  :readings_attributes, :meter_details_attributes, :deposit, :old_code
+                  :pub_record, :m2, :equiv_dwelling, :deposit, :old_code,
+                  :readings_attributes, :meter_details_attributes
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -262,6 +263,10 @@ class Subscriber < ActiveRecord::Base
 
   def use_name
     use.blank? ? "" : use.right_name
+  end
+
+  def right_equiv_dwelling
+    equiv_dwelling.nil? || equiv_dwelling == 0 ? 1 : equiv_dwelling
   end
 
   #

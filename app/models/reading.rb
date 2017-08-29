@@ -427,6 +427,11 @@ class Reading < ActiveRecord::Base
   def save_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
     # Fixed
     if !tariff.fixed_fee.zero?
+      tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
+      tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      if tariff_code == 'DEP'
+        tariff_price = tariff_price * subscriber.right_equiv_dwelling
+      end
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "CF",
@@ -525,10 +530,15 @@ class Reading < ActiveRecord::Base
   def save_invoice_items(tariff, invoice, bill, cf, user_id)
     # Fixed
     if !tariff.fixed_fee.zero?
+      tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
+      tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      if tariff_code == 'DEP'
+        tariff_price = tariff_price * subscriber.right_equiv_dwelling
+      end
       create_invoice_item(tariff,
                           invoice.id,
                           "CF",
-                          (tariff.fixed_fee / tariff.billing_frequency.total_months),
+                          tariff_price,
                           billing_frequency.total_months,
                           tariff.billing_frequency.fix_measure_id,
                           tariff.try(:tax_type_f_id),
