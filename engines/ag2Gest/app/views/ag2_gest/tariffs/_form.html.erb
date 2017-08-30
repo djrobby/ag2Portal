@@ -117,19 +117,19 @@
       <h4><%= t('activerecord.attributes.tariff_scheme.taxes') %></h4>
       <div class="row-fluid">
         <div class="span2"><h5><%= "* " + t('activerecord.attributes.tariff_scheme.f') %></h5></div>
-        <div class="span10"><%= f.input :tax_type_f_id, collection: @tax_type, selected: (TaxType.exempt_id), input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
+        <div class="span10"><%= f.input :tax_type_f_id, collection: @tax_type, input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
       </div>
       <div class="row-fluid">
         <div class="span2"><h5><%= "* " + t('activerecord.attributes.tariff_scheme.b') %></h5></div>
-        <div class="span10"><%= f.input :tax_type_b_id, collection: @tax_type, selected: (TaxType.exempt_id), input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
+        <div class="span10"><%= f.input :tax_type_b_id, collection: @tax_type, input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
       </div>
       <div class="row-fluid">
         <div class="span2"><h5><%= "* " + t('activerecord.attributes.tariff_scheme.v') %></h5></div>
-        <div class="span10"><%= f.input :tax_type_v_id, collection: @tax_type, selected: (TaxType.exempt_id), input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
+        <div class="span10"><%= f.input :tax_type_v_id, collection: @tax_type, input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
       </div>
       <div class="row-fluid">
         <div class="span2"><h5><%= "* " + t('activerecord.attributes.tariff_scheme.p') %></h5></div>
-        <div class="span10"><%= f.input :tax_type_p_id, collection: @tax_type, selected: (TaxType.exempt_id), input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
+        <div class="span10"><%= f.input :tax_type_p_id, collection: @tax_type, input_html: { value: TaxType.exempt_id }, label_html: { class: 'form-label' }, include_blank: false, label: false %></div>
       </div>
     </div>
   </div>

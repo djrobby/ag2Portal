@@ -2,6 +2,9 @@ class ContractTemplateTerm < ActiveRecord::Base
   # CONSTANTS
   CONSTANTS = {:GENERAL => 1, :PARTICULAR => 2 }
 
+  GENERAL = 1
+  PARTICULAR = 2
+
   belongs_to :contract_template
 
   attr_accessible :description, :term_type, :term_no, :contract_template_id

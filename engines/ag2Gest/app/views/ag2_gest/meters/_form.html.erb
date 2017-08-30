@@ -1,4 +1,6 @@
 <script type="text/javascript">
+  var text_field_color;
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -12,6 +14,97 @@
     
     // Set initial focus
     $(this).find(".form-label:first").focus();
+  });
+
+  jQuery(function($) {
+    // when the #meter_company_id field changes
+    $("#meter_company_id").change(function() {
+      // make a POST call and replace the content
+      var meter = $('select#meter_company_id :selected').val();
+      if (meter == "")
+        meter = "0";
+      jQuery.getJSON('me_update_office_select_from_company/' + meter, function(data) {
+        var w = data.offices;
+        $("#meter_office_id").html("");
+        $("#meter_office_id").select2("val", "");
+        $("#meter_office_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'companies' && option != "") {
+              $("#meter_office_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#meter_office_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #meter_organization_id field changes
+    $("#meter_organization_id").change(function() {
+      // make a POST call and replace the content
+      var meter = $('select#meter_organization_id :selected').val();
+      if (meter == "")
+        meter = "0";
+      jQuery.getJSON('me_update_company_select_from_organization/' + meter, function(data) {
+        var c = data.companies;
+        var w = data.offices;
+        // Companies
+        $("#meter_company_id").html("");
+        $("#meter_company_id").val("");
+        $("#meter_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'companies' && option != "") {
+              $("#meter_company_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#meter_company_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        // Offices
+        $("#meter_office_id").html("");
+        $("#meter_office_id").select2("val", "");
+        $("#meter_office_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'offices' && option != "") {
+              $("#meter_office_id").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#meter_office_id").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when #input_change_meter changes
+    $("#input_change_meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#input_change_meter').val();
+      if (meter == "")
+        meter = "$";
+      jQuery.getJSON('me_find_meter/' + meter, function(data) {
+        $("#alert_change").html(data.alert);
+        if (data.code == "$err") {
+          $("#alert_change").css('color', 'red');
+          alert('<%= I18n.t("activerecord.attributes.meter.master_meter") %>' + " " + data.alert);
+          $('#input_change_meter').select();
+        } else {
+          $("#alert_change").css('color', text_field_color);
+          $('#sel2_association_change').val(data.meter_id);
+        }
+      });
+      return false;
+    });
   });
 </script>
 
@@ -46,6 +139,10 @@
 <div>
   <label class="multi-field-label-two"> <%= f.association :meter_owner, label: t('activerecord.attributes.meter.meter_owner_id'), collection: MeterOwner.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%> </label>
   <label class="multi-field-label-two"> <%= f.association :master_meter, collection: @master_meter, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @meter.meter_code }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.master_meter') %>
+    <%= f.input :master_meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @meter.master_meter_id } %>
+  </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :meter_model, label: t('activerecord.attributes.meter.meter_model_id'), collection: MeterModel.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.full_name }, value_method: :id, :label_html => { :class => 'form-label' }%> </label>
@@ -59,5 +156,6 @@
   <label class="multi-field-label-two"> <%= f.input :first_installation_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.first_installation_date.strftime("%d/%m/%Y") if f.object.first_installation_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :expiry_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.expiry_date.strftime("%d/%m/%Y") if f.object.expiry_date), :class => 'mid-text-field date_picker' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -538,9 +538,10 @@
       $("#installation-date").text(data.reading.reading_date);
       $("#contract_pdf").removeClass("hide");
       $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");
-      $("#sepa_pdf").removeClass("hide");
-      $("#sepa_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/sepa_pdf.pdf");
-
+      if (data.contracting_request.client.client_bank_accounts != []) {
+        $("#sepa_pdf").removeClass("hide");
+        $("#sepa_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/sepa_pdf.pdf");
+      }
     });
 
     // $("#instalation-subscriber").bind("ajax:success", function(xhr, data, status) {
@@ -764,7 +765,7 @@
     <div class="setup-content" id="step-5">
     <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION && !@contracting_request.subscriber.blank? %>
       <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "contract_pdf",class: "btn btn-warning", target: "_blank"  %>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning", target: "_blank"  %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning", target: "_blank"  unless @contracting_request.client.client_bank_accounts.blank?  %>
     <% else %>
         <a target="_blank" id="contract_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.show_contract') %></a>
         <a target="_blank" id="sepa_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.water_supply_contract.pay_sepa_order_c') %></a>

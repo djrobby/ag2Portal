@@ -154,6 +154,17 @@ Ag2Gest::Engine.routes.draw do
     match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'contracting_requests'
     match 'contracting_requests/:id/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
     #
+    # Meter
+    match 'meters/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
+    match 'meters/:id/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
+    match 'me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
+    match 'meters/me_update_office_select_from_company/:meter', :controller => 'meters', :action => 'me_update_office_select_from_company'
+    match 'me_update_office_select_from_company/:meter', :controller => 'meters', :action => 'me_update_office_select_from_company'
+    match 'meters/:id/me_update_office_select_from_company/:meter', :controller => 'meters', :action => 'me_update_office_select_from_company'
+    match 'meters/me_update_company_select_from_organization/:meter', :controller => 'meters', :action => 'me_update_company_select_from_organization'
+    match 'me_update_company_select_from_organization/:meter', :controller => 'meters', :action => 'me_update_company_select_from_organization'
+    match 'meters/:id/me_update_company_select_from_organization/:meter', :controller => 'meters', :action => 'me_update_company_select_from_organization'
+    #
     # Tariff
     match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     match 'tariffs/:id/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'

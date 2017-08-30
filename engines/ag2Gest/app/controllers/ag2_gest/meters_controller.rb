@@ -2,11 +2,68 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class MetersController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
     helper_method :sort_column
+    skip_load_and_authorize_resource :only => [ :me_update_office_select_from_company,
+                                                :me_update_company_select_from_organization]
 
+    # Update office select at view from company select
+    def me_update_office_select_from_company
+      company = params[:meter]
+      if company != '0'
+        @company = Company.find(company)
+        @offices = @company.blank? ? offices_dropdown : offices_by_company(@company)
+      else
+        @offices = offices_dropdown
+      end
+      render json: { "offices" => @offices }
+    end
+
+    # Update company select at view from organization select
+    def me_update_company_select_from_organization
+      organization = params[:meter]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        @companies = @organization.blank? ? companies_dropdown : @organization.companies.order(:name)
+        @offices = @organization.blank? ? offices_dropdown : @organization.offices.order(:office_code)
+      else
+        @companies = companies_dropdown
+        @offices = offices_dropdown
+      end
+      @json_data = { "companies" => @companies, "offices" => @offices }
+      render json: @json_data
+    end
+
+    # def me_find_meter
+    #   m = params[:meter]
+    #   alert = ""
+    #   code = ''
+    #   meter_id = 0
+    #   if m != '0'
+    #     meter = Meter.find_by_meter_code(m) rescue nil
+    #     if !meter.nil?
+    #         # Meter available
+    #         alert = I18n.t("activerecord.errors.models.meter.available_c", var: m)
+    #         meter_id = meter.id
+    #     else
+    #       # Meter code not found
+    #       alert = I18n.t("activerecord.errors.models.meter.code_not_found", var: m)
+    #       code = '$err'
+    #     end
+    #   else
+    #     # Wrong meter code
+    #     alert = I18n.t("activerecord.errors.models.meter.code_wrong", var: m)
+    #     code = '$err'
+    #   end
+    #   # Setup JSON
+    #   @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+    #   render json: @json_data
+    # end
+
+    #
+    # Default Methods
+    #
     # GET /meters
     # GET /meters.json
     def index
@@ -286,6 +343,30 @@ module Ag2Gest
       else
         _companies = _organization.companies.order(:name)
       end
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      Office.where(company_id: _company).order(:name)
     end
 
     # Keeps filter state

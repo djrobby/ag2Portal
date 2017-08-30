@@ -71,7 +71,7 @@
         <%= link_to b.subscriber.try(:meter).try(:meter_code), meter_path(b.subscriber.meter) unless b.subscriber.try(:meter).blank? %>
       </div>
       <div align="right" class="span1 soft-padding">
-        <%= b.reading.try(:consumption_total_period) || 0 %>
+        <%= b.try(:reading).try(:consumption_total_period_to_invoice) || 0 %>
       </div>
       <div align="right" class="span1 soft-padding">
         <%= number_with_precision(b.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>

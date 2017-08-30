@@ -85,13 +85,13 @@ report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_re
 				   date_c2: I18n.t("activerecord.attributes.reading.reading_date") + ": ",
 				   date2: reading_b,
 				   reg_c: I18n.t("activerecord.attributes.reading.reg") + ": ",
-				   reg: @biller_printer.try(:invoices).try(:first).try(:consumption_real),
+				   reg: @biller_printer.try(:reading).try(:consumption_total_period),
 				   est_c: I18n.t("activerecord.attributes.reading.est") + ": ",
 				   est: @biller_printer.try(:invoices).try(:first).try(:consumption_estimated),
 				   other_c: I18n.t("activerecord.attributes.reading.other") + ": ",
 				   other: @biller_printer.try(:invoices).try(:first).try(:consumption_other),
 				   fac_c: I18n.t("activerecord.attributes.reading.fac") + ": ",
-				   fac: @biller_printer.try(:invoices).try(:first).try(:consumption),
+				   fac: @biller_printer.try(:reading).try(:consumption_total_period_to_invoice),
 				   con_c: I18n.t("activerecord.attributes.reading.con") + ": ",
 				   con: @biller_printer.try(:invoices).try(:first).try(:average_billed_consumption)[1]
 				   )

@@ -197,7 +197,7 @@ module Ag2Gest
       @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
-      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").map(&:billable_concept)
+      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").group("billable_concepts.id").map(&:billable_concept)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -213,7 +213,7 @@ module Ag2Gest
       @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
-      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").map(&:billable_concept)
+      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").group("billable_concepts.id").map(&:billable_concept)
     end
 
     def create
@@ -223,7 +223,7 @@ module Ag2Gest
       @billable_items = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
-      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").map(&:billable_concept)
+      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").group("billable_concepts.id").map(&:billable_concept)
       @tariff = Tariff.new(params[:tariff])
       @tariff.created_by = current_user.id if !current_user.nil?
 
@@ -249,7 +249,7 @@ module Ag2Gest
       @billable_items = billable_item_dropdown.joins(:billable_concept)#.where("billable_concepts.billable_document = 1")
       @calibers = caliber_dropdown
       @billing_frequencies = billing_frequency_dropdown
-      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").map(&:billable_concept)
+      @billable_concept_percentage = billable_item_dropdown.joins(:billable_concept).where("billable_concepts.billable_document = 1").group("billable_concepts.id").map(&:billable_concept)
 
       respond_to do |format|
         if @tariff.update_attributes(params[:tariff])
