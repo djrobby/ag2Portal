@@ -1,0 +1,10 @@
+<% child_meters.each do |m| %>
+<tr>
+  <td>
+    <%= link_to m.try(:meter_code), ag2_gest.meter_path(m) %>
+    <span><% if m.is_installed_now? %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></span>
+  </td>
+  <td><%= m.try(:meter_model).try(:full_name) %></td>
+  <td align="center"><%= m.try(:caliber).try(:caliber) %></td>
+  <td align="right"><%= m.try(:manufacturing_year) %></td></tr>
+<% end %>

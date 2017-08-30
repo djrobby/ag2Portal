@@ -1,6 +1,34 @@
 <script type="text/javascript">
   var text_field_color;
 
+  function metersSelect2ForNew(intialValue) {
+    var target_url = "/search_meters";
+    $('#Meter').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: target_url,
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }  
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -11,6 +39,9 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+
+    // Setup special search (select2)
+    metersSelect2ForNew("<%= @master_meter %>");
     
     // Set initial focus
     $(this).find(".form-label:first").focus();
@@ -138,11 +169,11 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :meter_owner, label: t('activerecord.attributes.meter.meter_owner_id'), collection: MeterOwner.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%> </label>
-  <label class="multi-field-label-two"> <%= f.association :master_meter, collection: @master_meter, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two">
-    <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @meter.meter_code }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.master_meter') %>
-    <%= f.input :master_meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @meter.master_meter_id } %>
-  </label>
+    <label class="multi-field-label-two">
+      <%#= f.association :master_meter, collection: @master_meter, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+      <%= label_tag "label_meter", t("activerecord.attributes.meter.master_meter"), :class => 'form-label' %>
+      <%= text_field_tag "Meter", params[:MasterMeter], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+    </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :meter_model, label: t('activerecord.attributes.meter.meter_model_id'), collection: MeterModel.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.full_name }, value_method: :id, :label_html => { :class => 'form-label' }%> </label>

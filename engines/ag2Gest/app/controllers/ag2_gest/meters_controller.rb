@@ -136,6 +136,7 @@ module Ag2Gest
       @meter = Meter.find(params[:id])
       @details = @meter.meter_details.paginate(:page => params[:page], :per_page => per_page).by_dates
       @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
+      @child_meters = @meter.child_meters.paginate(:page => params[:page], :per_page => per_page).by_code
 
       respond_to do |format|
         format.html # show.html.erb
@@ -149,7 +150,8 @@ module Ag2Gest
       @breadcrumb = 'create'
       @meter = Meter.new
       @companies = companies_dropdown
-      @master_meter = master_meters_dropdown(nil)
+      # @master_meter = master_meters_dropdown(nil)
+      @master_meter = " "
 
       respond_to do |format|
         format.html # new.html.erb
@@ -162,7 +164,8 @@ module Ag2Gest
       @breadcrumb = 'update'
       @meter = Meter.find(params[:id])
       @companies = @meter.organization.blank? ? companies_dropdown : companies_dropdown_edit(@meter.organization)
-      @master_meter = master_meters_dropdown(@meter.id)
+      # @master_meter = master_meters_dropdown(@meter.id)
+      @master_meter = @meter.master_meter.blank? ? " " : @meter.master_meter.meter_code
     end
 
     # POST /meters
@@ -170,15 +173,20 @@ module Ag2Gest
     def create
       @breadcrumb = 'create'
       @meter = Meter.new(params[:meter])
-      office = Office.find(params[:meter][:office_id])
-      @meter.company_id = office.company_id
-      @meter.organization_id = office.try(:company).try(:organization_id)
       @meter.created_by = current_user.id if !current_user.nil?
+      @meter.master_meter_id = params[:MasterMeter].to_i unless params[:MasterMeter].blank?
+      # office = Office.find(params[:meter][:office_id])
+      # @meter.company_id = office.company_id
+      # @meter.organization_id = office.try(:company).try(:organization_id)
+
       respond_to do |format|
         if @meter.save
           format.html { redirect_to @meter, notice: crud_notice('created', @meter) }
           format.json { render json: @meter, status: :created, location: @meter }
         else
+          @companies = companies_dropdown
+          # @master_meter = master_meters_dropdown(nil)
+          @master_meter = " "
           format.html { render action: "new" }
           format.json { render json: @meter.errors, status: :unprocessable_entity }
         end
@@ -191,6 +199,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @meter = Meter.find(params[:id])
       @meter.updated_by = current_user.id if !current_user.nil?
+      @meter.master_meter_id = params[:MasterMeter].to_i unless params[:MasterMeter].blank?
 
       respond_to do |format|
         if @meter.update_attributes(params[:meter])
@@ -198,6 +207,9 @@ module Ag2Gest
                         notice: (crud_notice('updated', @meter) + "#{undo_link(@meter)}").html_safe }
           format.json { head :no_content }
         else
+          @companies = @meter.organization.blank? ? companies_dropdown : companies_dropdown_edit(@meter.organization)
+          # @master_meter = master_meters_dropdown(@meter.id)
+          @master_meter = @meter.master_meter.blank? ? " " : @meter.master_meter.meter_code
           format.html { render action: "edit" }
           format.json { render json: @meter.errors, status: :unprocessable_entity }
         end

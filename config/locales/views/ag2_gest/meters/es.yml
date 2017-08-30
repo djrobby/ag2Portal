@@ -19,6 +19,7 @@ es:
         return_to: "Volver a Contador"
         subtable_title_details: "Movimientos"
         subtable_title_readings: "Lecturas"
+        subtable_title_child_meters: "Contadores secundarios"
       edit:
         show: "Mostrar"
         back: "Atrás"
@@ -27,8 +28,3 @@ es:
       new:
         title: "Nuevo Contador"
       back_to_main_page: "Volver a Contadores"
-      # generate_code_btn: "Código de Emisor de la factura"
-      # personal_info: "Información del Cliente"
-      # commercial_info: "Información Contable y Comercial"
-      # fiscal_error: "Id Fiscal erróneo o Entidad (Sujeto Pasivo) no existe."
-      # code_error: "Imposible generar Código de Cliente: No has elegido Organización."

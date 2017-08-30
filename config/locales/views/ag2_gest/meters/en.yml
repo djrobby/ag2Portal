@@ -4,6 +4,12 @@ en:
       index:
         title: "Meters"
         btn_new: "New Meter"
+        meter_code: "Código de contador"
+        meter_model_id: "Modelo"
+        meter_brand_id: "Marca"
+        caliber_id: "Calibre"
+        label_from: "Fecha compra desde"
+        label_to: "Fecha compra hasta"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Meters Management"
       show:
@@ -13,16 +19,12 @@ en:
         return_to: "Back to Meter"
         subtable_title_details: "Movements"
         subtable_title_readings: "Readings"
+        subtable_title_child_meters: "Child meters"
       edit:
+        show: "Show"
+        back: "Back"
         title: "Edit Meter"
         btn_show: "Show Meter"
       new:
         title: "New Billable item"
       back_to_main_page: "Back to Meters"
-      # generate_code_btn: "billable_item Code"
-      # personal_info: "billable_item Info"
-      # commercial_info: "Accounting & Commercial Info"
-      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
-      # code_error: "Unable to generate billable_item Code: No Organization chosen."
-
-      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}
