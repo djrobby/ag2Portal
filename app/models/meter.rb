@@ -214,7 +214,7 @@ class Meter < ActiveRecord::Base
       return false
     end
     # Check for subscriber
-    if !subscriber.blank?
+    if subscribers.count > 0
       errors.add(:base, I18n.t('activerecord.models.meter.check_for_subscribers'))
       return false
     end

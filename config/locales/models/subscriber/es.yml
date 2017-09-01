@@ -94,6 +94,7 @@ es:
         use_id: "Uso"
         m2: "M2"
         equiv_dwelling: "Vivienda equivalente"
+        deposit: "Fianza"
         direction: "Dirección"
         tariffs: "Tarifas"
 

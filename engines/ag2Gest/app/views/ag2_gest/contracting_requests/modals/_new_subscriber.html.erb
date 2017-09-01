@@ -63,7 +63,9 @@ jQuery(function($) {
     <% end %>
     <%= f.input :reading_sequence, required: true, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_sequence).blank? ? @contracting_request.try(:service_point).try(:reading_sequence) : @contracting_request.try(:old_subscriber).try(:reading_sequence) }, label_html: { class: 'form-label' } %>
     <%= f.input :reading_variant, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:reading_variant) }, label_html: { class: 'form-label' } %>
-
+    
+    <%= f.input :m2, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:m2) }, label_html: { class: 'form-label' } %>
+    <%= f.input :equiv_dwelling, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:equiv_dwelling) }, label_html: { class: 'form-label' } %>
     
     <%#= f.input :active, :as => :hidden, :input_html => { :value => "true" } %>
     <%#= f.input :building, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_building } %>

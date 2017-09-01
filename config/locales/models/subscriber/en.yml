@@ -92,6 +92,9 @@ en:
         use_id: "Use"
         m2: "M2"
         equiv_dwelling: "Equiv. Dwelling"
+        deposit: "Deposit"
+        direction: "Direction"
+        tariffs: "Tariffs"
 
         detail: 'Detalle'
         invoices: "Facturas"

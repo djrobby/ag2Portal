@@ -180,6 +180,13 @@
           <td><b><%= t('activerecord.attributes.subscriber.gis_id') %>:</b></td>
           <td><%= @subscriber.try(:gis_id) %></td>
         </tr>
+          <td><b><%= t('activerecord.attributes.subscriber.equiv_dwelling') %>:</b></td>
+          <td><%= number_with_precision(@subscriber.try(:equiv_dwelling), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.m2') %>:</b></td>
+          <td><%= number_with_precision(@subscriber.try(:m2), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
+          <td><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
           <td colspan="6"><%= @subscriber.try(:remarks) %></td>
