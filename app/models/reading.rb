@@ -698,33 +698,6 @@ class Reading < ActiveRecord::Base
 
     prev_reading_subscriber_tariff_tariff = prev_reading_tariff.tariff
 
-    if !tariff.fixed_fee.zero?
-      tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
-      tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
-      if tariff_code == 'DEP'
-        tariff_price = tariff_price * subscriber.right_equiv_dwelling
-      end
-      create_invoice_item(tariff,
-                          invoice.id,
-                          "CF",
-                          tariff_price,
-                          billing_frequency.total_months,
-                          tariff.billing_frequency.fix_measure_id,
-                          tariff.try(:tax_type_f_id),
-                          tariff.try(:discount_pct_f),
-                          user_id, '')
-    elsif tariff.percentage_fixed_fee > 0 and !tariff.percentage_applicable_formula.blank?
-      create_invoice_item(tariff,
-                          invoice.id,
-                          "CF",
-                          ((tariff.percentage_fixed_fee/100) * Invoice.find(invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula))  / billing_frequency.total_months,
-                          billing_frequency.total_months,
-                          tariff.billing_frequency.fix_measure_id,
-                          tariff.try(:tax_type_f_id),
-                          tariff.try(:discount_pct_f),
-                          user_id, '')
-    end
-
     #+++ Fixed +++
     previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
     current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
