@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170828163909) do
+ActiveRecord::Schema.define(:version => 20170902090553) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2324,22 +2324,43 @@ ActiveRecord::Schema.define(:version => 20170828163909) do
 
   add_index "organizations", ["name"], :name => "index_organizations_on_name"
 
+  create_table "payment_method_ledger_accounts", :force => true do |t|
+    t.integer  "payment_method_id"
+    t.integer  "input_ledger_account_id"
+    t.integer  "output_ledger_account_id"
+    t.integer  "company_id"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "payment_method_ledger_accounts", ["company_id"], :name => "index_payment_method_ledger_accounts_on_company_id"
+  add_index "payment_method_ledger_accounts", ["input_ledger_account_id"], :name => "index_payment_method_ledger_accounts_on_input_ledger_account_id"
+  add_index "payment_method_ledger_accounts", ["output_ledger_account_id"], :name => "index_payment_method_ledger_accounts_on_output_ledger_account_id"
+  add_index "payment_method_ledger_accounts", ["payment_method_id", "input_ledger_account_id", "output_ledger_account_id"], :name => "index_payment_method_ledger_accounts_unique", :unique => true
+  add_index "payment_method_ledger_accounts", ["payment_method_id"], :name => "index_payment_method_ledger_accounts_on_payment_method_id"
+
   create_table "payment_methods", :force => true do |t|
     t.string   "description"
-    t.integer  "expiration_days",                                              :default => 0,     :null => false
-    t.decimal  "default_interest",              :precision => 12, :scale => 4, :default => 0.0,   :null => false
-    t.datetime "created_at",                                                                      :null => false
-    t.datetime "updated_at",                                                                      :null => false
+    t.integer  "expiration_days",                                                      :default => 0,     :null => false
+    t.decimal  "default_interest",                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.datetime "created_at",                                                                              :null => false
+    t.datetime "updated_at",                                                                              :null => false
     t.string   "created_by"
     t.string   "updated_by"
-    t.integer  "flow",             :limit => 2
+    t.integer  "flow",                     :limit => 2
     t.integer  "organization_id"
-    t.boolean  "cashier",                                                      :default => false, :null => false
+    t.boolean  "cashier",                                                              :default => false, :null => false
+    t.integer  "input_ledger_account_id"
+    t.integer  "output_ledger_account_id"
   end
 
   add_index "payment_methods", ["description"], :name => "index_payment_methods_on_description"
   add_index "payment_methods", ["flow"], :name => "index_payment_methods_on_flow"
+  add_index "payment_methods", ["input_ledger_account_id"], :name => "index_payment_methods_on_input_ledger_account_id"
   add_index "payment_methods", ["organization_id"], :name => "index_payment_methods_on_organization_id"
+  add_index "payment_methods", ["output_ledger_account_id"], :name => "index_payment_methods_on_output_ledger_account_id"
 
   create_table "payment_types", :force => true do |t|
     t.string   "name"
@@ -2579,16 +2600,6 @@ ActiveRecord::Schema.define(:version => 20170828163909) do
     t.string  "store_name"
     t.decimal "initial",           :precision => 34, :scale => 4
     t.decimal "current",           :precision => 34, :scale => 4
-  end
-
-  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
-    t.integer "family_id",                                  :default => 0, :null => false
-    t.string  "family_code"
-    t.string  "family_name"
-    t.integer "store_id"
-    t.string  "store_name"
-    t.decimal "initial",     :precision => 34, :scale => 4
-    t.decimal "current",     :precision => 34, :scale => 4
   end
 
   create_table "product_types", :force => true do |t|
@@ -3694,19 +3705,6 @@ ActiveRecord::Schema.define(:version => 20170828163909) do
     t.decimal "total",               :precision => 65, :scale => 20
     t.decimal "paid",                :precision => 35, :scale => 4
     t.decimal "debt",                :precision => 65, :scale => 20
-  end
-
-  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
-    t.integer "organization_id"
-    t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|

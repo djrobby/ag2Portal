@@ -9,6 +9,6 @@ class TaxTypeLedgerAccount < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :input_ledger_account,  :presence => true
-  validates :output_ledger_account, :presence => true
+  validates :input_ledger_account,  :presence => true   # For VAT input/charged
+  validates :output_ledger_account, :presence => true   # For VAT output/paid
 end

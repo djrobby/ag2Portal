@@ -1,7 +1,9 @@
 class PaymentMethod < ActiveRecord::Base
   belongs_to :organization
+  belongs_to :input_ledger_account, class_name: "LedgerAccount"
+  belongs_to :output_ledger_account, class_name: "LedgerAccount"
   attr_accessible :default_interest, :description, :expiration_days, :flow,
-                  :cashier, :organization_id
+                  :cashier, :organization_id, :input_ledger_account_id, :output_ledger_account_id
 
   has_many :suppliers
   has_many :clients
@@ -14,6 +16,7 @@ class PaymentMethod < ActiveRecord::Base
   has_many :sale_offers
   has_many :payment_types
   has_many :return_payment_types, :class_name => 'PaymentType', foreign_key: "return_payment_method_id"
+  has_many :payment_method_ledger_accounts, dependent: :destroy
 
   has_paper_trail
 

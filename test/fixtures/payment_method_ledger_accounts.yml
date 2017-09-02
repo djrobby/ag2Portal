@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  payment_method: 
+  input_ledger_account: 
+  output_ledger_account: 
+  company: 
+
+two:
+  payment_method: 
+  input_ledger_account: 
+  output_ledger_account: 
+  company: 
