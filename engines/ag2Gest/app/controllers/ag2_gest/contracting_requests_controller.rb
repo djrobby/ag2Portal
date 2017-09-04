@@ -1794,7 +1794,7 @@ module Ag2Gest
     def subscribers_array(_m)
       _array = []
       _m.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.code_full_name_or_company_address]
       end
       _array
     end
