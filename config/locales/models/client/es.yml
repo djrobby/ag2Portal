@@ -55,3 +55,5 @@ es:
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         full_name: "Apellidos y Nombres"
+        debt: "Deuda"
+

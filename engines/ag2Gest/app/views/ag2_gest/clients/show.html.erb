@@ -90,6 +90,16 @@
   </tbody>
 </table>
 
+<!-- Debt -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.client.debt" %>:</td>
+      <td style="width: 88%"><%= number_with_precision(@client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @client.total_debt_unpaid.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- Remarks -->
 <table class="table">
   <tbody>

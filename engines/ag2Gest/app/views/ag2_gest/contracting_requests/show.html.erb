@@ -21,6 +21,10 @@
       <td><%= t "activerecord.attributes.contracting_request.request_date" %>:</td>
       <td><%=l @contracting_request.try(:request_date) unless @contracting_request.try(:request_date).blank? %></td>
     </tr>
+    <tr>
+      <td><%= t :"activerecord.attributes.subscriber.debt" %>:</td>
+      <td colspan="5"><%= number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @contracting_request.client.total_debt_unpaid.blank? %></td>
+    </tr>
   </tbody>
 </table>
 

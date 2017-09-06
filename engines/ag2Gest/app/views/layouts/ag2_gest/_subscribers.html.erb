@@ -2,7 +2,7 @@
 <tr>
   <td><%= link_to w.full_code, w %></td>
   <td><%= w.try(:full_name) %></td>
-  <td><%= w.try(:address_1) %></td>
+  <td><%= w.try(:address_1) + ", " + w.try(:address_2) %></td>
   <td><%= w.try(:meter_code) %></td>
   <% if w.try(:active) %>
     <td align="center"><i class="icon-thumbs-up"></i></td>

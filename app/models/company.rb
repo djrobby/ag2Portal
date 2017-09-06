@@ -18,7 +18,8 @@ class Company < ActiveRecord::Base
                   :r_last_name, :r_first_name, :r_fiscal_id,
                   :water_supply_contract_template_id, :water_connection_contract_template_id
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
-  attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes
+  attr_accessor :logo_cache
+  attr_accessible :company_notifications_attributes, :company_bank_accounts_attributes, :logo_cache
 
   has_many :offices
   has_many :departments
@@ -78,6 +79,19 @@ class Company < ActiveRecord::Base
   # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def cache_images
+    if logo.staged?
+      if invalid?
+        FileUtils.cp(logo.queued_for_write[:original].path, logo.path(:original))
+        @logo_cache = encrypt(logo.path(:original))
+      end
+    else
+      if @logo_cache.present?
+        File.open(decrypt(@logo_cache)) {|f| assign_attributes(logo: f)}
+      end
+    end
+  end
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -220,6 +234,24 @@ class Company < ActiveRecord::Base
   end
 
   private
+
+  def decrypt(data)
+    return '' unless data.present?
+    cipher = build_cipher(:decrypt, 'mypassword')
+    cipher.update(Base64.urlsafe_decode64(data).unpack('m')[0]) + cipher.final
+  end
+
+  def encrypt(data)
+    return '' unless data.present?
+    cipher = build_cipher(:encrypt, 'mypassword')
+    Base64.urlsafe_encode64([cipher.update(data) + cipher.final].pack('m'))
+  end
+
+  def build_cipher(type, password)
+    cipher = OpenSSL::Cipher::Cipher.new('DES-EDE3-CBC').send(type)
+    cipher.pkcs5_keyivgen(password)
+    cipher
+  end
 
   def check_for_dependent_records
     # Check for offices

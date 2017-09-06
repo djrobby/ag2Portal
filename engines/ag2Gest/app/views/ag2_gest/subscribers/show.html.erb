@@ -77,6 +77,10 @@
       <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
       <td> <% if @subscriber.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
+    <tr>
+      <td><b><%= t :"activerecord.attributes.subscriber.debt" %>:</b></td>
+      <td  colspan="5"><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
+    </tr>
   </tbody>
 </table>
 

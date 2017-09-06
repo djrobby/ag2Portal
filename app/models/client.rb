@@ -76,6 +76,10 @@ class Client < ActiveRecord::Base
   after_create :should_create_shared_contact, if: :is_contact?
   after_update :should_update_shared_contact, if: :is_contact?
 
+  def total_debt_unpaid
+    invoice_debts.unpaid.sum(:debt)
+  end
+
   def active_bank_accounts?
     !client_bank_accounts.where(ending_at: nil).blank?
   end

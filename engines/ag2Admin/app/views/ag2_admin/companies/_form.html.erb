@@ -209,7 +209,9 @@
 <table class="form-table">
   <tbody>
     <tr class="form-tr">
+    <div class="field file-field">
       <td class="form-td-two left-winged"> <%= f.input :logo, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
+      <%= f.hidden_field :logo_cache %> 
       <td class="form-td-two right-winged">
       <div id="dd_files">
         <% if !@company.logo_file_name.nil? %>
@@ -220,6 +222,7 @@
           <img id="image_content" hidden>
         <% end %>
       </div></td>
+    </div>
     </tr>
   </tbody>
 </table>

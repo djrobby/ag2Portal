@@ -55,3 +55,5 @@ en:
         payment_method: "Payment method"
         payment_method_id: "Payment method"
         full_name: "Full Name"
+        debt: "Debt"
+
