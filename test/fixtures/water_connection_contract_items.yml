@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  water_connection_contract: 
+  water_connection_contract_item_type: 
+  quantity: 9.99
+
+two:
+  water_connection_contract: 
+  water_connection_contract_item_type: 
+  quantity: 9.99

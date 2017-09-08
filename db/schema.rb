@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170902090553) do
+ActiveRecord::Schema.define(:version => 20170908122055) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2602,6 +2602,16 @@ ActiveRecord::Schema.define(:version => 20170902090553) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
@@ -3707,6 +3717,19 @@ ActiveRecord::Schema.define(:version => 20170902090553) do
     t.decimal "debt",                :precision => 65, :scale => 20
   end
 
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
+  end
+
   create_table "supplier_invoice_items", :force => true do |t|
     t.integer  "supplier_invoice_id"
     t.integer  "receipt_note_id"
@@ -4355,6 +4378,28 @@ ActiveRecord::Schema.define(:version => 20170902090553) do
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
+  create_table "water_connection_contract_item_types", :force => true do |t|
+    t.string   "description"
+    t.decimal  "price",       :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                  :null => false
+    t.datetime "updated_at",                                                  :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  create_table "water_connection_contract_items", :force => true do |t|
+    t.integer  "water_connection_contract_id"
+    t.integer  "water_connection_contract_item_type_id"
+    t.decimal  "quantity",                               :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                                             :null => false
+    t.datetime "updated_at",                                                                             :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "water_connection_contract_items", ["water_connection_contract_id"], :name => "index_water_connection_contract_items_on_contract"
+  add_index "water_connection_contract_items", ["water_connection_contract_item_type_id"], :name => "index_water_connection_contract_items_on_type"
+
   create_table "water_connection_contracts", :force => true do |t|
     t.integer  "contracting_request_id"
     t.integer  "water_connection_type_id"
@@ -4365,17 +4410,37 @@ ActiveRecord::Schema.define(:version => 20170902090553) do
     t.integer  "tariff_id"
     t.integer  "bill_id"
     t.string   "remarks"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                                                                           :null => false
+    t.datetime "updated_at",                                                                           :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "caliber_id"
+    t.integer  "tariff_type_id"
+    t.integer  "service_point_purpose_id"
+    t.string   "gis_id"
+    t.string   "cadastral_reference"
+    t.string   "max_pressure"
+    t.string   "min_pressure"
+    t.integer  "connections_no",           :limit => 2,                               :default => 1,   :null => false
+    t.integer  "dwellings_no",             :limit => 2,                               :default => 0,   :null => false
+    t.integer  "premises_no",              :limit => 2,                               :default => 0,   :null => false
+    t.integer  "common_items_no",          :limit => 2,                               :default => 0,   :null => false
+    t.integer  "premises_area",            :limit => 3,                               :default => 0,   :null => false
+    t.integer  "yard_area",                :limit => 3,                               :default => 0,   :null => false
+    t.decimal  "pipe_length",                           :precision => 9, :scale => 2, :default => 0.0, :null => false
+    t.integer  "pool_area",                :limit => 3,                               :default => 0,   :null => false
   end
 
   add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
+  add_index "water_connection_contracts", ["cadastral_reference"], :name => "index_water_connection_contracts_on_cadastral_reference"
+  add_index "water_connection_contracts", ["caliber_id"], :name => "index_water_connection_contracts_on_caliber_id"
   add_index "water_connection_contracts", ["client_id"], :name => "index_water_connection_contracts_on_client_id"
   add_index "water_connection_contracts", ["contracting_request_id"], :name => "index_water_connection_contracts_on_contracting_request_id"
+  add_index "water_connection_contracts", ["gis_id"], :name => "index_water_connection_contracts_on_gis_id"
   add_index "water_connection_contracts", ["sale_offer_id"], :name => "index_water_connection_contracts_on_sale_offer_id"
+  add_index "water_connection_contracts", ["service_point_purpose_id"], :name => "index_water_connection_contracts_on_service_point_purpose_id"
   add_index "water_connection_contracts", ["tariff_id"], :name => "index_water_connection_contracts_on_tariff_id"
+  add_index "water_connection_contracts", ["tariff_type_id"], :name => "index_water_connection_contracts_on_tariff_type_id"
   add_index "water_connection_contracts", ["water_connection_type_id"], :name => "index_water_connection_contracts_on_water_connection_type_id"
   add_index "water_connection_contracts", ["work_order_id"], :name => "index_water_connection_contracts_on_work_order_id"
 
