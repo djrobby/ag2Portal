@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170908122055) do
+ActiveRecord::Schema.define(:version => 20170910082024) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -4380,11 +4380,12 @@ ActiveRecord::Schema.define(:version => 20170908122055) do
 
   create_table "water_connection_contract_item_types", :force => true do |t|
     t.string   "description"
-    t.decimal  "price",       :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                  :null => false
-    t.datetime "updated_at",                                                  :null => false
+    t.decimal  "price",                    :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "flow",        :limit => 2,                                :default => 0,   :null => false
   end
 
   create_table "water_connection_contract_items", :force => true do |t|
