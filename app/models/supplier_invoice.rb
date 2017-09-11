@@ -544,7 +544,7 @@ class SupplierInvoice < ActiveRecord::Base
             csv << [i.ledger_account_company_code(company_id),  # 001
                     posting_date.year.to_s,                   # 002
                     entry.to_s,                               # 003
-                    'D',  # 004
+                    'D',                                      # 004
                     g.code,                                   # 005
                     nil,  # 006
                     i.format_date(posting_date),              # 007
@@ -609,7 +609,7 @@ class SupplierInvoice < ActiveRecord::Base
             csv << [i.ledger_account_company_code(company_id),  # 001
                     posting_date.year.to_s,                   # 002
                     entry.to_s,                               # 003
-                    'D',  # 004
+                    'D',                                      # 004
                     g.code,                                   # 005
                     nil,  # 006
                     i.format_date(posting_date),              # 007
@@ -668,6 +668,69 @@ class SupplierInvoice < ActiveRecord::Base
                     nil]  # 060
           end # !g.code.blank?
         end # i.items_group_by_tax_type.each
+        # Group 4 (47) line: withholding
+        if !withholding_ledger_account.nil? && !withholding_amount.nil?
+          csv << [i.ledger_account_company_code(company_id),  # 001
+                  posting_date.year.to_s,                   # 002
+                  entry.to_s,                               # 003
+                  'H',                                      # 004
+                  withholding_ledger_account,               # 005
+                  nil,  # 006
+                  i.format_date(posting_date),              # 007
+                  nil,  # 008
+                  i.invoice_no,                             # 009
+                  withholding_amount,                       # 010
+                  nil,  # 011
+                  nil,  # 012
+                  nil,  # 013
+                  nil,  # 014
+                  nil,  # 015
+                  nil,  # 016
+                  nil,  # 017
+                  posting_date.month.to_s,                  # 018
+                  '0',                                      # 019
+                  '0',                                      # 020
+                  '0',                                      # 021
+                  nil,  # 022
+                  nil,  # 023
+                  nil,  # 024
+                  nil,  # 025
+                  nil,  # 026
+                  nil,  # 027
+                  nil,  # 028
+                  nil,  # 029
+                  nil,  # 030
+                  nil,  # 031
+                  nil,  # 032
+                  nil,  # 033
+                  nil,  # 034
+                  nil,  # 035
+                  nil,  # 036
+                  nil,  # 037
+                  nil,  # 038
+                  nil,  # 039
+                  nil,  # 040
+                  nil,  # 041
+                  nil,  # 042
+                  nil,  # 043
+                  nil,  # 044
+                  nil,  # 045
+                  nil,  # 046
+                  nil,  # 047
+                  nil,  # 048
+                  nil,  # 049
+                  nil,  # 050
+                  nil,  # 051
+                  nil,  # 052
+                  nil,  # 053
+                  nil,  # 054
+                  nil,  # 055
+                  nil,  # 056
+                  nil,  # 057
+                  nil,  # 058
+                  nil,  # 059
+                  nil]  # 060
+        end # !withholding_ledger_account.nil? && !withholding_amount.nil?
       end # array.each
     end # CSV.generate
   end
