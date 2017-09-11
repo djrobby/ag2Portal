@@ -1,5 +1,6 @@
 class WithholdingType < ActiveRecord::Base
-  attr_accessible :description, :expiration, :tax, :ledger_account_app_code
+  belongs_to :ledger_account
+  attr_accessible :description, :expiration, :tax, :ledger_account_app_code, :ledger_account_id
 
   has_many :suppliers
 
@@ -20,6 +21,10 @@ class WithholdingType < ActiveRecord::Base
 
   def ledger_account_app_code_formatted
     ledger_account_app_code.blank? ? '' : ledger_account_app_code
+  end
+
+  def ledger_account_code
+    ledger_account.blank? ? '475100922' : ledger_account.code
   end
 
   private

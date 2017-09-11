@@ -18,6 +18,7 @@ class LedgerAccount < ActiveRecord::Base
   has_many :supplier_ledger_accounts
   has_many :input_tax_type_ledger_accounts, :class_name => 'TaxTypeLedgerAccount', foreign_key: :input_ledger_account_id
   has_many :output_tax_type_ledger_accounts, :class_name => 'TaxTypeLedgerAccount', foreign_key: :output_ledger_account_id
+  has_many :withholding_types
 
   has_paper_trail
 

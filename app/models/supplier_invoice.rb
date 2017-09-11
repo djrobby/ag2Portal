@@ -450,13 +450,23 @@ class SupplierInvoice < ActiveRecord::Base
         withholding_taxable = nil
         withholding_tax = nil
         withholding_amount = nil
+        withholding_type = nil
+        withholding_ledger_account = nil
         if !i.withholding.blank? && i.withholding < 0
+          totals = i.raw_number(taxable_sum + tax_sum + i.withholding, 2)
           withholding_invoiced = i.withholding * (-1)
           withholding_tax_pct = ((withholding_invoiced / taxable_sum) * 100).round(1)
           withholding_taxable = i.raw_number(taxable_sum, 2)
           withholding_tax = i.raw_number(withholding_tax_pct, 1)
           withholding_amount = i.raw_number(withholding_invoiced, 2)
-          withholding_code = WithholdingType.find_by_tax(withholding_tax_pct).ledger_account_app_code_formatted rescue withholding_tax_pct.round(0).to_s
+          withholding_type = WithholdingType.find_by_tax(withholding_tax_pct)
+          if withholding_type.nil?
+            withholding_code = withholding_tax_pct.round(0).to_s
+            withholding_ledger_account = '475100922'
+          else
+            withholding_code = withholding_type.ledger_account_app_code_formatted rescue withholding_tax_pct.round(0).to_s
+            withholding_ledger_account = withholding_type.ledger_account_code rescue '475100922'
+          end
         end
         # Posting date
         posting_date = i.posted_at.blank? ? i.created_at : i.posted_at

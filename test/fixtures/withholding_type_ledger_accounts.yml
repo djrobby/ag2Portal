@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  withholding_type: 
+  ledger_account: 
+  company: 
+
+two:
+  withholding_type: 
+  ledger_account: 
+  company: 
