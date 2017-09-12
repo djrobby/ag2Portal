@@ -16,6 +16,7 @@ module Ag2Purchase
                                                :su_format_amount,
                                                :su_format_percentage,
                                                :su_update_office_select_from_bank,
+                                               :su_update_ledger_account_select_from_company,
                                                :su_check_iban]
     # Update payment method and ledger account text fields at view from organization select
     def su_update_textfields_from_organization
@@ -245,6 +246,22 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update ledger account select at view from company select
+    def su_update_ledger_account_select_from_company
+      company = params[:company]
+      if company != '0'
+        @company = Company.find(company)
+        @offices = @company.blank? ? company_offices_dropdown : @company.bank_offices.order(:bank_id, :code)
+      else
+        @offices = bank_offices_dropdown
+      end
+      # Offers array
+      @offices_dropdown = bank_offices_array(@offices)
+      # Setup JSON
+      @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
     # Check Fiscal Id
     def su_check_fiscal_id
       fiscal_id = params[:contact]
@@ -319,6 +336,8 @@ module Ag2Purchase
       @countries = countries_dropdown
       @banks = banks_dropdown
       @offices = bank_offices_dropdown
+      @companies = companies_dropdown
+      @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -336,6 +355,8 @@ module Ag2Purchase
       @countries = countries_dropdown
       @banks = banks_dropdown
       @offices = bank_offices_dropdown
+      @companies = companies_dropdown
+      @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
     end
 
     # POST /suppliers
@@ -453,7 +474,7 @@ module Ag2Purchase
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
     def payment_payment_methods(_organization)
@@ -463,6 +484,14 @@ module Ag2Purchase
         _methods = PaymentMethod.where("flow = 3 OR flow = 2").order(:description)
       end
       _methods
+    end
+
+    def companies_dropdown
+      if session[:company] != '0'
+        Company.where(id: session[:company].to_i)
+      else
+        session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
     end
 
     def ledger_accounts_dropdown
@@ -476,6 +505,9 @@ module Ag2Purchase
           projects_ledger_accounts(_projects)
         end
       end
+    end
+
+    def ledger_accounts_by_company_dropdown
     end
 
     def bank_account_classes_dropdown

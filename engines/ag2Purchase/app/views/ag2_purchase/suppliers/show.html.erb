@@ -143,7 +143,7 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
-<% end %> <!-- end @accounts.count > 0 -->
+<% end %> <!-- @accounts.count > 0 -->
 
 <!-- Remarks -->
 <table class="table">
@@ -171,18 +171,35 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 <br />
 <br />
 
-<!-- Ledger Account -->
+<!-- Ledger Accounts -->
 <% if @supplier.supplier_ledger_accounts.count > 0 %>
-  <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
-  <table class="table table-condensed table-striped shrinked">
-    <thead>
-      <%= render '/layouts/ag2_purchase/ledger_account_header' %>
-    </thead>
-    <tbody>
-      <%= render :partial => '/layouts/ag2_purchase/ledger_accounts', :locals => { :ledger_accounts => @supplier.supplier_ledger_accounts } %>
-    </tbody>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <!-- company  -->
+  <col width="50%" />
+  <!-- ledger_account -->
+  <col width="50%" />
+  <thead>
+    <%= render 'ledger_accounts_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'ledger_account', collection: @supplier.supplier_ledger_accounts %>
+    <%#= render :partial => '/layouts/ag2_purchase/ledger_accounts', :locals => { :ledger_accounts => @supplier.supplier_ledger_accounts } %>
+  </tbody>
   </table>
-<% end %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
+<% end %> <!-- @supplier.supplier_ledger_accounts.count > 0 -->
 
 <!-- Contacts -->
 <% if (@contacts.count > 0) %>
