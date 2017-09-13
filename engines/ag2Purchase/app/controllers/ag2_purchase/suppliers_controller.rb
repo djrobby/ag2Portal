@@ -239,7 +239,7 @@ module Ag2Purchase
       else
         @offices = bank_offices_dropdown
       end
-      # Offers array
+      # Offices array
       @offices_dropdown = bank_offices_array(@offices)
       # Setup JSON
       @json_data = { "office" => @offices_dropdown }
@@ -251,14 +251,14 @@ module Ag2Purchase
       company = params[:company]
       if company != '0'
         @company = Company.find(company)
-        @offices = @company.blank? ? company_offices_dropdown : @company.bank_offices.order(:bank_id, :code)
+        @ledger_accounts = @company.blank? ? company_offices_dropdown : @company.ledger_accounts.by_code
       else
-        @offices = bank_offices_dropdown
+        @ledger_accounts = bank_offices_dropdown
       end
-      # Offers array
-      @offices_dropdown = bank_offices_array(@offices)
+      # Accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
       # Setup JSON
-      @json_data = { "office" => @offices_dropdown }
+      @json_data = { "ledger_account" => @ledger_accounts_dropdown }
       render json: @json_data
     end
 

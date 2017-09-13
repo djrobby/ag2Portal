@@ -26,7 +26,7 @@ class WaterSupplyContract < ActiveRecord::Base
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id, :tariff_type_id,
                   :created_by, :updated_by, :meter_code_input,
-                  :min_pressure, :max_pressure, :contract_term
+                  :min_pressure, :max_pressure, :contract_term, :contract_no
 
   def request_no
     contracting_request.request_no unless contracting_request.blank?

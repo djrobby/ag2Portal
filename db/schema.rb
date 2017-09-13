@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170910082024) do
+ActiveRecord::Schema.define(:version => 20170913071630) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1178,6 +1178,7 @@ ActiveRecord::Schema.define(:version => 20170910082024) do
   add_index "contracting_requests", ["entity_zipcode_id"], :name => "index_contracting_requests_on_entity_zipcode_id"
   add_index "contracting_requests", ["project_id"], :name => "index_contracting_requests_on_project_id"
   add_index "contracting_requests", ["r_fiscal_id"], :name => "index_contracting_requests_on_r_fiscal_id"
+  add_index "contracting_requests", ["request_no"], :name => "index_contracting_requests_on_request_no"
   add_index "contracting_requests", ["service_point_id"], :name => "index_contracting_requests_on_service_point_id"
   add_index "contracting_requests", ["subscriber_center_id"], :name => "index_contracting_requests_on_subscriber_center_id"
   add_index "contracting_requests", ["subscriber_country_id"], :name => "index_contracting_requests_on_subscriber_country_id"
@@ -4430,12 +4431,14 @@ ActiveRecord::Schema.define(:version => 20170910082024) do
     t.integer  "yard_area",                :limit => 3,                               :default => 0,   :null => false
     t.decimal  "pipe_length",                           :precision => 9, :scale => 2, :default => 0.0, :null => false
     t.integer  "pool_area",                :limit => 3,                               :default => 0,   :null => false
+    t.string   "contract_no"
   end
 
   add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
   add_index "water_connection_contracts", ["cadastral_reference"], :name => "index_water_connection_contracts_on_cadastral_reference"
   add_index "water_connection_contracts", ["caliber_id"], :name => "index_water_connection_contracts_on_caliber_id"
   add_index "water_connection_contracts", ["client_id"], :name => "index_water_connection_contracts_on_client_id"
+  add_index "water_connection_contracts", ["contract_no"], :name => "index_water_connection_contracts_on_contract_no"
   add_index "water_connection_contracts", ["contracting_request_id"], :name => "index_water_connection_contracts_on_contracting_request_id"
   add_index "water_connection_contracts", ["gis_id"], :name => "index_water_connection_contracts_on_gis_id"
   add_index "water_connection_contracts", ["sale_offer_id"], :name => "index_water_connection_contracts_on_sale_offer_id"
@@ -4497,12 +4500,14 @@ ActiveRecord::Schema.define(:version => 20170910082024) do
     t.string   "max_pressure"
     t.string   "min_pressure"
     t.string   "contract_term"
+    t.string   "contract_no"
   end
 
   add_index "water_supply_contracts", ["bailback_bill_id"], :name => "index_water_supply_contracts_on_bailback_bill_id"
   add_index "water_supply_contracts", ["bill_id"], :name => "index_water_supply_contracts_on_bill_id"
   add_index "water_supply_contracts", ["caliber_id"], :name => "index_water_supply_contracts_on_caliber_id"
   add_index "water_supply_contracts", ["client_id"], :name => "index_water_supply_contracts_on_client_id"
+  add_index "water_supply_contracts", ["contract_no"], :name => "index_water_supply_contracts_on_contract_no"
   add_index "water_supply_contracts", ["contracting_request_id"], :name => "index_water_supply_contracts_on_contracting_request_id"
   add_index "water_supply_contracts", ["meter_id"], :name => "index_water_supply_contracts_on_meter_id"
   add_index "water_supply_contracts", ["reading_route_id"], :name => "index_water_supply_contracts_on_reading_route_id"
@@ -4513,6 +4518,20 @@ ActiveRecord::Schema.define(:version => 20170910082024) do
   add_index "water_supply_contracts", ["use_id"], :name => "index_water_supply_contracts_on_use_id"
   add_index "water_supply_contracts", ["work_order_id"], :name => "index_water_supply_contracts_on_work_order_id"
 
+  create_table "withholding_type_ledger_accounts", :force => true do |t|
+    t.integer  "withholding_type_id"
+    t.integer  "ledger_account_id"
+    t.integer  "company_id"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "withholding_type_ledger_accounts", ["company_id"], :name => "index_withholding_type_ledger_accounts_on_company_id"
+  add_index "withholding_type_ledger_accounts", ["ledger_account_id"], :name => "index_withholding_type_ledger_accounts_on_ledger_account_id"
+  add_index "withholding_type_ledger_accounts", ["withholding_type_id"], :name => "index_withholding_type_ledger_accounts_on_withholding_type_id"
+
   create_table "withholding_types", :force => true do |t|
     t.string   "description"
     t.decimal  "tax",                     :precision => 6, :scale => 2, :default => 0.0, :null => false
@@ -4522,6 +4541,7 @@ ActiveRecord::Schema.define(:version => 20170910082024) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "ledger_account_app_code"
+    t.integer  "ledger_account_id"
   end
 
   add_index "withholding_types", ["tax"], :name => "index_withholding_types_on_tax"

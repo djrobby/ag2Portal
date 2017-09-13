@@ -725,6 +725,33 @@ end
     code
   end
 
+  # Contract no (for WaterSupplyContract & WaterConnectionContract)
+  # Params: project_id, type_id
+  def contract_next_no(project, type)
+    year = Time.new.year
+    last_no = nil
+    code = ''
+    # Builds code, if possible
+    project = project.to_s if project.is_a? Fixnum
+    project = project.rjust(6, '0')
+    type_s = type.to_s if type.is_a? Fixnum
+    type_s = type.rjust(2, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    if type == ContractingRequestType::CONNECTION
+      last_no = WaterConnectionContract.where("contract_no LIKE ?", "#{project}#{type_s}#{year}%").order(:contract_no).maximum(:contract_no)
+    else
+      last_no = WaterSupplyContract.where("contract_no LIKE ?", "#{project}#{type_s}#{year}%").order(:contract_no).maximum(:contract_no)
+    end
+    if last_no.nil?
+      code = project + type_s + year + '000001'
+    else
+      last_no = last_no[12..17].to_i + 1
+      code = project + type_s + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
+
   # Bill no
   def bill_next_no(project)
     year = Time.new.year
