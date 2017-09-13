@@ -36,7 +36,7 @@ class Supplier < ActiveRecord::Base
                   :is_contact, :shared_contact_id, :order_authorization, :free_shipping_sum,
                   :withholding_rate, :withholding_type_id
   attr_accessible :activity_ids
-  attr_accessible :supplier_bank_accounts_attributes
+  attr_accessible :supplier_bank_accounts_attributes, :supplier_ledger_accounts_attributes
 
   has_many :supplier_contacts, dependent: :destroy
   has_many :supplier_bank_accounts, dependent: :destroy

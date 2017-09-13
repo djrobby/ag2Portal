@@ -59,7 +59,7 @@
   </div>
   <div class="modal-body">
     <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-company', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :ledger_account, collection: @ledger_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-ledger-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :ledger_account, collection: @ledger_accounts_by_company, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-ledger-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
   </div>
   <div class="modal-footer">
     <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.suppliers.add_account_to", var: @supplier.full_code) unless @supplier.full_code.blank? %></span>

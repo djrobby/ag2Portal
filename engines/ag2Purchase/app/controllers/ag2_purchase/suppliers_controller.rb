@@ -251,9 +251,9 @@ module Ag2Purchase
       company = params[:company]
       if company != '0'
         @company = Company.find(company)
-        @ledger_accounts = @company.blank? ? company_offices_dropdown : @company.ledger_accounts.by_code
+        @ledger_accounts = @company.blank? ? ledger_accounts_by_company_dropdown : @company.ledger_accounts.by_code
       else
-        @ledger_accounts = bank_offices_dropdown
+        @ledger_accounts = ledger_accounts_by_company_dropdown
       end
       # Accounts array
       @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
@@ -377,6 +377,8 @@ module Ag2Purchase
           @countries = countries_dropdown
           @banks = banks_dropdown
           @offices = bank_offices_dropdown
+          @companies = companies_dropdown
+          @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -402,6 +404,8 @@ module Ag2Purchase
           @countries = countries_dropdown
           @banks = banks_dropdown
           @offices = bank_offices_dropdown
+          @companies = companies_dropdown
+          @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
           format.html { render action: "edit" }
           format.json { render json: @supplier.errors, status: :unprocessable_entity }
         end
@@ -508,6 +512,11 @@ module Ag2Purchase
     end
 
     def ledger_accounts_by_company_dropdown
+      if session[:company] != '0'
+        LedgerAccount.belongs_to_company(session[:company].to_i)
+      else
+        session[:organization] != '0' ? LedgerAccount.belongs_to_organization(session[:organization].to_i) : LedgerAccount.by_code
+      end
     end
 
     def bank_account_classes_dropdown
