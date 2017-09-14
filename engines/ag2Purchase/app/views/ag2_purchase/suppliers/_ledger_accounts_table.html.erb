@@ -2,7 +2,7 @@
   var _f = '';
 
   $(document).ready(function() {
-    $('.wsel2').select2({
+    $('.lsel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -67,8 +67,8 @@
   <tbody>
     <%= f.simple_fields_for :supplier_ledger_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :company, label: false, wrapper: false, collection: @companies, input_html: { class: 'wsel2 fnt-company' } %></td>
-      <td><%= i.association :ledger_account, label: false, wrapper: false, collection: @ledger_accounts_by_company, input_html: { class: 'wsel2 fnt-ledger-account', maxlength: 10 } %></td>
+      <td><%= i.association :company, label: false, wrapper: false, collection: @companies, input_html: { class: 'lsel2 fnt-company' } %></td>
+      <td><%= i.association :ledger_account, label: false, wrapper: false, collection: @ledger_accounts_by_company, input_html: { class: 'lsel2 fnt-ledger-account', maxlength: 10 } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      supplier_ledger_account:
+        zero:  Supplier bank accounts
+        one:   Supplier bank account
+        few:   Supplier bank accounts
+        other: Supplier bank accounts
+    attributes:
+      supplier_ledger_account:
+        supplier: "Supplier"
+        supplier_id: "Supplier"
+        ledger_account: "Ledger account"
+        ledger_account_id: "Ledger account"
+        company: "Company"
+        company_id: "Company"

@@ -43,8 +43,8 @@ en:
         email: "Email"
         payment_method: "Payment method"
         payment_method_id: "Payment method"
-        ledger_account: "Ledger account"
-        ledger_account_id: "Ledger account"
+        ledger_account: "Global ledger account"
+        ledger_account_id: "Global ledger account"
         discount_rate: "Discount rate %"
         discount_rate_c: "SGDR %"
         active: "Active?"
@@ -58,7 +58,10 @@ en:
         organization: "Organization"
         organization_id: "Organization"
         is_contact: "Is contact?"
-        free_shipping_sum: "Free shipping from €"
+        free_shipping_sum: "Free shipping from"
+        withholding_rate: "Withholding %"
+        withholding_type: "Withholding type"
+        withholding_type_id: "Withholding type"
     csv_sage200:
       supplier:
         c001: "CodigoEmpresa"

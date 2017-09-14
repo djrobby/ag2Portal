@@ -481,6 +481,10 @@
   <label class="multi-field-label-three"> <%= f.input :max_orders_count, input_html: { class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.input :max_orders_sum, as: :string, input_html: { value: (number_with_precision(f.object.max_orders_sum, precision: 2) if f.object.max_orders_sum), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :withholding_type, collection: @withholding_types, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :withholding_rate, as: :string, input_html: { value: (number_with_precision(f.object.withholding_rate, precision: 2) if f.object.withholding_rate), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
 <!-- Bank accounts -->
 <table class="form-table">
   <tbody>
@@ -514,6 +518,7 @@
     </tr>
   </tbody>
 </table>
+<%= render 'ledger_accounts_table', f: f %>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

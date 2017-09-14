@@ -338,6 +338,7 @@ module Ag2Purchase
       @offices = bank_offices_dropdown
       @companies = companies_dropdown
       @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
+      @withholding_types = WithholdingType.current
 
       respond_to do |format|
         format.html # new.html.erb
@@ -357,6 +358,7 @@ module Ag2Purchase
       @offices = bank_offices_dropdown
       @companies = companies_dropdown
       @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
+      @withholding_types = WithholdingType.current
     end
 
     # POST /suppliers

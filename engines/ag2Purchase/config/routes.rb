@@ -63,9 +63,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'suppliers/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'
     match 'su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'
     match 'suppliers/:id/su_check_iban/:country/:dc/:bank/:office/:account', :controller => 'suppliers', :action => 'su_check_iban'
-    match 'suppliers/su_update_ledger_account_select_from_company/:bank', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
-    match 'su_update_ledger_account_select_from_company/:bank', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
-    match 'suppliers/:id/su_update_ledger_account_select_from_company/:bank', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
+    match 'suppliers/su_update_ledger_account_select_from_company/:company', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
+    match 'su_update_ledger_account_select_from_company/:company', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
+    match 'suppliers/:id/su_update_ledger_account_select_from_company/:company', :controller => 'suppliers', :action => 'su_update_ledger_account_select_from_company'
     #
     # Purchase orders
     match 'purchase_orders/po_update_description_prices_from_product_store/:product/:qty/:store/:supplier/:tbl', :controller => 'purchase_orders', :action => 'po_update_description_prices_from_product_store'

@@ -44,8 +44,8 @@ es:
         remarks: "Comentarios"
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
-        ledger_account: "Cuenta contable"
-        ledger_account_id: "Cuenta contable"
+        ledger_account: "Cuenta contable global"
+        ledger_account_id: "Cuenta contable global"
         discount_rate: "Tasa descuento %"
         discount_rate_c: "TDGP %"
         active: "¿Activo?"
@@ -58,7 +58,10 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         is_contact: "¿Es contacto?"
-        free_shipping_sum: "Portes gratis a partir de €"
+        free_shipping_sum: "Portes gratis a partir de"
+        withholding_rate: "% Retención"
+        withholding_type: "Tipo retención"
+        withholding_type_id: "Tipo retención"
     csv_sage200:
       supplier:
         c001: "CodigoEmpresa"

@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      supplier_ledger_account:
+        zero:  Cuentas contables del proveedor
+        one:   Cuenta contable del proveedor
+        few:   Cuentas contables del proveedor
+        other: Cuentas contables del proveedor
+    attributes:
+      supplier_ledger_account:
+        supplier: "Proveedor"
+        supplier_id: "Proveedor"
+        ledger_account: "Cuenta contable"
+        ledger_account_id: "Cuenta contable"
+        company: "Empresa"
+        company_id: "Empresa"

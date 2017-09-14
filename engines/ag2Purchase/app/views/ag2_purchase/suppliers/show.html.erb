@@ -145,32 +145,6 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
 <% end %> <!-- @accounts.count > 0 -->
 
-<!-- Remarks -->
-<table class="table">
-  <tbody>
-    <tr>
-      <td style="width: 12%"><%= t :"activerecord.attributes.supplier.remarks" %>:</td>
-      <td style="width: 88%"><%= @supplier.remarks unless @supplier.remarks.blank? %></td>
-    </tr>
-  </tbody>
-</table>
-
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: Supplier, update_path: edit_supplier_path(@supplier), update_txt: t('.btn_edit'),
-delete_path: @supplier, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier.one"), txt: @supplier.full_name,
-new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') } %>
-
-<!-- Activities -->
-<% if @supplier.activities.count > 0 %>
-  <h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>
-  &#8226;
-  <% @supplier.activities.each do |activity| %>
-    <span class="highlighted"><%= activity.description %></span> &#8226;
-  <% end %>
-<% end %>
-<br />
-<br />
-
 <!-- Ledger Accounts -->
 <% if @supplier.supplier_ledger_accounts.count > 0 %>
 <table class="form-table">
@@ -201,9 +175,46 @@ new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
 <% end %> <!-- @supplier.supplier_ledger_accounts.count > 0 -->
 
+<!-- Remarks -->
+<table class="table">
+  <tbody>
+    <tr>
+      <td style="width: 12%"><%= t :"activerecord.attributes.supplier.remarks" %>:</td>
+      <td style="width: 88%"><%= @supplier.remarks unless @supplier.remarks.blank? %></td>
+    </tr>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: Supplier, update_path: edit_supplier_path(@supplier), update_txt: t('.btn_edit'),
+delete_path: @supplier, delete_txt: t('.btn_delete'), msg: t("activerecord.models.supplier.one"), txt: @supplier.full_name,
+new_path: new_supplier_path, new_txt: t('ag2_purchase.suppliers.index.btn_new') } %>
+
+<!-- Activities -->
+<% if @supplier.activities.count > 0 %>
+  <h4><%= t 'activerecord.attributes.supplier.activity_ids' %></h4>
+  &#8226;
+  <% @supplier.activities.each do |activity| %>
+    <span class="highlighted"><%= activity.description %></span> &#8226;
+  <% end %>
+<% end %>
+<br />
+<br />
+
 <!-- Contacts -->
 <% if (@contacts.count > 0) %>
-<h4><%=t '.subtable_title' %></h4>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <%= render '/layouts/ag2_purchase/contactsheader' %>
