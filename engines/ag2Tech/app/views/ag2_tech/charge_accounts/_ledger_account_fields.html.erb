@@ -1,0 +1,74 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    // Retrieves parent values
+    _f = $("#fnt-class").closest('form')[0];
+    // Holder Fiscal Id
+    if ($("#fnt-fiscal-id").val() == "") {
+      _n = $('#supplier_fiscal_id').val();
+      $("#fnt-fiscal-id").val(_n);
+    }
+    // Holder Name
+    if ($("#fnt-name").val() == "") {
+      _n = $('#supplier_name').val().toUpperCase();
+      $("#fnt-name").val(_n);
+    }
+    
+    // Set focus
+    $(".modal").on('shown', function() {
+      $(this).find(".form-label:first").focus();
+    });
+  });
+
+  jQuery(function($) {
+    // when the #fnt-company field changes
+    $("#fnt-company").change(function() {
+      // make a POST call and replace the content
+      var company = $('select#fnt-company :selected').val();
+      if (company == "")
+        company = "0";
+      jQuery.getJSON('su_update_ledger_account_select_from_company/' + company, function(data) {
+        var o = data.ledger_account;
+        $("#fnt-ledger-account").html("");
+        $("#fnt-ledger-account").select2("val", "");
+        $("#fnt-ledger-account").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'ledger-account' && option != "") {
+              $("#fnt-ledger-account").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#fnt-ledger-account").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          });
+        }
+      });
+      return false;
+    });
+  });
+</script>
+
+<div id="new-ledger-account-fields" class="modal hide fade" data-backdrop="static">
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t("ag2_purchase.suppliers.add_ledger_account") %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-company', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :ledger_account, collection: @ledger_accounts_by_company, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-ledger-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.suppliers.add_account_to", var: @supplier.full_code) unless @supplier.full_code.blank? %></span>
+    <button id="addLedgerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.suppliers.btn_add_account') %></button>
+    <button id="cancelLedgerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  sel2NoMatch = '<%= t("select2.no_matches") %>';
+  ca_ledger_accountFieldsUI.init(sel2NoMatch);
+</script>

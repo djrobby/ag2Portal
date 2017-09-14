@@ -1,0 +1,78 @@
+<script>
+  var _f = '';
+
+  $(document).ready(function() {
+    $('.lsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      containerCssClass: 'sub-select2-field'
+    });
+    // Retrieves parent values
+    _f = $(".fnt-company").closest('form')[0];
+  }); 
+
+  jQuery(function($) {
+    // when the .fnt-company field changes
+    $(".fnt-company").change(function() {
+      // preserve the current object
+      var _this = (this);
+      // make a POST call and replace the content
+      var company = $(this).closest('tr').find('select.fnt-company :selected').val();
+      if (company == "")
+        company = "0";
+      jQuery.getJSON('su_update_ledger_account_select_from_company/' + company, function(data) {
+        var o = data.ledger_account;
+        $(_this).closest('tr').find('.fnt-ledger-account').html("");
+        $(_this).closest('tr').find('.fnt-ledger-account').select2("val", "");
+        $(_this).closest('tr').find('.fnt-ledger-account').append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'ledger-account' && option != "") {
+              $(_this).closest('tr').find('.fnt-ledger-account').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $(_this).closest('tr').find('.fnt-ledger-account').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          });
+        }
+      });
+      return false;
+    });
+
+    /*
+     * Very special function!
+     * This one re-calculate table totals after delete an item
+     * When the .icon-trash clicked
+     * Replace behavior of link_to_remove_fields
+     * (the same was done in nested_si.js)
+     */
+    $(".icon-trash").click(function() {
+      remove_fields(this);
+    });
+  });
+</script>
+
+<table id="ledger-accounts-table" class="table table-condensed table-striped shrinked fixed">
+  <!-- company  -->
+  <col width="45%" />
+  <!-- ledger_account -->
+  <col width="50%" />
+  <!-- button -->
+  <col width="5%" />
+  <thead>
+    <%= render 'ledger_accounts_header' %>
+  </thead>
+  <tbody>
+    <%= f.simple_fields_for :supplier_ledger_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <tr class="fields">
+      <td><%= i.association :company, label: false, wrapper: false, collection: @companies, input_html: { class: 'lsel2 fnt-company' } %></td>
+      <td><%= i.association :ledger_account, label: false, wrapper: false, collection: @ledger_accounts_by_company, input_html: { class: 'lsel2 fnt-ledger-account', maxlength: 10 } %></td>
+      <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
+      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

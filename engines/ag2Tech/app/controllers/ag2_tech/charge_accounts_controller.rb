@@ -6,6 +6,7 @@ module Ag2Tech
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:cc_update_project_textfields_from_organization,
                                                :cc_update_account_textfield_from_project,
+                                               :cc_update_ledger_account_select_from_company,
                                                :cc_generate_code]
 
     # Update project text fields at view from organization select
@@ -58,6 +59,22 @@ module Ag2Tech
         code = cc_next_code(organization, group, project)
       end
       @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Update ledger account select at view from company select
+    def cc_update_ledger_account_select_from_company
+      company = params[:company]
+      if company != '0'
+        @company = Company.find(company)
+        @ledger_accounts = @company.blank? ? ledger_accounts_by_company_dropdown : @company.ledger_accounts.by_code
+      else
+        @ledger_accounts = ledger_accounts_by_company_dropdown
+      end
+      # Accounts array
+      @ledger_accounts_dropdown = ledger_accounts_array(@ledger_accounts)
+      # Setup JSON
+      @json_data = { "ledger_account" => @ledger_accounts_dropdown }
       render json: @json_data
     end
 
@@ -137,6 +154,8 @@ module Ag2Tech
       @projects = projects_dropdown
       @groups = groups_dropdown
       @ledger_accounts = projects_ledger_accounts(@projects)
+      @companies = companies_dropdown
+      @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -151,6 +170,8 @@ module Ag2Tech
       @projects = projects_dropdown_edit(@charge_account.project)
       @groups = @charge_account.organization.blank? ? groups_dropdown : @charge_account.organization.charge_groups.order(:group_code)
       @ledger_accounts = @charge_account.project.blank? ? projects_ledger_accounts(@projects) : ledger_accounts_dropdown_edit(@charge_account.project)
+      @companies = companies_dropdown
+      @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
     end
 
     # POST /charge_accounts
@@ -286,6 +307,14 @@ module Ag2Tech
 
     def ledger_accounts_dropdown
       session[:organization] != '0' ? LedgerAccount.where(organization_id: session[:organization].to_i).order(:code) : LedgerAccount.order(:code)
+    end
+
+    def ledger_accounts_by_company_dropdown
+      if session[:company] != '0'
+        LedgerAccount.belongs_to_company(session[:company].to_i)
+      else
+        session[:organization] != '0' ? LedgerAccount.belongs_to_organization(session[:organization].to_i) : LedgerAccount.by_code
+      end
     end
 
     def ledger_accounts_dropdown_edit(_project)
