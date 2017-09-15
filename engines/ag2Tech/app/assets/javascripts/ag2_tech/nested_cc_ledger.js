@@ -9,30 +9,30 @@
  * >> This global methods are in main nested.js!!
  */
 
-var ca_ledger_accountFieldsUI = {
+var cc_ledger_accountFieldsUI = {
     init: function(sel2NoMatches) {
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
         $('#addLedgerButton').on('click', function(e) {
-            var isValid = $(ca_ledger_cfg.formId).validate(false, validationSettings);
+            var isValid = $(cc_ledger_cfg.formId).validate(false, validationSettings);
             if (!isValid) {
                 e.stopPropagation();
                 return false;
             }
-            ca_ledger_formHandler.appendFields(sel2NoMatches);
-            ca_ledger_formHandler.hideForm();
+            cc_ledger_formHandler.appendFields(sel2NoMatches);
+            cc_ledger_formHandler.hideForm();
         });
 
         $('#cancelLedgerButton').on('click', function(e) {
-          ca_ledger_formHandler.removeFields();
-          ca_ledger_formHandler.hideForm();
+          cc_ledger_formHandler.removeFields();
+          cc_ledger_formHandler.hideForm();
         });
     }
 };
 
-var ca_ledger_cfg = {
+var cc_ledger_cfg = {
     formId: '#new-ledger-account-fields',
     tableId: '#ledger-accounts-table',
     inputFieldClassSelector: '.field',
@@ -41,16 +41,16 @@ var ca_ledger_cfg = {
     }
 };
 
-var ca_ledger_formHandler = {
+var cc_ledger_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
 		    // the DOM (we'll attach them later).
-        var inputFields = $(ca_ledger_cfg.formId + ' ' + ca_ledger_cfg.inputFieldClassSelector);
+        var inputFields = $(cc_ledger_cfg.formId + ' ' + cc_ledger_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
-        ca_ledger_rowBuilder.addRow(ca_ledger_cfg.getTBodySelector(), inputFields);
+        cc_ledger_rowBuilder.addRow(cc_ledger_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
         $('select.lsel2').select2('destroy');
@@ -66,7 +66,7 @@ var ca_ledger_formHandler = {
     removeFields: function () {
         // Get a handle on all the input fields in the form and detach them from
         // the DOM (we'll attach them later).
-        var inputFields = $(ca_ledger_cfg.formId + ' ' + ca_ledger_cfg.inputFieldClassSelector);
+        var inputFields = $(cc_ledger_cfg.formId + ' ' + cc_ledger_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Change value of _destroy field
@@ -82,11 +82,11 @@ var ca_ledger_formHandler = {
         // Update and display totals NOT HERE!
         //$('#accounts-table').trigger('totals');
         // Hide modal
-        $(ca_ledger_cfg.formId).modal('hide');
+        $(cc_ledger_cfg.formId).modal('hide');
     }
 };
 
-var ca_ledger_rowBuilder = function() {
+var cc_ledger_rowBuilder = function() {
     // Private property that define the default <TR> element text.
     var row = $('<tr>', { class: 'fields' });
 

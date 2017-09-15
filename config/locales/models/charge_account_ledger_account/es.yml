@@ -1,0 +1,16 @@
+es:
+  activerecord:
+    models:
+      charge_account_ledger_account:
+        zero:  Cuentas contables de cuenta analítica
+        one:   Cuenta contable de cuenta analítica
+        few:   Cuentas contables de cuenta analítica
+        other: Cuentas contables de cuenta analítica
+    attributes:
+      charge_account_ledger_account:
+        supplier: "Cuenta analítica"
+        supplier_id: "Cuenta analítica"
+        ledger_account: "Cuenta contable"
+        ledger_account_id: "Cuenta contable"
+        company: "Empresa"
+        company_id: "Empresa"

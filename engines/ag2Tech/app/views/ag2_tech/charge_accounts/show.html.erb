@@ -31,18 +31,34 @@
   </tbody>
 </table>
 
-<!-- Ledger Account -->
-<% if @charge_account.charge_account_ledger_accounts.count > 0 %>
-  <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
-  <table class="table table-condensed table-striped shrinked">
-    <thead>
-      <%= render '/layouts/ag2_tech/ledger_account_header' %>
-    </thead>
-    <tbody>
-      <%= render :partial => '/layouts/ag2_tech/ledger_accounts', :locals => { :ledger_accounts => @charge_account.charge_account_ledger_accounts } %>
-    </tbody>
+<!-- Ledger Accounts -->
+<% if @ledger_accounts.count > 0 %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'activerecord.models.ledger_account.zero' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <!-- company  -->
+  <col width="50%" />
+  <!-- ledger_account -->
+  <col width="50%" />
+  <thead>
+    <%= render 'ledger_accounts_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'ledger_account', collection: @ledger_accounts %>
+  </tbody>
   </table>
-<% end %>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @ledger_accounts } %>
+<% end %> <!-- @charge_account.charge_account_ledger_accounts.count > 0 -->
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: ChargeAccount, update_path: edit_charge_account_path(@charge_account), update_txt: t('.btn_edit'),

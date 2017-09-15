@@ -33,7 +33,6 @@ Ag2Tech::Engine.routes.draw do
     match 'pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     match 'projects/:id/pr_update_total_and_price/:total/:price', :controller => 'projects', :action => 'pr_update_total_and_price'
     match 'pr_update_offices_select_from_company/:com', :controller => 'projects', :action => 'pr_update_offices_select_from_company'
-
     match 'projects/pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
     match 'pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
     match 'projects/:id/pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
@@ -48,6 +47,10 @@ Ag2Tech::Engine.routes.draw do
     match 'charge_accounts/cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
     match 'cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
     match 'charge_accounts/:id/cc_update_account_textfield_from_project/:project', :controller => 'charge_accounts', :action => 'cc_update_account_textfield_from_project'
+
+    match 'charge_accounts/cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
+    match 'cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
+    match 'charge_accounts/:id/cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
     #
     # Groups
     match 'charge_groups/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'

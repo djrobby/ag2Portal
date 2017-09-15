@@ -28,7 +28,7 @@
       var company = $('select#fnt-company :selected').val();
       if (company == "")
         company = "0";
-      jQuery.getJSON('su_update_ledger_account_select_from_company/' + company, function(data) {
+      jQuery.getJSON('cc_update_ledger_account_select_from_company/' + company, function(data) {
         var o = data.ledger_account;
         $("#fnt-ledger-account").html("");
         $("#fnt-ledger-account").select2("val", "");
@@ -54,7 +54,7 @@
   <% e = t(:item_error) %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3><%= t("ag2_purchase.suppliers.add_ledger_account") %></h3>
+    <h3><%= t("ag2_tech.charge_accounts.add_ledger_account") %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
@@ -62,13 +62,13 @@
     <%= f.association :ledger_account, collection: @ledger_accounts_by_company, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-ledger-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_purchase.suppliers.add_account_to", var: @supplier.full_code) unless @supplier.full_code.blank? %></span>
-    <button id="addLedgerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_purchase.suppliers.btn_add_account') %></button>
+    <span class="left-floated" style="vertical-align: bottom"><%= t("ag2_tech.charge_accounts.add_ledger_account_to", var: @charge_account.full_code) unless @charge_account.full_code.blank? %></span>
+    <button id="addLedgerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t('ag2_tech.charge_accounts.btn_add_ledger_account') %></button>
     <button id="cancelLedgerButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
   </div>
 </div>
 
 <script type="text/javascript">
   sel2NoMatch = '<%= t("select2.no_matches") %>';
-  ca_ledger_accountFieldsUI.init(sel2NoMatch);
+  cc_ledger_accountFieldsUI.init(sel2NoMatch);
 </script>

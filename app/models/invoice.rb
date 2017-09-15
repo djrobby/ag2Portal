@@ -298,13 +298,13 @@ class Invoice < ActiveRecord::Base
     _prev_consumptions = []
     _average_consumption = 0
     if !billing_period.blank? && invoice_type_id == InvoiceType::WATER
-      _invoices = ActiveSupplyInvoice.joins(:billing_period).where('period <= ? AND subscriber_id = ?', billing_period.period, subscriber.id).order('period DESC').first(6)
-      if !_invoices.blank?
-        _invoices.each do |_i|
+      ii = ActiveSupplyInvoice.joins(:billing_period).where('period <= ? AND subscriber_id = ?', billing_period.period, subscriber.id).order('period DESC').first(6)
+      if !ii.blank?
+        ii.each do |_i|
           _prev_consumptions << _i.invoice.consumption
           _average_consumption += _i.invoice.consumption
         end
-        _average_consumption = _average_consumption / _invoices.count
+        _average_consumption = _average_consumption / ii.count
       end
     end
     return _prev_consumptions, _average_consumption

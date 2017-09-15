@@ -98,6 +98,7 @@ class Supplier < ActiveRecord::Base
   before_destroy :check_for_dependent_records
   after_create :should_create_shared_contact, if: :is_contact?
   after_update :should_update_shared_contact, if: :is_contact?
+  before_save :calculate_and_store_withholding_rate
 
   def fields_to_uppercase
     if !self.fiscal_id.blank?
@@ -497,6 +498,10 @@ class Supplier < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_withholding_rate
+    self.withholding_rate = self.withholding_type.tax if (!withholding_type.blank? && !withholding_type.tax.nil?)
+  end
 
   def check_for_dependent_records
     # Check for purchase orders

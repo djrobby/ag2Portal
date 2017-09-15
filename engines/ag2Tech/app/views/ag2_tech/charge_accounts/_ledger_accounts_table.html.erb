@@ -65,7 +65,7 @@
     <%= render 'ledger_accounts_header' %>
   </thead>
   <tbody>
-    <%= f.simple_fields_for :supplier_ledger_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
+    <%= f.simple_fields_for :charge_account_ledger_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.association :company, label: false, wrapper: false, collection: @companies, input_html: { class: 'lsel2 fnt-company' } %></td>
       <td><%= i.association :ledger_account, label: false, wrapper: false, collection: @ledger_accounts_by_company, input_html: { class: 'lsel2 fnt-ledger-account', maxlength: 10 } %></td>

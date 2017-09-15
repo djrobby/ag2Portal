@@ -2,10 +2,10 @@ en:
   activerecord:
     models:
       supplier_ledger_account:
-        zero:  Supplier bank accounts
-        one:   Supplier bank account
-        few:   Supplier bank accounts
-        other: Supplier bank accounts
+        zero:  Supplier ledger accounts
+        one:   Supplier ledger account
+        few:   Supplier ledger accounts
+        other: Supplier ledger accounts
     attributes:
       supplier_ledger_account:
         supplier: "Supplier"

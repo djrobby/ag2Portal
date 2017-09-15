@@ -139,6 +139,7 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @charge_account = ChargeAccount.find(params[:id])
+      @ledger_accounts = @charge_account.charge_account_ledger_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)
 
       respond_to do |format|
         format.html # show.html.erb
@@ -303,6 +304,14 @@ module Ag2Tech
 
     def groups_dropdown
       session[:organization] != '0' ? ChargeGroup.where(organization_id: session[:organization].to_i).order(:group_code) : ChargeGroup.order(:group_code)
+    end
+
+    def companies_dropdown
+      if session[:company] != '0'
+        Company.where(id: session[:company].to_i)
+      else
+        session[:organization] != '0' ? Company.where(organization_id: session[:organization].to_i).order(:name) : Company.order(:name)
+      end
     end
 
     def ledger_accounts_dropdown

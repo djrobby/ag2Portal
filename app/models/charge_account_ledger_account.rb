@@ -8,4 +8,12 @@ class ChargeAccountLedgerAccount < ActiveRecord::Base
   has_paper_trail
 
   validates :ledger_account,  :presence => true
+
+  def ledger_account_full
+    ledger_account.blank? ? 'N/A' : ledger_account.full_name
+  end
+
+  def company_full
+    company.blank? ? 'N/A' : company.full_name
+  end
 end

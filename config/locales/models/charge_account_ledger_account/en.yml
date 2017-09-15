@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      charge_account_ledger_account:
+        zero:  Analytical account ledger accounts
+        one:   Analytical account ledger account
+        few:   Analytical account ledger accounts
+        other: Analytical account ledger accounts
+    attributes:
+      charge_account_ledger_account:
+        supplier: "Analytical account"
+        supplier_id: "Analytical account"
+        ledger_account: "Ledger account"
+        ledger_account_id: "Ledger account"
+        company: "Company"
+        company_id: "Company"

@@ -5,6 +5,7 @@ class ChargeAccount < ActiveRecord::Base
   belongs_to :ledger_account
   attr_accessible :closed_at, :ledger_account_id, :name, :opened_at,
                   :project_id, :account_code, :organization_id, :charge_group_id
+  attr_accessible :charge_account_ledger_accounts_attributes
 
   has_many :budget_items
   has_many :work_orders
