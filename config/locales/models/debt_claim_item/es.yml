@@ -1,0 +1,29 @@
+es:
+  activerecord:
+    models:
+      debt_claim:
+        zero:  Items de RD
+        one:   Item de RD
+        few:   Items de RD
+        other: Items de RD
+    attributes:
+      debt_claim:
+        debt_claim: "Reclamación"
+        debt_claim_id: "Reclamación"
+        bill: "Recibo"
+        bill_id: "Recibo"
+        invoice: "Factura"
+        invoice_id: "Factura"
+        debt_claim_status: "Estado RD"
+        debt_claim_status_id: "Estado RD"
+        debt: "Deuda"
+        payday_limit: "Vencimiento"
+        bill_no: "NºRecibo"
+        invoice_no: "NºFactura"
+        project: "Proyecto"
+        client: "Cliente"
+        subscriber: "Abonado"
+        current_debt: "Deuda actual"
+        surcharge: "Recargo"
+        total: "Total"
+        current_total: "Total actual"

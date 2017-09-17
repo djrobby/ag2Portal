@@ -6,7 +6,7 @@ es:
         one:   Estado RD
         few:   Estados RD
         other: Estados RD
-        check_for_debt_claim_items: "Estado no puede ser eliminado mientras existan reclamaciones vinculadas."
+        check_for_debt_claims: "Estado no puede ser eliminado mientras existan reclamaciones vinculadas."
     attributes:
       debt_claim_status:
         name: "Descripción"

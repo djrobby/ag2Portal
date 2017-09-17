@@ -1,0 +1,26 @@
+es:
+  activerecord:
+    models:
+      debt_claim:
+        zero:  Reclamaciones de deuda
+        one:   Reclamación de deuda
+        few:   Reclamaciones de deuda
+        other: Reclamaciones de deuda
+    attributes:
+      debt_claim:
+        claim_no: "Nº"
+        created_at: "Creada el"
+        closed_at: "Cerrada el"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        organization: "Organización"
+        company: "Empresa"
+        office: "Oficina"
+        debt_claim_phase: "Fase RD"
+        debt_claim_phase_id: "Fase RD"
+        surcharge_pct: "% Recargo"
+        subtotal: "Subtotal"
+        surcharges: "Recargos"
+        total: "Total"
+        current_subtotal: "Subtotal actual"
+        current_total: "Total actual"

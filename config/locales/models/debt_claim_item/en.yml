@@ -1,0 +1,29 @@
+en:
+  activerecord:
+    models:
+      debt_claim_item:
+        zero:  DC items
+        one:   DC item
+        few:   DC items
+        other: DC items
+    attributes:
+      debt_claim_item:
+        debt_claim: "Debt claim"
+        debt_claim_id: "Debt claim"
+        bill: "Bill"
+        bill_id: "Bill"
+        invoice: "Invoice"
+        invoice_id: "Invoice"
+        debt_claim_status: "DC Status"
+        debt_claim_status_id: "DC Status"
+        debt: "Debt"
+        payday_limit: "Payday limit"
+        bill_no: "Bill No."
+        invoice_no: "Invoice No."
+        project: "Project"
+        client: "Client"
+        subscriber: "Subscriber"
+        current_debt: "Current debt"
+        surcharge: "Surcharge"
+        total: "Total"
+        current_total: "Current total"

@@ -6,7 +6,7 @@ en:
         one:   DC status
         few:   DC statuses
         other: DC statuses
-        check_for_debt_claim_items: "Status cannot be destroyed while linked claims exist."
+        check_for_debt_claims: "Status cannot be destroyed while linked claims exist."
     attributes:
       debt_claim_status:
         name: "Description"

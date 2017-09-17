@@ -10,6 +10,8 @@ class InstalmentPlan < ActiveRecord::Base
   has_many :instalments, dependent: :destroy
   has_many :instalment_invoices, through: :instalments
 
+  has_paper_trail
+
   validates :instalment_no,   :presence => true,
                               :length => { :is => 22 },
                               :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },

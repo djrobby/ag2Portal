@@ -1,0 +1,26 @@
+en:
+  activerecord:
+    models:
+      debt_claim:
+        zero:  Debt claims
+        one:   Debt claim
+        few:   Debt claims
+        other: Debt claims
+    attributes:
+      debt_claim:
+        claim_no: "No."
+        created_at: "Created at"
+        closed_at: "Closed at"
+        project: "Project"
+        project_id: "Project"
+        organization: "Organization"
+        company: "Company"
+        office: "Office"
+        debt_claim_phase: "DC Phase"
+        debt_claim_phase_id: "DC Phase"
+        surcharge_pct: "Surcharge %"
+        subtotal: "Subtotal"
+        surcharges: "Surcharges"
+        total: "Total"
+        current_subtotal: "Current subtotal"
+        current_total: "Current total"

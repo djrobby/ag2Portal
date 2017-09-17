@@ -11,6 +11,8 @@ class Instalment < ActiveRecord::Base
   has_many :bills, through: :instalment_invoices
   has_many :invoices, through: :instalment_invoices
 
+  has_paper_trail
+
   # Scopes
   scope :by_plan, -> { order(:instalment_plan_id, :instalment) }
   #

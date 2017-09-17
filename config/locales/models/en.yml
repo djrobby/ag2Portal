@@ -189,12 +189,10 @@ en:
           invalid_search_string: "Invalid search criteria."
           service_point_not_found: "No service points were found with this criteria."
           subscriber_not_found: "No subscribers were found with this criteria."
-
-          installation_error: "Error installing meter:"
-          code_not_found: "%{var} not found."
-          code_wrong: "%{var} is not correct."
-          installed: "%{var} is already installed (unavailable)."
-          available: "%{var} is available to be installed."
           attributes:
-            meter_code:
-              code_invalid: "invalid (must be alphanumeric)"
+            request_no:
+              code_invalid: "invalid"
+        debt_claim:
+          attributes:
+            claim_no:
+              code_invalid: "invalid"

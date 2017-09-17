@@ -190,5 +190,9 @@ es:
           service_point_not_found: "No se han encontrado puntos de suministro con el criterio indicado."
           subscriber_not_found: "No se han encontrado abonados con el criterio indicado."
           attributes:
-            meter_code:
-              code_invalid: "inválido (debe ser alfanumérico)"
+            request_no:
+              code_invalid: "inválido"
+        debt_claim:
+          attributes:
+            claim_no:
+              code_invalid: "inválido"

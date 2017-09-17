@@ -16,7 +16,7 @@ class DebtClaimPhase < ActiveRecord::Base
   def check_for_dependent_records
     # Check for debt claims
     if debt_claims.count > 0
-      errors.add(:base, I18n.t('activerecord.models.formality_type.check_for_debt_claims'))
+      errors.add(:base, I18n.t('activerecord.models.debt_claim_phase.check_for_debt_claims'))
       return false
     end
   end
