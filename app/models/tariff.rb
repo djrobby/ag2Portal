@@ -8,7 +8,6 @@ class Tariff < ActiveRecord::Base
   belongs_to :tax_type_f, class_name: "TaxType"
   belongs_to :tax_type_p, class_name: "TaxType"
   belongs_to :tax_type_v, class_name: "TaxType"
-  has_many :invoice_items
   attr_accessible :block1_fee, :block1_limit, :block2_fee, :block2_limit, :block3_fee,
                   :block3_limit, :block4_fee, :block4_limit, :block5_fee, :block5_limit,
                   :block6_fee, :block6_limit, :block7_fee, :block7_limit, :block8_fee,
@@ -16,11 +15,13 @@ class Tariff < ActiveRecord::Base
                   :fixed_fee, :percentage_applicable_formula, :percentage_fee, :tax_type_b_id,
                   :tax_type_f_id, :tax_type_p_id, :tax_type_v_id, :variable_fee, :tariff_type_id,
                   :billable_item_id, :caliber_id, :tariff_scheme_id, :billing_frequency_id,
-                  :starting_at, :ending_at, :tariff_ids, :percentage_fixed_fee
+                  :starting_at, :ending_at, :tariff_ids, :percentage_fixed_fee,
+                  :connection_fee_a, :connection_fee_b
 
   has_one :active_tariff
   has_one :billable_concept, through: :billable_item
 
+  has_many :invoice_items
   has_many :subscriber_tariffs
   has_many :contracted_tariffs
   has_many :tariff_scheme_items
