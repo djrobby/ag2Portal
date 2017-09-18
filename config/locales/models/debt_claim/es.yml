@@ -24,3 +24,4 @@ es:
         total: "Total"
         current_subtotal: "Subtotal actual"
         current_total: "Total actual"
+        debt_claim_items_count: "Facturas"

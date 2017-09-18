@@ -24,3 +24,4 @@ en:
         total: "Total"
         current_subtotal: "Current subtotal"
         current_total: "Current total"
+        debt_claim_items_count: "Invoices"

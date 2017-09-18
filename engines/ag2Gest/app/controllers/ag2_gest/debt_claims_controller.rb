@@ -12,7 +12,7 @@ module Ag2Gest
     # GET /debt_claims.json
     def index
       manage_filter_state
-      @debt_claims = DebtClaim.all
+      @debt_claims = DebtClaim.paginate(:page => params[:page], :per_page => per_page)
 
       respond_to do |format|
         format.html # index.html.erb

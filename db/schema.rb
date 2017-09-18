@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170918134145) do
+ActiveRecord::Schema.define(:version => 20170918140509) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1332,11 +1332,12 @@ ActiveRecord::Schema.define(:version => 20170918134145) do
     t.string   "claim_no"
     t.integer  "debt_claim_phase_id"
     t.date     "closed_at"
-    t.datetime "created_at",                                                          :null => false
-    t.datetime "updated_at",                                                          :null => false
+    t.datetime "created_at",                                                             :null => false
+    t.datetime "updated_at",                                                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "totals",              :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "totals",                 :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "debt_claim_items_count",                                :default => 0
   end
 
   add_index "debt_claims", ["claim_no"], :name => "index_debt_claims_on_claim_no"

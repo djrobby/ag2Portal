@@ -10,18 +10,30 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
-      <th><%= sortable "id", 'Id' %></th>
-      <th><%= sortable "name", t('activerecord.attributes.debt_claim.name') %></th>
+      <th><%= t 'activerecord.attributes.debt_claim.claim_no' %></th>
+      <th align="center"><%= t 'activerecord.attributes.debt_claim.created_at' %></th>
+      <th><%= t 'activerecord.attributes.debt_claim.debt_claim_phase' %></th>
+      <th align="center"><%= t 'activerecord.attributes.debt_claim.closed_at' %></th>
+      <th align="right"><%= t 'activerecord.attributes.debt_claim.debt_claim_items_count' %></th>
+      <th align="right"><%= t 'activerecord.attributes.debt_claim.total' %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @debt_claims.each do |type| %>
-    <tr>
-      <td><%= type.id %></td>
-      <td><%= link_to type.name, type %></td>
-      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => DebtClaim, :path => edit_debt_claim_path(type) } %>
-      <%= render :partial => '/layouts/crud/delete', :locals => { :model => DebtClaim, :path => type, :msg => t("activerecord.models.debt_claim.one"), :txt => type.name } %> </td>
+    <% @debt_claims.each do |claim| %>
+    <% if claim.closed_at.blank? %>
+      <tr>
+    <% else %>
+      <tr class="inactive-row">
+    <% end %>
+      <td><%= link_to claim.full_no, claim %></td>
+      <td align="center"><%= formatted_date(claim.created_at) unless claim.created_at.blank? %></td>
+      <td><%= claim.debt_claim_phase.name unless claim.debt_claim_phase.blank? %></td>
+      <td align="center"><%= formatted_date(claim.closed_at) unless claim.closed_at.blank? %></td>
+      <td align="right"><%= claim.debt_claim_items.size %></td>
+      <td align="right"><%= number_with_precision(claim.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless claim.total.blank? %></td>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Saleclaim, :path => edit_sale_claim_path(claim) } unless cannot_edit(claim) %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => Saleclaim, :path => claim, :msg => t("activerecord.models.sale_claim.one"), :txt => claim.claim_no } unless cannot_edit(claim) %> </td>
     </tr>
     <% end %>
   </tbody>
