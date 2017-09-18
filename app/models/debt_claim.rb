@@ -28,6 +28,7 @@ class DebtClaim < ActiveRecord::Base
 
   # Callbacks
   before_create :init_phase
+  before_save :calculate_and_store_totals
 
   #
   # Instance methods
@@ -104,5 +105,9 @@ class DebtClaim < ActiveRecord::Base
   # Before create
   def init_phase
     self.debt_claim_phase_id = DebtClaimPhase.first.id if debt_claim_phase_id.blank?
+  end
+
+  def calculate_and_store_totals
+    self.totals = total
   end
 end

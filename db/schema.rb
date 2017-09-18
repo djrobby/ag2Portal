@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170918082327) do
+ActiveRecord::Schema.define(:version => 20170918134145) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1027,6 +1027,8 @@ ActiveRecord::Schema.define(:version => 20170918082327) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -1330,10 +1332,11 @@ ActiveRecord::Schema.define(:version => 20170918082327) do
     t.string   "claim_no"
     t.integer  "debt_claim_phase_id"
     t.date     "closed_at"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.decimal  "totals",              :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "debt_claims", ["claim_no"], :name => "index_debt_claims_on_claim_no"
@@ -2526,8 +2529,8 @@ ActiveRecord::Schema.define(:version => 20170918082327) do
   add_index "pre_readings", ["meter_id"], :name => "index_pre_readings_on_meter_id"
   add_index "pre_readings", ["project_id", "billing_period_id", "reading_type_id", "meter_id", "subscriber_id", "reading_date"], :name => "index_pre_readings_unique", :unique => true
   add_index "pre_readings", ["project_id"], :name => "index_pre_readings_on_project_id"
-  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_1_id"
-  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_2_id"
+  add_index "pre_readings", ["reading_1_id"], :name => "index_pre_readings_on_reading_2_id"
+  add_index "pre_readings", ["reading_2_id"], :name => "index_pre_readings_on_reading_1_id"
   add_index "pre_readings", ["reading_date"], :name => "index_pre_readings_on_reading_date"
   add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
   add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
@@ -3720,16 +3723,16 @@ ActiveRecord::Schema.define(:version => 20170918082327) do
   end
 
   create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
-    t.integer "id",              :limit => 8
+    t.integer "id",                                              :default => 0, :null => false
     t.integer "organization_id"
     t.string  "invoice_no"
-    t.decimal "subtotal",                     :precision => 47, :scale => 8
-    t.decimal "taxes",                        :precision => 65, :scale => 20
-    t.decimal "bonus",                        :precision => 57, :scale => 14
-    t.decimal "taxable",                      :precision => 58, :scale => 14
-    t.decimal "total",                        :precision => 65, :scale => 20
-    t.decimal "paid",                         :precision => 35, :scale => 4
-    t.decimal "debt",                         :precision => 65, :scale => 20
+    t.decimal "subtotal",        :precision => 47, :scale => 8
+    t.decimal "taxes",           :precision => 65, :scale => 20
+    t.decimal "bonus",           :precision => 57, :scale => 14
+    t.decimal "taxable",         :precision => 58, :scale => 14
+    t.decimal "total",           :precision => 65, :scale => 20
+    t.decimal "paid",            :precision => 35, :scale => 4
+    t.decimal "debt",            :precision => 65, :scale => 20
   end
 
   create_table "supplier_invoice_items", :force => true do |t|
@@ -4436,6 +4439,7 @@ ActiveRecord::Schema.define(:version => 20170918082327) do
     t.integer  "pool_area",                :limit => 3,                               :default => 0,   :null => false
     t.string   "contract_no"
     t.integer  "diameter",                 :limit => 2,                               :default => 0,   :null => false
+    t.integer  "tariff_scheme_id"
   end
 
   add_index "water_connection_contracts", ["bill_id"], :name => "index_water_connection_contracts_on_bill_id"
