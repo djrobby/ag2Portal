@@ -132,6 +132,8 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
                 <th><%= t('activerecord.attributes.tariff_scheme.variable_fee') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.percentage_fee') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %></th>
+                <th><%= t('activerecord.attributes.tariff.connection_fee_a') %></th>
+                <th><%= t('activerecord.attributes.tariff.connection_fee_b') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_f') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_b') %></th>
                 <th><%= t('activerecord.attributes.tariff_scheme.discount_pct_v') %></th>
@@ -178,6 +180,8 @@ new_path: new_tariff_scheme_path, new_txt: t('ag2_gest.tariff_schemes.index.btn_
                     <td class="variable_fee"><%= tariff.try(:variable_fee) %></td>
                     <td class="percentage_fee"><%= tariff.try(:percentage_fee) %></td>
                     <td class="percentage_applicable_formula" data-concept="<%= tariff.percentage_applicable_formula %>"><%= tariff.try(:get_code_formula) %></td>
+                    <td class="connection_fee_a"><%= tariff.try(:connection_fee_a) %></td>
+                    <td class="connection_fee_b"><%= tariff.try(:connection_fee_b) %></td>
                     <td class="discount_pct_f"><%= tariff.try(:discount_pct_f) %></td>
                     <td class="discount_pct_b"><%= tariff.try(:discount_pct_b) %></td>
                     <td class="discount_pct_v"><%= tariff.try(:discount_pct_v) %></td>

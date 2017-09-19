@@ -33,6 +33,7 @@ class Bill < ActiveRecord::Base
   has_many :active_supply_invoices
   # Contract bill for: New contracting or change of holder (to NEW subscriber)
   has_one :water_supply_contract
+  has_one :water_connection_contract
   # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
   has_one :unsubscribe_water_supply_contract, :class_name => 'WaterSupplyContract', foreign_key: "unsubscribe_bill_id"
   # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)

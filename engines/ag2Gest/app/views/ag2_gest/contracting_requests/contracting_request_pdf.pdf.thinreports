@@ -87,24 +87,43 @@ report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_enti
 									 )
 #
 # service_point
-report.page.values(service_point_c: I18n.t("ag2_gest.contracting_requests.show.info_service_point"),
-									 fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
-									 fiscal_id_sp: @contracting_request.client.fiscal_id,
-									 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
-									 name_sp: @contracting_request.try(:client).try(:to_name),
-									 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
-									 street_sp: @contracting_request.subscriber_info_street,
-									 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
-									 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
-									 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
-									 center_sp: @contracting_request.try(:subscriber_center).try(:name),
-									 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
-									 town_sp: @contracting_request.try(:subscriber_town).try(:name),
-									 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
-									 region_sp: @contracting_request.try(:subscriber_region).try(:name),
-									 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
-									 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
-									 )
+if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION
+	report.page.values(service_point_c: t("activerecord.attributes.contracting_request.info_connection").capitalize,
+										 fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+										 fiscal_id_sp: @contracting_request.client.fiscal_id,
+										 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+										 name_sp: @contracting_request.try(:client).try(:to_name),
+										 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
+										 street_sp: @contracting_request.client.address_1,
+										 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
+										 zipcode_sp: @contracting_request.try(:client).try(:zipcode).try(:to_label),
+										 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
+										 town_sp: @contracting_request.try(:client).try(:town).try(:name),
+										 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
+										 region_sp: @contracting_request.try(:client).try(:region).try(:name),
+										 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
+										 country_sp:  @contracting_request.try(:client).try(:country).try(:name)
+										 )
+else
+	report.page.values(service_point_c: I18n.t("ag2_gest.contracting_requests.show.info_service_point"),
+										 fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+										 fiscal_id_sp: @contracting_request.client.fiscal_id,
+										 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+										 name_sp: @contracting_request.try(:client).try(:to_name),
+										 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
+										 street_sp: @contracting_request.subscriber_info_street,
+										 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
+										 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
+										 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
+										 center_sp: @contracting_request.try(:subscriber_center).try(:name),
+										 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
+										 town_sp: @contracting_request.try(:subscriber_town).try(:name),
+										 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
+										 region_sp: @contracting_request.try(:subscriber_region).try(:name),
+										 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
+										 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
+										 )
+end									 
 #
 # bank
 report.page.values(bank_c: I18n.t("ag2_gest.contracting_requests.show.bank_info"),
@@ -113,7 +132,8 @@ report.page.values(bank_c: I18n.t("ag2_gest.contracting_requests.show.bank_info"
 #
 var_meter_date = @contracting_request.try(:subscriber).try(:meter_details).try(:last).try(:installation_date).strftime("%d/%m/%Y") if @contracting_request.try(:subscriber)
 # data service_point
-report.page.values(sp_c: I18n.t("activerecord.models.service_point.one"),
+if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION
+	report.page.values(sp_c: I18n.t("activerecord.models.service_point.one"),
 									spl_c: I18n.t("activerecord.attributes.service_point.service_point_location_id") + ":",
 									 spl: @contracting_request.try(:service_point).try(:service_point_location).try(:name),
 									 spp_c: I18n.t("activerecord.attributes.service_point.service_point_purpose_id") + ":",
@@ -127,6 +147,10 @@ report.page.values(sp_c: I18n.t("activerecord.models.service_point.one"),
 									 instalation_index_c: I18n.t("activerecord.attributes.contracting_request.initial_reading") + ":",
 									 instalation_index: @contracting_request.try(:subscriber).try(:meter_details).try(:last).try(:installation_reading)
 									 )
+else
+	report.page.item(:sp_border).hide
+	report.page.item(:sp_down).hide
+end
 #
 img = @contracting_request.try(:service_point).try(:verified) == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
 # abastecimiento
@@ -161,12 +185,12 @@ report.page.values(change_c: I18n.t("ag2_gest.contracting_requests.report.change
 									 change_2: I18n.t("ag2_gest.contracting_requests.report.change_2"),
 									 change_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":"
 									 )
-if @contracting_request.contracting_request_type_id == 4 
+if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
 	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:to_label),
 					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
 					)
 end
-if @contracting_request.contracting_request_type_id == 2
+if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION
 	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:full_code) + " " + @contracting_request.try(:old_subscriber).try(:water_supply_contract).try(:client).try(:to_name),
 					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
 					)

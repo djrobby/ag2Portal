@@ -1,0 +1,643 @@
+<style type="text/css">
+  .disabled a:hover{
+    color: #aaa;
+    cursor: not-allowed !important;
+  }
+  .disabled:hover{
+    color: #fff;
+  }
+  .disabled:focus{
+    color: #fff;
+    background-color: white;
+  }
+  #billing-modal{
+    width: 880px !important;
+    left: 40% !important;
+  }
+  
+  .stepwizard-step p {
+          margin-top: 10px;
+      }
+
+      .step-refresh {
+        margin-right: 20px;
+      }
+
+      .stepwizard-row {
+          display: table-row;
+      }
+
+      .stepwizard {
+          display: table;
+          width: 100%;
+          position: relative;
+      }
+
+      .stepwizard-step button[disabled] {
+          opacity: 1 !important;
+          filter: alpha(opacity=100) !important;
+      }
+
+      .stepwizard-row:before {
+          top: 14px;
+          bottom: 0;
+          position: absolute;
+          content: " ";
+          width: 100%;
+          height: 1px;
+          background-color: #ccc;
+          z-order: 0;
+
+      }
+
+      .stepwizard-step {
+          display: table-cell;
+          text-align: center;
+          position: relative;
+      }
+
+      .btn-circle {
+        width: 30px;
+        text-align: center;
+        padding: 6px 0;
+        font-size: 12px;
+        line-height: 1.428571429;
+        border-radius: 15px;
+      }
+      .disabled {
+         display:inline-block;
+          pointer-events: none;
+      }
+
+      .text-active{
+        color: #006ccc;
+      }
+
+      .text-inactive{
+        color: #ccc;
+      }
+
+      #billing-modal {
+        width: 1020px !important;
+        left: 32% !important;
+      }
+
+      #billing-modal td {
+        text-align: center!important;
+        width: 12%;
+      }
+</style>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+  // Select2
+  $('select.sel2').select2({
+    formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+    allowClear: true
+  });
+  // Date picker
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
+
+    var navListItems = $('div.setup-panel div a'),
+        pListItems = $('div.setup-panel div p'),
+        allWells = $('.setup-content'),
+        allNextBtn = $('.nextBtn');
+        // allPrevBtn = $('.prevBtn');
+
+    allWells.hide();
+    $(".btn-circle[disabled!='disabled']").addClass('btn-primary');
+    $(".btn-circle[disabled!='disabled']").siblings("p").removeClass("text-inactive").addClass("text-active")
+
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+            $item = $(this);
+
+        if (!($item.attr("disabled") == "disabled")) {
+            navListItems.removeClass('btn-primary').addClass('btn-default').attr("disabled","disabled");
+            pListItems.removeClass("text-active").addClass("text-inactive")
+            $item.addClass('btn-primary').removeAttr("disabled");
+            $item.siblings("p").removeClass("text-inactive").addClass("text-active")
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
+
+
+    var changeState = function(current, next){
+      current
+      current.siblings("p").removeClass("text-active")
+      next.siblings("p").removeClass("text-inactive").addClass("text-active")
+      next.removeAttr('disabled').trigger('click');
+    };
+
+    $("#form_new_water_connection_contract").bind("ajax:success", function(xhr, data, status) {
+      $("#modal-data").modal('hide');
+    });
+
+    // ajax success for initial_inspection
+    $("#ot-connection-inspection").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-1"]'),
+          nextStepWizard = $('a[href="#step-2"]');
+      changeState(currentStepWizard,nextStepWizard)
+      $("#link_work_order_inspection").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
+      $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6));
+      $("#status_work_order_inspection").text(data.work_order_status.name);
+    });
+
+    $("#ot-connection-installation").bind("ajax:success", function(xhr, data, status) {
+      $("#link_work_order_inspection").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
+      $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6) + "M");
+      $("#status_work_order_inspection").text(data.work_order_status.name);
+      $("#link_work_order_installation").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order_installation.id);
+      $("#link_work_order_installation").text(data.work_order_installation.order_no.substr(0, 12) + "-" + data.work_order_installation.order_no.substr(12, 4) + "-" +  data.work_order_installation.order_no.substr(16, 6));
+      $("#status_work_order_installation").text(data.work_order_status_installation.name);
+      $("#ot-connection-installation").addClass('btn btn-primary nextBtn').attr("disabled","disabled");
+    });
+
+    
+    $("#refresh-connection-status").bind("ajax:success", function(xhr, data, status) {
+
+      if (data.client_debt) {
+        $("#debt").text(data.client_debt);
+      };
+
+      if (data.sale_offer) {
+        $("#link_sale_offer").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/sale_offers/" + data.sale_offer.id);
+        $("#link_sale_offer").text(data.sale_offer.offer_no.substr(0, 12) + "-" + data.sale_offer.offer_no.substr(12, 4) + "-" +  data.sale_offer.offer_no.substr(16, 6));
+      };
+
+      if (data.sale_offer_status) {
+        $("#status_sale_offer").text(data.sale_offer_status.name);
+      };
+
+      if (data.work_order) {
+        $("#link_work_order_inspection").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
+        $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6));
+      };
+      
+      if (data.work_order_status) {
+        $("#status_work_order_inspection").text(data.work_order_status.name);
+      };
+
+      if (data.caliber) {
+        $("#caliber").val(data.caliber.caliber);
+      };
+
+      if (data.work_order_installation) {
+        $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6) + "M");
+        $("#link_work_order_installation").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order_installation.id);
+        $("#link_work_order_installation").text(data.work_order_installation.order_no.substr(0, 12) + "-" + data.work_order_installation.order_no.substr(12, 4) + "-" +  data.work_order_installation.order_no.substr(16, 6));
+      };
+      if (data.work_order_status_installation) {
+        $("#status_work_order_installation").text(data.work_order_status_installation.name);
+          if (data.work_order_status_installation.id == '3' || data.work_order_status_installation.id == '4') {
+            $("#new-subscriber-installation").removeClass("disabled");
+          } else {
+            $("#new-subscriber-installation").addClass("disabled");
+          };
+      };
+
+      if (data.invoice_from_offer) {
+        $("#link-bill-commercial").removeClass("hide");
+        $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+        $("#link-bill-commercial").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+        $("#complete-connection").removeClass("disabled");
+      };
+
+      if (data.invoice_status) {
+        if (data.invoice_status.id != '1' && data.sale_offer_status.id == '2' && !data.work_order_installation) {
+          $("#ot-connection-installation").removeClass("disabled");
+        } else {
+          $("#ot-connection-installation").addClass("disabled");
+        };
+
+        if (data.invoice_status.id != '1') {
+          $("#link-bill-span").hide();
+        } else {
+          $("#link-bill-span").show();
+          $("#link-bill-span").text(data.invoice_status.code);
+        };
+      };
+    });
+
+    // ajax success for initial_billing
+    $("#connection-billing").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-2"]'),
+          nextStepWizard = $('a[href="#step-3"]');
+      changeState(currentStepWizard,nextStepWizard)
+      $("#update-new").hide();
+      $("#new").show();
+      $("#bill-doc").addClass("hide");
+      $("#link-bill").addClass("hide");
+    });
+
+    // ajax success for billing_instalation
+    $("#billing-connection").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-3"]'),
+          nextStepWizard = $('a[href="#step-4"]');
+      changeState(currentStepWizard,nextStepWizard);
+      $("#link-bill").removeClass("hide");
+      $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+      $("#link-bill").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+      $("#bill-doc").removeClass("hide");
+      $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_contract_pdf.pdf");
+      if (data.work_order_status.id == '1' || data.work_order_status.id == '2'){
+        alert('<%= t('activerecord.attributes.contracting_request.alert_inspection') %>');
+      };
+      if (data.invoice_status.id != '1' && !data.work_order_installation) {
+        $("#ot-connection-installation").removeClass("disabled");
+      } else {
+        $("#ot-connection-installation").addClass("disabled");
+      };
+      if (data.invoice_status.id != '1') {
+        $("#link-bill-span").hide();
+      } else {
+        $("#link-bill-span").show();
+        $("#link-bill-span").text(data.invoice_status.code);
+      };
+    });
+
+    $("#form_new_invoice_from_offer").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-4"]'),
+          nextStepWizard = $('a[href="#step-5"]');
+      changeState(currentStepWizard,nextStepWizard);
+      $("#new-invoice-from-offer").modal('hide');
+      $("#link-bill-commercial").removeClass("hide");
+      $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+      $("#link-bill-commercial").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+      $("#contract_pdf").removeClass("hide");
+      $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");
+      $("#contract").text(data.water_connection_contract.contract_no.substr(0, 5) + '-' + data.water_connection_contract.contract_no.substr(6, 7) + '-' + data.water_connection_contract.contract_no.substr(8, 11) + '-' + data.water_connection_contract.contract_no.substr(12, 17));
+
+      if (data.contracting_request.client.client_bank_accounts != []) {
+        $("#sepa_pdf").removeClass("hide");
+        $("#sepa_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/sepa_pdf.pdf");
+      }
+    });
+
+    $("#complete-connection").bind("ajax:success", function(xhr, data, status) {
+      var currentStepWizard = $('a[href="#step-4"]'),
+          nextStepWizard = $('a[href="#step-5"]');
+      changeState(currentStepWizard,nextStepWizard);
+    });
+
+    $('div.setup-panel div a.btn-primary').trigger('click');
+
+    $('a[data-toggle="tab"]').on('click', function(){
+      if ($(this).parent('li').hasClass('disabled')) {
+        return false;
+      };
+    });
+  });
+</script>
+
+<!-- wizard steps -->
+<div class="row">
+  <div class="stepwizard span12">
+    <div class="stepwizard-row setup-panel">
+      <div class="stepwizard-step">
+          <a href="#step-1" type="button" class="btn btn-primary btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::INITIAL %>>1</a>
+          <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.initiated') %></p>
+      </div>
+      <div class="stepwizard-step">
+          <a href="#step-2" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSPECTION %>>2</a>
+          <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.inspection') %></p>
+      </div>
+      <div class="stepwizard-step">
+          <a href="#step-3" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING %>>3</a>
+          <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.biller') %></p>
+      </div>
+      <div class="stepwizard-step">
+          <a href="#step-4" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION %>>4</a>
+          <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.installation') %></p>
+      </div>
+      <div class="stepwizard-step">
+          <a href="#step-5" type="button" class="btn btn-default btn-circle" <%= 'disabled=disabled' unless @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>>5</a>
+          <p class="text-inactive"><%= t('activerecord.attributes.contracting_request.full') %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- buttons -->
+<div class="row">
+  <!-- fixed buttons -->
+  <div class="span4" >
+    <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.request')}".html_safe, contracting_request_pdf_contracting_request_path(@contracting_request, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+
+    <% if !@contracting_request.water_connection_contract.blank? && !@contracting_request.water_connection_contract.bill.blank? && !@contracting_request.water_connection_contract.bill.invoices.blank? && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.invoice_contract_c')}".html_safe, biller_contract_pdf_bill_path(@contracting_request.water_connection_contract.bill_id, :format => :pdf), id: "bill-doc", class: "btn btn-warning #{'hide' unless @contracting_request.try(:water_connection_contract).try(:bill)}", target: "_blank" %>
+    <% else %>
+        <a target="_blank" id="bill-doc" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.invoice_contract_c') %></a>
+    <% end %>
+  </div>
+  <!-- step buttons -->
+  <form role="form" class="simple_form form-vertical span8">
+
+    <!-- step 1 -->
+    <div class="setup-content" id="step-1">
+      <a id="modal-data" href="#new-water-connection-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.connection_data') %></a>
+
+      <a id="ot-connection-inspection" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_connection_contract.nil? %>" href="<%= params[:id] %>/ot_connection_inspection" data-remote="true" ><%= t('activerecord.attributes.contracting_request.inspection_order') %></a>
+
+    </div>
+
+    <!-- step 2 -->
+    <div class="setup-content" id="step-2">
+      <a id="modal-data" href="#new-water-connection-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.connection_data') %></a>
+
+      <a id="connection-billing" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_connection_contract.nil? or @contracting_request.water_connection_contract.tariff_scheme.blank? %>" href="<%= params[:id] %>/connection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+    </div>
+
+    <!-- step 3 -->
+    <div class="setup-content" id="step-3">
+        <a id="billing-connection" href="<%= params[:id] %>/billing_connection" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
+
+        <a href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.invoice_edit') %></a>
+    </div>
+
+    <!-- step 4 -->
+    <div class="setup-content" id="step-4">
+       <% if !@contracting_request.water_connection_contract.blank? %>
+         <% if !@contracting_request.water_connection_contract.bill.blank?%>
+         <a id="ot-connection-installation" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_connection_contract.bill.invoices.first.invoice_status_id == InvoiceStatus::PENDING or @contracting_request.water_connection_contract.sale_offer.sale_offer_status_id != SaleOfferStatus::APPROVED or !@contracting_request.water_connection_contract.work_order.blank? %>" href="<%= params[:id] %>/ot_connection_installation" data-remote="true" ><%= t('activerecord.attributes.contracting_request.inspection_order_installation') %></a>
+         <% end %>
+       <% end %>
+
+       <a href="#new-invoice-from-offer" data-toggle="modal" role="button" class="btn btn-warning"><%= I18n.t("ag2_gest.commercial_billings.index.btn_new_from_sale_offer") %></a>
+
+      <a id="complete-connection" class="btn btn-primary nextBtn<%= 'disabled' if @contracting_request.water_connection_contract.sale_offer.sale_offer_status_id != SaleOfferStatus::APPROVED or !@contracting_request.water_connection_contract.work_order.blank? or @contracting_request.water_connection_contract.sale_offer.invoices.blank? %>" href="<%= params[:id] %>/complete_connection" data-remote="true"><%= t('activerecord.attributes.contracting_request.complete_connection') %></a>
+    </div>
+
+    <!-- step 5 -->
+    <div class="setup-content" id="step-5">
+        <!-- <#%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "contract_pdf",class: "btn btn-warning", target: "_blank"  %> -->
+
+        <!-- <#%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning ", target: "_blank"  unless @contracting_request.client.client_bank_accounts.blank?  %> -->
+        
+        <!-- <a target="_blank" id="contract_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.show_contract') %></a> -->
+        <!-- <a target="_blank" id="sepa_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.water_supply_contract.pay_sepa_order_c') %></a> -->
+    </div>
+  </form>
+  <a id="refresh-connection-status" class="step-refresh icon-refresh-link" href="<%= params[:id] %>/refresh_connection_status" data-remote="true" ><i class="icon-refresh"></i></a>
+</div>
+
+<div class="row-fluid">
+  <div class="span4">
+    <h4><%= t('activerecord.attributes.contracting_request.info_connection') %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.water_connection_type') %></b></td>
+          <td id="water_connection_type"><%= @water_connection_contract.water_connection_type.name unless @water_connection_contract.water_connection_type.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.service_point_purpose') %></b></td>
+          <td id="service_point_purpose"><%= @water_connection_contract.service_point_purpose.name unless @water_connection_contract.service_point_purpose.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.caliber') %></b></td>
+          <td id="caliber"><%= @water_connection_contract.caliber.caliber unless @water_connection_contract.caliber.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.diameter') %></b></td>
+          <td id="caliber"><%= @water_connection_contract.diameter unless @water_connection_contract.diameter.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.cadastral_reference') %></b></td>
+          <td id="water_connection_contract_cadastral_reference"><%= @water_connection_contract.cadastral_reference unless @water_connection_contract.cadastral_reference.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.gis_id') %></b></td>
+          <td id="water_connection_contract_gis_id"><%= @water_connection_contract.gis_id unless @water_connection_contract.gis_id.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.min_pressure') %></b></td>
+          <td id="water_connection_contract_min_pressure"><%= @water_connection_contract.min_pressure unless @water_connection_contract.min_pressure.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.max_pressure') %></b></td>
+          <td id="water_connection_contract_max_pressure"><%= @water_connection_contract.max_pressure unless @water_connection_contract.max_pressure.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.connections_no') %></b></td>
+          <td id="water_connection_contract_connections_no"><%= @water_connection_contract.connections_no unless @water_connection_contract.connections_no.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.dwellings_no') %></b></td>
+          <td id="water_connection_contract_dwellings_no"><%= @water_connection_contract.dwellings_no unless @water_connection_contract.dwellings_no.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.premises_no') %></b></td>
+          <td id="water_connection_contract_premises_no"><%= @water_connection_contract.premises_no unless @water_connection_contract.premises_no.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.premises_area') %></b></td>
+          <td id="water_connection_contract_premises_area"><%= @water_connection_contract.premises_area unless @water_connection_contract.premises_area.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.common_items_no') %></b></td>
+          <td id="water_connection_contract_common_items_no"><%= @water_connection_contract.common_items_no unless @water_connection_contract.common_items_no.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.pipe_length') %></b></td>
+          <td id="water_connection_contract_pipe_length"><%= @water_connection_contract.pipe_length unless @water_connection_contract.pipe_length.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.yard_area') %></b></td>
+          <td id="water_connection_contract_yard_area"><%= @water_connection_contract.yard_area unless @water_connection_contract.yard_area.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.pool_area') %></b></td>
+          <td id="water_connection_contract_pool_area"><%= @water_connection_contract.pool_area unless @water_connection_contract.pool_area.blank? %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="span4">
+    <h4><%= t('activerecord.attributes.contracting_request.conection_items').upcase %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.type') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.quantity') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.flow') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.total') %></b></td>
+        </tr>
+        <% if !@contracting_request.water_connection_contract.blank? %>
+          <% @contracting_request.water_connection_contract.water_connection_contract_items.each do |items| %>
+          <tr>
+            <td><%= items.water_connection_contract_item_type.description %></td>
+            <td><%= items.quantity %></td>
+            <td><%= items.water_connection_contract_item_type.flow %></td>
+            <td><%= items.quantity_flow %></td>
+          </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+    <h4><%= t('activerecord.attributes.contracting_request.sale_offer').upcase %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.sale_offer') %></b></td>
+          <td>
+            <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.sale_offer %>
+              <%= link_to @contracting_request.water_connection_contract.sale_offer.full_no, sale_offer_path(@contracting_request.water_connection_contract.sale_offer), id: "link_sale_offer" %>
+            <% else %>
+              <a id="link_sale_offer" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.state_sale_offer') %></b></td>
+          <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.sale_offer %>
+            <td id="status_sale_offer"><%= @contracting_request.water_connection_contract.sale_offer.sale_offer_status.name %></td>
+          <% else %>
+            <td id="status_sale_offer"></td>
+          <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4><%= t('activerecord.attributes.contracting_request.work_order') %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.inspection_order') %></b></td>
+          <td>
+            <% if @contracting_request.work_order %>
+              <%= link_to @contracting_request.work_order.full_no, ag2_tech.work_order_path(@contracting_request.work_order), id: "link_work_order_inspection" %>
+            <% else %>
+              <a id="link_work_order_inspection" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.state_work_order') %></b></td>
+          <% if @contracting_request.work_order %>
+            <td id="status_work_order_inspection"><%= @contracting_request.work_order.work_order_status.name %></td>
+          <% else %>
+            <td id="status_work_order_inspection"></td>
+          <% end %>
+          </td>
+        </tr>
+
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.inspection_order_installation') %></b></td>
+          <td>
+            <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.work_order %>
+              <%= link_to @contracting_request.water_connection_contract.work_order.full_no, ag2_tech.work_order_path(@contracting_request.water_connection_contract.work_order), id: "link_work_order_installation" %>
+            <% else %>
+              <a id="link_work_order_installation" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.state_work_order') %></b></td>
+          <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.work_order %>
+            <td id="status_work_order_installation"><%= @contracting_request.water_connection_contract.work_order.work_order_status.name %></td>
+          <% else %>
+            <td id="status_work_order_installation"></td>
+          <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<div class="span4">
+    <h4><%= t('activerecord.attributes.contracting_request.client') %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.client') %></b></td>
+          <td>
+            <% if @contracting_request.client %>
+              <%= link_to @contracting_request.client.full_code, client_path(@contracting_request.client) %>
+            <% else %>
+              <a id="link_client" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.starting_at') %></b></td>
+          <td><%= l( @contracting_request.client.created_at, format: :long) if @contracting_request.client %></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4><%= t('activerecord.attributes.contracting_request.info_tariff') %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.tariff_scheme') %></b></td>
+          <td>
+            <% if @water_connection_contract.tariff_scheme %>
+              <%= link_to @water_connection_contract.tariff_scheme.name, tariff_scheme_path(@water_connection_contract.tariff_scheme) unless @water_connection_contract.tariff_scheme.blank? %>
+            <% else %>
+              <a id="tariff_scheme" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <% if @water_connection_contract.tariff_scheme %>
+            <td><b><%= t('activerecord.attributes.contracting_request.tariff_type') %></b></td>
+            <td id="tariff_type"><%= @water_connection_contract.tariff_scheme.tariff_type.name %></td>
+          <% end %>
+        </tr>
+      </tbody>
+    </table>
+    <h4><%= t('activerecord.attributes.contracting_request.bills').upcase %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.invoice_contract_c') %></b></td>
+          <td>
+            <% if @contracting_request.try(:water_connection_contract).try(:bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
+              <% if @contracting_request.try(:water_connection_contract).try(:bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
+                <%= link_to @contracting_request.water_connection_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), :remote => true, id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.blank? %></span>
+              <% else %>
+                <%= link_to @contracting_request.water_connection_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), :remote => true, id: "link-bill" %></span>
+              <% end %>
+            <% else %>
+              <a id="link-bill" href="#"></a><span class="yellow hide" id="link-bill-span"><%= " P" %></span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.invoice_comercial_c') %></b></td>
+          <td>
+            <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.sale_offer && @contracting_request.water_connection_contract.sale_offer.invoices_count != 0 %>
+              <%= link_to @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.bill_no), :remote => true  %>
+            <% else %>
+              <a id="link-bill-commercial" href="#"></a>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4><%= t('activerecord.attributes.contracting_request.remark').upcase %></h4>
+    <table class="table table-center table-condensed">
+      <tbody>
+        <tr>
+          <td colspan="2" id="water_connection_contract_remarks"><%= @water_connection_contract.remarks %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<%= render '/ag2_gest/contracting_requests/modals/new_water_connection_contract' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/new_connection_bill' %>
+
+<%= render '/ag2_gest/contracting_requests/modals/new_invoice_from_offer' %>

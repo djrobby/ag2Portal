@@ -96,7 +96,7 @@ class Tariff < ActiveRecord::Base
   # THIS METHOD IS CONCEPTUALLY WRONG!!
   # DO NOT USE!!!
   def tariff_active
-    if block1_fee == 0.0 && block2_fee == 0.0 && block3_fee == 0.0 && block4_fee == 0.0 && block5_fee == 0.0 && block6_fee == 0.0 && block7_fee == 0.0 && block8_fee == 0.0 && fixed_fee == 0.0 && variable_fee == 0.0 && percentage_fee == 0.0
+    if block1_fee == 0.0 && block2_fee == 0.0 && block3_fee == 0.0 && block4_fee == 0.0 && block5_fee == 0.0 && block6_fee == 0.0 && block7_fee == 0.0 && block8_fee == 0.0 && fixed_fee == 0.0 && variable_fee == 0.0 && percentage_fee == 0.0 && connection_fee_a == 0.0 && connection_fee_b == 0.0
       return false
     else
       return true

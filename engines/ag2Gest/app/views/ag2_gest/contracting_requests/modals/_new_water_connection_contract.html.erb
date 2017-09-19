@@ -1,0 +1,109 @@
+<script type="text/javascript">
+  var text_field_color;
+
+  $(document).ready(function(){
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('select.sel3').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      closeOnSelect: false,
+      allowClear: true
+    });
+
+    // Save default text color
+    text_field_color = $("#alert").css('color')
+
+  $("#form_new_water_connection_contract")
+    .bind("ajax:success", function(xhr, data, status) {
+      location.reload();
+      return;
+      // modal water connection contract hide
+      $("#new-water-connection-contract").modal('hide');
+      // if form is post
+      if ($("#form_new_water_connection_contract").attr("method") == "post"){
+        // change form action and method
+        $("#form_new_water_connection_contract").attr("action", "/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/<%= @contracting_request.id %>/water_connection_contracts/" + data.water_connection_contract.id);
+        $("#form_new_water_connection_contract").attr("method", "put");
+      }
+      // update data fields
+      $("#water_connection_contract_cadastral_reference").text(data.water_connection_contract.cadastral_reference);
+      $("#water_connection_contract_gis_id").text(data.water_connection_contract.gis_id);
+      $("#water_connection_contract_min_pressure").text(data.water_connection_contract.min_pressure);
+      $("#water_connection_contract_max_pressure").text(data.water_connection_contract.max_pressure);
+      $("#water_connection_contract_connections_no").text(data.water_connection_contract.connections_no);
+      $("#water_connection_contract_dwellings_no").text(data.water_connection_contract.dwellings_no);
+      $("#water_connection_contract_premises_no").text(data.water_connection_contract.premises_no);
+      $("#water_connection_contract_premises_area").text(data.water_connection_contract.premises_area);
+      $("#water_connection_contract_common_items_no").text(data.water_connection_contract.common_items_no);
+      $("#water_connection_contract_pipe_length").text(data.water_connection_contract.pipe_length);
+      $("#water_connection_contract_yard_area").text(data.water_connection_contract.yard_area);
+      $("#water_connection_contract_pool_area").text(data.water_connection_contract.pool_area);
+      $("#water_connection_contract_remarks").text(data.water_connection_contract.remarks);
+      $("#caliber").text(data.caliber);
+      $("#service_point_purpose").text(data.service_point_purpose);
+    })
+    .bind("ajax:error", function(xhr, data, status) {
+      alert('<%= I18n.t("ag2_gest.contracting_requests.required_error") %>');
+    });
+  });
+
+  jQuery(function($) {
+
+    $(".icon-trash").click(function() {
+      remove_fields(this);
+    });
+  });
+</script>
+
+<div id="new-water-connection-contract" class="modal fade" style="display: none;">
+  <%= simple_form_for [@contracting_request, @water_connection_contract], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_water_connection_contract' } do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= I18n.t('ag2_gest.contracting_requests.new_water_connection_contract.title') %></h3>
+    </div>
+    <div class="modal-body">
+
+      <%= f.input :contracting_request_id, :as => :hidden, :input_html => { :value => @contracting_request.id } %>
+      <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
+
+      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+
+      <%= f.association :water_connection_type, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+
+      <%= f.association :service_point_purpose, required: true, collection: ServicePointPurpose.all, :input_html => { :class => 'x-large-text-field sel2', :id => 'service_point_purpose' }, :label_html => { :class => 'form-label' }, include_blank: true %>
+
+      <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'caliber' }, :label_html => { :class => 'form-label' }, include_blank: true %>
+
+      <%= f.input :diameter, :input_html => { :class => 'x-large-text-field', :id => 'wcc_diameter' }, :label_html => { :class => 'form-label' } %>
+
+      <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wcc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wcc_gis_id' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wcc_min_pressure' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wcc_max_pressure' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :connections_no, :input_html => { :class => 'x-large-text-field', :id => 'wcc_connections_no' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :dwellings_no, :input_html => { :class => 'x-large-text-field', :id => 'wcc_dwelling_no' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :premises_no, :input_html => { :class => 'x-large-text-field', :id => 'wcc_premises_no' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :premises_area, :input_html => { :class => 'x-large-text-field', :id => 'wcc_premises_area' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :common_items_no, :input_html => { :class => 'x-large-text-field', :id => 'wcc_common_items_no' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :pipe_length, :input_html => { :class => 'x-large-text-field', :id => 'wcc_pipe_length' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :yard_area, :input_html => { :class => 'x-large-text-field', :id => 'wcc_yard_area' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :pool_area, :input_html => { :class => 'x-large-text-field', :id => 'wcc_pool_area' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wcc_remarks', rows: 5 }, :label_html => { :class => 'form-label' } %>
+
+      <h4><%= t('activerecord.attributes.contracting_request.conection_items') %></h4>
+      <%= link_to_add_fields("Añadir Item", f, :water_connection_contract_items, "connection_items", "new-connection_items", class: "btn btn-warning fnt-new-btn") %>
+      <%= f.simple_fields_for :water_connection_contract_items, defaults: { input_html: { class: 'sub-form' } } do |item| %>
+        <%= render 'connection_items', :f => item %>
+      <%end%>
+    </div>
+    <div class="modal-footer">
+      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert"></span>
+      <%= f.submit t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+    </div>
+  <% end %>
+</div>
+
+

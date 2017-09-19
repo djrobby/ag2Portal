@@ -63,28 +63,29 @@ report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
 				   )
 
 # contract_data
-report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.contracting_data"),
-				   cr_type_c: I18n.t("activerecord.attributes.contracting_request.type") + ": ",
-				   cr_type: @contracting_request.contracting_request_type.description.capitalize,
-				   cr_no_c: I18n.t("activerecord.report.contracting_request.request_no") + ": ",
-				   cr_no: @contracting_request.full_no,
-				   fiscal_id_c: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ": ",
-				   fiscal_id: @biller_printer.try(:client).try(:fiscal_id),
-				   use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
-				   use: @water_supply_contract.try(:use).try(:name),
-				   caliber_c: I18n.t("activerecord.attributes.subscriber.caliber") + ": ",
-				   caliber: @water_supply_contract.try(:caliber).try(:caliber),
-				   cadastral_reference_c: I18n.t("activerecord.attributes.water_supply_contract.cadastral_reference") + ": ",
-				   cadastral_reference: @water_supply_contract.cadastral_reference,	   				   
-				   meter_code_c: I18n.t("activerecord.models.meter.one") + ": ",
-				   meter_code: @water_supply_contract.try(:meter).try(:meter_code),
-				   dot_c: I18n.t("activerecord.attributes.contracting_request.endowments"),
-				   dot: @water_supply_contract.try(:endowments),
-				   hab_c: I18n.t("activerecord.attributes.contracting_request.inhabitants"),
-				   hab: @water_supply_contract.try(:inhabitants),
-				   remarks_title: I18n.t("activerecord.attributes.commercial_billing.remarks"),
-				   remarks: @invoice.remarks
-				   )
+	report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.contracting_data"),
+					   cr_type_c: I18n.t("activerecord.attributes.contracting_request.type") + ": ",
+					   cr_type: @contracting_request.contracting_request_type.description.capitalize,
+					   cr_no_c: I18n.t("activerecord.report.contracting_request.request_no") + ": ",
+					   cr_no: @contracting_request.full_no,
+					   fiscal_id_c: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ": ",
+					   fiscal_id: @biller_printer.try(:client).try(:fiscal_id),
+					   use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
+					   use: @water_supply_contract.try(:use).try(:name),
+					   caliber_c: I18n.t("activerecord.attributes.subscriber.caliber") + ": ",
+					   caliber: @water_supply_contract.try(:caliber).try(:caliber),
+					   cadastral_reference_c: I18n.t("activerecord.attributes.water_supply_contract.cadastral_reference") + ": ",
+					   cadastral_reference: @water_supply_contract.try(:cadastral_reference),	   				   
+					   meter_code_c: I18n.t("activerecord.models.meter.one") + ": ",
+					   meter_code: @water_supply_contract.try(:meter).try(:meter_code),
+					   dot_c: I18n.t("activerecord.attributes.contracting_request.endowments"),
+					   dot: @water_supply_contract.try(:endowments),
+					   hab_c: I18n.t("activerecord.attributes.contracting_request.inhabitants"),
+					   hab: @water_supply_contract.try(:inhabitants),
+					   remarks_title: I18n.t("activerecord.attributes.commercial_billing.remarks"),
+					   remarks: @invoice.remarks
+					   )
+
 if !@contracting_request.service_point.blank?
 	report.page.values(service_point_c: I18n.t("activerecord.attributes.contracting_request.service_point"),
 					   service_point: @contracting_request.service_point.to_full_label

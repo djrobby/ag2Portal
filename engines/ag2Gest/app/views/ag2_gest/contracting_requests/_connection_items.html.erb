@@ -1,0 +1,19 @@
+<table id="connection-items" class="table table-condensed table-striped shrinked fixed">
+	<thead>
+		<tr>
+		  	<th><%= t('activerecord.attributes.water_connection_contract.type') %></th>
+		  	<th><%= t('activerecord.attributes.water_connection_contract.quantity') %></th>
+		  	<th align="right"><%= t('activerecord.attributes.water_connection_contract.flow') %></th>
+		  	<th align="right"><%= t('activerecord.attributes.water_connection_contract.total') %></th>
+		  	<th></th>
+	  	</tr>
+	</thead>
+	<tbody>
+	 	<tr>
+	    	<td><%= f.association :water_connection_contract_item_type, label: false, collection: WaterConnectionContractItemType.all, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' } %></td>
+	    	<td><%= f.input :quantity, label: false, :input_html => { :class => 'x-medium-text-field', :id => 'wcc_quantity' }, :label_html => { :class => 'form-label' } %></td>
+	    	<td align="right"><%= number_with_precision(f.object.water_connection_contract_item_type.flow, precision: 2) unless f.object.water_connection_contract_item_type.blank? %></td>
+	    	<td align="right"><%= number_with_precision(f.object.quantity_flow, precision: 2) unless f.object.quantity_flow.blank? %></td>
+	  	</tr>
+ 	</tbody>
+</table>

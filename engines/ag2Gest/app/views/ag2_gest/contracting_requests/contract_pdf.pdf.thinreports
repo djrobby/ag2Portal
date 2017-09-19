@@ -47,7 +47,7 @@ end
 
 report.page.values(form_title: var_title,
 				   request_no_c: I18n.t("activerecord.attributes.contracting_request.request_no") + " :",
-				   request_no: @water_supply_contract.contracting_request.full_no,
+				   request_no: @water_supply_contract.full_no,
 				   change_owner_c: I18n.t("activerecord.attributes.contracting_request.type") + " :",
 				   change_owner: @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? I18n.t("ag2_gest.contracting_requests.report.change_c") : I18n.t("activerecord.attributes.water_supply_contract.change_c_up")
 				  )
@@ -95,7 +95,7 @@ if @contracting_request.contracting_request_type_id == 2
 	var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.subscriber_id).where('client_id != ?', @water_supply_contract.client_id).order(:contract_date)
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
-				   					 request_no_master: var_master.last.contracting_request.full_no,
+				   					 request_no_master: var_master.last.full_no,
 				   					 old_subscriber: I18n.t("activerecord.attributes.water_supply_contract.old_contract"),
 									 old_subscriber_code_c: I18n.t("activerecord.attributes.report.client_code") + ": ",
 				  					 old_subscriber_code: var_master.last.client.full_code,
@@ -126,7 +126,7 @@ elsif @contracting_request.contracting_request_type_id == 4
 	var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
-				   			request_no_master: var_master.first.contracting_request.full_no)
+				   			request_no_master: var_master.first.full_no)
 	end
 end
 #
@@ -153,7 +153,7 @@ var_array
 end
 
 var_billable_concept_array = var_array.split("-")
-var_billable_concept_array_can = var_billable_concept_array -= %w{CAN} 
+var_billable_concept_array_can = var_billable_concept_array -= %w{CMA} 
 var_billable_concept_array_destroy = var_billable_concept_array -= %w{SUM SAN DEP} 
 var_img = "app/assets/images/icon/glyph/black/ok.png"
 
@@ -390,7 +390,7 @@ if @contracting_request.contracting_request_type_id == 2
 var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.subscriber_id).where('client_id != ?', @water_supply_contract.client_id).order(:contract_date)
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
-			   					 request_no_master: var_master.last.contracting_request.full_no)
+			   					 request_no_master: var_master.last.full_no)
 	end
 	var_title = I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation")
 else
@@ -398,7 +398,7 @@ else
 end
 report.page.values(form_title: var_title,
 				   request_no_c: I18n.t("activerecord.attributes.contracting_request.request_no") + " :",
-				   request_no: @water_supply_contract.contracting_request.full_no,
+				   request_no: @water_supply_contract.full_no,
 				   change_owner_c: I18n.t("activerecord.attributes.contracting_request.type") + " :",
 				   change_owner: @contracting_request.contracting_request_type_id == 2 || @contracting_request.contracting_request_type_id == 4 ? I18n.t("ag2_gest.contracting_requests.report.change_c") : I18n.t("activerecord.attributes.water_supply_contract.change_c_up")
 				  )

@@ -21,6 +21,7 @@ en:
         back_to_management: "Back to Contracting"
       show:
         title: "Contracting Request"
+        title_connection: "Connection Contracting Request"
         btn_edit: "Edit Contracting Request"
         btn_delete: "Delete Contracting Request"
         return_to: "Back to Contracting Request"
@@ -43,6 +44,7 @@ en:
         old_subscriber: "Antiguo abonado"
       edit:
         title: "Edit Contracting Request"
+        title_connection: "Edit Connection Contracting Request"
         btn_show: "Show Contracting Request"
       new:
         title: "New Contracting Request"
@@ -53,6 +55,17 @@ en:
         iban: "Cuenta IBAN"
         documents: "Documentos"
         service_point: "Service Point"
+      new_connection:
+        title: "New Connection Contracting Request"
+        claimant: "Datos Fiscales"
+        client: "Datos de Notificación"
+        address_subscriber: "Domicilio Suministro"
+        representative: "Representante"
+        iban: "Cuenta IBAN"
+        documents: "Documentos"
+        service_point: "Service Point"
+      new_water_connection_contract:
+        title: "Connection Contract"
       new_water_supply_contract:
         title: "Supply Contract"
         tariff_scheme: "Tariff scheme"

@@ -1,0 +1,77 @@
+<!-- Modal -->
+<script>
+
+  $(document).ready(function() {
+    $("#proc_mesage").hide();
+    if ($('#Date_').val() == "") {
+      $('#Date_').datepicker('setValue', es_date(new Date()));
+    }
+  });
+
+  jQuery(function($) {
+    $('#btn_accept').click(function() {
+      var supplier = $('#Client_H').val();
+      var request = $('#Offer_H').val();
+      var offer_date = $('#Date_').val();
+      if ((supplier == "") || (request == "") || (offer_date == "")) {
+        // Error
+        alert('<%= I18n.t(:mandatory_subtitle) %>');
+        return false;
+      }
+      // Right formatted date
+      offer_date = right_date(offer_date, "<%= I18n.locale %>");
+      // Show message
+      $("#proc_mesage").show();
+      // make the POST call
+      jQuery.getJSON('cr_generate_invoice_from_offer/' + supplier + '/' + request + '/' + offer_date, function(data) {
+        // Hide message
+        $("#proc_mesage").hide();
+        // AJAX refresh index table is necessary
+        $(".icon-refresh-link").click();
+        // Go on based on result
+        if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_gest.commercial_billings.generate_invoice_error") %>');
+        } else if (data.code == "$write") {
+          alert('<%= I18n.t("ag2_gest.commercial_billings.generate_invoice_write") %>');
+        } else {
+          // Hide the modal and exit
+          alert(data.code);
+          $("#new-invoice-from-offer").modal('hide');
+          //window.location = "<%= ag2_gest.commercial_billings_path %>";
+        }
+      });
+      return false;
+    });
+
+  });
+</script>
+
+<div id="new-invoice-from-offer" class="modal hide fade" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_gest.commercial_billings.index.btn_new_from_sale_offer') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <!-- Client -->
+    <label for="Client_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.bill.client") %></label>
+    <%= text_field_tag "Client_", @water_connection_contract.sale_offer.client.full_name_or_company_and_code, :class => 'x-large-text-field', disabled: true %>
+    <%= hidden_field_tag "Client_H", @water_connection_contract.sale_offer.client_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+    <!-- Sale offer -->
+    <label for="Offer_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.sale_offer") %></label>
+    <%= text_field_tag "Offer_", @water_connection_contract.sale_offer.to_label, :class => 'x-large-text-field', disabled: true %>
+    <%= hidden_field_tag "Offer_H", @water_connection_contract.sale_offer_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+    <!-- Invoice date -->
+    <label for="Date_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.invoice_date") %></label>
+    <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
+  </div>
+  <div class="modal-footer">
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.sale_offer.unbilled_balance_c") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom" id="current-balance">0,0000</span>
+    <a class="btn btn-primary" href="#" id="btn_accept"><%= t :generate %></a>
+    <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+  </div>
+</div>

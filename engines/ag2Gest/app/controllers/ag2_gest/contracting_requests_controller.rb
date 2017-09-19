@@ -21,16 +21,21 @@ module Ag2Gest
                                                 :show_test,
                                                 :next_status,
                                                 :complete_status,
+                                                :ot_connection_inspection,
                                                 :initial_inspection,
                                                 :ot_cancellation,
                                                 :ot_installation,
+                                                :ot_connection_installation,
                                                 :initial_billing,
                                                 :initial_billing_cancellation,
+                                                :connection_billing,
                                                 :inspection_billing,
                                                 :inspection_billing_cancellation,
+                                                :billing_connection,
                                                 :billing_instalation,
                                                 :billing_instalation_cancellation,
                                                 :new_subscriber_cancellation,
+                                                :complete_connection,
                                                 :instalation_subscriber,
                                                 :bill,
                                                 :bill_cancellation,
@@ -50,9 +55,15 @@ module Ag2Gest
                                                 :contracting_request_pdf,
                                                 :contracting_subscriber_pdf,
                                                 :refresh_status,
+                                                :refresh_connection_status,
+                                                :cr_generate_invoice_from_offer,
+                                                :bill_connection_create,
+                                                :bill_assign_invoice_from_offer,
                                                 :contract_pdf,
                                                 :sepa_pdf,
-                                                :serpoint_generate_no]
+                                                :serpoint_generate_no,
+                                                :new_connection,
+                                                :edit_connection]
     # Helper methods for
     helper_method :sort_column
     # => search available meters
@@ -62,6 +73,7 @@ module Ag2Gest
     def refresh_status
       @contracting_request = ContractingRequest.find(params[:id])
       response_hash = { contracting_request: @contracting_request }
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
       response_hash[:work_order_status] = @contracting_request.work_order.work_order_status if @contracting_request.work_order
       response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
@@ -81,6 +93,160 @@ module Ag2Gest
       response_hash[:reading_date_cancellation] = WorkOrder.where(master_order_id: @contracting_request.work_order_id,work_order_type_id: 29).first.current_reading_date if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP or @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
       respond_to do |format|
         format.json { render json: response_hash }
+      end
+    end
+
+    def refresh_connection_status
+      @contracting_request = ContractingRequest.find(params[:id])
+      response_hash = { contracting_request: @contracting_request }
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
+      response_hash[:work_order_status] = @contracting_request.work_order.work_order_status if @contracting_request.work_order
+      response_hash[:work_order_installation] = @contracting_request.water_connection_contract.work_order if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.work_order
+      response_hash[:work_order_status_installation] = @contracting_request.water_connection_contract.work_order.work_order_status if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.work_order
+      response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.bill
+      response_hash[:bill] = @contracting_request.water_connection_contract.bill if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.bill
+      response_hash[:caliber] = @contracting_request.work_order.caliber if @contracting_request.work_order and @contracting_request.work_order.caliber
+      response_hash[:sale_offer] = @contracting_request.water_connection_contract.sale_offer if @contracting_request.water_connection_contract.sale_offer
+      response_hash[:sale_offer_status] = @contracting_request.water_connection_contract.sale_offer.sale_offer_status if @contracting_request.water_connection_contract.sale_offer
+      response_hash[:invoice_from_offer] = @contracting_request.water_connection_contract.sale_offer.invoices if @contracting_request.water_connection_contract.sale_offer
+      respond_to do |format|
+        format.json { render json: response_hash }
+      end
+    end
+
+    # Generate new invoice from sale offer
+    def cr_generate_invoice_from_offer
+      client = params[:client]
+      offer = params[:offer]
+      invoice_date = params[:offer_date]  # YYYYMMDD
+      invoice_no = nil
+      bill_id = 0
+      invoice = nil
+      invoice_item = nil
+      code = ''
+
+      if offer != '0'
+        sale_offer = SaleOffer.find(offer) rescue nil
+        sale_offer_items = sale_offer.sale_offer_items rescue nil
+        if !sale_offer.nil? && !sale_offer_items.nil?
+          # Format offer_date
+          invoice_date = (invoice_date[0..3] + '-' + invoice_date[4..5] + '-' + invoice_date[6..7]).to_date
+          # Invoice No
+          invoice_no = commercial_bill_next_no(sale_offer.project.company_id, sale_offer.project.office_id)
+          if invoice_no != '$err'
+            # Try to save new bill
+            bill_id = bill_create_invoice_from_offer(sale_offer.project_id,
+                                  sale_offer.client_id,
+                                  invoice_date,
+                                  sale_offer.payment_method_id)
+            if bill_id > 0
+              # Try to save new invoice
+              invoice = Invoice.new
+              invoice.bill_id = bill_id
+              invoice.invoice_operation_id = InvoiceOperation::INVOICE
+              invoice.invoice_status_id = InvoiceStatus::PENDING
+              invoice.invoice_type_id = InvoiceType::COMMERCIAL
+              invoice.biller_id = sale_offer.project.company_id
+              invoice.invoice_no = invoice_no
+              invoice.payment_method_id = sale_offer.payment_method_id
+              invoice.invoice_date = invoice_date
+              invoice.discount_pct = sale_offer.discount_pct
+              invoice.charge_account_id = sale_offer.charge_account_id
+              invoice.created_by = current_user.id if !current_user.nil?
+              invoice.organization_id = sale_offer.organization_id
+              invoice.sale_offer_id = sale_offer.id
+              if invoice.save
+                # Try to save new invoice items
+                sale_offer_items.each do |i|
+                  if i.unbilled_balance != 0 # Only items not billed yet
+                    invoice_item = InvoiceItem.new
+                    invoice_item.invoice_id = invoice.id
+                    invoice_item.sale_offer_id = i.sale_offer_id
+                    invoice_item.sale_offer_item_id = i.id
+                    invoice_item.product_id = i.product_id
+                    invoice_item.code = i.product.product_code
+                    invoice_item.description = i.description
+                    invoice_item.quantity = i.unbilled_balance
+                    invoice_item.price = i.price
+                    invoice_item.discount_pct = i.discount_pct
+                    invoice_item.discount = i.discount
+                    invoice_item.tax_type_id = i.tax_type_id
+                    invoice_item.created_by = current_user.id if !current_user.nil?
+                    if !invoice_item.save
+                      # Can't save invoice item (exit)
+                      code = '$write'
+                      break
+                    end   # !invoice_item.save?
+                  end   # i.unbilled_balance != 0
+                end   # do |i|
+                # Update totals
+                invoice.update_column(:totals, Invoice.find(invoice.id).total)
+              else
+                # Can't save invoice
+                code = '$write'
+              end   # invoice.save?
+            else
+              # Can't save bill
+              code = '$write'
+            end   # bill_id > 0
+          else
+            # Invalid invoice No
+            code = '$err'
+          end   # invoice_no != '$err'
+        else
+          # Sale offer or items not found
+          code = '$err'
+        end   # !sale_offer.nil? && !sale_offer_items.nil?
+      else
+        # Sale offer 0
+        code = '$err'
+      end   # offer != '0'
+      if code == ''
+        code = I18n.t("ag2_gest.commercial_billings.generate_invoice_ok", var: invoice.invoice_no.to_s)
+      end
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
+
+    # Create associated Bill
+    def bill_create_invoice_from_offer(_project, _client, _date, _payment_method)
+      _r = 0
+      _bill = Bill.new
+      _bill.created_by = current_user.id if !current_user.nil?
+      _bill.bill_no = bill_next_no(_project)
+      bill_assign_invoice_from_offer(_bill, _project, _client, _date, _payment_method)
+      if _bill.save
+        _r = _bill.id
+      end
+      _r
+    end
+
+    def bill_assign_invoice_from_offer(_bill, _project, _client, _date, _payment_method)
+      _c = Client.find(_client) rescue nil
+      _p = Project.find(_project) rescue nil
+      if !_c.nil? && !_p.nil?
+        _bill.project_id = _project
+        _bill.client_id = _client
+        _bill.bill_date = _date
+        _bill.invoice_status_id = InvoiceStatus::PENDING
+        _bill.last_name = _c.last_name
+        _bill.first_name = _c.first_name
+        _bill.company = _c.company
+        _bill.fiscal_id = _c.fiscal_id
+        _bill.street_type_id = _c.street_type_id
+        _bill.street_name = _c.street_name
+        _bill.street_number = _c.street_number
+        _bill.building = _c.building
+        _bill.floor = _c.floor
+        _bill.floor_office = _c.floor_office
+        _bill.zipcode_id = _c.zipcode_id
+        _bill.town_id = _c.town_id
+        _bill.province_id = _c.province_id
+        _bill.region_id = _c.region_id
+        _bill.country_id = _c.country_id
+        _bill.organization_id = _p.organization_id
+        _bill.payment_method_id = _payment_method
       end
     end
 
@@ -320,6 +486,48 @@ module Ag2Gest
     end
 
     # Create work order cancellation
+    def ot_connection_installation
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_connection_contract = @contracting_request.water_connection_contract
+
+        @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+                                    master_order_id: @contracting_request.work_order_id,
+                                    work_order_type_id: @contracting_request.water_connection_contract.water_connection_type_id == 1 ? 37 : 38,
+                                    work_order_status_id: 1, #WorkOderStatus
+                                    work_order_labor_id: @contracting_request.water_connection_contract.water_connection_type_id == 1 ? 163 : 164,
+                                    work_order_area_id: 4, # TCA
+                                    project_id: @contracting_request.project_id,
+                                    client_id: @contracting_request.client.id, # ¿¿??
+                                    description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+                                    organization_id: @contracting_request.project.organization_id,
+                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
+                                    in_charge_id: 1,
+                                    caliber_id: @contracting_request.water_connection_contract.try(:caliber_id)
+                                  )
+
+      if @work_order.save(:validate => false)
+        @water_connection_contract.update_attributes(work_order_id: @work_order.id)
+        if @contracting_request.save
+          response_hash = { contracting_request: @contracting_request }
+          response_hash[:work_order] = @contracting_request.work_order
+          response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
+          response_hash[:work_order_installation] = @contracting_request.water_connection_contract.work_order
+          response_hash[:work_order_status_installation] = @contracting_request.water_connection_contract.work_order.work_order_status
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
+      else
+        respond_to do |format|
+          format.json { render :json => { :errors => @work_order.errors.as_json }, :status => 420 }
+        end
+      end
+    end
+
     def ot_installation
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
@@ -370,6 +578,45 @@ module Ag2Gest
 
 
     # Create work order inspection
+    def ot_connection_inspection
+      @contracting_request = ContractingRequest.find(params[:id])
+      # current_user_id = current_user.id if !current_user.nil?
+
+        @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
+                                    work_order_type_id: 25,
+                                    work_order_status_id: 1, #WorkOderStatus
+                                    work_order_labor_id: 132,
+                                    work_order_area_id: 4, # TCA
+                                    project_id: @contracting_request.project_id,
+                                    client_id: @contracting_request.client.id, # ¿¿??
+                                    description: "#{t('activerecord.attributes.contracting_request.number_request')} " + @contracting_request.request_no,
+                                    organization_id: @contracting_request.project.organization_id,
+                                    charge_account_id: @contracting_request.project.try(:charge_accounts).try(:first).try(:id),
+                                    in_charge_id: 1
+                                    # started_at:, completed_at:, closed_at:, charge_account_id: 1,area_id:, store_id:, created_by: current_user_id, updated_by: current_user_id, remarks:,petitioner:, master_order_id:, reported_at:, approved_at:, certified_at:, posted_at:, location:, pub_record:,
+                                  )
+      if @work_order.save(:validate => false)
+        @contracting_request.work_order = @work_order
+        @contracting_request.status_control
+        if @contracting_request.save
+          response_hash = { contracting_request: @contracting_request }
+          response_hash[:work_order] = @work_order
+          response_hash[:work_order_status] = @work_order.work_order_status
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
+      else
+        respond_to do |format|
+          format.json { render :json => { :errors => @work_order.errors.as_json }, :status => 420 }
+        end
+      end
+    end
+
     def initial_inspection
       @contracting_request = ContractingRequest.find(params[:id])
       # current_user_id = current_user.id if !current_user.nil?
@@ -410,6 +657,27 @@ module Ag2Gest
     end
 
     # Create contracting request bill
+    def connection_billing
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_connection_contract = @contracting_request.water_connection_contract
+
+      @bill = @water_connection_contract.generate_bill
+
+      if @bill
+        @contracting_request.status_control;
+        if @contracting_request.save
+          respond_to do |format|
+            format.json { render json: response_hash }
+            format.js {}
+          end
+        else
+          respond_to do |format|
+            format.json { render json: @water_connection_contract.errors.as_json, status: :unprocessable_entity }
+          end
+        end
+      end
+    end
+
     def inspection_billing
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract
@@ -641,6 +909,24 @@ module Ag2Gest
       end
     end
 
+    def billing_connection
+      @contracting_request = ContractingRequest.find(params[:id])
+        @contracting_request.status_control
+        if @contracting_request.save
+          response_hash = { contracting_request: @contracting_request }
+          response_hash[:bill] = @contracting_request.water_connection_contract.bill
+          response_hash[:invoice] = @contracting_request.water_connection_contract.bill.invoices.first   
+          response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status       
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
+    end
+
     # Create instalation work order
     def billing_instalation
       @contracting_request = ContractingRequest.find(params[:id])
@@ -721,6 +1007,26 @@ module Ag2Gest
         @contracting_request.status_control
         if @contracting_request.save
           @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.ending_at) if @contracting_request.water_supply_contract
+          response_hash = { contracting_request: @contracting_request }
+          # response_hash[:work_order] = @work_order
+          # response_hash[:work_order_status] = @work_order.work_order_status
+          respond_to do |format|
+            format.json { render json: response_hash }
+          end
+        else
+          respond_to do |format|
+            format.json { render :json => { :errors => @contracting_request.errors.as_json }, :status => 420 }
+          end
+        end
+    end
+
+    def complete_connection
+      @contracting_request = ContractingRequest.find(params[:id])
+      @water_connection_contract = @contracting_request.water_connection_contract
+      
+        @contracting_request.status_control
+        if @contracting_request.save
+          @contracting_request.water_connection_contract.update_attributes(contract_date: Date.today) if @contracting_request.water_connection_contract
           response_hash = { contracting_request: @contracting_request }
           # response_hash[:work_order] = @work_order
           # response_hash[:work_order_status] = @work_order.work_order_status
@@ -1319,6 +1625,7 @@ module Ag2Gest
       @breadcrumb = 'read'
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract || WaterSupplyContract.new
+      @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new      
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = current_projects
@@ -1391,6 +1698,30 @@ module Ag2Gest
 
     # GET /contracting_requests/new
     # GET /contracting_requests/new.json
+    def new_connection
+      @breadcrumb = 'create'
+      @contracting_request = ContractingRequest.new
+      @projects = current_projects
+      @projects_ids = current_projects_ids
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      @subscribers = []
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      @service_points = []
+      @offices = current_offices.group(:town_id).pluck('offices.town_id')
+      @street_types = StreetType.order(:street_type_code)
+      @towns = Town.order(:name)
+      @provinces = Province.order(:name)
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @zipcodes = Zipcode.order(:zipcode)
+      respond_to do |format|
+        format.html # new.html.erb
+        format.json { render json: @contracting_request }
+      end
+
+    end
+
     def new
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.new
@@ -1416,7 +1747,7 @@ module Ag2Gest
     end
 
     # GET /contracting_requests/1/edit
-    def edit
+    def edit_connection
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:id])
       @projects = current_projects
@@ -1426,6 +1757,25 @@ module Ag2Gest
       @subscribers = []
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
+      @offices = current_offices.group(:town_id).pluck(:town_id)
+      @street_types = StreetType.order(:street_type_code)
+      @towns = Town.order(:name)
+      @provinces = Province.order(:name)
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @zipcodes = Zipcode.order(:zipcode)
+    end
+
+    def edit
+      @breadcrumb = 'update'
+      @contracting_request = ContractingRequest.find(params[:id])
+      @projects = current_projects
+      @projects_ids = current_projects_ids
+      # _subscribers = Subscriber.where(office_id: current_offices_ids)
+      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+      @subscribers = []
+      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
+      @service_points = [@contracting_request.service_point]
       @offices = current_offices.group(:town_id).pluck(:town_id)
       @street_types = StreetType.order(:street_type_code)
       @towns = Town.order(:name)
@@ -1470,8 +1820,13 @@ module Ag2Gest
           format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.create')}
           format.json { render json: @contracting_request, status: :created, location: @contracting_request }
         else
-          format.html { render action: "new" }
-          format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
+          if @contracting_request.contracting_request_type_id ==3
+            format.html { render action: "new_connection" }
+            format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
+          else          
+            format.html { render action: "new" }
+            format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
+          end
         end
       end
     end

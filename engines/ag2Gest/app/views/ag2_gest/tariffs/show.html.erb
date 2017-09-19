@@ -123,10 +123,20 @@
         <div class="span7"><b><%= t('activerecord.attributes.tariff.percentage_applicable_formula') %>:</b></div>
         <div class="span4"><%= @tariff.get_code_formula  %></div>
       </div>
-    </div>
+
+      <h4 class="text-center"><%= t('activerecord.attributes.tariff.connection') %></h4>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.connection_fee_a') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.connection_fee_a, precision: 12, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+      <div class="row-fluid">
+        <div class="span7"><b><%= t('activerecord.attributes.tariff.connection_fee_b') %>:</b></div>
+        <div class="span4"><%= number_with_precision(@tariff.connection_fee_b, precision: 12, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
+      </div>
+  </div>
 
     <div class="span4 divborder_radius">
-      <h4><br></h4>
+      <h4 class="text-center"><%= t('activerecord.attributes.tariff_scheme.discounts') %></h4>
       <div class="row-fluid">
         <div class="span6"><b><%= t('activerecord.attributes.tariff.discount_pct_f') %>:</b></div>
         <div class="span5"><%= number_with_precision(@tariff.discount_pct_f, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
@@ -144,7 +154,7 @@
         <div class="span5"><%= number_with_precision(@tariff.discount_pct_p, precision: 6, strip_insignificant_zeros: true, delimiter: I18n.locale == :es ? "." : ",") %></div>
       </div>
 
-      <h4><br></h4>
+      <h4 class="text-center"><%= t('activerecord.attributes.tariff_scheme.taxes') %></h4>
       <div class="row-fluid">
         <div class="span6"><b><%= t('activerecord.attributes.tariff.tax_type_f_id') %>:</b></div>
         <div class="span5"><%= @tariff.tax_type_f.description + " (" + number_with_precision(@tariff.tax_type_f.tax, precision: 2, delimiter: I18n.locale == :es ? "." : ",") + ")" %></div>

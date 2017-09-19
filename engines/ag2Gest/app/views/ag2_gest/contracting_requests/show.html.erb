@@ -5,7 +5,11 @@
 
 <%= render '/layouts/ag2_gest/crequestsbreadcrumb' %>
 
-<h3><%= t('.title')%></h3>
+<% if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION %>
+  <h3><%= t('.title_connection')%></h3>
+<% else %>
+  <h3><%= t('.title')%></h3>
+<% end %>
 <table class="table">
   <tbody>
     <tr>
@@ -13,34 +17,61 @@
       <td><%= @contracting_request.try(:id) %></td>
       <td><%= t "activerecord.attributes.contracting_request.request_no" %>:</td>
       <td><b><%= @contracting_request.try(:full_no) %></b></td>
-      <td>Tipo:</td>
-      <td><%= @contracting_request.contracting_request_type.description %></td>
-    </tr>
-    <tr>
-      <td colspan="4"><h4><%= @contracting_request.try(:entity).try(:to_label) %></h4></td>
       <td><%= t "activerecord.attributes.contracting_request.request_date" %>:</td>
       <td><%=l @contracting_request.try(:request_date) unless @contracting_request.try(:request_date).blank? %></td>
     </tr>
     <tr>
+      <td>Tipo:</td>
+      <td><%= @contracting_request.contracting_request_type.description %></td>
+      <td><%= t "activerecord.report.subscriber.contract" %>:</td>
+      <% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>
+        <% if @contracting_request.water_supply_contract %>
+          <td colspan="3" id="contract"><b><%= @contracting_request.water_supply_contract.full_no unless @contracting_request.water_supply_contract.blank? %><b></td>
+        <% elsif @contracting_request.water_connection_contract %>
+          <td colspan="3" id="contract"><b><%= @contracting_request.water_connection_contract.full_no unless @contracting_request.water_connection_contract.blank? %><b></td>
+        <% end %>
+      <% else %>
+        <td colspan="3" id="contract"></td>
+      <% end %>
+    </tr>
+    <tr>
+      <td colspan="4"><h4><%= @contracting_request.try(:entity).try(:to_label) %></h4></td>
       <td><%= t :"activerecord.attributes.subscriber.debt" %>:</td>
-      <td colspan="5"><%= number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @contracting_request.client.total_debt_unpaid.blank? %></td>
+      <td id="debt"><%= number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @contracting_request.client.total_debt_unpaid.blank? %></td>
     </tr>
   </tbody>
 </table>
 
-<% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING or @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION or @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>
-  <div id="new">
-    <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
-  </div>
+<% if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION %>
+  <% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING or @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION or @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>
+    <div id="new">
+      <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_connection_contracting_requests_path, :txt => t('.btn_new') } %>
+    </div>
+  <% else %>
+    <div id="new" class="hide">
+      <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_connection_contracting_requests_path, :txt => t('.btn_new') } %>
+    </div>
+    <div id="update-new">
+      <%= render partial: '/layouts/crud/update_new', locals:
+    { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),
+    new_path: new_connection_contracting_requests_path, new_txt: t('.btn_new') } %>
+    </div>
+  <% end %>
 <% else %>
-  <div id="new" class="hide">
-    <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
-  </div>
-  <div id="update-new">
-    <%= render partial: '/layouts/crud/update_new', locals:
-  { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),
-  new_path: new_contracting_request_path, new_txt: t('.btn_new') } %>
-  </div>
+  <% if @contracting_request.contracting_request_status_id == ContractingRequestStatus::BILLING or @contracting_request.contracting_request_status_id == ContractingRequestStatus::INSTALLATION or @contracting_request.contracting_request_status_id == ContractingRequestStatus::COMPLETE %>
+    <div id="new">
+      <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
+    </div>
+  <% else %>
+    <div id="new" class="hide">
+      <%= render :partial => '/layouts/crud/new', :locals => { :model => ContractingRequest, :path => new_contracting_request_path, :txt => t('.btn_new') } %>
+    </div>
+    <div id="update-new">
+      <%= render partial: '/layouts/crud/update_new', locals:
+    { model: ContractingRequest, update_path: edit_contracting_request_path(@contracting_request), update_txt: t('.btn_edit'),
+    new_path: new_contracting_request_path, new_txt: t('.btn_new') } %>
+    </div>
+  <% end %>
 <% end %>
 
 <!-- <#%= render partial: '/layouts/crud/update_delete_new', locals:
@@ -59,18 +90,29 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
 <hr>
 
 <ul class="nav nav-tabs" id="myTab">
-  <li class="active">
-    <a href="#supply" data-toggle="tab"><%=t ".supply" %></a>
-  </li>
-  <li class="disabled">
-    <a href="#connection" data-toggle="tab"><%=t ".connection" %></a>
-  </li>
+  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
+    <li class="active">
+      <a href="#supply" data-toggle="tab"><%=t ".supply" %></a>
+    </li>
+    <li class="disabled">
+      <a href="#connection" data-toggle="tab"><%=t ".connection" %></a>
+    </li>
+  <% else %>
+    <li class="disabled">
+      <a href="#supply" data-toggle="tab"><%=t ".supply" %></a>
+    </li>
+    <li class="active">
+      <a href="#connection" data-toggle="tab"><%=t ".connection" %></a>
+    </li>
+  <% end %>
   <li>
     <a href="#details" data-toggle="tab"><%=t ".details" %></a>
   </li>
-  <li>
-    <a href="#subscriber" data-toggle="tab"><%=t ".subscriber" %></a>
-  </li>
+  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
+    <li>
+      <a href="#subscriber" data-toggle="tab"><%=t ".subscriber" %></a>
+    </li>
+  <% end %>
   <li>
     <a href="#entity" data-toggle="tab"><%=t ".entity" %></a>
   </li>
@@ -84,25 +126,29 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
 
 <div class="tab-content" id="myTabContent">
 
-  <!-- supply tab -->
-  <div class="tab-pane fade active in" id="supply">
-    <%= render "show_tab_supply" %>
-  </div>
-
-  <!-- connection tab -->
-  <div class="tab-pane fade" id="connection">
-    <%= render "show_tab_connection" %>
-  </div>
+  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
+    <!-- supply tab -->
+    <div class="tab-pane fade active in" id="supply">
+      <%= render "show_tab_supply" %>
+    </div>
+  <% else %>
+    <!-- connection tab -->
+    <div class="tab-pane fade active in" id="connection">
+      <%= render "show_tab_connection" %>
+    </div>
+  <% end %>
 
   <!-- details tab -->
   <div class="tab-pane fade" id="details">
     <%= render "show_tab_details" %>
   </div>
 
-  <!-- subscriber tab -->
-  <div class="tab-pane fade" id="subscriber">
-    <%= render "show_tab_subscriber" %>
-  </div>
+  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
+    <!-- subscriber tab -->
+    <div class="tab-pane fade" id="subscriber">
+      <%= render "show_tab_subscriber" %>
+    </div>
+  <% end %>
 
   <!-- entity tab -->
   <div class="tab-pane fade" id="entity">

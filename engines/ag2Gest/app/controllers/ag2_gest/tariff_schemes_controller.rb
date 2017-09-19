@@ -198,7 +198,9 @@ module Ag2Gest
           tax_type_f_id: tariff.tax_type_f_id,
           tax_type_v_id: tariff.tax_type_v_id,
           tax_type_p_id: tariff.tax_type_p_id,
-          tax_type_b_id: tariff.tax_type_b_id
+          tax_type_b_id: tariff.tax_type_b_id,
+          connection_fee_a: tariff.connection_fee_a,
+          connection_fee_b: tariff.connection_fee_b
         )
       end
       respond_to do |format|

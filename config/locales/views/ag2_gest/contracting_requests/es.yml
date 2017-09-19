@@ -21,6 +21,7 @@ es:
         back_to_management: "Volver a Contrataciones"
       show:
         title: "Solicitud de Contratación"
+        title_connection: "Solicitud de Contratación de Acometida"
         btn_new: "Nueva Solicitud"
         btn_edit: "Editar Solicitud"
         btn_delete: "Borrar Solicitud"
@@ -44,6 +45,7 @@ es:
         old_subscriber: "Antiguo abonado"
       edit:
         title: "Editar Solicitud de Contratación"
+        title_connection: "Editar Solicitud de Contratación de Acometida"
         btn_show: "Ver Solicitud de Contratación"
       new:
         title: "Nueva Solicitud de Contratación"
@@ -54,6 +56,17 @@ es:
         iban: "Cuenta IBAN"
         documents: "Documentos"
         service_point: "Punto de Servicio"
+      new_connection:
+        title: "Nueva Solicitud de Contratación de Acometida"
+        claimant: "Datos Fiscales"
+        client: "Datos de Notificación"
+        address_subscriber: "Domicilio Suministro"
+        representative: "Representante"
+        iban: "Cuenta IBAN"
+        documents: "Documentos"
+        service_point: "Punto de Servicio"
+      new_water_connection_contract:
+        title: "Contrato de Acometida"
       new_water_supply_contract:
         title: "Contrato de Suministro"
         tariff_scheme: "Esquema tarifario"

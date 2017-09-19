@@ -69,3 +69,6 @@ es:
         discounts: "Descuentos"
         tax: "Impuesto"
         taxes: "Impuestos"
+        connection: "Acometida"
+        connection_fee_a: "Parametro A"
+        connection_fee_b: "Parametro B"

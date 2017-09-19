@@ -296,6 +296,11 @@
     });
     
     $("#refresh-status").bind("ajax:success", function(xhr, data, status) {
+
+      if (data.client_debt) {
+        $("#debt").text(data.client_debt);
+      };
+
       if (data.work_order) {
         $("#link_work_order_inspection").attr("href","/<%= params[:locale] %>/ag2_tech/<%= params[:locale] %>/work_orders/" + data.work_order.id);
         $("#link_work_order_inspection").text(data.work_order.order_no.substr(0, 12) + "-" + data.work_order.order_no.substr(12, 4) + "-" +  data.work_order.order_no.substr(16, 6));
@@ -538,6 +543,8 @@
       $("#installation-date").text(data.reading.reading_date);
       $("#contract_pdf").removeClass("hide");
       $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");
+      $("#contract").text(data.water_supply_contract.contract_no.substr(0, 5) + '-' + data.water_supply_contract.contract_no.substr(6, 7) + '-' + data.water_supply_contract.contract_no.substr(8, 11) + '-' + data.water_supply_contract.contract_no.substr(12, 17));
+
       if (data.contracting_request.client.client_bank_accounts != []) {
         $("#sepa_pdf").removeClass("hide");
         $("#sepa_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/sepa_pdf.pdf");

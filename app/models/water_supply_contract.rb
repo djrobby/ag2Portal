@@ -28,6 +28,11 @@ class WaterSupplyContract < ActiveRecord::Base
                   :created_by, :updated_by, :meter_code_input,
                   :min_pressure, :max_pressure, :contract_term, :contract_no
 
+  def full_no
+    # Contract no (Project Id & Request type Id & year & sequential number) => PPPPPP-TT-YYYY-NNNNNN
+    contract_no.blank? ? "" : contract_no[0..5] + '-' + contract_no[6..7] + '-' + contract_no[8..11] + '-' + contract_no[12..17]
+  end
+  
   def request_no
     contracting_request.request_no unless contracting_request.blank?
   end

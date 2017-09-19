@@ -19,7 +19,7 @@ class ContractTemplateTerm < ActiveRecord::Base
                             :numericality => { :only_integer => true, :greater_than => 0, :less_than => 3  }
 
   # Scopes
-  scope :by_no, -> { order(:term_no) }
+  scope :by_no, -> { order('cast(term_no as unsigned) asc') }
   scope :by_type_no, -> { order(:term_type, :term_no) }
   #
   scope :general_terms, -> { where("term_type = ?", ContractTemplateTerm::GENERAL).by_no }

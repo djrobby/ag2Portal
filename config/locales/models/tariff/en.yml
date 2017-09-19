@@ -69,3 +69,6 @@ en:
         discounts: "Discount"
         tax: "Tax"
         taxes: "Taxes"
+        connection: "Connection"
+        connection_fee_a: "Parameter A"
+        connection_fee_b: "Parameter B"

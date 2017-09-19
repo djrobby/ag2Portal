@@ -96,16 +96,16 @@ class ContractingRequest < ActiveRecord::Base
   validates :client_street_type,          :presence => true
   validates :client_town,                 :presence => true
   validates :client_zipcode,              :presence => true
-  validates :subscriber_center,           :presence => true
-  validates :subscriber_country,          :presence => true
-  validates :subscriber_province,         :presence => true
-  validates :subscriber_region,           :presence => true
-  validates :subscriber_street_directory, :presence => true
-  validates :subscriber_street_number,    :presence => true
-  validates :subscriber_street_type,      :presence => true
-  validates :subscriber_town,             :presence => true
-  validates :subscriber_zipcode,          :presence => true
-  validates :service_point_id,               :presence => true  
+  validates :subscriber_center,           :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_country,          :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_province,         :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_region,           :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_street_directory, :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_street_number,    :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_street_type,      :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_town,             :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :subscriber_zipcode,          :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  validates :service_point_id,             :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
   # validates :subscriber_id, presence: true, if: "contracting_request_type_id==2"
 
   validate :check_document_required?
@@ -428,6 +428,7 @@ class ContractingRequest < ActiveRecord::Base
 
   def to_cancellation
     water_supply_contract = WaterSupplyContract.new(
+                              contract_no: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_no : nil,
                               contracting_request_id: id,
                               client_id: client.id,
                               reading_route_id: old_subscriber.reading_route_id,
@@ -472,6 +473,7 @@ class ContractingRequest < ActiveRecord::Base
   #change_owner
   def to_subrogation
     water_supply_contract = WaterSupplyContract.create(
+                              contract_no: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_no : nil,
                               contracting_request_id: id,
                               client_id: client.id,
                               subscriber_id: old_subscriber.id,
@@ -527,6 +529,7 @@ class ContractingRequest < ActiveRecord::Base
   #to_add_concept
   def to_add_concept
     water_supply_contract = WaterSupplyContract.create(
+                              contract_no: old_subscriber.water_supply_contract ? old_subscriber.water_supply_contract.contract_no : nil,
                               contracting_request_id: id,
                               client_id: client.id,
                               subscriber_id: old_subscriber.id,
@@ -585,6 +588,7 @@ class ContractingRequest < ActiveRecord::Base
     # water_supply_contract = WaterSupplyContract.new(old_subscriber.water_supply_contract.attributes.except!("id", "created_at", "updated_at"))
     # water_supply_contract.client = client
     water_supply_contract = WaterSupplyContract.new(
+                              contract_no: contract_next_no(project_id,contracting_request_type_id),
                               contracting_request_id: id,
                               client_id: client.id,
                               reading_route_id: old_subscriber.reading_route_id,

@@ -163,6 +163,9 @@ es:
       formality_types:
         items: "Tipos de trámite"
         item: "Tipo"
+      debt_claims:
+        items: "Reclamaciones de deuda"
+        item: "Reclamación"
       debt_claim_phases:
         items: "Fases RD"
         item: "Fase"

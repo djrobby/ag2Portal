@@ -735,7 +735,7 @@ end
     project = project.to_s if project.is_a? Fixnum
     project = project.rjust(6, '0')
     type_s = type.to_s if type.is_a? Fixnum
-    type_s = type.rjust(2, '0')
+    type_s = type_s.rjust(2, '0')
     year = year.to_s if year.is_a? Fixnum
     year = year.rjust(4, '0')
     if type == ContractingRequestType::CONNECTION

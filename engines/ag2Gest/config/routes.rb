@@ -126,22 +126,30 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/:id/et_validate_fiscal_id_textfield/:id', :controller => 'contracting_requests', :action => 'et_validate_fiscal_id_textfield'
     match 'contracting_requests/:id/next_status', :controller => 'contracting_requests', :action => 'next_status'
     match 'contracting_requests/:id/complete_status', :controller => 'contracting_requests', :action => 'complete_status'
+    match 'contracting_requests/:id/ot_connection_inspection', :controller => 'contracting_requests', :action => 'ot_connection_inspection'
     match 'contracting_requests/:id/initial_inspection', :controller => 'contracting_requests', :action => 'initial_inspection'
     match 'contracting_requests/:id/inspection_billing', :controller => 'contracting_requests', :action => 'inspection_billing'
+    match 'contracting_requests/:id/connection_billing', :controller => 'contracting_requests', :action => 'connection_billing'
     match 'contracting_requests/:id/inspection_billing_cancellation', :controller => 'contracting_requests', :action => 'inspection_billing_cancellation'
     match 'contracting_requests/:id/initial_billing', :controller => 'contracting_requests', :action => 'initial_billing'
     match 'contracting_requests/:id/ot_cancellation', :controller => 'contracting_requests', :action => 'ot_cancellation'
+    match 'contracting_requests/:id/ot_connection_installation', :controller => 'contracting_requests', :action => 'ot_connection_installation'
     match 'contracting_requests/:id/ot_installation', :controller => 'contracting_requests', :action => 'ot_installation'
     match 'contracting_requests/:id/initial_billing_cancellation', :controller => 'contracting_requests', :action => 'initial_billing_cancellation'
+    match 'contracting_requests/:id/billing_connection', :controller => 'contracting_requests', :action => 'billing_connection'
     match 'contracting_requests/:id/billing_instalation', :controller => 'contracting_requests', :action => 'billing_instalation'
     match 'contracting_requests/:id/billing_instalation_cancellation', :controller => 'contracting_requests', :action => 'billing_instalation_cancellation'
     match 'contracting_requests/:id/new_subscriber_cancellation', :controller => 'contracting_requests', :action => 'new_subscriber_cancellation'
+    match 'contracting_requests/:id/complete_connection', :controller => 'contracting_requests', :action => 'complete_connection'
     match 'contracting_requests/:id/instalation_subscriber', :controller => 'contracting_requests', :action => 'instalation_subscriber'
     match 'contracting_requests/:id/update_bill', :controller => 'contracting_requests', :action => 'update_bill'
     match 'contracting_requests/get_caliber/:id', :controller => 'contracting_requests', :action => 'get_caliber'
     match 'contracting_requests/update_old_subscriber/:id', :controller => 'contracting_requests', :action => 'update_old_subscriber'
     match 'contracting_requests/:id/initial_complete', :controller => 'contracting_requests', :action => 'initial_complete'
     match 'contracting_requests/:id/billing_complete', :controller => 'contracting_requests', :action => 'billing_complete'
+    match 'contracting_requests/cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'contracting_requests/:id/cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -362,6 +370,7 @@ Ag2Gest::Engine.routes.draw do
     resources :sale_offer_statuses
     #
     resources :contracting_requests do
+      get 'new_connection', on: :collection
       get 'contracting_request_pdf', on: :member
       get 'contract_pdf', on: :member
       get 'sepa_pdf', on: :member
@@ -369,15 +378,19 @@ Ag2Gest::Engine.routes.draw do
       get 'bill_cancellation', on: :member
       get 'biller_pdf', on: :member
       get 'refresh_status', on: :member
+      get 'refresh_connection_status', on: :member
       get 'biller_contract_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member
       post 'subrogation', on: :collection
       resources :water_supply_contracts, except: [:index, :show, :edit, :new]
+      resources :water_connection_contracts, except: [:index, :show, :edit, :new]
       #resources :water_supply_contracts, except: [:new]
       resources :subscribers, only: [:create, :update]
     end
     resources :water_supply_contracts
     resources :water_connection_contracts
+    resources :water_connection_contract_items
+    resources :water_connection_contract_item_types
     resources :contracting_request_types
     resources :contracting_request_statuses
     resources :contracting_request_document_types

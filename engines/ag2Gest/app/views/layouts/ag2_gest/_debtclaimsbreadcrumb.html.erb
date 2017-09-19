@@ -1,6 +1,6 @@
-<% content_for :title, "aGestiona2 | ag2GestReadingIncidenceTypes" %>
-<% content_for :icon, "/assets/icon/TableA.png" %>
-<% content_for :alt, "ag2GestReadingIncidenceType" %>
+<% content_for :title, "aGestiona2 | ag2GestDebtClaims" %>
+<% content_for :icon, "/assets/icon/ag2DebtManagement.png" %>
+<% content_for :alt, "ag2GestDebtClaim" %>
 
 <ul class="breadcrumb">
   <li>
@@ -10,19 +10,19 @@
     <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
   </li>
   <li>
-    <a href="<%= ag2_gest.reading_management_path %>"><%= t "ag2_gest.home.index.reading_management" %></a><span class="divider">></span>
+    <a href="<%= ag2_gest.debt_claim_management_path %>"><%= t "ag2_gest.home.index.debt_claim_management" %></a><span class="divider">></span>
   </li>
-  <% if @reading_incidence_types %>
+  <% if @debt_claims %>
   <li>
-    <%=t "ag2_gest.breadcrumb.reading_incidence_types.items" %>
+    <%=t "ag2_gest.breadcrumb.debt_claims.items" %>
   </li>
   <% end %>
-  <% if @reading_incidence_type %>
+  <% if @debt_claim %>
   <li>
-    <a href="<%= reading_incidence_types_path %>"><%=t :"ag2_gest.breadcrumb.reading_incidence_types.items" %></a><span class="divider">></span>
+    <a href="<%= debt_claims_path %>"><%=t :"ag2_gest.breadcrumb.debt_claims.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
-  <%=t :"ag2_gest.breadcrumb.reading_incidence_types.item" %>
+  <%=t :"ag2_gest.breadcrumb.debt_claims.item" %>
   <% end %>
   <% if @breadcrumb == 'create' %>
   <li>

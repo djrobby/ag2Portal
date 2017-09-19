@@ -119,6 +119,9 @@ module Ag2Gest
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       @water_supply_contract = WaterSupplyContract.new(params[:water_supply_contract].except(:meter_code_input))
       # @water_supply_contract.tariff_id = @tariff.try(:id)
+      _project = @contracting_request.project_id
+      _type = @contracting_request.contracting_request_type_id
+      @water_supply_contract.contract_no = contract_next_no(_project,_type) if _type == ContractingRequestType::SUPPLY || _type == ContractingRequestType::CHANGE_OWNERSHIP
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
       if !@contracting_request.work_order.blank?
