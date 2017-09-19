@@ -1,4 +1,6 @@
 class Meter < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :meter_model
   belongs_to :caliber
   belongs_to :meter_owner
@@ -33,6 +35,74 @@ class Meter < ActiveRecord::Base
                                   :length => { :is => 4 },
                                   :numericality => { :only_integer => true, :greater_than => 0 }
 
+  # Current meter coding from 2010:
+  # Length must be 12 chars
+  # Format: BYYMCSSSSSSK
+  # B       ->  Manufacturer (brand) Id (meter_brand.letter_id)
+  # YY      ->  Manufacturing year
+  # M       ->  Model Id (meter_model.letter_id)
+  # C       ->  Caliber Id (caliber.letter_id)
+  # SSSSSS  ->  Serial number
+  # K       ->  Control digit
+  # Returns:
+  # $err            ->  meter_code do not validate (<12 or bad format)
+  # $manufacturer   ->  manufacturer invalid
+  # $year           ->  year invalid
+  # $model          ->  model invalid
+  # $caliber        ->  caliber invalid
+  # $serial         ->  serial no. invalid
+  # $control$       ->  control digit invalid (returns obtained digit)
+  # $ok             ->  no errors detected: OK
+  def check_meter_code
+    ret = '$err'
+    if !meter_code.blank? && meter_code.length == 12
+      b = meter_code[0]
+      yy = meter_code[1..2]
+      m = meter_code[3]
+      c = meter_code[4]
+      ssssss = meter_code[5..10]
+      k = meter_code[11]
+      manufacturer_letter = meter_model.meter_brand.letter_id rescue nil
+      model_letter = meter_model.letter_id rescue nil
+      caliber_letter = caliber.letter_id rescue nil
+      st2 = (11 * (meter_code[0].ord - "A".ord)) + (8 * (meter_code[3].ord - "A".ord)) + (7 * (meter_code[4].ord - "A".ord))
+      st1 = (10 * meter_code[1].to_i) + (9 * meter_code[2].to_i) + (6 * meter_code[5].to_i) + (5 * meter_code[6].to_i) +
+            (4 * meter_code[7].to_i) + (3 * meter_code[8].to_i) + (2 * meter_code[9].to_i) + meter_code[10].to_i
+      control_digit = ("A".ord + ((st1 + st2) % 26)).chr
+      # Check manufacturer
+      if !manufacturer_letter.blank? && manufacturer_letter == b
+        # Check year
+        if is_numeric?(yy)
+          # Check model
+          if !model_letter.blank? && model_letter == m
+            # Check caliber
+            if !caliber_letter.blank? && caliber_letter == c
+              # Check serial no.
+              if is_numeric?(ssssss)
+                # Check control digit
+                if !control_digit.blank? && control_digit == k
+                  ret = '$ok'
+                else
+                  ret = '$control$' + control_digit
+                end
+              else
+                ret = '$serial'
+              end
+            else
+              ret = '$caliber'
+            end
+          else
+            ret = '$model'
+          end
+        else
+          ret = '$year'
+        end
+      else
+        ret = '$manufacturer'
+      end
+    end
+    ret
+  end
 
   # Scopes
   scope :by_code, -> { order(:meter_code) }
