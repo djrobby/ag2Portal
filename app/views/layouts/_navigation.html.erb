@@ -64,9 +64,7 @@
               </ul>
             </li>
             <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.regulations_path, '<i class="ico-regulations"></i>'.html_safe + " " + t("ag2_gest.home.regulation.regulations")) %></li>
-            <li>
-              <a data-toggle="modal" href="#notfound"><i class="ico-debtclaim"></i> <%= t("ag2_gest.home.index.debt_claim_management") %></a>
-            </li>
+            <li><%= link_to_resetting_filters(Ag2Gest, ag2_gest.debt_claim_management_path, '<i class="ico-debtclaim"></i>'.html_safe + " " + t("ag2_gest.home.index.debt_claim_management")) %></li>
             <li>
               <a data-toggle="modal" href="#notfound"><i class="ico-formalities"></i> <%= t("ag2_gest.home.index.formality_management") %></a>
             </li>
