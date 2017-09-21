@@ -3,7 +3,8 @@ class PaymentMethod < ActiveRecord::Base
   belongs_to :input_ledger_account, class_name: "LedgerAccount"
   belongs_to :output_ledger_account, class_name: "LedgerAccount"
   attr_accessible :default_interest, :description, :expiration_days, :flow,
-                  :cashier, :organization_id, :input_ledger_account_id, :output_ledger_account_id
+                  :cashier, :bank,
+                  :organization_id, :input_ledger_account_id, :output_ledger_account_id
 
   has_many :suppliers
   has_many :clients

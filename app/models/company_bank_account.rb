@@ -6,8 +6,9 @@ class CompanyBankAccount < ActiveRecord::Base
   belongs_to :country
   belongs_to :bank
   belongs_to :bank_office
+  belongs_to :ledger_account
   attr_accessible :account_no, :bank_suffix, :ccc_dc, :ending_at, :holder_fiscal_id, :holder_name, :iban_dc, :starting_at,
-                  :company_id, :bank_account_class_id, :country_id, :bank_id, :bank_office_id
+                  :company_id, :bank_account_class_id, :country_id, :bank_id, :bank_office_id, :ledger_account_id
 
   has_paper_trail
 
