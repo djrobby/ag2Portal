@@ -101,7 +101,7 @@ class Notifier < ActionMailer::Base
     @current_host = current_host
     #d = purchase_order.approval_date.utc
     #t = Time.new(d.year, d.month, d.day, d.hour, d.min, d.sec, d.zone)
-    @approved_at = purchase_order.approval_date.utc.getlocal
+    @approved_at = purchase_order.approval_date.utc.getlocal rescue nil
     @from = _from
     mail reply_to: _from, to: _to do |format|
       format.html

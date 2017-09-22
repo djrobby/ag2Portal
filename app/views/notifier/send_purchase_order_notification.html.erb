@@ -26,8 +26,10 @@
         <%= t :created_at %> <%= formatted_timestamp(@purchase_order.created_at.utc.getlocal) %> <%= t :by %> <%= User.find(@purchase_order.created_by).email unless @purchase_order.created_by.blank? %>
         <br />
         <%= t :updated_at %> <%= formatted_timestamp(@purchase_order.updated_at.utc.getlocal) %> <%= t :by %> <%= User.find(@purchase_order.updated_by).email unless @purchase_order.updated_by.blank? %>
+        <% if !@approved_at.blank? %>
         <br />
         <%= t :approved_at %> <%= formatted_timestamp(@approved_at) %> <%= t :by %> <%= User.find(@purchase_order.approver_id).email unless @purchase_order.approver_id.blank? %>
+        <% end %>
       </p>
       <p>
         <a href="<%= ag2_purchase.purchase_order_url(:id => @purchase_order.id, :host => @current_host) %>"><%= t '.htmllink' %></a>
