@@ -11,6 +11,7 @@ es:
         bill_id: "Factura"
         bill: "Factura"
         cadastral_reference: "Ref. catastral"
+        pub_record: "Registro OP"
         client_id: "Cliente"
         client: "Cliente"
         caliber: "Calibre"

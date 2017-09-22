@@ -362,11 +362,12 @@
       };
       if (data.work_order_status_installation) {
         $("#status_work_order_installation").text(data.work_order_status_installation.name);
-          if (data.work_order_status_installation.id == '3' || data.work_order_status_installation.id == '4') {
-            $("#new-subscriber-installation").removeClass("disabled");
-          } else {
-            $("#new-subscriber-installation").addClass("disabled");
-          };
+          $("#new-subscriber-installation").removeClass("disabled");
+          // if (data.work_order_status_installation.id == '3' || data.work_order_status_installation.id == '4') {
+          //   $("#new-subscriber-installation").removeClass("disabled");
+          // } else {
+          //   $("#new-subscriber-installation").addClass("disabled");
+          // };
       };
       if (data.invoice_status) {
         if (data.invoice_status.id != '1' && !data.work_order_installation) {
@@ -762,7 +763,8 @@
           <% if @contracting_request.water_supply_contract.work_order.blank?%>
             <a href="#new-subscriber" id="new-subscriber-installation" data-toggle="modal" role="button" class="btn btn-primary <%= 'disabled' if @contracting_request.water_supply_contract.work_order_id.blank? %>" data-remote="true"><%= t('activerecord.attributes.contracting_request.data_subscriber') %></a>
           <% else %>
-            <a href="#new-subscriber" id="new-subscriber-installation" data-toggle="modal" role="button" class="btn btn-primary <%= 'disabled' if @contracting_request.water_supply_contract.work_order_id.blank? or @contracting_request.water_supply_contract.work_order.work_order_status_id != WorkOrderStatus::COMPLETED and @contracting_request.water_supply_contract.work_order.work_order_status_id != WorkOrderStatus::CLOSED %>" data-remote="true"><%= t('activerecord.attributes.contracting_request.data_subscriber') %></a>
+            <!-- <a href="#new-subscriber" id="new-subscriber-installation" data-toggle="modal" role="button" class="btn btn-primary <#%= 'disabled' if @contracting_request.water_supply_contract.work_order_id.blank? or @contracting_request.water_supply_contract.work_order.work_order_status_id != WorkOrderStatus::COMPLETED and @contracting_request.water_supply_contract.work_order.work_order_status_id != WorkOrderStatus::CLOSED %>" data-remote="true"><#%= t('activerecord.attributes.contracting_request.data_subscriber') %></a> -->
+            <a href="#new-subscriber" id="new-subscriber-installation" data-toggle="modal" role="button" class="btn btn-primary <%= 'disabled' if @contracting_request.water_supply_contract.work_order_id.blank? %>" data-remote="true"><%= t('activerecord.attributes.contracting_request.data_subscriber') %></a>
           <% end %>
         <% end %>
       <% end %>
@@ -795,6 +797,10 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.cadastral_reference') %></b></td>
           <td id="water_supply_contract_cadastral_reference"><%= @water_supply_contract.cadastral_reference %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.contracting_request.pub_record') %></b></td>
+          <td id="water_supply_contract_pub_record"><%= @water_supply_contract.pub_record %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.gis_id') %></b></td>

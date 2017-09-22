@@ -29,7 +29,7 @@ report.start_new_page
 # Page header: Image block for Logo
 report.page.values company_logo: "public/" + @contracting_request.project.company.logo.url(:original).split("?").first unless @contracting_request.project.company.logo.blank?
 
-var_client_bank = ClientBankAccount.where(subscriber_id: @water_supply_contract.subscriber_id,ending_at: nil)
+var_client_bank = ClientBankAccount.where(client_id: @water_contract.client_id,ending_at: nil)
 
 # Page header: Creditor
 report.page.values(refere: var_client_bank.first.try(:refere),
@@ -41,7 +41,7 @@ report.page.values(refere: var_client_bank.first.try(:refere),
 				   )
 #
 # Page footer
-var_full_date = I18n.l(@water_supply_contract.contract_date, format: :long_whit_day) unless @water_supply_contract.contract_date.blank?
+var_full_date = I18n.l(@water_contract.contract_date, format: :long_whit_day) unless @water_contract.contract_date.blank?
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"),
@@ -51,7 +51,7 @@ report.page.values(printed_at: Time.now,
 var_client_bank_full = var_client_bank.first.try(:e_format_with_spaces)
 var_client_bank_titular = var_client_bank.first.try(:holder_name)
 
-contract_tariff = ContractedTariff.where(water_supply_contract_id: @water_supply_contract.id).count
+contract_tariff = ContractedTariff.where(water_supply_contract_id: @water_contract.id).count
 report.page.values(refere: var_client_bank.first.try(:refere),
 				   holder_name: var_client_bank_titular,
 				   holder_address_1: @contracting_request.try(:client).address_1,
@@ -73,7 +73,7 @@ report.start_new_page
 # Page header: Image block for Logo
 report.page.values company_logo: "public/" + @contracting_request.project.company.logo.url(:original).split("?").first unless @contracting_request.project.company.logo.blank?
 
-var_client_bank = ClientBankAccount.where(subscriber_id: @water_supply_contract.subscriber_id,ending_at: nil)
+var_client_bank = ClientBankAccount.where(client_id: @water_contract.client_id,ending_at: nil)
 
 # Page header: Creditor
 report.page.values(refere: var_client_bank.first.try(:refere),
@@ -85,7 +85,7 @@ report.page.values(refere: var_client_bank.first.try(:refere),
 				   )
 #
 # Page footer
-var_full_date = I18n.l(@water_supply_contract.contract_date, format: :long_whit_day) unless @water_supply_contract.contract_date.blank?
+var_full_date = I18n.l(@water_contract.contract_date, format: :long_whit_day) unless @water_contract.contract_date.blank?
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"),
@@ -95,7 +95,7 @@ report.page.values(printed_at: Time.now,
 var_client_bank_full = var_client_bank.first.try(:e_format_with_spaces)
 var_client_bank_titular = var_client_bank.first.try(:holder_name)
 
-contract_tariff = ContractedTariff.where(water_supply_contract_id: @water_supply_contract.id).count
+contract_tariff = ContractedTariff.where(water_supply_contract_id: @water_contract.id).count
 report.page.values(refere: var_client_bank.first.try(:refere),
 				   holder_name: var_client_bank_titular,
 				   holder_address_1: @contracting_request.try(:client).address_1,

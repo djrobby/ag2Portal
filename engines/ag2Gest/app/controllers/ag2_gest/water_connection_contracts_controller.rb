@@ -2,20 +2,69 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class WaterConnectionContractsController < ApplicationController
+    before_filter :authenticate_user!
+    load_and_authorize_resource
+
     # GET /water_connection_contracts
     # GET /water_connection_contracts.json
     def index
-      @water_connection_contracts = WaterConnectionContract.all
-  
+      manage_filter_state
+      no = params[:No]
+      order = params[:Order]
+      caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+      @tariff_schemes = tariff_schemes_dropdown if @tariff_schemes.nil?
+      @calibers = calibers_dropdown if @calibers.nil?
+
+      # ContractingRequest for current projects
+      current_contracting_request = ContractingRequest.where(project_id: current_projects_ids).map(&:id)
+
+      @search = WaterConnectionContract.search do
+        if !current_contracting_request.blank?
+          with :contracting_request_id, current_contracting_request
+        end
+        fulltext params[:search]
+        if !no.blank?
+          with(:request_no).starting_with(no)
+        end
+        if !order.blank?
+          with :tariff_scheme_id, order
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
+        end
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @water_connection_contracts = @search.results
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @water_connection_contracts }
+        format.js
       end
     end
   
     # GET /water_connection_contracts/1
     # GET /water_connection_contracts/1.json
     def show
+      @breadcrumb = 'read'
       @water_connection_contract = WaterConnectionContract.find(params[:id])
       @water_connection_contract_items = @water_connection_contract.water_connection_contract_items
 
@@ -78,7 +127,7 @@ module Ag2Gest
         if @water_connection_contract.update_attributes(params[:water_connection_contract])
           if @water_connection_contract.sale_offer
             @water_connection_contract.sale_offer.update_attributes(
-              charge_account_id: @water_connection_contract.water_connection_type_id == 1 ? 10763 : @water_connection_contract.water_connection_type_id == 2 ? 10764 : 10765
+              charge_account_id: @water_connection_contract.water_connection_type_id == WaterConnectionType::SUM ? 10763 : @water_connection_contract.water_connection_type_id == WaterConnectionType::SAN ? 10764 : 10765
             )
           end
           format.html { redirect_to @water_connection_contract,
@@ -106,6 +155,63 @@ module Ag2Gest
           format.json { render json: @water_connection_contract.errors, status: :unprocessable_entity }
         end
       end
+    end
+
+    private
+    def manage_filter_state
+      # subscribers
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # tariff_schemes
+      if params[:Order]
+        session[:Order] = params[:Order]
+      elsif session[:Order]
+        params[:Order] = session[:Order]
+      end
+      # calibers
+      if params[:Caliber]
+        session[:Caliber] = params[:Caliber]
+      elsif session[:Caliber]
+        params[:Caliber] = session[:Caliber]
+      end
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
+    end
+
+    def inverse_gis_search(gis)
+      _numbers = []
+      # Add numbers found
+      WaterConnectionContract.where('gis_id LIKE ?', "#{gis}").each do |i|
+        _numbers = _numbers << i.offer_gis
+      end
+      _numbers = _numbers.blank? ? gis : _numbers
+    end
+
+    def tariff_schemes_dropdown
+      TariffScheme.where(project_id: current_projects_ids)
+    end
+
+    def calibers_dropdown
+      Caliber.all
     end
   end
 end

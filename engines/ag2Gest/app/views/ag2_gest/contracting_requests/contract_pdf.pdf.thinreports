@@ -441,7 +441,7 @@ report.page.values(printed_at: Time.now,
 report.page.values(general_condition: I18n.t("activerecord.attributes.water_supply_contract.general_condition"))
 
 character_term = 0
-character_term_total = 6000
+character_term_total = 5750
 general_terms_items = ""
 general_terms_items_2 = ""
 

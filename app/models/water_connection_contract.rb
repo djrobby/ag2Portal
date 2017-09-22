@@ -44,7 +44,7 @@ class WaterConnectionContract < ActiveRecord::Base
       client_id: client_id,
       contracting_request_id: contracting_request_id,
       payment_method_id: contracting_request.client.active_bank_account ? 6 : 1,
-      charge_account_id: water_connection_type_id == 1 ? 10763 : water_connection_type_id == 2 ? 10764 : ""
+      charge_account_id: water_connection_type_id == WaterConnectionType::SUM ? 10763 : water_connection_type_id == WaterConnectionType::SAN ? 10764 : ""
     )
   end
   

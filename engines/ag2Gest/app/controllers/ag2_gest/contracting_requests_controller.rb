@@ -333,22 +333,15 @@ module Ag2Gest
       title = t("activerecord.models.water_supply_contract.one")
       respond_to do |format|
         format.pdf {
-          send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+          send_data render_to_string, filename: "#{title}_#{@water_supply_contract.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
         }
       end
     end
 
     def sepa_pdf
       @contracting_request = ContractingRequest.find(params[:id])
-      @water_supply_contract = @contracting_request.water_supply_contract
-      _tariff_type = []
-      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
-          if !_tariff_type.include? tt.tariff.tariff_type.name
-            _tariff_type = _tariff_type << tt.tariff.tariff_type.name
-          end
-      end
-      @tariff_type = _tariff_type.join(", ")
-      @tariff_type_billing_frequency = @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").first
+      @water_contract = !@contracting_request.water_supply_contract.blank? ? @contracting_request.water_supply_contract : @contracting_request.water_connection_contract
+      
       title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
       respond_to do |format|
         format.pdf {
@@ -492,9 +485,9 @@ module Ag2Gest
 
         @work_order = WorkOrder.new(  order_no: wo_next_no(@contracting_request.project),
                                     master_order_id: @contracting_request.work_order_id,
-                                    work_order_type_id: @contracting_request.water_connection_contract.water_connection_type_id == 1 ? 37 : 38,
+                                    work_order_type_id: @contracting_request.water_connection_contract.water_connection_type_id == WaterConnectionType::SUM ? 37 : 38,
                                     work_order_status_id: 1, #WorkOderStatus
-                                    work_order_labor_id: @contracting_request.water_connection_contract.water_connection_type_id == 1 ? 163 : 164,
+                                    work_order_labor_id: @contracting_request.water_connection_contract.water_connection_type_id == WaterConnectionType::SUM ? 163 : 164,
                                     work_order_area_id: 4, # TCA
                                     project_id: @contracting_request.project_id,
                                     client_id: @contracting_request.client.id, # ¿¿??

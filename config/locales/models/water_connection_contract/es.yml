@@ -2,17 +2,17 @@ es:
   activerecord:
     models:
       water_connection_contract:
-        zero:  Contratos de acometida
-        one:   Contrato de acometida
-        few:   Contratos de acometida
-        other: Contratos de acometida
+        zero:  Contratos de Acometida
+        one:   Contrato de Acometida
+        few:   Contratos de Acometida
+        other: Contratos de Acometida
     attributes:
       water_connection_contract:
         id: "Id"
         contracting_request_id: "Solicitud"
         contracting_request: "Solicitud"
-        water_connection_type_id: "Tipo de acometida"
-        water_connection_type: "Tipo de acometida"
+        water_connection_type_id: "Tipo de Acometida"
+        water_connection_type: "Tipo de Acometida"
         contract_date: "Fecha de contrato"
         client_id: "Cliente"
         client: "Cliente"
@@ -37,7 +37,7 @@ es:
         gis_id: "GIS Id."
         min_pressure: "Presión mínima"
         max_pressure: "Presión máxima"
-        connections_no: "Nº de acometidas"
+        connections_no: "Nº de Acometidas"
         dwellings_no: "Nº de viviendas a abastecer"
         premises_no: "Nº de locales"
         common_items_no: "Nº de elementos comunes"
@@ -52,6 +52,9 @@ es:
         flow: "Caudal"
         total: "Total"
         flow_total: "Caudal Total"
+        label_others: "Otros"
+        code: "Código"
+        contract_no: "Nº de Contrato"
 
         successfully: "Contrato de tipo de acometida se ha actualizado correctamente."
         create: "Contrato de tipo de acometida se ha creado correctamente."

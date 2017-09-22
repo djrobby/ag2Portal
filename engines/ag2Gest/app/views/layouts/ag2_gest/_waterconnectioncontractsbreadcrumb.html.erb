@@ -1,0 +1,38 @@
+<% content_for :title, "aGestiona2 | ag2WaterConnectionContract" %>
+<% content_for :icon, "/assets/icon/ag2ConnectionContracts.png" %>
+<% content_for :alt, "ag2WaterConnectionContract" %>
+
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.contracting_management_path %>"><%= t "ag2_gest.home.index.contracting_management" %></a><span class="divider">></span>
+  </li>
+  <% if @water_connection_contracts %>
+    <li>
+      <%=t "ag2_gest.breadcrumb.water_connection_contracts.items" %>
+    </li>
+  <% end %>
+  <% if @water_connection_contract %>
+    <li>
+      <a href="<%= water_connection_contracts_path %>"><%=t "ag2_gest.breadcrumb.water_connection_contracts.items" %></a><span class="divider">></span>
+    </li>
+    <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+      <%=t "ag2_gest.breadcrumb.water_connection_contracts.item" %>
+    <% end %>
+    <% if @breadcrumb == 'create' %>
+      <li>
+        <%= t :"breadcrumb.new" %>
+      </li>
+  <% end %>
+
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

@@ -79,7 +79,9 @@
     </tr>
     <tr>
       <td><b><%= t :"activerecord.attributes.subscriber.debt" %>:</b></td>
-      <td  colspan="5"><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
+      <td><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
+      <td  colspan="3"><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
   </tbody>
 </table>
@@ -173,23 +175,24 @@
           <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) unless @subscriber.service_point.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
           <td><%= @subscriber.try(:cadastral_reference) %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>
-          <td><%= @subscriber.try(:gis_id_wc) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.pub_record') %>:</b></td>
+          <td><%= @subscriber.try(:pub_record) %></td>
         </tr>
         <tr>
-          <td><b><%= t('activerecord.attributes.subscriber.endowments') %>:</b></td>
-          <td><%= @subscriber.try(:endowments) %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.inhabitants') %>:</b></td>
-          <td><%= @subscriber.try(:inhabitants) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>
+          <td><%= @subscriber.try(:gis_id_wc) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.gis_id') %>:</b></td>
           <td><%= @subscriber.try(:gis_id) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.endowments') %>:</b></td>
+          <td><%= @subscriber.try(:endowments) %></td>
         </tr>
+          <td><b><%= t('activerecord.attributes.subscriber.inhabitants') %>:</b></td>
+          <td><%= @subscriber.try(:inhabitants) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.equiv_dwelling') %>:</b></td>
           <td><%= number_with_precision(@subscriber.try(:equiv_dwelling), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <td><b><%= t('activerecord.attributes.subscriber.m2') %>:</b></td>
           <td><%= number_with_precision(@subscriber.try(:m2), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
-          <td><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>

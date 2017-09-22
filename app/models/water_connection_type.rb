@@ -1,4 +1,8 @@
 class WaterConnectionType < ActiveRecord::Base
+  # CONSTANTS
+  SUM = 1
+  SAN = 2
+
   attr_accessible :name
 
   has_many :water_connections

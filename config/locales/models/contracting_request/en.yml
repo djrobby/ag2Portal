@@ -1,4 +1,4 @@
-es:
+en:
   activerecord:
     models:
       contracting_request:
@@ -141,6 +141,7 @@ es:
         bill: "Factura"
         bills : "Facturas"
         cadastral_reference: "Referencia catastral"
+        pub_record: "PB Record"
         bill_name: "Recibo de contratación"
         show_pdf: "Ver Pdf"
         show_contract: "Ver contrato"

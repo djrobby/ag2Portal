@@ -7,7 +7,9 @@
         <h3><%=t '.title' %></h3>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@water_supply_contract.contracting_request_id, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+        <% if !@water_supply_contract.contracting_request.subscriber.blank? %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@water_supply_contract.contracting_request_id, :format => :pdf), class: "btn btn-warning", target: "_blank"  %>
+        <% end %>
       </td>
     </tr>
   </tbody>
@@ -63,8 +65,14 @@
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.cadastral_reference' %>:</td>
       <td><%= @water_supply_contract.cadastral_reference %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.pub_record' %>:</td>
+      <td><%= @water_supply_contract.pub_record %></td>
+    </tr>
+    <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.gis_id' %>:</td>
       <td><%= @water_supply_contract.gis_id %></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.endowments' %>:</td>

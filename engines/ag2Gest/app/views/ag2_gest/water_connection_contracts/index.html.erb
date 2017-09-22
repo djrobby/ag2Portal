@@ -1,21 +1,116 @@
-<h1>Listing water_connection_contracts</h1>
+<% session[:return_to_subscriber] = nil %>
+<% session[:return_to_subscriber_url] = nil %>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<script>
+  var _thisForm = '';
+  var changing = false;
 
-<% @water_connection_contracts.each do |water_connection_contract| %>
-  <tr>
-    <td><%= link_to 'Show', water_connection_contract %></td>
-    <td><%= link_to 'Edit', edit_water_connection_contract_path(water_connection_contract) %></td>
-    <td><%= link_to 'Destroy', water_connection_contract, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+  $(document).ready(function() {
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true
+    });
+    $('.nsel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.ndate_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.ndate_picker').datepicker('hide');
+    });
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+    // Initialized form variable
+    _thisForm = $("#Supplier").closest('form')[0];
+  });
 
-<br />
+  $(document).ajaxStart(function() {
+    // show loader on start
+    if (changing == false) {
+      $("#div_table").html("");
+      $("#loader").show();
+    }
+  }).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
 
-<%= link_to 'New Water connection contract', new_water_connection_contract_path %>
+  $(window).bind("load", function() {
+    $("#No").val("<%= params[:No] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#Meter").val("<%= params[:Meter] %>");
+    $("#Order").select2("val", "<%= params[:Order] %>");
+    $("#Caliber").select2("val", "<%= params[:Caliber] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+  });
+
+  jQuery(function($) {
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#No").val("");
+      $("#Subscriber").val("");
+      $("#Meter").val("");
+      $("#Order").select2("val", "");
+      $("#Caliber").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      $("#search").val("");
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
+
+<%= render '/layouts/ag2_gest/waterconnectioncontractsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.water_connection_contracts_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "water_connection_contracts", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- Tariff Scheme -->
+        <%= label_tag I18n.t("activerecord.attributes.water_connection_contract.tariff_scheme_id"), nil, :class => 'form-label' %>
+        <%= select_tag "Order", options_from_collection_for_select(@tariff_schemes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Caliber -->
+        <%= label_tag I18n.t("activerecord.attributes.water_connection_contract.caliber_id"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <!-- Others -->
+        <%= label_tag I18n.t("activerecord.attributes.water_connection_contract.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <%= link_to t(".back_to_management"), ag2_gest.contracting_management_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'water_connection_contracts' %>
+      </div>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

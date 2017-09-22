@@ -141,6 +141,7 @@ es:
         bill: "Factura"
         bills : "Facturas"
         cadastral_reference: "Referencia catastral"
+        pub_record: "Registro OP"
         bill_name: "Recibo de contratación"
         show_pdf: "Ver Pdf"
         show_contract: "Ver contrato"

@@ -1,0 +1,32 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  });
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t 'activerecord.attributes.water_connection_contract.code' %></th>
+      <th align="center"><%= t 'activerecord.attributes.water_connection_contract.contract_date' %></th>
+      <th><%= t 'activerecord.attributes.water_connection_contract.tariff_scheme_id' %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @water_connection_contracts.each do |water_connection_contracts| %>
+    <tr>
+      <td><%= link_to water_connection_contracts.contracting_request.to_label, water_connection_contracts %>
+      <td align="center"><%= formatted_date(water_connection_contracts.contract_date) if water_connection_contracts.contract_date %></td>
+      <td><%= water_connection_contracts.tariff_scheme.try(:to_label) %></td>
+      <td>
+        <a data-toggle="modal" href="#notfound" class="btn btn-mini"><i class="icon-edit"></i></a>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @water_connection_contracts } %>

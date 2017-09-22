@@ -75,6 +75,7 @@ module Ag2Gest
     # GET /water_supply_contracts/1
     # GET /water_supply_contracts/1.json
     def show
+      @breadcrumb = 'read'
       @water_supply_contract = WaterSupplyContract.find(params[:id])
 
       respond_to do |format|

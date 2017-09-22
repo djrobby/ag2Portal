@@ -658,6 +658,7 @@ module Ag2Gest
           floor: @contracting_request.subscriber_floor,
           floor_office: @contracting_request.subscriber_floor_office,
           gis_id: @contracting_request.water_supply_contract.try(:gis_id),
+          pub_record: @contracting_request.water_supply_contract.try(:pub_record),
           inhabitants: @contracting_request.water_supply_contract.try(:inhabitants),
           # name: @contracting_request.entity.try(:full_name),
           office_id: @contracting_request.project.try(:office).try(:id),

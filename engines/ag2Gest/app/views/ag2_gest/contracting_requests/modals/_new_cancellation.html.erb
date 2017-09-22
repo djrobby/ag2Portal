@@ -50,6 +50,7 @@
       }
       // update data fields
       $("#water_supply_contract_cadastral_reference").text(data.water_supply_contract.cadastral_reference);
+      $("#water_supply_contract_pub_record").text(data.water_supply_contract.pub_record);
       $("#water_supply_contract_gis_id").text(data.water_supply_contract.gis_id);
       $("#water_supply_contract_endowments").text(data.water_supply_contract.endowments);
       $("#water_supply_contract_inhabitants").text(data.water_supply_contract.inhabitants);
@@ -238,6 +239,7 @@ jQuery(function($) {
       <%= f.association :caliber, :disabled => true, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.input :pub_record, :input_html => { :class => 'x-large-text-field', :id => 'wsc_pub_record' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>

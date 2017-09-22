@@ -1,5 +1,82 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/waterconnectioncontractsbreadcrumb' %>
 
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h3><%=t '.title' %></h3>
+      </td>
+      <td class="form-td-two right-winged">
+        <!-- <#%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@water_connection_contract.contracting_request_id, :format => :pdf), class: "btn btn-warning", target: "_blank"  %> -->
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td colspan="3"><%= @water_connection_contract.id %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.contract_no' %>:</td>
+      <td><%= @water_connection_contract.try(:contract_no) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.contract_date' %>:</td>
+      <td><%= formatted_date(@water_connection_contract.contract_date) if @water_connection_contract.contract_date %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.contracting_request_id' %>:</td>
+      <td><%= @water_connection_contract.contracting_request.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.client_id' %>:</td>
+      <td><%= @water_connection_contract.client.try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.sale_offer_id' %>:</td>
+      <td><%= @water_connection_contract.sale_offer.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.work_order_id' %>:</td>
+      <td><%= @water_connection_contract.work_order.try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.caliber_id' %>:</td>
+      <td><%= @water_connection_contract.caliber.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.bill_id' %>:</td>
+      <td><%= @water_connection_contract.bill.try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.tariff_scheme_id' %>:</td>
+      <td><%= @water_connection_contract.tariff_scheme.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.tariff_type' %>:</td>
+      <td><%= @water_connection_contract.tariff_scheme.try(:tariff_type).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.cadastral_reference' %>:</td>
+      <td><%= @water_connection_contract.cadastral_reference %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.gis_id' %>:</td>
+      <td><%= @water_connection_contract.gis_id %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.min_pressure' %>:</td>
+      <td><%= @water_connection_contract.min_pressure %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.max_pressure' %>:</td>
+      <td><%= @water_connection_contract.max_pressure %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.water_connection_contract.remarks' %>:</td>
+      <td><%= @water_connection_contract.remarks %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_connection_contract } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_connection_contract } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_water_connection_contract_path(@water_connection_contract) %> |
-<%= link_to 'Back', water_connection_contracts_path %>
+<%#= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: PaymentMethod, update_path: edit_water_connection_contract_path(@water_connection_contract), update_txt: t('.btn_edit'),
+delete_path: @water_connection_contract, delete_txt: t('.btn_delete'), msg: t("activerecord.models.water_connection_contract.one"), txt: @water_connection_contract.description,
+new_path: new_water_connection_contract_path, new_txt: t('ag2_admin.water_connection_contracts.index.btn_new') } %>
+
+<% if !session[:return_to_subscriber].nil? %>
+  <%= link_to session[:return_to_subscriber], session[:return_to_subscriber_url] %> |
+<% end %>
+<%= link_to t('ag2_gest.water_connection_contracts.back_to_main_page'), water_connection_contracts_path %>

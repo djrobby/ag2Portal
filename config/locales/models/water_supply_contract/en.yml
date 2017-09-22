@@ -11,6 +11,7 @@ en:
         bill_id: "Factura"
         bill: "Factura"
         cadastral_reference: "Ref. catastral"
+        pub_record: "PB Record"
         client_id: "Cliente"
         client: "Cliente"
         contract_date: "Fecha de contrato"

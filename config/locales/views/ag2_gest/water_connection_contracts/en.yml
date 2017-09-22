@@ -1,25 +1,21 @@
 en:
   ag2_gest:
-    reading_incidences:
+    water_connection_contracts:
       index:
-        title: "Billable items"
-        btn_new: "New Billable item"
-        back_to_root: "Back to ag2Gest"
+        title: "Contratos de Acometida"
+        btn_new: "Contrato de Acometida"
+        back_to_root: "Volver a ag2Gest"
+        back_to_management: "Volver a Contrataciones"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Contrato de Acometida"
+        btn_edit: "Editar Contrato de Acometida"
+        btn_delete: "Borrar Contrato de Acometida"
+        return_to: "Volver a Contrato de Acometida"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        show: "Mostrar"
+        back: "Atrás"
+        title: "Editar Contrato de Acometida"
+        btn_show: "Ver Contrato de Acometida"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
-      # generate_code_btn: "billable_item Code"
-      # personal_info: "billable_item Info"
-      # commercial_info: "Accounting & Commercial Info"
-      # fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
-      # code_error: "Unable to generate billable_item Code: No Organization chosen."
-
-      # {:office=>{:one=>"Oficina", :other=>"Oficinas"}, :company=>"Empresa"}
+        title: "Nuevo Contrato de Acometida"
+      back_to_main_page: "Volver a Contratos de Acometida"

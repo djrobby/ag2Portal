@@ -57,7 +57,7 @@ es:
         documents: "Documentos"
         service_point: "Punto de Servicio"
       new_connection:
-        title: "Nueva Solicitud de Contratación de Acometida"
+        title: "Nueva Solicitud de Acometida"
         claimant: "Datos Fiscales"
         client: "Datos de Notificación"
         address_subscriber: "Domicilio Suministro"
