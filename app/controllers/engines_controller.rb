@@ -228,6 +228,23 @@ class EnginesController < ApplicationController
     render json: @work_orders
   end
 
+  # Project Work orders
+  def search_project_work_orders
+    project = params[:project]
+    @work_orders = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "projects.company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "projects.office_id = #{session[:office]} AND " if session[:office] != '0'
+    w = "project_id = #{project} AND " if !project.blank?
+    if @q != ''
+      w += "(order_no LIKE '%#{@q}%' OR description LIKE '%#{@q}%')"
+      @work_orders = serialized(WorkOrder.g_where(w),
+                                Api::V1::WorkOrdersSerializer)
+    end
+    render json: @work_orders
+  end
+
   # Contracting requests
   def search_contracting_requests
     @contracting_requests = []

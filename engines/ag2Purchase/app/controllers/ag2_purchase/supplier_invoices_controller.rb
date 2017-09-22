@@ -105,6 +105,7 @@ module Ag2Purchase
       charge_account_id = 0
       store_id = 0
       payment_method_id = 0
+      work_order_full_name = ''
       if o != '0'
         @receipt_note = ReceiptNote.find(o)
         @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
@@ -119,7 +120,10 @@ module Ag2Purchase
           @products = @receipt_note.products.group(:product_code)
         end
         project_id = @projects.id rescue 0
-        work_order_id = @work_orders.id rescue 0
+        if @work_orders.count == 1
+          work_order_id = @work_orders.first.id rescue 0
+          work_order_full_name = @work_orders.first.full_name rescue " "
+        end
         charge_account_id = @charge_accounts.id rescue 0
         store_id = @stores.id rescue 0
         payment_method_id = @payment_methods.id rescue 0
@@ -144,7 +148,8 @@ module Ag2Purchase
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
-                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown }
+                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown,
+                     "worder" => work_order_full_name }
       render json: @json_data
     end
 
@@ -396,6 +401,7 @@ module Ag2Purchase
     def si_update_charge_account_from_project
       project = params[:order]
       projects = projects_dropdown
+      work_order_full_name = ''
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
@@ -409,7 +415,8 @@ module Ag2Purchase
       # Work orders array
       @orders_dropdown = work_orders_array(@work_order)
       # Setup JSON
-      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account,
+                     "store" => @store, "worder" => work_order_full_name }
       render json: @json_data
     end
 
@@ -963,7 +970,8 @@ module Ag2Purchase
       destroy_attachment
       @receipt_notes = receipts_dropdown
       @projects = projects_dropdown
-      @work_orders = work_orders_dropdown
+      # @work_orders = work_orders_dropdown
+      @work_order = " "
       @charge_accounts = projects_charge_accounts(@projects)
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
@@ -990,7 +998,8 @@ module Ag2Purchase
       # _form ivars
       @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
       @projects = projects_dropdown_edit(@supplier_invoice.project)
-      @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+      # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+      @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
       @charge_accounts = work_order_charge_account(@supplier_invoice)
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
@@ -1034,7 +1043,8 @@ module Ag2Purchase
           $attachment = Attachment.new
           @receipt_notes = receipts_dropdown
           @projects = projects_dropdown
-          @work_orders = work_orders_dropdown
+          # @work_orders = work_orders_dropdown
+          @work_order = " "
           @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
@@ -1132,7 +1142,8 @@ module Ag2Purchase
             $attachment = Attachment.new
             @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
             @projects = projects_dropdown_edit(@supplier_invoice.project)
-            @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+            # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+            @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
             @charge_accounts = work_order_charge_account(@supplier_invoice)
             @stores = work_order_store(@supplier_invoice)
             @suppliers = suppliers_dropdown
