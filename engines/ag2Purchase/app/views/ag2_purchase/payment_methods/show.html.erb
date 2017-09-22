@@ -17,7 +17,11 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.payment_method.flow' %>:</td>
-      <td><%= @payment_method.flow_label unless @payment_method.flow.blank? %></td>
+      <td colspan="3"><%= @payment_method.flow_label unless @payment_method.flow.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.payment_method.bank' %>:</td>
+      <td> <% if @payment_method.bank %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
       <td><%=t 'activerecord.attributes.payment_method.cashier' %>:</td>
       <td> <% if @payment_method.cashier %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>

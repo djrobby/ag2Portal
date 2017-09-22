@@ -27,3 +27,4 @@ es:
         organization: "Organización"
         organization_id: "Organización"
         cashier: "¿Usada por cajero/a?"
+        bank: "¿Para operaciones bancarias?"
