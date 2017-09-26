@@ -18,6 +18,7 @@ es:
         office: "Oficina"
         debt_claim_phase: "Fase RD"
         debt_claim_phase_id: "Fase RD"
+        debt_claim_phase_c: "Fase"
         surcharge_pct: "% Recargo"
         subtotal: "Subtotal"
         surcharges: "Recargos"

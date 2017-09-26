@@ -18,6 +18,7 @@ en:
         office: "Office"
         debt_claim_phase: "DC Phase"
         debt_claim_phase_id: "DC Phase"
+        debt_claim_phase_c: "Phase"
         surcharge_pct: "Surcharge %"
         subtotal: "Subtotal"
         surcharges: "Surcharges"

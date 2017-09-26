@@ -1,0 +1,44 @@
+en:
+  ag2_gest:
+    debt_claims:
+      index:
+        title: "Debt claims"
+        btn_new: "New Claim"
+        btn_new_from_sale_offer: "New Claim from S.Offer"
+        back_to_root: "Back to ag2Gest"
+        back_to_management: "Back to Debt Management"
+        label_project: "Project"
+        label_client: "Client"
+        label_subscriber: "Subscriber"
+        label_status: "Status"
+        label_type: "Type"
+        label_operation: "Operation"
+        label_Claimer: "Claimer"
+        label_period: "Period"
+        label_others: "Others"
+      show:
+        title: "Debt claim"
+        btn_edit: "Edit Claim"
+        btn_delete: "Delete Claim"
+        return_to: "Volver a Claim"
+        print: "Print"
+        show_to: "Show Sale offer"
+      edit:
+        title: "Edit Debt claim"
+        btn_show: "Show Debt claim"
+      new:
+        title: "New Debt claim"
+      back_to_main_page: "Back to Debt claims"
+      items_info: "Claim Items"
+      generate_code_btn: "Claim No."
+      no_error: "Unable to generate Claim No.: No Project chosen or Invalid code."
+      delete_item: "Delete this Item"
+      add_item: "Add new Item"
+      add_item_to: "Claim %{var}"
+      btn_new_item: "New Item"
+      btn_add_item: "Add"
+      item_error: "can't be blank"
+      generate_claim_error: "Claim can not be generated: Offer invalid."
+      generate_claim_write: "Unable to save new Claim."
+      generate_claim_ok: "Claim %{var} has been generated."
+

@@ -18,7 +18,7 @@ class DebtClaim < ActiveRecord::Base
   validates_associated :debt_claim_items
 
   validates :claim_no,          :presence => true,
-                                :length => { :is => 23 },
+                                :length => { :is => 22 },
                                 :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                                 :uniqueness => { :scope => :project_id }
   validates :project,           :presence => true
@@ -35,20 +35,20 @@ class DebtClaim < ActiveRecord::Base
   #
   # Formal No
   def full_no
-    # Debt claim no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNNN
+    # Debt claim no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     if claim_no == "$err"
-      "000000000000-0000-0000000"
+      "000000000000-0000-000000"
     else
-      claim_no.blank? ? "" : claim_no[0..11] + '-' + claim_no[12..15] + '-' + claim_no[16..22]
+      claim_no.blank? ? "" : claim_no[0..11] + '-' + claim_no[12..15] + '-' + claim_no[16..21]
     end
   end
 
   # Short No
   def short_no
-    # Debt claim no (Project ID & year & sequential number) => PPPP-YYYY-NNNNNNN
-    code = "0000-0000-0000000"
+    # Debt claim no (Project ID & year & sequential number) => PPPP-YYYY-NNNNNN
+    code = "0000-0000-000000"
     if claim_no != "$err" && !claim_no.blank? && !project_id.blank?
-      code = project_id.to_s.rjust(4, '0') + '-' + claim_no[12..15] + '-' + claim_no[16..22]
+      code = project_id.to_s.rjust(4, '0') + '-' + claim_no[12..15] + '-' + claim_no[16..21]
     end
     code
   end

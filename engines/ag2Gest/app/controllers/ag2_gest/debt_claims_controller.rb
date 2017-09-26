@@ -4,6 +4,22 @@ module Ag2Gest
   class DebtClaimsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:dc_remove_filters,
+                                               :dc_restore_filters,
+                                               :dc_generate_no]
+    # Helper methods for
+    # => index filters
+    helper_method :dc_remove_filters, :dc_restore_filters
+
+    # Update claim number at view (generate_code_btn)
+    def dc_generate_no
+      project = params[:project]
+
+      # Builds no, if possible
+      code = project == '$' ? '$err' : dc_next_no(project)
+      @json_data = { "code" => code }
+      render json: @json_data
+    end
 
     #
     # Default Methods
@@ -12,11 +28,29 @@ module Ag2Gest
     # GET /debt_claims.json
     def index
       manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      client = params[:Client]
+      status = params[:Status]
+      type = params[:Type]
+      operation = params[:Operation]
+      biller = params[:Biller]
+      # OCO
+      init_oco if !session[:organization]
+
+      @client = " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
+      @status = invoice_statuses_dropdown if @status.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
+      @sale_offers = sale_offers_dropdown if @sale_offers.nil?
+
       @debt_claims = DebtClaim.paginate(:page => params[:page], :per_page => per_page)
 
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @debt_claims }
+        format.js
       end
     end
 
@@ -108,6 +142,77 @@ module Ag2Gest
 
     # Keeps filter state
     def manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # client
+      if params[:Client]
+        session[:Client] = params[:Client]
+      elsif session[:Client]
+        params[:Client] = session[:Client]
+      end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # operation
+      if params[:Operation]
+        session[:Operation] = params[:Operation]
+      elsif session[:Operation]
+        params[:Operation] = session[:Operation]
+      end
+      # biller
+      if params[:Biller]
+        session[:Biller] = params[:Biller]
+      elsif session[:Biller]
+        params[:Biller] = session[:Biller]
+      end
+    end
+
+    def dc_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Project] = ""
+      params[:Client] = ""
+      params[:Status] = ""
+      params[:Type] = ""
+      params[:Operation] = ""
+      params[:Biller] = ""
+      return " "
+    end
+
+    def dc_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Project] = session[:Project]
+      params[:Client] = session[:Client]
+      params[:Status] = session[:Status]
+      params[:Type] = session[:Type]
+      params[:Operation] = session[:Operation]
+      params[:Biller] = session[:Biller]
     end
   end
 end
