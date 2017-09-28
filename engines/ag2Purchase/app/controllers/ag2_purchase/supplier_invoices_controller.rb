@@ -69,8 +69,8 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @receipt_notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.unbilled(@supplier.organization_id, true)
-        #@notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.order(:supplier_id, :receipt_no, :id)
+        @receipt_notes = @supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier)
+        # @receipt_notes = @supplier.blank? ? receipts_dropdown : @supplier.receipt_notes.unbilled(@supplier.organization_id, true)
       else
         @receipt_notes = receipts_dropdown
       end
@@ -1349,6 +1349,16 @@ module Ag2Purchase
         ReceiptNote.unbilled_by_company(session[:company].to_i, true)
       else
         session[:organization] != '0' ? ReceiptNote.unbilled(session[:organization].to_i, true) : ReceiptNote.unbilled(nil, true)
+      end
+    end
+
+    def receipts_dropdown_by_supplier(_supplier)
+      if session[:office] != '0'
+        _supplier.receipt_notes.unbilled_by_office(session[:office].to_i, true)
+      elsif session[:company] != '0'
+        _supplier.receipt_notes.unbilled_by_company(session[:company].to_i, true)
+      else
+        session[:organization] != '0' ? _supplier.receipt_notes.unbilled(session[:organization].to_i, true) : _supplier.receipt_notes.unbilled(nil, true)
       end
     end
 
