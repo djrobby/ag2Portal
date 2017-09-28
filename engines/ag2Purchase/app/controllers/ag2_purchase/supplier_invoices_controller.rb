@@ -1343,7 +1343,13 @@ module Ag2Purchase
     end
 
     def receipts_dropdown
-      session[:organization] != '0' ? ReceiptNote.unbilled(session[:organization].to_i, true) : ReceiptNote.unbilled(nil, true)
+      if session[:office] != '0'
+        ReceiptNote.unbilled_by_office(session[:office].to_i, true)
+      elsif session[:company] != '0'
+        ReceiptNote.unbilled_by_company(session[:company].to_i, true)
+      else
+        session[:organization] != '0' ? ReceiptNote.unbilled(session[:organization].to_i, true) : ReceiptNote.unbilled(nil, true)
+      end
     end
 
     def note_items_dropdown(_note)

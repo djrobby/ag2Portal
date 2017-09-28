@@ -88,6 +88,14 @@ class ReceiptNote < ActiveRecord::Base
     receipt_no[0,14]
   end
 
+  def company
+    project.company unless project.blank?
+  end
+
+  def office
+    project.office unless project.blank?
+  end
+
   #
   # Calculated fields
   #
@@ -169,6 +177,22 @@ class ReceiptNote < ActiveRecord::Base
       else
         includes(:supplier).joins(:receipt_note_item_balances).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
       end
+    end
+  end
+
+  def self.unbilled_by_company(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('projects.company_id = ?', s).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('projects.company_id = ?', s).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.unbilled_by_office(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('projects.office_id = ?', s).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('projects.office_id = ?', s).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
     end
   end
 
