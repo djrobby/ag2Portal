@@ -97,6 +97,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/update_subscriber_from_service_point/:id', :controller => 'contracting_requests', :action => 'update_subscriber_from_service_point'
     match 'update_subscriber_from_service_point/:id', :controller => 'contracting_requests', :action => 'update_subscriber_from_service_point'
     match 'contracting_requests/:id/update_subscriber_from_service_point/:id', :controller => 'contracting_requests', :action => 'update_subscriber_from_service_point'
+    match 'contracting_requests/update_connection_from_street_directory/:id', :controller => 'contracting_requests', :action => 'update_connection_from_street_directory'
+    match 'update_connection_from_street_directory/:id', :controller => 'contracting_requests', :action => 'update_connection_from_street_directory'
+    match 'contracting_requests/:id/update_connection_from_street_directory/:id', :controller => 'contracting_requests', :action => 'update_connection_from_street_directory'
     match 'contracting_requests/update_province_textfield_from_town/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_town'
     match 'update_province_textfield_from_town/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_town'
     match 'contracting_requests/:id/update_province_textfield_from_town/:id', :controller => 'contracting_requests', :action => 'update_province_textfield_from_town'
@@ -147,9 +150,16 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/update_old_subscriber/:id', :controller => 'contracting_requests', :action => 'update_old_subscriber'
     match 'contracting_requests/:id/initial_complete', :controller => 'contracting_requests', :action => 'initial_complete'
     match 'contracting_requests/:id/billing_complete', :controller => 'contracting_requests', :action => 'billing_complete'
-    match 'contracting_requests/cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
-    match 'cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
-    match 'contracting_requests/:id/cr_generate_invoice_from_offer/:client/:offer/:offer_date', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'contracting_requests/cr_generate_invoice_from_offer', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'cr_generate_invoice_from_offer', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'contracting_requests/:id/cr_generate_invoice_from_offer', :controller => 'contracting_requests', :action => 'cr_generate_invoice_from_offer'
+    match 'contracting_requests/void_bill_connection', :controller => 'contracting_requests', :action => 'void_bill_connection'
+    match 'void_bill_connection', :controller => 'contracting_requests', :action => 'void_bill_connection'
+    match 'contracting_requests/:id/void_bill_connection', :controller => 'contracting_requests', :action => 'void_bill_connection'
+    match 'contracting_requests/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
+    match 'cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
+    match 'contracting_requests/:id/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
+    
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -379,6 +389,7 @@ Ag2Gest::Engine.routes.draw do
       get 'biller_pdf', on: :member
       get 'refresh_status', on: :member
       get 'refresh_connection_status', on: :member
+      get 'cr_calculate_flow', on: :member
       get 'biller_contract_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member
       post 'subrogation', on: :collection

@@ -10,20 +10,20 @@
 
   jQuery(function($) {
     $('#btn_accept').click(function() {
-      var supplier = $('#Client_H').val();
-      var request = $('#Offer_H').val();
+      var client = $('#Client_H').val();
+      var offer = $('#Offer_H').val();
       var offer_date = $('#Date_').val();
-      if ((supplier == "") || (request == "") || (offer_date == "")) {
+      if ((client == "") || (offer == "") || (offer_date == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');
         return false;
       }
       // Right formatted date
-      offer_date = right_date(offer_date, "<%= I18n.locale %>");
+      offer_date = right_date(offer_date,"<%= I18n.locale %>");
       // Show message
       $("#proc_mesage").show();
       // make the POST call
-      jQuery.getJSON('cr_generate_invoice_from_offer/' + supplier + '/' + request + '/' + offer_date, function(data) {
+      jQuery.getJSON('cr_generate_invoice_from_offer?client=' + client + '&offer=' + offer + '&offer_date=' + offer_date, function(data) {
         // Hide message
         $("#proc_mesage").hide();
         // AJAX refresh index table is necessary
@@ -56,17 +56,19 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <!-- Client -->
-    <label for="Client_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.bill.client") %></label>
-    <%= text_field_tag "Client_", @water_connection_contract.sale_offer.client.full_name_or_company_and_code, :class => 'x-large-text-field', disabled: true %>
-    <%= hidden_field_tag "Client_H", @water_connection_contract.sale_offer.client_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-    <!-- Sale offer -->
-    <label for="Offer_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.sale_offer") %></label>
-    <%= text_field_tag "Offer_", @water_connection_contract.sale_offer.to_label, :class => 'x-large-text-field', disabled: true %>
-    <%= hidden_field_tag "Offer_H", @water_connection_contract.sale_offer_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-    <!-- Invoice date -->
-    <label for="Date_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.invoice_date") %></label>
-    <%= text_field_tag "Date_", nil, class: 'mid-text-field ndate_picker' %>
+    <% if !@water_connection_contract.sale_offer.blank? %>
+      <!-- Client -->
+      <label for="Client_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.bill.client") %></label>
+      <%= text_field_tag "Client_", @water_connection_contract.sale_offer.client.full_name_or_company_and_code, :class => 'x-large-text-field', disabled: true %>
+      <%= hidden_field_tag "Client_H", @water_connection_contract.sale_offer.client_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Sale offer -->
+      <label for="Offer_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.sale_offer") %></label>
+      <%= text_field_tag "Offer_", @water_connection_contract.sale_offer.to_label, :class => 'x-large-text-field', disabled: true %>
+      <%= hidden_field_tag "Offer_H", @water_connection_contract.sale_offer_id, :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Invoice date -->
+      <label for="Date_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.attributes.commercial_billing.invoice_date") %></label>
+      <%= text_field_tag "Date_", formatted_date(@water_connection_contract.sale_offer.offer_date), class: 'mid-text-field ndate_picker' %>
+    <% end %>
   </div>
   <div class="modal-footer">
     <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.sale_offer.unbilled_balance_c") %>=</span>

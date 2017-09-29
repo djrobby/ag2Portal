@@ -37,28 +37,58 @@
       <td><%= @water_connection_contract.work_order.try(:to_label) %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.water_connection_contract.caliber_id' %>:</td>
-      <td><%= @water_connection_contract.caliber.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_connection_contract.tariff_scheme_id' %>:</td>
+      <td><%= @water_connection_contract.tariff_scheme.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_connection_contract.bill_id' %>:</td>
       <td><%= @water_connection_contract.bill.try(:to_label) %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.water_connection_contract.tariff_scheme_id' %>:</td>
-      <td><%= @water_connection_contract.tariff_scheme.try(:to_label) %></td>
-      <td><%=t 'activerecord.attributes.water_connection_contract.tariff_type' %>:</td>
-      <td><%= @water_connection_contract.tariff_scheme.try(:tariff_type).try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.water_connection_type') %></b></td>
+      <td id="water_connection_type"><%= @water_connection_contract.water_connection_type.name unless @water_connection_contract.water_connection_type.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.service_point_purpose') %></b></td>
+      <td id="service_point_purpose"><%= @water_connection_contract.service_point_purpose.name unless @water_connection_contract.service_point_purpose.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.water_connection_contract.cadastral_reference' %>:</td>
-      <td><%= @water_connection_contract.cadastral_reference %></td>
-      <td><%=t 'activerecord.attributes.water_connection_contract.gis_id' %>:</td>
-      <td><%= @water_connection_contract.gis_id %></td>
+      <td><b><%= t('activerecord.attributes.contracting_request.caliber') %></b></td>
+      <td id="caliber"><%= @water_connection_contract.caliber.caliber unless @water_connection_contract.caliber.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.diameter') %></b></td>
+      <td id="caliber"><%= @water_connection_contract.diameter unless @water_connection_contract.diameter.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.water_connection_contract.min_pressure' %>:</td>
-      <td><%= @water_connection_contract.min_pressure %></td>
-      <td><%=t 'activerecord.attributes.water_connection_contract.max_pressure' %>:</td>
-      <td><%= @water_connection_contract.max_pressure %></td>
+      <td><b><%= t('activerecord.attributes.contracting_request.cadastral_reference') %></b></td>
+      <td id="water_connection_contract_cadastral_reference"><%= @water_connection_contract.cadastral_reference unless @water_connection_contract.cadastral_reference.blank? %></td>
+      <td><b><%= t('activerecord.attributes.contracting_request.gis_id') %></b></td>
+      <td id="water_connection_contract_gis_id"><%= @water_connection_contract.gis_id unless @water_connection_contract.gis_id.blank? %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.min_pressure') %></b></td>
+      <td id="water_connection_contract_min_pressure"><%= @water_connection_contract.min_pressure unless @water_connection_contract.min_pressure.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.max_pressure') %></b></td>
+      <td id="water_connection_contract_max_pressure"><%= @water_connection_contract.max_pressure unless @water_connection_contract.max_pressure.blank? %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.connections_no') %></b></td>
+      <td id="water_connection_contract_connections_no"><%= @water_connection_contract.connections_no unless @water_connection_contract.connections_no.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.dwellings_no') %></b></td>
+      <td id="water_connection_contract_dwellings_no"><%= @water_connection_contract.dwellings_no unless @water_connection_contract.dwellings_no.blank? %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.premises_no') %></b></td>
+      <td id="water_connection_contract_premises_no"><%= @water_connection_contract.premises_no unless @water_connection_contract.premises_no.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.premises_area') %></b></td>
+      <td id="water_connection_contract_premises_area"><%= @water_connection_contract.premises_area unless @water_connection_contract.premises_area.blank? %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.common_items_no') %></b></td>
+      <td id="water_connection_contract_common_items_no"><%= @water_connection_contract.common_items_no unless @water_connection_contract.common_items_no.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.pipe_length') %></b></td>
+      <td id="water_connection_contract_pipe_length"><%= @water_connection_contract.pipe_length unless @water_connection_contract.pipe_length.blank? %></td>
+    </tr>
+    <tr>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.yard_area') %></b></td>
+      <td id="water_connection_contract_yard_area"><%= @water_connection_contract.yard_area unless @water_connection_contract.yard_area.blank? %></td>
+      <td><b><%= t('activerecord.attributes.water_connection_contract.pool_area') %></b></td>
+      <td id="water_connection_contract_pool_area"><%= @water_connection_contract.pool_area unless @water_connection_contract.pool_area.blank? %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_connection_contract.remarks' %>:</td>
@@ -69,7 +99,43 @@
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @water_connection_contract } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @water_connection_contract } %>
   </tbody>
+
+
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'activerecord.attributes.contracting_request.conection_items' %></h4>
+      </td>
+    </tr>
+  </tbody>
 </table>
+<% if (@water_connection_contract_items.count > 0) %>
+    <table class="table table-condensed table-striped shrinked">
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.type') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.quantity') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.flow') %></b></td>
+          <td><b><%= t('activerecord.attributes.water_connection_contract.total') %></b></td>
+        </tr>
+        <% if !@water_connection_contract.blank? %>
+          <% @water_connection_contract_items.each do |items| %>
+          <tr>
+            <td><%= items.water_connection_contract_item_type.description %></td>
+            <td><%= items.quantity %></td>
+            <td><%= items.water_connection_contract_item_type.flow %></td>
+            <td><%= items.quantity_flow %></td>
+          </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @water_connection_contract_items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @water_connection_contract_items } %>
+<% end %>
 
 <%#= render partial: '/layouts/crud/update_delete_new', locals:
 { model: PaymentMethod, update_path: edit_water_connection_contract_path(@water_connection_contract), update_txt: t('.btn_edit'),

@@ -66,7 +66,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @water_connection_contract = WaterConnectionContract.find(params[:id])
-      @water_connection_contract_items = @water_connection_contract.water_connection_contract_items
+      @water_connection_contract_items = @water_connection_contract.water_connection_contract_items.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb

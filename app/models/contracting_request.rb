@@ -170,11 +170,11 @@ class ContractingRequest < ActiveRecord::Base
   end
 
   def subscriber_info_street
-    a = subscriber_street_directory.to_label + ", " + subscriber_street_number
+    subscriber_street_directory.blank? ? a1 = subscriber_street_type.street_type_code + " " + subscriber_street_name + ", " + subscriber_street_number : a = subscriber_street_directory.to_label + ", " + subscriber_street_number
     b = subscriber_building.blank? ? "" : ", " + subscriber_building
     c = subscriber_floor.blank? ? "" : ", " + subscriber_floor
     d = subscriber_floor_office.blank? ? "" : ", " + subscriber_floor_office
-    subscriber_street_directory.blank? ? "" : a + b + c + d
+    subscriber_street_directory.blank? ? a1 + b + c + d : a + b + c + d
   end
 
   def document_types

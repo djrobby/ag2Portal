@@ -1,19 +1,75 @@
+<script>
+ 
+jQuery(function($) {
+
+	// when the .fnt-vehicle field changes
+	$(".wcc_item_type").change(function() {
+	  // preserve the current object
+	  var _this = (this);
+	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  if (wcc_item_type == "")
+	  	wcc_item_type = "0";
+	  var wcc_quantity = $(this).closest('tr').find('.wcc_quantity').val();
+	  if (wcc_quantity == "")
+	    wcc_quantity = "0";
+	  jQuery.getJSON('cr_calculate_flow/' + wcc_item_type + '/' + wcc_quantity, function(data) {
+	    $(_this).closest('tr').find('.wcc_flow').val(data.flow);
+	    $(_this).closest('tr').find('.wcc_quantity_flow').val(data.quantity_flow);
+	  });
+	  return false;
+	});
+
+	// when the .fnt-vehicle field changes
+	$(".wcc_quantity").change(function() {
+	  // preserve the current object
+	  var _this = (this);
+	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  if (wcc_item_type == "")
+	  	wcc_item_type = "0";
+	  var wcc_quantity = $(this).closest('tr').find('.wcc_quantity').val();
+	  if (wcc_quantity == "")
+	    wcc_quantity = "0";
+	  jQuery.getJSON('cr_calculate_flow/' + wcc_item_type + '/' + wcc_quantity, function(data) {
+	    $(_this).closest('tr').find('.wcc_flow').val(data.flow);
+	    $(_this).closest('tr').find('.wcc_quantity_flow').val(data.quantity_flow);
+	  });
+	  return false;
+	});
+
+  $(".icon-trash").click(function() {
+    remove_fields(this);
+  });
+ });
+//End jQuery function, exclusive $ jQuery function
+</script>
+
 <table id="connection-items" class="table table-condensed table-striped shrinked fixed">
-	<thead>
-		<tr>
-		  	<th><%= t('activerecord.attributes.water_connection_contract.type') %></th>
-		  	<th><%= t('activerecord.attributes.water_connection_contract.quantity') %></th>
-		  	<th align="right"><%= t('activerecord.attributes.water_connection_contract.flow') %></th>
-		  	<th align="right"><%= t('activerecord.attributes.water_connection_contract.total') %></th>
-		  	<th></th>
-	  	</tr>
-	</thead>
-	<tbody>
-	 	<tr>
-	    	<td><%= f.association :water_connection_contract_item_type, label: false, collection: WaterConnectionContractItemType.all, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' } %></td>
-	    	<td><%= f.input :quantity, label: false, :input_html => { :class => 'x-medium-text-field', :id => 'wcc_quantity' }, :label_html => { :class => 'form-label' } %></td>
-	    	<td align="right"><%= number_with_precision(f.object.water_connection_contract_item_type.flow, precision: 2) unless f.object.water_connection_contract_item_type.blank? %></td>
-	    	<td align="right"><%= number_with_precision(f.object.quantity_flow, precision: 2) unless f.object.quantity_flow.blank? %></td>
-	  	</tr>
- 	</tbody>
+  <!-- vehicle -->
+  <col width="60%" />
+  <!-- distance -->
+  <col width="11%" />
+  <!-- cost -->
+  <col width="12%" />
+  <!-- costs -->
+  <col width="12%" />
+  <!-- button -->
+  <col width="5%" />
+  <thead>
+    <tr>
+      <th><%= t('activerecord.attributes.water_connection_contract.type') %></th>
+      <th><%= t('activerecord.attributes.water_connection_contract.quantity') %></th>
+      <th align="right"><%= t('activerecord.attributes.water_connection_contract.flow') %></th>
+      <th align="right"><%= t('activerecord.attributes.water_connection_contract.total') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="fields">
+      <td><%= f.association :water_connection_contract_item_type, label: false, collection: WaterConnectionContractItemType.all, input_html: { class: 'x-large-text-field sel2 wcc_item_type'}, label_html: { class: 'form-label' } %></td>
+      <td><%= f.input :quantity, label: false, :input_html => { :class => 'sub-number-text-field wcc_quantity' }, :label_html => { :class => 'form-label' } %></td>
+      <td><%= f.input :flow, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.water_connection_contract_item_type.flow, precision: 2) unless f.object.water_connection_contract_item_type.blank?), class: 'sub-number-text-field wcc_flow' } %></td>
+      <td><%= f.input :quantity_flow, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(f.object.quantity_flow, precision: 2) unless f.object.quantity_flow.blank?), class: 'sub-number-text-field sub-disabled-field wcc_quantity_flow' } %></td>
+      <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, f) %></td>
+    </tr>
+  </tbody>
 </table>

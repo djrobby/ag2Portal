@@ -6,6 +6,7 @@ es:
         one:   Contrato de Acometida
         few:   Contratos de Acometida
         other: Contratos de Acometida
+        check_for_water_connection_contract_items: "No existe equipamiento o caudal total para esta acometida"
     attributes:
       water_connection_contract:
         id: "Id"

@@ -32,20 +32,56 @@ module Ag2Gest
       project = params[:Project]
       client = params[:Client]
       status = params[:Status]
-      type = params[:Type]
-      operation = params[:Operation]
-      biller = params[:Biller]
+      phase = params[:Phase]
       # OCO
       init_oco if !session[:organization]
 
       @client = " "
       @project = !project.blank? ? Project.find(project).full_name : " "
-      @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @status = invoice_statuses_dropdown if @status.nil?
-      @operations = invoice_operations_dropdown if @operations.nil?
-      @sale_offers = sale_offers_dropdown if @sale_offers.nil?
+      @phases = invoice_phases_dropdown if @phases.nil?
 
-      @debt_claims = DebtClaim.paginate(:page => params[:page], :per_page => per_page)
+      # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @types = invoice_types_dropdown if @types.nil?
+      current_types = @types.blank? ? [0] : current_types_for_index(@types)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      client = !client.blank? ? inverse_client_search(client) : client
+
+      @search = DebtClaim.search do
+        with :invoice_type_id, current_types
+        with :project_id, current_projects
+        fulltext params[:search]
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !client.blank?
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
+        end
+        if !phase.blank?
+          with :invoice_phase_id, phase
+        end
+        if !status.blank?
+          with :invoice_status_id, status
+        end
+        data_accessor_for(DebtClaim).include = [:debt_claim_phase, :project, {debt_claim_items: :debt_claim_status}, {debt_claim_items: {bill: :client}}]
+        order_by :sort_no, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+      @debt_claims = @search.results
 
       respond_to do |format|
         format.html # index.html.erb

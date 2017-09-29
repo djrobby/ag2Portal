@@ -21,7 +21,12 @@
 
 </script>
 
-<h4><%=t 'ag2_gest.contracting_requests.new.address_subscriber' %></h4>
+<% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
+  <h4><%=t 'ag2_gest.contracting_requests.new.address_subscriber' %></h4>
+<% else %>
+  <h4><%=t 'ag2_gest.contracting_requests.new_connection.address_connection' %></h4>
+<% end %>
+
 <table class="table">
   <tbody>
     <tr>

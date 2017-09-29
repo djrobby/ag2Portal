@@ -88,42 +88,28 @@ report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_enti
 #
 # service_point
 if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION
-	report.page.values(service_point_c: t("activerecord.attributes.contracting_request.info_connection").capitalize,
-										 fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
-										 fiscal_id_sp: @contracting_request.client.fiscal_id,
-										 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
-										 name_sp: @contracting_request.try(:client).try(:to_name),
-										 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
-										 street_sp: @contracting_request.client.address_1,
-										 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
-										 zipcode_sp: @contracting_request.try(:client).try(:zipcode).try(:to_label),
-										 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
-										 town_sp: @contracting_request.try(:client).try(:town).try(:name),
-										 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
-										 region_sp: @contracting_request.try(:client).try(:region).try(:name),
-										 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
-										 country_sp:  @contracting_request.try(:client).try(:country).try(:name)
-										 )
+	report.page.values(service_point_c: t("activerecord.attributes.contracting_request.info_connection").capitalize)
 else
-	report.page.values(service_point_c: I18n.t("ag2_gest.contracting_requests.show.info_service_point"),
-										 fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
-										 fiscal_id_sp: @contracting_request.client.fiscal_id,
-										 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
-										 name_sp: @contracting_request.try(:client).try(:to_name),
-										 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
-										 street_sp: @contracting_request.subscriber_info_street,
-										 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
-										 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
-										 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
-										 center_sp: @contracting_request.try(:subscriber_center).try(:name),
-										 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
-										 town_sp: @contracting_request.try(:subscriber_town).try(:name),
-										 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
-										 region_sp: @contracting_request.try(:subscriber_region).try(:name),
-										 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
-										 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
-										 )
-end									 
+	report.page.values(service_point_c: I18n.t("ag2_gest.contracting_requests.show.info_service_point"))
+end		
+
+report.page.values(fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+									 fiscal_id_sp: @contracting_request.client.fiscal_id,
+									 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 name_sp: @contracting_request.try(:client).try(:to_name),
+									 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 street_sp: @contracting_request.subscriber_info_street,
+									 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
+									 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
+									 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
+									 center_sp: @contracting_request.try(:subscriber_center).try(:name),
+									 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
+									 town_sp: @contracting_request.try(:subscriber_town).try(:name),
+									 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
+									 region_sp: @contracting_request.try(:subscriber_region).try(:name),
+									 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
+									 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
+									 )							 
 #
 # bank
 report.page.values(bank_c: I18n.t("ag2_gest.contracting_requests.show.bank_info"),
@@ -179,40 +165,52 @@ report.page.values(san_c: I18n.t("ag2_gest.contracting_requests.report.san_c"),
 									 )
 #
 # cambio de suministro
-report.page.values(change_c: I18n.t("ag2_gest.contracting_requests.report.change_c"),
-									 old_subscriber_c: I18n.t("ag2_gest.contracting_requests.show.old_subscriber") + ":",
-									 change_1: I18n.t("ag2_gest.contracting_requests.report.change_1"),
-									 change_2: I18n.t("ag2_gest.contracting_requests.report.change_2"),
-									 change_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":"
-									 )
-if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
-	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:to_label),
-					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
-					)
+if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION
+	report.page.values(change_c: I18n.t("ag2_gest.contracting_requests.report.change_c"),
+										 old_subscriber_c: I18n.t("ag2_gest.contracting_requests.show.old_subscriber") + ":",
+										 change_1: I18n.t("ag2_gest.contracting_requests.report.change_1"),
+										 change_2: I18n.t("ag2_gest.contracting_requests.report.change_2"),
+										 change_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":"
+										 )
+	if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
+		report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:to_label),
+						reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
+						)
+	end
+	if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION
+		report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:full_code) + " " + @contracting_request.try(:old_subscriber).try(:water_supply_contract).try(:client).try(:to_name),
+						reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
+						)
+	end
+	#
+	# baja
+	report.page.values(baja_c: I18n.t("ag2_gest.contracting_requests.report.baja_c"),
+										 baja_1: I18n.t("activerecord.attributes.contracting_request.code_meter") + ":",
+										 baja_2: I18n.t("activerecord.attributes.meter_detail.location") + ":",
+										 baja_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":",
+										 baja_4: I18n.t("activerecord.report.subscriber.ending_at") + ":",
+										 baja_5: I18n.t("ag2_gest.contracting_requests.report.baja_5"),
+										 baja_6: I18n.t("ag2_gest.contracting_requests.report.baja_6"),
+										 baja_7: I18n.t("ag2_gest.contracting_requests.report.baja_7"),
+										 baja_8: I18n.t("ag2_gest.contracting_requests.report.baja_8")
+										 )
+	if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION
+		date = @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.strftime("%d/%m/%Y") unless @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.blank?
+		report.page.values(meter_code: @contracting_request.try(:water_supply_contract).try(:meter).try(:to_label),
+							meter_location: @contracting_request.try(:water_supply_contract).try(:meter).try(:meter_details).try(:last).try(:meter_location).try(:name),
+							baja_date: date,
+							baja_reading_index: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index)
+						)
+	end
+else
+	report.page.item(:baja_border).hide
+	report.page.item(:change_border).hide
+	report.page.item(:baja_down).hide
+	report.page.item(:change_down).hide
+	report.page.item(:baja_img).hide
+	report.page.item(:baja_img1).hide
+	report.page.item(:baja_img2).hide
+	report.page.item(:baja_img3).hide
+	report.page.item(:change_img).hide
+	report.page.item(:change_img1).hide
 end
-if @contracting_request.contracting_request_type_id == ContractingRequestType::SUBROGATION
-	report.page.values(old_subscriber: @contracting_request.try(:old_subscriber).try(:full_code) + " " + @contracting_request.try(:old_subscriber).try(:water_supply_contract).try(:client).try(:to_name),
-					reading_index: @contracting_request.try(:subscriber).try(:readings).try(:last).try(:reading_index)
-					)
-end
-#
-# baja
-report.page.values(baja_c: I18n.t("ag2_gest.contracting_requests.report.baja_c"),
-									 baja_1: I18n.t("activerecord.attributes.contracting_request.code_meter") + ":",
-									 baja_2: I18n.t("activerecord.attributes.meter_detail.location") + ":",
-									 baja_3: I18n.t("ag2_gest.contracting_requests.report.change_3") + ":",
-									 baja_4: I18n.t("activerecord.report.subscriber.ending_at") + ":",
-									 baja_5: I18n.t("ag2_gest.contracting_requests.report.baja_5"),
-									 baja_6: I18n.t("ag2_gest.contracting_requests.report.baja_6"),
-									 baja_7: I18n.t("ag2_gest.contracting_requests.report.baja_7"),
-									 baja_8: I18n.t("ag2_gest.contracting_requests.report.baja_8")
-									 )
-if @contracting_request.contracting_request_type_id == 6
-	date = @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.strftime("%d/%m/%Y") unless @contracting_request.water_supply_contract.meter.meter_details.last.withdrawal_date.blank?
-	report.page.values(meter_code: @contracting_request.try(:water_supply_contract).try(:meter).try(:to_label),
-						meter_location: @contracting_request.try(:water_supply_contract).try(:meter).try(:meter_details).try(:last).try(:meter_location).try(:name),
-						baja_date: date,
-						baja_reading_index: @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:reading_index)
-					)
-end
-

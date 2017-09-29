@@ -99,6 +99,50 @@ class DebtClaim < ActiveRecord::Base
   #
   # Search
   #
+  searchable do
+    text :invoice_no
+    integer :organization_id
+    integer :payment_method_id
+    # text :client_code_name_fiscal do
+    #   bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
+    # end
+    # text :subscriber_code_name_address_fiscal do
+    #   bill.subscriber.code_full_name_or_company_address_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    # end
+    string :client_code_name_fiscal, :multiple => true do
+      bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
+    end
+    string :subscriber_code_name_fiscal, :multiple => true do
+      bill.subscriber.code_full_name_or_company_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    end
+    string :supply_address, :multiple => true do
+      bill.subscriber.subscriber_supply_address.supply_address unless (bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
+    end
+    string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    integer :id
+    integer :original_invoice_id
+    integer :bill_id
+    integer :invoice_status_id
+    integer :invoice_type_id
+    integer :invoice_operation_id
+    integer :tariff_scheme_id
+    integer :biller_id
+    integer :billing_period_id
+    integer :charge_account_id
+    date :invoice_date
+    integer :client_id do
+      bill.client_id unless (bill.blank? || bill.client_id.blank?)
+    end
+    integer :subscriber_id do
+      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
+    end
+    integer :project_id, :multiple => true do
+      bill.project_id unless (bill.blank? || bill.project_id.blank?)
+    end
+    string :sort_no do
+      invoice_no
+    end
+  end
 
   private
 

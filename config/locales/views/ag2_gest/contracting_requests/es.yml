@@ -60,7 +60,7 @@ es:
         title: "Nueva Solicitud de Acometida"
         claimant: "Datos Fiscales"
         client: "Datos de Notificación"
-        address_subscriber: "Domicilio Suministro"
+        address_connection: "Lugar de la Acometida"
         representative: "Representante"
         iban: "Cuenta IBAN"
         documents: "Documentos"

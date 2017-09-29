@@ -37,6 +37,7 @@ module Ag2Gest
       session[:StreetName] = nil
       session[:BankAccount] = nil
       session[:Use] = nil
+      session[:Phase] = nil
     end
 
     def current_projects

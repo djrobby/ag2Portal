@@ -3,6 +3,7 @@ class SaleOfferStatus < ActiveRecord::Base
   PENDING = 1
   APPROVED = 2
   DENIED = 3
+  CANCELLED = 4
 
   attr_accessible :approval, :name, :notification
 

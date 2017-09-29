@@ -215,6 +215,8 @@ es:
         brand_model: "Marca/Modelo"
         state_work_order: "Estado orden de trabajo"
         state_sale_offer: "Estado Oferta de Venta"
+        total_sale_offer: "Total Venta"
+        total_work_order: "Total Orden"
         sale_offer: "Oferta de venta"
         data_installation_meter: "Datos instalación contador"
         data_withdrawal_meter: "Datos retirada contador"

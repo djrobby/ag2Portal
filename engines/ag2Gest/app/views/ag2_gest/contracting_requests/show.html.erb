@@ -108,11 +108,9 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
   <li>
     <a href="#details" data-toggle="tab"><%=t ".details" %></a>
   </li>
-  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
-    <li>
-      <a href="#subscriber" data-toggle="tab"><%=t ".subscriber" %></a>
-    </li>
-  <% end %>
+  <li>
+    <a href="#subscriber" data-toggle="tab"><%=t ".subscriber" %></a>
+  </li>
   <li>
     <a href="#entity" data-toggle="tab"><%=t ".entity" %></a>
   </li>
@@ -143,12 +141,10 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
     <%= render "show_tab_details" %>
   </div>
 
-  <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CONNECTION %>
-    <!-- subscriber tab -->
-    <div class="tab-pane fade" id="subscriber">
-      <%= render "show_tab_subscriber" %>
-    </div>
-  <% end %>
+  <!-- subscriber tab -->
+  <div class="tab-pane fade" id="subscriber">
+    <%= render "show_tab_subscriber" %>
+  </div>
 
   <!-- entity tab -->
   <div class="tab-pane fade" id="entity">

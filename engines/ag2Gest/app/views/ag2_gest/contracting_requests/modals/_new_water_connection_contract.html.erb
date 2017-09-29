@@ -70,11 +70,11 @@
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.association :water_connection_type, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :water_connection_type, required: true, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <%= f.association :service_point_purpose, required: true, collection: ServicePointPurpose.all, :input_html => { :class => 'x-large-text-field sel2', :id => 'service_point_purpose' }, :label_html => { :class => 'form-label' }, include_blank: true %>
 
-      <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'caliber' }, :label_html => { :class => 'form-label' }, include_blank: true %>
+      <%= f.association :caliber, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'caliber' }, :label_html => { :class => 'form-label' }, include_blank: true %>
 
       <%= f.input :diameter, :input_html => { :class => 'x-large-text-field', :id => 'wcc_diameter' }, :label_html => { :class => 'form-label' } %>
 
@@ -92,7 +92,7 @@
       <%= f.input :pool_area, :input_html => { :class => 'x-large-text-field', :id => 'wcc_pool_area' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wcc_remarks', rows: 5 }, :label_html => { :class => 'form-label' } %>
 
-      <h4><%= t('activerecord.attributes.contracting_request.conection_items') %></h4>
+      <h4><%= "* " + t('activerecord.attributes.contracting_request.conection_items') %></h4>
       <%= link_to_add_fields("Añadir Item", f, :water_connection_contract_items, "connection_items", "new-connection_items", class: "btn btn-warning fnt-new-btn") %>
       <%= f.simple_fields_for :water_connection_contract_items, defaults: { input_html: { class: 'sub-form' } } do |item| %>
         <%= render 'connection_items', :f => item %>

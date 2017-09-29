@@ -33,6 +33,8 @@ class WaterConnectionContract < ActiveRecord::Base
   # validates
   validates_associated :water_connection_contract_items
 
+  before_save :calculate_flow
+
   # methods
   def to_sale_offer
     sale_offer = SaleOffer.create(
@@ -154,6 +156,13 @@ class WaterConnectionContract < ActiveRecord::Base
   end
 
   private
+
+  def calculate_flow
+    if water_connection_contract_items[0].blank?
+      errors.add(:base, I18n.t('activerecord.models.water_connection_contract.check_for_water_connection_contract_items'))
+      return false
+    end
+  end
 
     # Sale offer no
   def sale_offer_next_no(project)

@@ -6,6 +6,7 @@ en:
         one:   Connection contract
         few:   Connection contracts
         other: Connection contracts
+        check_for_water_connection_contract_items: "No existe equipamiento o caudal total para esta acometida"
     attributes:
       water_connection_contract:
         id: "Id"
