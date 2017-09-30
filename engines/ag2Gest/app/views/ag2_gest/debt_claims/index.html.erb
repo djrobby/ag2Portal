@@ -4,7 +4,7 @@
 
   function setupAllSelect2(p, b) {
     projectsSelect2(p);
-    billersSelect2(b);    
+    clientsSelect2(b);    
   }
 
   function clientsSelect2(intialValue) {
@@ -62,33 +62,6 @@
     });
   }
 
-  function billersSelect2(intialValue) {
-    $('#Biller').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: "/search_companies",
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return { 
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }
-
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -107,7 +80,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @biller %>");
+    setupAllSelect2("<%= @project %>", "<%= @client %>");
 
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
@@ -119,15 +92,12 @@
   });
 
   $(window).bind("load", function() {
-    a = "<%= ci_restore_filters %>";
+    a = "<%= dc_restore_filters %>";
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%= params[:Project] %>");
     // $("#Client").select2("val", "<%= params[:Client] %>");
-    $("#Client").val("<%= params[:Client] %>");
+    $("#Phase").val("<%= params[:Phase] %>");
     $("#Status").val("<%= params[:Status] %>");
-    $("#Type").val("<%= params[:Type] %>");
-    $("#Operation").val("<%= params[:Operation] %>");
-    // $("#Biller").select2("val", "<%= params[:Biller] %>");
     $("#search").val("<%= params[:search] %>");
   });
 
@@ -150,15 +120,12 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
-      $("#Client").val("");
-      // $("#Client").select2("val", "");
+      $("#Client").select2("val", "");
+      $("#Phase").val("");
       $("#Status").val("");
-      $("#Type").val("");
-      $("#Operation").val("");
-      $("#Biller").select2("val", "");
       $("#search").val("");
-      a = "<%= ci_remove_filters %>";
-      setupAllSelect2(a, a, a);
+      a = "<%= dc_remove_filters %>";
+      setupAllSelect2(a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -187,20 +154,14 @@
         <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
-        <!-- <%#= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %> -->
-        <!-- Type -->
-        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_type"), nil, :class => 'form-label' %>
-        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%#= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Phase -->
+        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_phase"), nil, :class => 'form-label' %>
+        <%= select_tag "Phase", options_from_collection_for_select(@phase, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_status"), nil, :class => 'form-label' %>
         <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <!-- Operation -->
-        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_operation"), nil, :class => 'form-label' %>
-        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <!-- Biller -->
-        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_biller"), nil, :class => 'form-label' %>
-        <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Others -->
         <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_others"), nil, :class => 'form-label-under-sel2' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

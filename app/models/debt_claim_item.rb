@@ -14,6 +14,12 @@ class DebtClaimItem < ActiveRecord::Base
   validates :debt_claim_status, :presence => true
 
   # Scopes
+  scope :grouped_by_debt_claim, group(:debt_claim_id)
+  scope :belongs_to_client, -> c { joins(:bill).group(:debt_claim_id).where(bills: { client_id: c }) }
+  scope :has_status, -> s { group(:debt_claim_id).where(debt_claim_status_id: s) }
+  scope :belongs_to_client_and_has_status, -> c, s {
+    joins(:bill).group(:debt_claim_id).where(bills: { client_id: c }, debt_claim_status_id: s)
+  }
 
   # Callbacks
   before_create :init_debt
@@ -67,6 +73,31 @@ class DebtClaimItem < ActiveRecord::Base
   #
   # Search
   #
+  searchable do
+    string :client_code_name_fiscal, :multiple => true do
+      bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
+    end
+    string :subscriber_code_name_fiscal, :multiple => true do
+      bill.subscriber.code_full_name_or_company_fiscal unless (bill.blank? || bill.subscriber.blank?)
+    end
+    string :supply_address, :multiple => true do
+      bill.subscriber.subscriber_supply_address.supply_address unless (bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
+    end
+    integer :client_id do
+      bill.client_id unless (bill.blank? || bill.client_id.blank?)
+    end
+    integer :subscriber_id do
+      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
+    end
+    integer :project_id, :multiple => true do
+      debt_claim.project_id unless (debt_claim.blank? || debt_claim.project_id.blank?)
+    end
+    date :payday_limit
+    integer :id
+    integer :debt_claim_status_id
+    integer :bill_id
+    integer :invoice_id
+  end
 
   private
 

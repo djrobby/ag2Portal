@@ -8,6 +8,10 @@ module Ag2Gest
                                                :dc_restore_filters,
                                                :dc_generate_no]
     # Helper methods for
+    # => allow edit (hide buttons)
+    helper_method :cannot_edit
+    # => returns client code & full name
+    helper_method :client_name
     # => index filters
     helper_method :dc_remove_filters, :dc_restore_filters
 
@@ -36,46 +40,44 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
 
-      @client = " "
+      # Initialize select_tags
+      @client = !client.blank? ? Client.find(client).to_label : " "
       @project = !project.blank? ? Project.find(project).full_name : " "
-      @status = invoice_statuses_dropdown if @status.nil?
-      @phases = invoice_phases_dropdown if @phases.nil?
+      @status = debt_claim_statuses_dropdown if @status.nil?
+      @phase = debt_claim_phases_dropdown if @phase.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
-      @types = invoice_types_dropdown if @types.nil?
-      current_types = @types.blank? ? [0] : current_types_for_index(@types)
+      if !client.blank? && !status.blank?
+        items = DebtClaimItem.belongs_to_client_and_has_status(client, status)
+      elsif !client.blank? && status.blank?
+        items = DebtClaimItem.belongs_to_client(client)
+      elsif client.blank? && !status.blank?
+        items = DebtClaimItem.has_status(status)
+      else
+        items = DebtClaimItem.grouped_by_debt_claim
+      end
+      current_items = items.blank? ? [0] : current_items_for_index(items)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      client = !client.blank? ? inverse_client_search(client) : client
 
       @search = DebtClaim.search do
-        with :invoice_type_id, current_types
+        with :id, current_items
         with :project_id, current_projects
         fulltext params[:search]
         if !no.blank?
           if no.class == Array
-            with :invoice_no, no
+            with :claim_no, no
           else
-            with(:invoice_no).starting_with(no)
+            with(:claim_no).starting_with(no)
           end
         end
         if !project.blank?
           with :project_id, project
         end
-        if !client.blank?
-          if client.class == Array
-            with :client_code_name_fiscal, client
-          else
-            with(:client_code_name_fiscal).starting_with(client)
-          end
-        end
         if !phase.blank?
-          with :invoice_phase_id, phase
-        end
-        if !status.blank?
-          with :invoice_status_id, status
+          with :debt_claim_phase_id, phase
         end
         data_accessor_for(DebtClaim).include = [:debt_claim_phase, :project, {debt_claim_items: :debt_claim_status}, {debt_claim_items: {bill: :client}}]
         order_by :sort_no, :desc
@@ -176,6 +178,94 @@ module Ag2Gest
 
     private
 
+    # Can't edit or delete when
+    # => User isn't administrator
+    # => Claim is closed
+    def cannot_edit(_claim)
+      !session[:is_administrator] && _claim.debt_claim_phase_id == DebtClaimPhase::CLOSED
+    end
+
+    def client_name(_bill)
+      _name = _bill.client.full_name_or_company_and_code rescue nil
+      _name.blank? ? '' : _name[0,40]
+    end
+
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
+    end
+
+    def current_items_for_index(_items)
+      _items.pluck(:debt_claim_id)
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      SaleOffer.where('offer_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.offer_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).by_code
+    end
+
+    def projects_dropdown_edit(_project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        _projects = Project.where(id: _project)
+      end
+      _projects
+    end
+
+    def debt_claim_phases_dropdown
+      DebtClaimPhase.all
+    end
+
+    def debt_claim_statuses_dropdown
+      DebtClaimStatus.all
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
+      end
+    end
+
     # Keeps filter state
     def manage_filter_state
       # search
@@ -202,29 +292,17 @@ module Ag2Gest
       elsif session[:Client]
         params[:Client] = session[:Client]
       end
+      # phase
+      if params[:Phase]
+        session[:Phase] = params[:Phase]
+      elsif session[:Phase]
+        params[:Phase] = session[:Phase]
+      end
       # status
       if params[:Status]
         session[:Status] = params[:Status]
       elsif session[:Status]
         params[:Status] = session[:Status]
-      end
-      # type
-      if params[:Type]
-        session[:Type] = params[:Type]
-      elsif session[:Type]
-        params[:Type] = session[:Type]
-      end
-      # operation
-      if params[:Operation]
-        session[:Operation] = params[:Operation]
-      elsif session[:Operation]
-        params[:Operation] = session[:Operation]
-      end
-      # biller
-      if params[:Biller]
-        session[:Biller] = params[:Biller]
-      elsif session[:Biller]
-        params[:Biller] = session[:Biller]
       end
     end
 
@@ -233,10 +311,8 @@ module Ag2Gest
       params[:No] = ""
       params[:Project] = ""
       params[:Client] = ""
+      params[:Phase] = ""
       params[:Status] = ""
-      params[:Type] = ""
-      params[:Operation] = ""
-      params[:Biller] = ""
       return " "
     end
 
@@ -245,10 +321,8 @@ module Ag2Gest
       params[:No] = session[:No]
       params[:Project] = session[:Project]
       params[:Client] = session[:Client]
+      params[:Phase] = session[:Phase]
       params[:Status] = session[:Status]
-      params[:Type] = session[:Type]
-      params[:Operation] = session[:Operation]
-      params[:Biller] = session[:Biller]
     end
   end
 end

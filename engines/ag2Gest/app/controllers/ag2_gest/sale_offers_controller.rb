@@ -624,7 +624,7 @@ module Ag2Gest
 
       # Returning founded projects
       ret_array(_array, _projects, 'id')
-      _projects = Project.where(id: _array).order(:project_code)
+      _projects = Project.where(id: _array).by_code
     end
 
     def projects_dropdown_edit(_project)

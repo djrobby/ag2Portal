@@ -1,4 +1,7 @@
 class DebtClaimPhase < ActiveRecord::Base
+  # CONSTANTS
+  CLOSED = 99
+
   attr_accessible :name, :surcharge_pct
 
   has_many :debt_claims
