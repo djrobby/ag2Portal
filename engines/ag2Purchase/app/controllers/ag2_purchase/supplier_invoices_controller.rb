@@ -86,9 +86,9 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @purchase_orders = @supplier.blank? ? purchase_orders_dropdown : @supplier.purchase_orders.undelivered(@supplier.organization_id, true)
+        @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : @supplier.purchase_orders.unbilled(@supplier.organization_id, true)
       else
-        @purchase_orders = purchase_orders_dropdown
+        @purchase_orders = unbilled_purchase_orders_dropdown
       end
       # Orders array
       @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
@@ -112,7 +112,7 @@ module Ag2Purchase
         @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
         @projects = @receipt_note.blank? ? projects_dropdown : Project.where(id: @receipt_note.project)
         @work_orders = @receipt_note.blank? ? work_orders_dropdown : WorkOrder.where(id: @receipt_note.work_order)
-        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
+        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : ChargeAccount.where(id: @receipt_note.charge_account)
         @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
         @payment_methods = @receipt_note.blank? ? payment_methods_dropdown : @receipt_note.payment_method
         if @note_items.blank?
@@ -121,14 +121,14 @@ module Ag2Purchase
           @products = @receipt_note.products.group(:product_code)
         end
         if @projects.count == 1
-          project_id = @projects.id rescue 0
+          project_id = @projects.first.id rescue 0
         end
         if @work_orders.count == 1
           work_order_id = @work_orders.first.id rescue 0
           work_order_full_name = @work_orders.first.full_name rescue " "
         end
         if @charge_accounts.count == 1
-          charge_account_id = @charge_accounts.id rescue 0
+          charge_account_id = @charge_accounts.first.id rescue 0
           charge_account_full_name = @charge_accounts.first.full_name rescue " "
         end
         store_id = @stores.id rescue 0
@@ -841,7 +841,7 @@ module Ag2Purchase
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
-      @purchase_orders = purchase_orders_dropdown if @purchase_orders.nil?
+      @purchase_orders = unbilled_purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -916,7 +916,7 @@ module Ag2Purchase
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
-      @purchase_orders = purchase_orders_dropdown if @purchase_orders.nil?
+      @purchase_orders = unbilled_purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -982,11 +982,12 @@ module Ag2Purchase
       $attachment = Attachment.new
       destroy_attachment
       @receipt_notes = receipts_dropdown
+      @purchase_orders = unbilled_purchase_orders_dropdown
       @projects = projects_dropdown
       @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
-      # @work_orders = work_orders_dropdown
+      @work_orders = work_orders_dropdown
       @work_order = " "
-      # @charge_accounts = projects_charge_accounts(@projects)
+      @charge_accounts = projects_charge_accounts(@projects)
       @charge_account = " "
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
@@ -1388,7 +1389,23 @@ module Ag2Purchase
     end
 
     def purchase_orders_dropdown
-      session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
+      if session[:office] != '0'
+        PurchaseOrder.undelivered_by_office(session[:office].to_i, true)
+      elsif session[:company] != '0'
+        PurchaseOrder.undelivered_by_company(session[:company].to_i, true)
+      else
+        session[:organization] != '0' ? PurchaseOrder.undelivered(session[:organization].to_i, true) : PurchaseOrder.undelivered(nil, true)
+      end
+    end
+
+    def unbilled_purchase_orders_dropdown
+      if session[:office] != '0'
+        PurchaseOrder.unbilled_by_office(session[:office].to_i, true)
+      elsif session[:company] != '0'
+        PurchaseOrder.unbilled_by_company(session[:company].to_i, true)
+      else
+        session[:organization] != '0' ? PurchaseOrder.unbilled(session[:organization].to_i, true) : PurchaseOrder.unbilled(nil, true)
+      end
     end
 
     def order_items_dropdown(_order)

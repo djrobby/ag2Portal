@@ -15,6 +15,7 @@ class PurchaseOrderItem < ActiveRecord::Base
 
   has_many :receipt_note_items
   has_one :purchase_order_item_balance
+  has_one :purchase_order_item_invoiced_balance
 
   has_paper_trail
 

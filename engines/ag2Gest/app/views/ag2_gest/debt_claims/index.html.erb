@@ -157,13 +157,13 @@
         <%#= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
         <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Phase -->
-        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_phase"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_phase"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Phase", options_from_collection_for_select(@phase, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_status"), nil, :class => 'form-label' %>
         <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Others -->
-        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_others"), nil, :class => 'form-label-under-sel2' %>
+        <%= label_tag I18n.t("ag2_gest.debt_claims.index.label_others"), nil, :class => 'form-label' %>
         <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
@@ -171,8 +171,7 @@
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => Invoice, :path => new_debt_claim_path, :txt => t(".btn_new") } %>
-        <% end %>
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => DebtClaim, :path => new_debt_claim_path, :txt => t(".btn_new") } %>
         <%= link_to t(".back_to_management"), ag2_gest.debt_claim_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

@@ -13,6 +13,12 @@
     var _po = $('#supplier_invoice_receipt_note_id :selected').val();
     if (_po == "") _po = "0";
     $('#fnt-receipt-note').val(_po);
+    // Purchase Order
+    $("#fnt-receipt-note").html("");
+    $('#supplier_invoice_receipt_note_id option').clone().appendTo('#fnt-receipt-note');
+    var _po = $('#supplier_invoice_receipt_note_id :selected').val();
+    if (_po == "") _po = "0";
+    $('#fnt-receipt-note').val(_po);
     // Project
     $("#fnt-project").html("");
     $('#supplier_invoice_project_id option').clone().appendTo('#fnt-project');
@@ -20,17 +26,17 @@
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
-    $("#fnt-work-order").html("");
-    $('#supplier_invoice_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#supplier_invoice_work_order_id :selected').val();
-    if (_o == "") _o = "0";
-    $('#fnt-work-order').val(_o);
+    // $("#fnt-work-order").html("");
+    // $('#supplier_invoice_work_order_id option').clone().appendTo('#fnt-work-order');
+    // var _o = $('#supplier_invoice_work_order_id :selected').val();
+    // if (_o == "") _o = "0";
+    // $('#fnt-work-order').val(_o);
     // Charge Account
-    $("#fnt-charge-account").html("");
-    $('#supplier_invoice_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#supplier_invoice_charge_account_id :selected').val();
-    if (_c == "") _c = "0";
-    $('#fnt-charge-account').val(_c);
+    // $("#fnt-charge-account").html("");
+    // $('#supplier_invoice_charge_account_id option').clone().appendTo('#fnt-charge-account');
+    // var _c = $('#supplier_invoice_charge_account_id :selected').val();
+    // if (_c == "") _c = "0";
+    // $('#fnt-charge-account').val(_c);
     // Store
     /*
     $("#fnt-store").html("");
@@ -42,7 +48,7 @@
     // Supplier
     _supplier = $('#supplier_invoice_supplier_id :selected').val();
     if (_supplier == "") _supplier = "0";
-    // Product & Note item
+    // Product, Note item, Work order & Charge account
     init();
 
     // Set focus
@@ -553,6 +559,49 @@
         }
       });
     }
+    var p = $('select#supplier_invoice_project_id :selected').val();
+    if (p != "" && p != "0") {
+      jQuery.getJSON('si_update_charge_account_from_project/' + p, function(data) {
+        var w = data.work_order;
+        var h = data.charge_account
+        // Work order
+        $("#fnt-work-order").html("");
+        $("#fnt-work-order").select2("val", "");
+        $("#fnt-work-order").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        var _o = $('#Worder').val();
+        if (_o == "") _o = "0";
+        $('#fnt-work-order').select2("val", _o);
+        // Charge account
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        var _c = $('#Account').val();
+        if (_c == "") _c = "0";
+        $('#fnt-charge-account').select2("val", _c);
+      });
+    }
   }
 </script>
 
@@ -570,6 +619,9 @@
       <%= f.association :receipt_note, collection: @receipt_notes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
     </div>
     <%= f.association :receipt_note_item, collection: @note_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note-item' }, label_html: { class: 'form-label' } %>
+    <%= f.association :purchase_order, collection: @receipt_notes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
+    <%= f.association :purchase_order_item, collection: @note_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note-item' }, label_html: { class: 'form-label' } %>
+
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
     <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>

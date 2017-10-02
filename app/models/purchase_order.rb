@@ -21,6 +21,7 @@ class PurchaseOrder < ActiveRecord::Base
 
   has_many :purchase_order_items, dependent: :destroy
   has_many :purchase_order_item_balances, through: :purchase_order_items
+  has_many :purchase_order_item_invoiced_balances, through: :purchase_order_items
   has_many :products, through: :purchase_order_items
   has_many :receipt_notes
   has_many :receipt_note_items
@@ -196,6 +197,62 @@ class PurchaseOrder < ActiveRecord::Base
       PurchaseOrder.undelivered(organization, _ordered)
     else
       includes(:supplier).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND purchase_orders.project_id IN (?)', _projects).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.undelivered_by_company(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND projects.company_id = ?', s).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND projects.company_id = ?', s).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.undelivered_by_office(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND projects.office_id = ?', s).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:purchase_order_item_balances).where('NOT purchase_orders.approver_id IS NULL AND projects.office_id = ?', s).group('purchase_orders.id').having('sum(purchase_order_item_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.unbilled(organization, _ordered)
+    if !organization.blank?
+      if !_ordered
+        includes(:supplier).joins(:purchase_order_item_invoiced_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+      else
+        includes(:supplier).joins(:purchase_order_item_invoiced_balances).where('purchase_orders.organization_id = ?', organization).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+      end
+    else
+      if !_ordered
+        includes(:supplier).joins(:purchase_order_item_invoiced_balances).group('purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+      else
+        includes(:supplier).joins(:purchase_order_item_invoiced_balances).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+      end
+    end
+  end
+
+  def self.unbilled_by_project(_projects = nil, organization = nil, _ordered = true)
+    if _projects.blank?
+      PurchaseOrder.unbilled(organization, _ordered)
+    else
+      includes(:supplier).joins(:purchase_order_item_invoiced_balances).where('purchase_orders.project_id IN (?)', _projects).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.unbilled_by_company(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:purchase_order_item_invoiced_balances).where('projects.company_id = ?', s).group('purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:purchase_order_item_invoiced_balances).where('projects.company_id = ?', s).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.unbilled_by_office(s = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:purchase_order_item_invoiced_balances).where('projects.office_id = ?', s).group('purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:purchase_order_item_invoiced_balances).where('projects.office_id = ?', s).group('purchase_orders.supplier_id, purchase_orders.order_no, purchase_orders.id').having('sum(purchase_order_item_invoiced_balances.balance) > ?', 0)
     end
   end
 

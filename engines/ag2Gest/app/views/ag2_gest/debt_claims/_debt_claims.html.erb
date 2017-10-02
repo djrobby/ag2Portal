@@ -39,5 +39,3 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @debt_claims } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => DebtClaim, :path => new_debt_claim_path, :txt => t("ag2_gest.debt_claims.index.btn_new") } %>
-<%= link_to t("ag2_gest.debt_claims.index.back_to_root"), ag2_gest.root_path %>

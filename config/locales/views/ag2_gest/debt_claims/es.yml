@@ -11,7 +11,7 @@ es:
         label_client: "Cliente"
         label_subscriber: "Abonado"
         label_status: "Estado"
-        label_type: "Tipo"
+        label_phase: "Fase"
         label_operation: "Operación"
         label_biller: "Reclamaciónnte"
         label_period: "Período"

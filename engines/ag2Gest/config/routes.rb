@@ -159,7 +159,7 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
     match 'cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
     match 'contracting_requests/:id/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
-    
+
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -360,6 +360,11 @@ Ag2Gest::Engine.routes.draw do
     match 'client_payments/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
     match 'cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
     match 'client_payments/:id/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
+    #
+    # Debt claims
+    match 'debt_claims/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
+    match 'dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
+    match 'debt_claims/:id/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
 
     # Resources
     resources :clients

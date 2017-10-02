@@ -750,7 +750,7 @@ module Ag2Purchase
         @is_approver = true
       end
       # Users (notify)
-      @users = session[:organization] != '0' ? Organization.find(session[:organization].to_i).users.order(:email) : User.order(:email)
+      @users = (session[:organization] && (session[:organization] != '0' && session[:organization] != 0)) ? Organization.find(session[:organization].to_i).users.order(:email) : User.order(:email)
 
       respond_to do |format|
         format.html # show.html.erb
