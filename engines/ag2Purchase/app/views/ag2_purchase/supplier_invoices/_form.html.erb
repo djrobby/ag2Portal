@@ -101,7 +101,7 @@
     dd_import_files('#dd_files', '#image_content', 'si_update_attachment');
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @work_order %>", "<%= @charge_account %>");
+    // setupAllSelect2("<%= @work_order %>", "<%= @charge_account %>");
 
     // Save default text color
     text_field_color = $("#supplier_invoice_invoice_no").css('color')
@@ -311,8 +311,10 @@
       var supplier = $('select#supplier_invoice_supplier_id :selected').val();
       if (supplier == "")
         supplier = "0";
-      jQuery.getJSON('si_update_receipt_select_from_supplier/' + supplier, function(data) {
+      jQuery.getJSON('si_update_receipt_and_order_select_from_supplier/' + supplier, function(data) {
         var o = data.note;
+        var p = data.order;
+        // Receipt note
         $("#supplier_invoice_receipt_note_id").html("");
         $("#supplier_invoice_receipt_note_id").select2("val", "");
         $("#supplier_invoice_receipt_note_id").append($('<option></option>').val("").html(""));
@@ -325,6 +327,21 @@
         } else {
           $.each(o, function(id, option) {
             $("#supplier_invoice_receipt_note_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          });
+        }
+        // Purchase order
+        $("#supplier_invoice_purchase_order_id").html("");
+        $("#supplier_invoice_purchase_order_id").select2("val", "");
+        $("#supplier_invoice_purchase_order_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order' && option != "") {
+              $("#supplier_invoice_purchase_order_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#supplier_invoice_purchase_order_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
       });
@@ -367,39 +384,39 @@
         }
         if (p_id != 0) $("#supplier_invoice_project_id").select2("val", p_id);
         // Work order
-        wordersSelect2ForNew(data.worder, data.project_id);
-        // $("#supplier_invoice_work_order_id").html("");
-        // $("#supplier_invoice_work_order_id").select2("val", "");
-        // $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
-        // if (!w.length) {
-        //   $.each(data, function(id, option) {
-        //     if (id == 'work_order' && option != "") {
-        //       $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-        //     }
-        //   });
-        // } else {
-        //   $.each(w, function(id, option) {
-        //     $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-        //   });
-        // }
-        // if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
+        // wordersSelect2ForNew(data.worder, data.project_id);
+        $("#supplier_invoice_work_order_id").html("");
+        $("#supplier_invoice_work_order_id").select2("val", "");
+        $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
         // Charge account
-        caccountsSelect2ForNew(data.caccount);
-        // $("#supplier_invoice_charge_account_id").html("");
-        // $("#supplier_invoice_charge_account_id").select2("val", "");
-        // $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
-        // if (!h.length) {
-        //   $.each(data, function(id, option) {
-        //     if (id == 'charge_account' && option != "") {
-        //       $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-        //     }
-        //   });
-        // } else {
-        //   $.each(h, function(id, option) {
-        //     $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-        //   });
-        // }
-        // if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        // caccountsSelect2ForNew(data.caccount);
+        $("#supplier_invoice_charge_account_id").html("");
+        $("#supplier_invoice_charge_account_id").select2("val", "");
+        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -454,37 +471,37 @@
         var c = data.charge_account;
         var s = data.store;
         // Work Order
-        wordersSelect2ForNew(data.worder, order);
-        // $("#supplier_invoice_work_order_id").html("");
-        // $("#supplier_invoice_work_order_id").select2("val", "");
-        // $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
-        // if (!w.length) {
-        //   $.each(data, function(id, option) {
-        //     if (id == 'work_order' && option != "") {
-        //       $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-        //     }
-        //   });
-        // } else {
-        //   $.each(w, function(id, option) {
-        //     $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
-        //   });
-        // }
+        // wordersSelect2ForNew(data.worder, order);
+        $("#supplier_invoice_work_order_id").html("");
+        $("#supplier_invoice_work_order_id").select2("val", "");
+        $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
         // Charge Account
-        caccountsSelect2ForNew(data.caccount);
-        // $("#supplier_invoice_charge_account_id").html("");
-        // $("#supplier_invoice_charge_account_id").select2("val", "");
-        // $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
-        // if (!c.length) {
-        //   $.each(data, function(id, option) {
-        //     if (id == 'charge_account' && option != "") {
-        //       $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-        //     }
-        //   });
-        // } else {
-        //   $.each(c, function(id, option) {
-        //     $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-        //   });
-        // }
+        // caccountsSelect2ForNew(data.caccount);
+        $("#supplier_invoice_charge_account_id").html("");
+        $("#supplier_invoice_charge_account_id").select2("val", "");
+        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -667,18 +684,10 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two">
-    <%#= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-    <%= label_tag "label_worder", t("activerecord.attributes.supplier_invoice.work_order"), :class => 'form-label' %>
-    <%= text_field_tag "Worder", params[:Worder], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
-  </label>
+  <label class="multi-field-label-two"> <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two">
-    <%#= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-    <%= label_tag "label_caccount", t("activerecord.attributes.supplier_invoice.charge_account"), :class => 'form-label' %>
-    <%= text_field_tag "Account", params[:Account], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
-  </label>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->

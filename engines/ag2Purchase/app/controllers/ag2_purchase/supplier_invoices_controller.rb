@@ -7,11 +7,17 @@ module Ag2Purchase
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:si_remove_filters,
                                                :si_restore_filters,
+                                               :si_attachment_changed,
+                                               :si_update_attachment,
                                                :si_update_receipt_select_from_supplier,
                                                :si_update_order_select_from_supplier,
+                                               :si_update_receipt_and_order_select_from_supplier,
                                                :si_update_selects_from_note,
+                                               :si_update_selects_from_order,
                                                :si_update_product_select_from_note_item,
+                                               :si_update_product_select_from_order_item,
                                                :si_item_balance_check,
+                                               :si_purchase_order_item_balance_check,
                                                :si_item_totals,
                                                :si_approval_totals,
                                                :si_update_description_prices_from_product_store,
@@ -30,8 +36,6 @@ module Ag2Purchase
                                                :si_current_balance_order,
                                                :si_generate_invoice,
                                                :si_generate_invoice_from_order,
-                                               :si_attachment_changed,
-                                               :si_update_attachment,
                                                :si_update_payday_limit_from_method,
                                                :si_generate_no]
     # Helper methods for
@@ -62,6 +66,26 @@ module Ag2Purchase
       else
         render json: { "image" => "" }
       end
+    end
+
+    # Update receipt note select at view from supplier select
+    def si_update_receipt_and_order_select_from_supplier
+      supplier = params[:supplier]
+      if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @receipt_notes = @supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier)
+        @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : @supplier.purchase_orders.unbilled(@supplier.organization_id, true)
+      else
+        @receipt_notes = receipts_dropdown
+        @purchase_orders = unbilled_purchase_orders_dropdown
+      end
+      # Notes array
+      @notes_dropdown = notes_array(@receipt_notes)
+      # Orders array
+      @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
+      # Setup JSON
+      @json_data = { "note" => @notes_dropdown, "order" => @purchase_orders_dropdown }
+      render json: @json_data
     end
 
     # Update receipt note select at view from supplier select
@@ -105,14 +129,12 @@ module Ag2Purchase
       charge_account_id = 0
       store_id = 0
       payment_method_id = 0
-      work_order_full_name = ''
-      charge_account_full_name = ''
       if o != '0'
         @receipt_note = ReceiptNote.find(o)
         @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
-        @projects = @receipt_note.blank? ? projects_dropdown : Project.where(id: @receipt_note.project)
-        @work_orders = @receipt_note.blank? ? work_orders_dropdown : WorkOrder.where(id: @receipt_note.work_order)
-        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : ChargeAccount.where(id: @receipt_note.charge_account)
+        @projects = @receipt_note.blank? ? projects_dropdown : @receipt_note.project
+        @work_orders = @receipt_note.blank? ? work_orders_dropdown : @receipt_note.work_order
+        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
         @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
         @payment_methods = @receipt_note.blank? ? payment_methods_dropdown : @receipt_note.payment_method
         if @note_items.blank?
@@ -120,17 +142,9 @@ module Ag2Purchase
         else
           @products = @receipt_note.products.group(:product_code)
         end
-        if @projects.count == 1
-          project_id = @projects.first.id rescue 0
-        end
-        if @work_orders.count == 1
-          work_order_id = @work_orders.first.id rescue 0
-          work_order_full_name = @work_orders.first.full_name rescue " "
-        end
-        if @charge_accounts.count == 1
-          charge_account_id = @charge_accounts.first.id rescue 0
-          charge_account_full_name = @charge_accounts.first.full_name rescue " "
-        end
+        project_id = @projects.first.id rescue 0
+        work_order_id = @work_orders.first.id rescue 0
+        charge_account_id = @charge_accounts.first.id rescue 0
         store_id = @stores.id rescue 0
         payment_method_id = @payment_methods.id rescue 0
       else
@@ -142,8 +156,6 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
-      # Projects string for Account Select2 at view
-      @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       # Work orders array
       @orders_dropdown = work_orders_array(@work_orders)
       # Note items array
@@ -156,8 +168,58 @@ module Ag2Purchase
                      "payment_method" => @payment_methods, "product" => @products_dropdown,
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
-                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown,
-                     "worder" => work_order_full_name, "caccount" => charge_account_full_name }
+                     "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown }
+      render json: @json_data
+    end
+
+    # Update selects at view from purchase order
+    def si_update_selects_from_order
+      o = params[:o]
+      project_id = 0
+      work_order_id = 0
+      charge_account_id = 0
+      store_id = 0
+      payment_method_id = 0
+      if o != '0'
+        @purchase_order = PurchaseOrder.find(o)
+        @order_items = @purchase_order.blank? ? [] : order_items_dropdown(@purchase_order)
+        @projects = @purchase_order.blank? ? projects_dropdown : @purchase_order.project
+        @work_orders = @purchase_order.blank? ? work_orders_dropdown : @purchase_order.work_order
+        @charge_accounts = @purchase_order.blank? ? charge_accounts_dropdown : @purchase_order.charge_account
+        @stores = @purchase_order.blank? ? stores_dropdown : @purchase_order.store
+        @payment_methods = @purchase_order.blank? ? payment_methods_dropdown : @purchase_order.payment_method
+        if @order_items.blank?
+          @products = @purchase_order.blank? ? products_dropdown : @purchase_order.organization.products.order(:product_code)
+        else
+          @products = @purchase_order.products.group(:product_code)
+        end
+        project_id = @projects.first.id rescue 0
+        work_order_id = @work_orders.first.id rescue 0
+        charge_account_id = @charge_accounts.first.id rescue 0
+        store_id = @stores.id rescue 0
+        payment_method_id = @payment_methods.id rescue 0
+      else
+        @order_items = []
+        @projects = projects_dropdown
+        @work_orders = work_orders_dropdown
+        @charge_accounts = charge_accounts_dropdown
+        @stores = stores_dropdown
+        @payment_methods = payment_methods_dropdown
+        @products = products_dropdown
+      end
+      # Work orders array
+      @orders_dropdown = work_orders_array(@work_orders)
+      # Purchase order items array
+      @order_items_dropdown = order_items_array(@order_items)
+      # Products array
+      @products_dropdown = products_array(@products)
+      # Setup JSON
+      @json_data = { "project" => @projects, "work_order" => @orders_dropdown,
+                     "charge_account" => @charge_accounts, "store" => @stores,
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
+                     "project_id" => project_id, "work_order_id" => work_order_id,
+                     "charge_account_id" => charge_account_id, "store_id" => store_id,
+                     "payment_method_id" => payment_method_id, "note_item" => @order_items_dropdown }
       render json: @json_data
     end
 
@@ -174,6 +236,19 @@ module Ag2Purchase
       render json: @json_data
     end
 
+    # Update product select at view from purchase order item
+    def si_update_product_select_from_order_item
+      i = params[:i]
+      product_id = 0
+      if i != '0'
+        @item = PurchaseOrderItem.find(i)
+        product_id = @item.blank? ? 0 : @item.product_id
+      end
+      # Setup JSON
+      @json_data = { "product" => product_id }
+      render json: @json_data
+    end
+
     # Is quantity greater than item unbilled balance?
     def si_item_balance_check
       i = params[:i]
@@ -182,6 +257,25 @@ module Ag2Purchase
       alert = ""
       if i != '0'
         bal = ReceiptNoteItem.find(i).balance rescue 0
+        if qty > bal
+          qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+          alert = I18n.t("activerecord.models.supplier_invoice_item.quantity_greater_than_balance", qty: qty, bal: bal)
+        end
+      end
+      # Setup JSON
+      @json_data = { "alert" => alert }
+      render json: @json_data
+    end
+
+    # Is quantity greater than item unbilled (purchase order) balance?
+    def si_purchase_order_item_balance_check
+      i = params[:i]
+      qty = params[:qty].to_f / 10000
+      bal = 0
+      alert = ""
+      if i != '0'
+        bal = PurchaseOrderItem.find(i).balance rescue 0
         if qty > bal
           qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
           bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
@@ -409,27 +503,20 @@ module Ag2Purchase
     def si_update_charge_account_from_project
       project = params[:order]
       projects = projects_dropdown
-      work_order_full_name = ''
-      charge_account_full_name = ''
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
-        projects = Project.where(id: project)
       else
         @work_order = work_orders_dropdown
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
-      # Projects string for Account Select2 at view
-      @search_projects = projects.map{ |p| p.id }.map(&:inspect).join(',')
       # Work orders array
       @orders_dropdown = work_orders_array(@work_order)
       # Setup JSON
-      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account,
-                     "store" => @store, "worder" => work_order_full_name,
-                     "caccount" => charge_account_full_name }
+      @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account, "store" => @store }
       render json: @json_data
     end
 
@@ -474,6 +561,7 @@ module Ag2Purchase
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : payment_payment_methods(@organization.id)
         @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @companies = @organization.blank? ? companies_dropdown : companies_dropdown_edit(@organization)
       else
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
@@ -482,6 +570,7 @@ module Ag2Purchase
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
+        @companies = companies_dropdown
       end
       # Work orders array
       @orders_dropdown = work_orders_array(@work_orders)
@@ -490,7 +579,8 @@ module Ag2Purchase
       # Setup JSON
       @json_data = { "supplier" => @suppliers, "project" => @projects, "work_order" => @orders_dropdown,
                      "charge_account" => @charge_accounts, "store" => @stores,
-                     "payment_method" => @payment_methods, "product" => @products_dropdown }
+                     "payment_method" => @payment_methods, "product" => @products_dropdown,
+                     "company" => @companies }
       render json: @json_data
     end
 
@@ -986,9 +1076,7 @@ module Ag2Purchase
       @projects = projects_dropdown
       @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       @work_orders = work_orders_dropdown
-      @work_order = " "
       @charge_accounts = projects_charge_accounts(@projects)
-      @charge_account = " "
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
@@ -1015,10 +1103,8 @@ module Ag2Purchase
       @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
       @projects = projects_dropdown_edit(@supplier_invoice.project)
       @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
-      # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
-      @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
-      # @charge_accounts = work_order_charge_account(@supplier_invoice)
-      @charge_account = @supplier_invoice.charge_account.blank? ? " " : @supplier_invoice.charge_account.full_name
+      @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+      @charge_accounts = work_order_charge_account(@supplier_invoice)
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
@@ -1062,10 +1148,8 @@ module Ag2Purchase
           @receipt_notes = receipts_dropdown
           @projects = projects_dropdown
           @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
-          # @work_orders = work_orders_dropdown
-          @work_order = " "
-          # @charge_accounts = projects_charge_accounts(@projects)
-          @charge_account = " "
+          @work_orders = work_orders_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
@@ -1163,10 +1247,8 @@ module Ag2Purchase
             @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
             @projects = projects_dropdown_edit(@supplier_invoice.project)
             @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
-            # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
-            @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
-            # @charge_accounts = work_order_charge_account(@supplier_invoice)
-            @charge_account = @supplier_invoice.charge_account.blank? ? " " : @supplier_invoice.charge_account.full_name
+            @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
+            @charge_accounts = work_order_charge_account(@supplier_invoice)
             @stores = work_order_store(@supplier_invoice)
             @suppliers = suppliers_dropdown
             @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
@@ -1410,6 +1492,10 @@ module Ag2Purchase
 
     def order_items_dropdown(_order)
       _order.purchase_order_items.joins(:purchase_order_item_balance).where('purchase_order_item_balances.balance > ?', 0)
+    end
+
+    def unbilled_order_items_dropdown(_order)
+      _order.purchase_order_items.joins(:purchase_order_item_invoiced_balances).where('purchase_order_item_invoiced_balances.balance > ?', 0)
     end
 
     def charge_accounts_dropdown
