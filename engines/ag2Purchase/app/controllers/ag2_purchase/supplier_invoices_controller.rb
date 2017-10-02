@@ -106,10 +106,11 @@ module Ag2Purchase
       store_id = 0
       payment_method_id = 0
       work_order_full_name = ''
+      charge_account_full_name = ''
       if o != '0'
         @receipt_note = ReceiptNote.find(o)
         @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
-        @projects = @receipt_note.blank? ? projects_dropdown : @receipt_note.project
+        @projects = @receipt_note.blank? ? projects_dropdown : Project.where(id: @receipt_note.project)
         @work_orders = @receipt_note.blank? ? work_orders_dropdown : WorkOrder.where(id: @receipt_note.work_order)
         @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
         @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
@@ -119,12 +120,17 @@ module Ag2Purchase
         else
           @products = @receipt_note.products.group(:product_code)
         end
-        project_id = @projects.id rescue 0
+        if @projects.count == 1
+          project_id = @projects.id rescue 0
+        end
         if @work_orders.count == 1
           work_order_id = @work_orders.first.id rescue 0
           work_order_full_name = @work_orders.first.full_name rescue " "
         end
-        charge_account_id = @charge_accounts.id rescue 0
+        if @charge_accounts.count == 1
+          charge_account_id = @charge_accounts.id rescue 0
+          charge_account_full_name = @charge_accounts.first.full_name rescue " "
+        end
         store_id = @stores.id rescue 0
         payment_method_id = @payment_methods.id rescue 0
       else
@@ -136,6 +142,8 @@ module Ag2Purchase
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
       end
+      # Projects string for Account Select2 at view
+      @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       # Work orders array
       @orders_dropdown = work_orders_array(@work_orders)
       # Note items array
@@ -149,7 +157,7 @@ module Ag2Purchase
                      "project_id" => project_id, "work_order_id" => work_order_id,
                      "charge_account_id" => charge_account_id, "store_id" => store_id,
                      "payment_method_id" => payment_method_id, "note_item" => @note_items_dropdown,
-                     "worder" => work_order_full_name }
+                     "worder" => work_order_full_name, "caccount" => charge_account_full_name }
       render json: @json_data
     end
 
@@ -402,21 +410,26 @@ module Ag2Purchase
       project = params[:order]
       projects = projects_dropdown
       work_order_full_name = ''
+      charge_account_full_name = ''
       if project != '0'
         @project = Project.find(project)
         @work_order = @project.blank? ? work_orders_dropdown : @project.work_orders.order(:order_no)
         @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
         @store = project_stores(@project)
+        projects = Project.where(id: project)
       else
         @work_order = work_orders_dropdown
         @charge_account = projects_charge_accounts(projects)
         @store = stores_dropdown
       end
+      # Projects string for Account Select2 at view
+      @search_projects = projects.map{ |p| p.id }.map(&:inspect).join(',')
       # Work orders array
       @orders_dropdown = work_orders_array(@work_order)
       # Setup JSON
       @json_data = { "work_order" => @orders_dropdown, "charge_account" => @charge_account,
-                     "store" => @store, "worder" => work_order_full_name }
+                     "store" => @store, "worder" => work_order_full_name,
+                     "caccount" => charge_account_full_name }
       render json: @json_data
     end
 
@@ -970,9 +983,11 @@ module Ag2Purchase
       destroy_attachment
       @receipt_notes = receipts_dropdown
       @projects = projects_dropdown
+      @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       # @work_orders = work_orders_dropdown
       @work_order = " "
-      @charge_accounts = projects_charge_accounts(@projects)
+      # @charge_accounts = projects_charge_accounts(@projects)
+      @charge_account = " "
       @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
@@ -998,9 +1013,11 @@ module Ag2Purchase
       # _form ivars
       @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
       @projects = projects_dropdown_edit(@supplier_invoice.project)
+      @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
       @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
-      @charge_accounts = work_order_charge_account(@supplier_invoice)
+      # @charge_accounts = work_order_charge_account(@supplier_invoice)
+      @charge_account = @supplier_invoice.charge_account.blank? ? " " : @supplier_invoice.charge_account.full_name
       @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
@@ -1043,9 +1060,11 @@ module Ag2Purchase
           $attachment = Attachment.new
           @receipt_notes = receipts_dropdown
           @projects = projects_dropdown
+          @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
           # @work_orders = work_orders_dropdown
           @work_order = " "
-          @charge_accounts = projects_charge_accounts(@projects)
+          # @charge_accounts = projects_charge_accounts(@projects)
+          @charge_account = " "
           @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
@@ -1142,9 +1161,11 @@ module Ag2Purchase
             $attachment = Attachment.new
             @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : @supplier_invoice.supplier.receipt_notes.unbilled(@supplier_invoice.organization_id, true)
             @projects = projects_dropdown_edit(@supplier_invoice.project)
+            @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
             # @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
             @work_order = @supplier_invoice.work_order.blank? ? " " : @supplier_invoice.work_order.full_name
-            @charge_accounts = work_order_charge_account(@supplier_invoice)
+            # @charge_accounts = work_order_charge_account(@supplier_invoice)
+            @charge_account = @supplier_invoice.charge_account.blank? ? " " : @supplier_invoice.charge_account.full_name
             @stores = work_order_store(@supplier_invoice)
             @suppliers = suppliers_dropdown
             @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)

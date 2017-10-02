@@ -19,9 +19,9 @@
     }
   }
 
-  function setupAllSelect2(c) {
-    wordersSelect2ForNew(c, 0);
-    // subscribersSelect2ForNew(s, 0);
+  function setupAllSelect2(w, c) {
+    wordersSelect2ForNew(w, 0);
+    caccountsSelect2ForNew(c);
     // metersSelect2ForNew(m, 0);
   }
 
@@ -56,20 +56,15 @@
     });
   }
 
-  function subscribersSelect2ForNew(intialValue, searchedClient) {
-    var target_url = "/search_subscribers";
-    if (searchedClient > 0) {
-      target_url = "/search_client_subscribers?client=" + searchedClient
-    }
-    $('#Subscriber').select2({
+  function caccountsSelect2ForNew(intialValue) {
+    $('#Account').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        // url: "/search_subscribers",
-        url: target_url,
+        url: "/search_projects_expenditure_charge_accounts?projects=<%= @search_projects %>",
         dataType: "json",
         delay: 250,
         data: function(term, page) {
@@ -87,37 +82,6 @@
       }
     });
   }
-
-  function metersSelect2ForNew(intialValue, searchedSubscriber) {
-    var target_url = "/search_meters";
-    if (searchedSubscriber > 0) {
-      target_url = "/search_subscriber_meter?subscriber=" + searchedSubscriber
-    }
-    $('#Meter').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: target_url,
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return { 
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }  
   
   $(document).ready(function() {
     $('select.sel2').select2({
@@ -137,7 +101,7 @@
     dd_import_files('#dd_files', '#image_content', 'si_update_attachment');
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @work_order %>");
+    setupAllSelect2("<%= @work_order %>", "<%= @charge_account %>");
 
     // Save default text color
     text_field_color = $("#supplier_invoice_invoice_no").css('color')
@@ -420,21 +384,22 @@
         // }
         // if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
         // Charge account
-        $("#supplier_invoice_charge_account_id").html("");
-        $("#supplier_invoice_charge_account_id").select2("val", "");
-        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
-        if (!h.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(h, function(id, option) {
-            $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
-        if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        caccountsSelect2ForNew(data.caccount);
+        // $("#supplier_invoice_charge_account_id").html("");
+        // $("#supplier_invoice_charge_account_id").select2("val", "");
+        // $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
+        // if (!h.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'charge_account' && option != "") {
+        //       $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+        //     }
+        //   });
+        // } else {
+        //   $.each(h, function(id, option) {
+        //     $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+        //   });
+        // }
+        // if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -505,20 +470,21 @@
         //   });
         // }
         // Charge Account
-        $("#supplier_invoice_charge_account_id").html("");
-        $("#supplier_invoice_charge_account_id").select2("val", "");
-        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
+        caccountsSelect2ForNew(data.caccount);
+        // $("#supplier_invoice_charge_account_id").html("");
+        // $("#supplier_invoice_charge_account_id").select2("val", "");
+        // $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
+        // if (!c.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'charge_account' && option != "") {
+        //       $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+        //     }
+        //   });
+        // } else {
+        //   $.each(c, function(id, option) {
+        //     $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+        //   });
+        // }
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -707,7 +673,11 @@
   </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <%#= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <%= label_tag "label_caccount", t("activerecord.attributes.supplier_invoice.charge_account"), :class => 'form-label' %>
+    <%= text_field_tag "Account", params[:Account], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+  </label>
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <!-- Items -->
