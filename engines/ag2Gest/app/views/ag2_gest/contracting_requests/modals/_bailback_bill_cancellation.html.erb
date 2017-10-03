@@ -63,7 +63,13 @@
 
     var net_price = parseFloat(_price) - parseFloat(_discount);
     var amount =  parseFloat(_quantity) * net_price;
-    var bonus;
+    var tax;
+
+    if (_tax == undefined){
+      tax = 0;
+    } else {
+      tax = (parseFloat(_tax)/100) * amount;
+    }
 
     if (_discountpct == undefined){
       bonus = 0;
@@ -71,7 +77,7 @@
       bonus = (parseFloat(_discountpct)/100) * amount;
     }
 
-    var total = amount - bonus;
+    var total = (amount - bonus) + tax;
 
     $(`.total_f${_id}`).get(0).innerHTML = total.toFixed(2);
     $(`.td-amount-f${_id}`).get(0).innerHTML = amount.toFixed(2);

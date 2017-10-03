@@ -15,8 +15,8 @@
     $('#fnt-receipt-note').val(_rn);
     // Purchase Order
     $("#fnt-purchase-order").html("");
-    $('#supplier_invoice_receipt_note_id option').clone().appendTo('#fnt-purchase-order');
-    var _po = $('#supplier_invoice_receipt_note_id :selected').val();
+    $('#supplier_invoice_purchase_order_id option').clone().appendTo('#fnt-purchase-order');
+    var _po = $('#supplier_invoice_purchase_order_id :selected').val();
     if (_po == "") _po = "0";
     $('#fnt-purchase-order').val(_po);
     // Project
@@ -357,6 +357,130 @@
       //return false;
     });
 
+    // when the #fnt-purchase_order field changes
+    $("#fnt-purchase_order").change(function() {
+      // make a POST call and replace the content
+      var o = $('select#fnt-purchase_order :selected').val();
+      if (o == "")
+        o = "0";
+      jQuery.getJSON('si_update_selects_from_order/' + o, function(data) {
+        var p = data.project;
+        var w = data.work_order;
+        var h = data.charge_account
+        var s = data.store
+        var m = data.payment_method
+        var prods = data.product
+        var p_id = data.project_id;
+        var w_id = data.work_order_id;
+        var c_id = data.charge_account_id;
+        var s_id = data.store_id;
+        var m_id = data.payment_method_id;
+        var i = data.note_item
+        // Project
+        $("#fnt-project").html("");
+        $("#fnt-project").select2("val", "");
+        $("#fnt-project").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#fnt-project").append($('<option></option>').val(option.id).html(option.project_code.substring(0,3) + "-" + option.project_code.substring(3,6) + "-" + option.project_code.substring(6,12) + " " + option.name));
+          });
+        }
+        if (p_id != 0) $("#fnt-project").select2("val", p_id);
+        // Work order
+        $("#fnt-work-order").html("");
+        $("#fnt-work-order").select2("val", "");
+        $("#fnt-work-order").append($('<option></option>').val("").html(""));
+        if (!w.length) {
+          $.each(data, function(id, option) {
+            if (id == 'work_order' && option != "") {
+              $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(w, function(id, option) {
+            $("#fnt-work-order").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (w_id != 0) $("#fnt-work-order").select2("val", w_id);
+        // Charge account
+        $("#fnt-charge-account").html("");
+        $("#fnt-charge-account").select2("val", "");
+        $("#fnt-charge-account").append($('<option></option>').val("").html(""));
+        if (!h.length) {
+          $.each(data, function(id, option) {
+            if (id == 'charge_account' && option != "") {
+              $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+            }
+          });
+        } else {
+          $.each(h, function(id, option) {
+            $("#fnt-charge-account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
+          });
+        }
+        if (c_id != 0) $("#fnt-charge-account").select2("val", c_id);
+        // Store
+        /*
+        $("#fnt-store").html("");
+        $("#fnt-store").select2("val", "");
+        $("#fnt-store").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'store' && option != "") {
+              $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+            }
+          });
+        } else {
+          $.each(s, function(id, option) {
+            $("#fnt-store").append($('<option></option>').val(option.id).html(option.name));
+          });
+        }
+        if (s_id != 0) $("#fnt-store").select2("val", s_id);
+        */
+        // Product
+        $("#fnt-product").html("");
+        $("#fnt-product").select2("val", "");
+        $("#fnt-product").append($('<option></option>').val("").html(""));
+        if (!prods.length) {
+          $.each(data, function(id, option) {
+            if (id == 'product' && option != "") {
+              $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+            }
+          });
+        } else {
+          $.each(prods, function(id, option) {
+            $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
+          });
+        }
+        // Note item
+        $("#fnt-purchase-order-item").html("");
+        $("#fnt-purchase-order-item").select2("val", "");
+        $("#fnt-purchase-order-item").append($('<option></option>').val("").html(""));
+        if (!i.length) {
+          $.each(data, function(id, option) {
+            if (id == 'note_item' && option != "") {
+              $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+            }
+          });
+        } else {
+          $.each(i, function(id, option) {
+            $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+          });
+        }
+      });
+      // Order not selected
+      if (o == "0") {
+        $("#fnt-project").val(0);
+        $("#fnt-project").trigger("change");
+      }
+      //return false;
+    });
+
     // when the #fnt-receipt-note-item field changes
     $("#fnt-receipt-note-item").change(function() {
       // make a POST call and replace the content
@@ -364,6 +488,21 @@
       if (i == "")
         i = "0";
       jQuery.getJSON('si_update_product_select_from_note_item/' + i, function(data) {
+        var p_id = data.product;
+        // Product
+        if (p_id != 0) $("#fnt-product").select2("val", p_id);
+        $("#fnt-product").trigger("change");
+      });
+      return false;
+    });
+
+    // when the #fnt-purchase-order-item field changes
+    $("#fnt-purchase-order-item").change(function() {
+      // make a POST call and replace the content
+      var i = $('select#fnt-purchase-order-item :selected').val();
+      if (i == "")
+        i = "0";
+      jQuery.getJSON('si_update_product_select_from_order_item/' + i, function(data) {
         var p_id = data.product;
         // Product
         if (p_id != 0) $("#fnt-product").select2("val", p_id);

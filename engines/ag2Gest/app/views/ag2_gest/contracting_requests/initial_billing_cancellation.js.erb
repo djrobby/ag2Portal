@@ -300,6 +300,13 @@ $(document).ready(function() {
     var net_price = parseFloat(_price) - parseFloat(_discount);
     var amount =  parseFloat(_quantity) * net_price;
     var bonus;
+    var tax;
+
+    if (_tax == undefined){
+      tax = 0;
+    } else {
+      tax = (parseFloat(_tax)/100) * amount;
+    }
 
     if (_discountpct == undefined){
       bonus = 0;
@@ -307,7 +314,7 @@ $(document).ready(function() {
       bonus = (parseFloat(_discountpct)/100) * amount;
     }
 
-    var total = amount - bonus;
+    var total = (amount - bonus) + tax;
 
     $(`.total${_id}`).get(0).innerHTML = total.toFixed(2);
     $(`.td-amount${_id}`).get(0).innerHTML = amount.toFixed(2);
@@ -475,6 +482,13 @@ $(document).ready(function() {
     var net_price = parseFloat(_price) - parseFloat(_discount);
     var amount =  parseFloat(_quantity) * net_price;
     var bonus;
+    var tax;
+
+    if (_tax == undefined){
+      tax = 0;
+    } else {
+      tax = (parseFloat(_tax)/100) * amount;
+    }
 
     if (_discountpct == undefined){
       bonus = 0;
@@ -482,7 +496,7 @@ $(document).ready(function() {
       bonus = (parseFloat(_discountpct)/100) * amount;
     }
 
-    var total = amount - bonus;
+    var total = (amount - bonus) + tax;
 
     $(`.total_u${_id}`).get(0).innerHTML = total.toFixed(2);
     $(`.td-amount-u${_id}`).get(0).innerHTML = amount.toFixed(2);
@@ -650,6 +664,13 @@ $(document).ready(function() {
     var net_price = parseFloat(_price) - parseFloat(_discount);
     var amount =  parseFloat(_quantity) * net_price;
     var bonus;
+    var tax;
+
+    if (_tax == undefined){
+      tax = 0;
+    } else {
+      tax = (parseFloat(_tax)/100) * amount;
+    }
 
     if (_discountpct == undefined){
       bonus = 0;
@@ -657,7 +678,7 @@ $(document).ready(function() {
       bonus = (parseFloat(_discountpct)/100) * amount;
     }
 
-    var total = amount - bonus;
+    var total = (amount - bonus) + tax;
 
     $(`.total_b${_id}`).get(0).innerHTML = total.toFixed(2);
     $(`.td-amount-b${_id}`).get(0).innerHTML = amount.toFixed(2);

@@ -32,6 +32,7 @@ module Ag2Purchase
                                                :si_current_stock,
                                                :si_update_project_textfields_from_organization,
                                                :si_update_product_select_from_organization,
+                                               :si_update_selects_from_company,
                                                :si_current_balance,
                                                :si_current_balance_order,
                                                :si_generate_invoice,
@@ -131,12 +132,21 @@ module Ag2Purchase
       payment_method_id = 0
       if o != '0'
         @receipt_note = ReceiptNote.find(o)
-        @note_items = @receipt_note.blank? ? [] : note_items_dropdown(@receipt_note)
-        @projects = @receipt_note.blank? ? projects_dropdown : @receipt_note.project
-        @work_orders = @receipt_note.blank? ? work_orders_dropdown : @receipt_note.work_order
-        @charge_accounts = @receipt_note.blank? ? charge_accounts_dropdown : @receipt_note.charge_account
-        @stores = @receipt_note.blank? ? stores_dropdown : @receipt_note.store
-        @payment_methods = @receipt_note.blank? ? payment_methods_dropdown : @receipt_note.payment_method
+        if @receipt_note.blank?
+          @note_items = []
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @stores = stores_dropdown
+          @payment_methods = payment_methods_dropdown
+        else
+          @note_items = note_items_dropdown(@receipt_note)
+          @projects = @receipt_note.project.blank? ? [] : Project.where(id: @receipt_note.project.id)
+          @work_orders = @receipt_note.work_order.blank? ? [] : WorkOrder.where(id: @receipt_note.work_order.id)
+          @charge_accounts = @receipt_note.charge_account.blank? ? [] : ChargeAccount.where(id: @receipt_note.charge_account.id)
+          @stores = @receipt_note.store
+          @payment_methods = @receipt_note.payment_method
+        end
         if @note_items.blank?
           @products = @receipt_note.blank? ? products_dropdown : @receipt_note.organization.products.order(:product_code)
         else
@@ -157,7 +167,7 @@ module Ag2Purchase
         @products = products_dropdown
       end
       # Work orders array
-      @orders_dropdown = work_orders_array(@work_orders)
+      @orders_dropdown = @work_orders.blank? ? [] : work_orders_array(@work_orders)
       # Note items array
       @note_items_dropdown = note_items_array(@note_items)
       # Products array
@@ -182,12 +192,21 @@ module Ag2Purchase
       payment_method_id = 0
       if o != '0'
         @purchase_order = PurchaseOrder.find(o)
-        @order_items = @purchase_order.blank? ? [] : order_items_dropdown(@purchase_order)
-        @projects = @purchase_order.blank? ? projects_dropdown : @purchase_order.project
-        @work_orders = @purchase_order.blank? ? work_orders_dropdown : @purchase_order.work_order
-        @charge_accounts = @purchase_order.blank? ? charge_accounts_dropdown : @purchase_order.charge_account
-        @stores = @purchase_order.blank? ? stores_dropdown : @purchase_order.store
-        @payment_methods = @purchase_order.blank? ? payment_methods_dropdown : @purchase_order.payment_method
+        if @purchase_order.blank?
+          @order_items = []
+          @projects = projects_dropdown
+          @work_orders = work_orders_dropdown
+          @charge_accounts = charge_accounts_dropdown
+          @stores = stores_dropdown
+          @payment_methods = payment_methods_dropdown
+        else
+          @order_items = order_items_dropdown(@purchase_order)
+          @projects = @purchase_order.project.blank? ? [] : Project.where(id: @purchase_order.project.id)
+          @work_orders = @purchase_order.work_order.blank? ? [] : WorkOrder.where(id: @purchase_order.work_order.id)
+          @charge_accounts = @purchase_order.charge_account.blank? ? [] : ChargeAccount.where(id: @purchase_order.charge_account.id)
+          @stores = @purchase_order.store
+          @payment_methods = @purchase_order.payment_method
+        end
         if @order_items.blank?
           @products = @purchase_order.blank? ? products_dropdown : @purchase_order.organization.products.order(:product_code)
         else
@@ -208,7 +227,7 @@ module Ag2Purchase
         @products = products_dropdown
       end
       # Work orders array
-      @orders_dropdown = work_orders_array(@work_orders)
+      @orders_dropdown = @work_orders.blank? ? [] : work_orders_array(@work_orders)
       # Purchase order items array
       @order_items_dropdown = order_items_array(@order_items)
       # Products array
@@ -597,6 +616,20 @@ module Ag2Purchase
       @products_dropdown = products_array(@products)
       # Setup JSON
       @json_data = { "product" => @products_dropdown }
+      render json: @json_data
+    end
+
+    # Update selects at view from company select
+    def si_update_selects_from_company
+      company = params[:org]
+      if company != '0'
+        @company = Company.find(company)
+        @projects = @company.blank? ? projects_dropdown : @company.projects.order(:project_code)
+      else
+        @projects = projects_dropdown
+      end
+      # Setup JSON
+      @json_data = { "project" => @projects }
       render json: @json_data
     end
 
@@ -1156,6 +1189,7 @@ module Ag2Purchase
           # @products = products_dropdown
           # @note_items = []
           @users = User.where('id = ?', current_user.id)
+          @companies = companies_dropdown
           format.html { render action: "new" }
           format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
         end
@@ -1265,6 +1299,7 @@ module Ag2Purchase
             @is_approver = company_approver(@supplier_invoice, @supplier_invoice.project.company, current_user.id) ||
                            office_approver(@supplier_invoice, @supplier_invoice.project.office, current_user.id) ||
                            (current_user.has_role? :Approver)
+            @companies = @supplier_invoice.organization.blank? ? companies_dropdown : companies_dropdown_edit(@supplier_invoice.organization)
             format.html { render action: "edit" }
             format.json { render json: @supplier_invoice.errors, status: :unprocessable_entity }
           end
