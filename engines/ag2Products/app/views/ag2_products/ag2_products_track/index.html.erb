@@ -272,8 +272,8 @@
           var status = $('select#Status :selected').val();
           var petitioner = $('select#User :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
-            return;
+          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
+          //   return;
           if (detailed == ""){
           	window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
           }else {
@@ -290,8 +290,8 @@
           var status = $('select#Status :selected').val();
           var petitioner = $('select#User :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
-            return;
+          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
+          //   return;
           if (detailed == ""){
             window.open("order_pending_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
           }else {
@@ -307,8 +307,8 @@
           var account = $('select#Account :selected').val();
           var balance = $('select#Balance :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
-            return;
+          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
+          //   return;
           if (detailed == ""){
           	window.open("receipt_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  "_blank");
           }else {
@@ -322,8 +322,8 @@
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
      //mj var product = $('select#Product :selected').val();
-          if ((project == "") && (store == "") && (order == "") && (account == ""))
-            return;
+          // if ((project == "") && (store == "") && (order == "") && (account == ""))
+          //   return;
           if (detailed == ""){
          	window.open("delivery_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
           }else {

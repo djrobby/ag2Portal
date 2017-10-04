@@ -139,6 +139,7 @@ var si_rowBuilder = function() {
                   id === 'fnt-work-order' || id === 'fnt-project' ||
                   id === 'fnt-charge-account' || id === 'fnt-store' ||
                   id === 'fnt-receipt-note' || id === 'fnt-receipt-note-item' ||
+                  id === 'fnt-purchase-order' || id === 'fnt-purchase-order-item' ||
                   id === 'fnt-tax-type') {
                   td = $('<td style="display:none;"/>').append($(this));
                 }
@@ -150,39 +151,6 @@ var si_rowBuilder = function() {
               // Add new column(s) to row
               td.appendTo(newRow);
             }
-/*
-            var id = '';
-            var css = '';
-            // Add only if not select2 link
-            if (this.id.indexOf("s2") == -1) {
-              // Apply CSS
-              id = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select isel2';
-              if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
-              if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
-              if (css === '') css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("isel2") == -1) css = css + ' sub-bordered-input';
-              css = css + ' string ' + id;
-              $(this).removeAttr('class');
-              $(this).removeAttr('id');
-              $(this).addClass(css);
-              // Add new column to row...
-              var td = $('<td/>').append($(this));
-              // ...hiding this if applicable
-              if (id === 'fnt-code' || id === 'fnt-delivery-date' ||
-                id === 'fnt-work-order' || id === 'fnt-project' ||
-                id === 'fnt-charge-account' || id === 'fnt-store' ||
-                id === 'fnt-receipt-note' || id === 'fnt-receipt-note-item' ||
-                id === 'fnt-tax-type') {
-                td = $('<td style="display:none;"/>').append($(this));
-              }
-              // If destroy field, add delete link also
-              if (id.indexOf("_destroy") != -1) {
-                var td = $('<td/>').append($(this), newLink);
-              }
-              td.appendTo(newRow);
-            }
-*/
         });
 
         return newRow;

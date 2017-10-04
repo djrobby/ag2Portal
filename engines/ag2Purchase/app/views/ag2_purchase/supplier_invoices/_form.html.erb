@@ -358,7 +358,7 @@
       var supplier = $('select#supplier_invoice_supplier_id :selected').val();
       if (supplier == "")
         supplier = "0";
-      jQuery.getJSON('si_update_receipt_and_order_select_from_supplier/' + supplier, function(data) {
+      jQuery.getJSON('si_update_receipt_and_order_select_from_supplier/' + supplier , function(data) {
         var o = data.note;
         var p = data.order;
         // Receipt note

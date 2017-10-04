@@ -22,8 +22,8 @@
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.posted_at' %>:</td>
       <td><%= formatted_date(@supplier_invoice.posted_at) unless @supplier_invoice.posted_at.blank? %></td>
-      <td><%=t 'activerecord.attributes.supplier_invoice.receipt_note' %>:</td>
-      <td><%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %></td>
+      <td><%=t 'activerecord.attributes.supplier_invoice.charge_account' %>:</td>
+      <td><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.supplier_invoice.supplier' %>:</td>
@@ -38,8 +38,8 @@
       <td><%= @supplier_invoice.work_order.full_name unless @supplier_invoice.work_order.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.supplier_invoice.charge_account' %>:</td>
-      <td><%= @supplier_invoice.charge_account.full_name unless @supplier_invoice.charge_account.blank? %> </td>
+      <td><%=t 'activerecord.attributes.supplier_invoice.receipt_note' %>:</td>
+      <td><%= @supplier_invoice.receipt_note.receipt_no unless @supplier_invoice.receipt_note.blank? %></td>
       <td><%=t 'activerecord.attributes.supplier_invoice.purchase_order' %>:</td>
       <td><%= @supplier_invoice.purchase_order.full_no unless @supplier_invoice.purchase_order.blank? %></td>
     </tr>

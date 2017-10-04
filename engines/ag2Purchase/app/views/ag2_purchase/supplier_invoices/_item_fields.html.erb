@@ -639,11 +639,16 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var o = $('select#supplier_invoice_receipt_note_id :selected').val();
-    if (o != "" && o != "0") {
-      jQuery.getJSON('si_update_selects_from_note/' + o, function(data) {
+    var o = $('#supplier_invoice_receipt_note_id :selected').val();
+    if (o == "") o = "0";
+    var p = $('#supplier_invoice_purchase_order_id :selected').val();
+    if (p == "") p = "0";
+    if (o != "0" || p != "0") {
+      // receipt note or purchase order
+      jQuery.getJSON('si_update_product_select_from_note_and_order/' + o + '/' + p, function(data) {
         var prods = data.product
         var i = data.note_item
+        var j = data.order_item
         // Product
         $("#fnt-product").html("");
         $("#fnt-product").select2("val", "");
@@ -659,7 +664,7 @@
             $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
           });
         }
-        // Note item
+        // Receipt note item
         $("#fnt-receipt-note-item").html("");
         $("#fnt-receipt-note-item").select2("val", "");
         $("#fnt-receipt-note-item").append($('<option></option>').val("").html(""));
@@ -674,8 +679,24 @@
             $("#fnt-receipt-note-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
           });
         }
+        // Purchase order item
+        $("#fnt-purchase-order-item").html("");
+        $("#fnt-purchase-order-item").select2("val", "");
+        $("#fnt-purchase-order-item").append($('<option></option>').val("").html(""));
+        if (!j.length) {
+          $.each(data, function(id, option) {
+            if (id == 'order_item' && option != "") {
+              $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+            }
+          });
+        } else {
+          $.each(j, function(id, option) {
+            $("#fnt-purchase-order-item").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3] + " " + option[4] + " " + option[5] + " " + option[6] + " " + option[7]));
+          });
+        }
       });
     } else {
+      // all products
       var order = $('select#supplier_invoice_organization_id :selected').val();
       if (order == "")
         order = "0";
@@ -696,6 +717,14 @@
             $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
           });
         }
+        // Receipt note item
+        $("#fnt-receipt-note-item").html("");
+        $("#fnt-receipt-note-item").select2("val", "");
+        $("#fnt-receipt-note-item").append($('<option></option>').val("").html(""));
+        // Purchase order item
+        $("#fnt-purchase-order-item").html("");
+        $("#fnt-purchase-order-item").select2("val", "");
+        $("#fnt-purchase-order-item").append($('<option></option>').val("").html(""));
       });
     }
   }
@@ -712,25 +741,23 @@
     <a href="javascript:scrollToAnchorModal('#fnt-tax');" style="float: right" id="go-bottom"><i class="icon-arrow-down" title="<%=t(:bottom) %>"></i></a>
     <a href="javascript:goToAnchorModal('.fnt-product-label');" style="float: right" id="go-to"><i class="icon-bookmark" title="<%=t(:goto_prod) %>"></i></a>
     <div style="overflow: hidden; padding-left: 0em;">
-      <%#= f.association :receipt_note, collection: @receipt_notes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
-      <%= f.association :receipt_note, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
+      <%= f.association :receipt_note, collection: @receipt_notes, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
+      <%#= f.association :receipt_note, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note' }, label_html: { class: 'form-label' } %>
     </div>
     <%= f.association :receipt_note_item, collection: @note_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note-item' }, label_html: { class: 'form-label' } %>
-
-    <%#= f.association :purchase_order, collection: @purchase_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order' }, label_html: { class: 'form-label' } %>
-    <%= f.association :purchase_order, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order' }, label_html: { class: 'form-label' } %>
+    <%#= f.association :receipt_note_item, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-receipt-note-item' }, label_html: { class: 'form-label' } %>
+    <%= f.association :purchase_order, collection: @purchase_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order' }, label_html: { class: 'form-label' } %>
+    <%#= f.association :purchase_order, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order' }, label_html: { class: 'form-label' } %>
     <%= f.association :purchase_order_item, collection: @order_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order-item' }, label_html: { class: 'form-label' } %>
-
-    <%#= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :project, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-
-    <%#= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
-    <%= f.association :work_order, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
-
-    <%#= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-    <%= f.association :charge_account, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-
+    <%#= f.association :purchase_order_item, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-purchase-order-item' }, label_html: { class: 'form-label' } %>
+    <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%#= f.association :project, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-project', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%= f.association :work_order, collection: @work_orders, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
+    <%#= f.association :work_order, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-work-order' }, label_html: { class: 'form-label' } %>
+    <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+    <%#= f.association :charge_account, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-charge-account', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
+    <%#= f.association :product, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
     <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
