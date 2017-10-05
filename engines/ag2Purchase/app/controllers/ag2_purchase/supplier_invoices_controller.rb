@@ -12,6 +12,8 @@ module Ag2Purchase
                                                :si_update_receipt_select_from_supplier,
                                                :si_update_order_select_from_supplier,
                                                :si_update_receipt_and_order_select_from_supplier,
+                                               :si_update_receipt_and_order_select_from_project,
+                                               :si_update_receipt_and_order_select_from_project_supplier,
                                                :si_update_selects_from_note,
                                                :si_update_selects_from_order,
                                                :si_update_selects_from_note_and_order,
@@ -71,10 +73,75 @@ module Ag2Purchase
       end
     end
 
-    # Update receipt note select at view from supplier select
+    # Update receipt note select at view from project
+    def si_update_receipt_and_order_select_from_project
+      project = params[:order]
+      if project != '0'
+        @project = Project.find(project)
+        @receipt_notes = @project.blank? ? receipts_dropdown : receipts_dropdown_by_project(@project)
+        @purchase_orders = @project.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_project(@project)
+      else
+        @receipt_notes = receipts_dropdown
+        @purchase_orders = unbilled_purchase_orders_dropdown
+      end
+      # Notes array
+      @notes_dropdown = notes_array(@receipt_notes)
+      # Orders array
+      @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
+      # Setup JSON
+      @json_data = { "note" => @notes_dropdown, "order" => @purchase_orders_dropdown }
+      render json: @json_data
+    end
+
+    # Update receipt note select at view from supplier
     def si_update_receipt_and_order_select_from_supplier
       supplier = params[:supplier]
       if supplier != '0'
+        @supplier = Supplier.find(supplier)
+        @receipt_notes = @supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier)
+        @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_supplier(@supplier)
+      else
+        @receipt_notes = receipts_dropdown
+        @purchase_orders = unbilled_purchase_orders_dropdown
+      end
+      # Notes array
+      @notes_dropdown = notes_array(@receipt_notes)
+      # Orders array
+      @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
+      # Setup JSON
+      @json_data = { "note" => @notes_dropdown, "order" => @purchase_orders_dropdown }
+      render json: @json_data
+    end
+
+    # Update receipt note select at view from supplier
+    def si_update_receipt_and_order_select_from_supplier
+      project = params[:order]
+      supplier = params[:supplier]
+      if supplier != '0' && project != '0'
+        @project = Project.find(project)
+        @supplier = Supplier.find(supplier)
+        if @project.blank? && @supplier.blank?
+          # neither project nor supplier
+          @receipt_notes = receipts_dropdown
+          @purchase_orders = unbilled_purchase_orders_dropdown
+        elsif !@project.blank? && @supplier.blank?
+          # project only
+          @receipt_notes = receipts_dropdown_by_project(@project)
+          @purchase_orders = unbilled_purchase_orders_dropdown_by_project(@project)
+        elsif @project.blank? && !@supplier.blank?
+          # supplier only
+          @receipt_notes = receipts_dropdown_by_supplier(@supplier)
+          @purchase_orders = unbilled_purchase_orders_dropdown_by_supplier(@supplier)
+        else
+          # project and supplier
+          @receipt_notes = receipts_dropdown_by_project_supplier(@project, @supplier)
+          @purchase_orders = unbilled_purchase_orders_dropdown_by_project_supplier(@project, @supplier)
+        end
+      elsif project != '0'
+        @project = Project.find(project)
+        @receipt_notes = @project.blank? ? receipts_dropdown : receipts_dropdown_by_project(@project)
+        @purchase_orders = @project.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_project(@project)
+      elsif supplier != '0'
         @supplier = Supplier.find(supplier)
         @receipt_notes = @supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier)
         @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_supplier(@supplier)
@@ -1303,7 +1370,7 @@ module Ag2Purchase
       # @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       @work_orders = work_orders_dropdown
       @charge_accounts = projects_charge_accounts(@projects)
-      @stores = stores_dropdown
+      # @stores = stores_dropdown
       @suppliers = suppliers_dropdown
       @payment_methods = payment_methods_dropdown
       @receipt_notes = []
@@ -1333,7 +1400,7 @@ module Ag2Purchase
       # @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
       @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
       @charge_accounts = work_order_charge_account(@supplier_invoice)
-      @stores = work_order_store(@supplier_invoice)
+      # @stores = work_order_store(@supplier_invoice)
       @suppliers = suppliers_dropdown
       @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
       @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier_invoice.supplier)
@@ -1382,7 +1449,7 @@ module Ag2Purchase
           # @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
           @work_orders = work_orders_dropdown
           @charge_accounts = projects_charge_accounts(@projects)
-          @stores = stores_dropdown
+          # @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
           @receipt_notes = []
@@ -1484,7 +1551,7 @@ module Ag2Purchase
             # @search_projects = @projects.map{ |p| p.id }.map(&:inspect).join(',')
             @work_orders = @supplier_invoice.project.blank? ? work_orders_dropdown : @supplier_invoice.project.work_orders.order(:order_no)
             @charge_accounts = work_order_charge_account(@supplier_invoice)
-            @stores = work_order_store(@supplier_invoice)
+            # @stores = work_order_store(@supplier_invoice)
             @suppliers = suppliers_dropdown
             @payment_methods = @supplier_invoice.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@supplier_invoice.organization_id)
             @receipt_notes = @supplier_invoice.supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier_invoice.supplier)
@@ -1697,6 +1764,10 @@ module Ag2Purchase
       end
     end
 
+    def receipts_dropdown_by_project(_project)
+      ReceiptNote.unbilled_by_project(_project.id)
+    end
+
     def receipts_dropdown_by_supplier(_supplier)
       if session[:office] != '0'
         _supplier.receipt_notes.unbilled_by_office(session[:office].to_i, true)
@@ -1705,6 +1776,10 @@ module Ag2Purchase
       else
         session[:organization] != '0' ? _supplier.receipt_notes.unbilled(session[:organization].to_i, true) : _supplier.receipt_notes.unbilled(nil, true)
       end
+    end
+
+    def receipts_dropdown_by_project_supplier(_project, _supplier)
+      ReceiptNote.unbilled_by_project_supplier(_project.id, _supplier.id, true)
     end
 
     def note_items_dropdown(_note)
@@ -1741,6 +1816,10 @@ module Ag2Purchase
       end
     end
 
+    def unbilled_purchase_orders_dropdown_by_project(_project)
+      PurchaseOrder.unbilled_by_project(_project.id, true)
+    end
+
     def unbilled_purchase_orders_dropdown_by_supplier(_supplier)
       if session[:office] != '0'
         _supplier.purchase_orders.unbilled_by_office(session[:office].to_i, true)
@@ -1748,6 +1827,38 @@ module Ag2Purchase
         _supplier.purchase_orders.unbilled_by_company(session[:company].to_i, true)
       else
         session[:organization] != '0' ? _supplier.purchase_orders.unbilled(session[:organization].to_i, true) : _supplier.purchase_orders.unbilled(nil, true)
+      end
+    end
+
+    def unbilled_purchase_orders_dropdown_by_project_supplier(_project, _supplier)
+      PurchaseOrder.unbilled_by_project_supplier(_project.id, _supplier.id, true)
+    end
+
+    def unbilled_and_undelivered_purchase_orders_dropdown
+      if session[:office] != '0'
+        PurchaseOrder.unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
+      elsif session[:company] != '0'
+        PurchaseOrder.unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
+      elsif session[:organization] != '0'
+        PurchaseOrder.unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
+      else
+        PurchaseOrder.unbilled_and_undelivered(nil, nil, nil, nil)
+      end
+    end
+
+    def unbilled_and_undelivered_purchase_orders_dropdown_by_project(_project)
+      PurchaseOrder.unbilled_and_undelivered(nil, nil, nil, _project.id)
+    end
+
+    def unbilled_and_undelivered_purchase_orders_dropdown_by_supplier(_supplier)
+      if session[:office] != '0'
+        _supplier.purchase_orders.unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
+      elsif session[:company] != '0'
+        _supplier.purchase_orders.unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
+      elsif session[:organization] != '0'
+        _supplier.purchase_orders.unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
+      else
+        _supplier.purchase_orders.unbilled_and_undelivered(nil, nil, nil, nil)
       end
     end
 

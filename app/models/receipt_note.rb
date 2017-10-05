@@ -196,6 +196,22 @@ class ReceiptNote < ActiveRecord::Base
     end
   end
 
+  def self.unbilled_by_project(_project = nil, _ordered)
+    if !_ordered
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('receipt_notes.project_id = ?', _project).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('receipt_notes.project_id = ?', _project).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    end
+  end
+
+  def self.unbilled_by_project_supplier(_project = nil, _supplier = nil, _ordered = true)
+    if !_ordered
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('receipt_notes.project_id = ? AND receipt_notes.supplier_id = ?', _project, _supplier).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    else
+      includes(:supplier, :project).joins(:receipt_note_item_balances).where('receipt_notes.project_id = ? AND receipt_notes.supplier_id = ?', _project, _supplier).group('receipt_notes.supplier_id, receipt_notes.receipt_no, receipt_notes.id').having('sum(receipt_note_item_balances.balance) > ?', 0)
+    end
+  end
+
   def self.bill_total #billing_status = 0
     joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) <= ?', 0)
   end
