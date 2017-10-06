@@ -47,6 +47,8 @@ es:
         offer_no: "Nº Oferta prov."
         balance: "Saldo"
         balance_c: "Saldo pedido elegido"
+        unbilled_balance: "No facturado"
+        unbilled_balance_c: "No facturado pedido elegido"
         quantity: "Artículos"
         bonus: "Bonificación"
         organization: "Organización"

@@ -177,11 +177,9 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_update_receipt_and_order_select_from_project/:order', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project'
     match 'si_update_receipt_and_order_select_from_project/:order', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project'
     match 'supplier_invoices/:id/si_update_receipt_and_order_select_from_project/:order', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project'
-
     match 'supplier_invoices/si_update_receipt_and_order_select_from_project_supplier/:order/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project_supplier'
     match 'si_update_receipt_and_order_select_from_project_supplier/:order/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project_supplier'
     match 'supplier_invoices/:id/si_update_receipt_and_order_select_from_project_supplier/:order/:supplier', :controller => 'supplier_invoices', :action => 'si_update_receipt_and_order_select_from_project_supplier'
-
     match 'supplier_invoices/si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
     match 'si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
     match 'supplier_invoices/:id/si_format_number/:num', :controller => 'supplier_invoices', :action => 'si_format_number'
@@ -254,6 +252,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     match 'si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     match 'si_current_balance_order/:order', :controller => 'supplier_invoices', :action => 'si_current_balance_order'
+    match 'si_current_unbilled_balance_order/:order', :controller => 'supplier_invoices', :action => 'si_current_unbilled_balance_order'
     match 'supplier_invoices/:id/si_current_balance/:order', :controller => 'supplier_invoices', :action => 'si_current_balance'
     match 'supplier_invoices/si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'
     match 'si_update_payday_limit_from_method/:order', :controller => 'supplier_invoices', :action => 'si_update_payday_limit_from_method'

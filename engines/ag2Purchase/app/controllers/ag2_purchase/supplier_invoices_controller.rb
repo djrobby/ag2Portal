@@ -39,6 +39,7 @@ module Ag2Purchase
                                                :si_update_selects_from_company,
                                                :si_current_balance,
                                                :si_current_balance_order,
+                                               :si_current_unbilled_balance_order,
                                                :si_generate_invoice,
                                                :si_generate_invoice_from_order,
                                                :si_update_payday_limit_from_method,
@@ -113,8 +114,8 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Update receipt note select at view from supplier
-    def si_update_receipt_and_order_select_from_supplier
+    # Update receipt note select at view from project & supplier
+    def si_update_receipt_and_order_select_from_project_supplier
       project = params[:order]
       supplier = params[:supplier]
       if supplier != '0' && project != '0'
@@ -123,31 +124,41 @@ module Ag2Purchase
         if @project.blank? && @supplier.blank?
           # neither project nor supplier
           @receipt_notes = receipts_dropdown
-          @purchase_orders = unbilled_purchase_orders_dropdown
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
         elsif !@project.blank? && @supplier.blank?
           # project only
           @receipt_notes = receipts_dropdown_by_project(@project)
-          @purchase_orders = unbilled_purchase_orders_dropdown_by_project(@project)
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown_by_project(@project)
         elsif @project.blank? && !@supplier.blank?
           # supplier only
           @receipt_notes = receipts_dropdown_by_supplier(@supplier)
-          @purchase_orders = unbilled_purchase_orders_dropdown_by_supplier(@supplier)
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown_by_supplier(@supplier)
         else
           # project and supplier
           @receipt_notes = receipts_dropdown_by_project_supplier(@project, @supplier)
-          @purchase_orders = unbilled_purchase_orders_dropdown_by_project_supplier(@project, @supplier)
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown_by_project_supplier(@project, @supplier)
         end
       elsif project != '0'
         @project = Project.find(project)
-        @receipt_notes = @project.blank? ? receipts_dropdown : receipts_dropdown_by_project(@project)
-        @purchase_orders = @project.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_project(@project)
+        if @project.blank?
+          @receipt_notes = receipts_dropdown
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
+        else
+          @receipt_notes = receipts_dropdown_by_project(@project)
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown_by_project(@project)
+        end
       elsif supplier != '0'
         @supplier = Supplier.find(supplier)
-        @receipt_notes = @supplier.blank? ? receipts_dropdown : receipts_dropdown_by_supplier(@supplier)
-        @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_supplier(@supplier)
+        if @supplier.blank?
+          @receipt_notes = receipts_dropdown
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
+        else
+          @receipt_notes = receipts_dropdown_by_supplier(@supplier)
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown_by_supplier(@supplier)
+        end
       else
         @receipt_notes = receipts_dropdown
-        @purchase_orders = unbilled_purchase_orders_dropdown
+        @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
       end
       # Notes array
       @notes_dropdown = notes_array(@receipt_notes)
@@ -180,9 +191,9 @@ module Ag2Purchase
       supplier = params[:supplier]
       if supplier != '0'
         @supplier = Supplier.find(supplier)
-        @purchase_orders = @supplier.blank? ? unbilled_purchase_orders_dropdown : unbilled_purchase_orders_dropdown_by_supplier(@supplier)
+        @purchase_orders = @supplier.blank? ? unbilled_and_undelivered_purchase_orders_dropdown : unbilled_and_undelivered_purchase_orders_dropdown_by_supplier(@supplier)
       else
-        @purchase_orders = unbilled_purchase_orders_dropdown
+        @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
       end
       # Orders array
       @purchase_orders_dropdown = purchase_orders_array(@purchase_orders)
@@ -556,7 +567,7 @@ module Ag2Purchase
       bal = 0
       alert = ""
       if i != '0'
-        bal = PurchaseOrderItem.find(i).balance rescue 0
+        bal = PurchaseOrderItem.find(i).unbilled_balance rescue 0
         if qty > bal
           qty = number_with_precision(qty.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
           bal = number_with_precision(bal.round(4), precision: 4, delimiter: I18n.locale == :es ? "." : ",")
@@ -909,12 +920,26 @@ module Ag2Purchase
       render json: @json_data
     end
 
-    # Update purchase order balance (unbilled) text field at view from order select
+    # Update purchase order balance (undelivered) text field at view from order select
     def si_current_balance_order
       order = params[:order]
       current_balance = 0
       if order != '0'
         current_balance = PurchaseOrder.find(order).balance rescue 0
+      end
+      # Format numbers
+      current_balance = number_with_precision(current_balance.round(4), precision: 4)
+      # Setup JSON
+      @json_data = { "balance" => current_balance.to_s }
+      render json: @json_data
+    end
+
+    # Update purchase order balance (unbilled) text field at view from order select
+    def si_current_unbilled_balance_order
+      order = params[:order]
+      current_balance = 0
+      if order != '0'
+        current_balance = PurchaseOrder.find(order).unbilled_balance rescue 0
       end
       # Format numbers
       current_balance = number_with_precision(current_balance.round(4), precision: 4)
@@ -1301,7 +1326,7 @@ module Ag2Purchase
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
-      @purchase_orders = unbilled_purchase_orders_dropdown if @purchase_orders.nil?
+      @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -1452,8 +1477,10 @@ module Ag2Purchase
           # @stores = stores_dropdown
           @suppliers = suppliers_dropdown
           @payment_methods = payment_methods_dropdown
-          @receipt_notes = []
-          @purchase_orders = []
+          @receipt_notes = receipts_dropdown
+          @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown
+          # @receipt_notes = []
+          # @purchase_orders = []
           @note_items = []
           @order_items = []
           @products = []
@@ -1765,7 +1792,7 @@ module Ag2Purchase
     end
 
     def receipts_dropdown_by_project(_project)
-      ReceiptNote.unbilled_by_project(_project.id)
+      ReceiptNote.unbilled_by_project(_project.id, true)
     end
 
     def receipts_dropdown_by_supplier(_supplier)
@@ -1836,30 +1863,34 @@ module Ag2Purchase
 
     def unbilled_and_undelivered_purchase_orders_dropdown
       if session[:office] != '0'
-        PurchaseOrder.unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
+        PurchaseOrder.approved_unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
       elsif session[:company] != '0'
-        PurchaseOrder.unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
+        PurchaseOrder.approved_unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
       elsif session[:organization] != '0'
-        PurchaseOrder.unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
+        PurchaseOrder.approved_unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
       else
-        PurchaseOrder.unbilled_and_undelivered(nil, nil, nil, nil)
+        PurchaseOrder.approved_unbilled_and_undelivered(nil, nil, nil, nil)
       end
     end
 
     def unbilled_and_undelivered_purchase_orders_dropdown_by_project(_project)
-      PurchaseOrder.unbilled_and_undelivered(nil, nil, nil, _project.id)
+      PurchaseOrder.approved_unbilled_and_undelivered(nil, nil, nil, _project.id)
     end
 
     def unbilled_and_undelivered_purchase_orders_dropdown_by_supplier(_supplier)
       if session[:office] != '0'
-        _supplier.purchase_orders.unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
+        _supplier.purchase_orders.approved_unbilled_and_undelivered(nil, nil, session[:office].to_i, nil)
       elsif session[:company] != '0'
-        _supplier.purchase_orders.unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
+        _supplier.purchase_orders.approved_unbilled_and_undelivered(nil, session[:company].to_i, nil, nil)
       elsif session[:organization] != '0'
-        _supplier.purchase_orders.unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
+        _supplier.purchase_orders.approved_unbilled_and_undelivered(session[:organization].to_i, nil, nil, nil)
       else
-        _supplier.purchase_orders.unbilled_and_undelivered(nil, nil, nil, nil)
+        _supplier.purchase_orders.approved_unbilled_and_undelivered(nil, nil, nil, nil)
       end
+    end
+
+    def unbilled_and_undelivered_purchase_orders_dropdown_by_project_supplier(_project, _supplier)
+      _supplier.purchase_orders.approved_unbilled_and_undelivered(nil, nil, nil, _project.id)
     end
 
     def order_items_dropdown(_order)

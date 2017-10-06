@@ -89,6 +89,10 @@ class PurchaseOrderItem < ActiveRecord::Base
     #quantity - purchase_order_items.sum("quantity")
   end
 
+  def unbilled_balance
+    purchase_order_item_invoiced_balance.balance
+  end
+
   private
 
   def check_for_dependent_records

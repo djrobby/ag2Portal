@@ -155,7 +155,7 @@ var text_field_color;
       // make a POST call and replace the content
       var order = $('#Order_ :selected').val();
       if (order == "") order = 0;
-      jQuery.getJSON('si_current_balance_order/' + order, function(data) {
+      jQuery.getJSON('si_current_unbilled_balance_order/' + order, function(data) {
         $("#current-balance-o").html(data.balance);
       });
       // AJAX refresh index table is necessary
@@ -202,7 +202,7 @@ var text_field_color;
     <%= text_field_tag "InternalNoO_", nil, :class => 'mid-text-field iconify_O' %>
   </div>
   <div class="modal-footer">
-    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.purchase_order.balance_c") %>=</span>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.purchase_order.unbilled_balance_c") %>=</span>
     <span class="left-floated shrinked" style="vertical-align: bottom" id="current-balance-o">0,0000</span>
     <a class="btn btn-primary" href="#" id="btn_accept_o"><%= t :generate %></a>
     <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>

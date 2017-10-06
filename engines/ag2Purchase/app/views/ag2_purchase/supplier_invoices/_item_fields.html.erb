@@ -515,21 +515,30 @@
     $("#fnt-quantity").change(function() {
       // preserve the current object
       var _this = (this);
+      // right method name
+      var bcm = "si_item_balance_check/";
       // balance check
       var i = $('select#fnt-receipt-note-item :selected').val();
       if (typeof i === "undefined") {
         i = $(_this).closest('tr').find('.fnt-receipt-note-item').val();
       }
-      if (i == "")
-        i = "0";
+      if (i == "") i = "0";
+      var j = $('select#fnt-purchase-order-item :selected').val();
+      if (typeof j === "undefined") {
+        j = $(_this).closest('tr').find('.fnt-purchase-order-item').val();
+      }
+      if (j == "") j = "0";
+      if (i == "0" && j != "0") {
+        bcm = "si_purchase_order_item_balance_check/";
+        i = j;
+      }
       var qty = $('#fnt-quantity').val();
       if (typeof qty === "undefined") {
         qty = $(_this).closest('tr').find('.fnt-quantity').val();
       }
-      if (qty == "")
-        qty = "0";
+      if (qty == "") qty = "0";
       qty = parseInt(right_number(qty, 4) * 10000);
-      jQuery.getJSON('si_item_balance_check/' + i + '/' + qty, function(data) {
+      jQuery.getJSON(bcm + i + '/' + qty, function(data) {
         if (data.alert != "") {
           alert(data.alert);
         }

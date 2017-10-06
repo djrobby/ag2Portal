@@ -348,7 +348,7 @@
       if (order == "0") {
         $("#supplier_invoice_project_id").val(0);
       }
-      $("#supplier_invoice_project_id").trigger("change");
+      // $("#supplier_invoice_project_id").trigger("change");
       return false;
     });
 
@@ -448,6 +448,14 @@
             $("#supplier_invoice_purchase_order_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
+        // Work order
+        $("#supplier_invoice_work_order_id").html("");
+        $("#supplier_invoice_work_order_id").select2("val", "");
+        $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
+        // Charge account
+        $("#supplier_invoice_charge_account_id").html("");
+        $("#supplier_invoice_charge_account_id").select2("val", "");
+        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
       });
       return false;
     });
@@ -461,7 +469,7 @@
       var supplier = $('select#supplier_invoice_supplier_id :selected').val();
       if (supplier == "")
         supplier = "0";
-      jQuery.getJSON('si_update_receipt_and_order_select_from_project_supplier/' + supplier , function(data) {
+      jQuery.getJSON('si_update_receipt_and_order_select_from_project_supplier/' + order + '/' + supplier, function(data) {
         var o = data.note;
         var p = data.order;
         // Receipt note
@@ -494,6 +502,14 @@
             $("#supplier_invoice_purchase_order_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
+        // Work order
+        $("#supplier_invoice_work_order_id").html("");
+        $("#supplier_invoice_work_order_id").select2("val", "");
+        $("#supplier_invoice_work_order_id").append($('<option></option>').val("").html(""));
+        // Charge account
+        $("#supplier_invoice_charge_account_id").html("");
+        $("#supplier_invoice_charge_account_id").select2("val", "");
+        $("#supplier_invoice_charge_account_id").append($('<option></option>').val("").html(""));
       });
       return false;
     });
@@ -549,7 +565,8 @@
             $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
-        if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
+        $("#supplier_invoice_work_order_id").select2("val", w_id);
+        // if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
         // Charge account
         // caccountsSelect2ForNew(data.caccount);
         $("#supplier_invoice_charge_account_id").html("");
@@ -566,7 +583,8 @@
             $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
-        if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        // if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -600,12 +618,13 @@
             $("#supplier_invoice_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#supplier_invoice_payment_method_id").val(m_id);
+        $("#supplier_invoice_payment_method_id").select2("val", m_id);
+        // if (m_id != 0) $("#supplier_invoice_payment_method_id").select2("val", m_id);
       });
       // Note not selected
       if (o == "0") {
         $("#supplier_invoice_project_id").val(0);
-        $("#supplier_invoice_project_id").trigger("change");
+        // $("#supplier_invoice_project_id").trigger("change");
       }
       //return false;
     });
@@ -661,7 +680,8 @@
             $("#supplier_invoice_work_order_id").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
-        if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
+        $("#supplier_invoice_work_order_id").select2("val", w_id);
+        // if (w_id != 0) $("#supplier_invoice_work_order_id").select2("val", w_id);
         // Charge account
         // caccountsSelect2ForNew(data.caccount);
         $("#supplier_invoice_charge_account_id").html("");
@@ -678,7 +698,8 @@
             $("#supplier_invoice_charge_account_id").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
           });
         }
-        if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        $("#supplier_invoice_charge_account_id").select2("val", c_id);
+        // if (c_id != 0) $("#supplier_invoice_charge_account_id").select2("val", c_id);
         // Store
         /*
         $("#supplier_invoice_store_id").html("");
@@ -712,7 +733,8 @@
             $("#supplier_invoice_payment_method_id").append($('<option></option>').val(option.id).html(option.description));
           });
         }
-        if (m_id != 0) $("#supplier_invoice_payment_method_id").val(m_id);
+        $("#supplier_invoice_payment_method_id").select2("val", m_id);
+        // if (m_id != 0) $("#supplier_invoice_payment_method_id").select2("val", m_id);
       });
       // Note not selected
       if (o == "0") {
