@@ -97,6 +97,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @debt_claim = DebtClaim.find(params[:id])
+      @items = @debt_claim.debt_claim_items.paginate(:page => params[:page], :per_page => per_page).order('id')
 
       respond_to do |format|
         format.html # show.html.erb

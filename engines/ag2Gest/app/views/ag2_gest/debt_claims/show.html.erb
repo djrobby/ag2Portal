@@ -1,5 +1,107 @@
-<p id="notice"><%= notice %></p>
+<script>
+  $(document).ready(function() {
+  });
 
+  jQuery(function($) {
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      var id = $('#id').html();
+      if (id == "")
+        return;
+      window.open("invoice_form.pdf?id=" + id, "_blank");
+      return false;
+    });
+  });  
+</script>
 
-<%= link_to 'Edit', edit_debt_claim_path(@debt_claim) %> |
-<%= link_to 'Back', debt_claims_path %>
+<%= render '/layouts/ag2_gest/debtclaimsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td id="id"><%= @debt_claim.id %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.claim_no' %>:</td>
+      <td class="highlighted bolded"><%= @debt_claim.full_no %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.debt_claim.invoice_date' %>:</td>
+      <td><%= formatted_date(@debt_claim.invoice_date) unless @debt_claim.invoice_date.blank? %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.bill' %>:</td>
+      <td><%= @debt_claim.try(:bill).try(:to_label) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.bill.client' %>:</td>
+      <td><%= @debt_claim.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.sale_offer' %>:</td>
+      <td><%= @debt_claim.try(:sale_offer).try(:full_no) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.bill.project' %>:</td>
+      <td><%= @debt_claim.try(:bill).try(:project).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.invoice_type' %>:</td>
+      <td><%= @debt_claim.try(:invoice_type).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.debt_claim.invoice_status' %>:</td>
+      <td><%= @debt_claim.try(:invoice_status).try(:name) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.invoice_operation' %>:</td>
+      <td><%= @debt_claim.try(:invoice_operation).try(:name) %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.debt_claim.charge_account' %>:</td>
+      <td colspan="3"><%= @debt_claim.charge_account.full_name unless @debt_claim.charge_account.blank? %> </td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.debt_claim.payment_method' %>:</td>
+      <td><%= @debt_claim.payment_method.description unless @debt_claim.payment_method.blank? %> </td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.debt" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.debt.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @debt_claim } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @debt_claim } %>
+  </tbody>
+</table>
+
+<!-- Items -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_gest.debt_claims.items_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t '.print' %></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<% if (@items.count > 0) %>
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <%= render 'items_header' %>
+  </thead>
+  <tfoot>
+    <%= render partial: 'items_footer', :locals => { claim: @debt_claim } %>
+  </tfoot>
+  <tbody>
+    <%= render partial: 'item', collection: @items %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<% else %>
+<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<% end %> <!-- end @items.count > 0 -->
+
+<% if cannot_edit(@debt_claim) %>
+<%= render partial: '/layouts/crud/new', locals: { model: DebtClaim, path: new_debt_claim_path, txt: t('ag2_gest.debt_claims.index.btn_new') } %>
+<% else %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: DebtClaim, update_path: edit_debt_claim_path(@debt_claim), update_txt: t('.btn_edit'),
+delete_path: @debt_claim, delete_txt: t('.btn_delete'), msg: t("activerecord.models.debt_claim.one"), txt: @debt_claim.claim_no,
+new_path: new_debt_claim_path, new_txt: t('ag2_gest.debt_claims.index.btn_new') } %>
+<% end %>
+
+<%= link_to t("ag2_gest.debt_claims.back_to_main_page"), debt_claims_path %>

@@ -1,4 +1,6 @@
 class DebtClaimItem < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :debt_claim, :counter_cache => true
   belongs_to :bill
   belongs_to :invoice
@@ -30,9 +32,15 @@ class DebtClaimItem < ActiveRecord::Base
   def bill_no
     bill.bill_no unless (bill.blank? || bill.bill_no.blank?)
   end
+  def bill_full_no
+    (bill.blank? || bill.bill_no.blank?) ? '' : bill.full_no
+  end
 
   def invoice_no
     invoice.invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
+  end
+  def invoice_full_no
+    (invoice.blank? || invoice.invoice_no.blank?) ? '' : invoice.full_no
   end
 
   def project
@@ -45,6 +53,22 @@ class DebtClaimItem < ActiveRecord::Base
 
   def subscriber
     bill.subscriber unless (bill.blank? || bill.subscriber.blank?)
+  end
+
+  def client_code_and_name
+    (bill.blank? || bill.client.blank?) ? '' : bill.client.full_name_or_company_and_code
+  end
+
+  def subscriber_code_and_name
+    (bill.blank? || bill.subscriber.blank?) ? '' : bill.subscriber.full_name_or_company_and_code
+  end
+
+  def formatted_payday_limit
+    formatted_date(payday_limit) rescue ''
+  end
+
+  def status_name
+    debt_claim_status.blank? ? '' : debt_claim_status.name
   end
 
   #

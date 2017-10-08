@@ -1,0 +1,11 @@
+<tr>
+  <td><%= item.bill_full_no %></td>
+  <td><%= item.invoice_full_no %></td>
+  <td><%= item.client_code_and_name %></td>
+  <td align="center"><%= item.invoice.formatted_payday_limit %></td>
+  <td><%= item.status_name %></td>
+  <td align="center"><%= item.formatted_payday_limit %></td>
+  <td align="right"><%= number_with_precision(item.debt, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.total, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.current_total, precision: 4) %></td>
+</tr>
