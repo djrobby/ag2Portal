@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171002113507) do
+ActiveRecord::Schema.define(:version => 20171009113730) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1029,8 +1029,6 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -1340,10 +1338,12 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
     t.integer  "updated_by"
     t.decimal  "totals",                 :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.integer  "debt_claim_items_count",                                :default => 0
+    t.integer  "office_id"
   end
 
   add_index "debt_claims", ["claim_no"], :name => "index_debt_claims_on_claim_no"
   add_index "debt_claims", ["debt_claim_phase_id"], :name => "index_debt_claims_on_debt_claim_phase_id"
+  add_index "debt_claims", ["office_id"], :name => "index_debt_claims_on_office_id"
   add_index "debt_claims", ["project_id"], :name => "index_debt_claims_on_project_id"
 
   create_table "degree_types", :force => true do |t|
@@ -1798,6 +1798,21 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
     t.decimal "taxable",             :precision => 58, :scale => 16
     t.decimal "total",               :precision => 65, :scale => 22
     t.integer "original_invoice_id"
+  end
+
+  create_table "invoice_debts", :id => false, :force => true do |t|
+    t.integer "invoice_id",                                      :default => 0, :null => false
+    t.integer "organization_id"
+    t.integer "client_id"
+    t.integer "subscriber_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",        :precision => 47, :scale => 10
+    t.decimal "taxes",           :precision => 65, :scale => 22
+    t.decimal "bonus",           :precision => 57, :scale => 16
+    t.decimal "taxable",         :precision => 58, :scale => 16
+    t.decimal "total",           :precision => 65, :scale => 22
+    t.decimal "paid",            :precision => 34, :scale => 4
+    t.decimal "debt",            :precision => 65, :scale => 22
   end
 
   create_table "invoice_items", :force => true do |t|
@@ -2596,12 +2611,40 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
     t.decimal "current",           :precision => 34, :scale => 4
   end
 
+  create_table "product_family_stocks_manual", :id => false, :force => true do |t|
+    t.integer "family_id",                                  :default => 0, :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "store_id"
+    t.string  "store_name"
+    t.decimal "initial",     :precision => 34, :scale => 4
+    t.decimal "current",     :precision => 34, :scale => 4
+  end
+
   create_table "product_types", :force => true do |t|
     t.string   "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+  end
+
+  create_table "product_valued_stock_by_companies", :id => false, :force => true do |t|
+    t.integer "store_id"
+    t.string  "store_name"
+    t.integer "product_family_id",                                    :default => 0,   :null => false
+    t.string  "family_code"
+    t.string  "family_name"
+    t.integer "product_id",                                           :default => 0,   :null => false
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "average_price",         :precision => 12, :scale => 4, :default => 0.0, :null => false
+    t.decimal "initial",               :precision => 34, :scale => 4
+    t.decimal "current",               :precision => 34, :scale => 4
+    t.decimal "current_value",         :precision => 13, :scale => 4
+    t.integer "company_id"
+    t.decimal "company_average_price", :precision => 12, :scale => 4, :default => 0.0
+    t.decimal "company_current_value", :precision => 13, :scale => 4
   end
 
   create_table "product_valued_stocks", :id => false, :force => true do |t|
@@ -3566,8 +3609,8 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0
-    t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0,  :null => false
     t.decimal  "deposit",                             :precision => 13, :scale => 4, :default => 0.0,  :null => false
     t.string   "old_code"
   end
@@ -3675,6 +3718,33 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
   add_index "supplier_invoice_approvals", ["approval_date"], :name => "index_supplier_invoice_approvals_on_approval_date"
   add_index "supplier_invoice_approvals", ["approver_id"], :name => "index_supplier_invoice_approvals_on_approver_id"
   add_index "supplier_invoice_approvals", ["supplier_invoice_id"], :name => "index_supplier_invoice_approvals_on_supplier_invoice_id"
+
+  create_table "supplier_invoice_debts", :id => false, :force => true do |t|
+    t.integer "supplier_invoice_id",                                 :default => 0, :null => false
+    t.integer "organization_id"
+    t.integer "supplier_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",            :precision => 47, :scale => 8
+    t.decimal "taxes",               :precision => 65, :scale => 20
+    t.decimal "bonus",               :precision => 57, :scale => 14
+    t.decimal "taxable",             :precision => 58, :scale => 14
+    t.decimal "total",               :precision => 65, :scale => 20
+    t.decimal "paid",                :precision => 35, :scale => 4
+    t.decimal "debt",                :precision => 65, :scale => 20
+  end
+
+  create_table "supplier_invoice_debts_manual", :id => false, :force => true do |t|
+    t.integer "id",              :limit => 8
+    t.integer "organization_id"
+    t.string  "invoice_no"
+    t.decimal "subtotal",                     :precision => 47, :scale => 8
+    t.decimal "taxes",                        :precision => 65, :scale => 20
+    t.decimal "bonus",                        :precision => 57, :scale => 14
+    t.decimal "taxable",                      :precision => 58, :scale => 14
+    t.decimal "total",                        :precision => 65, :scale => 20
+    t.decimal "paid",                         :precision => 35, :scale => 4
+    t.decimal "debt",                         :precision => 65, :scale => 20
+  end
 
   create_table "supplier_invoice_items", :force => true do |t|
     t.integer  "supplier_invoice_id"
@@ -4217,28 +4287,6 @@ ActiveRecord::Schema.define(:version => 20171002113507) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
-
-  create_table "update_wap", :id => false, :force => true do |t|
-    t.integer "id"
-    t.string  "product_code"
-    t.string  "main_description"
-    t.decimal "reference_price",  :precision => 12, :scale => 4
-    t.decimal "global_wap",       :precision => 12, :scale => 4
-    t.integer "supplier_id"
-    t.decimal "price",            :precision => 12, :scale => 4
-    t.decimal "discount_rate",    :precision => 12, :scale => 2
-    t.decimal "net_price",        :precision => 12, :scale => 4
-  end
-
-  create_table "update_wap_0", :id => false, :force => true do |t|
-    t.string  "product_code"
-    t.decimal "wap",          :precision => 12, :scale => 4
-  end
-
-  create_table "update_wap_strange", :id => false, :force => true do |t|
-    t.string  "product_code"
-    t.decimal "wap",          :precision => 12, :scale => 4
-  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false

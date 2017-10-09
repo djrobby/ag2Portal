@@ -1,8 +1,9 @@
 class DebtClaim < ActiveRecord::Base
+  belongs_to :office
   belongs_to :project
   belongs_to :debt_claim_phase
   attr_accessible :claim_no, :closed_at,
-                  :project_id, :debt_claim_phase_id
+                  :office_id, :project_id, :debt_claim_phase_id
   attr_accessible :debt_claim_items_attributes
 
   has_many :debt_claim_items, dependent: :destroy
@@ -18,10 +19,10 @@ class DebtClaim < ActiveRecord::Base
   validates_associated :debt_claim_items
 
   validates :claim_no,          :presence => true,
-                                :length => { :is => 22 },
+                                :length => { :is => 13 },
                                 :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
-                                :uniqueness => { :scope => :project_id }
-  validates :project,           :presence => true
+                                :uniqueness => { :scope => :office_id }
+  validates :office,            :presence => true
   validates :debt_claim_phase,  :presence => true
 
   # Scopes
@@ -37,7 +38,17 @@ class DebtClaim < ActiveRecord::Base
   # Instance methods
   #
   # Formal No
+
   def full_no
+    # Debt claim no (Office & year & sequential number) => OOOO-YYYY-NNNNN
+    if claim_no == "$err"
+      "0000-0000-00000"
+    else
+      claim_no.blank? ? "" : claim_no[0.3] + '-' + claim_no[4..7] + '-' + claim_no[8..12]
+    end
+  end
+
+  def full_no_by_project
     # Debt claim no (Project code & year & sequential number) => PPPPPPPPPPPP-YYYY-NNNNNN
     if claim_no == "$err"
       "000000000000-0000-000000"
@@ -47,7 +58,7 @@ class DebtClaim < ActiveRecord::Base
   end
 
   # Short No
-  def short_no
+  def short_no_by_project
     # Debt claim no (Project ID & year & sequential number) => PPPP-YYYY-NNNNNN
     code = "0000-0000-000000"
     if claim_no != "$err" && !claim_no.blank? && !project_id.blank?
@@ -61,15 +72,11 @@ class DebtClaim < ActiveRecord::Base
   end
 
   def organization
-    project.organization unless (project.blank? || project.organization.blank?)
+    office.company.organization unless (office.blank? || office.company.blank? || office.company.organization.blank?)
   end
 
   def company
-    project.company unless (project.blank? || project.company.blank?)
-  end
-
-  def office
-    project.office unless (project.blank? || project.office.blank?)
+    office.company unless (office.blank? || office.company.blank?)
   end
 
   def status
@@ -116,6 +123,7 @@ class DebtClaim < ActiveRecord::Base
     string :claim_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id, :multiple => true
     integer :project_id, :multiple => true
+    integer :office_id, :multiple => true
     integer :debt_claim_phase_id
     string :sort_no do
       claim_no

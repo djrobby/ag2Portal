@@ -29,8 +29,8 @@ class ClientPayment < ActiveRecord::Base
   after_destroy :reindex_instalment
 
   def full_no
-    # Receipt no (Office & year & sequential number) => OO-YYYY-NNNN
-    receipt_no.blank? ? "" : receipt_no[0.1] + '-' + receipt_no[2..5] + '-' + receipt_no[6..9]
+    # Receipt no (Office & year & sequential number) => OOOO-YYYY-NNNNN
+    receipt_no.blank? ? "" : receipt_no[0.3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]
   end
 
   # 9 digits Id for bank orders

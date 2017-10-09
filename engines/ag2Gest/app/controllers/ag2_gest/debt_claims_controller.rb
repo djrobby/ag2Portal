@@ -17,12 +17,53 @@ module Ag2Gest
 
     # Update claim number at view (generate_code_btn)
     def dc_generate_no
-      project = params[:project]
+      office = params[:office]
 
       # Builds no, if possible
-      code = project == '$' ? '$err' : dc_next_no(project)
+      code = office == '$' ? '$err' : dc_next_no(office)
       @json_data = { "code" => code }
       render json: @json_data
+    end
+
+    # Generate new debt claim
+    def dc_generate_new
+      payday_limit = params[:payday_limit]
+      pending_amount = params[:pending_amount]
+      pending_invoices = params[:pending_invoices]
+      office = params[:office]
+      project = params[:project]
+      reading_routes = params[:reading_routes]
+      invoice_types = params[:invoice_types]
+      clients = params[:clients]
+      subscribers = params[:subscribers]
+
+      # Build where
+      w = nil
+
+      # Retrieve invoices
+      invoices = Invoice.g_where(w)
+
+      # Claim No.
+      claim_no = dc_next_no(office)
+
+      # Begin the transaction
+      begin
+        ActiveRecord::Base.transaction do
+          # Create debt claim
+          claim = DebtClaim.create(office_id: office, project_id: project,
+                                   claim_no: claim_no, closed_at: nil,
+                                   debt_claim_phase_id: DebtClaimPhase::FIRST_CLAIM)
+          # Loop thru invoices and create items
+          invoices.each do |i|
+            DebtClaimItem.create(debt_claim_id: claim.id)
+          end # invoices.each
+
+          redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
+        end # ActiveRecord::Base.transaction
+      rescue ActiveRecord::RecordInvalid
+        redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
+      end # begin
+
     end
 
     #

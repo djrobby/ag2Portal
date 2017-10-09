@@ -831,16 +831,16 @@ end
   def receipt_next_no(office = nil)
     year = Time.new.year
     code = ''
-    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
+    office_code = office.nil? ? '0000' : office.to_s.rjust(4, '0')
     # Builds code, if possible
     year = year.to_s if year.is_a? Fixnum
     year = year.rjust(4, '0')
     last_no = ClientPayment.where("receipt_no LIKE ?", "#{office_code}#{year}%").order(:receipt_no).maximum(:receipt_no)
     if last_no.nil?
-      code = office_code + year + '0001'
+      code = office_code + year + '00001'
     else
-      last_no = last_no[6..9].to_i + 1
-      code = office_code + year + last_no.to_s.rjust(4, '0')
+      last_no = last_no[8..12].to_i + 1
+      code = office_code + year + last_no.to_s.rjust(5, '0')
     end
     code
   end
@@ -922,24 +922,19 @@ end
   end
 
   # Debt claim no
-  def dc_next_no(project)
+  def dc_next_no(office)
     year = Time.new.year
     code = ''
+    office_code = office.nil? ? '0000' : office.to_s.rjust(4, '0')
     # Builds code, if possible
-    project_code = Project.find(project).project_code rescue '$'
-    if project_code == '$'
-      code = '$err'
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    last_no = DebtClaim.where("claim_no LIKE ?", "#{office_code}#{year}%").order(:claim_no).maximum(:claim_no)
+    if last_no.nil?
+      code = office_code + year + '00001'
     else
-      project = project_code.rjust(12, '0')
-      year = year.to_s if year.is_a? Fixnum
-      year = year.rjust(4, '0')
-      last_no = DebtClaim.where("claim_no LIKE ?", "#{project}#{year}%").order(:claim_no).maximum(:claim_no)
-      if last_no.nil?
-        code = project + year + '000001'
-      else
-        last_no = last_no[16..21].to_i + 1
-        code = project + year + last_no.to_s.rjust(6, '0')
-      end
+      last_no = last_no[8..12].to_i + 1
+      code = office_code + year + last_no.to_s.rjust(5, '0')
     end
     code
   end

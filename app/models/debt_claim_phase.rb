@@ -1,5 +1,6 @@
 class DebtClaimPhase < ActiveRecord::Base
   # CONSTANTS
+  FIRST_CLAIM = 1
   CLOSED = 99
 
   attr_accessible :name, :surcharge_pct

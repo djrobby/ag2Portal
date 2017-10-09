@@ -65,6 +65,11 @@ class Bill < ActiveRecord::Base
     .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ? AND bills.bill_no BETWEEN ? AND ?', InvoiceType::WATER, p, b, f, t)
     .by_no
   }
+  scope :g_where, -> w {
+    joins(:invoices)
+    .where(w)
+    .by_no
+  }
 
   def to_label
     full_no
