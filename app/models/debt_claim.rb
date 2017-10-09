@@ -72,6 +72,14 @@ class DebtClaim < ActiveRecord::Base
     project.office unless (project.blank? || project.office.blank?)
   end
 
+  def status
+    debt_claim_items.order(debt_claim_status_id: :desc).first.debt_claim_status rescue nil
+  end
+
+  def status_name
+    status.nil? ? '' : status.name
+  end
+
   #
   # Calculated fields
   #

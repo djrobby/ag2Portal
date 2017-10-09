@@ -26,3 +26,6 @@ en:
         current_subtotal: "Current subtotal"
         current_total: "Current total"
         debt_claim_items_count: "Invoices"
+        debt_claim_status: "DC Status"
+        debt_claim_status_id: "DC Status"
+        debt_claim_status_c: "Status"

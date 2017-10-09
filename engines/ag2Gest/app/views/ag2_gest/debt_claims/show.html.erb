@@ -27,38 +27,28 @@
       <td class="highlighted bolded"><%= @debt_claim.full_no %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.debt_claim.invoice_date' %>:</td>
-      <td><%= formatted_date(@debt_claim.invoice_date) unless @debt_claim.invoice_date.blank? %></td>
-      <td><%=t 'activerecord.attributes.debt_claim.bill' %>:</td>
-      <td><%= @debt_claim.try(:bill).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.created_at' %>:</td>
+      <td><%= formatted_date(@debt_claim.created_at) unless @debt_claim.created_at.blank? %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.closed_at' %>:</td>
+      <td><%= formatted_date(@debt_claim.closed_at) unless @debt_claim.closed_at.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.bill.client' %>:</td>
-      <td><%= @debt_claim.try(:bill).try(:client).try(:full_name_or_company_and_code) %></td>
-      <td><%=t 'activerecord.attributes.debt_claim.sale_offer' %>:</td>
-      <td><%= @debt_claim.try(:sale_offer).try(:full_no) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.project' %>:</td>
+      <td><%= @debt_claim.try(:project).try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.debt_claim_phase' %>:</td>
+      <td><%= @debt_claim.debt_claim_phase.name unless @debt_claim.debt_claim_phase.blank? %> </td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.bill.project' %>:</td>
-      <td><%= @debt_claim.try(:bill).try(:project).try(:to_label) %></td>
-      <td><%=t 'activerecord.attributes.debt_claim.invoice_type' %>:</td>
-      <td><%= @debt_claim.try(:invoice_type).try(:name) %></td>
+      <td><%=t 'activerecord.attributes.debt_claim.debt_claim_status_c' %>:</td>
+      <td><%= @debt_claim.status_name unless @debt_claim.status_name.blank? %> </td>
+      <td><%= t "activerecord.attributes.debt_claim.surcharge_pct" %>:</td>
+      <td><%= number_with_precision(@supplier.surcharge_pct, precision: 2) unless @supplier.surcharge_pct.blank? %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.debt_claim.invoice_status' %>:</td>
-      <td><%= @debt_claim.try(:invoice_status).try(:name) %></td>
-      <td><%=t 'activerecord.attributes.debt_claim.invoice_operation' %>:</td>
-      <td><%= @debt_claim.try(:invoice_operation).try(:name) %></td>
-    </tr>
-    <tr>
-      <td><%=t 'activerecord.attributes.debt_claim.charge_account' %>:</td>
-      <td colspan="3"><%= @debt_claim.charge_account.full_name unless @debt_claim.charge_account.blank? %> </td>
-    </tr>
-    <tr>
-      <td><%=t 'activerecord.attributes.debt_claim.payment_method' %>:</td>
-      <td><%= @debt_claim.payment_method.description unless @debt_claim.payment_method.blank? %> </td>
-      <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.debt" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.debt.blank? %></td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.total" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.total.blank? %></td>
+      <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.current_total" %>:</td>
+      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.current_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.current_total.blank? %></td>
     </tr>
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @debt_claim } %>
     <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @debt_claim } %>

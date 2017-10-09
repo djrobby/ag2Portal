@@ -26,3 +26,6 @@ es:
         current_subtotal: "Subtotal actual"
         current_total: "Total actual"
         debt_claim_items_count: "Facturas"
+        debt_claim_status: "Estado RD"
+        debt_claim_status_id: "Estado RD"
+        debt_claim_status_c: "Estado"
