@@ -27,6 +27,10 @@ en:
         btn_show: "Show Debt claim"
       new:
         title: "New Debt claim"
+      generate:
+        title: "New Debt claim"
+        notice: "Debt claim was successfully created."
+        alert: "Error! Unable to generate new Debt claim."
       back_to_main_page: "Back to Debt claims"
       items_info: "Claim Items"
       generate_code_btn: "Claim No."
@@ -37,7 +41,7 @@ en:
       btn_new_item: "New Item"
       btn_add_item: "Add"
       item_error: "can't be blank"
-      generate_claim_error: "Claim can not be generated: Offer invalid."
+      generate_claim_error: "Claim can not be generated."
       generate_claim_write: "Unable to save new Claim."
       generate_claim_ok: "Claim %{var} has been generated."
 

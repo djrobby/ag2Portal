@@ -6,7 +6,8 @@ module Ag2Gest
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:dc_remove_filters,
                                                :dc_restore_filters,
-                                               :dc_generate_no]
+                                               :dc_generate_no,
+                                               :generate]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
@@ -26,16 +27,16 @@ module Ag2Gest
     end
 
     # Generate new debt claim
-    def dc_generate_new
-      payday_limit = params[:payday_limit]
-      pending_amount = params[:pending_amount]
-      pending_invoices = params[:pending_invoices]
-      office = params[:office]
-      project = params[:project]
-      reading_routes = params[:reading_routes]
-      invoice_types = params[:invoice_types]
-      clients = params[:clients]
-      subscribers = params[:subscribers]
+    def generate
+      office = params[:debt_claim][:office]
+      projects = params[:debt_claim][:projects]
+      payday_limit = params[:debt_claim][:payday_limit]
+      pending_amount = params[:debt_claim][:pending_amount]
+      pending_invoices = params[:debt_claim][:pending_invoices]
+      reading_routes = params[:debt_claim][:reading_routes]
+      invoice_types = params[:debt_claim][:invoice_types]
+      clients = params[:debt_claim][:clients]
+      subscribers = params[:debt_claim][:subscribers]
 
       # Build where
       w = nil
@@ -58,10 +59,10 @@ module Ag2Gest
             DebtClaimItem.create(debt_claim_id: claim.id)
           end # invoices.each
 
-          redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
+          redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.alert")
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
+        redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate.alert") and return
       end # begin
 
     end
@@ -86,6 +87,8 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @status = debt_claim_statuses_dropdown if @status.nil?
       @phase = debt_claim_phases_dropdown if @phase.nil?
+
+      # Initialize modal generate tags
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?

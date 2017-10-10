@@ -1,0 +1,32 @@
+<!-- Modal Generate -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#proc_mesage_dc").hide();
+  });
+</script>
+
+<div id="generate-debt-claim" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="GenerateDebtClaim" aria-hidden="true" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage_dc" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t('ag2_gest.debt_claims.generate.title') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <%= simple_form_for :debt_claim, url: generate_debt_claims_path, method: :post, :html => { class: 'modal-footer-right instalment-form'} do |f| %>
+    <div class="modal-body">
+      <%= f.input :office, required: true, label: I18n.t("activerecord.attributes.debt_claim.office"), collection: @offices, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%#= f.input :office, required: true, label: I18n.t("activerecord.attributes.debt_claim.instalments_qty"), as: :integer, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+      <%= f.input :projects, label: I18n.t("activerecord.attributes.debt_claim.project"), collection: @projects, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+      <%= f.input :payday_limit, required: true, label: I18n.t("activerecord.attributes.debt_claim.payday_limit"), as: :date, inline_label: "Yes", input_html: { class: 'x-large-text-field ndate_picker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
+      <%= f.input :pending_amount, label: I18n.t("activerecord.attributes.debt_claim.pending_amount"), as: :decimal, inline_label: "Yes", input_html: { class: 'small-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :pending_invoices, label: I18n.t("activerecord.attributes.debt_claim.pending_invoices"), as: :integer, inline_label: "Yes", input_html: { class: 'small-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+    </div>
+    <div class="modal-footer">
+      <%= f.button :submit, t(:confirm), :class => 'btn btn-primary', id: 'btn-submit-generate' %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#" id="btn_close"><%= t :close_button %></a>
+    </div>
+  <% end %>
+</div>

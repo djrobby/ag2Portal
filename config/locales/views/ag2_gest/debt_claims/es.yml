@@ -28,6 +28,10 @@ es:
         btn_show: "Ver Reclamación de deuda"
       new:
         title: "Nueva Reclamación de deuda"
+      generate:
+        title: "Nueva Reclamación de deuda"
+        notice: "Reclamación de deuda fue creado/a con éxito."
+        alert: "¡Error! Imposible generar nueva Reclamacion de deuda."
       back_to_main_page: "Volver a Reclamaciones de deuda"
       items_info: "Items de la Reclamación"
       generate_code_btn: "Nº de Reclamación"

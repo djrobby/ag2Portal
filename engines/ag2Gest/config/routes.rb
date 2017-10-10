@@ -508,7 +508,9 @@ Ag2Gest::Engine.routes.draw do
     resources :formalities
     resources :formality_types
     #
-    resources :debt_claims
+    resources :debt_claims do
+      post 'generate', on: :collection
+    end
     resources :debt_claim_phases
     resources :debt_claim_statuses
     #
