@@ -34,3 +34,7 @@ en:
         pending_amount: "Amount outstanding greater than"
         pending_invoices: "No. of pending bills greater than"
         payday_limit: "Payday limit"
+        reading_route: "Reading route"
+        client: "Client"
+        subscriber: "Subscriber"
+        invoice_type: "Invoice type"

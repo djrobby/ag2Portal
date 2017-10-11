@@ -28,15 +28,18 @@ module Ag2Gest
 
     # Generate new debt claim
     def generate
+      # required params
       office = params[:debt_claim][:office]
-      projects = params[:debt_claim][:projects]
       payday_limit = params[:debt_claim][:payday_limit]
+
+      # optional params
+      projects = params[:debt_claim][:projects]
       pending_amount = params[:debt_claim][:pending_amount]
       pending_invoices = params[:debt_claim][:pending_invoices]
       reading_routes = params[:debt_claim][:reading_routes]
-      invoice_types = params[:debt_claim][:invoice_types]
       clients = params[:debt_claim][:clients]
       subscribers = params[:debt_claim][:subscribers]
+      invoice_types = params[:debt_claim][:invoice_types]
 
       # Build where
       w = nil
@@ -89,6 +92,12 @@ module Ag2Gest
       @phase = debt_claim_phases_dropdown if @phase.nil?
 
       # Initialize modal generate tags
+      @offices = []
+      @projects = []
+      @reading_routes = []
+      @clients = []
+      @subscribers = []
+      @invoice_types = []
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?

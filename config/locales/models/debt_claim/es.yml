@@ -34,3 +34,7 @@ es:
         pending_amount: "Importe pendiente mayor que"
         pending_invoices: "Nº de recibos pendientes mayor que"
         payday_limit: "Vencimiento"
+        reading_route: "Ruta de lectura"
+        client: "Cliente"
+        subscriber: "Abonado"
+        invoice_type: "Tipo de factura"
