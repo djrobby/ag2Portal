@@ -48,7 +48,7 @@ module Ag2Gest
       w = "office_id = #{session[:office]} AND " if session[:office] != '0'
 
       # Retrieve invoices
-      invoices = Invoice.g_where(w)
+      invoices = InvoiceCurrentDebt.g_where(w)
 
       # Claim No.
       claim_no = dc_next_no(office)

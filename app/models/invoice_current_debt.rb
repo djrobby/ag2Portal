@@ -15,6 +15,18 @@ class InvoiceCurrentDebt < ActiveRecord::Base
                   :invoice_no, :invoice_date, :payday_limit,
                   :subtotal, :taxes, :bonus, :taxable, :total, :paid, :calc_debt, :totals, :receivables, :debt
 
+  # Scopes
+  scope :by_no, -> { order(:invoice_no) }
+  #
+  scope :g_where, -> w {
+    where(w).by_no
+  }
+  # scope :g_where, -> w {
+  #   joins(:bill)
+  #   .where(w)
+  #   .by_no
+  # }
+
   def to_label
     "#{full_name}"
   end
