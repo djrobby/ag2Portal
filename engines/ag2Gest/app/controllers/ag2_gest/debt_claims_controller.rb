@@ -42,7 +42,10 @@ module Ag2Gest
       invoice_types = params[:debt_claim][:invoice_types]
 
       # Build where
-      w = nil
+      w = ''
+      w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+      w = "company_id = #{session[:company]} AND " if session[:company] != '0'
+      w = "office_id = #{session[:office]} AND " if session[:office] != '0'
 
       # Retrieve invoices
       invoices = Invoice.g_where(w)

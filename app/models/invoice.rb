@@ -30,6 +30,7 @@ class Invoice < ActiveRecord::Base
   has_many :client_payments
   has_one :pre_invoice
   has_one :invoice_debt
+  has_one :invoice_current_debt
   has_one :invoice_bill
   has_one :invoice_credit
   has_one :invoice_rebill
@@ -65,6 +66,11 @@ class Invoice < ActiveRecord::Base
   scope :commercial, -> { where("invoice_type_id != 1 AND invoice_type_id != 3").by_no }
   scope :service, -> { where(invoice_type_id: InvoiceType::WATER).by_no }
   scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
+  scope :g_where, -> w {
+    joins(:bill)
+    .where(w)
+    .by_no
+  }
 
   # Callbacks
   before_save :calculate_and_store_totals
@@ -263,6 +269,14 @@ class Invoice < ActiveRecord::Base
 
   def project
     bill.project unless (bill.blank? || bill.project.blank?)
+  end
+
+  def office
+    bill.office unless bill.blank?
+  end
+
+  def company
+    bill.company unless bill.blank?
   end
 
   def client

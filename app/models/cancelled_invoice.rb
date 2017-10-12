@@ -1,3 +1,6 @@
+#
+# ES: Facturas abonadas (originales o refacturas que tienen una adicional de abono, total o parcial)
+#
 class CancelledInvoice < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :bill

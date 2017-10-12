@@ -1,3 +1,6 @@
+#
+# ES: Facturas (originales)
+#
 class InvoiceBill < ActiveRecord::Base
   include ModelsModule
 

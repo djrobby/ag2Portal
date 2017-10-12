@@ -21,6 +21,7 @@ class Organization < ActiveRecord::Base
   has_many :bills
   has_many :invoices
   has_many :invoice_debts
+  has_many :invoice_current_debts
   has_many :invoice_bills
   has_many :invoice_credits
   has_many :invoice_rebills

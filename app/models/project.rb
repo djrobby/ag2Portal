@@ -41,6 +41,7 @@ class Project < ActiveRecord::Base
   has_many :regulations
   has_many :contracting_requests
   has_many :ledger_accounts
+  has_many :invoice_current_debts
 
   has_paper_trail
 

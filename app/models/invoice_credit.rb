@@ -1,3 +1,6 @@
+#
+# ES: Facturas de abono (notas de crédito)
+#
 class InvoiceCredit < ActiveRecord::Base
   include ModelsModule
 

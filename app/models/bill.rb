@@ -31,6 +31,7 @@ class Bill < ActiveRecord::Base
   has_many :cancelled_invoices
   has_many :active_invoices
   has_many :active_supply_invoices
+  has_many :invoice_current_debts
   # Contract bill for: New contracting or change of holder (to NEW subscriber)
   has_one :water_supply_contract
   has_one :water_connection_contract
@@ -154,6 +155,14 @@ class Bill < ActiveRecord::Base
     invoices.first.invoice_type.id rescue 0
   end
 
+  def company
+    project.company unless (project.blank? || project.company.blank?)
+  end
+
+  def office
+    project.office unless (project.blank? || project.office.blank?)
+  end
+
   def subscriber_supply_address
     subscriber.subscriber_supply_address.supply_address rescue ''
   end
@@ -256,6 +265,9 @@ class Bill < ActiveRecord::Base
     _codes
   end
 
+  #
+  # Calculated fields
+  #
   def total
     invoices.reject(&:marked_for_destruction?).sum(&:totals)
   end

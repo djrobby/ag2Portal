@@ -41,6 +41,7 @@ class Subscriber < ActiveRecord::Base
   has_many :active_invoices
   has_many :active_supply_invoices
   has_many :invoice_debts
+  has_many :invoice_current_debts
   has_many :invoice_bills
   has_many :invoice_credits
   has_many :invoice_rebills

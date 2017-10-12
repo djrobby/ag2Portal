@@ -1,3 +1,6 @@
+#
+# ES: Refacturas (rectificativas)
+#
 class InvoiceRebill < ActiveRecord::Base
   include ModelsModule
 

@@ -1,3 +1,6 @@
+#
+# ES: Saldos de factura (todas las facturas, originales, abonos y refacturas)
+#
 class InvoiceDebt < ActiveRecord::Base
   include ModelsModule
 
@@ -14,6 +17,10 @@ class InvoiceDebt < ActiveRecord::Base
 
   def self.unpaid
     where('debt > 0')
+  end
+
+  def self.existing_debt
+    where('debt <> 0')
   end
 
   def full_name
