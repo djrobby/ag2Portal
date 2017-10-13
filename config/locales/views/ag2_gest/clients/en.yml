@@ -10,6 +10,7 @@ en:
         btn_edit: "Edit Client"
         btn_delete: "Delete Client"
         subtable_title: "Subscribers"
+        subtable_bill_title: "Bills"
         return_to: "Back to Client"
       edit:
         title: "Edit Client"

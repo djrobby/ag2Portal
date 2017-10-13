@@ -115,20 +115,84 @@
 delete_path: @client, delete_txt: t('.btn_delete'), msg: t("activerecord.models.client.one"), txt: @client.full_name_or_company_and_code,
 new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
 
-<!-- Subscribers -->
-<% if (@subscribers.count > 0) %>
-<h4><%=t '.subtable_title' %></h4>
-<table class="table table-condensed table-striped shrinked">
-  <thead>
-    <%= render '/layouts/ag2_gest/subscribersheader' %>
-  </thead>
-  <tbody>
-    <%= render :partial => '/layouts/ag2_gest/subscribers', :locals => { :subscribers => @subscribers } %>
-  </tbody>
-</table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscribers } %>
-<% end %>
 
+<ul class="nav nav-tabs" id="myTab">
+  <li class="active"><a href="#bills" data-toggle="tab"><%= t '.subtable_bill_title' %></a></li>
+  <li><a href="#subscribers" data-toggle="tab"><%= t '.subtable_title' %></a></li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+  
+<!-- Bills -->
+<div class="tab-pane fade active in" id="bills">
+
+  <% if (@bills.count > 0) %>
+  <table class="table table-condensed table-striped shrinked">
+    <!-- no -->
+    <col width="15%" />
+    <!-- codes -->
+    <col width="5%" />
+    <!-- date -->
+    <col width="9%" />
+    <!-- bill -->
+    <col width="20%" />
+    <!-- biller -->
+    <col width="28%" />
+    <!-- total -->
+    <col width="10%" />
+    <!-- buttons -->
+    <thead>
+      <tr>
+        <th><%= t 'activerecord.attributes.commercial_billing.invoice_no' %></th>
+        <th><%= t 'activerecord.attributes.commercial_billing.codes' %></th>
+        <th align="center"><%= t 'activerecord.attributes.commercial_billing.invoice_date' %></th>
+        <th><%= t 'activerecord.attributes.commercial_billing.bill' %></th>
+        <th><%= t 'activerecord.attributes.invoice.biller' %></th>
+        <th align="right"><%= t 'activerecord.attributes.commercial_billing.total' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @bills.each do |bill| %>
+      <% bill.invoices.each do |invoice| %>
+      <tr>
+        <% if invoice.invoice_type_id == InvoiceType::CONTRACT %>
+          <td><%= link_to invoice.full_no, invoice_path(invoice) %></td>
+        <% else %>
+          <td><%= link_to invoice.full_no, commercial_bill_path(invoice) %></td>
+        <% end %>
+        <td>
+          <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>
+          <span class="yellow"><%= invoice.invoice_status.code unless invoice.invoice_status.blank? %></span>
+          <span class="brown"><%= invoice.invoice_operation.code unless invoice.invoice_operation.blank? %></span>
+        </td>
+        <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
+        <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
+        <td><%= invoice.biller.name unless invoice.biller.blank? %></td>
+        <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
+      </tr>
+      <% end %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills } %>
+  <% end %>
+</div>
+<!-- Subscribers -->
+<div class="tab-pane fade active" id="subscribers">
+
+  <% if (@subscribers.count > 0) %>
+  <table class="table table-condensed table-striped shrinked">
+    <thead>
+      <%= render '/layouts/ag2_gest/subscribersheader' %>
+    </thead>
+    <tbody>
+      <%= render :partial => '/layouts/ag2_gest/subscribers', :locals => { :subscribers => @subscribers } %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscribers } %>
+  <% end %>
+</div>
+</div>
 <% if !session[:return_to].nil? %>
 <%= link_to session[:return_to], session[:return_to_url] %> |
 <% end %>

@@ -269,6 +269,7 @@ module Ag2Gest
       @breadcrumb = 'read'
       @client = Client.find(params[:id])
       @subscribers = @client.subscribers.paginate(:page => params[:page], :per_page => per_page).order(:subscriber_code)
+      @bills = @client.bills.not_service.paginate(:page => params[:page], :per_page => per_page).order(:bill_no)
 
       respond_to do |format|
         format.html # show.html.erb
