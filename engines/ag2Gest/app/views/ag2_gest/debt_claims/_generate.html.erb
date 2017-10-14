@@ -17,6 +17,8 @@
         alert("<%= I18n.t('activerecord.attributes.debt_claim.payday_limit') %> <%= I18n.t(:item_error) %>");
         return false;
       }
+      // Show message
+      $("#proc_mesage_dc").show();
     });
 
     // when #generate_code_btn is clicked
@@ -81,12 +83,12 @@
       return false;
     });
 
-    // when the #SupplierO_ field changes
-    $("#SupplierO_").change(function() {
+    // when the #debt_claim_office field changes
+    $("#debt_claim_office").change(function() {
       // make a POST call and replace the content
-      var supplier = $('#SupplierO_').val();
-      if (supplier == "") supplier = 0;
-      jQuery.getJSON('si_update_order_select_from_supplier/' + supplier, function(data) {
+      var o = $('#debt_claim_office').val();
+      if (o == "") o = 0;
+      jQuery.getJSON('dc_update_order_select_from_o/' + o, function(data) {
         var r = data.order;
         $("#Order_").html("");
         $("#Order_").select2("val", "");
@@ -102,19 +104,6 @@
             $("#Order_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
-      });
-      // AJAX refresh index table is necessary
-      $(".icon-refresh-link").click();
-      return false;
-    });
-
-    // when the #Order_ field changes
-    $("#Order_").change(function() {
-      // make a POST call and replace the content
-      var order = $('#Order_ :selected').val();
-      if (order == "") order = 0;
-      jQuery.getJSON('si_current_unbilled_balance_order/' + order, function(data) {
-        $("#current-balance-o").html(data.balance);
       });
       // AJAX refresh index table is necessary
       $(".icon-refresh-link").click();
