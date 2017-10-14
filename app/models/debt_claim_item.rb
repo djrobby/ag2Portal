@@ -44,7 +44,7 @@ class DebtClaimItem < ActiveRecord::Base
   end
 
   def project
-    debt_claim.project unless (debt_claim.blank? || debt_claim.project.blank?)
+    bill.project unless (bill.blank? || bill.project.blank?)
   end
 
   def client

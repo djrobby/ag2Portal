@@ -30,25 +30,59 @@ module Ag2Gest
     def generate
       # required params
       office = params[:debt_claim][:office]
-      payday_limit = params[:debt_claim][:payday_limit]
+      payday_limit = params[:debt_claim][:payday_limit]   # YYYYMMDD
 
       # optional params
       projects = params[:debt_claim][:projects]
-      pending_amount = params[:debt_claim][:pending_amount]
-      pending_invoices = params[:debt_claim][:pending_invoices]
       reading_routes = params[:debt_claim][:reading_routes]
       clients = params[:debt_claim][:clients]
       subscribers = params[:debt_claim][:subscribers]
       invoice_types = params[:debt_claim][:invoice_types]
+      pending_amount = params[:debt_claim][:pending_amount]
+      pending_invoices = params[:debt_claim][:pending_invoices]
 
-      # Build where
+      # Formats input params data
+      payday_limit = (payday_limit[0..3] + '-' + payday_limit[4..5] + '-' + payday_limit[6..7]).to_date
+      projects = projects.split(",") if !projects.blank?
+      reading_routes = reading_routes.split(",") if !reading_routes.blank?
+      clients = clients.split(",") if !clients.blank?
+      subscribers = subscribers.split(",") if !subscribers.blank?
+      invoice_types = invoice_types.split(",") if !invoice_types.blank?
+
+      # Builds WHERE
       w = ''
-      w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
-      w = "company_id = #{session[:company]} AND " if session[:company] != '0'
-      w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+      w = "office_id = #{office}" if !office.blank?
+      if !payday_limit.blank?
+        w += " AND " if w == ''
+        w += "payday_limit < #{payday_limit}"
+      end
+      if !projects.blank?
+        w += " AND " if w == ''
+        w = "project_id IN (#{projects})"
+      end
+      if !reading_routes.blank?
+        w += " AND " if w == ''
+        w = "subscribers.reading_route_id IN (#{reading_routes})"
+      end
+      if !clients.blank?
+        w += " AND " if w == ''
+        w = "client_id IN (#{clients})"
+      end
+      if !subscribers.blank?
+        w += " AND " if w == ''
+        w = "subscriber_id IN (#{subscribers})"
+      end
+      if !invoice_types.blank?
+        w += " AND " if w == ''
+        w = "invoice_type_id IN (#{invoice_types})"
+      end
 
-      # Retrieve invoices
+      # Retrieve current outstanding invoices
       invoices = InvoiceCurrentDebt.g_where(w)
+
+      # Set project if it's unique
+      project = nil
+      project = projects[0] if projects.count == 1
 
       # Claim No.
       claim_no = dc_next_no(office)
@@ -65,12 +99,11 @@ module Ag2Gest
             DebtClaimItem.create(debt_claim_id: claim.id)
           end # invoices.each
 
-          redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.alert")
+          redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.notice")
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
         redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate.alert") and return
       end # begin
-
     end
 
     #
@@ -95,12 +128,12 @@ module Ag2Gest
       @phase = debt_claim_phases_dropdown if @phase.nil?
 
       # Initialize modal generate tags
-      @offices = []
+      @offices = offices_dropdown if @offices.nil?
       @projects = []
       @reading_routes = []
       @clients = []
       @subscribers = []
-      @invoice_types = []
+      @invoice_types = invoice_types_dropdown if @invoice_types.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -312,6 +345,30 @@ module Ag2Gest
 
     def debt_claim_statuses_dropdown
       DebtClaimStatus.all
+    end
+
+    def invoice_statuses_dropdown
+      InvoiceStatus.all
+    end
+
+    def invoice_types_dropdown
+      InvoiceType.all
+    end
+
+    def invoice_operations_dropdown
+      InvoiceOperation.all
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        Office.where(company_id: session[:company].to_i).order(:name)
+      elsif session[:organization] != '0'
+        Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name)
+      else
+        Office.order(:name)
+      end
     end
 
     # Returns _array from _ret table/model filled with _id attribute

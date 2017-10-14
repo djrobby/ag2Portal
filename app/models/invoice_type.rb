@@ -22,6 +22,8 @@ class InvoiceType < ActiveRecord::Base
 
   # Scopes
   scope :commercial, -> { where("id != 1 AND id != 3") }
+  scope :service, -> { where(id: 1) }
+  scope :contracting, -> { where(id: 3) }
 
   def code
     case self.id

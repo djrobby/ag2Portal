@@ -11,15 +11,20 @@ class InvoiceCurrentDebt < ActiveRecord::Base
   belongs_to :bill
   belongs_to :project
   belongs_to :office
+  belongs_to :invoice_status
+  belongs_to :invoice_type
+  belongs_to :invoice_operation
   attr_accessible :invoice_id, :organization_id, :client_id, :subscriber_id, :bill_id, :project_id, :office_id,
-                  :invoice_no, :invoice_date, :payday_limit,
+                  :invoice_status_id, :invoice_type_id, :invoice_operation_id, :invoice_no, :invoice_date, :payday_limit,
                   :subtotal, :taxes, :bonus, :taxable, :total, :paid, :calc_debt, :totals, :receivables, :debt
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
+  scope :by_project_bill_invoice, -> { order(:project_id, :bill_id, :invoice_id) }
   #
   scope :g_where, -> w {
-    where(w).by_no
+    joins('LEFT JOIN subscribers ON invoice_current_debts.subscriber_id = subscribers.id')
+    .where(w).by_project_bill_invoice
   }
   # scope :g_where, -> w {
   #   joins(:bill)
