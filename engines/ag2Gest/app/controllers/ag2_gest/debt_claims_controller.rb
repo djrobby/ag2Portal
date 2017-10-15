@@ -31,15 +31,18 @@ module Ag2Gest
       # required params
       office = params[:debt_claim][:office]
       payday_limit = params[:debt_claim][:payday_limit]   # YYYYMMDD
-
       # optional params
       projects = params[:debt_claim][:projects]
       reading_routes = params[:debt_claim][:reading_routes]
       clients = params[:debt_claim][:clients]
       subscribers = params[:debt_claim][:subscribers]
       invoice_types = params[:debt_claim][:invoice_types]
-      pending_amount = params[:debt_claim][:pending_amount]
-      pending_invoices = params[:debt_claim][:pending_invoices]
+      # numeric params
+      pending_amount = BigDecimal(params[:debt_claim][:pending_amount]) rescue 0.0
+      pending_invoices = Integer(params[:debt_claim][:pending_amount]) rescue 0
+      if pending_amount < 0 || pending_invoices < 0
+        redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_numeric") and return
+      end
 
       # Formats input params data
       payday_limit = (payday_limit[0..3] + '-' + payday_limit[4..5] + '-' + payday_limit[6..7]).to_date
@@ -79,6 +82,12 @@ module Ag2Gest
 
       # Retrieve current outstanding invoices
       invoices = InvoiceCurrentDebt.g_where(w)
+      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.count < 0
+
+      # Group & total: Retrieve clients with right pending_amount or pending_invoices
+      g = invoices.group(:client_id)
+                  .select('client_id, SUM(debt) AS pending_amount, COUNT(invoice_id) AS pending_invoices')
+                  .having('pending_amount > ? OR pending_invoices > ?', pending_amount, pending_invoices)
 
       # Set project if it's unique
       project = nil

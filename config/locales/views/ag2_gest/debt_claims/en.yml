@@ -44,4 +44,5 @@ en:
       generate_claim_error: "Claim can not be generated."
       generate_claim_write: "Unable to save new Claim."
       generate_claim_ok: "Claim %{var} has been generated."
-
+      generate_error_numeric: "Oops!... You must enter correct numbers."
+      generate_error_no_data: "Oops!... I have not found any data with these parameters."

@@ -45,4 +45,5 @@ es:
       generate_claim_error: "Imposible generar Reclamación: Oferta inválida."
       generate_claim_write: "Imposible guardar nueva Reclamación."
       generate_claim_ok: "Reclamación %{var} ha sido generada."
-
+      generate_error_payment: "¡Oh oh!... Debes indicar números correctos."
+      generate_error_no_data: "¡Oh oh!... No he encontrado datos con estos parámetros."
