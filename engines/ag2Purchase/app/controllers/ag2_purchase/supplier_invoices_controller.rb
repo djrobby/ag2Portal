@@ -218,7 +218,7 @@ module Ag2Purchase
           @note_items = []
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @payment_methods = payment_methods_dropdown
         else
@@ -252,7 +252,7 @@ module Ag2Purchase
           @note_items = []
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @payment_methods = payment_methods_dropdown
         else
@@ -279,7 +279,7 @@ module Ag2Purchase
           @order_items = []
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @payment_methods = payment_methods_dropdown
         else
@@ -305,7 +305,7 @@ module Ag2Purchase
         @order_items = []
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
-        @charge_accounts = charge_accounts_dropdown
+        @charge_accounts = projects_charge_accounts(@projects)
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
@@ -343,7 +343,7 @@ module Ag2Purchase
           @note_items = []
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @payment_methods = payment_methods_dropdown
         else
@@ -368,7 +368,7 @@ module Ag2Purchase
         @note_items = []
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
-        @charge_accounts = charge_accounts_dropdown
+        @charge_accounts = projects_charge_accounts(@projects)
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
@@ -403,7 +403,7 @@ module Ag2Purchase
           @order_items = []
           @projects = projects_dropdown
           @work_orders = work_orders_dropdown
-          @charge_accounts = charge_accounts_dropdown
+          @charge_accounts = projects_charge_accounts(@projects)
           @stores = stores_dropdown
           @payment_methods = payment_methods_dropdown
         else
@@ -428,7 +428,7 @@ module Ag2Purchase
         @order_items = []
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
-        @charge_accounts = charge_accounts_dropdown
+        @charge_accounts = projects_charge_accounts(@projects)
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
@@ -858,7 +858,7 @@ module Ag2Purchase
         @suppliers = suppliers_dropdown
         @projects = projects_dropdown
         @work_orders = work_orders_dropdown
-        @charge_accounts = charge_accounts_dropdown
+        @charge_accounts = projects_charge_accounts(@projects)
         @stores = stores_dropdown
         @payment_methods = payment_methods_dropdown
         @products = products_dropdown
