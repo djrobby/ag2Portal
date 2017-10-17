@@ -79,12 +79,20 @@ class DebtClaim < ActiveRecord::Base
     office.company unless (office.blank? || office.company.blank?)
   end
 
-  def status
+  def max_status
     debt_claim_items.order(debt_claim_status_id: :desc).first.debt_claim_status rescue nil
   end
 
-  def status_name
-    status.nil? ? '' : status.name
+  def max_status_name
+    max_status.nil? ? '' : max_status.name
+  end
+
+  def min_status
+    debt_claim_items.order(debt_claim_status_id: :asc).first.debt_claim_status rescue nil
+  end
+
+  def min_status_name
+    min_status.nil? ? '' : min_status.name
   end
 
   #

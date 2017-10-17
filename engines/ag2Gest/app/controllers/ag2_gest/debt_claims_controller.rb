@@ -82,12 +82,17 @@ module Ag2Gest
 
       # Retrieve current outstanding invoices
       invoices = InvoiceCurrentDebt.g_where(w)
-      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.count < 0
+      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.count < 1
 
       # Group & total: Retrieve clients with right pending_amount or pending_invoices
       g = invoices.group(:client_id)
                   .select('client_id, SUM(debt) AS pending_amount, COUNT(invoice_id) AS pending_invoices')
                   .having('pending_amount > ? OR pending_invoices > ?', pending_amount, pending_invoices)
+      if !g.blank?
+        # Filter invoice records
+        c = g.pluck(:client_id)
+        invoices = invoices.where(client_id: c)
+      end
 
       # Set project if it's unique
       project = nil
@@ -105,7 +110,9 @@ module Ag2Gest
                                    debt_claim_phase_id: DebtClaimPhase::FIRST_CLAIM)
           # Loop thru invoices and create items
           invoices.each do |i|
-            DebtClaimItem.create(debt_claim_id: claim.id)
+            DebtClaimItem.create(debt_claim_id: claim.id, bill_id: i.bill_id,
+                                 invoice_id: i.invoice_id, debt_claim_status_id: DebtClaimStatus::INITIATED,
+                                 debt: i.debt, payday_limit: Time.now.to_date + 1.month)
           end # invoices.each
 
           redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.notice")

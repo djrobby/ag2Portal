@@ -1,4 +1,8 @@
 class DebtClaimStatus < ActiveRecord::Base
+  # CONSTANTS
+  INITIATED = 1
+  COMPLETED = 99
+
   attr_accessible :action, :name
 
   has_many :debt_claim_items
