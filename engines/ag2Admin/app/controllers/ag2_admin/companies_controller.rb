@@ -155,6 +155,9 @@ module Ag2Admin
       @users = users_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
+      @zipcodes = zipcodes_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
       @banks = banks_dropdown
       @offices = bank_offices_dropdown
       $attachment = Attachment.new
@@ -174,6 +177,9 @@ module Ag2Admin
       @users = users_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
+      @zipcodes = zipcodes_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
       @banks = banks_dropdown
       @offices = bank_offices_dropdown
       $attachment = Attachment.new
@@ -203,6 +209,9 @@ module Ag2Admin
           @users = users_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
+          @zipcodes = zipcodes_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           @banks = banks_dropdown
           @offices = bank_offices_dropdown
           $attachment.destroy
@@ -237,6 +246,9 @@ module Ag2Admin
           @users = users_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
+          @zipcodes = zipcodes_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           @banks = banks_dropdown
           @offices = bank_offices_dropdown
           $attachment.destroy
@@ -280,6 +292,18 @@ module Ag2Admin
 
     def countries_dropdown
       Country.order(:code)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town, :province)
+    end
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
     end
 
     def banks_dropdown
