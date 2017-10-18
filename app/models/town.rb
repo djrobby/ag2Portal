@@ -21,6 +21,11 @@ class Town < ActiveRecord::Base
   validates :ine_cmun,  :length => { :minimum => 3 }
   validates :ine_dc,    :length => { :minimum => 1 }
 
+  # Scopes
+  scope :by_ine, -> { order(:ine_cmun, :ine_dc) }
+  scope :by_name, -> { order(:name) }
+
+  # Callbacks
   before_destroy :check_for_dependent_records
 
   def to_label

@@ -22,14 +22,18 @@ class Zipcode < ActiveRecord::Base
   validates :town,      :presence => true
   validates :province,  :presence => true
 
+  # Scopes
+  scope :by_zipcode, -> { order(:zipcode) }
+
+  # Callbacks
   before_destroy :check_for_dependent_records
 
   def to_label
-    "#{zipcode} - #{town.name} (#{province.name})"
+    "#{zipcode} - #{town_name} (#{province.name})"
   end
 
   def town_name
-    town.name
+    town.blank? ? '' : town.name
   end
 
   searchable do

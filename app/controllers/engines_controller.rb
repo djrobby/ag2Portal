@@ -214,6 +214,30 @@ class EnginesController < ApplicationController
     render json: @companies
   end
 
+  # Towns
+  def search_towns
+    @towns = []
+    w = ''
+    if @q != ''
+      w += "name LIKE '%#{@q}%'"
+      @towns = serialized(Town.where(w).by_name,
+                             Api::V1::TownsSerializer)
+    end
+    render json: @towns
+  end
+
+  # Zipcodes
+  def search_zipcodes
+    @zipcodes = []
+    w = ''
+    if @q != ''
+      w += "zipcode LIKE '%#{@q}%'"
+      @zipcodes = serialized(Zipcode.where(w).by_zipcode,
+                             Api::V1::ZipcodesSerializer)
+    end
+    render json: @zipcodes
+  end
+
   # Work orders
   def search_work_orders
     @work_orders = []

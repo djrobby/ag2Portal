@@ -33,6 +33,8 @@ Ag2Portal::Application.routes.draw do
     match 'search_project_work_orders', :controller => 'engines', :action => 'search_project_work_orders'
     match 'search_contracting_requests', :controller => 'engines', :action => 'search_contracting_requests'
     match 'search_companies', :controller => 'engines', :action => 'search_companies'
+    match 'search_towns', :controller => 'engines', :action => 'search_towns'
+    match 'search_zipcodes', :controller => 'engines', :action => 'search_zipcodes'
     match 'search_suppliers', :controller => 'engines', :action => 'search_suppliers'
     match 'search_product_families', :controller => 'engines', :action => 'search_product_families'
     match 'search_products', :controller => 'engines', :action => 'search_products'
