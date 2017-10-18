@@ -26,7 +26,7 @@ class Province < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   def to_label
-    "#{name} (#{region.name})"
+    "#{name_and_region}"
   end
 
   def name_and_region

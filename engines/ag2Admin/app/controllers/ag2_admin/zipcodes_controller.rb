@@ -65,6 +65,11 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @zipcode = Zipcode.new
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+
+      # @towns = Town.connection.select_all('select * from towns order by name')
+      # @towns = Town.find_by_sql('SELECT * FROM TOWNS ORDER BY NAME')
 
       respond_to do |format|
         format.html # new.html.erb
@@ -76,6 +81,8 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @zipcode = Zipcode.find(params[:id])
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
     end
 
     # POST /zipcodes
@@ -90,6 +97,8 @@ module Ag2Admin
           format.html { redirect_to @zipcode, notice: crud_notice('created', @zipcode) }
           format.json { render json: @zipcode, status: :created, location: @zipcode }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           format.html { render action: "new" }
           format.json { render json: @zipcode.errors, status: :unprocessable_entity }
         end
@@ -109,6 +118,8 @@ module Ag2Admin
                         notice: (crud_notice('updated', @zipcode) + "#{undo_link(@zipcode)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           format.html { render action: "edit" }
           format.json { render json: @zipcode.errors, status: :unprocessable_entity }
         end
@@ -133,6 +144,14 @@ module Ag2Admin
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
 
     def sort_column
       Zipcode.column_names.include?(params[:sort]) ? params[:sort] : "zipcode"
