@@ -78,6 +78,7 @@
   });
 </script>
 
+<% users = users_according_oco %>
 <%= simple_form_for @ticket, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
@@ -95,12 +96,12 @@
 <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 30 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 5, :maxlength => 999 }, :label_html => { :class => 'form-label' } %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :created_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :updated_by, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :created_by, collection: users, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :updated_by, collection: users, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :office, collection: @offices, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :cc, collection: User.all(order: 'email'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :cc, collection: users, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :ticket_status, collection: TicketStatus.all(order: 'id'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>

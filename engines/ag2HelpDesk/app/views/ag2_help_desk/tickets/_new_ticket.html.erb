@@ -5,6 +5,10 @@
     validationSettings = {
       errorMessagePosition : 'element'
     };
+    $('.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true
+    });
     // Run validation on an input element when it loses focus.    
     //$('#new-item-fields').validateOnBlur();
   });
@@ -42,7 +46,7 @@
 <div id="new-ticket" class="modal hide fade" style="display: none;">
   <% if user_signed_in? %>
     <% e = t('ag2_help_desk.tickets.new_ticket.error') %>
-    <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_ticket' } do |f| %>
+    <%= simple_form_for Ticket.new, :url => ag2_help_desk.popup_new_tickets_path, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline modal-footer-right', :id => 'form_new_ticket' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
       <h3><%= I18n.t('ag2_help_desk.tickets.new_ticket.title') %></h3>
@@ -53,6 +57,7 @@
       <%= f.association :ticket_priority, collection: TicketPriority.user_only, :selected => 1, :input_html => { :class => 'mid-text-field', :id => 'fnt_priority', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :ticket_subject, :input_html => { :class => 'x-large-text-field', :maxlength => 30, :id => 'fnt_subject', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :ticket_message, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 5, :maxlength => 999, :id => 'fnt_message', :data => { :validation => "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
+      <%= f.association :cc, collection: users_according_oco, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :attachment, :as => :file, :label_html => { :class => 'form-label' } %>
       <%= hidden_field_tag :referrer, "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
     </div>

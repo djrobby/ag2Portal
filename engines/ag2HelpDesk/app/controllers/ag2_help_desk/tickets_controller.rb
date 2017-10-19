@@ -512,11 +512,15 @@ module Ag2HelpDesk
     end
 
     def offices_by_company(_company)
-      _offices = Office.where(company_id: _company).order(:name)
+      Office.where(company_id: _company).order(:name)
     end
 
     def technicians_dropdown
-      _technicians = session[:organization] != '0' ? Technician.where(organization_id: session[:organization].to_i).order(:name) : Technician.order(:name)
+      session[:organization] != '0' ? Technician.where(organization_id: session[:organization].to_i).order(:name) : Technician.order(:name)
+    end
+
+    def users_dropdown
+      session[:organization] != '0' ? User.belongs_to_organization(session[:organization].to_i) : User.by_email
     end
 
     # Keeps filter state

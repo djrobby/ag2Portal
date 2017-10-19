@@ -22,18 +22,25 @@ class User < ActiveRecord::Base
   attr_accessible :role_ids, :organization_ids, :company_ids, :office_ids, :project_ids
   # attr_accessible :title, :body
 
-  has_paper_trail
-
-  validates :name,  :presence => true
-
-  before_save :ensure_authentication_token
-  after_create :assign_default_role_and_send_email
-
   has_many :workers # has_one when finished worker_items implementation
   has_one :technician
   has_many :tickets, foreign_key: :created_by
   has_many :cc_tickets, class_name: 'Ticket', foreign_key: :cc_id
   has_many :background_works
+
+  has_paper_trail
+
+  validates :name,  :presence => true
+
+  # Scopes
+  scope :by_email, -> { order(:email) }
+  scope :by_name, -> { order(:name) }
+  #
+  scope :belongs_to_organization, -> o { joins(:organizations).where(organizations: { id: o }).by_email }
+
+  # Callbacks
+  before_save :ensure_authentication_token
+  after_create :assign_default_role_and_send_email
 
   def works_pending
     background_works.where(complete: false)

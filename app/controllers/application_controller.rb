@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   helper_method :formatted_date
   helper_method :formatted_timestamp
   helper_method :formatted_time
+  helper_method :users_according_oco
 
   #
   # Formatting
@@ -134,6 +135,10 @@ class ApplicationController < ActionController::Base
       _include_blank = true
     end
     return _org, _include_blank
+  end
+
+  def users_according_oco
+    (session[:organization] && (session[:organization] != '0' && session[:organization] != 0)) ? Organization.find(session[:organization].to_i).users.by_email : User.by_email
   end
 
   #
