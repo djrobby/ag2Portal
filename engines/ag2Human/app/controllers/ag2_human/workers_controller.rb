@@ -351,6 +351,9 @@ end
       @worker = Worker.new
       $attachment = Attachment.new
       destroy_attachment
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -364,6 +367,10 @@ end
       @worker = Worker.find(params[:id])
       $attachment = Attachment.new
       destroy_attachment
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+
       # Check worker OCO access
       if !oco_can_access(@worker)
         redirect_to workers_url, alert: I18n.t('unauthorized.default')
@@ -390,6 +397,9 @@ end
         else
           $attachment.destroy
           $attachment = Attachment.new
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @worker.errors, status: :unprocessable_entity }
         end
@@ -417,6 +427,9 @@ end
         else
           $attachment.destroy
           $attachment = Attachment.new
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @worker.errors, status: :unprocessable_entity }
         end
@@ -441,6 +454,18 @@ end
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def current_items_for_index(_items)
       _current_items = []

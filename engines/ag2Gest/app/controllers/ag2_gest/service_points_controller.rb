@@ -129,6 +129,7 @@ module Ag2Gest
       @companies = companies_dropdown
       @offices = offices_dropdown
       @reading_routes = reading_routes_dropdown
+      @zipcodes = zipcodes_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -143,6 +144,7 @@ module Ag2Gest
       @companies = @service_point.organization.blank? ? companies_dropdown : companies_dropdown_edit(@service_point.organization)
       @offices = @service_point.organization.blank? ? offices_dropdown : offices_dropdown_edit(@service_point.organization_id)
       @reading_routes = reading_routes_dropdown
+      @zipcodes = zipcodes_dropdown
     end
 
     # POST /service
@@ -159,6 +161,7 @@ module Ag2Gest
           @companies = companies_dropdown
           @offices = offices_dropdown
           @reading_routes = reading_routes_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @service_point.errors, status: :unprocessable_entity }
         end
@@ -180,6 +183,7 @@ module Ag2Gest
           @companies = @project.organization.blank? ? companies_dropdown : companies_dropdown_edit(@project.organization)
           @offices = @project.organization.blank? ? offices_dropdown : offices_dropdown_edit(@project.organization_id)
           @reading_routes = reading_routes_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @service_point.errors, status: :unprocessable_entity }
         end
@@ -203,6 +207,10 @@ module Ag2Gest
     end
 
     private
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def companies_dropdown
       if session[:company] != '0'

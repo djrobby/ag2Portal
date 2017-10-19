@@ -118,6 +118,11 @@ module Ag2Directory
     def new
       @breadcrumb = 'create'
       @shared_contact = SharedContact.new
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -129,6 +134,11 @@ module Ag2Directory
     def edit
       @breadcrumb = 'update'
       @shared_contact = SharedContact.find(params[:id])
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
     end
 
     # POST /shared_contacts
@@ -143,6 +153,11 @@ module Ag2Directory
           format.html { redirect_to @shared_contact, notice: crud_notice('created', @shared_contact) }
           format.json { render json: @shared_contact, status: :created, location: @shared_contact }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
+          @regions = Region.order(:name)
+          @countries = Country.order(:name)
           format.html { render action: "new" }
           format.json { render json: @shared_contact.errors, status: :unprocessable_entity }
         end
@@ -162,6 +177,11 @@ module Ag2Directory
                         notice: (crud_notice('updated', @shared_contact) + "#{undo_link(@shared_contact)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
+          @regions = Region.order(:name)
+          @countries = Country.order(:name)
           format.html { render action: "edit" }
           format.json { render json: @shared_contact.errors, status: :unprocessable_entity }
         end
@@ -182,6 +202,18 @@ module Ag2Directory
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     # Keeps filter state
     def manage_filter_state

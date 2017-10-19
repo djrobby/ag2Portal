@@ -2,6 +2,6 @@
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <%= f.input :name, :required => true, :autofocus => true, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
-<%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :country, collection: @countries, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

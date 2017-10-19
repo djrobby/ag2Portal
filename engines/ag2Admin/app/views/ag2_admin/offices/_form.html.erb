@@ -18,7 +18,7 @@
       if (office == "")
         office = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + office, function(data) {
-        $("#office_province_id").select2("val", data.id);
+        $("#office_province_id").val(data.id);
       })
       return false;
     });
@@ -31,10 +31,10 @@
       if (office == "")
         office = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + office, function(data) {
-        $("#office_town_id").select2("val", data.town_id);
-        $("#office_province_id").select2("val", data.province_id);
+        $("#office_town_id").val(data.town_id);
+        $("#office_province_id").val(data.province_id);
         if (code == "")
-          $("#office_office_code").val(data.zipcode);
+          $("#office_office_code").val(zipcode);
       })
       return false;
     });
@@ -46,7 +46,7 @@
       if (office == "")
         office = "0";
       jQuery.getJSON('update_code_textfield_from_zipcode/' + office, function(data) {
-        $("#office_office_code").val(data.zipcode);
+        $("#office_office_code").val(zipcode);
       })
       return false;
     });
@@ -138,11 +138,11 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %>
+<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
 <%= f.input :nomina_id, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
 <% end %>

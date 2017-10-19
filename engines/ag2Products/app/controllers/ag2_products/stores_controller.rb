@@ -108,7 +108,9 @@ module Ag2Products
       @companies = companies_dropdown
       @offices = offices_dropdown
       @suppliers = suppliers_dropdown
-
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @store }
@@ -122,6 +124,9 @@ module Ag2Products
       @companies = @store.organization.blank? ? companies_dropdown : companies_dropdown_edit(@store.organization)
       @offices = @store.organization.blank? ? offices_dropdown : offices_dropdown_edit(@store.organization_id)
       @suppliers = @store.organization.blank? ? suppliers_dropdown : suppliers_dropdown_edit(@store.organization)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
     end
 
     # POST /stores
@@ -139,6 +144,9 @@ module Ag2Products
           @companies = companies_dropdown
           @offices = offices_dropdown
           @suppliers = suppliers_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @store.errors, status: :unprocessable_entity }
         end
@@ -161,6 +169,9 @@ module Ag2Products
           @companies = @store.organization.blank? ? companies_dropdown : companies_dropdown_edit(@store.organization)
           @offices = @store.organization.blank? ? offices_dropdown : offices_dropdown_edit(@store.organization_id)
           @suppliers = @store.organization.blank? ? suppliers_dropdown : suppliers_dropdown_edit(@store.organization)
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @store.errors, status: :unprocessable_entity }
         end
@@ -231,6 +242,18 @@ module Ag2Products
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def sort_column
       Store.column_names.include?(params[:sort]) ? params[:sort] : "name"

@@ -44,7 +44,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @street_directory = StreetDirectory.new
-
+      @towns = towns_dropdown
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @street_directory }
@@ -55,6 +55,7 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @street_directory = StreetDirectory.find(params[:id])
+      @towns = towns_dropdown
     end
 
     # POST /street_directories
@@ -69,6 +70,7 @@ module Ag2Gest
           format.html { redirect_to @street_directory, notice: t('activerecord.attributes.street_directory.create') }
           format.json { render json: @street_directory, status: :created, location: @street_directory }
         else
+          @towns = towns_dropdown
           format.html { render action: "new" }
           format.json { render json: @street_directory.errors, status: :unprocessable_entity }
         end
@@ -88,6 +90,7 @@ module Ag2Gest
                         notice: (crud_notice('updated', @street_directory) + "#{undo_link(@street_directory)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
           format.html { render action: "edit" }
           format.json { render json: @street_directory.errors, status: :unprocessable_entity }
         end
@@ -112,6 +115,10 @@ module Ag2Gest
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
 
     def sort_column
       StreetDirectory.column_names.include?(params[:sort]) ? params[:sort] : "street_name"

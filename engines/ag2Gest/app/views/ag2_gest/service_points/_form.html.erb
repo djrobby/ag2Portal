@@ -82,10 +82,10 @@ var text_field_color;
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
-        $("#fnt_town").select2("val", data.town_id);
-        $("#fnt_province").select2("val", data.province_id);
-        $("#fnt_region").select2("val", data.region_id);
-        $("#fnt_country").select2("val", data.country_id);
+        $("#fnt_town").val(data.town_id);
+        $("#fnt_province").val(data.province_id);
+        $("#fnt_region").val(data.region_id);
+        $("#fnt_country").val(data.country_id);
       });
       return false;
     });
@@ -101,10 +101,10 @@ var text_field_color;
       jQuery.getJSON('update_province_textfield_from_street_directory/' + contact, function(data) {
 
         $("#fnt_street_type").select2("val", data.street_type_id);
-        $("#fnt_town").select2("val", data.town_id);
-        $("#fnt_province").select2("val", data.province_id);
-        $("#fnt_region").select2("val", data.region_id);
-        $("#fnt_country").select2("val", data.country_id);
+        $("#fnt_town").val(data.town_id);
+        $("#fnt_province").val(data.province_id);
+        $("#fnt_region").val(data.region_id);
+        $("#fnt_country").val(data.country_id);
 
         $("#fnt_street_type").prop('disabled', true);
         $("#fnt_town").prop('disabled', true);
@@ -190,7 +190,7 @@ var text_field_color;
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
+  <label class="multi-field-label-two"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
   <label class="multi-field-label-two"> <%= f.association :reading_route, collection: @reading_routes, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
 </div>
 <div>

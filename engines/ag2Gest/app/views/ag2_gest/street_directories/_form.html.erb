@@ -16,7 +16,7 @@
 
 	<div class="row-fluid">
 	  <%= f.association :street_type, collection: StreetType.all(order: 'street_type_description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-	  <%= f.association :town, collection: Town.all(order: 'province_id, name'), :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span8"} %>
+	  <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span8"} %>
 	</div>  
 
 	<%= f.button :submit, :class => 'btn-primary' %>

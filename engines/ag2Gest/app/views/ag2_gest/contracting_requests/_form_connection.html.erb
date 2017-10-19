@@ -13,6 +13,11 @@
 
   $(document).ready(function() {
     // Select2
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    
     $('select.custom-sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true,
@@ -92,11 +97,6 @@
             $("#contracting_request_entity_province_id").val(data.province_id);
             $("#contracting_request_entity_region_id").val(data.region_id);
             $("#contracting_request_entity_country_id").val(data.country_id);
-            $("#contracting_request_entity_zipcode_id").select2("val", data.zipcode_id);
-            $("#contracting_request_entity_town_id").select2("val", data.town_id);
-            $("#contracting_request_entity_province_id").select2("val", data.province_id);
-            $("#contracting_request_entity_region_id").select2("val", data.region_id);
-            $("#contracting_request_entity_country_id").select2("val", data.country_id);
 
             $("#contracting_request_client_street_type_id").val(data.street_type_id);
             $("#contracting_request_client_street_type_id").select2("val", data.street_type_id);
@@ -111,11 +111,6 @@
             $("#contracting_request_client_province_id").val(data.province_id);
             $("#contracting_request_client_region_id").val(data.region_id);
             $("#contracting_request_client_country_id").val(data.country_id);
-            $("#contracting_request_client_zipcode_id").select2("val", data.zipcode_id);
-            $("#contracting_request_client_town_id").select2("val", data.town_id);
-            $("#contracting_request_client_province_id").select2("val", data.province_id);
-            $("#contracting_request_client_region_id").select2("val", data.region_id);
-            $("#contracting_request_client_country_id").select2("val", data.country_id);
             $("#contracting_request_client_phone").val(data.phone);
             $("#contracting_request_client_fax").val(data.fax);
             $("#contracting_request_client_cellular").val(data.cellular);
@@ -134,11 +129,6 @@
             $("#contracting_request_subscriber_province_id").val(data.province_id);
             $("#contracting_request_subscriber_region_id").val(data.region_id);
             $("#contracting_request_subscriber_country_id").val(data.country_id);
-            $("#contracting_request_subscriber_zipcode_id").select2("val", data.zipcode_id);
-            $("#contracting_request_subscriber_town_id").select2("val", data.town_id);
-            $("#contracting_request_subscriber_province_id").select2("val", data.province_id);
-            $("#contracting_request_subscriber_region_id").select2("val", data.region_id);
-            $("#contracting_request_subscriber_country_id").select2("val", data.country_id);
 
             // Enable fields
             $('.entity-field').prop('disabled', false);
@@ -213,15 +203,15 @@
 
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
-      $('#contracting_request_request_no').prop('readonly', true);
+      $('#contracting_request_request_no').prop('disabled', true);
       $('#contracting_request_request_date').attr('disabled', true);
-      $('#contracting_request_contracting_request_type_id').prop('readonly', true);
-      $('#contracting_request_project_id').prop('readonly', true);
+      $('#contracting_request_contracting_request_type_id').prop('disabled', true);
+      $('#contracting_request_project_id').prop('disabled', true);
     } else {
-      $('#contracting_request_request_no').prop('readonly', false);
+      $('#contracting_request_request_no').prop('disabled', false);
       $('#contracting_request_request_date').attr('disabled', false);
-      $('#contracting_request_contracting_request_type_id').prop('readonly', false);
-      $('#contracting_request_project_id').prop('readonly', false);
+      $('#contracting_request_contracting_request_type_id').prop('disabled', false);
+      $('#contracting_request_project_id').prop('disabled', false);
     }
   });
 
@@ -242,11 +232,6 @@
         $("#contracting_request_subscriber_province_id").val(data.province_id);
         $("#contracting_request_subscriber_region_id").val(data.region_id);
         $("#contracting_request_subscriber_country_id").val(data.country_id);
-        $("#contracting_request_subscriber_zipcode_id").select2("val", data.zipcode_id);
-        $("#contracting_request_subscriber_town_id").select2("val", data.town_id);
-        $("#contracting_request_subscriber_province_id").select2("val", data.province_id);
-        $("#contracting_request_subscriber_region_id").select2("val", data.region_id);
-        $("#contracting_request_subscriber_country_id").select2("val", data.country_id);
       });
       return false;
     });
@@ -279,7 +264,7 @@
 
     // when the .contracting_request_type_id field changes
     $('.contracting_request_type_id').select2().on("change", function(e) {
-        $(".cancellation-field").prop('readonly', false);
+        $(".cancellation-field").prop('disabled', false);
         $('.row-bank-account').show();
         $('.row-documents').show();
         $('.row-buttons').show();
@@ -302,7 +287,6 @@
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
         $("#contracting_request_client_province_id").val(data.province_id);
-        $("#contracting_request_client_province_id").select2("val", data.province_id);
         $("#contracting_request_client_region_id").val(data.region_id);
         $("#contracting_request_client_country_id").val(data.country_id);
       })
@@ -344,7 +328,6 @@
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
         $("#contracting_request_client_province_id").val(data.province_id);
-        $("#contracting_request_client_province_id").select2("val", data.province_id);
         $("#contracting_request_client_region_id").val(data.region_id);
         $("#contracting_request_client_country_id").val(data.country_id);
       })
@@ -352,7 +335,7 @@
     });
 
     // when the #contracting_request_client_province_id field changes
-    $('#contracting_request_client_province_id').select2().on("select2-selecting", function(e) {
+    $('#contracting_request_client_province_id').change(function() {
     // $("#contracting_request_client_province_id").change(function() {
       // make a POST call and replace the content
       var contact = $('select#contracting_request_client_province_id :selected').val();
@@ -396,13 +379,13 @@
   <!-- PROJECT -->
   <label class="multi-field-label-four field-project">
     <% if !@projects.empty? %>
-      <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+      <%= f.association :project, collection: @projects.ser_or_tca, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif session[:organization] != '0' %>
-      <%= f.association :project, collection: Project.where("organization_id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+      <%= f.association :project, collection: Project.where("organization_id = ?", "#{session[:organization]}").ser_or_tca, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.projects.count > 0 %>
-      <%= f.association :project, collection: current_user.projects.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+      <%= f.association :project, collection: current_user.projects.ser_or_tca, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-      <%= f.association :project, collection: Project.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+      <%= f.association :project, collection: Project.ser_or_tca, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <% end %>
   </label>
 
@@ -463,20 +446,20 @@
       <!-- ENTITY floor_office -->
       <%= f.input :entity_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
       <!-- ENTITY zipcode -->
-      <%= f.association :entity_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.association :entity_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
     </div>
     <div class="row-fluid">
       <!-- ENTITY town -->
-      <%= f.association :entity_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY province -->
-      <%= f.association :entity_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
 
     <div class="row-fluid">
       <!-- ENTITY region -->
-      <%= f.association :entity_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY country -->
-      <%= f.association :entity_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
 
   </div>
@@ -527,20 +510,20 @@
     <!-- CLIENT floor_office -->
     <%= f.input :client_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CLIENT zipcode -->
-    <%= f.association :client_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :client_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- CLIENT town -->
-    <%= f.association :client_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT province -->
-    <%= f.association :client_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT region -->
-    <%= f.association :client_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT country -->
-    <%= f.association :client_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
@@ -584,20 +567,20 @@
     <!-- CONNECTION floor_office -->
     <%= f.input :subscriber_floor_office, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CONNECTION zipcode -->
-    <%= f.association :subscriber_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :subscriber_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- CONNECTION town -->
-    <%= f.association :subscriber_town, collection: @towns, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_town, collection: @towns, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CONNECTION province -->
-    <%= f.association :subscriber_province, collection: @provinces, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_province, collection: @provinces, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CONNECTION region -->
-    <%= f.association :subscriber_region, collection: @regions, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_region, collection: @regions, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- CONNECTION country -->
-    <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- CONNECTION center -->
     <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
@@ -609,13 +592,13 @@
   <h4><%=t 'ag2_gest.contracting_requests.new.iban' %></h4>
   <div class="row-fluid">
     <!-- COUNTRY CODE -->
-    <%= f.input :country_id, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :country_id, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- IBAN DC -->
     <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- BANK -->
-    <%= f.input :bank_id, collection: Bank.all(order: 'code'), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_id, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- BANK OFFICE -->
-    <%= f.input :bank_office_id, collection: BankOffice.order(:bank_id, :code), label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_office_id, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- DC -->
     <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->

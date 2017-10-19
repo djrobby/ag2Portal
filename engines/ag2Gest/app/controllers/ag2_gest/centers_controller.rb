@@ -38,7 +38,7 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @center = Center.new
-
+      @towns = towns_dropdown
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @center }
@@ -49,6 +49,7 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @center = Center.find(params[:id])
+      @towns = towns_dropdown
     end
 
     # POST /centers
@@ -63,6 +64,7 @@ module Ag2Gest
           format.html { redirect_to @center, notice: t('activerecord.attributes.center.create') }
           format.json { render json: @center, status: :created, location: @center }
         else
+          @towns = towns_dropdown
           format.html { render action: "new" }
           format.json { render json: @center.errors, status: :unprocessable_entity }
         end
@@ -82,6 +84,7 @@ module Ag2Gest
                         notice: (crud_notice('updated', @center) + "#{undo_link(@center)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
           format.html { render action: "edit" }
           format.json { render json: @center.errors, status: :unprocessable_entity }
         end
@@ -106,6 +109,10 @@ module Ag2Gest
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
 
     def sort_column
       Center.column_names.include?(params[:sort]) ? params[:sort] : "name"

@@ -6,6 +6,6 @@
   <label class="multi-field-label-two"> <%= f.input :ine_cmun, :required => true, :input_html => { :class => 'small-text-field number-text-field', :maxlength => 3 }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :ine_dc, :required => true, :input_html => { :class => 'small-text-field number-text-field', :maxlength => 1 }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<%= f.association :province, collection: @provinces, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

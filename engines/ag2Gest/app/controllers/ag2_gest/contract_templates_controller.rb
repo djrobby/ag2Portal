@@ -80,7 +80,10 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @contract_template = ContractTemplate.new
-  
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contract_template }
@@ -91,6 +94,10 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @contract_template = ContractTemplate.find(params[:id])
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
     end
   
     # POST /contract_templates
@@ -105,6 +112,8 @@ module Ag2Gest
           format.html { redirect_to @contract_template, notice: crud_notice('created', @contract_template) }
           format.json { render json: @contract_template, status: :created, location: @contract_template }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           format.html { render action: "new" }
           format.json { render json: @contract_template.errors, status: :unprocessable_entity }
         end
@@ -124,6 +133,8 @@ module Ag2Gest
                         notice: (crud_notice('updated', @contract_template) + "#{undo_link(@contract_template)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
           format.html { render action: "edit" }
           format.json { render json: @contract_template.errors, status: :unprocessable_entity }
         end
@@ -148,6 +159,14 @@ module Ag2Gest
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
 
     def sort_column
       ContractTemplate.column_names.include?(params[:sort]) ? params[:sort] : "name"

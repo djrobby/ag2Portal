@@ -159,6 +159,11 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @entity = Entity.new
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -170,6 +175,11 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @entity = Entity.find(params[:id])
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
     end
 
     # POST /entities
@@ -184,6 +194,9 @@ module Ag2Admin
           format.html { redirect_to @entity, notice: crud_notice('created', @entity) }
           format.json { render json: @entity, status: :created, location: @entity }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @entity.errors, status: :unprocessable_entity }
         end
@@ -203,6 +216,9 @@ module Ag2Admin
                         notice: (crud_notice('updated', @entity) + "#{undo_link(@entity)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @entity.errors, status: :unprocessable_entity }
         end
@@ -227,6 +243,18 @@ module Ag2Admin
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     # Keeps filter state
     def manage_filter_state

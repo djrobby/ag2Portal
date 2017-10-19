@@ -81,6 +81,12 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @bank_office = BankOffice.new
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -92,6 +98,12 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @bank_office = BankOffice.find(params[:id])
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
     end
 
     # POST /bank_offices
@@ -106,6 +118,12 @@ module Ag2Admin
           format.html { redirect_to @bank_office, notice: crud_notice('created', @bank_office) }
           format.json { render json: @bank_office, status: :created, location: @bank_office }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
+          @regions = Region.order(:name)
+          @countries = Country.order(:name)
+          @bank = banks_dropdown
           format.html { render action: "new" }
           format.json { render json: @bank_office.errors, status: :unprocessable_entity }
         end
@@ -125,6 +143,12 @@ module Ag2Admin
                         notice: (crud_notice('updated', @bank_office) + "#{undo_link(@bank_office)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
+          @regions = Region.order(:name)
+          @countries = Country.order(:name)
+          @bank = banks_dropdown
           format.html { render action: "edit" }
           format.json { render json: @bank_office.errors, status: :unprocessable_entity }
         end
@@ -149,6 +173,22 @@ module Ag2Admin
     end
 
     private
+
+    def banks_dropdown
+      Bank.order(:code)
+    end
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def sort_column
       BankOffice.column_names.include?(params[:sort]) ? params[:sort] : "code"

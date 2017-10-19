@@ -155,9 +155,9 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
-        $("#client_province_id").select2("val", data.province_id);
-        $("#client_region_id").select2("val", data.region_id);
-        $("#client_country_id").select2("val", data.country_id);
+        $("#client_province_id").val(data.province_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
       })
       return false;
     });
@@ -169,8 +169,8 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
-        $("#client_region_id").select2("val", data.region_id);
-        $("#client_country_id").select2("val", data.country_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
       })
       return false;
     });
@@ -182,10 +182,10 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
-        $("#client_town_id").select2("val", data.town_id);
-        $("#client_province_id").select2("val", data.province_id);
-        $("#client_region_id").select2("val", data.region_id);
-        $("#client_country_id").select2("val", data.country_id);
+        $("#client_town_id").val(data.town_id);
+        $("#client_province_id").val(data.province_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
       })
       return false;
     });
@@ -197,7 +197,7 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
-        $("#client_country_id").select2("val", data.country_id);
+        $("#client_country_id").val(data.id);
       })
       return false;
     });
@@ -292,11 +292,11 @@
         $("#client_building").val(data.building);
         $("#client_floor").val(data.floor);
         $("#client_floor_office").val(data.floor_office);
-        $("#client_zipcode_id").select2("val", data.zipcode_id);
-        $("#client_town_id").select2("val", data.town_id);
-        $("#client_province_id").select2("val", data.province_id);
-        $("#client_region_id").select2("val", data.region_id);
-        $("#client_country_id").select2("val", data.country_id);
+        $("#client_zipcode_id").val(data.zipcode_id);
+        $("#client_town_id").val(data.town_id);
+        $("#client_province_id").val(data.province_id);
+        $("#client_region_id").val(data.region_id);
+        $("#client_country_id").val(data.country_id);
         $("#client_phone").val(data.phone);
         $("#client_fax").val(data.fax);
         $("#client_cellular").val(data.cellular);
@@ -373,13 +373,13 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: @regions, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: @countries, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :entity_id, :as => :hidden %>

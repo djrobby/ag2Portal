@@ -36,6 +36,7 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @town = Town.new
+      @provinces = provinces_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -47,6 +48,7 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @town = Town.find(params[:id])
+      @provinces = provinces_dropdown
     end
 
     # POST /towns
@@ -61,6 +63,7 @@ module Ag2Admin
           format.html { redirect_to @town, notice: crud_notice('created', @town) }
           format.json { render json: @town, status: :created, location: @town }
         else
+          @provinces = provinces_dropdown
           format.html { render action: "new" }
           format.json { render json: @town.errors, status: :unprocessable_entity }
         end
@@ -80,6 +83,7 @@ module Ag2Admin
                         notice: (crud_notice('updated', @town) + "#{undo_link(@town)}").html_safe }
           format.json { head :no_content }
         else
+          @provinces = provinces_dropdown
           format.html { render action: "edit" }
           format.json { render json: @town.errors, status: :unprocessable_entity }
         end
@@ -104,6 +108,10 @@ module Ag2Admin
     end
 
     private
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
 
     def sort_column
       Town.column_names.include?(params[:sort]) ? params[:sort] : "name"

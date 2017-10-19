@@ -64,6 +64,7 @@ class Project < ActiveRecord::Base
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
   scope :belongs_to_type, -> type { where("project_type_id = ?", type).by_code }
   scope :ser_or_tca, -> { where("project_type_id = ? OR project_type_id = ?", 1, 2).order(:id) }
+  scope :ser_or_tca_order_type, -> { where("project_type_id = ? OR project_type_id = ?", 1, 2).order(:project_type_id) }
 
   before_destroy :check_for_dependent_records
 

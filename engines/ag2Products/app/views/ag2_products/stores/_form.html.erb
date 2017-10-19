@@ -117,7 +117,7 @@
       if (office == "")
         office = "0";
       jQuery.getJSON('st_update_province_textfield_from_town/' + office, function(data) {
-        $("#store_province_id").select2("val", data.id);
+        $("#store_province_id").val(data.id);
       });
       return false;
     });
@@ -129,8 +129,8 @@
       if (office == "")
         office = "0";
       jQuery.getJSON('st_update_province_textfield_from_zipcode/' + office, function(data) {
-        $("#store_town_id").select2("val", data.town_id);
-        $("#store_province_id").select2("val", data.province_id);
+        $("#store_town_id").val(data.town_id);
+        $("#store_province_id").val(data.province_id);
       });
       return false;
     });
@@ -188,9 +188,9 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :phone, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>

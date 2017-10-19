@@ -109,6 +109,9 @@ module Ag2Admin
       @users = users_dropdown
       @companies = companies_dropdown
       @zones = zones_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -125,6 +128,10 @@ module Ag2Admin
       @users = users_dropdown
       @companies = companies_dropdown
       @zones = zones_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+
     end
 
     # POST /offices
@@ -144,6 +151,9 @@ module Ag2Admin
           @users = users_dropdown
           @companies = companies_dropdown
           @zones = zones_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -168,6 +178,9 @@ module Ag2Admin
           @users = users_dropdown
           @companies = companies_dropdown
           @zones = zones_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @office.errors, status: :unprocessable_entity }
         end
@@ -192,6 +205,18 @@ module Ag2Admin
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def notifications_dropdown
       Notification.order(:id)

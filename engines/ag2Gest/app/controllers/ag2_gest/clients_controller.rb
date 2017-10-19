@@ -284,6 +284,11 @@ module Ag2Gest
       @client = Client.new
       @payment_methods = payment_methods_dropdown
       @ledger_accounts = ledger_accounts_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -297,6 +302,11 @@ module Ag2Gest
       @client = Client.find(params[:id])
       @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
       @ledger_accounts = ledger_accounts_dropdown
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
     end
 
     # POST /clients
@@ -313,6 +323,9 @@ module Ag2Gest
         else
           @payment_methods = payment_methods_dropdown
           @ledger_accounts = ledger_accounts_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "new" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -334,6 +347,9 @@ module Ag2Gest
         else
           @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
           @ledger_accounts = ledger_accounts_dropdown
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
           format.html { render action: "edit" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -358,6 +374,18 @@ module Ag2Gest
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     # Ledger accounts belonging to projects
     def projects_ledger_accounts(_projects)

@@ -92,6 +92,9 @@ module Ag2Gest
 
     def add_bank_account
       @subscriber = Subscriber.find(params[:id])
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
       if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank?
         @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
         redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
@@ -115,6 +118,9 @@ module Ag2Gest
           format.html { redirect_to @subscriber, notice: t('ag2_gest.subscribers.client_bank_account.successful') }
           format.json { render json: @client_bank_account, status: :created, location: @client_bank_account }
         else
+          @countries = Country.order(:name)
+          @bank = banks_dropdown
+          @bank_offices = bank_offices_dropdown
           format.html { redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.failure') }
           format.json { render json: @client_bank_account.errors, status: :unprocessable_entity }
         end
@@ -575,7 +581,10 @@ module Ag2Gest
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
-
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
+      
       @search_bills = Bill.search do
         if filter == "pending" or filter == "unpaid"
           with(:invoice_status_id, 0..98)
@@ -625,6 +634,9 @@ module Ag2Gest
     # GET /subscribers/1/edit
     def edit
       @subscriber = Subscriber.find(params[:id])
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
     end
 
     # POST /subscribers
@@ -796,6 +808,9 @@ module Ag2Gest
           format.html { redirect_to @subscriber, notice: t( 'activerecord.attributes.subscriber.successfully') }
           format.json { head :no_content }
         else
+          @countries = Country.order(:name)
+          @bank = banks_dropdown
+          @bank_offices = bank_offices_dropdown
           format.html { render action: "edit" }
           format.json { render json: @subscriber.errors, status: :unprocessable_entity }
         end
@@ -1040,6 +1055,14 @@ module Ag2Gest
     end
 
     private
+
+    def banks_dropdown
+      Bank.order(:code)
+    end
+
+    def bank_offices_dropdown
+      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+    end
 
     def reports_array()
       _array = []

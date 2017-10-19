@@ -37,6 +37,7 @@ module Ag2Admin
     def new
       @breadcrumb = 'create'
       @province = Province.new
+      @regions = Region.order(:name)
 
       respond_to do |format|
         format.html # new.html.erb
@@ -48,6 +49,7 @@ module Ag2Admin
     def edit
       @breadcrumb = 'update'
       @province = Province.find(params[:id])
+      @regions = Region.order(:name)
     end
 
     # POST /provinces
@@ -62,6 +64,7 @@ module Ag2Admin
           format.html { redirect_to @province, notice: crud_notice('created', @province) }
           format.json { render json: @province, status: :created, location: @province }
         else
+          @regions = Region.order(:name)
           format.html { render action: "new" }
           format.json { render json: @province.errors, status: :unprocessable_entity }
         end
@@ -81,6 +84,7 @@ module Ag2Admin
                         notice: (crud_notice('updated', @province) + "#{undo_link(@province)}").html_safe }
           format.json { head :no_content }
         else
+          @regions = Region.order(:name)
           format.html { render action: "edit" }
           format.json { render json: @province.errors, status: :unprocessable_entity }
         end

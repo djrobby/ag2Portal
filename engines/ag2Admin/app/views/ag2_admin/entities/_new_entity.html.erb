@@ -185,11 +185,11 @@
     <%= f.input :building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :zipcode, collection: Zipcode.all(order: 'zipcode'), :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :town, collection: Town.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :province, collection: Province.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :region, collection: Region.all(order: 'name'), :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :country, collection: Country.all(order: 'name'), :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :region, collection: @regions, :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :country, collection: @countries, :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
     <% if session[:organization] != '0' %>
     <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.organizations.count > 0 %>

@@ -1680,8 +1680,8 @@ module Ag2Gest
       @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new      
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id).order("billable_items.billable_concept_id")
       #@billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
       @billable_concept_availables = BillableItem.joins(:billable_concept,:regulation).where('(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND billable_concepts.billable_document = 1 AND billable_items.project_id = ?', Date.today,@contracting_request.project_id).order("billable_concepts.id")
@@ -1753,8 +1753,8 @@ module Ag2Gest
     def new_connection
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.new
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       @subscribers = []
@@ -1762,11 +1762,13 @@ module Ag2Gest
       @service_points = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
       @street_types = StreetType.order(:street_type_code)
-      @towns = Town.order(:name)
-      @provinces = Province.order(:name)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
       @countries = Country.order(:name)
-      @zipcodes = Zipcode.order(:zipcode)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
@@ -1777,8 +1779,8 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.new
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       @subscribers = []
@@ -1786,11 +1788,13 @@ module Ag2Gest
       @service_points = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
       @street_types = StreetType.order(:street_type_code)
-      @towns = Town.order(:name)
-      @provinces = Province.order(:name)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
       @countries = Country.order(:name)
-      @zipcodes = Zipcode.order(:zipcode)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
@@ -1802,8 +1806,8 @@ module Ag2Gest
     def edit_connection
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:id])
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       @subscribers = []
@@ -1811,18 +1815,20 @@ module Ag2Gest
       @service_points = []
       @offices = current_offices.group(:town_id).pluck(:town_id)
       @street_types = StreetType.order(:street_type_code)
-      @towns = Town.order(:name)
-      @provinces = Province.order(:name)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
       @countries = Country.order(:name)
-      @zipcodes = Zipcode.order(:zipcode)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
     end
 
     def edit
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:id])
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       @subscribers = []
@@ -1830,29 +1836,33 @@ module Ag2Gest
       @service_points = [@contracting_request.service_point]
       @offices = current_offices.group(:town_id).pluck(:town_id)
       @street_types = StreetType.order(:street_type_code)
-      @towns = Town.order(:name)
-      @provinces = Province.order(:name)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
       @countries = Country.order(:name)
-      @zipcodes = Zipcode.order(:zipcode)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
     end
 
     # POST /requests
     # POST /requests.json
     def create
       @breadcrumb = 'create'
-      @projects = current_projects
-      @projects_ids = current_projects_ids
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
       @subscribers = []
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices.group(:town_id).pluck(:town_id)
       @street_types = StreetType.order(:street_type_code)
-      @towns = Town.order(:name)
-      @provinces = Province.order(:name)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
       @countries = Country.order(:name)
-      @zipcodes = Zipcode.order(:zipcode)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
       # _subscribers = Subscriber.where(office_id: current_offices_ids)
       # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
@@ -1872,10 +1882,20 @@ module Ag2Gest
           format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.create')}
           format.json { render json: @contracting_request, status: :created, location: @contracting_request }
         else
-          if @contracting_request.contracting_request_type_id ==3
+          if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION
+            @towns = towns_dropdown
+            @provinces = provinces_dropdown
+            @zipcodes = zipcodes_dropdown
+            @bank = banks_dropdown
+            @bank_offices = bank_offices_dropdown
             format.html { render action: "new_connection" }
             format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
           else          
+            @towns = towns_dropdown
+            @provinces = provinces_dropdown
+            @zipcodes = zipcodes_dropdown
+            @bank = banks_dropdown
+            @bank_offices = bank_offices_dropdown
             format.html { render action: "new" }
             format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
           end
@@ -1921,6 +1941,11 @@ module Ag2Gest
                         notice: (crud_notice('updated', @contracting_request) + "#{undo_link(@contracting_request)}").html_safe }
           format.json { head :no_content }
         else
+          @towns = towns_dropdown
+          @provinces = provinces_dropdown
+          @zipcodes = zipcodes_dropdown
+          @bank = banks_dropdown
+          @bank_offices = bank_offices_dropdown
           format.html { render action: "edit" }
           format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
         end
@@ -2163,6 +2188,26 @@ module Ag2Gest
 
     private
 
+    def banks_dropdown
+      Bank.order(:code)
+    end
+
+    def bank_offices_dropdown
+      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+    end
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
+
     def available_meters_for_contract(_request)
       if session[:office] != '0'
         Meter.from_office(session[:office]).availables(_request.try(:old_subscriber).try(:meter_id))
@@ -2216,12 +2261,30 @@ module Ag2Gest
 
     def projects_dropdown
       if session[:office] != '0'
-        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+        _projects = Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
       elsif session[:company] != '0'
-        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        _projects = Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
       else
-        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
       end
+    end
+
+    def projects_dropdown_ids
+      projects_dropdown.pluck(:id)
+    end
+
+    def projects_connection_dropdown
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i) : Project.all
+      end
+    end
+
+    def projects_connection_dropdown_ids
+      projects_connection_dropdown.pluck(:id)
     end
 
     def request_statuses_dropdown
