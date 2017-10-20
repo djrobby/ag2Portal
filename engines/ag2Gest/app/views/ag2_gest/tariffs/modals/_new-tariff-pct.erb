@@ -41,7 +41,7 @@
       var billable_concept_ids = $('#BillableConcept_').val();
       if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
       if (billable_concept_ids == null) billable_concept_ids = null;
-      jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids, function(data) {
+      jQuery.getJSON('update_tariff_type_select_from_billing_concept2/' + billable_concept_ids, function(data) {
         var o = data.tariff_type_ids;
         $("#TariffType_").html("");
         $("#TariffType_").select2("val", "");
@@ -58,9 +58,33 @@
           });
         }
       });
+
+      $("#billable_item").removeClass("disabled");
+      var project_ids = $('select#project_id :selected').val();
+      if (project_ids == "")
+        project_ids = "0";
+      var billable_concept_ids = $('#BillableConcept_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('update_new_item_select_from_billing_concept2/' + billable_concept_ids + '/' + project_ids, function(data) {
+        var o = data.new_item_ids;
+        $("#billable_item").html("");
+        $("#billable_item").select2("val", "");
+        $("#billable_item").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'tariff_type_ids' && option != "") {
+              $("#billable_item").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#billable_item").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
       return false;
     });
-
 
   });
 
@@ -86,14 +110,14 @@
       <%= select_tag "TariffType_", nil, :prompt => "", :class => 'x-large-text-field sel2 disabled', multiple: true %>
 
 
-      <%= label_tag "new Item", nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "billable_item", options_from_collection_for_select(BillableItem.order('id DESC').all, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      <%= label_tag t('activerecord.attributes.tariff.new_item'), nil, :class => 'form-label-under-sel2' %>
+      <%= select_tag "billable_item", nil, :prompt => "", :class => 'x-large-text-field shrinked sel2 disabled' %>
 
 
-      <%= label_tag "Incremento porcentual", nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag t('activerecord.attributes.tariff.porcentual_increment'), nil, :class => 'form-label-under-sel2' %>
       <%= text_field_tag "pct_value", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)", type: "number", step: "any", required: "required" %>
 
-      <%= label_tag "Fecha inicio de vigencia", nil, :class => 'form-label' %>
+      <%= label_tag t('activerecord.attributes.tariff.date_starting_at'), nil, :class => 'form-label' %>
       <%= text_field_tag "init_date", nil, :class => 'x-large-text-field shrinked number-text-field date_picker', onkeyup: "caps(this)", required: "required" %>
 
     </div>

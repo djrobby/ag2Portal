@@ -429,6 +429,9 @@ class Reading < ActiveRecord::Base
     if !tariff.fixed_fee.zero?
       tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
       tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      if tariff_code == 'SUM'
+        tariff_price = tariff_price * subscriber.right_inhabitants_and_endowments
+      end
       if tariff_code == 'DEP'
         tariff_price = tariff_price * subscriber.right_equiv_dwelling
       end

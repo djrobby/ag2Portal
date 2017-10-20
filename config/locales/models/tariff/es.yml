@@ -72,3 +72,6 @@ es:
         connection: "Acometida"
         connection_fee_a: "Parametro A"
         connection_fee_b: "Parametro B"
+        new_item: "Nuevo Item facturable"
+        porcentual_increment: "Incremento porcentual"
+        date_starting_at: "Fecha inicio de vigencia"

@@ -7,7 +7,7 @@ module Ag2Gest
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :create_pct,
                                                 :update_billable_concept_select_from_project,
-                                                :update_tariff_type_select_from_billing_concept ]
+                                                :update_tariff_type_select_from_billing_concept2 ]
 
     def update_billable_concept_select_from_project
       project_ids = params[:project_ids]
@@ -21,18 +21,38 @@ module Ag2Gest
     end
 
 
-    def update_tariff_type_select_from_billing_concept
+    def update_tariff_type_select_from_billing_concept2
       billable_concept_ids = params[:billable_concept_ids]
       billable_concept_ids = billable_concept_ids.split(",")
       @tariff_type_ids = []
+      @bc_ids = []
       billable_concept_ids.each do |bc|
-        @tariff_type_ids += BillableConcept.find(bc).grouped_tariff_types
+        bil_concept = BillableConcept.find(bc).grouped_tariff_types
+        if !bil_concept.blank? && !@bc_ids.include?(bil_concept[0].id.to_s)
+          @tariff_type_ids += bil_concept
+          @bc_ids << bil_concept[0].id.to_s
+        end
       end
       @tariff_type_dropdown = tariff_type_array(@tariff_type_ids)
       # Setup JSON
       @json_data = { "tariff_type_ids" => @tariff_type_dropdown }
       render json: @json_data
     end
+
+    def update_new_item_select_from_billing_concept2
+      project_ids = params[:project_ids]
+      billable_concept_ids = params[:billable_concept_ids]
+      billable_concept_ids = billable_concept_ids.split(",")
+      @new_item_ids = []
+      billable_concept_ids.each do |bc|
+        @new_item_ids += BillableItem.availables.where('billable_items.billable_concept_id = ? AND billable_items.project_id = ?',bc,project_ids)
+      end
+      @new_item_dropdown = new_item_array(@new_item_ids)
+      # Setup JSON
+      @json_data = { "new_item_ids" => @new_item_dropdown }
+      render json: @json_data
+    end
+    
 
     def create_pct
       @project = Project.find(params[:project_id])
@@ -54,17 +74,12 @@ module Ag2Gest
       # @tariffs = @project.billable_items.map(&:tariffs).flatten.select{|t| t.tariff_type_id == params[:tariff_types].to_i and t.ending_at.nil?}
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error") and return if @tariffs.blank?
       redirect_to tariffs_path, alert: I18n.t("ag2_gest.tariffs.generate_error_date") and return if @tariffs.first.starting_at > params[:init_date].to_date - 1.day
-      @subscribers = Subscriber.joins(:subscriber_tariffs).availables.where('subscriber_tariffs.tariff_id IN (?)', @tariffs).group('subscribers.id')
+      @subscribers = Subscriber.joins(:subscriber_tariffs).where('(subscribers.ending_at IS NULL OR subscribers.ending_at >= ?) AND (subscriber_tariffs.tariff_id IN (?))', Date.today,@tariffs).group('subscribers.id')
       # @subscribers = @tariffs.map(&:subscribers).compact.flatten.uniq
       @new_tariffs = []
       @tariffs.each do |tariff|
-        if @billable_item.billable_concept_id == tariff.billable_item.billable_concept_id
-          billable_item = @billable_item.id
-        else
-          billable_item = tariff.billable_item_id
-        end
         @new_tariffs << Tariff.create(
-          billable_item_id: billable_item,
+          billable_item_id: @billable_item.id,
           tariff_type_id: tariff.tariff_type_id,
           caliber_id: tariff.caliber_id,
           billing_frequency_id: tariff.billing_frequency_id,
@@ -102,10 +117,10 @@ module Ag2Gest
           starting_at: params[:init_date]
         )
       end
-      @subscribers.each do |s|
-        tariffs_assing = @new_tariffs.select{|t| (t.caliber_id.nil? || t.caliber_id == s.meter.caliber_id) and t.billable_concept.billable_document == "1"}
-        s.tariffs << tariffs_assing
-       end
+        @subscribers.each do |s|
+          tariffs_assing = @new_tariffs.select{|t| (t.caliber_id.nil? || t.caliber_id == s.meter.caliber_id) and t.billable_concept.billable_document == "1"}
+          s.tariffs << tariffs_assing
+        end
       _end_date = @new_tariffs.first.starting_at - 1.day
       @tariffs.each{|t| t.update_attributes(ending_at: _end_date)}
       redirect_to tariffs_path, notice: I18n.t("ag2_gest.tariffs.generate_ok")
@@ -326,6 +341,14 @@ module Ag2Gest
       _array
     end
 
+    def new_item_array(_new_item)
+      _array = []
+      _new_item.each do |i|
+        _array = _array << [i.id, i.to_label_date]
+      end
+      _array
+    end
+
     def tariff_type_dropdown
       TariffType.all
     end
@@ -340,9 +363,9 @@ module Ag2Gest
 
     def billable_item_dropdown
       if session[:organization]
-        BillableItem.where(project_id: current_projects_ids)
+        BillableItem.availables.where(project_id: current_projects_ids)
       else
-        BillableItem.all
+        BillableItem.availables
       end
     end
 

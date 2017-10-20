@@ -23,12 +23,18 @@ class BillableItem < ActiveRecord::Base
   scope :by_code_id, -> { includes(:billable_concept).order('billable_concepts.code, billable_items.id') }
   #
   scope :belongs_to_project, -> p { where(project_id: p).by_code_id }
+  scope :availables, -> { includes(:regulation).where("regulations.ending_at IS NULL OR ending_at >= ?", Date.today)}
+
 
   before_save :check_sum
   before_destroy :check_for_dependent_records
 
   def to_label
     "#{billable_concept.name} (#{billable_concept.code}) - #{biller.name}"
+  end
+
+  def to_label_date
+    "#{billable_concept.name} (#{billable_concept.code}) - #{biller.name} - #{regulation.to_date}"
   end
 
   def to_label_biller

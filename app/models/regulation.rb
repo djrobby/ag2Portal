@@ -23,6 +23,14 @@ class Regulation < ActiveRecord::Base
     end
   end
 
+  def to_date
+    if ending_at.blank?
+      "#{regulation_starting_at}"
+    else
+      "#{regulation_starting_at}-#{regulation_ending_at}"
+    end
+  end
+
   def type_description
     regulation_type.description.strip rescue ''
   end

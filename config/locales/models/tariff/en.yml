@@ -72,3 +72,6 @@ en:
         connection: "Connection"
         connection_fee_a: "Parameter A"
         connection_fee_b: "Parameter B"
+        new_item: "New Billable item"
+        porcentual_increment: "Porcentual increment"
+        date_starting_at: "Date Effective since"

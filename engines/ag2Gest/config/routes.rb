@@ -196,6 +196,13 @@ Ag2Gest::Engine.routes.draw do
     match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     match 'tariffs/:id/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     match 'update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
+    match 'tariffs/update_tariff_type_select_from_billing_concept2/:billable_concept_ids', :controller => 'tariffs', :action => 'update_tariff_type_select_from_billing_concept2'
+    match 'tariffs/:id/update_tariff_type_select_from_billing_concept2/:billable_concept_ids', :controller => 'tariffs', :action => 'update_tariff_type_select_from_billing_concept2'
+    match 'update_tariff_type_select_from_billing_concept2/:billable_concept_ids', :controller => 'tariffs', :action => 'update_tariff_type_select_from_billing_concept2'
+    
+    match 'tariffs/update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
+    match 'tariffs/:id/update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
+    match 'update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
     #
     # Prototype
     match "sale_offers/show_test", controller: "sale_offers", action: 'show_test'

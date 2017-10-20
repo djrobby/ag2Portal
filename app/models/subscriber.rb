@@ -270,6 +270,21 @@ class Subscriber < ActiveRecord::Base
     equiv_dwelling.nil? || equiv_dwelling == 0 ? 1 : equiv_dwelling
   end
 
+  def right_inhabitants
+    inhabitants.nil? || inhabitants == 0 ? 1 : inhabitants
+  end
+
+  def right_endowments
+    endowments.nil? || endowments == 0 ? 1 : endowments
+  end
+
+  def right_inhabitants_and_endowments
+    _i = inhabitants.nil? ? 0 : inhabitants
+    _e = endowments.nil? ? 0 : endowments
+    _ie = _i + _e
+    _ie == 0 ? 1 : _ie
+  end
+
   #
   # Class (self) user defined methods
   #
