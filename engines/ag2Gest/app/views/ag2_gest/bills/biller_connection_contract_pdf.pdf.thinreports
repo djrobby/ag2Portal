@@ -7,7 +7,7 @@ delimiter = I18n.locale == :es ? "." : ","
 # Localization for dates
 _format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
 
-report.set_layout tlf: 'reports/invoice_form_contract', layout_options: { default: true }
+report.set_layout tlf: 'reports/invoice_form_connection_contract', layout_options: { default: true }
 
 
 # New page & start
@@ -38,6 +38,17 @@ report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
 var_bill_date = @biller_printer.bill_date.strftime(_format) unless @biller_printer.bill_date.blank?
 var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 #
+
+if !@contracting_request.water_connection_contract.blank? and !@contracting_request.water_connection_contract.tariff_scheme.blank?
+ caliber_id = @contracting_request.try(:water_connection_contract).try(:caliber).try(:id)
+ tariffs_contract = @contracting_request.water_connection_contract.tariff_scheme.tariffs_contract(caliber_id).first[1].first
+ tariffs_contract_a = tariffs_contract.connection_fee_a
+ tariffs_contract_b = tariffs_contract.connection_fee_b
+else
+ tariffs_contract_a = ""
+ tariffs_contract_b = ""
+end
+
 report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
 				   data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
 				   bill_n_c:  I18n.t("activerecord.attributes.bill.bill_no"),
@@ -66,22 +77,30 @@ report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
 	report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_request.contracting_data"),
 					   cr_type_c: I18n.t("activerecord.attributes.contracting_request.type") + ": ",
 					   cr_type: @contracting_request.contracting_request_type.description.capitalize,
+					   street_c_sp: I18n.t("activerecord.report.subscriber.direction"),
+					   street_sp: @contracting_request.subscriber_info_street +  @contracting_request.subscriber_address_2,
 					   cr_no_c: I18n.t("activerecord.report.contracting_request.request_no") + ": ",
 					   cr_no: @contracting_request.full_no,
 					   fiscal_id_c: I18n.t("activerecord.attributes.subscriber.fiscal_id_c") + ": ",
 					   fiscal_id: @biller_printer.try(:client).try(:fiscal_id),
-					   use_c: I18n.t("activerecord.attributes.subscriber.use") + ": ",
-					   use: @water_supply_contract.try(:use).try(:name),
 					   caliber_c: I18n.t("activerecord.attributes.subscriber.caliber") + ": ",
 					   caliber: @water_supply_contract.try(:caliber).try(:caliber),
 					   cadastral_reference_c: I18n.t("activerecord.attributes.water_supply_contract.cadastral_reference") + ": ",
 					   cadastral_reference: @water_supply_contract.try(:cadastral_reference),	   				   
-					   meter_code_c: I18n.t("activerecord.models.meter.one") + ": ",
-					   meter_code: @water_supply_contract.try(:meter).try(:meter_code),
-					   dot_c: I18n.t("activerecord.attributes.contracting_request.endowments"),
-					   dot: @water_supply_contract.try(:endowments),
-					   hab_c: I18n.t("activerecord.attributes.contracting_request.inhabitants"),
-					   hab: @water_supply_contract.try(:inhabitants),
+					   paramA_c: I18n.t('activerecord.attributes.tariff.connection_fee_a') + ":",
+					   paramA: tariffs_contract_a,
+					   paramB_c: I18n.t('activerecord.attributes.tariff.connection_fee_b') + ":",
+					   paramB: tariffs_contract_b,
+					   diameter_c: I18n.t('activerecord.attributes.water_connection_contract.diameter') + ":",
+					   diameter: @contracting_request.try(:water_connection_contract).try(:diameter),
+					   flow_c: I18n.t('activerecord.attributes.water_connection_contract.flow') + ":",
+					   flow: @contracting_request.try(:water_connection_contract).try(:flow),
+					   gis_id_c: I18n.t('activerecord.attributes.contracting_request.gis_id') + ":",
+					   gis_id: @contracting_request.try(:water_connection_contract).try(:gis_id),
+					   min_pressure_c: I18n.t('activerecord.attributes.water_connection_contract.min_pressure') + ":",
+					   min_pressure: @contracting_request.try(:water_connection_contract).try(:min_pressure),
+					   max_pressure_c: I18n.t('activerecord.attributes.water_connection_contract.max_pressure') + ":",
+					   max_pressure: @contracting_request.try(:water_connection_contract).try(:max_pressure),
 					   remarks_title: I18n.t("activerecord.attributes.commercial_billing.remarks"),
 					   remarks: @invoice.remarks
 					   )

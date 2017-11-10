@@ -53,6 +53,7 @@
     values = inputs.map(function () { return $(this).val(); }).get();
     date = values[0];
     index = values[1];
+
     check_consumption = function(){
       if(row.data("index-one") <= parseInt(index)){
         consumption = index - row.data("index-one");
@@ -65,6 +66,8 @@
         alert("Anomalía en consumo.\nP. Actual: "+consumption+"\nP. Anterior: "+previous_consumption+"\nA. Anterior: "+year_consumption)
       }
     };
+    
+    diferent = ((index - row.data("index-one")) * 100) / row.data("consumption-one");
     // if both inputs have values
     if (inputs.filter(function() { return this.value == '' }).length == 0){
       // if index last period exits
@@ -85,8 +88,68 @@
               input_index.val(row.data("index"));
             }
           };
-        // if index >= index last period
-        }else{
+        // Consumo excesivo AND Contador Compartido
+        } else if (diferent > 50 && row.data("meters") > 1){
+          // Consumo excesivo
+          var lap_meter = confirm("Consumo excesivo y Contador Compartido. Incidencia Activada");
+          if (lap_meter == true) {
+            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
+            form.append($(input));
+            check_consumption();
+            form.submit();
+          } else {
+            if (row.data("index") == "" ){
+              input_index.val("");
+            }else{
+              input_index.val(row.data("index"));
+            }
+          };
+        // Consumo excesivo
+        } else if (diferent > 50 ){
+          var lap_meter = confirm("Consumo excesivo. Incidencia Activada");
+          if (lap_meter == true) {
+            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
+            form.append($(input));
+            check_consumption();
+            form.submit();
+          } else {
+            if (row.data("index") == "" ){
+              input_index.val("");
+            }else{
+              input_index.val(row.data("index"));
+            }
+          };
+        // Contador Compartido
+        } else if ( row.data("meters") > 1 ){
+          var lap_meter = confirm("Contador Compartido");
+          if (lap_meter == true) {
+            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
+            form.append($(input));
+            check_consumption();
+            form.submit();
+          } else {
+            if (row.data("index") == "" ){
+              input_index.val("");
+            }else{
+              input_index.val(row.data("index"));
+            }
+          };
+        // Consumo excesivo
+        } else if (index == row.data("index-one") && index == row.data("index-two")){
+          var lap_meter = confirm("Posible contador parado");
+          if (lap_meter == true) {
+            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
+            form.append($(input));
+            check_consumption();
+            form.submit();
+          } else {
+            if (row.data("index") == "" ){
+              input_index.val("");
+            }else{
+              input_index.val(row.data("index"));
+            }
+          };
+        } else {
           check_consumption();
           form.submit();
         };
@@ -195,7 +258,7 @@
         </thead>
         <tbody>
           <% @pre_readings.each_with_index do |pre_reading,index| %>
-          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.reading_incidence_types.map(&:id) %>">
+          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.reading_incidence_types.map(&:id) %>">
               <%= simple_form_for pre_reading, :remote => true, :html => { "data-type" => :json, :id => "form-prereading-#{pre_reading.id}" } do |f| %>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
@@ -250,7 +313,7 @@
   <div class="row">
     <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary" %>
     <%= link_to t('activerecord.attributes.pre_reading.print'), to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary", target: "_blank" %>
-    <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+    <a data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
 
   </div>
   <br>

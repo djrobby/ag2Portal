@@ -79,6 +79,7 @@ end
 #
 # Page footer
 var_full_date = I18n.l(@water_supply_contract.contract_date, format: :long_whit_day) unless @water_supply_contract.contract_date.blank?
+_dni = !@contracting_request.project.office.r_fiscal_id.blank? ? I18n.t("activerecord.attributes.water_supply_contract.company_text_6") : ""
 report.page.values(printed_at: Time.now,
 				   pt: I18n.t("every_report.pt"),
 				   pd: I18n.t("every_report.pd"),
@@ -86,7 +87,9 @@ report.page.values(printed_at: Time.now,
 				   full_date: @contracting_request.project.company.town.name + ", " + var_full_date.to_s,
 				   company_sign: I18n.t("activerecord.attributes.water_supply_contract.company_sign"),
 				   subscriber_sign: I18n.t("activerecord.attributes.water_supply_contract.subscriber_sign"),
-				   r_company_sign: @contracting_request.project.office.r_first_name.to_s + " " + @contracting_request.project.office.r_last_name.to_s + " " + I18n.t("activerecord.attributes.water_supply_contract.company_text_6") + " " + @contracting_request.project.office.r_fiscal_id.to_s + "\r\n" + @contracting_request.project.office.r_position.to_s,
+				   
+				   r_company_sign: @contracting_request.project.office.r_first_name.to_s + " " + @contracting_request.project.office.r_last_name.to_s + " " + _dni + " " + @contracting_request.project.office.r_fiscal_id.to_s + "\r\n" + @contracting_request.project.office.r_position.to_s,
+				   
 				   r_company_sign_lopd: I18n.t("activerecord.attributes.water_supply_contract.lopd") + ": " + I18n.t("activerecord.attributes.water_supply_contract.lopd_2")
 					)
 #
@@ -354,14 +357,17 @@ a = @water_supply_contract.bill.invoices.first
 		row.item(:subtotal).value  number_with_precision(a.subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless a.subtotal.blank?
 	end
 	a.tax_breakdown.each do |tax|
-		if tax[0] == 0
-		else
+		if tax[0] != TaxType.exempt.tax
 			report.page.list(:default).add_row do |row|
-				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{tax[0]}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
+				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
 				row.item(:iva).value number_with_precision(tax[2], precision: 2)
 			end
+		else
+			report.page.list(:default).add_row do |row|
+				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_exempt_c") + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
+			end
 		end
-	end	
+	end
 end
 #
 #

@@ -181,6 +181,11 @@ Ag2Gest::Engine.routes.draw do
     match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'contracting_requests'
     match 'contracting_requests/:id/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
     #
+    # Readings
+    match 'readings/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
+    match 'r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
+    match 'readings/:id/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
+    #
     # Meter
     match 'meters/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
     match 'meters/:id/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
@@ -394,6 +399,7 @@ Ag2Gest::Engine.routes.draw do
     resources :contracting_requests do
       get 'new_connection', on: :collection
       get 'contracting_request_pdf', on: :member
+      get 'contracting_request_connection_pdf', on: :member
       get 'contract_pdf', on: :member
       get 'sepa_pdf', on: :member
       get 'bill', on: :member
@@ -403,6 +409,7 @@ Ag2Gest::Engine.routes.draw do
       get 'refresh_connection_status', on: :member
       get 'cr_calculate_flow', on: :member
       get 'biller_contract_pdf', on: :member
+      get 'biller_connection_contract_pdf', on: :member
       get 'contracting_subscriber_pdf', on: :member
       post 'subrogation', on: :collection
       resources :water_supply_contracts, except: [:index, :show, :edit, :new]
@@ -456,7 +463,9 @@ Ag2Gest::Engine.routes.draw do
       get 'show_list', on: :collection
       #get 'new_pre_readings' on: :member
     end
-    resources :readings
+    resources :readings do
+       get 'r_reading_date', on: :member
+    end
     resources :reading_types
     resources :reading_incidence_types
     resources :reading_routes
@@ -471,6 +480,7 @@ Ag2Gest::Engine.routes.draw do
       get 'bill_supply_pdf', on: :member
       get 'biller_pdf', on: :member
       get 'biller_contract_pdf', on: :member
+      get 'biller_connection_contract_pdf', on: :member
       get 'status_prebills', on: :collection
       get 'status_confirm', on: :collection
       #get 'void', on: :member

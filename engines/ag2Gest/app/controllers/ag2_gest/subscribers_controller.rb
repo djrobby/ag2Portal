@@ -24,7 +24,16 @@ module Ag2Gest
 
     def update_tariffs
       @subscriber = Subscriber.find params[:id]
-      tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      # tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      _tariff_type_ids = []
+      SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |tt|
+        if !_tariff_type_ids.include? tt.tariff.tariff_type.id
+          _tariff_type_ids << tt.tariff.tariff_type.id
+        end
+      end
+      @tariff_type_ids = _tariff_type_ids
+      tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", @tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      
       @subscriber.tariffs.delete(tariffs_delete)
       params[:subscriber][:tariff_ids].reject { |c| c.empty? }.each do |t|
          s = SubscriberTariff.new(subscriber_id: @subscriber.id, tariff_id: t)
@@ -550,7 +559,6 @@ module Ag2Gest
       # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
       @billing_period = BillingPeriod.order('period DESC').all
       @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
-      @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
       _tariff_type = []
       if !@subscriber.water_supply_contract.blank?
         @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
@@ -560,6 +568,17 @@ module Ag2Gest
         end
         @tariff_type = _tariff_type.join(", ")
       end
+       _tariff_type_ids = []
+       if !@subscriber.water_supply_contract.blank?
+         @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
+             if !_tariff_type_ids.include? tt.tariff.tariff_type.id
+               _tariff_type_ids << tt.tariff.tariff_type.id
+             end
+         end
+         @tariff_type_ids = _tariff_type_ids
+       end
+      @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", @tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
       # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first

@@ -78,7 +78,11 @@
       <% if @invoice.invoice_type.id == InvoiceType::WATER %>
         <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
       <% elsif @invoice.invoice_type.id == InvoiceType::CONTRACT %>
-        <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_contract_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+        <% if !@invoice.bill.water_connection_contract.blank? %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_connection_contract_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
+        <% else %>
+          <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, biller_contract_pdf_bill_path(@invoice.bill, :format => :pdf), target: "_blank", class: "btn btn-warning" %>        
+        <% end %>
       <% else %>
         <%= link_to "<i class='icon-print icon-white'></i> #{t '.print'}".html_safe, invoice_form_commercial_billing_path(@invoice, :format => :pdf), target: "_blank", class: "btn btn-warning" %>
       <% end %>

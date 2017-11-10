@@ -1,0 +1,194 @@
+if @contracting_request.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/contracting_request_connection_form', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @contracting_request.project.company.logo.url(:original).split("?").first unless @contracting_request.project.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @contracting_request.project.company.name,
+				   company_address_1: @contracting_request.project.company.address_1,
+				   company_address_2: @contracting_request.project.company.address_2,
+				   company_phones: @contracting_request.project.company.phone_and_fax,
+				   company_email: @contracting_request.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @contracting_request.project.company.fiscal_id)
+
+# Page header
+report.page.values(form_title: I18n.t("activerecord.models.contracting_request.one"),
+				   request_no_c: I18n.t("activerecord.attributes.contracting_request.request_no") + ":",
+				   request_no: @contracting_request.full_no,
+				   request_date_c: I18n.t("activerecord.attributes.contracting_request.request_date") + ":",
+				   request_date: @contracting_request.created_at.strftime("%d/%m/%Y")
+				  )
+# Page footer
+report.page.values(printed_at: Time.now,
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"),
+				   currency_note: @contracting_request.project.company.invoice_footer,
+				   remarks_title: I18n.t("activerecord.attributes.water_supply_contract.remarks"),
+				   remarks: @contracting_request.try(:water_supply_contract).try(:remarks)
+				   )
+#
+# Lists
+report.page.values(cr_type_c: I18n.t("activerecord.attributes.contracting_request.contracting_request_type") + ":",
+				   cr_type: @contracting_request.contracting_request_type.description,
+				   cr_doc_type_c: I18n.t("activerecord.attributes.contracting_request.document") + ":",
+				   cr_doc_type: @contracting_request.try(:document_types)
+				   )
+#
+# client
+report.page.values(client_c: I18n.t("ag2_gest.contracting_requests.show.entity_description"),
+									 fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+									 fiscal_id: @contracting_request.client.fiscal_id,
+									 name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 name: @contracting_request.try(:client).try(:to_name),
+									 street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 street: @contracting_request.try(:client).try(:address_1),
+									 phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
+									 phone: @contracting_request.try(:client).try(:phone),
+									 zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
+									 zipcode: @contracting_request.try(:client).try(:address_2),
+									 cellular_c: I18n.t("activerecord.attributes.client.cellular") + ":",
+									 cellular: @contracting_request.try(:client).try(:cellular),
+									 email_c: I18n.t("activerecord.attributes.client.email") + ":",
+									 email:  @contracting_request.try(:client).try(:email)
+									 )
+#
+# r_client
+report.page.values(r_client_c: I18n.t("ag2_gest.contracting_requests.show.r_entity_description"),
+									 r_fiscal_id_c: I18n.t("activerecord.attributes.contracting_request.r_fiscal_id") + ":",
+									 r_fiscal_id: @contracting_request.try(:r_fiscal_id),
+									 r_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 r_name: @contracting_request.entity_info
+									 )
+#
+# service_point
+report.page.values(service_point_c: t("activerecord.attributes.contracting_request.info_connection_c"))
+
+if !@contracting_request.water_connection_contract.blank? and !@contracting_request.water_connection_contract.tariff_scheme.blank?
+ caliber_id = @contracting_request.try(:water_connection_contract).try(:caliber).try(:id)
+ tariffs_contract = @contracting_request.water_connection_contract.tariff_scheme.tariffs_contract(caliber_id).first[1].first
+ tariffs_contract_a = tariffs_contract.connection_fee_a
+ tariffs_contract_b = tariffs_contract.connection_fee_b
+else
+ tariffs_contract_a = ""
+ tariffs_contract_b = ""
+end
+
+report.page.values(fiscal_id_c_sp: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+									 fiscal_id_sp: @contracting_request.client.fiscal_id,
+									 name_c_sp: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+									 name_sp: @contracting_request.try(:client).try(:to_name),
+									 street_c_sp: I18n.t("activerecord.report.subscriber.direction") + ":",
+									 street_sp: @contracting_request.subscriber_info_street,
+									 zipcode_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_zipcode_id") + ":",
+									 zipcode_sp: @contracting_request.try(:subscriber_zipcode).try(:to_label),
+									 center_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_center_id") + ":",
+									 center_sp: @contracting_request.try(:subscriber_center).try(:name),
+									 town_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_town_id") + ":",
+									 town_sp: @contracting_request.try(:subscriber_town).try(:name),
+									 region_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_region_id") + ":",
+									 region_sp: @contracting_request.try(:subscriber_region).try(:name),
+									 country_c_sp: I18n.t("activerecord.attributes.contracting_request.subscriber_country_id") + ":",
+									 country_sp:  @contracting_request.try(:subscriber_country).try(:name)
+									 )
+
+report.page.values(connection_c: t("activerecord.attributes.contracting_request.connection_data"),
+									 tariff_scheme_c: I18n.t('activerecord.attributes.water_connection_contract.tariff_scheme') + ":",
+									 tariff_scheme: @contracting_request.try(:water_connection_contract).try(:tariff_scheme).try(:name),
+									 paramA_c: I18n.t('activerecord.attributes.tariff.connection_fee_a') + ":",
+									 paramA: tariffs_contract_a,
+									 paramB_c: I18n.t('activerecord.attributes.tariff.connection_fee_b') + ":",
+									 paramB: tariffs_contract_b,
+									 water_connection_type_c: I18n.t('activerecord.attributes.water_connection_contract.water_connection_type') + ":",
+									 water_connection_type: @contracting_request.try(:water_connection_contract).try(:water_connection_type).try(:name),
+									 service_point_purpose_c: I18n.t('activerecord.attributes.water_connection_contract.service_point_purpose') + ":",
+									 service_point_purpose: @contracting_request.try(:water_connection_contract).try(:service_point_purpose).try(:name),
+									 caliber_c: I18n.t('activerecord.attributes.contracting_request.caliber') + ":",
+									 caliber: @contracting_request.try(:water_connection_contract).try(:caliber).try(:caliber),
+									 diameter_c: I18n.t('activerecord.attributes.water_connection_contract.diameter') + ":",
+									 diameter: @contracting_request.try(:water_connection_contract).try(:diameter),
+									 flow_c: I18n.t('activerecord.attributes.water_connection_contract.flow') + ":",
+									 flow: @contracting_request.try(:water_connection_contract).try(:flow),
+									 cadastral_reference_c: I18n.t('activerecord.attributes.contracting_request.cadastral_reference') + ":",
+									 cadastral_reference: @contracting_request.try(:water_connection_contract).try(:cadastral_reference),
+									 gis_id_c: I18n.t('activerecord.attributes.contracting_request.gis_id') + ":",
+									 gis_id: @contracting_request.try(:water_connection_contract).try(:gis_id),
+									 min_pressure_c: I18n.t('activerecord.attributes.water_connection_contract.min_pressure') + ":",
+									 min_pressure: @contracting_request.try(:water_connection_contract).try(:min_pressure),
+									 max_pressure_c: I18n.t('activerecord.attributes.water_connection_contract.max_pressure') + ":",
+									 max_pressure: @contracting_request.try(:water_connection_contract).try(:max_pressure),
+									 connections_no_c: I18n.t('activerecord.attributes.water_connection_contract.connections_no') + ":",
+									 connections_no: @contracting_request.try(:water_connection_contract).try(:connections_no),
+									 dwellings_no_c: I18n.t('activerecord.attributes.water_connection_contract.dwellings_no') + ":",
+									 dwellings_no: @contracting_request.try(:water_connection_contract).try(:dwellings_no),
+									 premises_no_c: I18n.t('activerecord.attributes.water_connection_contract.premises_no') + ":",
+									 premises_no: @contracting_request.try(:water_connection_contract).try(:premises_no),
+									 premises_area_c: I18n.t('activerecord.attributes.water_connection_contract.premises_area') + ":",
+									 premises_area: @contracting_request.try(:water_connection_contract).try(:premises_area),
+									 common_items_no_c: I18n.t('activerecord.attributes.water_connection_contract.common_items_no') + ":",
+									 common_items_no: @contracting_request.try(:water_connection_contract).try(:common_items_no),
+									 pipe_length_c: I18n.t('activerecord.attributes.water_connection_contract.pipe_length') + ":",
+									 pipe_length: @contracting_request.try(:water_connection_contract).try(:pipe_length),
+									 yard_area_c: I18n.t('activerecord.attributes.water_connection_contract.yard_area') + ":",
+									 yard_area: @contracting_request.try(:water_connection_contract).try(:yard_area),
+									 pool_area_c: I18n.t('activerecord.attributes.water_connection_contract.pool_area') + ":",
+									 pool_area: @contracting_request.try(:water_connection_contract).try(:pool_area) 
+									 )							 
+#
+# bank
+report.page.values(bank_c: I18n.t("ag2_gest.contracting_requests.show.bank_info"),
+									 iban: @contracting_request.p_format
+									 )
+#
+#
+img = @contracting_request.try(:service_point).try(:verified) == true ? "app/assets/images/icon/glyph/black/ok.png" : ""
+# abastecimiento
+report.page.values(abast_c: I18n.t("ag2_gest.contracting_requests.report.abast_c"),
+									 abast_c2: I18n.t("ag2_gest.contracting_requests.report.alta_c"),
+									 abast_2: I18n.t("ag2_gest.contracting_requests.report.abast_2"),
+									 abast_3: I18n.t("ag2_gest.contracting_requests.report.abast_3"),
+									 abast_4: I18n.t("ag2_gest.contracting_requests.report.abast_4"),
+									 abast_5: I18n.t("ag2_gest.contracting_requests.report.abast_5"),
+									 abast_6: I18n.t("ag2_gest.contracting_requests.report.abast_6"),
+									 img1: img,
+									 abast_7: I18n.t("ag2_gest.contracting_requests.report.abast_7"),
+									 abast_8: I18n.t("ag2_gest.contracting_requests.report.abast_8")
+									 )
+#
+# saneamiento
+report.page.values(san_c: I18n.t("ag2_gest.contracting_requests.report.san_c"),
+									 san_c2: I18n.t("ag2_gest.contracting_requests.report.alta_c"),
+									 san_2: I18n.t("ag2_gest.contracting_requests.report.abast_2"),
+									 san_3: I18n.t("ag2_gest.contracting_requests.report.san_3"),
+									 san_4: I18n.t("ag2_gest.contracting_requests.report.san_4"),
+									 san_5: I18n.t("ag2_gest.contracting_requests.report.san_5"),
+									 san_6: I18n.t("ag2_gest.contracting_requests.report.san_6"),
+									 san_7: I18n.t("ag2_gest.contracting_requests.report.abast_7"),
+									 san_8: I18n.t("ag2_gest.contracting_requests.report.abast_8")
+									 )
+#

@@ -49,15 +49,15 @@ report.page.list(:instrument).on_page_footer_insert do |page_footer|
 end
 
 # Page header: Image block for Logo
-report.page.values company_logo: "public/" + @close_cash.company.logo.url(:original).split("?").first unless @close_cash.company.logo.blank?
+report.page.values company_logo: "public/" + @close_cash.project.company.logo.url(:original).split("?").first unless @close_cash.project.company.logo.blank?
 
 # Page header: Company
-report.page.values(company_name: @close_cash.company.name,
-				   company_address_1: @close_cash.company.address_1,
-				   company_address_2: @close_cash.company.address_2,
-				   company_phones: @close_cash.company.phone_and_fax,
-				   company_email: @close_cash.company.email_and_website,
-				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.company.fiscal_id)
+report.page.values(company_name: @close_cash.project.company.name,
+				   company_address_1: @close_cash.project.company.address_1,
+				   company_address_2: @close_cash.project.company.address_2,
+				   company_phones: @close_cash.project.company.phone_and_fax,
+				   company_email: @close_cash.project.company.email_and_website,
+				   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.project.company.fiscal_id)
 
 # Page header: Others
 _last_closing_created = formatted_timestamp(CashDeskClosing.find(@close_cash.last_closing_id).created_at) unless @close_cash.last_closing_id.blank?
@@ -139,15 +139,15 @@ if report.page_count == 1 && report.list.overflow?
 	end
 
 	# Page header: Image block for Logo
-	report.page.values company_logo: "public/" + @close_cash.company.logo.url(:original).split("?").first unless @close_cash.company.logo.blank?
+	report.page.values company_logo: "public/" + @close_cash.project.company.logo.url(:original).split("?").first unless @close_cash.project.company.logo.blank?
 
 	# Page header: Company
-	report.page.values(company_name: @close_cash.company.name,
-					   company_address_1: @close_cash.company.address_1,
-					   company_address_2: @close_cash.company.address_2,
-					   company_phones: @close_cash.company.phone_and_fax,
-					   company_email: @close_cash.company.email_and_website,
-					   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.company.fiscal_id)
+	report.page.values(company_name: @close_cash.project.company.name,
+					   company_address_1: @close_cash.project.company.address_1,
+					   company_address_2: @close_cash.project.company.address_2,
+					   company_phones: @close_cash.project.company.phone_and_fax,
+					   company_email: @close_cash.project.company.email_and_website,
+					   company_fiscal_id: I18n.t("activerecord.attributes.company.fiscal_id_c") + ": " + @close_cash.project.company.fiscal_id)
 
 	# Page header: Others
 	_last_closing_created = formatted_timestamp(CashDeskClosing.find(@close_cash.last_closing_id).created_at) unless @close_cash.last_closing_id.blank?

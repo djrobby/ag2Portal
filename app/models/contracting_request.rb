@@ -177,6 +177,21 @@ class ContractingRequest < ActiveRecord::Base
     subscriber_street_directory.blank? ? a1 + b + c + d : a + b + c + d
   end
 
+    def subscriber_address_2
+    _ret = ""
+    if !subscriber_zipcode.blank?
+      _ret += subscriber_zipcode.zipcode + " "
+    end
+    if !subscriber_street_directory.blank?
+      _ret += subscriber_street_directory.town.name + ", "
+      _ret += subscriber_street_directory.town.province.name + " "
+      if !subscriber_street_directory.town.province.region.country.blank?
+        _ret += "(" + subscriber_street_directory.town.province.region.country.name + ")"
+      end
+    end
+    _ret
+  end
+
   def document_types
     _codes = ""
     _ii = contracting_request_documents.group(:contracting_request_document_type_id)

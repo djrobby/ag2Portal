@@ -54,6 +54,7 @@ module Ag2Gest
                                                 :contracting_request_complete_report,
                                                 :biller_pdf,
                                                 :contracting_request_pdf,
+                                                :contracting_request_connection_pdf,
                                                 :contracting_subscriber_pdf,
                                                 :refresh_status,
                                                 :refresh_connection_status,
@@ -365,6 +366,18 @@ module Ag2Gest
 
     # PDF Contracting Request
     def contracting_request_pdf
+      @contracting_request = ContractingRequest.find(params[:id])
+      title = t("activerecord.models.contracting_request.one")
+      #@water_supply_contract = @contracting_request.water_supply_contract
+      #@bill = @water_supply_contract.bill
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@contracting_request.full_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
+
+    def contracting_request_connection_pdf
       @contracting_request = ContractingRequest.find(params[:id])
       title = t("activerecord.models.contracting_request.one")
       #@water_supply_contract = @contracting_request.water_supply_contract

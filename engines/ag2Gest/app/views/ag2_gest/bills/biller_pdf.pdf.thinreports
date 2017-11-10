@@ -121,28 +121,35 @@ end
 #
 # Factura
 #
-_code = "SUM"
+_code1 = @biller_printer.invoices.first.invoiced_subtotals_by_billable_item.first
+_code = _code1[3]
 _number1 = 1
 _bridge = " "
 _array = [ ]
 regulation_tariff = " "
+_ab = []
 
 a = @biller_printer.invoices.first
 	a.invoiced_subtotals_by_billable_item.each do |sub_billable_item|
 		regulation = Regulation.find(sub_billable_item[5]) rescue nil
 		if !regulation.blank?
-			if _code != sub_billable_item[3]
-				_number1 = _number1 + 1.to_i
-				_code = sub_billable_item[3]
-			end
-			if sub_billable_item[4] == 1.to_s
-				_number1 = _number1 + 1.to_i
-			end
-				_array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
+		_array.each do |ew|
+			_ab << ew[2]
+		end
+			if !_ab.include?(sub_billable_item[5])
+				if _code != sub_billable_item[3]
+					_number1 = _number1 + 1.to_i
+					_code = sub_billable_item[3]
+				end
+				if sub_billable_item[4] == 1.to_s
+					_number1 = _number1 + 1.to_i
+				end
+					_array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
 
-				regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "." unless regulation.blank?
+					regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "." unless regulation.blank?
 
-				_bridge = " // "
+					_bridge = " // "
+			end
 		end
 	end
 
@@ -174,6 +181,10 @@ _number2 = " "
 			report.page.list(:default).add_row do |row|
 				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_c") + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
 				row.item(:iva).value number_with_precision(tax[2], precision: 2)
+			end
+		else
+			report.page.list(:default).add_row do |row|
+				row.item(:iva_c).value I18n.t("activerecord.attributes.contracting_request.iva_exempt_c") + " " + "(#{number_with_precision(tax[0], precision: 2)}%" + " de " + number_with_precision(tax[1], precision: 2) + ")"
 			end
 		end
 	end

@@ -14,6 +14,8 @@
       <th><%= sortable "description", t('activerecord.attributes.regulation.description') %></th>
       <th><%= sortable "project_id", t('activerecord.attributes.regulation.project_id') %></th>
       <th><%= sortable "regulation_type_id", t('activerecord.attributes.regulation.regulation_type_id') %></th>
+      <th><%= t('activerecord.attributes.regulation.starting_at') %></th>
+      <th><%= t('activerecord.attributes.regulation.ending_at') %></th>
       <th></th>
     </tr>
   </thead>
@@ -24,6 +26,8 @@
         <td><%= link_to regulation.try(:description), regulation_path(regulation) %></td>
         <td><%= regulation.try(:project).try(:name) %></td>
         <td><%= regulation.try(:regulation_type).try(:description) %></td>
+        <td><%= formatted_date(regulation.starting_at) %></td>
+        <td><%= formatted_date(regulation.ending_at) unless regulation.ending_at.blank? %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Regulation, :path => edit_regulation_path(regulation) } %>
         <%= render :partial => '/layouts/crud/delete', :locals => { :model => Regulation, :path => regulation, :msg => t("activerecord.models.regulation.one"), :txt => regulation.description } %> </td>
       </tr>

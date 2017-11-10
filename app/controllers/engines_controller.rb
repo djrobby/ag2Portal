@@ -335,7 +335,7 @@ class EnginesController < ApplicationController
     w = "projects.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
     if @q != ''
       w += "(period LIKE '%#{@q}%')"
-      @billing_periods = serialized(BillingPeriod.where(w).by_period,
+      @billing_periods = serialized(BillingPeriod.joins(:project).where(w).by_period,
                              Api::V1::BillingPeriodsSerializer)
     end
     render json: @billing_periods

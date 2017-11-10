@@ -31,3 +31,4 @@ en:
       new:
         title: "New Reading"
       back_to_main_page: "Back to Readings"
+      reading_date_error: "Esta lectura se encuentra fuera del plazo establecido en el calendario de lectura. Incidencia activada."

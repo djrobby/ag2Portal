@@ -53,19 +53,20 @@ module Ag2Gest
       # .select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
 
       @to_readings.each do |pre_reading|
-
         redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil?
+        # redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil? and pre_reading.reading_index_1.nil?
         reading = Reading.new( project_id: pre_reading.project_id,
                               billing_period_id: pre_reading.billing_period_id,
                               billing_frequency_id: pre_reading.billing_frequency_id,
-                              reading_type_id: pre_reading.reading_type_id,
+                              reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
                               meter_id: pre_reading.meter_id,
                               subscriber_id: pre_reading.subscriber_id,
                               reading_route_id: pre_reading.reading_route_id,
                               reading_sequence: pre_reading.reading_sequence,
                               reading_variant: pre_reading.reading_variant,
-                              reading_date: pre_reading.reading_date,
-                              reading_index: pre_reading.reading_index || pre_reading.reading_index_1,
+                              # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
+                              reading_date: pre_reading.reading_date ,
+                              reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
                               reading_index_1: pre_reading.reading_index_1,
                               reading_index_2: pre_reading.reading_index_2,
                               reading_incidence_types: pre_reading.reading_incidence_types,
@@ -193,6 +194,9 @@ module Ag2Gest
       # añdadir incidencia vuelta de contador y no existe. ID 4
       if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 1
         @prereading.reading_incidence_types << ReadingIncidenceType.find(1)
+      end
+      if params[:lapconexs] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 26
+        @prereading.reading_incidence_types << ReadingIncidenceType.find(26)
       end
       respond_to do |format|
         if @prereading.update_attributes(params[:pre_reading])

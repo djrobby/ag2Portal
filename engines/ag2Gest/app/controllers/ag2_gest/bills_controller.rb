@@ -64,6 +64,28 @@ module Ag2Gest
                      disposition: 'inline' }
       end
     end
+
+    def biller_connection_contract_pdf
+      # Search invoice & items
+      @biller_printer = Bill.find(params[:id])
+      @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
+      @water_connection_contract = @biller_printer.water_connection_contract 
+      
+      @contracting_request = !@water_supply_contract.blank? ? @water_supply_contract.contracting_request : @water_connection_contract.contracting_request
+      @invoice = @biller_printer.invoices.first
+      @items = @invoice.invoice_items.order('id')
+
+      title = t("activerecord.models.invoice.one")
+
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                     filename: "#{title}_#{@invoice.full_no}.pdf",
+                     type: 'application/pdf',
+                     disposition: 'inline' }
+      end
+    end
+
     def biller_pdf
       @biller_printer = Bill.find(params[:id])
       title = t("activerecord.models.bill.few")

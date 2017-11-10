@@ -5,6 +5,22 @@ module Ag2Gest
 
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [ :r_reading_date
+                                              ]
+
+    def r_reading_date
+      billing_period = BillingPeriod.find(params[:billing_period])
+      reading_date = params[:reading_date]
+      reading_date = (reading_date[0..3] + '-' + reading_date[4..5] + '-' + reading_date[6..7]).to_date
+      code = ''
+      
+      if reading_date.between?(billing_period.reading_starting_date, billing_period.reading_ending_date)
+        code = '$ok'
+      else
+        code = '$err'
+      end
+      render json: { "code" => code }
+    end
 
     # GET /readings
     # GET /readings.json
@@ -134,6 +150,10 @@ module Ag2Gest
         @reading.reading_route_id = @subscriber.reading_route_id
         @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
         @reading.created_by = current_user.id if !current_user.nil?
+        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
+        else
+          @reading.reading_incidence_types << ReadingIncidenceType.find(36)
+        end
 
         if @reading.save
           respond_to do |format|
@@ -206,9 +226,29 @@ module Ag2Gest
         @reading.reading_index_2 = rdg_2.try(:reading_index)
         @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
         @reading.updated_by = current_user.id if !current_user.nil?
-        if @reading.reading_index < @reading.reading_index_1
+        jj = []
+        if !@reading.reading_incidence_types.blank?
+          @reading.reading_incidence_types.each do |a|
+            jj << a.id
+          end
+        end
+        # vuelta de contador
+        if @reading.reading_index < @reading.reading_index_1 and !jj.include?(1)
           @reading.reading_incidence_types << ReadingIncidenceType.find(1)
         end 
+
+        # consumo excesivo
+        diferent = (@reading.consumption * 100) / (@reading.reading_1.consumption)
+        if diferent > 50 and !jj.include?(26)
+          @reading.reading_incidence_types << ReadingIncidenceType.find(26)
+        end 
+
+        # fuera de plazo
+        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date) and !jj.include?(26)
+        else
+          @reading.reading_incidence_types << ReadingIncidenceType.find(36)
+        end
+
 
         respond_to do |format|
           if @reading.save

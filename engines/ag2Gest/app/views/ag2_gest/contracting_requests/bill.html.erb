@@ -12,9 +12,13 @@
 <h3><%= t("activerecord.attributes.contracting_request.bill_name") %></h3>
 
 <% if @bill.invoices.first.invoice_type.id == InvoiceType::WATER %>
-  <%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" unless @bill.subscriber_id.blank?%>
+  <%= link_to "<i class='icon-print icon-white'></i> #{t 'ag2_gest.bills.show.print'}".html_safe, biller_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" unless @bill.subscriber_id.blank?%>
 <% elsif @bill.invoices.first.invoice_type.id == InvoiceType::CONTRACT %>
-  <%= link_to "<i class='icon-print icon-white'></i> Imprimir".html_safe, biller_contract_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" %>
+	<% if !@bill.water_connection_contract.blank? %>
+	  <%= link_to "<i class='icon-print icon-white'></i> #{t 'ag2_gest.bills.show.print'}".html_safe, biller_connection_contract_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" %>
+	<% else %>
+	  <%= link_to "<i class='icon-print icon-white'></i> #{t 'ag2_gest.bills.show.print'}".html_safe, biller_contract_pdf_bill_path(@bill, :format => :pdf), target: "_blank", class: "btn btn-warning pull-right" %>        
+	<% end %>
 <% end %>
 
 <% @bill.invoices.each do |invoice| %>
