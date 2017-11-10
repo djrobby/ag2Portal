@@ -183,12 +183,14 @@ class SupplierInvoice < ActiveRecord::Base
         .joins("INNER JOIN (charge_accounts LEFT JOIN ledger_accounts ON charge_accounts.ledger_account_id=ledger_accounts.id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
         .group("ledger_accounts.code")
         .select('charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
+        .order("item_amount")
     else
       supplier_invoice_items
         .joins("INNER JOIN (charge_accounts LEFT JOIN (charge_account_ledger_accounts INNER JOIN ledger_accounts ON charge_account_ledger_accounts.ledger_account_id=ledger_accounts.id) ON charge_accounts.id=charge_account_ledger_accounts.charge_account_id) ON supplier_invoice_items.charge_account_id=charge_accounts.id")
         .where("charge_account_ledger_accounts.company_id = ?", company_id)
         .group("ledger_accounts.code")
         .select('supplier_invoice_items.charge_account_id, ledger_accounts.code, sum(supplier_invoice_items.quantity*(supplier_invoice_items.price-supplier_invoice_items.discount)) AS item_amount')
+        .order("item_amount")
     end
   end
 
