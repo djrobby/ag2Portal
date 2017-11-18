@@ -178,7 +178,12 @@ var text_field_color;
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :street_directory, collection: StreetDirectory.by_name_type, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :center, collection: Center.by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+
+  <% if session[:office] != '0' %>
+    <label class="multi-field-label-two"> <%= f.association :center, collection: Center.where("town_id = ?", Office.find("#{session[:office]}").town_id).by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
+  <% else %>
+    <label class="multi-field-label-two"> <%= f.association :center, collection: Center.by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>  
+  <% end %>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :street_number, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>

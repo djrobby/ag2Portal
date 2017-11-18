@@ -47,12 +47,12 @@
       contact = "0";
     if (contact == "0") {
       // Empty fiscal id: Disable
-      $('.entity-field').prop('disabled', true);
+      $('.entity-field').prop('readonly', true);
       $('#generate_code_btn').hide();
       $('#submit_btn').hide();
     } else {
       // Fiscal Id OK: Enable
-      $('.entity-field').prop('disabled', false);
+      $('.entity-field').prop('readonly', false);
       $('#generate_code_btn').show();
       $('#submit_btn').show();
     }
@@ -178,7 +178,7 @@
             $("#contracting_request_client_email").val(data.email);
 
             // Enable fields
-            $('.entity-field').prop('disabled', false);
+            $('.entity-field').prop('readonly', false);
             cr_type = $('.contracting_request_type_id').select2("val")
             if(cr_type == "<%= ContractingRequestType::SUPPLY %>"){
               $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
@@ -197,7 +197,7 @@
               $("#contracting_request_service_point_id").select2("val", data.service_point);
             }else{
               // Disable fields
-              $(".subscriber-field").prop('disabled', true);
+              $(".subscriber-field").prop('readonly', true);
             };
 
             $('#generate_code_btn').show();
@@ -270,15 +270,15 @@
 
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
-      $('#contracting_request_request_no').prop('disabled', true);
+      $('#contracting_request_request_no').prop('readonly', true);
       $('#contracting_request_request_date').attr('disabled', true);
-      $('#contracting_request_contracting_request_type_id').prop('disabled', true);
-      $('#contracting_request_project_id').prop('disabled', true);
+      $('#contracting_request_contracting_request_type_id').prop('readonly', true);
+      $('#contracting_request_project_id').prop('readonly', true);
     } else {
-      $('#contracting_request_request_no').prop('disabled', false);
+      $('#contracting_request_request_no').prop('readonly', false);
       $('#contracting_request_request_date').attr('disabled', false);
-      $('#contracting_request_contracting_request_type_id').prop('disabled', false);
-      $('#contracting_request_project_id').prop('disabled', false);
+      $('#contracting_request_contracting_request_type_id').prop('readonly', false);
+      $('#contracting_request_project_id').prop('readonly', false);
     }
   });
 
@@ -338,7 +338,7 @@
         $("#row-old-subscriber").show();
         $("#contracting_request_subscriber_id").attr("required", "required");
         if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
-          $(".cancellation-field").prop('disabled', true);
+          $(".cancellation-field").prop('readonly', true);
           $("#contracting_request_service_point_id").attr('disabled', true);
           $("#service_point_hide").attr('disabled', false);
           $('.row-service-point').show();
@@ -354,7 +354,7 @@
           $('.field-no').show();
           $('#subrogation-form').hide();
         }else{
-          $(".cancellation-field").prop('disabled', false);
+          $(".cancellation-field").prop('readonly', false);
           $("#contracting_request_service_point_id").attr('disabled', false);
           $("#service_point_hide").attr('disabled', true);
           $('.row-service-point').show();
@@ -371,7 +371,7 @@
           $('#subrogation-form').hide();
         }
       }else{
-        $(".cancellation-field").prop('disabled', false);
+        $(".cancellation-field").prop('readonly', false);
         $("#contracting_request_service_point_id").attr('disabled', false);
         $("#service_point_hide").attr('disabled', true);
         $('.row-service-point').show();
@@ -428,7 +428,7 @@
       var subscriber = $('select#old-subscriber :selected').val();
       if (subscriber == ""){
         subscriber = "0";
-        $('.contracting_request_type_id').prop('disabled', false);
+        $('.contracting_request_type_id').prop('readonly', false);
       }else{
         // $('.contracting_request_type_id').prop('disabled', true);
       }
@@ -438,17 +438,17 @@
         jQuery.getJSON('update_old_subscriber/' + subscriber, function(data) {
           if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
             $('#contracting_request_entity_fiscal_id').val(data.subscriber.fiscal_id);
-            $(".cancellation-field").prop('disabled', true);
+            $(".cancellation-field").prop('readonly', true);
             $('.button-service-point').hide();
-            $(".subscriber-field").prop('disabled', true);
-            $(".entity-field").prop('disabled', true);
+            $(".subscriber-field").prop('readonly', true);
+            $(".entity-field").prop('readonly', true);
           }else{
             $("#contracting_request_entity_fiscal_id").val("");
             $("#contracting_request_entity_fiscal_id").removeAttr("required", "required");
-            $(".cancellation-field").prop('disabled', false);
+            $(".cancellation-field").prop('readonly', false);
             $('.button-service-point').show();
-            $(".subscriber-field").prop('disabled', true);
-            $('.entity-field').prop('disabled', false);
+            $(".subscriber-field").prop('readonly', true);
+            $('.entity-field').prop('readonly', false);
           }
           $("#contracting_request_subscriber_street_type_id").select2("val", data.street_directory.street_type_id);
           $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory.id);

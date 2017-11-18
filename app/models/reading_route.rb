@@ -13,7 +13,8 @@ class ReadingRoute < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :route_code,  :presence => true
+  # validates :route_code,  :presence => true
+  validate :route_code,   :presence => true, :before => :create
   validates :office_id,   :presence => true
 
   # Scopes

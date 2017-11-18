@@ -123,6 +123,7 @@ module Ag2Gest
       _project = @contracting_request.project_id
       _type = @contracting_request.contracting_request_type_id
       @water_supply_contract.contract_no = contract_next_no(_project,_type) if _type == ContractingRequestType::SUPPLY || _type == ContractingRequestType::CHANGE_OWNERSHIP
+      @water_supply_contract.contract_date = @contracting_request.request_date.strftime("%Y-%m-%d")
       @water_supply_contract.created_by = current_user.id if !current_user.nil?
       if @water_supply_contract.save
       if !@contracting_request.work_order.blank?
@@ -135,7 +136,11 @@ module Ag2Gest
           _tariff_type = TariffType.find(r)
           _billable_items.each do |b|
             tariffs = Tariff.availables_to_project_type_document_caliber(b,@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
-          @water_supply_contract.tariffs << tariffs
+            tariffs.each do |a|
+              if !@water_supply_contract.tariffs.include?(a)
+                @water_supply_contract.tariffs << a
+              end
+            end
           end
         end
 
@@ -239,7 +244,11 @@ module Ag2Gest
             _tariff_type = TariffType.find(r)
             _billable_items.each do |b|
               tariffs = Tariff.availables_to_project_type_document_caliber(b,@contracting_request.project_id,_tariff_type.id,1,@caliber.id)
-            @water_supply_contract.tariffs << tariffs
+              tariffs.each do |a|
+                if !@water_supply_contract.tariffs.include?(a)
+                  @water_supply_contract.tariffs << a
+                end
+              end
             end
           end
         end

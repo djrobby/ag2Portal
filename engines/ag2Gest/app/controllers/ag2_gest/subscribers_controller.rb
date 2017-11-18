@@ -697,7 +697,7 @@ module Ag2Gest
           # province_id: @contracting_request.subscriber_province_id,
           # region_id: @contracting_request.subscriber_region_id,
           remarks: @contracting_request.try(:water_supply_contract).try(:remarks),
-          starting_at: Time.now,
+          starting_at: @contracting_request.try(:water_supply_contract).try(:contract_date),
           street_directory_id: @contracting_request.subscriber_street_directory_id,
           # street_name: @contracting_request.subscriber_street_name,
           street_number: @contracting_request.subscriber_street_number,

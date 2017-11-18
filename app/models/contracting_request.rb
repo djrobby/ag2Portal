@@ -607,13 +607,13 @@ class ContractingRequest < ActiveRecord::Base
     # water_supply_contract = WaterSupplyContract.new(old_subscriber.water_supply_contract.attributes.except!("id", "created_at", "updated_at"))
     # water_supply_contract.client = client
     water_supply_contract = WaterSupplyContract.new(
-                              contract_no: contract_next_no(project_id,contracting_request_type_id),
+                              contract_no: contract_next_no(self.project_id,self.contracting_request_type_id),
                               contracting_request_id: id,
                               client_id: client.id,
                               reading_route_id: old_subscriber.reading_route_id,
                               meter_id: old_subscriber.meter_id,
                               tariff_scheme_id: old_subscriber.tariff_scheme_id,
-                              contract_date: Date.today,
+                              contract_date: request_date,
                               reading_sequence: old_subscriber.reading_sequence,
                               cadastral_reference: old_subscriber.cadastral_reference,
                               pub_record: old_subscriber.pub_record,
@@ -767,6 +767,33 @@ class ContractingRequest < ActiveRecord::Base
     end
     code
   end
+
+  # Params: project_id, type_id
+  def contract_next_no(project, type)
+    year = Time.new.year
+    last_no = nil
+    code = ''
+    # Builds code, if possible
+    project = project.to_s if project.is_a? Fixnum
+    project = project.rjust(6, '0')
+    type_s = type.to_s if type.is_a? Fixnum
+    type_s = type_s.rjust(2, '0')
+    year = year.to_s if year.is_a? Fixnum
+    year = year.rjust(4, '0')
+    if type == ContractingRequestType::CONNECTION
+      last_no = WaterConnectionContract.where("contract_no LIKE ?", "#{project}#{type_s}#{year}%").order(:contract_no).maximum(:contract_no)
+    else
+      last_no = WaterSupplyContract.where("contract_no LIKE ?", "#{project}#{type_s}#{year}%").order(:contract_no).maximum(:contract_no)
+    end
+    if last_no.nil?
+      code = project + type_s + year + '000001'
+    else
+      last_no = last_no[12..17].to_i + 1
+      code = project + type_s + year + last_no.to_s.rjust(6, '0')
+    end
+    code
+  end
+
 
   def status_control(status=nil)
     if ["INITIAL","INSPECTION","BILLING","INSTALLATION","COMPLETE"].include? status.try(:upcase)

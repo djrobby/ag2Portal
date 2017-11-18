@@ -287,6 +287,7 @@
       $("#link_work_order_installation").text(data.work_order_installation.order_no.substr(0, 12) + "-" + data.work_order_installation.order_no.substr(12, 4) + "-" +  data.work_order_installation.order_no.substr(16, 6));
       $("#status_work_order_installation").text(data.work_order_status_installation.name);
       $("#ot-installation").addClass('btn btn-primary nextBtn').attr("disabled","disabled");
+      $("#new-subscriber-installation").removeClass("disabled");
     });
 
     $("#initial-complete").bind("ajax:success", function(xhr, data, status) {
@@ -722,6 +723,7 @@
     <!-- step 3 -->
     <div class="setup-content" id="step-3">
       <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION or @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP %>
+      <% if !@contracting_request.water_supply_contract.blank? %>
         <a id="billing-instalation-cancellation" href="<%= params[:id] %>/billing_instalation_cancellation" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
 
         <% if !@contracting_request.water_supply_contract.bailback_bill.blank? %>
@@ -741,7 +743,7 @@
         <% else %>
           <a id="edit-bill" href="#billing-modal" data-toggle="modal" role="button" class="btn btn-primary hide"><%= t('activerecord.attributes.contracting_request.invoice_c')  + t('activerecord.attributes.contracting_request.new_contract') %></a>
         <% end %>
-
+      <% end %>
       <% else %>
         <a id="billing-instalation" href="<%= params[:id] %>/billing_instalation" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn" data-remote="true"><%= t('activerecord.attributes.contracting_request.invoice_confirm') %></a>
 
