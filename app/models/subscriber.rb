@@ -71,9 +71,12 @@ class Subscriber < ActiveRecord::Base
   scope :by_code, -> { order(:subscriber_code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
+  scope :actives, -> { where(active: true).by_code }
+  scope :active_by_office, -> office { where(active: true, office_id: office).by_code }
   scope :availables, -> { where("ending_at IS NULL OR ending_at >= ?", Date.today)}
   scope :unavailables, -> { where("NOT ending_at IS NULL OR active = false") }
   scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today)}
+  scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
 
   # Callbacks
   before_validation :fields_to_uppercase

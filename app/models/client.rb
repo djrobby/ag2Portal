@@ -70,6 +70,8 @@ class Client < ActiveRecord::Base
   scope :by_code, -> { order(:client_code) }
   #
   scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
+  scope :actives, -> { where(active: true).by_code }
+  scope :active_by_organization, -> o { where(active: true, organization_id: o).by_code }
 
   # Callbacks
   before_validation :fields_to_uppercase

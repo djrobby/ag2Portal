@@ -174,7 +174,7 @@ module Ag2Gest
       @breadcrumb = 'create'
       @meter = Meter.new(params[:meter])
       @meter.created_by = current_user.id if !current_user.nil?
-      @meter.master_meter_id = params[:MasterMeter].to_i unless params[:MasterMeter].blank?
+      @meter.master_meter_id = params[:Meter].to_i unless params[:Meter].blank?
       # office = Office.find(params[:meter][:office_id])
       # @meter.company_id = office.company_id
       # @meter.organization_id = office.try(:company).try(:organization_id)
@@ -199,7 +199,7 @@ module Ag2Gest
       @breadcrumb = 'update'
       @meter = Meter.find(params[:id])
       @meter.updated_by = current_user.id if !current_user.nil?
-      @meter.master_meter_id = params[:MasterMeter].to_i unless params[:MasterMeter].blank?
+      @meter.master_meter_id = params[:Meter].to_i unless params[:Meter].blank?
 
       respond_to do |format|
         if @meter.update_attributes(params[:meter])

@@ -87,11 +87,12 @@ module Ag2Products
       current_stock = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
+        # @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
+        cost = product_price_to_apply(@product, store)
+        # cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
         costs = qty * cost
         price = @product.sell_price
         amount = qty * price
@@ -118,6 +119,7 @@ module Ag2Products
     end
 
     # Update description and prices text fields at view from product select
+    # DO NOT USE -> dn_update_description_prices_from_product_store
     def dn_update_description_prices_from_product
       product = params[:product]
       description = ""
@@ -131,11 +133,12 @@ module Ag2Products
       tax = 0
       if product != '0'
         @product = Product.find(product)
-        @prices = @product.purchase_prices
+        # @prices = @product.purchase_prices
         # Assignment
         description = @product.main_description[0,40]
         qty = params[:qty].to_f / 10000
-        cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
+        cost = product_price(@product)
+        # cost = @product.average_price > 0 ? @product.average_price : @product.reference_price
         costs = qty * cost
         price = @product.sell_price
         amount = qty * price
@@ -278,7 +281,8 @@ module Ag2Products
         @charge_accounts = @organization.blank? ? charge_accounts_dropdown : @organization.charge_accounts.order(:account_code)
         @stores = @organization.blank? ? stores_dropdown : @organization.stores.order(:name)
         @payment_methods = @organization.blank? ? payment_methods_dropdown : collection_payment_methods(@organization.id)
-        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        # @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @products = @organization.blank? ? products_dropdown : Product.active_by_organization(organization)
       else
         # @clients = clients_dropdown
         @projects = projects_dropdown
@@ -308,8 +312,9 @@ module Ag2Products
     def dn_update_product_select_from_organization
       organization = params[:org]
       if organization != '0'
-        @organization = Organization.find(organization)
-        @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @organization = Organization.find(organization) rescue nil
+        # @products = @organization.blank? ? products_dropdown : @organization.products.order(:product_code)
+        @products = @organization.blank? ? products_dropdown : Product.active_by_organization(organization)
       else
         @products = products_dropdown
       end
@@ -319,6 +324,7 @@ module Ag2Products
       @json_data = { "product" => @products_dropdown }
       render json: @json_data
     end
+
     # Is quantity greater than current stock?
     # Will quantity leave stock at minimum?
     def dn_item_stock_check
@@ -886,11 +892,11 @@ module Ag2Products
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
+      session[:organization] != '0' ? collection_payment_methods(session[:organization].to_i) : collection_payment_methods(0)
     end
 
     def collection_payment_methods(_organization)
@@ -903,7 +909,8 @@ module Ag2Products
     end
 
     def products_dropdown
-      session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+      # session[:organization] != '0' ? Product.where(organization_id: session[:organization].to_i).order(:product_code) : Product.order(:product_code)
+      session[:organization] != '0' ? Product.active_by_organization(organization) : Product.actives
     end
 
     def clients_array(_clients)
@@ -948,8 +955,27 @@ module Ag2Products
     end
 
     # Use average price, if any. Otherwise, the reference price
-    def product_price_to_apply(_product)
-      @product.average_price > 0 ? @product.average_price : @product.reference_price
+    # Try use product-company average price first...
+    def product_price_to_apply(_product, _store=0)
+      if _store == 0
+        product_price(_product)
+      else
+        _s = Store.find(_store) rescue nil
+        if _s.nil?
+          product_price(_product)
+        else
+          _pcp = ProductCompanyPrice.find_by_product_and_company(_product.id, _s.company_id)
+          if !_pcp.nil? && _pcp.average_price > 0
+            _pcp.average_price
+          else
+            product_price(_product)
+          end
+        end
+      end
+    end
+
+    def product_price(_product)
+      _product.average_price > 0 ? _product.average_price : _product.reference_price
     end
 
     # Keeps filter state
