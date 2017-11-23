@@ -32,6 +32,7 @@ class InvoiceType < ActiveRecord::Base
     when 3 then I18n.t('activerecord.attributes.invoice_type.code_3')
     when 4 then I18n.t('activerecord.attributes.invoice_type.code_4')
     when 5 then I18n.t('activerecord.attributes.invoice_type.code_5')
+    else I18n.t('activerecord.attributes.invoice_type.code_5')
     end
   end
 end

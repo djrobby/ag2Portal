@@ -329,6 +329,10 @@
             $("#fnt-product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
           });
         }
+        // Offer item
+        $("#fnt-sale-offer-item").html("");
+        $("#fnt-sale-offer-item").select2("val", "");
+        $("#fnt-sale-offer-item").append($('<option></option>').val("").html(""));
       });
     }
   }
@@ -347,7 +351,8 @@
     <div style="overflow: hidden; padding-left: 0em;">
       <%= f.association :sale_offer, collection: @sale_offers, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-sale-offer' }, label_html: { class: 'form-label' } %>
     </div>
-    <%= f.association :sale_offer_item, collection: @offer_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-sale-offer-item' }, label_html: { class: 'form-label' } %>
+    <%#= f.association :sale_offer_item, collection: @offer_items, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-sale-offer-item' }, label_html: { class: 'form-label' } %>
+    <%= f.association :sale_offer_item, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-sale-offer-item' }, label_html: { class: 'form-label' } %>
     <%= f.association :product, collection: @products, input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-product', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label fnt-product-label' } %>
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
