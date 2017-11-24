@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171014081558) do
+ActiveRecord::Schema.define(:version => 20171124095143) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3596,8 +3596,8 @@ ActiveRecord::Schema.define(:version => 20171014081558) do
     t.date     "starting_at"
     t.date     "ending_at"
     t.integer  "street_directory_id"
-    t.datetime "created_at",                                                                           :null => false
-    t.datetime "updated_at",                                                                           :null => false
+    t.datetime "created_at",                                                                               :null => false
+    t.datetime "updated_at",                                                                               :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "street_number"
@@ -3610,7 +3610,7 @@ ActiveRecord::Schema.define(:version => 20171014081558) do
     t.string   "cellular"
     t.string   "email"
     t.integer  "service_point_id"
-    t.boolean  "active",                                                             :default => true, :null => false
+    t.boolean  "active",                                                                 :default => true, :null => false
     t.integer  "tariff_scheme_id"
     t.integer  "billing_frequency_id"
     t.integer  "meter_id"
@@ -3621,16 +3621,30 @@ ActiveRecord::Schema.define(:version => 20171014081558) do
     t.string   "remarks"
     t.string   "cadastral_reference"
     t.string   "gis_id"
-    t.integer  "endowments",             :limit => 2,                                :default => 0,    :null => false
-    t.integer  "inhabitants",            :limit => 2,                                :default => 0,    :null => false
+    t.integer  "endowments",                 :limit => 2,                                :default => 0,    :null => false
+    t.integer  "inhabitants",                :limit => 2,                                :default => 0,    :null => false
     t.string   "km"
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                  :precision => 12, :scale => 4, :default => 0.0
-    t.decimal  "equiv_dwelling",                      :precision => 12, :scale => 4, :default => 0.0
-    t.decimal  "deposit",                             :precision => 13, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,  :null => false
     t.string   "old_code"
+    t.string   "postal_last_name"
+    t.string   "postal_first_name"
+    t.integer  "postal_street_directory_id"
+    t.integer  "postal_street_type_id"
+    t.string   "postal_street_name"
+    t.string   "postal_street_number"
+    t.string   "postal_building"
+    t.string   "postal_floor"
+    t.string   "postal_floor_office"
+    t.integer  "postal_zipcode_id"
+    t.integer  "postal_town_id"
+    t.integer  "postal_province_id"
+    t.integer  "postal_region_id"
+    t.integer  "postal_country_id"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3650,6 +3664,13 @@ ActiveRecord::Schema.define(:version => 20171014081558) do
   add_index "subscribers", ["office_id"], :name => "index_subscribers_on_office_id"
   add_index "subscribers", ["old_code"], :name => "index_subscribers_on_old_code"
   add_index "subscribers", ["phone"], :name => "index_subscribers_on_phone"
+  add_index "subscribers", ["postal_country_id"], :name => "index_subscribers_on_postal_country_id"
+  add_index "subscribers", ["postal_province_id"], :name => "index_subscribers_on_postal_province_id"
+  add_index "subscribers", ["postal_region_id"], :name => "index_subscribers_on_postal_region_id"
+  add_index "subscribers", ["postal_street_directory_id"], :name => "index_subscribers_on_postal_street_directory_id"
+  add_index "subscribers", ["postal_street_type_id"], :name => "index_subscribers_on_postal_street_type_id"
+  add_index "subscribers", ["postal_town_id"], :name => "index_subscribers_on_postal_town_id"
+  add_index "subscribers", ["postal_zipcode_id"], :name => "index_subscribers_on_postal_zipcode_id"
   add_index "subscribers", ["pub_record"], :name => "index_subscribers_on_pub_record"
   add_index "subscribers", ["reading_route_id"], :name => "index_subscribers_on_reading_route_id"
   add_index "subscribers", ["reading_sequence"], :name => "index_subscribers_on_reading_sequence"

@@ -11,6 +11,13 @@ class Subscriber < ActiveRecord::Base
   belongs_to :reading_route
   belongs_to :contracting_request
   belongs_to :use
+  belongs_to :postal_street_directory, :class_name => 'StreetDirectory', :foreign_key => 'postal_street_directory_id'
+  belongs_to :postal_street_type, :class_name => 'StreetType', :foreign_key => 'postal_street_type_id'
+  belongs_to :postal_zipcode, :class_name => 'Zipcode', :foreign_key => 'postal_zipcode_id'
+  belongs_to :postal_town, :class_name => 'Town', :foreign_key => 'postal_town_id'
+  belongs_to :postal_province, :class_name => 'Province', :foreign_key => 'postal_province_id'
+  belongs_to :postal_region, :class_name => 'Region', :foreign_key => 'postal_region_id'
+  belongs_to :postal_country, :class_name => 'Country', :foreign_key => 'postal_country_id'
   attr_accessible :company, :first_name, :fiscal_id, :last_name, :subscriber_code,
                   :starting_at, :ending_at, :created_by, :updated_by,
                   :client_id, :office_id, :center_id, :street_directory_id, :street_number,
@@ -18,7 +25,9 @@ class Subscriber < ActiveRecord::Base
                   :service_point_id, :active, :tariff_scheme_id, :billing_frequency_id, :meter_id,
                   :reading_route_id, :reading_sequence, :reading_variant, :contracting_request_id, :use_id,
                   :remarks, :cadastral_reference, :gis_id, :endowments, :inhabitants, :km, :gis_id_wc,
-                  :pub_record, :m2, :equiv_dwelling, :deposit, :old_code,
+                  :pub_record, :m2, :equiv_dwelling, :deposit, :old_code, :client_town_id, :client_zipcode_id,
+                  :client_province_id, :client_region_id, :client_street_directory_id,
+                  :client_street_name, :client_street_number, :client_street_type_id,
                   :readings_attributes, :meter_details_attributes
 
   attr_accessor :reading_index_add, :reading_date_add
