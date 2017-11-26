@@ -25,5 +25,8 @@ en:
         amount_paid: "Amount paid"
         invoices_paid: "Invoices paid"
         invoices_paid_c: "I. Pa"
+        amount_others: "Amount others"
         last_closing: "Last_closing"
         last_closing_id: "Last_closing"
+        selected_receipts: "Selected receipts"
+        sum_instruments: "Sum of instruments"

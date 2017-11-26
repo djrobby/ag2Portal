@@ -25,5 +25,8 @@ es:
         amount_paid: "Importe pagado"
         invoices_paid: "Facturas pagadas"
         invoices_paid_c: "F. Pa"
+        amount_others: "Importe otros"
         last_closing: "Cierre anterior"
         last_closing_id: "Cierre Ant."
+        selected_receipts: "Recibos seleccionados"
+        sum_instruments: "Suma de instrumentos"

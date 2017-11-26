@@ -536,8 +536,58 @@
     <!-- Instalments -->
     <%= render 'modal_instalment' %>
 
-    <!-- Close Cash -->
-    <%= render 'modal_cash_close' %>
+    <!-- Close Cash (modal) -->
+    <div id="modal-close-cash" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="CerrarCaja" aria-hidden="true">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&#215;</a>
+        <h3><%= t "ag2_gest.client_payments.index.cash_closing" %></h3>
+        <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+      </div>
+      <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right close-cash-form'} do |f| %>
+        <div class="modal-body">
+          <%= f.input :client_payments_ids, :as => :hidden %>
+          <%= f.input :opening_balance, required: true, label: I18n.t("activerecord.attributes.cash_desk_closing.opening_balance"), as: :decimal, inline_label: "Yes", input_html: { id: 'initial-cash', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+
+          <div class="control-group string required">
+            <label class="string control-label">Recibos seleccionados</label>
+            <div class="controls highlighted bolded">
+              <span id="bills-cash"><%= @cash_totals.payments %></span>
+            </div>
+          </div>
+
+          <div class="control-group string required">
+            <label class="form-label">Total cobrado</label>
+            <div class="controls highlighted bolded">
+              <span id="total-cash"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+
+          <div class="control-group string required">
+            <label class="form-label">Saldo de cierre</label>
+            <div class="controls highlighted bolded">
+              <span id="ending-cash" size="50" type="number" step="0.01"><%= number_with_precision(@closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+            </div>
+          </div>
+
+          <!-- Currency instruments -->
+          <% if !@currency_instruments.blank? %>
+          <div class="control-group">
+            <h4><%= t "activerecord.models.currency_instrument.few" %></h4>
+            <% @currency_instruments.each do |i| %>
+            <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+            <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
+            <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label' } %>
+            <% end %>
+          </div>
+          <% end %>
+
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+          <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+        </div>
+      <% end %>
+    </div><!-- Close Cash -->
 
     <!-- Cash To Pending (modal) -->
     <div id="modal-cash-to-pending" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
@@ -1264,15 +1314,5 @@
     cashed = parseFloat($("#total-cash").text());
     ending_cash = initial_cash + cashed
     $("#ending-cash").text(ending_cash.format(2, 3, _delimiter, _separator));
-  });
-
-  $(".fnt-currency-quantity").change(function() {
-    sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
-    ival = parseFloat($(this).attr("data-ival")) || 0;
-    old_qty = parseFloat(this.oldvalue);
-    sum_instruments = sum_instruments - (old_qty * ival);
-    qty = parseFloat(this.value) || 0;
-    sum_instruments = sum_instruments + (qty * ival);
-    $("#sum-instruments").text(sum_instruments.format(2, 3, _delimiter, _separator));
   });
 </script>

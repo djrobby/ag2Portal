@@ -1,0 +1,65 @@
+<!-- Modal Close Cash -->
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#proc_mesage_cc").hide();
+  });
+</script>
+
+<div id="modal-close-cash" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true" data-backdrop="static" style="display: none;">
+  <div id="proc_mesage_cc" class="alert alert-info">
+    <%= t(:generating) %>
+  </div>
+  <% e = t(:item_error) %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= t "ag2_gest.client_payments.index.cash_closing" %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <%= simple_form_for :close_cash, url: close_cash_client_payments_path, method: :post, :html => {:class => 'modal-footer-right close-cash-form'} do |f| %>
+    <div class="modal-body">
+      <%= f.input :client_payments_ids, :as => :hidden %>
+      <%= f.input :opening_balance, required: true, label: I18n.t("activerecord.attributes.cash_desk_closing.opening_balance"), as: :decimal, inline_label: "Yes", input_html: { id: 'initial-cash', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+      <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.selected_receipts') %>:</span>
+        <span id="bills-cash" class="controls highlighted bolded"><%= @cash_totals.payments %></span>
+      </p>
+      <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_collected') %>:</span>
+        <span id="total-cash" class="controls highlighted bolded"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+      </p>
+      <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_paid') %>:</span>
+        <span id="total-paid" class="controls highlighted bolded"><%= number_with_precision(@supplier_payments, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+      </p>
+      <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_others') %>:</span>
+        <span id="total-others" class="controls highlighted bolded"><%= number_with_precision(@other_cash, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+      </p>
+      <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.closing_balance') %>:</span>
+        <span id="ending-cash" class="controls highlighted bolded" size="50" type="number" step="0.01"><%= number_with_precision(@closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+      </p>
+      <!-- Currency instruments -->
+      <% if !@currency_instruments.blank? %>
+      <hr />
+      <div class="control-group">
+        <h4><%= t "activerecord.models.currency_instrument.few" %></h4>
+        <% @currency_instruments.each do |i| %>
+        <%= i.value_i %>
+        <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
+        <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
+        <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
+        <% end %>
+        <p class="control-group">
+          <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.sum_instruments') %>:</span>
+          <span id="sum-instruments" class="controls highlighted bolded">0,00</span>
+        </p>
+      </div>
+      <% end %>
+    </div>
+    <div class="modal-footer">
+      <%= f.button :submit, t(:confirm), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', id: 'btn-submit-modal-cash-close' %>
+      <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+    </div>
+  <% end %>
+</div><!-- Close Cash -->

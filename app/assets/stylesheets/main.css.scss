@@ -496,6 +496,19 @@ span.editicon input {
 }
 
 /*
+ * Tabulated span
+ */
+span.tabulated {
+  display: inline-block;
+  min-width: 166px;
+}
+span.tabulated-highlighted {
+  display: inline-block;
+  min-width: 100px;
+  color: #a67326;
+}
+
+/*
  * Bands - Toolbars
  */
 .blue-band {

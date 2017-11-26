@@ -1046,10 +1046,14 @@ module Ag2Gest
       plan_ids = @instalments.map(&:instalment_plan_id).uniq
       @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
 
+      # Supplier payments & Other cash movements
+      @supplier_payments = 0
+      @other_cash = 0
+
       # Open last cash desk closing
       @last_cash_desk_closing = open_cash
       @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
-      @closing_balance = @opening_balance + @cash_totals.totals
+      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments + @other_cash
 
       # Currencies & instruments
       @currency = Currency.find_by_alphabetic_code('EUR')
@@ -1328,7 +1332,7 @@ module Ag2Gest
         }
       end
     end
-    
+
 
      # client payment report
     def client_payment_report

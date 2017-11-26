@@ -35,6 +35,7 @@ es:
         to_collect: "A Cobrar"
         to_deferred: "A Aplazar"
         change: "Cambio"
+        selected_receipts: "Recibos seleccionados"
         successfully: "Pago de cliente se ha actualizado correctamente."
         create: "Pago de cliente se ha creado correctamente."
         bank_account_id: "Cuenta bancaria a utilizar"

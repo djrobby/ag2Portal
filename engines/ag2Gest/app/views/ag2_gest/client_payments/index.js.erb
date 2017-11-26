@@ -647,6 +647,16 @@ $("#initial-cash").change(function() {
   $("#ending-cash").text(ending_cash.format(2, 3, _delimiter, _separator));
 });
 
+// $(".fnt-currency-quantity").change(function() {
+//   sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
+//   ival = parseFloat($(this).attr("data-ival")) || 0;
+//   old_qty = parseFloat(this.oldvalue);
+//   sum_instruments = sum_instruments - (old_qty * ival);
+//   qty = parseFloat(this.value) || 0;
+//   sum_instruments = sum_instruments + (qty * ival);
+//   $("#sum-instruments").text(sum_instruments.format(2, 3, _delimiter, _separator));
+// });
+
 $("#pages a").on("click", function() {
   $.getScript(this.href);
   return false;
