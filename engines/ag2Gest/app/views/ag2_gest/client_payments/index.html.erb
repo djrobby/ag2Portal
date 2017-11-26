@@ -1016,11 +1016,20 @@
   });
 
   $("form.payment_fractionated").submit(function(){
-   var $input = $(this).find("input[name='payment_fractionated[ids]']");
-   var elements = $( "input.checkbox-slave:checked" );
-   var instalments_ids = [];
-   for(var i=0;typeof(elements[i])!='undefined';instalments_ids.push(elements[i++].getAttribute('value')));
-   $input.val(instalments_ids);
+    var $input = $(this).find("input[name='payment_fractionated[ids]']");
+    var elements = $( "input.checkbox-slave:checked" );
+    var instalments_ids = [];
+    for(var i=0;typeof(elements[i])!='undefined';instalments_ids.push(elements[i++].getAttribute('value')));
+    $input.val(instalments_ids);
+  });
+
+  $("form.close_cash").submit(function(){
+    var sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
+    var ending_cash = parseFloat($("#ending-cash").text().replace(",", ".")) || 0;
+    if (sum_instruments != ending_cash)
+      alert("<%= I18n.t('activerecord.attributes.cash_desk_closing.instruments_neq_closing') %>");
+      return false;
+    }
   });
   /*** End forms submit ***/
 

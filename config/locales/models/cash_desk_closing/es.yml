@@ -30,3 +30,4 @@ es:
         last_closing_id: "Cierre Ant."
         selected_receipts: "Recibos seleccionados"
         sum_instruments: "Suma de instrumentos"
+        instruments_neq_closing: "¡Suma de instrumentos es diferente al Saldo de cierre!"

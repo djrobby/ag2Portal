@@ -1,7 +1,7 @@
 en:
   activerecord:
     models:
-      cash_desk_closing:
+      e:
         zero:  Cash desk closings
         one:   Cash desk closing
         few:   Cash desk closings
@@ -30,3 +30,4 @@ en:
         last_closing_id: "Last_closing"
         selected_receipts: "Selected receipts"
         sum_instruments: "Sum of instruments"
+        instruments_neq_closing: "Sum of instruments is different than Closing balance!"
