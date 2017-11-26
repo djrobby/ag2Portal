@@ -1,7 +1,7 @@
 en:
   activerecord:
     models:
-      e:
+      cash_desk_closing:
         zero:  Cash desk closings
         one:   Cash desk closing
         few:   Cash desk closings
