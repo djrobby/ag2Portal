@@ -8,6 +8,7 @@ en:
   reindex_button: "Reindex"
   process_button: "Process"
   close_button: "Close"
+  reset_button: "Reset"
   apply_filter_button: "Apply Filter"
   clear_filter_button: "Remove Filter"
   clear_search_field: "Clear"

@@ -1023,10 +1023,10 @@
     $input.val(instalments_ids);
   });
 
-  $("form.close_cash").submit(function(){
+  $("form.close-cash-form").submit(function(){
     var sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
     var ending_cash = parseFloat($("#ending-cash").text().replace(",", ".")) || 0;
-    if (sum_instruments != ending_cash)
+    if (sum_instruments != ending_cash) {
       alert("<%= I18n.t('activerecord.attributes.cash_desk_closing.instruments_neq_closing') %>");
       return false;
     }
@@ -1276,12 +1276,19 @@
   });
 
   $(".fnt-currency-quantity").change(function() {
-    sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
+    sum_instruments = parseFloat($("#sum-instruments").text().replace(".", "").replace(",", ".")) || 0;
     ival = parseFloat($(this).attr("data-ival")) || 0;
-    old_qty = parseFloat(this.oldvalue);
+    old_qty = parseFloat(this.oldvalue) || 0;
     sum_instruments = sum_instruments - (old_qty * ival);
     qty = parseFloat(this.value) || 0;
     sum_instruments = sum_instruments + (qty * ival);
     $("#sum-instruments").text(sum_instruments.format(2, 3, _delimiter, _separator));
+  });
+
+  $("#btn-currency-reset").click(function (e) {
+    sum_instruments = 0;
+    $("#sum-instruments").text(sum_instruments.format(2, 3, _delimiter, _separator));
+    $('.fnt-currency-quantity').val(0);
+    return false;
   });
 </script>

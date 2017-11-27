@@ -45,7 +45,6 @@
       <div class="control-group">
         <h4><%= t "activerecord.models.currency_instrument.few" %></h4>
         <% @currency_instruments.each do |i| %>
-        <%= i.value_i %>
         <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
         <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
         <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
@@ -53,6 +52,7 @@
         <p class="control-group">
           <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.sum_instruments') %>:</span>
           <span id="sum-instruments" class="controls highlighted bolded">0,00</span>
+          <span><button id="btn-currency-reset" class="btn btn-primary" aria-hidden="true"><%= t :reset_button %></button></span>
         </p>
       </div>
       <% end %>
