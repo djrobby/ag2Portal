@@ -182,14 +182,18 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @prereading = PreReading.find(params[:id])
-      if params["reading_index"].nil?
+      if params["reading_index"]
         r_date = params[:pre_reading][:reading_date]
         @prereading.reading_index = Reading.where(subscriber_id: @prereading.subscriber_id, reading_type_id: ReadingType.auto_registrable).where("reading_date < ?", r_date.to_date).order(:reading_date).last.reading_index
         @prereading.reading_type_id = ReadingType::AUTO
       end
       if params["incidence_type_ids"]
-        @prereading.reading_incidence_types.destroy_all
-        @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])
+        # @prereading.reading_incidence_types.destroy_all
+        # @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])
+        @prereading.pre_reading_incidences.destroy_all
+        params["incidence_type_ids"].each do |i|
+          @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: i)
+        end
       end
       # añdadir incidencia vuelta de contador y no existe. ID 4
       if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 1
