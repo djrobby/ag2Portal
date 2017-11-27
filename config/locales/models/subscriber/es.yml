@@ -103,6 +103,7 @@ es:
         readings: "Lecturas"
         reading: "Lectura"
         data_supply: "Dirección de notificación"
+        change_data_supply: "Cambiar Dirección de notificación"
         notes: "Notas"
         debits: "Domiciliaciones"
         tariff: "Tarifa"
@@ -188,10 +189,13 @@ es:
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
-        add_meter_successful: "Contador instalado exitosamente"
-        add_meter_failure: "No se ha podido instalar el contador indicado"
-        quit_meter_successful: "Contador retirado exitosamente"
-        quit_meter_failure: "No se ha podido retirar el contador actualmente instalado"
+        add_meter_successful: "Contador instalado exitosamente."
+        add_meter_failure: "No se ha podido instalar el contador indicado."
+        quit_meter_successful: "Contador retirado exitosamente."
+        quit_meter_failure: "No se ha podido retirar el contador actualmente instalado."
+        alert_add_meter: "¡Atención, el Abonado se reactivará!"
+        alert_quit_meter: "¡Atención, el Abonado se desactivará!"
+
 
     report:
       subscriber:

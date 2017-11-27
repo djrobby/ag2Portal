@@ -252,6 +252,14 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     #
     # Subscriber
+    match 'subscribers/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
+    match 'subscribers/:id/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
+    match 'subscribers/update_region_textfield_from_province/:id', :controller => 'subscribers', :action => 'update_region_textfield_from_province'
+    match 'subscribers/:id/update_region_textfield_from_province/:id', :controller => 'subscribers', :action => 'update_region_textfield_from_province'
+    match 'subscribers/update_province_textfield_from_town/:id', :controller => 'subscribers', :action => 'update_province_textfield_from_town'
+    match 'subscribers/:id/update_province_textfield_from_town/:id', :controller => 'subscribers', :action => 'update_province_textfield_from_town'
+    match 'subscribers/update_province_textfield_from_zipcode/:id', :controller => 'subscribers', :action => 'update_province_textfield_from_zipcode'
+    match 'subscribers/:id/update_province_textfield_from_zipcode/:id', :controller => 'subscribers', :action => 'update_province_textfield_from_zipcode'
     match 'subscribers/add_meter/:id', :controller => 'subscribers', :action => 'add_meter', :via => [:post]
     match 'subscribers/:id/add_meter/:id', :controller => 'subscribers', :action => 'add_meter', :via => [:post]
     match 'subscribers/quit_meter/:id', :controller => 'subscribers', :action => 'quit_meter'#, :via => [:post]
@@ -386,6 +394,7 @@ Ag2Gest::Engine.routes.draw do
       post 'simple_bill', on: :member
       post 'update_simple', on: :member
       post 'update_tariffs', on: :member
+      resources :clients, except: [:index, :show, :edit, :new]
     end
     #
     resources :centers
@@ -476,6 +485,7 @@ Ag2Gest::Engine.routes.draw do
       get 'pre_index', on: :collection
       get 'get_subscribers', on: :collection
       get 'show_consumptions', on: :collection
+      get 'show_pre_bills', on: :collection
       get 'confirm', on: :collection
       get 'bill_supply_pdf', on: :member
       get 'biller_pdf', on: :member

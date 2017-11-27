@@ -101,6 +101,7 @@ en:
         readings: "Lecturas"
         reading: "Lectura"
         data_supply: "Dirección de notificación"
+        change_data_supply: "Cambiar Dirección de notificación"
         notes: "Notas"
         debits: "Domiciliaciones"
         tariff: "Tarifa"
@@ -187,10 +188,12 @@ en:
         confirm: "Confirmar"
         cancel: "Cancelar"
         accept: "Aceptar"
-        add_meter_successful: "Meter successfully installed"
-        add_meter_failure: "Unable to install specified meter"
-        quit_meter_successful: "Meter successfully withdrawn"
-        quit_meter_failure: "Unable to withdraw currently installed meter"
+        add_meter_successful: "Meter successfully installed."
+        add_meter_failure: "Unable to install specified meter."
+        quit_meter_successful: "Meter successfully withdrawn."
+        quit_meter_failure: "Unable to withdraw currently installed meter."
+        alert_add_meter: "Warning, the subscriber will be reactivated!"
+        alert_quit_meter: "Warning, the subscriber will be deactivated!"
 
     report:
       subscriber:

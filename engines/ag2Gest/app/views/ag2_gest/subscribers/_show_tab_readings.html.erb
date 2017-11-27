@@ -17,10 +17,10 @@
   <div class="span4">
     <% unless @subscriber.meter.blank? %>
       <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
-      <a href="#quitMeter" id="quit_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
+      <a href="#quitMeter" id="quit_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal" data-confirm="<%= t("activerecord.attributes.subscriber.alert_quit_meter")%>" ><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
       <a href="#changeMeter" id="change_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_meter') %></a>
     <% else %>
-      <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.add_meter') %></a>
+      <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal" data-confirm="<%= t("activerecord.attributes.subscriber.alert_add_meter")%>" ><%= t('activerecord.attributes.subscriber.add_meter') %></a>
     <% end %>
   </div>
   <div align="right" class="span7"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_consumptions") %>:</b> <%= @subscriber_readings.sum{|r| r.consumption } %></h5></div>

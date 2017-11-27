@@ -324,6 +324,21 @@ module Ag2Gest
       end
     end
 
+    def show_pre_bills
+      bills = []
+      @bills = PreBill.where(pre_group_no: params[:pre_group]) or Bill.where(pre_group_no: params[:pre_group])
+      @bills.each do |pr|
+        bills << pr
+      end
+      @p_r = PreBill.where(id: bills)
+      @bills = @p_r
+
+      respond_to do |format|
+        format.html
+        format.csv { render text: PreBill.to_csv(@bills) }
+      end
+    end
+
     # This method executes on Apply Tariffs
     def index
       if params[:bills]

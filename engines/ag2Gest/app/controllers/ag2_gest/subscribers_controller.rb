@@ -20,7 +20,64 @@ module Ag2Gest
                                                 :subscriber_eco_report,
                                                 :rebilling,
                                                 :add_bank_account,
-                                                :su_check_iban]
+                                                :su_check_iban,
+                                                :update_country_textfield_from_region,
+                                                :update_region_textfield_from_province,
+                                                :update_province_textfield_from_town,
+                                                :update_province_textfield_from_zipcode]
+
+    # Update country text field at view from region select
+    def update_country_textfield_from_region
+      @region = Region.find(params[:id])
+      @country = Country.find(@region.country)
+
+      respond_to do |format|
+        format.html # update_country_textfield_from_region.html.erb does not exist! JSON only
+        format.json { render json: @country }
+      end
+    end
+
+    # Update region and country text fields at view from town select
+    def update_region_textfield_from_province
+      @province = Province.find(params[:id])
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update province, region and country text fields at view from town select
+    def update_province_textfield_from_town
+      @town = Town.find(params[:id])
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
+
+    # Update town, province, region and country text fields at view from zip code select
+    def update_province_textfield_from_zipcode
+      @zipcode = Zipcode.find(params[:id])
+      @town = Town.find(@zipcode.town)
+      @province = Province.find(@town.province)
+      @region = Region.find(@province.region)
+      @country = Country.find(@region.country)
+      @json_data = { "town_id" => @town.id, "province_id" => @province.id, "region_id" => @region.id, "country_id" => @country.id }
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
+    end
 
     def update_tariffs
       @subscriber = Subscriber.find params[:id]
@@ -183,6 +240,8 @@ module Ag2Gest
       # Assign meter
       @subscriber.meter_id = @meter.id
 
+      @subscriber.update_attributes(active: true)
+
       # Try to save everything
       save_all_ok = false
       if (@subscriber.save and @meter_detail.save and @reading.save)
@@ -256,6 +315,8 @@ module Ag2Gest
       # Remove meter from subscriber
       @subscriber.meter_id = nil
 
+      @subscriber.update_attributes(ending_at: Date.today, active: false)
+
       # Try to save everything
       save_all_ok = false
       if (@subscriber.save and @meter_detail.save and @reading.save)
@@ -268,6 +329,7 @@ module Ag2Gest
       else
         save_all_ok = false
       end
+
 
       respond_to do |format|
         if save_all_ok
@@ -555,6 +617,12 @@ module Ag2Gest
       @breadcrumb = 'read'
       @subscriber = Subscriber.find(params[:id])
       @reading = Reading.new
+      @street_types = StreetType.order(:street_type_code)
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @client = Client.find(@subscriber.client_id)
       @client_bank_account = ClientBankAccount.new
       # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
       @billing_period = BillingPeriod.order('period DESC').all
@@ -1074,6 +1142,18 @@ module Ag2Gest
     end
 
     private
+
+    def towns_dropdown
+      Town.order(:name).includes(:province)
+    end
+
+    def provinces_dropdown
+      Province.order(:name).includes(:region)
+    end
+
+    def zipcodes_dropdown
+      Zipcode.order(:zipcode).includes(:town,:province)
+    end
 
     def banks_dropdown
       Bank.order(:code)

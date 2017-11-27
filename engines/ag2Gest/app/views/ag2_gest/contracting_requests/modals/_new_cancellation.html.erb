@@ -208,25 +208,44 @@ jQuery(function($) {
       <div>
       <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
       
-      <%= f.association :use, collection: Use.all, input_html: { :id => 'use_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>    
+        <%= f.association :use, :disabled => true, collection: Use.all, input_html: { :id => 'use_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
+      <% else %>
+        <%= f.association :use, collection: Use.all, input_html: { :id => 'use_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
+      <% end %>
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }  %>
       
-      <div class="span5">      
-        <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>  
+        <div class="span5">      
+          <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+          <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :disabled => true, :class => 'x-large-text-field sel2', multiple: true %>
+        </div>
+        <div class="span5">
+          <label for="TariffType_" class="form-label-under-sel2 "> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+          <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :disabled => true, :class => 'x-large-text-field sel3', multiple: true %>
+        </div>
+      <% else %>
+        <div class="span5">      
+          <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+          <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+        </div>
+        <div class="span5">
+          <label for="TariffType_" class="form-label-under-sel2 "> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+          <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
+        </div>
+      <% end %>
+      
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>    
+        <%= f.input :endowments, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :inhabitants, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :contract_term, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <% else %>
+        <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <% end %>
 
-        <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
-      </div>
-      <div class="span5">
-        <label for="TariffType_" class="form-label-under-sel2 "> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
-
-        <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
-      </div>
-
-      <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-
-      <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-      <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       </div>
       <div>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
@@ -238,18 +257,28 @@ jQuery(function($) {
       <%= f.input :caliber_id, :as => :hidden, :input_html => { :value => @water_supply_contract.caliber_id } %>
       <%= f.association :caliber, :disabled => true, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>
-      <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-      <%= f.input :pub_record, :input_html => { :class => 'x-large-text-field', :id => 'wsc_pub_record' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-      <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-      <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
-      <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+
+      <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>    
+        <%= f.input :cadastral_reference, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :pub_record, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_pub_record' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :gis_id, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :min_pressure, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :max_pressure, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <% else %>
+        <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wsc_cadastral_reference' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :pub_record, :input_html => { :class => 'x-large-text-field', :id => 'wsc_pub_record' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wsc_gis_id' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :min_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_min_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :max_pressure, :input_html => { :class => 'x-large-text-field', :id => 'wsc_max_pressure' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <% end %>
       <%= f.input :remarks, as: :text, :input_html => { :class => 'x-large-text-field', :id => 'wsc_remarks', rows: 5 }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+
       </div>
       <div>      
       <h3><%= t('activerecord.attributes.contracting_request.data_withdrawal_meter') %></h3>
       <%= f.input :installation_date, required: true, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { id: 'cancellation-date', value: !@work_order_retired.try(:current_reading_date).blank? ? @work_order_retired.try(:current_reading_date).strftime("%d/%m/%Y") : !@water_supply_contract.try(:installation_date).blank? ? @water_supply_contract.try(:installation_date).strftime("%d/%m/%Y") : nil , class: 'x-large-text-field date_picker' }, label: t('activerecord.attributes.meter_detail.withdrawal_date'), wrapper_html: { class: "span5" } %>
       <% if @water_supply_contract.installation_index.blank? %>
-        <%= f.input :installation_index, required: true, :input_html => { id: 'cancellation-index', :class => 'x-large-text-field', value: @work_order_retired.try(:current_reading_index) }, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %>
+        <%= f.input :installation_index, required: true, :input_html => { id: 'cancellation-index', :class => 'x-large-text-field', value: @work_order_retired.try(:current_reading_index)}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %>
       <% else %>
         <%= f.input :installation_index, required: true, :input_html => { id: 'cancellation-index', :class => 'x-large-text-field'}, label: t('activerecord.attributes.meter_detail.withdrawal_reading'), wrapper_html: { class: "span5" } %> 
       <% end %>    

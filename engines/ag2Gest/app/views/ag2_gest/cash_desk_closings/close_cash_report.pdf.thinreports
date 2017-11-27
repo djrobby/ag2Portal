@@ -101,7 +101,7 @@ project_id = @close_cash_report.first.project_id
 	report.page.list(:default).add_row do |row|
 		report.page.values company_c: I18n.t("activerecord.attributes.cash_desk_closing.company") + ": "
 		report.page.values project_c: I18n.t("activerecord.attributes.cash_desk_closing.project") + ": "
-		report.page.values company: i.company.name
+		report.page.values company: i.company.name unless i.company.blank?
 		report.page.values project: i.project.to_label
 		row.item(:id).value i.id
 		row.item(:opening_balance).value number_with_precision(i.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")

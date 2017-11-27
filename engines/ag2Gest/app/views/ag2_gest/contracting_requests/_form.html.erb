@@ -116,6 +116,13 @@
             //alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt);
             alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt + '\n' + data.project_debt);
           };
+          cr_type = $('.contracting_request_type_id').select2("val")
+          if(cr_type == "<%= ContractingRequestType::CANCELLATION %>"){
+            $('.entity-field').prop('readonly', true);
+          }else{
+            $('.entity-field').prop('readonly', false);
+          }
+
           // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
           //   $("#subrogation-form input, #subrogation-form select").prop("disabled", false);
           //   $(".subrogation_full_name").prop("disabled", true);
@@ -178,8 +185,6 @@
             $("#contracting_request_client_email").val(data.email);
 
             // Enable fields
-            $('.entity-field').prop('readonly', false);
-            cr_type = $('.contracting_request_type_id').select2("val")
             if(cr_type == "<%= ContractingRequestType::SUPPLY %>"){
               $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
               $("#contracting_request_subscriber_street_name").val(data.street_name);
@@ -725,20 +730,20 @@
       <!-- ENTITY floor_office -->
       <%= f.input :entity_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
       <!-- ENTITY zipcode -->
-      <%= f.association :entity_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.association :entity_zipcode, collection: @zipcodes, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
     </div>
     <div class="row-fluid">
       <!-- ENTITY town -->
-      <%= f.association :entity_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_town, collection: @towns, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY province -->
-      <%= f.association :entity_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_province, collection: @provinces, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
 
     <div class="row-fluid">
       <!-- ENTITY region -->
-      <%= f.association :entity_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_region, collection: @regions, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY country -->
-      <%= f.association :entity_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_country, collection: @countries, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
 
 
@@ -794,20 +799,20 @@
     <!-- CLIENT floor_office -->
     <%= f.input :client_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CLIENT zipcode -->
-    <%= f.association :client_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :client_zipcode, collection: @zipcodes, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- CLIENT town -->
-    <%= f.association :client_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_town, collection: @towns, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT province -->
-    <%= f.association :client_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_province, collection: @provinces, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT region -->
-    <%= f.association :client_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_region, collection: @regions, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT country -->
-    <%= f.association :client_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_country, collection: @countries, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
@@ -879,20 +884,20 @@
     <!-- SUBSCRIBER floor_office -->
     <%= f.input :subscriber_floor_office, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- SUBSCRIBER zipcode -->
-    <%= f.association :subscriber_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :subscriber_zipcode, collection: @zipcodes, :readonly => true, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- SUBSCRIBER town -->
-    <%= f.association :subscriber_town, collection: @towns, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_town, collection: @towns, :readonly => true, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- SUBSCRIBER province -->
-    <%= f.association :subscriber_province, collection: @provinces, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_province, collection: @provinces, :readonly => true, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- SUBSCRIBER region -->
-    <%= f.association :subscriber_region, collection: @regions, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_region, collection: @regions, :readonly => true, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- SUBSCRIBER country -->
-    <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_country, collection: @countries, :readonly => true, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>

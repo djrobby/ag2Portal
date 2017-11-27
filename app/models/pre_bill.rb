@@ -59,6 +59,43 @@ class PreBill < ActiveRecord::Base
     pre_invoices.reject(&:marked_for_destruction?).sum(&:total)
   end
 
+  def subtotal
+    pre_invoices.reject(&:marked_for_destruction?).sum(&:subtotal)
+  end
+
+  def net_tax
+    pre_invoices.reject(&:marked_for_destruction?).sum(&:net_tax)
+  end
+
+
+  def self.to_csv(array)
+    attributes = ["Id",
+                  I18n.t("activerecord.attributes.invoice.billing_period"),
+                  I18n.t("activerecord.attributes.subscriber.subscriber_code2"),
+                  I18n.t("activerecord.attributes.bill.subscriber"),
+                  I18n.t("activerecord.attributes.subscriber.meter"),
+                  I18n.t("activerecord.attributes.invoice.consumption"),
+                  I18n.t("activerecord.attributes.bill.subtotal"),
+                  I18n.t("activerecord.attributes.bill.taxes"),
+                  I18n.t("activerecord.attributes.bill.total")]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |b|
+        csv << [  b.bill_id.blank? ? b.id : b.bill_id,
+                  b.try(:pre_invoices).first.try(:billing_period).try(:period),
+                  b.subscriber.full_code,
+                  b.subscriber.full_name,
+                  b.subscriber.try(:meter).try(:meter_code),
+                  b.try(:reading).try(:consumption_total_period_to_invoice) || 0 ,
+                  b.subtotal.round(4),
+                  b.net_tax.round(4),
+                  b.total.round(4)]
+      end
+    end
+  end
+
+
   # PreBill no
   def self.next_no
     code = ''

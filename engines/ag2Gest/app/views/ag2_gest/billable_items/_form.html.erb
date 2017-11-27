@@ -19,7 +19,7 @@
 
     <%= f.association :billable_concept, label: t('activerecord.attributes.billable_item.billable_concept_id'), collection: BillableConcept.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |bc| bc.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 
-    <%= f.association :biller, label: t('activerecord.attributes.billable_item.company_id'), collection: @companies, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |cp| cp.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+    <%= f.association :biller, label: t('activerecord.attributes.billable_item.biller_id'), collection: @companies, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |cp| cp.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
   </div>
   <div class="row-fluid">
 
