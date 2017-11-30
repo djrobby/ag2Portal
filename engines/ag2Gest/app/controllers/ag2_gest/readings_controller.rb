@@ -152,7 +152,7 @@ module Ag2Gest
         @reading.created_by = current_user.id if !current_user.nil?
         if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
         else
-          @reading.reading_incidence_types << ReadingIncidenceType.find(36)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 36)
         end
 
         if @reading.save
@@ -234,19 +234,19 @@ module Ag2Gest
         end
         # vuelta de contador
         if @reading.reading_index < @reading.reading_index_1 and !jj.include?(1)
-          @reading.reading_incidence_types << ReadingIncidenceType.find(1)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 1)
         end 
 
         # consumo excesivo
         diferent = (@reading.consumption * 100) / (@reading.reading_1.consumption)
         if diferent > 50 and !jj.include?(26)
-          @reading.reading_incidence_types << ReadingIncidenceType.find(26)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 26)
         end 
 
         # fuera de plazo
-        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date) and !jj.include?(26)
+        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date) and !jj.include?(36)
         else
-          @reading.reading_incidence_types << ReadingIncidenceType.find(36)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 36)
         end
 
 

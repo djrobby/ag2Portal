@@ -158,7 +158,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
         <% if invoice.invoice_type_id == InvoiceType::CONTRACT %>
           <td><%= link_to invoice.full_no, invoice_path(invoice) %></td>
         <% else %>
-          <td><%= link_to invoice.full_no, commercial_bill_path(invoice) %></td>
+          <td><%= link_to invoice.full_no, commercial_billing_path(invoice) %></td>
         <% end %>
         <td>
           <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>

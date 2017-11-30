@@ -182,10 +182,12 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @prereading = PreReading.find(params[:id])
-      if params["reading_index"]
-        r_date = params[:pre_reading][:reading_date]
-        @prereading.reading_index = Reading.where(subscriber_id: @prereading.subscriber_id, reading_type_id: ReadingType.auto_registrable).where("reading_date < ?", r_date.to_date).order(:reading_date).last.reading_index
-        @prereading.reading_type_id = ReadingType::AUTO
+      if params["pre_reading"]
+        if !params["pre_reading"]["reading_index"]
+          r_date = params[:pre_reading][:reading_date]
+          @prereading.reading_index = !Reading.where(subscriber_id: @prereading.subscriber_id, reading_type_id: ReadingType.auto_registrable).where("reading_date < ?", r_date.to_date).order(:reading_date).last.blank? ? Reading.where(subscriber_id: @prereading.subscriber_id, reading_type_id: ReadingType.auto_registrable).where("reading_date < ?", r_date.to_date).order(:reading_date).last.reading_index : 0
+          @prereading.reading_type_id = ReadingType::AUTO
+        end
       end
       if params["incidence_type_ids"]
         # @prereading.reading_incidence_types.destroy_all
@@ -196,16 +198,20 @@ module Ag2Gest
         end
       end
       # añdadir incidencia vuelta de contador y no existe. ID 4
-      if params[:lap] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 1
-        @prereading.reading_incidence_types << ReadingIncidenceType.find(1)
+      if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:id).include? 1
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
       end
-      if params[:lapconexs] == "true" and !@prereading.reading_incidence_types.map(&:id).include? 26
-        @prereading.reading_incidence_types << ReadingIncidenceType.find(26)
+      if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:id).include? 26
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 26)
+      end
+      # fuera de plazo
+      if params[:lapdate] == "true" and !@prereading.pre_reading_incidences.map(&:id).include?(26)
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 36)
       end
       respond_to do |format|
         if @prereading.update_attributes(params[:pre_reading])
           format.html { redirect_to @prereading, notice: t('activerecord.attribute.sale_offer.successfully') }
-          format.json { render json: @prereading.to_json( include: :reading_incidence_types ) }
+          format.json { render json: @prereading.to_json( include: :pre_reading_incidences ) }
         else
           format.html { render action: "edit" }
           format.json { render json: @prereading.errors.full_messages.join(" ,"), status: :unprocessable_entity }

@@ -199,7 +199,7 @@
     <% end %>
   </div>
   <div class="modal-footer">
-    <%= f.submit I18n.t('ag2_admin.entities.new_entity.btn_new'), :class => "btn btn-primary" %>
+    <%= f.submit I18n.t('ag2_admin.entities.new_entity.btn_new'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary" %>
     <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
   </div>
   <% end %>

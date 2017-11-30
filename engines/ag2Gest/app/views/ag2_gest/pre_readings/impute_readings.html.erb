@@ -12,6 +12,20 @@
     row = $(this).closest(".prereading-row");
     date = row.find("input[type='text']").val();
     row.addClass("date-clicked");
+    reading_ending_date = row.data("reading-ending-date");
+    reading_starting_date = row.data("reading-starting-date");
+    
+    var d1 = reading_starting_date.split("/");
+    var d2 = reading_ending_date.split("/");
+    var c = date.split("/");
+
+    var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+    var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+    var check = new Date(c[2], parseInt(c[1])-1, c[0]);
+
+    if (check < from || check > to){
+      alert("Lectura fuera de plazo")
+    };
     $("tr.date-clicked").nextAll().find('input[type="text"]').val(date);
     $('html, body').animate({
       scrollTop: $(this).offset().top - 50
@@ -53,6 +67,16 @@
     values = inputs.map(function () { return $(this).val(); }).get();
     date = values[0];
     index = values[1];
+    reading_ending_date = row.data("reading-ending-date");
+    reading_starting_date = row.data("reading-starting-date");
+
+    var d1 = reading_starting_date.split("/");
+    var d2 = reading_ending_date.split("/");
+    var c = date.split("/");
+
+    var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+    var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+    var check = new Date(c[2], parseInt(c[1])-1, c[0]);
 
     check_consumption = function(){
       if(row.data("index-one") <= parseInt(index)){
@@ -63,9 +87,24 @@
       previous_consumption = row.data("consumption-one");
       year_consumption = row.data("consumption-two");
       if( (previous_consumption!="" && year_consumption!="") && (consumption > previous_consumption + (0.5 * previous_consumption)) || (consumption < previous_consumption - (0.5 * previous_consumption)) || (consumption > year_consumption + (0.5 * year_consumption)) || (consumption < year_consumption - (0.5 * year_consumption)) ){
-        alert("Anomalía en consumo.\nP. Actual: "+consumption+"\nP. Anterior: "+previous_consumption+"\nA. Anterior: "+year_consumption)
+        alert("Detalles de consumo.\nP. Actual: "+consumption+"\nP. Anterior: "+previous_consumption+"\nA. Anterior: "+year_consumption)
+      }
+      if (index != "" ){
+        row.find("td").addClass("row-green");
+      }else{
+        row.find("td").fadeOut(500).fadeIn(500);
       }
     };
+
+    if (index != "" ){
+      row.find("td").addClass("row-green");
+    }else{
+      row.find("td").removeClass("row-green");
+      input_index.val("");
+      var input = $("<input>").attr("type", "hidden").attr("name", "lapnot").val(true);
+      form.append($(input));
+      form.submit();
+    }
     
     diferent = ((index - row.data("index-one")) * 100) / row.data("consumption-one");
     // if both inputs have values
@@ -80,6 +119,7 @@
             var input = $("<input>").attr("type", "hidden").attr("name", "lap").val(true);
             form.append($(input));
             check_consumption();
+            row.find(".wrench-column").show()
             form.submit();
           } else {
             if (row.data("index") == "" ){
@@ -96,6 +136,7 @@
             var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
             form.append($(input));
             check_consumption();
+            row.find(".wrench-column").show()
             form.submit();
           } else {
             if (row.data("index") == "" ){
@@ -111,6 +152,7 @@
             var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
             form.append($(input));
             check_consumption();
+            row.find(".wrench-column").show()
             form.submit();
           } else {
             if (row.data("index") == "" ){
@@ -126,6 +168,7 @@
             var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
             form.append($(input));
             check_consumption();
+            row.find(".wrench-column").show()
             form.submit();
           } else {
             if (row.data("index") == "" ){
@@ -134,13 +177,30 @@
               input_index.val(row.data("index"));
             }
           };
-        // Consumo excesivo
+        // Contador parado
         } else if (index == row.data("index-one") && index == row.data("index-two")){
           var lap_meter = confirm("Posible contador parado");
           if (lap_meter == true) {
             var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
             form.append($(input));
             check_consumption();
+            row.find(".wrench-column").show()
+            form.submit();
+          } else {
+            if (row.data("index") == "" ){
+              input_index.val("");
+            }else{
+              input_index.val(row.data("index"));
+            }
+          };
+        // Lectura fuera de plazo
+        } else if (check < from || check > to){
+          var lap_meter = confirm("Lectura fuera de plazo");
+          if (lap_meter == true) {
+            var input = $("<input>").attr("type", "hidden").attr("name", "lapdate").val(true);
+            form.append($(input));
+            check_consumption();
+            row.find(".wrench-column").show()
             form.submit();
           } else {
             if (row.data("index") == "" ){
@@ -167,17 +227,19 @@
     $(".alert.alert-error").hide();
     $('#modal-incidence').modal("hide")
     incidences = []
-    $.each(data["reading_incidence_types"], function( index, value ) {
+    $.each(data["pre_reading_incidences"], function( index, value ) {
       incidences.push(value["id"])
     });
     if(incidences.length != 0){
       row.find(".wrench-column").show()
+      row.find("input[type='number']").val(row.data("index-one"));
     }
     if (row.data("index") == "" ){
       row.find("td").addClass("row-green");
     }else{
       row.find("td").fadeOut(500).fadeIn(500);
     }
+
     row.data("incedences", incidences);
     row.data("index", data["reading_index"]);
   });
@@ -258,7 +320,7 @@
         </thead>
         <tbody>
           <% @pre_readings.each_with_index do |pre_reading,index| %>
-          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.reading_incidence_types.map(&:id) %>">
+          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-reading-ending-date="<%= pre_reading.billing_period.reading_ending_date.strftime("%d/%m/%Y") %>" data-reading-starting-date="<%= pre_reading.billing_period.reading_starting_date.strftime("%d/%m/%Y") %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.pre_reading_incidences.map(&:id) %>">
               <%= simple_form_for pre_reading, :remote => true, :html => { "data-type" => :json, :id => "form-prereading-#{pre_reading.id}" } do |f| %>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
@@ -294,7 +356,7 @@
                   <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm', tabindex: index+1} %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <i class="wrench-column icon-wrench" <%= 'style=display:none' if pre_reading.reading_incidence_types.empty? %>></i>
+                  <i class="wrench-column icon-wrench" <%= 'style=display:none' if pre_reading.pre_reading_incidences.empty? %>></i>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <a id="modal-link-<%= pre_reading.id %>" href="#" class="btn btn-warning btn-mini"><i class="icon-wrench icon-white"></i></a>

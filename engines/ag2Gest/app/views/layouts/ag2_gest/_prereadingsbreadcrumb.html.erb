@@ -23,7 +23,16 @@
       </li>
     <% else %>
       <li>
-        <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
+        <% if (request.path == "/es/ag2_gest/es/pre_readings/list_q" || request.path == "/en/ag2_gest/en/pre_readings/list_q") %>
+          <li>
+            <a href="<%= ag2_gest.pre_readings_path %>"><%= t('ag2_gest.breadcrumb.pre_readings.items') %></a><span class="divider">></span>
+          </li>
+          <li>
+            <%= t('activerecord.models.pre_reading.few') %>
+          </li>
+        <% else %>
+          <%=t "ag2_gest.breadcrumb.pre_readings.items" %>
+        <% end %>
       </li>
     <% end %><!-- (request.path == "/es/ag2_gest/es/pre_readings/impute_readings" || request.path == "/en/ag2_gest/en/pre_readings/impute_readings") -->
   <% end %><!-- @pre_readings -->
@@ -35,6 +44,7 @@
       <%= t('activerecord.attributes.pre_reading.impute_readings') %>
     </li>
   <% end %><!-- (request.path == "/es/ag2_gest/es/pre_readings/new_impute" || request.path == "/en/ag2_gest/en/pre_readings/new_impute") -->
+ 
 
   <% if @pre_reading %>
     <li>
