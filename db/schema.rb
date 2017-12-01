@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171124095143) do
+ActiveRecord::Schema.define(:version => 20171201101547) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3596,8 +3596,8 @@ ActiveRecord::Schema.define(:version => 20171124095143) do
     t.date     "starting_at"
     t.date     "ending_at"
     t.integer  "street_directory_id"
-    t.datetime "created_at",                                                                               :null => false
-    t.datetime "updated_at",                                                                               :null => false
+    t.datetime "created_at",                                                                                :null => false
+    t.datetime "updated_at",                                                                                :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "street_number"
@@ -3610,7 +3610,7 @@ ActiveRecord::Schema.define(:version => 20171124095143) do
     t.string   "cellular"
     t.string   "email"
     t.integer  "service_point_id"
-    t.boolean  "active",                                                                 :default => true, :null => false
+    t.boolean  "active",                                                                 :default => true,  :null => false
     t.integer  "tariff_scheme_id"
     t.integer  "billing_frequency_id"
     t.integer  "meter_id"
@@ -3621,15 +3621,15 @@ ActiveRecord::Schema.define(:version => 20171124095143) do
     t.string   "remarks"
     t.string   "cadastral_reference"
     t.string   "gis_id"
-    t.integer  "endowments",                 :limit => 2,                                :default => 0,    :null => false
-    t.integer  "inhabitants",                :limit => 2,                                :default => 0,    :null => false
+    t.integer  "endowments",                 :limit => 2,                                :default => 0,     :null => false
+    t.integer  "inhabitants",                :limit => 2,                                :default => 0,     :null => false
     t.string   "km"
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
     t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
     t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
-    t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,   :null => false
     t.string   "old_code"
     t.string   "postal_last_name"
     t.string   "postal_first_name"
@@ -3645,6 +3645,7 @@ ActiveRecord::Schema.define(:version => 20171124095143) do
     t.integer  "postal_province_id"
     t.integer  "postal_region_id"
     t.integer  "postal_country_id"
+    t.boolean  "non_billable",                                                           :default => false, :null => false
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
