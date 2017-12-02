@@ -90,6 +90,14 @@
 <table class="table">
   <tbody>
     <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.service_point_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) unless @subscriber.service_point.blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
+      <td><%= @subscriber.try(:cadastral_reference) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.pub_record') %>:</b></td>
+      <td><%= @subscriber.try(:pub_record) %></td>
+    </tr>
+    <tr>
       <td><b><%= t('activerecord.attributes.subscriber.direction') %>:</b></td>
       <td colspan="3"><%= @subscriber.address_1 %></td>
       <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %>:</b></td>
@@ -171,14 +179,6 @@
           <td><%= @subscriber.try(:reading_variant) %></td>
         </tr>
         <tr>
-          <td><b><%= t('activerecord.attributes.subscriber.service_point_id') %>:</b></td>
-          <td><%= link_to @subscriber.try(:service_point).try(:to_full_label), service_point_path(@subscriber.service_point) unless @subscriber.service_point.blank? %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
-          <td><%= @subscriber.try(:cadastral_reference) %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.pub_record') %>:</b></td>
-          <td><%= @subscriber.try(:pub_record) %></td>
-        </tr>
-        <tr>
           <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>
           <td><%= @subscriber.try(:gis_id_wc) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.gis_id') %>:</b></td>
@@ -217,21 +217,22 @@
     <%= render 'show_tab_bills' %>
   </div>
 
-  <!-- CLIENT -->
+  <!-- POSTAL ADDRESS (CLIENT) -->
   <div class="tab-pane fade active" id="direction">
     <a href="#changeDataSupply" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_data_supply') %></a>
-    <table class="table">
+    <table class="table table-striped shrinked">
+    <!-- <table class="table"> -->
       <thead>
-        <br></br>
+        <!-- <br></br> -->
       </thead>
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
-          <td><%= @subscriber.try(:to_name_postal) %></td>
-          <td><b><%= t('activerecord.attributes.subscriber.direction') %></b></td>
-          <td><%= @subscriber.try(:postal_street_name) %></td>
+          <td><%= @subscriber.right_postal_name %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.street_name') %></b></td>
+          <td><%= @subscriber.right_postal_street_name %></td>
           <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
-          <td><%= @subscriber.try(:postal_street_number) %></td>
+          <td><%= @subscriber.right_postal_street_number %></td>
           <td><b><%= t('activerecord.attributes.subscriber.block') %></b></td>
           <td><%= @subscriber.try(:postal_building) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.floor') %></b></td>
@@ -241,7 +242,7 @@
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.town_id') %></b></td>
-          <td><%= @subscriber.try(:postal_town).try(:name) %></td>
+          <td><%= @subscriber.right_postal_town %></td>
           <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %></b></td>
           <td><%= @subscriber.try(:postal_zipcode).try(:zipcode) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
@@ -249,7 +250,7 @@
           <td><b><%= t('activerecord.attributes.subscriber.region_id') %></b></td>
           <td><%= @subscriber.try(:postal_region).try(:name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.country_id') %></b></td>
-          <td><%= @subscriber.try(:postal_country).try(:name) %></td>
+          <td colspan="3"><%= @subscriber.try(:postal_country).try(:name) %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.phone') %></b></td>

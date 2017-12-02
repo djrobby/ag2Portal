@@ -94,25 +94,6 @@ class Subscriber < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
-  def to_name_postal
-    if !self.postal_last_name.blank? && !self.postal_first_name.blank?
-      "#{full_name_postal}"
-    else
-      "#{postal_company}"
-    end
-  end
-
-  def full_name_postal
-    postal_full_name = ""
-    if !self.postal_last_name.blank?
-      postal_full_name += self.postal_last_name
-    end
-    if !self.postal_first_name.blank?
-      postal_full_name += ", " + self.postal_first_name
-    end
-    postal_full_name[0,40]
-  end
-
   def current_tariffs(_reading_date=nil)
     unless tariffs.blank?
       if _reading_date.nil?
@@ -223,6 +204,65 @@ class Subscriber < ActiveRecord::Base
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
   end
 
+  #
+  # Postal
+  #
+  def full_name_postal
+    postal_full_name = ""
+    if !self.postal_last_name.blank?
+      postal_full_name += self.postal_last_name
+    end
+    if !self.postal_first_name.blank?
+      postal_full_name += ", " + self.postal_first_name
+    end
+    postal_full_name[0,40]
+  end
+
+  def right_postal_name
+    if !self.postal_last_name.blank? && !self.postal_first_name.blank?
+      "#{full_name_postal}"
+    elsif !self.postal_company.blank?
+      postal_company
+    elsif !self.client.blank?
+      client.try(:to_name)
+    else
+      ""
+    end
+  end
+
+  def right_postal_street_name
+    if !self.postal_street_name.blank?
+      postal_street_name
+    elsif !self.client.blank?
+      client.try(:street_name)
+    else
+      ""
+    end
+  end
+
+  def right_postal_street_number
+    if !self.postal_street_number.blank?
+      postal_street_number
+    elsif !self.client.blank?
+      client.try(:street_number)
+    else
+      ""
+    end
+  end
+
+  def right_postal_town
+    if !self.postal_town.blank?
+      postal_town.try(:name)
+    elsif !self.client.blank?
+      client.try(:town).try(:name)
+    else
+      ""
+    end
+  end
+
+  #
+  # For banking
+  #
   def diput
     subscriber_code.blank?  || subscriber_code == "$ERR" ? "00000000" : subscriber_code[2..3] + subscriber_code[5..10]
   end
@@ -231,6 +271,9 @@ class Subscriber < ActiveRecord::Base
     self.id.blank? ? '00000000' : self.id.to_s.rjust(8,'0')
   end
 
+  #
+  # Client
+  #
   def client_first_name
     self.client.first_name
   end
@@ -243,6 +286,9 @@ class Subscriber < ActiveRecord::Base
     self.client.company
   end
 
+  #
+  # Supply address
+  #
   def address_1
     _ret = ""
     if !street_directory.blank?
