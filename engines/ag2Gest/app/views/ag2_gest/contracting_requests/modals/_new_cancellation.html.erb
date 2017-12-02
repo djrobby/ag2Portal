@@ -285,7 +285,7 @@ jQuery(function($) {
       </div>
 
     <div class="span5">
-    <%= label_tag I18n.t("activerecord.attributes.reading.billing_period_id"), nil, required: true , :class => 'form-label' %>
+    <%= label_tag I18n.t("activerecord.attributes.contracting_request.billing_period_id"), nil, required: true , :class => 'form-label' %>
     <%= select_tag "BillingPeriodForReading", options_from_collection_for_select(BillingPeriod.order("period DESC").find_all_by_project_id(@projects_ids), "id", "to_label", :selected => @contracting_request.try(:old_subscriber).try(:readings).try(:last).try(:billing_period_id)), required: true , :prompt => "", :class => 'x-large-text-field sel2 shrinked' %>
     </div>
     

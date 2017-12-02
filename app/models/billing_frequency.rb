@@ -18,9 +18,9 @@ class BillingFrequency < ActiveRecord::Base
 
   def to_label
     if days.zero?
-      return months.to_s + (months==1 ? ' mes' : ' meses')
+      return name + " - " + months.to_s + (months==1 ? ' mes' : ' meses')
     else
-      return days.to_s + (days==1 ? ' dia' : ' dias')
+      return name + " - " + days.to_s + (days==1 ? ' dia' : ' dias')
     end
   end
 

@@ -38,12 +38,12 @@ p_total_amount = 0
 report.start_new_page
 
 # Page footer:
-report.page.list(:default).on_page_footer_insert do |page_footer|
+report.list(:default).on_page_footer_insert do |page_footer|
 	page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total") + " (" + p_item.to_s + ")"
 	page_footer.item(:total_full).value number_with_precision(p_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 end
 
-report.page.list(:instrument).on_page_footer_insert do |page_footer|
+report.list(:instrument).on_page_footer_insert do |page_footer|
 	page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total")
 	page_footer.item(:total_amount).value number_with_precision(p_total_amount, precision: @instrument.first.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",")
 end
@@ -82,7 +82,7 @@ report.page.values(printed_at: Time.now,
 				   currency_note: I18n.t("every_report.currency_note"))
 
 # Details
-report.page.list(:instrument).on_footer_insert do |footer|
+report.list(:instrument).on_footer_insert do |footer|
 	footer.item(:detail).value I18n.t("ag2_gest.bills.index.totals")
 	footer.item(:closing_balance_c).value I18n.t("activerecord.attributes.cash_desk_closing.closing_balance") + ":"
 	footer.item(:closing_balance).value number_with_precision(@close_cash.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
@@ -133,7 +133,7 @@ if report.page_count == 1 && report.list.overflow?
 	report.start_new_page layout: :other
 
 	# Page footer:
-	report.page.list(:default).on_page_footer_insert do |page_footer|
+	report.list(:default).on_page_footer_insert do |page_footer|
 		page_footer.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total") + " (" + p_item.to_s + ")"
 		page_footer.item(:total_full).value number_with_precision(p_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 	end

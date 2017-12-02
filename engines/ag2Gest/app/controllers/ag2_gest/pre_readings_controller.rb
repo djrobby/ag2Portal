@@ -197,16 +197,21 @@ module Ag2Gest
           @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: i)
         end
       end
-      # añdadir incidencia vuelta de contador y no existe. ID 4
-      if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:id).include? 1
+      # añdadir incidencia vuelta de contador y no existe. ID 
+      if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
       end
-      if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:id).include? 26
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 26)
+      # Consumo Excesivo
+      if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
+      end
+      # Bajo Consumo 
+      if params[:lapconbaj] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
       end
       # fuera de plazo
-      if params[:lapdate] == "true" and !@prereading.pre_reading_incidences.map(&:id).include?(26)
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 36)
+      if params[:lapdate] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include?(27)
+        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 27)
       end
       respond_to do |format|
         if @prereading.update_attributes(params[:pre_reading])

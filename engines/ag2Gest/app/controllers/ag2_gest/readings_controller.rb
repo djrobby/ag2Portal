@@ -152,7 +152,7 @@ module Ag2Gest
         @reading.created_by = current_user.id if !current_user.nil?
         if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
         else
-          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 36)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 27)
         end
 
         if @reading.save
@@ -237,16 +237,24 @@ module Ag2Gest
           @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 1)
         end 
 
-        # consumo excesivo
-        diferent = (@reading.consumption * 100) / (@reading.reading_1.consumption)
-        if diferent > 50 and !jj.include?(26)
-          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 26)
-        end 
+        if !@reading.reading_1_id.blank? && Reading.find(@reading.reading_1_id).reading_type_id != ReadingType::INSTALATION
+          conbaj = (@reading.reading_1.consumption / 2)
+          conexc = (@reading.reading_1.consumption * 2)
+          # consumo excesivo
+          if @reading.consumption > conexc and !jj.include?(21)
+            @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 21)
+          end 
+
+          # bajo consumo
+          if @reading.consumption < conbaj and !jj.include?(22)
+            @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 22)
+          end 
+        end
 
         # fuera de plazo
-        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date) and !jj.include?(36)
+        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date) and !jj.include?(27)
         else
-          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 36)
+          @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 27)
         end
 
 

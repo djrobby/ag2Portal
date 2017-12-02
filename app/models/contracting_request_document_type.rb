@@ -13,6 +13,10 @@ class ContractingRequestDocumentType < ActiveRecord::Base
     "#{name}"
   end
 
+  def to_label_required
+    required.blank? ? "#{name}" : "#{name} *"
+  end
+  
   def fields_to_uppercase
     if !self.name.blank?
       self[:name].replace(self[:name].mb_chars.upcase!.to_s)

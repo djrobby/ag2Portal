@@ -28,7 +28,10 @@ class Subscriber < ActiveRecord::Base
                   :pub_record, :m2, :equiv_dwelling, :deposit, :old_code, :client_town_id, :client_zipcode_id,
                   :client_province_id, :client_region_id, :client_street_directory_id,
                   :client_street_name, :client_street_number, :client_street_type_id,
-                  :readings_attributes, :meter_details_attributes
+                  :readings_attributes, :meter_details_attributes, :postal_last_name, :postal_first_name, :postal_company,
+                  :postal_street_directory_id, :postal_street_type_id, :postal_street_name, :postal_street_number,
+                  :postal_building, :postal_floor, :postal_floor_office, :postal_zipcode_id, :postal_town_id,
+                  :postal_province_id, :postal_region_id, :postal_country_id, :non_billable
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -90,6 +93,25 @@ class Subscriber < ActiveRecord::Base
   # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+
+  def to_name_postal
+    if !self.postal_last_name.blank? && !self.postal_first_name.blank?
+      "#{full_name_postal}"
+    else
+      "#{postal_company}"
+    end
+  end
+
+  def full_name_postal
+    postal_full_name = ""
+    if !self.postal_last_name.blank?
+      postal_full_name += self.postal_last_name
+    end
+    if !self.postal_first_name.blank?
+      postal_full_name += ", " + self.postal_first_name
+    end
+    postal_full_name[0,40]
+  end
 
   def current_tariffs(_reading_date=nil)
     unless tariffs.blank?

@@ -159,6 +159,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
     match 'cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
     match 'contracting_requests/:id/cr_calculate_flow/:wcc_item_type/:wcc_quantity', :controller => 'contracting_requests', :action => 'cr_calculate_flow'
+    match 'contracting_requests/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
+    match 'cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
+    match 'contracting_requests/:id/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
 
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'

@@ -1,6 +1,6 @@
 <div class="row-fluid">
   <div class="span6">
-    <%= f.association :contracting_request_document_type, collection: ContractingRequestDocumentType.all, label: 'Tipo de documento', input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-class', data: { validation: "required"} }, label_html: { class: 'form-label' } %>
+    <%= f.association :contracting_request_document_type, collection: ContractingRequestDocumentType.all, :label_method => :to_label_required, label: 'Tipo de documento', input_html: { class: 'x-large-text-field fsel2 field', id: 'fnt-class', data: { validation: "required"} }, label_html: { class: 'form-label' } %>
     <%= f.input :attachment, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
   </div>
   <div class="span5">

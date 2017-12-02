@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171201101547) do
+ActiveRecord::Schema.define(:version => 20171201140343) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3646,6 +3646,7 @@ ActiveRecord::Schema.define(:version => 20171201101547) do
     t.integer  "postal_region_id"
     t.integer  "postal_country_id"
     t.boolean  "non_billable",                                                           :default => false, :null => false
+    t.string   "postal_company"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"

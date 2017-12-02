@@ -195,7 +195,23 @@ es:
         quit_meter_failure: "No se ha podido retirar el contador actualmente instalado."
         alert_add_meter: "¡Atención, el Abonado se reactivará!"
         alert_quit_meter: "¡Atención, el Abonado se desactivará!"
-
+        postal_street_type: "Tipo de vía"
+        postal_street_name: "Nombre de vía"
+        postal_street_number: "Nº"
+        postal_building: "Edificio/Bloque"
+        postal_floor: "Planta"
+        postal_floor_office: "Oficina"
+        postal_zipcode: "Código postal"
+        postal_zipcode_id: "Código postal"
+        postal_town: "Población"
+        postal_town_id: "Población"
+        postal_province: "Provincia"
+        postal_province_id: "Provincia"
+        postal_region: "Región"
+        postal_region_id: "Región"
+        postal_country: "País"
+        postal_country_id: "País"
+        non_billable: "¿No facturable?"
 
     report:
       subscriber:
@@ -225,7 +241,7 @@ es:
         cellular: "Móvil"
         email: "E-mail"
 
-        active: "Activo"
+        active: "¿Activo?"
         starting_at: "Fecha de alta"
         ending_at: "Fecha de baja"
         tariff_scheme_id: "Tarifa aplicada"

@@ -219,43 +219,47 @@
 
   <!-- CLIENT -->
   <div class="tab-pane fade active" id="direction">
+    <a href="#changeDataSupply" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_data_supply') %></a>
     <table class="table">
+      <thead>
+        <br></br>
+      </thead>
       <tbody>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
-          <td><%= @subscriber.try(:client).try(:to_name) %></td>
+          <td><%= @subscriber.try(:to_name_postal) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.direction') %></b></td>
-          <td><%= @subscriber.try(:client).try(:street_name) %></td>
+          <td><%= @subscriber.try(:postal_street_name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
-          <td><%= @subscriber.try(:client).try(:street_number) %></td>
+          <td><%= @subscriber.try(:postal_street_number) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.block') %></b></td>
-          <td><%= @subscriber.try(:client).try(:building) %></td>
+          <td><%= @subscriber.try(:postal_building) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.floor') %></b></td>
-          <td><%= @subscriber.try(:client).try(:floor) %></td>
+          <td><%= @subscriber.try(:postal_floor) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.door') %></b></td>
-          <td><%= @subscriber.try(:client).try(:floor_office) %></td>
+          <td><%= @subscriber.try(:postal_floor_office) %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.town_id') %></b></td>
-          <td><%= @subscriber.try(:client).try(:town).try(:name) %></td>
+          <td><%= @subscriber.try(:postal_town).try(:name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %></b></td>
-          <td><%= @subscriber.try(:client).try(:zipcode).try(:zipcode) %></td>
+          <td><%= @subscriber.try(:postal_zipcode).try(:zipcode) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
-          <td><%= @subscriber.try(:client).try(:province).try(:name) %></td>
+          <td><%= @subscriber.try(:postal_province).try(:name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.region_id') %></b></td>
-          <td><%= @subscriber.try(:client).try(:region).try(:name) %></td>
+          <td><%= @subscriber.try(:postal_region).try(:name) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.country_id') %></b></td>
-          <td><%= @subscriber.try(:client).try(:country).try(:name) %></td>
+          <td><%= @subscriber.try(:postal_country).try(:name) %></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.phone') %></b></td>
-          <td><%= @subscriber.try(:client).try(:phone) %></td>
+          <td><%= @subscriber.try(:phone) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.cellular') %></b></td>
-          <td><%= @subscriber.try(:client).try(:cellular) %></td>
+          <td><%= @subscriber.try(:cellular) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.fax') %></b></td>
-          <td><%= @subscriber.try(:client).try(:fax) %></td>
+          <td><%= @subscriber.try(:fax) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.email') %></b></td>
-          <td colspan="5"><%= @subscriber.try(:client).try(:email) %></td>
+          <td colspan="5"><%= @subscriber.try(:email) %></td>
         </tr>
       </tbody>
     </table>
@@ -306,6 +310,7 @@
 
 <!-- MODALS -->
 <%= render '/ag2_gest/subscribers/modals/new_reading' %>
+<%= render '/ag2_gest/subscribers/modals/change_data_supply' %>
 <%= render '/ag2_gest/subscribers/modals/new_client_bank_account' %>
 <%= render '/ag2_gest/subscribers/modals/charge_invoice' %>
 <%= render '/ag2_gest/subscribers/modals/quit_meter' %>

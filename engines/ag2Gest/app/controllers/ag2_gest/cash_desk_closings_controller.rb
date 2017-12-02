@@ -69,7 +69,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @cash_desk_closing = CashDeskClosing.find(params[:id])
-      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
       @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
    
       respond_to do |format|
@@ -83,7 +83,7 @@ module Ag2Gest
       @close_cash = CashDeskClosing.find(params[:id])
       @close_cash_items = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id')
       #@close_cash_items = @close_cash.cash_desk_closing_items.select('client_payments.payment_method_id AS payment_method,client_payments.invoice_id AS invoice,cash_desk_closing_items.amount AS amount').joins(:client_payment).order('client_payments.payment_method_id')
-      @instrument = @close_cash.cash_desk_closing_instruments
+      @instrument = @close_cash.cash_desk_closing_instruments.by_cu_value_id
       title = t("activerecord.models.cash_desk_closing.few")
         respond_to do |format|
         format.pdf {

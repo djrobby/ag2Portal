@@ -67,12 +67,21 @@ module Ag2Gest
                                                 :sepa_pdf,
                                                 :serpoint_generate_no,
                                                 :new_connection,
-                                                :edit_connection]
+                                                :edit_connection,
+                                                :cr_check_iban]
     # Helper methods for
     helper_method :sort_column
     # => search available meters
     helper_method :available_meters_for_contract
     helper_method :available_meters_for_subscriber
+
+    # Check IBAN
+    def cr_check_iban
+      iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
+      # Setup JSON
+      @json_data = { "iban" => iban }
+      render json: @json_data
+    end
 
     def refresh_status
       @contracting_request = ContractingRequest.find(params[:id])
@@ -966,6 +975,9 @@ module Ag2Gest
       @contracting_request = ContractingRequest.find(params[:id])
       params["invoice_item"].each do |item|
          invoice_item = InvoiceItem.find_by_id(item[0])
+         _i = Invoice.find(invoice_item.invoice_id) if invoice_item
+         _i.totals = _i.total if invoice_item
+         _i.save if invoice_item
          invoice_item.update_attributes(item[1]) if invoice_item
       end
       respond_to do |format|
