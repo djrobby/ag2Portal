@@ -20,6 +20,10 @@ class ClientPayment < ActiveRecord::Base
                   :bill_id, :invoice_id, :client_id, :client_bank_account_id, :subscriber_id,
                   :instalment_id, :charge_account_id, :payment_method_id
 
+  has_many :cash_desk_closing_items
+
+  has_paper_trail
+
   validates :bill,              :presence => true
   validates :invoice,           :presence => true
   validates :payment_method,    :presence => true

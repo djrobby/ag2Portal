@@ -10,6 +10,8 @@ class SupplierPayment < ActiveRecord::Base
                   :approver_id, :payment_method_id,
                   :supplier_invoice_approval_id, :organization_id
 
+  has_many :cash_desk_closing_items
+
   has_paper_trail
 
   validates :supplier,          :presence => true

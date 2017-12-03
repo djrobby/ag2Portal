@@ -196,3 +196,9 @@ es:
           attributes:
             claim_no:
               code_invalid: "inválido"
+        cash_movement_type:
+          attributes:
+            code:
+              code_invalid: "inválido"
+            type_id:
+              type_invalid: "inválido (deber ser 1:Entrada o 2:Salida)"

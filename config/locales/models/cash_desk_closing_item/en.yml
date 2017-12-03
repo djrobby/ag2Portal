@@ -16,3 +16,5 @@ en:
         supplier_payment_id: "Payment"
         amount: "Amount"
         type_i: "Type"
+        type_c: "INFLOW"
+        type_p: "OUTFLOW"

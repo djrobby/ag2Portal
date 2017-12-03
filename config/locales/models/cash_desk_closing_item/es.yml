@@ -16,3 +16,5 @@ es:
         supplier_payment_id: "Pago"
         amount: "Importe"
         type_i: "Tipo"
+        type_c: "ENTRADA"
+        type_p: "SALIDA"

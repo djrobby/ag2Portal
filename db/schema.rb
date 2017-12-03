@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171201140343) do
+ActiveRecord::Schema.define(:version => 20171203112449) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -508,13 +508,15 @@ ActiveRecord::Schema.define(:version => 20171201140343) do
     t.integer  "cash_desk_closing_id"
     t.integer  "client_payment_id"
     t.integer  "supplier_payment_id"
-    t.string   "type_i",               :limit => 1,                                                 :null => false
-    t.decimal  "amount",                            :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.datetime "created_at",                                                                        :null => false
-    t.datetime "updated_at",                                                                        :null => false
+    t.string   "type_i",                :limit => 1,                                                 :null => false
+    t.decimal  "amount",                             :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.datetime "created_at",                                                                         :null => false
+    t.datetime "updated_at",                                                                         :null => false
+    t.integer  "cash_movement_type_id"
   end
 
   add_index "cash_desk_closing_items", ["cash_desk_closing_id"], :name => "index_cash_desk_closing_items_on_cash_desk_closing_id"
+  add_index "cash_desk_closing_items", ["cash_movement_type_id"], :name => "index_cash_desk_closing_items_on_cash_movement_type_id"
   add_index "cash_desk_closing_items", ["client_payment_id"], :name => "index_cash_desk_closing_items_on_client_payment_id"
   add_index "cash_desk_closing_items", ["supplier_payment_id"], :name => "index_cash_desk_closing_items_on_supplier_payment_id"
   add_index "cash_desk_closing_items", ["type_i"], :name => "index_cash_desk_closing_items_on_type_i"
@@ -544,6 +546,22 @@ ActiveRecord::Schema.define(:version => 20171201140343) do
   add_index "cash_desk_closings", ["office_id"], :name => "index_cash_desk_closings_on_office_id"
   add_index "cash_desk_closings", ["organization_id"], :name => "index_cash_desk_closings_on_organization_id"
   add_index "cash_desk_closings", ["project_id"], :name => "index_cash_desk_closings_on_project_id"
+
+  create_table "cash_movement_types", :force => true do |t|
+    t.string   "code",            :limit => 3, :null => false
+    t.string   "name"
+    t.string   "type_id",         :limit => 1, :null => false
+    t.integer  "organization_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "cash_movement_types", ["code"], :name => "index_cash_movement_types_on_code"
+  add_index "cash_movement_types", ["organization_id", "type_id", "code"], :name => "index_cash_movement_types_unique", :unique => true
+  add_index "cash_movement_types", ["organization_id"], :name => "index_cash_movement_types_on_organization_id"
+  add_index "cash_movement_types", ["type_id"], :name => "index_cash_movement_types_on_type_id"
 
   create_table "centers", :force => true do |t|
     t.integer  "town_id"

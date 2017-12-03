@@ -1,0 +1,18 @@
+en:
+  activerecord:
+    models:
+      cash_movement_type:
+        zero:  Cash movement types
+        one:   Cash movement type
+        few:   Cash movement types
+        other: Cash movement types
+        check_for_cash_movement_types: "Type cannot be destroyed while linked cash desk closing items exist."
+    attributes:
+      cash_movement_type:
+        organization: "Organization"
+        organization_id: "Organization"
+        code: "Code"
+        name: "Name"
+        type_id: "Type"
+        type_i: "INFLOW"
+        type_o: "OUTFLOW"
