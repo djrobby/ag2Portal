@@ -29,11 +29,15 @@ class Zipcode < ActiveRecord::Base
   before_destroy :check_for_dependent_records
 
   def to_label
-    "#{zipcode} - #{town_name} (#{province.name})"
+    "#{zipcode} - #{town_name} (#{province_name})"
   end
 
   def town_name
     town.blank? ? '' : town.name
+  end
+
+  def province_name
+    province.blank? ? '' : province.name
   end
 
   searchable do

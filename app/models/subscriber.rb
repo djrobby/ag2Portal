@@ -205,7 +205,7 @@ class Subscriber < ActiveRecord::Base
   end
 
   #
-  # Postal
+  # Postal & notifications
   #
   def full_name_postal
     postal_full_name = ""
@@ -250,11 +250,121 @@ class Subscriber < ActiveRecord::Base
     end
   end
 
+  def right_postal_building
+    if !self.postal_building.blank?
+      postal_building
+    elsif !self.client.blank?
+      client.try(:building)
+    else
+      ""
+    end
+  end
+
+  def right_postal_floor
+    if !self.postal_floor.blank?
+      postal_floor
+    elsif !self.client.blank?
+      client.try(:floor)
+    else
+      ""
+    end
+  end
+
+  def right_postal_floor_office
+    if !self.postal_floor_office.blank?
+      postal_floor_office
+    elsif !self.client.blank?
+      client.try(:floor_office)
+    else
+      ""
+    end
+  end
+
   def right_postal_town
     if !self.postal_town.blank?
       postal_town.try(:name)
     elsif !self.client.blank?
       client.try(:town).try(:name)
+    else
+      ""
+    end
+  end
+
+  def right_postal_zipcode
+    if !self.postal_zipcode.blank?
+      postal_zipcode.try(:zipcode)
+    elsif !self.client.blank?
+      client.try(:zipcode).try(:zipcode)
+    else
+      ""
+    end
+  end
+
+  def right_postal_province
+    if !self.postal_province.blank?
+      postal_province.try(:name)
+    elsif !self.client.blank?
+      client.try(:province).try(:name)
+    else
+      ""
+    end
+  end
+
+  def right_postal_region
+    if !self.postal_region.blank?
+      postal_region.try(:name)
+    elsif !self.client.blank?
+      client.try(:region).try(:name)
+    else
+      ""
+    end
+  end
+
+  def right_postal_country
+    if !self.postal_country.blank?
+      postal_country.try(:name)
+    elsif !self.client.blank?
+      client.try(:country).try(:name)
+    else
+      ""
+    end
+  end
+
+  def right_phone
+    if !self.phone.blank?
+      phone
+    elsif !self.client.blank?
+      client.try(:phone)
+    else
+      ""
+    end
+  end
+
+  def right_cellular
+    if !self.cellular.blank?
+      cellular
+    elsif !self.client.blank?
+      client.try(:cellular)
+    else
+      ""
+    end
+  end
+
+  def right_fax
+    if !self.fax.blank?
+      fax
+    elsif !self.client.blank?
+      client.try(:fax)
+    else
+      ""
+    end
+  end
+
+  def right_email
+    if !self.email.blank?
+      email
+    elsif !self.client.blank?
+      client.try(:email)
     else
       ""
     end

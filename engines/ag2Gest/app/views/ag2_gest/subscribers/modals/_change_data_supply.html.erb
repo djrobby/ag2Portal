@@ -5,6 +5,9 @@
     $('#form_change_data_supply').on('submit', function() {
       $("#changeDataSupply").modal('hide');
       window.location.reload();
+      var postal_first_name = $('#fnt_first_name').val();
+      var postal_last_name = $('#fnt_last_name').val();
+      var postal_company = $('#fnt_company').val();
       var phone = $('#fnt_phone').val();
       var cellular = $('#fnt_cellular').val();
       var email = $('#fnt_email').val();
@@ -86,20 +89,26 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.input :phone, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :postal_street_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_street_name' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :postal_street_number, required: true, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :postal_building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :postal_floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor' }, :label_html => { :class => 'form-label' } %>
-    <%= f.input :postal_floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_zipcode, collection: @zipcodes, :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_town, collection: @towns, :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_province, collection: @provinces, :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_region, collection: @regions, :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_country, collection: @countries, :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_first_name, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_first_name', :value => !@subscriber.postal_first_name.blank? ? @subscriber.postal_first_name : @subscriber.try(:client).try(:first_name) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_last_name, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_last_name', :value => !@subscriber.postal_last_name.blank? ? @subscriber.postal_last_name : @subscriber.try(:client).try(:last_name) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_company, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_company', :value => !@subscriber.postal_company.blank? ? @subscriber.postal_company : @subscriber.try(:client).try(:company) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :phone, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone', :value => !@subscriber.phone.blank? ? @subscriber.phone : @subscriber.try(:client).try(:phone) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular', :value => !@subscriber.cellular.blank? ? @subscriber.cellular : @subscriber.try(:client).try(:cellular) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email', :value => !@subscriber.email.blank? ? @subscriber.email : @subscriber.try(:client).try(:email) }, :label_html => { :class => 'form-label' } %>
+    
+    <%= f.association :postal_street_type, collection: StreetType.all(order: 'street_type_code'), selected: !@subscriber.postal_street_type_id.blank? ? @subscriber.postal_street_type_id : @subscriber.try(:client).try(:street_type_id), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
+    
+    <%= f.input :postal_street_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_street_name', :value => !@subscriber.postal_street_name.blank? ? @subscriber.postal_street_name : @subscriber.try(:client).try(:street_name) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_street_number, required: true, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number', :value => !@subscriber.postal_street_number.blank? ? @subscriber.postal_street_number : @subscriber.try(:client).try(:street_number) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building', :value => !@subscriber.postal_building.blank? ? @subscriber.postal_building : @subscriber.try(:client).try(:building) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor', :value => !@subscriber.postal_floor.blank? ? @subscriber.postal_floor : @subscriber.try(:client).try(:floor) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :postal_floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office', :value => !@subscriber.postal_floor_office.blank? ? @subscriber.postal_floor_office : @subscriber.try(:client).try(:floor_office) }, :label_html => { :class => 'form-label' } %>
+
+    <%= f.association :postal_zipcode, collection: @zipcodes, selected: !@subscriber.postal_zipcode_id.blank? ? @subscriber.postal_zipcode_id : @subscriber.try(:client).try(:zipcode_id), :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_town, collection: @towns, selected: !@subscriber.postal_town_id.blank? ? @subscriber.postal_town_id : @subscriber.try(:client).try(:town_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_province, collection: @provinces, selected: !@subscriber.postal_province_id.blank? ? @subscriber.postal_province_id : @subscriber.try(:client).try(:province_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_region, collection: @regions, selected: !@subscriber.postal_region_id.blank? ? @subscriber.postal_region_id : @subscriber.try(:client).try(:region_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_country, collection: @countries, selected: !@subscriber.postal_country_id.blank? ? @subscriber.postal_country_id : @subscriber.try(:client).try(:country_id), :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
   </div>
   <div class="modal-footer">
     <%= f.submit t('activerecord.attributes.subscriber.accept'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary" %>

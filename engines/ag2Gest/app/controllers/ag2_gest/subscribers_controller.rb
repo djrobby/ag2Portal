@@ -90,7 +90,7 @@ module Ag2Gest
       end
       @tariff_type_ids = _tariff_type_ids
       tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", @tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
-      
+
       @subscriber.tariffs.delete(tariffs_delete)
       params[:subscriber][:tariff_ids].reject { |c| c.empty? }.each do |t|
          s = SubscriberTariff.new(subscriber_id: @subscriber.id, tariff_id: t)
@@ -621,7 +621,10 @@ module Ag2Gest
       @towns = towns_dropdown
       @provinces = provinces_dropdown
       @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
+      @regions = regions_dropdown
+      @countries = countries_dropdown
+      # @regions = Region.order(:name)
+      # @countries = Country.order(:name)
       @client = Client.find(@subscriber.client_id)
       @client_bank_account = ClientBankAccount.new
       # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
@@ -668,10 +671,9 @@ module Ag2Gest
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
-      @countries = Country.order(:name)
       @bank = banks_dropdown
       @bank_offices = bank_offices_dropdown
-      
+
       @search_bills = Bill.search do
         if filter == "pending" or filter == "unpaid"
           with(:invoice_status_id, 0..98)
@@ -1159,23 +1161,36 @@ module Ag2Gest
     private
 
     def towns_dropdown
-      Town.order(:name).includes(:province)
+      Town.order(:name).includes(:province).select("towns.id, towns.name, towns.province_id")
+      # Town.order(:name).includes(:province)
     end
 
     def provinces_dropdown
-      Province.order(:name).includes(:region)
+      Province.order(:name).includes(:region).select("provinces.id, provinces.name, provinces.region_id")
+      # Province.order(:name).includes(:region)
     end
 
     def zipcodes_dropdown
-      Zipcode.order(:zipcode).includes(:town,:province)
+      Zipcode.order(:zipcode).includes(:town, :province).select("zipcodes.id, zipcodes.zipcode, zipcodes.town_id, zipcodes.province_id")
+      # Zipcode.order(:zipcode).includes(:town,:province)
+    end
+
+    def regions_dropdown
+      Region.order(:name).includes(:country).select("regions.id, regions.name, regions.country_id")
+    end
+
+    def countries_dropdown
+      Country.order(:name).select("id, code, name")
     end
 
     def banks_dropdown
-      Bank.order(:code)
+      Bank.order(:code).select("id, code, name")
+      # Bank.order(:code)
     end
 
     def bank_offices_dropdown
-      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+      BankOffice.order(:bank_id, :code).includes(:bank, :country).select("bank_offices.id, bank_offices.code, bank_offices.name, bank_offices.bank_id, bank_offices.country_id ")
+      # BankOffice.order(:bank_id, :code).includes(:bank,:country)
     end
 
     def reports_array()
