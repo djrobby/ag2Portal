@@ -70,13 +70,13 @@
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.association :water_connection_type, required: true, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :water_connection_type, required: true, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' }, include_blank: true %>
 
-      <%= f.association :service_point_purpose, required: true, collection: ServicePointPurpose.all, :input_html => { :class => 'x-large-text-field sel2', :id => 'service_point_purpose' }, :label_html => { :class => 'form-label' }, include_blank: true %>
+      <%= f.association :service_point_purpose, required: true, collection: ServicePointPurpose.all, :input_html => { :class => 'x-large-text-field sel2', :id => 'service_point_purpose' }, :label_html => { :class => 'form-label-under-sel2' }, include_blank: true %>
 
-      <%= f.association :caliber, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'caliber' }, :label_html => { :class => 'form-label' }, include_blank: true %>
+      <%= f.association :caliber, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'caliber' }, :label_html => { :class => 'form-label-under-sel2' }, include_blank: true %>
 
-      <%= f.input :diameter, :input_html => { :class => 'x-large-text-field', :id => 'wcc_diameter' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :diameter, :input_html => { :class => 'x-large-text-field', :id => 'wcc_diameter' }, :label_html => { :class => 'form-label-under-sel2' } %>
 
       <%= f.input :cadastral_reference, :input_html => { :class => 'x-large-text-field', :id => 'wcc_cadastral_reference' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :gis_id, :input_html => { :class => 'x-large-text-field', :id => 'wcc_gis_id' }, :label_html => { :class => 'form-label' } %>

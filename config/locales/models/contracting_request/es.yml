@@ -238,6 +238,7 @@ es:
         billing_period_id: "Periodo de facturación"
         service_point: "Punto de Suministro"
         service_point_id: "Punto de Suministro"
+        add_document: "Añadir Documento"
     report:
       contracting_request:
         id: "Id"

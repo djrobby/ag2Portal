@@ -953,7 +953,7 @@
   <%= f.simple_fields_for :contracting_request_documents do |document|%>
     <%= render 'document_fields', :f => document %>
   <%end%>
-  <%= link_to_add_fields("Añadir documento", f, :contracting_request_documents, "document_fields", "new-document-fields", class: "btn btn-warning fnt-new-btn") %>
+  <%= link_to_add_fields( t('activerecord.attributes.contracting_request.add_document'), f, :contracting_request_documents, "document_fields", "new-document-fields", class: "btn btn-warning fnt-new-btn") %>
   <hr>
 </div>
 

@@ -7,6 +7,8 @@
   }
 </style>
 <script type="text/javascript">
+  var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
+  var tryAgain = '<%= t("should_try_again") %>';
   var text_field_color;
   var old_value = '';
   var old_code = '';
@@ -40,15 +42,18 @@
       contact = "0";
     if (contact == "0") {
       // Empty fiscal id: Disable
-      $('.entity-field').prop('disabled', true);
+      $('.entity-field').prop('readonly', true);
+      $('.client-field').prop('readonly', true);
       $('#generate_code_btn').hide();
       $('#submit_btn').hide();
     } else {
       // Fiscal Id OK: Enable
-      $('.entity-field').prop('disabled', false);
+      $('.entity-field').prop('readonly', false);
+      $('.client-field').prop('readonly', false);
       $('#generate_code_btn').show();
       $('#submit_btn').show();
     }
+
 
     // Save default text color
     text_field_color = $("#contracting_request_request_no").css('color')
@@ -81,11 +86,13 @@
           if (data.client_debt != '0'){
             alert('<%= I18n.t("ag2_gest.contracting_requests.debt_error")%>' + data.client_debt + '\n' + data.project_debt);
           };
+            $('.client-field').attr('readonly', false);
+            $(".entity-field").attr('readonly', true);
+
             $("#contracting_request_entity_fiscal_id").val(data.fiscal_id);
             $("#contracting_request_entity_id").val(data.id);
             $(".contracting_request_full_name").val(data.name);
             $("#contracting_request_entity_street_directory_id").val($("#street_directory").val());
-            $("#contracting_request_entity_street_type_id").val(data.street_type_id);
             $("#contracting_request_entity_street_type_id").select2("val", data.street_type_id);
             $("#contracting_request_entity_street_name").val(data.street_name);
             $("#contracting_request_entity_street_number").val(data.street_number);
@@ -98,7 +105,6 @@
             $("#contracting_request_entity_region_id").val(data.region_id);
             $("#contracting_request_entity_country_id").val(data.country_id);
 
-            $("#contracting_request_client_street_type_id").val(data.street_type_id);
             $("#contracting_request_client_street_type_id").select2("val", data.street_type_id);
             $("#contracting_request_client_street_name").val(data.street_name);
             $("#contracting_request_client_street_directory").select2("val", data.street_directory_id);
@@ -116,7 +122,6 @@
             $("#contracting_request_client_cellular").val(data.cellular);
             $("#contracting_request_client_email").val(data.email);
 
-            $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
             $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
             $("#contracting_request_subscriber_street_name").val(data.street_name);
             $("#contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
@@ -131,10 +136,8 @@
             $("#contracting_request_subscriber_country_id").val(data.country_id);
 
             // Enable fields
-            $('.entity-field').prop('disabled', false);
-            cr_type = $('.contracting_request_type_id').select2("val")
-              $('#generate_code_btn').show();
-              $('#submit_btn').show();
+            $('#generate_code_btn').show();
+            $('#submit_btn').show();
             // Default color & focus
             $("#contracting_request_entity_fiscal_id").css('color', text_field_color);
           //}
@@ -223,7 +226,6 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_connection_from_street_directory/' + contact, function(data) {
-        $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
         $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
         $("#contracting_request_subscriber_street_name").val(data.street_name);
         $("#contracting_request_subscriber_street_number").val('');
@@ -366,6 +368,16 @@
       })
       return false;
     });
+    // when #check_iban_btn is clicked
+    $(".check_iban_btn").click(function() {
+      var country = $("#contracting_request_country_id").val();
+      var dc = $("#contracting_request_iban_dc").val();
+      var bank = $("#contracting_request_bank_id").val();
+      var office = $("#contracting_request_bank_office_id").val();
+      var account = $("#contracting_request_account_no").val();
+      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'cr_check_iban');
+      return false;
+    });
   });
 </script>
 
@@ -429,9 +441,14 @@
       </div>
     </div>
 
+    <!-- <div class="row-fluid"> -->
+      <!-- ENTITY STREET DIRECTORY -->
+      <%#= f.association :entity_street_directory, collection: StreetDirectory.all(order: 'street_type_id'), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span12" } %>
+    <!-- </div> -->
+
     <div class="row-fluid">
       <!-- ENTITY STREET TYPE -->
-      <%= f.association :entity_street_type, collection: @street_types, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+      <%= f.association :entity_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
       <!-- ENTITY STREET NAME -->
       <%= f.input :entity_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
       <!-- ENTITY STREET NUMBER -->
@@ -446,21 +463,22 @@
       <!-- ENTITY floor_office -->
       <%= f.input :entity_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
       <!-- ENTITY zipcode -->
-      <%= f.association :entity_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+      <%= f.association :entity_zipcode, collection: @zipcodes, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
     </div>
     <div class="row-fluid">
       <!-- ENTITY town -->
-      <%= f.association :entity_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_town, collection: @towns, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY province -->
-      <%= f.association :entity_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_province, collection: @provinces, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
 
     <div class="row-fluid">
       <!-- ENTITY region -->
-      <%= f.association :entity_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_region, collection: @regions, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
       <!-- ENTITY country -->
-      <%= f.association :entity_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+      <%= f.association :entity_country, collection: @countries, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     </div>
+
 
   </div>
 
@@ -492,52 +510,56 @@
       </div>
     </div>
   </div>
+  <!-- <div class="row-fluid"> -->
+    <!-- CLIENT STREET DIRECTORY -->
+    <%#= f.association :client_street_directory, collection: StreetDirectory.all(order: 'street_type_id'), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span12" } %>
+  <!-- </div> -->
 
   <div class="row-fluid">
     <!-- CLIENT STREET TYPE -->
-    <%= f.association :client_street_type, collection: @street_types, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :client_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'client-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CLIENT STREET NAME -->
-    <%= f.input :client_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
+    <%= f.input :client_street_name, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- CLIENT STREET NUMBER -->
-    <%= f.input :client_street_number, :input_html => { :class => 'entity-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
+    <%= f.input :client_street_number, :input_html => { :class => 'client-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT building -->
-    <%= f.input :client_building, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.input :client_building, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CLIENT floor -->
-    <%= f.input :client_floor, :input_html => { :class => 'entity-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :client_floor, :input_html => { :class => 'client-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CLIENT floor_office -->
-    <%= f.input :client_floor_office, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :client_floor_office, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CLIENT zipcode -->
-    <%= f.association :client_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :client_zipcode, collection: @zipcodes, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- CLIENT town -->
-    <%= f.association :client_town, collection: @towns, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_town, collection: @towns, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT province -->
-    <%= f.association :client_province, collection: @provinces, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_province, collection: @provinces, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT region -->
-    <%= f.association :client_region, collection: @regions, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_region, collection: @regions, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT country -->
-    <%= f.association :client_country, collection: @countries, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :client_country, collection: @countries, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT PHONE -->
-    <%= f.input :client_phone, :input_html => { :class => 'x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.input :client_phone, :input_html => { :class => 'client-field x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT FAX -->
-    <%= f.input :client_fax, :input_html => { :class => 'x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.input :client_fax, :input_html => { :class => 'client-field x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CLIENT CELLULAR -->
-    <%= f.input :client_cellular, :input_html => { :class => 'x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.input :client_cellular, :input_html => { :class => 'client-field x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CLIENT EMAIL -->
-    <%= f.input :client_email, :input_html => { :class => 'x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.input :client_email, :input_html => { :class => 'client-field x-large-text-field entity-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 </div>
 
@@ -548,41 +570,41 @@
 
   <div class="row-fluid">
     <!-- CONNECTION STREET TYPE -->
-    <%= f.association :subscriber_street_type, collection: @street_types, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :subscriber_street_type, collection: @street_types, :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CONNECTION STREET DIRECTORY -->
-    <%= f.association :subscriber_street_directory, collection: StreetDirectory.by_towns(@offices).order(:street_name), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2', id: "contracting_request_subscriber_street_directory" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
+    <%= f.association :subscriber_street_directory, collection: StreetDirectory.by_towns(@offices).order(:street_name), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'subscriber-field x-large-text-field sel2', id: "contracting_request_subscriber_street_directory" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
   </div>
   <div class="row-fluid">
     <!-- CLIENT STREET NAME -->
-    <%= f.input :subscriber_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
+    <%= f.input :subscriber_street_name, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- CONNECTION STREET NUMBER -->
-    <%= f.input :subscriber_street_number, :input_html => { :class => 'entity-field subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
+    <%= f.input :subscriber_street_number, :input_html => { :class => 'subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CONNECTION building -->
-    <%= f.input :subscriber_building, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.input :subscriber_building, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CONNECTION floor -->
-    <%= f.input :subscriber_floor, :input_html => { :class => 'entity-field subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :subscriber_floor, :input_html => { :class => 'subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CONNECTION floor_office -->
-    <%= f.input :subscriber_floor_office, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :subscriber_floor_office, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- CONNECTION zipcode -->
-    <%= f.association :subscriber_zipcode, collection: @zipcodes, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.association :subscriber_zipcode, collection: @zipcodes, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
   </div>
   <div class="row-fluid">
     <!-- CONNECTION town -->
-    <%= f.association :subscriber_town, collection: @towns, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_town, collection: @towns, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
     <!-- CONNECTION province -->
-    <%= f.association :subscriber_province, collection: @provinces, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
+    <%= f.association :subscriber_province, collection: @provinces, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
 
   <div class="row-fluid">
     <!-- CONNECTION region -->
-    <%= f.association :subscriber_region, collection: @regions, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_region, collection: @regions, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- CONNECTION country -->
-    <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'entity-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- CONNECTION center -->
-    <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'entity-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>
 
@@ -596,13 +618,14 @@
     <!-- IBAN DC -->
     <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- BANK -->
-    <%= f.input :bank_id, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_id, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- BANK OFFICE -->
-    <%= f.input :bank_office_id, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :bank_office_id, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- DC -->
     <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->
-    <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+    <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>          
   </div>
 </div>
 

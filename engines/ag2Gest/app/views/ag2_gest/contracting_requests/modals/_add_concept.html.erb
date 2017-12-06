@@ -203,7 +203,7 @@ jQuery(function($) {
       <%= f.input :tariff_scheme_id, :as => :hidden, :input_html => { :value => @water_supply_contract.tariff_scheme_id } %>
       <%= f.association :tariff_scheme, required: true, :disabled => true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }  %>
 
-      <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+      <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
       <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
       
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
@@ -212,7 +212,7 @@ jQuery(function($) {
 
       <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
 
-      <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label-under-sel2' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
       <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>

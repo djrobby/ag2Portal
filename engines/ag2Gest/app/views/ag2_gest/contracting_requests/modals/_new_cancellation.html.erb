@@ -218,7 +218,7 @@ jQuery(function($) {
       
       <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>  
         <div class="span5">      
-          <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+          <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
           <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :disabled => true, :class => 'x-large-text-field sel2', multiple: true %>
         </div>
         <div class="span5">
@@ -227,7 +227,7 @@ jQuery(function($) {
         </div>
       <% else %>
         <div class="span5">      
-          <label for="BillableConcept_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+          <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
           <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
         </div>
         <div class="span5">
@@ -237,7 +237,7 @@ jQuery(function($) {
       <% end %>
       
       <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>    
-        <%= f.input :endowments, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
+        <%= f.input :endowments, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label-under-sel2' }, wrapper_html: { class: "span5" } %>
         <%= f.input :inhabitants, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
         <%= f.input :contract_term, :readonly => true, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>
       <% else %>

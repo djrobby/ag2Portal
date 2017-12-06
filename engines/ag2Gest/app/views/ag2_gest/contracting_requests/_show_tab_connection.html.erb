@@ -384,7 +384,7 @@
 
       <a href="#new-invoice-from-offer" data-toggle="modal" role="button" class="btn btn-warning <%= 'disabled' if @contracting_request.water_connection_contract.blank? or @contracting_request.water_connection_contract.sale_offer.blank? or @contracting_request.water_connection_contract.sale_offer.sale_offer_status_id != SaleOfferStatus::APPROVED %>"><%= I18n.t("ag2_gest.commercial_billings.index.btn_new_from_sale_offer") %></a>
 
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning ", target: "_blank"  unless @contracting_request.client.client_bank_accounts.blank?  %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning ", target: "_blank"  unless @contracting_request.client.client_bank_accounts.active.blank?  %>
 
       <a target="_blank" id="sepa_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.water_supply_contract.pay_sepa_order_c') %></a>
     </div>

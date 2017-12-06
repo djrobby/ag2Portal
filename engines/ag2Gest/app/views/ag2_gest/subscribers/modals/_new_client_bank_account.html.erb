@@ -54,7 +54,7 @@ jQuery(function($) {
     var bank = $("#client_bank_account_bank_id").val();
     var office = $("#client_bank_account_bank_office_id").val();
     var account = $("#client_bank_account_account_no").val();
-    var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'su_check_iban');
+    var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'sub_check_iban');
     return false;
   });
 });
@@ -82,9 +82,10 @@ jQuery(function($) {
 
       <%= f.input :iban_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :bank_id, :required => true, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field custom-sel2', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
-
-      <%= f.input :bank_office_id, :required => true, collection: @bank_office, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <!-- BANK -->
+      <%= f.input :bank_id, :required => true, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <!-- BANK OFFICE -->
+      <%= f.input :bank_office_id, :required => true, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
 
       <!-- <#%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %> -->
       <%= f.input :account_no, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' } %>

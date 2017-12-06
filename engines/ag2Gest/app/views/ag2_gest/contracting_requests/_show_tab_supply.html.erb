@@ -387,17 +387,17 @@
 
       if (data.invoice_status_cancellation) {
         if (data.invoice_status_cancellation.id != '1') {
+          $("#link-unsubscribe-bill-span").hide();
           $("#new-subscriber-cancellation").removeClass("disabled");
+          $("#new-subscriber-cancellation").removeClass("hide");
         } else {
+          $("#link-unsubscribe-bill-span").show();
+          $("#link-unsubscribe-bill-span").text(data.invoice_status_cancellation.code);
           $("#new-subscriber-cancellation").addClass("disabled");
-        };
-        if (data.invoice_status_cancellation.id != '1') {
-          $("#link-unsubscribe-bill").hide();
-        } else {
-          $("#link-unsubscribe-bill").show();
-          $("#link-unsubscribe-bill").text(data.invoice_status_cancellation.code);
+          $("#new-subscriber-cancellation").addClass("hide");
         };
       };
+
     });
 
     // ajax success for initial_billing
@@ -507,25 +507,33 @@
       $("#link-unsubscribe-bill").text(data.unsubscribe_bill.bill_no.substr(0, 12) + "-" + data.unsubscribe_bill.bill_no.substr(12, 4) + "-" +  data.unsubscribe_bill.bill_no.substr(16, 7));
       $("#unsubscribe-bill-doc").removeClass("hide");
       $("#unsubscribe-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id + "/biller_pdf.pdf");
-      $("#link-bill").removeClass("hide");
-      $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
-      $("#link-bill").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
-      $("#bill-doc").removeClass("hide");
-      $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_contract_pdf.pdf");
-      $("#new-subscriber-cancellation").removeClass("disabled");
+      if (data.bill) {
+        $("#link-bill").removeClass("hide");
+        $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+        $("#link-bill").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" + data.bill.bill_no.substr(16, 7));
+        $("#bill-doc").removeClass("hide");
+        $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_contract_pdf.pdf");
+      };
+      $("#new-subscriber-cancellation").removeClass("hide");
+      $("#new-subscriber-cancellation").addClass("disabled");
+      $("#link-unsubscribe-bill-span").show();
+      $("#link-unsubscribe-bill-span").text(data.invoice_status_cancellation.code);
+      
       if (data.work_order_status.id == '1' || data.work_order_status.id == '2'){
         alert('<%= t('activerecord.attributes.contracting_request.alert_inspection') %>');
       };
-      if (data.invoice_status.id != '1' && !data.work_order_installation) {
-        $("#ot-installation").removeClass("disabled");
-      } else {
-        $("#ot-installation").addClass("disabled");
-      };
-      if (data.invoice_status.id != '1') {
-        $("#link-bill-span").hide();
-      } else {
-        $("#link-bill-span").show();
-        $("#link-bill-span").text(data.invoice_status.code);
+      if (data.invoice_status) {
+        if (data.invoice_status.id != '1' && !data.work_order_installation) {
+          $("#ot-installation").removeClass("disabled");
+        } else {
+          $("#ot-installation").addClass("disabled");
+        };
+        if (data.invoice_status.id != '1') {
+          $("#link-bill-span").hide();
+        } else {
+          $("#link-bill-span").show();
+          $("#link-bill-span").text(data.invoice_status.code);
+        };
       };
       // $("#bill-doc").removeClass("hide");
       // $("#unsubscribe-bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.unsubscribe_bill.id);
@@ -562,10 +570,10 @@
       $("#contract_pdf").removeClass("hide");
       $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");
       $("#contract").text(data.water_supply_contract.contract_no.substr(0, 5) + '-' + data.water_supply_contract.contract_no.substr(6, 7) + '-' + data.water_supply_contract.contract_no.substr(8, 11) + '-' + data.water_supply_contract.contract_no.substr(12, 17));
-      if (data.subscriber.client.client_bank_accounts.active != []) {
+      if (data.client_bank_accounts ) {
         $("#sepa_pdf").removeClass("hide");
         $("#sepa_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/sepa_pdf.pdf");
-      }
+      };
     });
 
     // $("#instalation-subscriber").bind("ajax:success", function(xhr, data, status) {
@@ -771,6 +779,8 @@
       <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
         <% if !@contracting_request.water_supply_contract.blank? and !@contracting_request.water_supply_contract.unsubscribe_bill.blank?  %>
           <a id="new-subscriber-cancellation" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status_id == InvoiceStatus::PENDING%>" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
+        <% else %>
+          <a id="new-subscriber-cancellation" class="btn btn-primary nextBtn hide" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
         <% end %>
       <% else %>
         <% if !@contracting_request.water_supply_contract.blank? %>
@@ -793,7 +803,7 @@
     <div class="setup-content" id="step-5">
     <% if @contracting_request.contracting_request_type_id != ContractingRequestType::CANCELLATION && !@contracting_request.subscriber.blank? %>
       <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.contracting_request.show_contract')}".html_safe, contract_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "contract_pdf",class: "btn btn-warning", target: "_blank"  %>
-      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning", target: "_blank"  unless @contracting_request.client.client_bank_accounts.blank?  %>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sepa_pdf_contracting_request_path(@contracting_request, :format => :pdf), id: "sepa_pdf",class: "btn btn-warning", target: "_blank"  unless @contracting_request.client.client_bank_accounts.active.blank?  %>
     <% else %>
         <a target="_blank" id="contract_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.contracting_request.show_contract') %></a>
         <a target="_blank" id="sepa_pdf" type="button" class="btn btn-warning hide" href="#"><%= t('activerecord.attributes.water_supply_contract.pay_sepa_order_c') %></a>
@@ -1094,10 +1104,14 @@
             <tr>
               <td><b><%= t('activerecord.attributes.contracting_request.invoice_service') %></b></td>
               <td>
-              <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING  %>
-              <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no), :remote => true %>
+              <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
+                <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
+                  <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no), :remote => true, id: "link-unsubscribe-bill" %><span class="yellow" id="link-unsubscribe-bill-span"><%= " " + @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.blank? %></span>
+                <% else %>
+                  <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no), :remote => true, id: "link-unsubscribe-bill" %><span class="yellow" id="link-unsubscribe-bill-span"><%= " " + @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.blank? %></span>
+                <% end %>
               <% else %>
-                <a id="link-unsubscribe-bill" href="#"></a>
+                <a id="link-unsubscribe-bill" href="#"></a><span class="yellow hide" id="link-unsubscribe-bill-span"><%= " P" %></span>
               <% end %>
               </td>
             </tr>

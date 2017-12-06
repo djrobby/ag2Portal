@@ -41,7 +41,11 @@
               <a class="accor accordion-toggle collapsed pull-left" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
               <% if bill.client.active_bank_accounts? %><i class="icon-briefcase"></i><% end %>
             </td>
+            <% if bill.bill_type_id == InvoiceType::COMMERCIAL %>
+            <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), commercial_billing_path(bill) %></td>
+            <% else %>
             <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <% end %>
             <% if bill.bill_type_id == InvoiceType::WATER %>
             <td><%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) if bill.subscriber %></td>
             <% else %>

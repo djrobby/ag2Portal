@@ -1028,6 +1028,7 @@ module Ag2Gest
           response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first   
           response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status       
           response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
+          response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
           # response_hash[:work_order] = @work_order
           # response_hash[:work_order_status] = @work_order.work_order_status
           respond_to do |format|
@@ -1060,7 +1061,9 @@ module Ag2Gest
           response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+          response_hash[:invoice_status_cancellation] = @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
+          response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
           render json: response_hash
         else
           render :json => { :errors => @contracting_request.errors.as_json }, :status => 420

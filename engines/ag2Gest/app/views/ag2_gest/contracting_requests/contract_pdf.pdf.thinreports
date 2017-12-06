@@ -111,7 +111,7 @@ if @contracting_request.contracting_request_type_id == 2
 									 old_phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
 									 old_phone: var_master.last.client.phone,
 									 old_zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
-									 old_zipcode: var_master.last.client.address_2,
+									 old_zipcode: var_master.last.client.address_2
 			   						)
 		if !var_master.last.subscriber.total_debt_unpaid.blank?
 			report.layout.config.list(:default) do |c|
@@ -129,7 +129,21 @@ elsif @contracting_request.contracting_request_type_id == 4
 	var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
 	if !var_master.last.blank?
 		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
-				   			request_no_master: var_master.first.full_no)
+				   			request_no_master: var_master.first.full_no,
+				   			old_subscriber: I18n.t("activerecord.attributes.water_supply_contract.old_contract"),
+				   			old_subscriber_code_c: I18n.t("activerecord.attributes.report.client_code") + ": ",
+				   			old_subscriber_code: var_master.last.subscriber.full_code,
+				   			old_fiscal_id_c: I18n.t("activerecord.attributes.client.fiscal_id") + ":",
+				   			old_fiscal_id: var_master.last.subscriber.fiscal_id,
+				   			old_name_c: I18n.t("activerecord.attributes.contracting_request.info_name") + ":",
+				   			old_name: var_master.last.subscriber.full_name,
+				   			old_street_c: I18n.t("activerecord.report.subscriber.direction") + ":",
+				   			old_street: var_master.last.subscriber.address_1,
+				   			old_phone_c: I18n.t("activerecord.attributes.client.phone") + ":",
+				   			old_phone: var_master.last.subscriber.phone,
+				   			old_zipcode_c: I18n.t("activerecord.attributes.client.zipcode") + ":",
+				   			old_zipcode: var_master.last.subscriber.address_2
+				   			)
 	end
 end
 #

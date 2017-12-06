@@ -20,7 +20,7 @@ module Ag2Gest
                                                 :subscriber_eco_report,
                                                 :rebilling,
                                                 :add_bank_account,
-                                                :su_check_iban,
+                                                :sub_check_iban,
                                                 :update_country_textfield_from_region,
                                                 :update_region_textfield_from_province,
                                                 :update_province_textfield_from_town,
@@ -149,7 +149,7 @@ module Ag2Gest
     end
 
     # Check IBAN
-    def su_check_iban
+    def sub_check_iban
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
@@ -881,6 +881,8 @@ module Ag2Gest
               response_hash[:bill] = @contracting_request.water_supply_contract.bill
               response_hash[:contracting_request] = @contracting_request
               response_hash[:reading] = @reading
+              response_hash[:water_supply_contract] = @contracting_request.water_supply_contract
+              response_hash[:client_bank_accounts] = @subscriber.client.client_bank_accounts.active
               respond_to do |format|
                 format.json { render json: response_hash }
               end
