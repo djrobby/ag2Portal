@@ -1,0 +1,28 @@
+<%= render '/layouts/ag2_admin/cmtypesbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td>Id:</td>
+      <td><%= @cash_movement_type.id %></td>
+      <td><%=t 'activerecord.attributes.cash_movement_type.code' %>:</td>
+      <td class="highlighted bolded"><%= @cash_movement_type.code unless @cash_movement_type.code.blank? %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_movement_type.name' %>:</td>
+      <td><%= @cash_movement_type.name.titleize unless @cash_movement_type.name.blank? %></td>
+      <td><%=t 'activerecord.attributes.cash_movement_type.type_id' %>:</td>
+      <td><%= @cash_movement_type.type_label unless @cash_movement_type.type_id.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @cash_movement_type } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @cash_movement_type } %>
+  </tbody>
+</table>
+
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: CashMovementType, update_path: edit_cash_movement_type_path(@cash_movement_type), update_txt: t('.btn_edit'),
+delete_path: @cash_movement_type, delete_txt: t('.btn_delete'), msg: t("activerecord.models.cash_movement_type.one"), txt: @cash_movement_type.name,
+new_path: new_cash_movement_type_path, new_txt: t('ag2_admin.cash_movement_types.index.btn_new') } %>
+
+<%= link_to t('ag2_admin.cash_movement_types.back_to_main_page'), cash_movement_types_path %>

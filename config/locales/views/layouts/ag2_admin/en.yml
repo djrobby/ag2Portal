@@ -91,3 +91,6 @@ en:
       currency_instruments:
         items: "Currency instruments"
         item: "Instrument"
+      cash_movement_types:
+        items: "Cash movement types"
+        item: "Type"

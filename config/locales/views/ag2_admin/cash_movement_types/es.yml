@@ -1,0 +1,21 @@
+es:
+  ag2_admin:
+    cash_movement_types:
+      index:
+        title: "Tipos de movimiento de caja"
+        btn_new: "Nuevo Tipo"
+        back_to_root: "Volver a ag2Admin"
+        inflow_only: "Entradas"
+        outflow_only: "Salidas"
+        all: "Todos"
+      show:
+        title: "Tipo de movimiento de caja"
+        btn_edit: "Editar Tipo"
+        btn_delete: "Borrar Tipo"
+        return_to: "Volver a Tipo de movimiento de caja"
+      edit:
+        title: "Editar Tipo de movimiento de caja"
+        btn_show: "Ver Tipo"
+      new:
+        title: "Nuevo Tipo de movimiento de caja"
+      back_to_main_page: "Volver a Tipos de movimiento de caja"

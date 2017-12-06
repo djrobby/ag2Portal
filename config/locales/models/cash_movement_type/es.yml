@@ -6,7 +6,7 @@ es:
         one:   Tipo de movimiento de caja
         few:   Tipos de movimiento de caja
         other: Tipos de movimiento de caja
-        check_for_cash_movement_types: "Tipo no puede ser eliminado mientras existan ítems de cierre de caja vinculados."
+        check_for_cash_desk_closing_items: "Tipo no puede ser eliminado mientras existan ítems de cierre de caja vinculados."
     attributes:
       cash_movement_type:
         organization: "Organización"
@@ -14,5 +14,5 @@ es:
         code: "Código"
         name: "Nombre"
         type_id: "Tipo"
-        type_i: "ENTRADA"
-        type_o: "SALIDA"
+        type_i: "Entrada"
+        type_o: "Salida"

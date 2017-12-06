@@ -1,0 +1,21 @@
+en:
+  ag2_admin:
+    cash_movement_types:
+      index:
+        title: "Cash movement types"
+        btn_new: "New Type"
+        back_to_root: "Back to ag2Admin"
+        inflow_only: "Inflows"
+        outflow_only: "Outflows"
+        all: "All"
+      show:
+        title: "Cash movement type"
+        btn_edit: "Edit Type"
+        btn_delete: "Delete Type"
+        return_to: "Back to Cash movement type"
+      edit:
+        title: "Edit Cash movement type"
+        btn_show: "Show Type"
+      new:
+        title: "New Cash movement type"
+      back_to_main_page: "Back to Cash movement types"

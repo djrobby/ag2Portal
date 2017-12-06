@@ -91,3 +91,6 @@ es:
       currency_instruments:
         items: "Instrumentos monetarios"
         item: "Instrumento"
+      cash_movement_types:
+        items: "Tipos de movimiento de caja"
+        item: "Tipo"

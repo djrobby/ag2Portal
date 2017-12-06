@@ -1,0 +1,37 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= sortable "code", t('activerecord.attributes.cash_movement_type.code') %></th>
+      <th><%= sortable "name", t('activerecord.attributes.cash_movement_type.name') %></th>
+      <th><%= sortable "type_id", t('activerecord.attributes.cash_movement_type.type_id') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cash_movement_types.each do |cmtype| %>
+    <tr>
+      <td><%= link_to cmtype.code, cmtype %></td>
+      <td><%= cmtype.name %></td>
+      <td><%= cmtype.type_label %></td>
+      <td><%= render :partial => '/layouts/crud/edit', :locals => { :model => CashMovementType, :path => edit_cash_movement_type_path(cmtype) } %>
+      <%= render :partial => '/layouts/crud/delete', :locals => { :model => CashMovementType, :path => cmtype, :msg => t("activerecord.models.cash_movement_type.one"), :txt => cmtype.name } %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_movement_types } %>
+<%= render :partial => '/layouts/crud/new', :locals => { :model => CashMovementType, :path => new_cash_movement_type_path, :txt => t("ag2_admin.cash_movement_types.index.btn_new") } %>
+
+<%= link_to t('ag2_admin.cash_movement_types.index.all'), controller: "cash_movement_types", action: "index", ifilter: "all", :remote => true %> |
+<%= link_to t('ag2_admin.cash_movement_types.index.inflow_only'), controller: "cash_movement_types", action: "index", ifilter: "inflow", :remote => true %> |
+<%= link_to t('ag2_admin.cash_movement_types.index.outflow_only'), controller: "cash_movement_types", action: "index", ifilter: "outflow", :remote => true %> |
+<%= link_to t("ag2_admin.cash_movement_types.index.back_to_root"), ag2_admin.root_path %>

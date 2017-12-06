@@ -202,5 +202,22 @@
     <% end %>
   </li>
 </ul><!-- /.thumbnails -->
+<ul class="thumbnails">
+  <!-- Apps 5 -->
+  <li class="span2">
+    <% if (session[:resolution] == "LD")%>
+    <a href="<%= cash_movement_types_path %>" class="thumbnail centered"><img src="/assets/icon/ag2CashMovementTypes.png" width="48" height="48" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".cash_movement_types" %></h5></a>
+    <% elsif session[:resolution] == "SD" %>
+    <a href="<%= cash_movement_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2/ag2CashMovementTypes72.png" width="72" height="72" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".cash_movement_types" %></h5></a>
+    <% else %>
+    <a href="<%= cash_movement_types_path %>" class="thumbnail centered"><img src="/assets/pict/ag2CashMovementTypes96.png" width="96" height="96" alt="ag2Tables" /><h5 class="h5-narrow"><%=t ".cash_movement_types" %></h5></a>
+    <% end %>
+  </li>
+  <li class="span2"></li>
+  <li class="span2"></li>
+  <li class="span2"></li>
+  <li class="span2"></li>
+  <li class="span2"></li>
+</ul><!-- /.thumbnails -->
 
 <!--<%= button_to "Regresar", main_app.root_path, :class => "btn btn-primary", :method => "get" %>-->
