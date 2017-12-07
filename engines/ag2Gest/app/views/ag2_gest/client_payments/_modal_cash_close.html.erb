@@ -20,7 +20,7 @@
       <%= f.input :client_payments_ids, :as => :hidden %>
       <%= f.input :opening_balance, required: true, label: I18n.t("activerecord.attributes.cash_desk_closing.opening_balance"), as: :decimal, inline_label: "Yes", input_html: { id: 'initial-cash', class: 'mid-text-field number-text-field' }, label_html: { class: 'form-label' } %>
       <p class="control-group">
-        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.selected_receipts') %>:</span>
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.bills_collected') %>:</span>
         <span id="bills-cash" class="controls highlighted bolded"><%= @cash_totals.payments %></span>
       </p>
       <p class="control-group">
@@ -28,8 +28,12 @@
         <span id="total-cash" class="controls highlighted bolded"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
       </p>
       <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.invoices_paid') %>:</span>
+        <span id="invoices-paid" class="controls highlighted bolded"><%= @supplier_payments.payments %></span>
+      </p>
+      <p class="control-group">
         <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_paid') %>:</span>
-        <span id="total-paid" class="controls highlighted bolded"><%= number_with_precision(@supplier_payments, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+        <span id="total-paid" class="controls highlighted bolded"><%= number_with_precision(@supplier_payments.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
       </p>
       <p class="control-group">
         <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_others') %>:</span>

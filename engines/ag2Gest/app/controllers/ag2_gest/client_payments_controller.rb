@@ -197,12 +197,22 @@ module Ag2Gest
       invoices_collected = 0
       created_by = current_user.id if !current_user.nil?
       # Data to process
+      # Client payments
       client_payments = ClientPayment.where(id: client_payments_ids)
       first_payment = client_payments.first
       organization = first_payment.bill.organization_id rescue nil
       project = first_payment.bill.project_id rescue nil
       company = project.company_id rescue nil
       office = project.office_id rescue nil
+      # Supplier payments
+      w = ''
+      w = "supplier_payments.organization_id = #{organization} AND " if !organization.nil?
+      w = "supplier_invoices.company_id = #{company} AND " if !company.nil?
+      w = "projects.office_id = #{office} AND " if !office.nil?
+      # w = "supplier_invoices.project_id = #{project} AND " if !project.nil?
+      w += "((payment_methods.flow = 3 OR payment_methods.flow = 2) AND payment_methods.cashier = TRUE)"
+      supplier_payments = SupplierPayment.no_cash_desk_closing_yet(w)
+      # Other cash movements
 
       # Begin the transaction
       begin
@@ -229,6 +239,12 @@ module Ag2Gest
                 break
               end
             end # client_payments.each
+            supplier_payments.each do |sp|
+              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, supplier_payment_id: sp.id, amount: sp.amount * (-1), type_i: 'P')
+              if !item.save
+                break
+              end
+            end # supplier_payments.each
             # Instruments
             currency_instrument_ids.each_with_index do |id, i|
               quantity = currency_instrument_quantities[i].to_i
@@ -1023,8 +1039,9 @@ module Ag2Gest
 
       # Initialize totals
       bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
-      payments_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
+      collections_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
       plans_select = 'count(id) as plans'
+      payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
 
       pending_ids = @bills_pending.map(&:id)
       charged_ids = @bills_charged.map(&:id)
@@ -1036,24 +1053,31 @@ module Ag2Gest
 
       @pending_totals = Bill.select(bills_select).joins(:invoices).where(id: pending_ids).first
       @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
-      @cash_totals = ClientPayment.select(payments_select).where(id: cash_ids).first
-      @bank_totals = ClientPayment.select(payments_select).where(id: bank_ids).first
-      @others_totals = ClientPayment.select(payments_select).where(id: others_ids).first
-      @instalment_invoices_totals = InstalmentInvoice.select(payments_select).where(id: instalment_invoices_ids).first
+      @cash_totals = ClientPayment.select(collections_select).where(id: cash_ids).first
+      @bank_totals = ClientPayment.select(collections_select).where(id: bank_ids).first
+      @others_totals = ClientPayment.select(collections_select).where(id: others_ids).first
+      @instalment_invoices_totals = InstalmentInvoice.select(collections_select).where(id: instalment_invoices_ids).first
 
       @instalments = Instalment.with_these_ids(instalment_ids).paginate(:page => params[:page], :per_page => per_page || 10)
-      @instalments_totals = @instalments.select(payments_select).first
+      @instalments_totals = @instalments.select(collections_select).first
       plan_ids = @instalments.map(&:instalment_plan_id).uniq
       @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
 
-      # Supplier payments & Other cash movements
-      @supplier_payments = 0
+      # Supplier payments
+      w = ''
+      w = "supplier_payments.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+      w = "supplier_invoices.company_id = #{session[:company]} AND " if session[:company] != '0'
+      w = "projects.office_id = #{session[:office]} AND " if session[:office] != '0'
+      w += "((payment_methods.flow = 3 OR payment_methods.flow = 2) AND payment_methods.cashier = TRUE)"
+      @supplier_payments = SupplierPayment.no_cash_desk_closing_yet(w).select(payments_select).first
+
+      # Other cash movements
       @other_cash = 0
 
       # Open last cash desk closing
       @last_cash_desk_closing = open_cash
       @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
-      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments + @other_cash
+      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments.totals + @other_cash
 
       # Currencies & instruments
       @currency = Currency.find_by_alphabetic_code('EUR')

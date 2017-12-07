@@ -20,6 +20,7 @@ es:
         closing_balance: "Saldo de cierre"
         opening_balance: "Saldo de apertura"
         amount_collected: "Importe cobrado"
+        bills_collected: "Recibos cobrados"
         invoices_collected: "Facturas cobradas"
         invoices_collected_c: "F. Co"
         amount_paid: "Importe pagado"

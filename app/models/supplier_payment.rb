@@ -27,6 +27,19 @@ class SupplierPayment < ActiveRecord::Base
                                 :numericality => { :greater_than => 0, :less_than_or_equal_to => :invoice_debt }
   validates :organization,      :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:payment_no) }
+  # Pending of Cash desk closing
+  scope :no_cash_desk_closing_yet, -> w {
+    joins(supplier_invoice: :project)
+    .joins(:payment_method)
+    .joins('LEFT JOIN cash_desk_closing_items ON supplier_payments.id=cash_desk_closing_items.supplier_payment_id')
+    .where(w)
+    .where('cash_desk_closing_items.supplier_payment_id IS NULL')
+    .by_no
+  }
+
+  # Methods
   def full_no
     # Payment no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
     payment_no.blank? ? "" : payment_no[0..3] + '-' + payment_no[4..7] + '-' + payment_no[8..13]

@@ -1445,6 +1445,7 @@ module Ag2Purchase
       @users = User.where('id = ?', current_user.id)
       @is_approver = company_approver(@supplier_invoice, @supplier_invoice.project.company, current_user.id) ||
                      office_approver(@supplier_invoice, @supplier_invoice.project.office, current_user.id) ||
+                     zone_approver(@supplier_invoice, @supplier_invoice.project.office.zone, current_user.id) ||
                      (current_user.has_role? :Approver)
       @companies = @supplier_invoice.organization.blank? ? companies_dropdown : companies_dropdown_edit(@supplier_invoice.organization)
     end

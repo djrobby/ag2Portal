@@ -52,9 +52,9 @@ class PaymentMethod < ActiveRecord::Base
 
   def flow_label
     case flow
-      when 1 then I18n.t('activerecord.attributes.payment_method.flow_1')
-      when 2 then I18n.t('activerecord.attributes.payment_method.flow_2')
-      when 3 then I18n.t('activerecord.attributes.payment_method.flow_3_show')
+      when 1 then I18n.t('activerecord.attributes.payment_method.flow_1')       # Collections
+      when 2 then I18n.t('activerecord.attributes.payment_method.flow_2')       # Payments
+      when 3 then I18n.t('activerecord.attributes.payment_method.flow_3_show')  # Both
       else 'N/A'
     end
   end

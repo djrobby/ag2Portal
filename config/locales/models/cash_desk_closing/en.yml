@@ -20,6 +20,7 @@ en:
         closing_balance: "Closing balance"
         opening_balance: "Opening balance"
         amount_collected: "Amount collected"
+        bills_collected: "Receipts collected"
         invoices_collected: "Invoices collected"
         invoices_collected_c: "I.Co"
         amount_paid: "Amount paid"
