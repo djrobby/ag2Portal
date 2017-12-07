@@ -99,7 +99,7 @@
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => TariffScheme, :path => new_tariff_scheme_path, :txt => t("ag2_gest.tariff_schemes.index.btn_new") } %>
         <!-- Button to trigger modal -->
-        <a href="#new-tariff-pct" role="button" class="btn btn-warning" data-toggle="modal">Nueva esquema desde otro</a>
+        <a href="#new-tariff-pct" role="button" class="btn btn-warning" data-toggle="modal">Nuevo Esquema desde otro</a>
         <br>
         <br>
         <%= link_to t("ag2_gest.tariff_schemes.index.back_to_management"), ag2_gest.tariff_management_path %>
@@ -139,7 +139,7 @@
     </div>
     <div class="modal-footer">
       <%= submit_tag "Crear Esquema", :class => 'btn btn-primary', :id => 'submit_btn' %>
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
 </div>

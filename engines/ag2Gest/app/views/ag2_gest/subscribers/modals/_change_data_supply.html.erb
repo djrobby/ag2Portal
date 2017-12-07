@@ -1,28 +1,21 @@
 <script>
   var text_field_color;
 
-  jQuery(function($) {
-    $('#form_change_data_supply').on('submit', function() {
+  $(document).ready(function(){
+
+  $("#form_change_data_supply")
+    .bind("ajax:success", function(xhr, data, status) {
+      // modal water supply contract hide
       $("#changeDataSupply").modal('hide');
-      window.location.reload();
-      var postal_first_name = $('#fnt_first_name').val();
-      var postal_last_name = $('#fnt_last_name').val();
-      var postal_company = $('#fnt_company').val();
-      var phone = $('#fnt_phone').val();
-      var cellular = $('#fnt_cellular').val();
-      var email = $('#fnt_email').val();
-      var street_type = $('select#fnt_street_type :selected').val();
-      var street_name = $('#fnt_street_name').val();
-      var street_number = $('#fnt_street_number').val();
-      var building = $('#fnt_building').val();
-      var floor = $('#fnt_floor').val();
-      var floor_office = $('#fnt_floor_office').val();
-      var zipcode = $('select#fnt_zipcode :selected').val();
-      var town = $('select#fnt_town :selected').val();
-      var province = $('select#fnt_province :selected').val();
-      var region = $('select#fnt_region :selected').val();
-      var country = $('select#fnt_country :selected').val();
+      location.reload();
+      return;
+    })
+    .bind("ajax:error", function(xhr, data, status) {
+      alert('<%= I18n.t("ag2_gest.contracting_requests.required_error") %>');
     });
+  });
+
+  jQuery(function($) {
     
     // when the #fnt_town field changes
     $("#fnt_town").change(function() {
@@ -82,13 +75,14 @@
 </script>
 
 <div id="changeDataSupply" class="modal hide fade" data-backdrop="static">
-  <%= simple_form_for @subscriber, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_change_data_supply' } do |f| %>
+  <%= simple_form_for @subscriber, :remote => :true, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_change_data_supply' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= I18n.t('activerecord.attributes.subscriber.data_supply') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
+    <%= f.input :id, as: :hidden, input_html: { id: 'fnt_id', :value => @subscriber.id } %>
     <%= f.input :postal_first_name, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_first_name', :value => !@subscriber.postal_first_name.blank? ? @subscriber.postal_first_name : @subscriber.try(:client).try(:first_name) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :postal_last_name, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_last_name', :value => !@subscriber.postal_last_name.blank? ? @subscriber.postal_last_name : @subscriber.try(:client).try(:last_name) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :postal_company, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_company', :value => !@subscriber.postal_company.blank? ? @subscriber.postal_company : @subscriber.try(:client).try(:company) }, :label_html => { :class => 'form-label' } %>
@@ -104,11 +98,11 @@
     <%= f.input :postal_floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor', :value => !@subscriber.postal_floor.blank? ? @subscriber.postal_floor : @subscriber.try(:client).try(:floor) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :postal_floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office', :value => !@subscriber.postal_floor_office.blank? ? @subscriber.postal_floor_office : @subscriber.try(:client).try(:floor_office) }, :label_html => { :class => 'form-label' } %>
 
-    <%= f.association :postal_zipcode, collection: @zipcodes, selected: !@subscriber.postal_zipcode_id.blank? ? @subscriber.postal_zipcode_id : @subscriber.try(:client).try(:zipcode_id), :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_town, collection: @towns, selected: !@subscriber.postal_town_id.blank? ? @subscriber.postal_town_id : @subscriber.try(:client).try(:town_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_province, collection: @provinces, selected: !@subscriber.postal_province_id.blank? ? @subscriber.postal_province_id : @subscriber.try(:client).try(:province_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_region, collection: @regions, selected: !@subscriber.postal_region_id.blank? ? @subscriber.postal_region_id : @subscriber.try(:client).try(:region_id), :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :postal_country, collection: @countries, selected: !@subscriber.postal_country_id.blank? ? @subscriber.postal_country_id : @subscriber.try(:client).try(:country_id), :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_zipcode, collection: @zipcodes, :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_town, collection: @towns, :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_province, collection: @provinces, :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_region, collection: @regions, :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
+    <%= f.association :postal_country, collection: @countries, :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
   </div>
   <div class="modal-footer">
     <%= f.submit t('activerecord.attributes.subscriber.accept'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary" %>

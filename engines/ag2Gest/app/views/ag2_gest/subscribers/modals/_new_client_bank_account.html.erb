@@ -23,25 +23,25 @@ $(document).ready(function() {
 
 jQuery(function($) {
   // when the #client_bank_account_bank field changes
-  $("#client_bank_account_bank_id").change(function() {
+  $("#fnt_bank").change(function() {
     // make a POST call and replace the content
-    var bank = $('select#client_bank_account_bank_id :selected').val();
+    var bank = $('select#fnt_bank :selected').val();
     if (bank == "")
       bank = "0";
     jQuery.getJSON('/ag2_gest/contracting_requests/update_bank_offices_from_bank/' + bank, function(data) {
       var o = data.office;
-      $("#client_bank_account_bank_office_id").html("");
-      $("#client_bank_account_bank_office_id").select2("val", "");
-      $("#client_bank_account_bank_office_id").append($('<option></option>').val("").html(""));
+      $("#fnt_bank_office").html("");
+      $("#fnt_bank_office").select2("val", "");
+      $("#fnt_bank_office").append($('<option></option>').val("").html(""));
       if (!o.length) {
         $.each(data, function(id, option) {
           if (id == 'office' && option != "") {
-            $("#client_bank_account_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+            $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           }
         });
       } else {
         $.each(o, function(id, option) {
-          $("#client_bank_account_bank_office_id").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
+          $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
         });
       }
     });
@@ -49,10 +49,10 @@ jQuery(function($) {
   });
   // when #check_iban_btn is clicked
   $(".check_iban_btn").click(function() {
-    var country = $("#client_bank_account_country_id").val();
+    var country = $("#fnt_bank_country").val();
     var dc = $("#client_bank_account_iban_dc").val();
-    var bank = $("#client_bank_account_bank_id").val();
-    var office = $("#client_bank_account_bank_office_id").val();
+    var bank = $("#fnt_bank").val();
+    var office = $("#fnt_bank_office").val();
     var account = $("#client_bank_account_account_no").val();
     var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'sub_check_iban');
     return false;
@@ -64,7 +64,7 @@ jQuery(function($) {
 
 
 <div id="newAccountModal" class="modal fade" style="display: none;">
-  <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'form-inline' } do |f| %>
+  <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'modal-footer-right form-inline' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
     <div class="modal-header">
@@ -74,18 +74,19 @@ jQuery(function($) {
     </div>
     <div class="modal-body">
       <%= f.input :client_id, :as => :hidden, :input_html => { :value => @subscriber.client_id } %>
-      <%= f.input :subscriber_id, :as => :hidden, :input_html => { :value => @subscriber.id } %>
+      <%= f.input :subscriber_id, :as => :hidden, :input_html => { id: 'fnt_id', :value => @subscriber.id } %>
+
 
       <%= f.association :bank_account_class, required: true, collection: BankAccountClass.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: true %>
 
-      <%= f.input :country_id, :required => true, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :country_id, :required => true, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2", :id => 'fnt_bank_country' }, :label_html => { :class => 'form-label' } %>
 
       <%= f.input :iban_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %>
 
       <!-- BANK -->
-      <%= f.input :bank_id, :required => true, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :bank_id, :required => true, collection: @bank, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4", :id => 'fnt_bank' }, :label_html => { :class => 'form-label' } %>
       <!-- BANK OFFICE -->
-      <%= f.input :bank_office_id, :required => true, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :bank_office_id, :required => true, collection: @bank_offices, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "4", :id => 'fnt_bank_office' }, :label_html => { :class => 'form-label' } %>
 
       <!-- <#%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %> -->
       <%= f.input :account_no, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' } %>

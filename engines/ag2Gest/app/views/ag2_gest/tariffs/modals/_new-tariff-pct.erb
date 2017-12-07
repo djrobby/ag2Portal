@@ -123,7 +123,7 @@
     </div>
     <div class="modal-footer">
       <%= submit_tag "Crear Tarifa", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', :id => 'submit_btn' %>
-      <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
 </div>

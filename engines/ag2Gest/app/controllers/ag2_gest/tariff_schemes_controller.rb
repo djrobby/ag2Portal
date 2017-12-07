@@ -160,52 +160,59 @@ module Ag2Gest
         name: @tariff_scheme_old.name,
         starting_at:  params[:init_date],
         ending_at: nil,
-        tariff_type_id:@tariff_scheme_old.tariff_type_id,
+        tariff_type_id: @tariff_scheme_old.tariff_type_id,
+        use_id: @tariff_scheme_old.use_id,
         created_by: current_user.try(:id),
         updated_by: current_user.try(:id)
       )
+      @new_tariffs = []
       @tariff_scheme_old.tariffs.each do |tariff|
-        Tariff.create(
-          tariff_scheme_id: @tariff_scheme_new.id,
-          billable_item_id: tariff.billable_item_id,
-          tariff_type_id: tariff.tariff_type_id,
-          caliber_id: tariff.caliber_id,
-          billing_frequency_id: tariff.billing_frequency_id,
-          fixed_fee: tariff.fixed_fee + (tariff.fixed_fee * (params["pct_value"].to_f / 100)),
-          variable_fee: tariff.variable_fee + (tariff.variable_fee * (params["pct_value"].to_f / 100)),
-          percentage_fee: tariff.percentage_fee + (tariff.percentage_fee * (params["pct_value"].to_f / 100)),
-          percentage_applicable_formula: tariff.percentage_applicable_formula,
-          block1_limit: tariff.block1_limit,
-          block2_limit: tariff.block2_limit,
-          block3_limit: tariff.block3_limit,
-          block4_limit: tariff.block4_limit,
-          block5_limit: tariff.block5_limit,
-          block6_limit: tariff.block6_limit,
-          block7_limit: tariff.block7_limit,
-          block8_limit: tariff.block8_limit,
-          block1_fee: tariff.block1_fee + (tariff.block1_fee * (params["pct_value"].to_f / 100)),
-          block2_fee: tariff.block2_fee + (tariff.block2_fee * (params["pct_value"].to_f / 100)),
-          block3_fee: tariff.block3_fee + (tariff.block3_fee * (params["pct_value"].to_f / 100)),
-          block4_fee: tariff.block4_fee + (tariff.block4_fee * (params["pct_value"].to_f / 100)),
-          block5_fee: tariff.block5_fee + (tariff.block5_fee * (params["pct_value"].to_f / 100)),
-          block6_fee: tariff.block6_fee + (tariff.block6_fee * (params["pct_value"].to_f / 100)),
-          block7_fee: tariff.block7_fee + (tariff.block7_fee * (params["pct_value"].to_f / 100)),
-          block8_fee: tariff.block8_fee + (tariff.block8_fee * (params["pct_value"].to_f / 100)),
-          discount_pct_f: tariff.discount_pct_f,
-          discount_pct_v: tariff.discount_pct_v,
-          discount_pct_p: tariff.discount_pct_p,
-          discount_pct_b: tariff.discount_pct_b,
-          tax_type_f_id: tariff.tax_type_f_id,
-          tax_type_v_id: tariff.tax_type_v_id,
-          tax_type_p_id: tariff.tax_type_p_id,
-          tax_type_b_id: tariff.tax_type_b_id,
-          connection_fee_a: tariff.connection_fee_a,
-          connection_fee_b: tariff.connection_fee_b
-        )
+        t = Tariff.find(tariff.id)
+        if t.ending_at.blank? || t.ending_at >= Date.today
+          @new_tariffs << Tariff.create(
+            billable_item_id: tariff.billable_item_id,
+            tariff_type_id: tariff.tariff_type_id,
+            caliber_id: tariff.caliber_id,
+            billing_frequency_id: tariff.billing_frequency_id,
+            fixed_fee: tariff.fixed_fee + (tariff.fixed_fee * (params["pct_value"].to_f / 100)),
+            variable_fee: tariff.variable_fee + (tariff.variable_fee * (params["pct_value"].to_f / 100)),
+            percentage_fee: tariff.percentage_fee,
+            percentage_applicable_formula: tariff.percentage_applicable_formula,
+            percentage_fixed_fee: tariff.percentage_fixed_fee,
+            block1_limit: tariff.block1_limit,
+            block2_limit: tariff.block2_limit,
+            block3_limit: tariff.block3_limit,
+            block4_limit: tariff.block4_limit,
+            block5_limit: tariff.block5_limit,
+            block6_limit: tariff.block6_limit,
+            block7_limit: tariff.block7_limit,
+            block8_limit: tariff.block8_limit,
+            block1_fee: tariff.block1_fee + (tariff.block1_fee * (params["pct_value"].to_f / 100)),
+            block2_fee: tariff.block2_fee + (tariff.block2_fee * (params["pct_value"].to_f / 100)),
+            block3_fee: tariff.block3_fee + (tariff.block3_fee * (params["pct_value"].to_f / 100)),
+            block4_fee: tariff.block4_fee + (tariff.block4_fee * (params["pct_value"].to_f / 100)),
+            block5_fee: tariff.block5_fee + (tariff.block5_fee * (params["pct_value"].to_f / 100)),
+            block6_fee: tariff.block6_fee + (tariff.block6_fee * (params["pct_value"].to_f / 100)),
+            block7_fee: tariff.block7_fee + (tariff.block7_fee * (params["pct_value"].to_f / 100)),
+            block8_fee: tariff.block8_fee + (tariff.block8_fee * (params["pct_value"].to_f / 100)),
+            discount_pct_f: tariff.discount_pct_f,
+            discount_pct_v: tariff.discount_pct_v,
+            discount_pct_p: tariff.discount_pct_p,
+            discount_pct_b: tariff.discount_pct_b,
+            tax_type_f_id: tariff.tax_type_f_id,
+            tax_type_v_id: tariff.tax_type_v_id,
+            tax_type_p_id: tariff.tax_type_p_id,
+            tax_type_b_id: tariff.tax_type_b_id,
+            connection_fee_a: tariff.connection_fee_a,
+            connection_fee_b: tariff.connection_fee_b,
+            starting_at: params[:init_date]
+          )
+        end
       end
       respond_to do |format|
         if @tariff_scheme_new.save
-          tariffs = Tariff.availables_to_project_type_document(@tariff_scheme_new.project_id,@tariff_scheme_new.tariff_type_id,2)
+          tariffs = @new_tariffs
+          # tariffs = Tariff.availables_to_project_type_document(@tariff_scheme_new.project_id,@tariff_scheme_new.tariff_type_id,2)
           @tariff_scheme_new.tariffs << tariffs
           @tariff_scheme_old.update_attributes(ending_at: params[:init_date])
           format.html { redirect_to tariff_schemes_path, notice: t('activerecord.attributes.tariff_scheme.create') }

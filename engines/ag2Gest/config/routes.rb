@@ -276,7 +276,13 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/add_bank_account', :controller => 'subscribers', :action => 'add_bank_account', :via => [:post], as: "add_bank_account"
     match 'subscribers/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
     match 'sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
-    match 'subscribers/:id/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
+    match 'subscribers/:id/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'    
+    match 'subscribers/sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
+    match 'sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
+    match 'subscribers/:id/sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
+    match 'subscribers/sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
+    match 'sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
+    match 'subscribers/:id/sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
     #
     # Commercial billing
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
@@ -391,6 +397,7 @@ Ag2Gest::Engine.routes.draw do
     # Resources
     resources :clients
     resources :subscribers do
+      get 'sub_load_postal', on: :collection 
       get 'subscriber_pdf', on: :member
       post 'change_meter', on: :member
       post 'simple_bill', on: :member

@@ -29,7 +29,7 @@ class ClientBankAccount < ActiveRecord::Base
   #                                 :length => { :is => 2 },
   #                                 :format => { with: /\A\d+\Z/, message: :dc_invalid }
   validates :account_no,          :presence => true,
-                                  :length => { :is => 10 },
+                                  :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
                                   :uniqueness => { :scope => [:bank_account_class_id, :country_id,
                                                               :iban_dc, :bank_id, :bank_office_id, :ccc_dc] }
