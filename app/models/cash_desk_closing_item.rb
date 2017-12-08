@@ -6,11 +6,12 @@ class CashDeskClosingItem < ActiveRecord::Base
   belongs_to :cash_desk_closing
   belongs_to :client_payment
   belongs_to :supplier_payment
-  belongs_to :cash_movement_type
+  belongs_to :cash_movement
+  belongs_to :payment_method
 
   attr_accessible :amount, :type_i,
                   :cash_desk_closing_id, :client_payment_id,
-                  :supplier_payment_id, :cash_movement_type_id
+                  :supplier_payment_id, :cash_movement_id, :payment_method_id
 
   def type_label
     case type_i

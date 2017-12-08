@@ -195,7 +195,14 @@ module Ag2Gest
       closing_balance = 0
       amount_collected = 0
       invoices_collected = 0
+      amount_paid = 0
+      invoices_paid = 0
+      amount_others = 0
+      quantity_others = 0
       created_by = current_user.id if !current_user.nil?
+      # SELECT for payment & other totals
+      payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
+      others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
       # Data to process
       # Client payments
       client_payments = ClientPayment.where(id: client_payments_ids)
@@ -212,7 +219,20 @@ module Ag2Gest
       # w = "supplier_invoices.project_id = #{project} AND " if !project.nil?
       w += "((payment_methods.flow = 3 OR payment_methods.flow = 2) AND payment_methods.cashier = TRUE)"
       supplier_payments = SupplierPayment.no_cash_desk_closing_yet(w)
+      supplier_payment_totals = supplier_payments.select(payments_select).first
       # Other cash movements
+      w = ''
+      w = "cash_movements.organization_id = #{organization} AND " if !organization.nil?
+      w = "cash_movements.company_id = #{company} AND " if !company.nil?
+      w = "cash_movements.office_id = #{office} AND " if !office.nil?
+      w += "(payment_methods.cashier = TRUE)"
+      other_movements = CashMovement.no_cash_desk_closing_yet(w)
+      other_movement_totals = other_movements.select(others_select).first
+      # Payment & other totals
+      amount_paid = supplier_payment_totals.totals
+      invoices_paid = supplier_payment_totals.payments
+      amount_others = other_movement_totals.totals
+      quantity_others = other_movement_totals.movements
 
       # Begin the transaction
       begin
@@ -229,22 +249,38 @@ module Ag2Gest
           closing_balance = opening_balance + amount_collected
           # Create cash desk closing
           cash_desk_closing = CashDeskClosing.new(organization_id: organization, company_id: company, office_id: office, project_id: project,
-                                                  opening_balance: opening_balance, closing_balance: closing_balance, amount_collected: amount_collected,
-                                                  invoices_collected: invoices_collected, last_closing_id: last_closing, created_by: created_by)
+                                                  opening_balance: opening_balance, closing_balance: closing_balance, last_closing_id: last_closing,
+                                                  amount_collected: amount_collected, invoices_collected: invoices_collected,
+                                                  amount_paid: amount_paid, invoices_paid: invoices_paid,
+                                                  amount_others: amount_others, quantity_others: quantity_others,
+                                                  created_by: created_by)
           if cash_desk_closing.save
+            #
             # Items
+            #
+            # Client payments (collections)
             client_payments.each do |cp|
-              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type_i: 'C')
+              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type_i: 'C', payment_method_id: cp.payment_method_id)
               if !item.save
                 break
               end
             end # client_payments.each
+            # Supplier payments
             supplier_payments.each do |sp|
-              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, supplier_payment_id: sp.id, amount: sp.amount * (-1), type_i: 'P')
+              item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, supplier_payment_id: sp.id, amount: sp.amount * (-1), type_i: 'P', payment_method_id: sp.payment_method_id)
               if !item.save
                 break
               end
             end # supplier_payments.each
+            # Other movements
+            other_movements.each do |om|
+              if om.cash_desk_closing_item_type_i != 'N/A'
+                item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, cash_movement_id: om.id, amount: om.amount, type_i: om.cash_desk_closing_item_type_i, payment_method_id: om.payment_method_id)
+                if !item.save
+                  break
+                end
+              end
+            end # other_movements.each
             # Instruments
             currency_instrument_ids.each_with_index do |id, i|
               quantity = currency_instrument_quantities[i].to_i
@@ -1042,6 +1078,7 @@ module Ag2Gest
       collections_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
       plans_select = 'count(id) as plans'
       payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
+      others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
 
       pending_ids = @bills_pending.map(&:id)
       charged_ids = @bills_charged.map(&:id)
@@ -1072,7 +1109,12 @@ module Ag2Gest
       @supplier_payments = SupplierPayment.no_cash_desk_closing_yet(w).select(payments_select).first
 
       # Other cash movements
-      @other_cash = 0
+      w = ''
+      w = "cash_movements.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+      w = "cash_movements.company_id = #{session[:company]} AND " if session[:company] != '0'
+      w = "cash_movements.office_id = #{session[:office]} AND " if session[:office] != '0'
+      w += "(payment_methods.cashier = TRUE)"
+      @other_cash = CashMovement.no_cash_desk_closing_yet(w).select(others_select).first
 
       # Open last cash desk closing
       @last_cash_desk_closing = open_cash

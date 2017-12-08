@@ -6,7 +6,7 @@ en:
         one:   Cash movement type
         few:   Cash movement types
         other: Cash movement types
-        check_for_cash_desk_closing_items: "Type cannot be destroyed while linked cash desk closing items exist."
+        check_for_cash_movements: "Type cannot be destroyed while linked cash movements exist."
     attributes:
       cash_movement_type:
         organization: "Organization"

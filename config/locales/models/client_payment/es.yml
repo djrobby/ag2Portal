@@ -43,3 +43,5 @@ es:
         presentation_date: "Fecha de presentación"
         charge_date: "Fecha de cargo"
         return_file: "Archivo de Devoluciones/Rechazos"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"

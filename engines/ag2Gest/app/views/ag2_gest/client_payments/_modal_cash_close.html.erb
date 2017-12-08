@@ -36,8 +36,12 @@
         <span id="total-paid" class="controls highlighted bolded"><%= number_with_precision(@supplier_payments.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
       </p>
       <p class="control-group">
+        <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.quantity_others') %>:</span>
+        <span id="quantity-others" class="controls highlighted bolded"><%= @other_cash.movements %></span>
+      </p>
+      <p class="control-group">
         <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.amount_others') %>:</span>
-        <span id="total-others" class="controls highlighted bolded"><%= number_with_precision(@other_cash, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+        <span id="total-others" class="controls highlighted bolded"><%= number_with_precision(@other_cash.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
       </p>
       <p class="control-group">
         <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.closing_balance') %>:</span>

@@ -5,7 +5,9 @@ class CashDeskClosing < ActiveRecord::Base
   belongs_to :project
 
   attr_accessible :closing_balance, :opening_balance, :last_closing_id,
-                  :amount_collected, :invoices_collected, :amount_paid, :invoices_paid,
+                  :amount_collected, :invoices_collected,
+                  :amount_paid, :invoices_paid,
+                  :amount_others, :quantity_others,
                   :organization_id, :company_id, :office_id, :project_id,
                   :created_by, :updated_by
 

@@ -6,7 +6,7 @@ class CashMovementType < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :code, :name, :type_id, :organization_id
 
-  has_many :cash_desk_closing_items
+  has_many :cash_movements
 
   has_paper_trail
 
@@ -37,9 +37,11 @@ class CashMovementType < ActiveRecord::Base
   scope :inflows_by_organization_u, -> o { where(type_id: 1, organization_id: o) }
   scope :outflows_by_organization_u, -> o { where(type_id: 2, organization_id: o) }
 
+  # Callbacks
   before_destroy :check_for_dependent_records
   before_validation :fields_to_uppercase
 
+  # Methods
   def to_label
     "#{full_name}"
   end
@@ -68,6 +70,14 @@ class CashMovementType < ActiveRecord::Base
     end
   end
 
+  def cash_desk_closing_item_type_i
+    case type_id
+      when 1 then 'C'
+      when 2 then 'P'
+      else 'N/A'
+    end
+  end
+
   private
 
   def fields_to_uppercase
@@ -78,9 +88,9 @@ class CashMovementType < ActiveRecord::Base
 
   # Before destroy
   def check_for_dependent_records
-    # Check for cash desk closing items
-    if cash_desk_closing_items.count > 0
-      errors.add(:base, I18n.t('activerecord.models.cash_movement_type.check_for_cash_desk_closing_items'))
+    # Check for cash movements
+    if cash_movements.count > 0
+      errors.add(:base, I18n.t('activerecord.models.cash_movement_type.check_for_cash_movements'))
       return false
     end
   end

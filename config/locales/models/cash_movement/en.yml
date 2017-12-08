@@ -1,0 +1,32 @@
+en:
+  activerecord:
+    models:
+      cash_movement:
+        zero:  Cash movements
+        one:   Cash movement
+        few:   Cash movements
+        other: Cash movements
+        check_for_cash_desk_closing_items: "Movement cannot be destroyed while linked cash desk closing items exist."
+    attributes:
+      cash_movement:
+        organization: "Organization"
+        organization_id: "Organization"
+        company: "Company"
+        company_id: "Company"
+        office: "Office"
+        office_id: "Office"
+        project: "Project"
+        project_id: "Project"
+        charge_account: "Analytical account"
+        charge_account_id: "Analytical account"
+        cash_movement_type: "Type"
+        cash_movement_type_id: "Type"
+        payment_method: "Payment method"
+        payment_method_id: "Payment method"
+        movement_date: "Date"
+        amount: "Amount"
+        cash_movement_type_full_name: "Type description"
+        cash_movement_type_code: "Type code"
+        cash_movement_type_full_type_label: "Type used for"
+        payment_method_description: "Payment method description"
+        payment_method_flow_label: "Payment method used for"

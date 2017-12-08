@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  cash_movement_type: 
+  payment_method: 
+  charge_account: 
+  movement_date: 2017-12-08
+  amount: 9.99
+
+two:
+  cash_movement_type: 
+  payment_method: 
+  charge_account: 
+  movement_date: 2017-12-08
+  amount: 9.99

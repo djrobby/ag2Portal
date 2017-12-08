@@ -1,0 +1,32 @@
+es:
+  activerecord:
+    models:
+      cash_movement:
+        zero:  Movimientos de caja
+        one:   Movimiento de caja
+        few:   Movimientos de caja
+        other: Movimientos de caja
+        check_for_cash_desk_closing_items: "Movimiento no puede ser eliminado mientras existan ítems de cierre de caja vinculados."
+    attributes:
+      cash_movement:
+        organization: "Organización"
+        organization_id: "Organización"
+        company: "Empresa"
+        company_id: "Empresa"
+        office: "Oficina"
+        office_id: "Oficina"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        charge_account: "Cuenta analítica"
+        charge_account_id: "Cuenta analítica"
+        cash_movement_type: "Tipo"
+        cash_movement_type_id: "Tipo"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        movement_date: "Fecha"
+        amount: "Importe"
+        cash_movement_type_full_name: "Descripción Tipo"
+        cash_movement_type_code: "Código Tipo"
+        cash_movement_type_full_type_label: "Tipo usado para"
+        payment_method_description: "Descripción Forma de pago"
+        payment_method_flow_label: "Forma de pago usada para"

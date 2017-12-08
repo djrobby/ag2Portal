@@ -18,6 +18,10 @@ class PaymentMethod < ActiveRecord::Base
   has_many :payment_types
   has_many :return_payment_types, :class_name => 'PaymentType', foreign_key: "return_payment_method_id"
   has_many :payment_method_ledger_accounts, dependent: :destroy
+  has_many :client_payments
+  has_many :supplier_payments
+  has_many :cash_movements
+  has_many :cash_desk_closing_items
 
   has_paper_trail
 
@@ -34,6 +38,9 @@ class PaymentMethod < ActiveRecord::Base
   scope :payments, -> { where("flow = 3 OR flow = 2").by_description }
   scope :collections_belong_to_organization, -> o { where("(flow = 3 OR flow = 1) AND organization_id = ?", o).by_description }
   scope :payments_belong_to_organization, -> o { where("(flow = 3 OR flow = 2) AND organization_id = ?", o).by_description }
+  scope :used_by_cashier, -> { where("cashier = TRUE").by_description }
+  scope :used_by_cashier_and_organization, -> o { where("organization_id = ? AND cashier = TRUE", o).by_description }
+  scope :collections_used_by_cashier, -> o { where("(flow = 3 OR flow = 1) AND organization_id = ? AND cashier = TRUE", o).by_description }
   scope :payments_used_by_cashier, -> o { where("(flow = 3 OR flow = 2) AND organization_id = ? AND cashier = TRUE", o).by_description }
   scope :collections_used_by_cashier, -> { where("(flow = 3 OR flow = 1) AND cashier = TRUE").by_description }
   scope :collections_by_organization_used_by_cashier, -> o { where("(flow = 3 OR flow = 1) AND organization_id = ? AND cashier = TRUE", o).by_description }
