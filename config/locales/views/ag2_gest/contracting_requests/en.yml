@@ -106,6 +106,8 @@ en:
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       code_error: "Unable to generate Contracting Request Code: No Organization chosen."
+      debt_error: "Este Cliente tiene una deuda total de: "
+      sub_debt_error: "Este Abonado tiene una deuda total de: "
       required_error: "Requiered fields are empty"
       label_subscriber_search: "Search Subscriber to unsubscribe"
       label_service_point_search: "Search Supply point(s)"

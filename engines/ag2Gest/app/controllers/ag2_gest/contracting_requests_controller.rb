@@ -1208,11 +1208,17 @@ module Ag2Gest
     # Update subscriber data if old subscriber exits
     def update_old_subscriber
       @subscriber = Subscriber.find(params[:id])
+      @subscriber_debt = '0'
       service_points = []
       service_point = nil
       service_point_code = ''
       @street_directory = @subscriber.street_directory
       service_point = @subscriber.service_point rescue nil
+      if !@subscriber.blank? and !@subscriber.invoice_debts.unpaid.blank?
+        @subscriber_debt = number_with_precision(@subscriber.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      else
+        @subscriber_debt = '0'
+      end
       if !service_point.nil?
         service_point_code = service_point.code
         search = ServicePoint.search do
@@ -1236,6 +1242,7 @@ module Ag2Gest
                      "region" => @street_directory.town.province.region,
                      "country" => @street_directory.town.province.region.country,
                      "ServicePoint" => service_point_code,
+                     "subscriber_debt" => @subscriber_debt,
                      "service_point" => search_array
                     }
 

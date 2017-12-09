@@ -71,18 +71,18 @@ module Ag2Gest
       @cash_desk_closing = CashDeskClosing.find(params[:id])
       @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
       @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
-   
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @cash_desk_closing }
       end
     end
-    
+
     def close_cash_form
-      # @close_report = CashDeskClosing.find(params[:id])
       @close_cash = CashDeskClosing.find(params[:id])
-      @close_cash_items = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id')
-      #@close_cash_items = @close_cash.cash_desk_closing_items.select('client_payments.payment_method_id AS payment_method,client_payments.invoice_id AS invoice,cash_desk_closing_items.amount AS amount').joins(:client_payment).order('client_payments.payment_method_id')
+      @close_cash_items_client = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
+      @close_cash_items_supplier = @close_cash.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
+      @close_cash_items_movement = @close_cash.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
       @instrument = @close_cash.cash_desk_closing_instruments.by_cu_value_id
       title = t("activerecord.models.cash_desk_closing.few")
         respond_to do |format|

@@ -59,6 +59,18 @@ class CashDeskClosing < ActiveRecord::Base
     cash_desk_closing_items.sum(:amount)
   end
 
+  def total_collections
+    cash_desk_closing_items.where("client_payment_id IS NOT NULL").sum(:amount)
+  end
+
+  def total_payments
+    cash_desk_closing_items.where("supplier_payment_id IS NOT NULL").sum(:amount)
+  end
+
+  def total_cash_movement
+    cash_desk_closing_items.where("cash_movement_id IS NOT NULL").sum(:amount)
+  end
+
   def to_first
     CashDeskClosing.order("id").first
   end

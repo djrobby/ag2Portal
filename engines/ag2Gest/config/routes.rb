@@ -41,6 +41,11 @@ Ag2Gest::Engine.routes.draw do
 
     # Routes for jQuery POSTs
     #
+    # Prereadings
+    match 'pre_readings/update_reading_route_from_period/:id', :controller => 'pre_readings', :action => 'update_reading_route_from_period'
+    match 'update_reading_route_from_period/:id', :controller => 'pre_readings', :action => 'update_reading_route_from_period'
+    match 'pre_readings/:id/update_reading_route_from_period/:id', :controller => 'pre_readings', :action => 'update_reading_route_from_period'
+    #
     # Contract_Templates
     match 'contract_templates/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
     match 'contract_templates/:id/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
@@ -48,6 +53,7 @@ Ag2Gest::Engine.routes.draw do
     match 'contract_templates/:id/update_country_textfield_from_region/:id', :controller => 'contract_templates', :action => 'update_country_textfield_from_region'
     match 'contract_templates/update_region_textfield_from_province/:id', :controller => 'contract_templates', :action => 'update_region_textfield_from_province'
     match 'contract_templates/:id/update_region_textfield_from_province/:id', :controller => 'contract_templates', :action => 'update_region_textfield_from_province'
+    #
     # Clients
     match 'clients/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
     match 'clients/:id/update_province_textfield_from_town/:id', :controller => 'clients', :action => 'update_province_textfield_from_town'
@@ -276,7 +282,7 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/:id/add_bank_account', :controller => 'subscribers', :action => 'add_bank_account', :via => [:post], as: "add_bank_account"
     match 'subscribers/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
     match 'sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
-    match 'subscribers/:id/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'    
+    match 'subscribers/:id/sub_check_iban/:country/:dc/:bank/:office/:account', :controller => 'subscribers', :action => 'sub_check_iban'
     match 'subscribers/sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
     match 'sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
     match 'subscribers/:id/sub_load_postal/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_postal'
@@ -397,7 +403,7 @@ Ag2Gest::Engine.routes.draw do
     # Resources
     resources :clients
     resources :subscribers do
-      get 'sub_load_postal', on: :collection 
+      get 'sub_load_postal', on: :collection
       get 'subscriber_pdf', on: :member
       post 'change_meter', on: :member
       post 'simple_bill', on: :member

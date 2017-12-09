@@ -23,6 +23,7 @@ class CashMovement < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order('cash_movements.movement_date, cash_movements.id') }
+  scope :by_payment, -> { order('cash_movements.payment_method_id, cash_movements.movement_date, cash_movements.id') }
   # Pending of Cash desk closing
   scope :no_cash_desk_closing_yet, -> w {
     joins(:payment_method)
@@ -34,6 +35,7 @@ class CashMovement < ActiveRecord::Base
 
   # Callbacks
   before_destroy :check_for_dependent_records
+  before_save :check_for_amount # must store negative if cash_movement_type.type_id == CashMovementType.OUTFLOW
 
   # Methods
   def cash_movement_type_full_name
@@ -73,6 +75,10 @@ class CashMovement < ActiveRecord::Base
   end
 
   private
+
+  def check_for_amount
+    self.amount = self.amount * (-1) if (cash_movement_type.type_id == CashMovementType.OUTFLOW && self.amount > 0)
+  end
 
   # Before destroy
   def check_for_dependent_records

@@ -5,8 +5,37 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+
+    jQuery(function($) {
+      
+      // when the #pre_period field changes
+      $("#prereading_period").change(function() {
+        // make a POST call and replace the content
+        var contact = $('select#prereading_period :selected').val();
+        if (contact == "")
+          contact = "0";
+        jQuery.getJSON('update_reading_route_from_period/' + contact, function(data) {
+          var rr = data.reading_route;
+          $("#prereading_reading_routes").html("");
+          $("#prereading_reading_routes").select2("val", "");
+          $("#prereading_reading_routes").append($('<option></option>').val("").html(""));
+          if (!rr.length) {
+            $.each(data, function(id, option) {
+              if (id == 'reading_route' && option != "") {
+                $("#prereading_reading_routes").append($('<option></option>').val(option.id).html(option.routing_code.substring(0,4) + "-" + option.routing_code.substring(4,10) + " (" + option.name + ")"));
+              }
+            });
+          } else {
+            $.each(rr, function(id, option) {
+              $("#prereading_reading_routes").append($('<option></option>').val(option.id).html(option.routing_code.substring(0,4) + "-" + option.routing_code.substring(4,10) + " (" + option.name + ")"));
+            });
+          }
+        })
+        return false;
+      });
+    });
   });
-</script>
+  </script>
 
 <%= render '/layouts/ag2_gest/prereadingsbreadcrumb' %>
 
@@ -18,10 +47,10 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
+    <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, :input_html => { :class => "mid-text-field"}, :label_html => { :class => 'form-label' } %>
   </div>
   <div class="span6">
-    <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, :input_html => { :class => "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
   </div>
 </div>
 

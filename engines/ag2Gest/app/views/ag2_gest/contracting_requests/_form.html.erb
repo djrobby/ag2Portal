@@ -449,6 +449,9 @@
       //   $("#subrogation_subscriber_id").val(subscriber)
       // } else {
         jQuery.getJSON('update_old_subscriber/' + subscriber, function(data) {
+          if (data.subscribe_debt != '0'){
+            alert('<%= I18n.t("ag2_gest.contracting_requests.sub_debt_error")%>' + data.subscriber_debt);
+          };
           if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::CANCELLATION %>"){
             $('#contracting_request_entity_fiscal_id').val(data.subscriber.fiscal_id);
             $(".cancellation-field").attr('readonly', true);

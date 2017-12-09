@@ -12,13 +12,31 @@ module Ag2Gest
                                                 :to_pdf,
                                                 :impute_readings,
                                                 :new_impute,
-                                                :to_reading
+                                                :to_reading,
+                                                :update_reading_route_from_period
                                               ]
     def new_impute
       @breadcrumb = 'create'
       @billing_periods = billing_periods_dropdown.select{|b| !b.pre_readings.empty?}
       @reading_routes = reading_routes_dropdown.select{|r| !r.pre_readings.empty?}
       #@pre_readings = 1
+    end
+
+    def update_reading_route_from_period
+      @billing_period = BillingPeriod.find(params[:id])
+      @r_r = PreReading.select(:reading_route_id).where(project_id: current_projects_ids, billing_period_id: @billing_period.id).group(:reading_route_id)
+      _rr = []
+      @r_r.each do |r|
+        _rr << r.reading_route_id
+      end
+      @reading_route = ReadingRoute.find(_rr)
+
+      @json_data = { "reading_route" => @reading_route}
+
+      respond_to do |format|
+        format.html # update_province_textfield.html.erb does not exist! JSON only
+        format.json { render json: @json_data }
+      end
     end
 
     def impute_readings

@@ -9,6 +9,9 @@ en:
     attributes:
       cash_desk_closing:
         id: "Id"
+        number: "No."
+        concept: "Concept"
+        cash_movement: "Other movements"
         organization: "Organization"
         organization_id: "Organization"
         company: "Company"
