@@ -41,3 +41,4 @@ es:
         master_meter: "Contador maestro"
         master_meter_id: "Contador maestro"
         child_meters: "Contadores secundarios"
+        meter_coding_note: "Recuerda que el código de contador debería tener el formato FAAMC000000K y un máximo de 12 caracteres."

@@ -1,5 +1,5 @@
 <tr>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(cash_desk_closing.total_instruments, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cash_desk_closing.total_instruments.blank? %></td>
+  <td align="right"><%= number_with_precision(cash_desk_closing.total_instruments, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cash_desk_closing.total_instruments.blank? %></td>
 <tr>

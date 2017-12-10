@@ -21,6 +21,7 @@
 <!-- Receipt note data -->
 <div class="row-fluid">
 	<div class="span12 track-box">
+  <!-- Header data -->
   <table class="table odd_even_table">
     <tbody>
       <tr>
@@ -51,8 +52,32 @@
       </tr>
     </tbody>
   </table>
-	</div>
+  <!-- Meters -->
+  <% if !@item_meters.blank? %>
+    <h6 class="text-center blue"><%= I18n.t('activerecord.attributes.meter.meter_coding_note') %></h6>
+    <div class="control-group">
+      <table class="table table-condensed">
+        <tbody>
+          <% @item_meters.each do |i| %>
+            <% if i[0].odd? # Odd number: New row %>
+              <tr>
+            <% end %>
+            <td>
+              <%= label_tag i[1], nil, :class => 'form-label' %>
+              <%= text_field_tag :meter_code, i[2], :class => 'x-large-text-field shrinked', maxlength: 12 %>
+            </td>
+            <% if i[0].even? # Even number: Close row %>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+  <!-- Buttons -->
+  <%= submit_tag I18n.t(:confirm), :class => 'btn btn-primary', :id => 'submit_btn' %>
+  <br/><br/>
+	</div> <!-- class="span12 track-box" -->
 </div>
-
 <br/>
 <%= link_to t(".back_to_note"), receipt_note_path(@receipt_note) %>

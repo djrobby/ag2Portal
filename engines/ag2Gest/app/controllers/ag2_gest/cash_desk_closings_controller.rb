@@ -2,7 +2,6 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class CashDeskClosingsController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
     helper_method :sort_column
@@ -51,7 +50,7 @@ module Ag2Gest
             with :created_at, to
           end
         end
-        order_by sort_column, sort_direction
+        order_by sort_column, "desc"
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
@@ -70,7 +69,10 @@ module Ag2Gest
       @breadcrumb = 'read'
       @cash_desk_closing = CashDeskClosing.find(params[:id])
       @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
-      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
+      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
+      # @cash_desk_closing_cash_items_client = @cash_desk_closing.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
+      # @cash_desk_closing_items_supplier = @cash_desk_closing.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
+      # @cash_desk_closing_items_movement = @cash_desk_closing.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
 
       respond_to do |format|
         format.html # show.html.erb
@@ -135,7 +137,7 @@ module Ag2Gest
               with :created_at, to
             end
           end
-          order_by sort_column, sort_direction
+          order_by sort_column, "desc"
           paginate :page => params[:page] || 1, :per_page => per_page || 10
         end
 
@@ -228,7 +230,5 @@ module Ag2Gest
         params[:direction] = session[:direction]
       end
     end
-
-
   end
 end

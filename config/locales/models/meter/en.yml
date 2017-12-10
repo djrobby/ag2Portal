@@ -41,3 +41,4 @@ en:
         master_meter: "Master meter"
         master_meter_id: "Master meter"
         child_meters: "Child meters"
+        meter_coding_note: "Remember that the counter code should have the format BYYMC000000K and a maximum of 12 characters."

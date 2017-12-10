@@ -1,5 +1,13 @@
+<% concept = "" %>
+<% if !item.client_payment_id.blank? %>
+  <% concept = item.try(:client_payment).try(:invoice).try(:full_no)  %>
+<% elsif !item.supplier_payment_id.blank? %>
+  <% concept = item.try(:supplier_payment).try(:supplier_invoice).try(:valid_number)  %>
+<% elsif !item.cash_movement_id.blank? %>
+  <% concept = item.try(:cash_movement).try(:cash_movement_type).try(:code)  %>
+<% end %>    
 <tr>
-  <td><%= item.try(:client_payment).try(:payment_method).try(:to_label) %></td>
-  <td><%= item.try(:client_payment).try(:invoice).try(:full_no)  %></td>
+  <td><%= item.try(:payment_method).try(:to_label) %></td>
+  <td><%= concept %></td>
   <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
 </tr>

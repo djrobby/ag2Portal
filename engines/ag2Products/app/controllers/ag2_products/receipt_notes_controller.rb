@@ -814,6 +814,10 @@ module Ag2Products
       @receipt_note = @item.receipt_note
       @meter_models = meter_models_dropdown
       @calibers = calibers_dropdown
+      @item_meters = []
+      for i in 1..@item.quantity
+        @item_meters = @item_meters << [i, I18n.t('activerecord.attributes.meter.meter_code_f') + " " + i.to_s, ""]
+      end
 
       respond_to do |format|
         format.html # receive_meters.html.erb

@@ -18,3 +18,6 @@ es:
         type_i: "Tipo"
         type_c: "ENTRADA"
         type_p: "SALIDA"
+        payment_method: "Forma de pago"
+        payment_method_id: "Forma de pago"
+        concept: "Concepto"

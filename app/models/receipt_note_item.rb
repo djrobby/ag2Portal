@@ -109,6 +109,10 @@ class ReceiptNoteItem < ActiveRecord::Base
     product.product_family.is_meter || false
   end
 
+  def meter_label
+    I18n.t('activerecord.models.meter.one')
+  end
+
   #
   # Class (self) user defined methods
   #

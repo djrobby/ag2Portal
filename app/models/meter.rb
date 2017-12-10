@@ -37,7 +37,7 @@ class Meter < ActiveRecord::Base
 
   # Current meter coding from 2010:
   # Length must be 12 chars
-  # Format: BYYMCSSSSSSK
+  # Format: BYYMCSSSSSSK (FAAMC000000K)
   # B       ->  Manufacturer (brand) Id (meter_brand.letter_id)
   # YY      ->  Manufacturing year
   # M       ->  Model Id (meter_model.letter_id)

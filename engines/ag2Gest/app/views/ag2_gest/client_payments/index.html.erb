@@ -809,7 +809,7 @@
       $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash
       $("#initial-cash").val("<%= @opening_balance %>");
       $("#bills-cash").html(cp_ids.length);
-      $("#total-cash").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#total-cash").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 

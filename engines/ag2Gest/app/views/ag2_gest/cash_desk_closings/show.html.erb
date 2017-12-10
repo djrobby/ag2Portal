@@ -42,21 +42,33 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.cash_desk_closing.opening_balance' %>:</td>
-      <td><%= number_with_precision(@cash_desk_closing.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td>
+        <%= number_with_precision(@cash_desk_closing.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
+        (<%= number_with_precision(@cash_desk_closing.last_closing.difference_of_balance_due_to_rounding, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>)
+      </td>
       <td><%=t 'activerecord.attributes.cash_desk_closing.closing_balance' %>:</td>
-      <td><%= number_with_precision(@cash_desk_closing.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td class="highlighted bolded">
+        <%= number_with_precision(@cash_desk_closing.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
+        (<%= number_with_precision(@cash_desk_closing.difference_of_balance_due_to_rounding, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>)
+      </td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.cash_desk_closing.invoices_collected' %>:</td>
       <td><%= number_with_precision(@cash_desk_closing.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td><%=t 'activerecord.attributes.cash_desk_closing.amount_collected' %>:</td>
-      <td><%= number_with_precision(@cash_desk_closing.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= number_with_precision(@cash_desk_closing.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.cash_desk_closing.invoices_paid' %>:</td>
       <td><%= number_with_precision(@cash_desk_closing.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td><%=t 'activerecord.attributes.cash_desk_closing.amount_paid' %>:</td>
-      <td><%= number_with_precision(@cash_desk_closing.amount_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= number_with_precision(@cash_desk_closing.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.quantity_others' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.quantity_others, precision: 0, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%=t 'activerecord.attributes.cash_desk_closing.amount_others' %>:</td>
+      <td><%= number_with_precision(@cash_desk_closing.amount_others, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.cash_desk_closing.project' %>:</td>
@@ -76,8 +88,8 @@
 </table>
 
 <div class="container-fluid">
-<!-- Items -->
   <div class="row-fluid">
+    <!-- Items -->
     <div class="span7">
       <% if (@cash_desk_closing_items.count > 0) %>
       <h4><%= t 'activerecord.models.cash_desk_closing_item.zero' %></h4>
@@ -96,7 +108,7 @@
       <% end %>
     </div>
 
-  <!-- Instruments -->
+    <!-- Instruments -->
     <div class="span5">
       <% if (@cash_desk_closing_instruments.count > 0) %>
       <h4><%= t 'activerecord.attributes.cash_desk_closing_instrument.currency_instruments' %></h4>
@@ -116,7 +128,5 @@
     </div>
   </div>
 </div>
-
-
 
 <%= link_to t("ag2_gest.cash_desk_closings.back_to_main_page"), cash_desk_closings_path %>

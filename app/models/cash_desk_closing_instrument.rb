@@ -6,5 +6,6 @@ class CashDeskClosingInstrument < ActiveRecord::Base
 
   validates :quantity,  :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 
-  scope :by_cu_value_id, -> { joins(:currency_instrument).order('currency_instruments.value_i') }
+  # Scopes
+  scope :by_cu_value_id, -> { joins(:currency_instrument).order('currency_instruments.type_i DESC, currency_instruments.value_i ASC') }
 end

@@ -246,8 +246,8 @@ module Ag2Gest
               cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
             end
           end # client_payments.each
-          closing_balance = opening_balance + amount_collected
           # Create cash desk closing
+          closing_balance = opening_balance + amount_collected + amount_paid + amount_others
           cash_desk_closing = CashDeskClosing.new(organization_id: organization, company_id: company, office_id: office, project_id: project,
                                                   opening_balance: opening_balance, closing_balance: closing_balance, last_closing_id: last_closing,
                                                   amount_collected: amount_collected, invoices_collected: invoices_collected,
@@ -1119,7 +1119,7 @@ module Ag2Gest
       # Open last cash desk closing
       @last_cash_desk_closing = open_cash
       @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
-      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments.totals + @other_cash
+      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments.totals + @other_cash.totals
 
       # Currencies & instruments
       @currency = Currency.find_by_alphabetic_code('EUR')

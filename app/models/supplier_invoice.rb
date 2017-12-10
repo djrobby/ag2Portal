@@ -110,6 +110,10 @@ class SupplierInvoice < ActiveRecord::Base
     internal_no.blank? ? id.to_s : internal_no[7..12]
   end
 
+  def valid_number
+    internal_no.blank? ? invoice_no : full_internal_no
+  end
+
   #
   # Calculated fields
   #

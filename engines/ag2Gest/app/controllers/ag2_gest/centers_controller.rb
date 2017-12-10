@@ -2,7 +2,6 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class CentersController < ApplicationController
-
     before_filter :authenticate_user!
     load_and_authorize_resource
     helper_method :sort_column

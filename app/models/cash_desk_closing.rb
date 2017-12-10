@@ -28,6 +28,31 @@ class CashDeskClosing < ActiveRecord::Base
   scope :by_office, -> x { where(office_id: x).by_date }
   scope :by_project, -> x { where(project_id: x).by_date }
 
+  # Methods
+  def difference_of_balance_due_to_rounding
+    closing_balance - closing_balance.round(2)
+  end
+
+  def total_instruments
+    cash_desk_closing_instruments.sum(:amount)
+  end
+
+  def total_items
+    cash_desk_closing_items.sum(:amount)
+  end
+
+  def total_collections
+    cash_desk_closing_items.where("client_payment_id IS NOT NULL").sum(:amount)
+  end
+
+  def total_payments
+    cash_desk_closing_items.where("supplier_payment_id IS NOT NULL").sum(:amount)
+  end
+
+  def total_cash_movement
+    cash_desk_closing_items.where("cash_movement_id IS NOT NULL").sum(:amount)
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -51,26 +76,9 @@ class CashDeskClosing < ActiveRecord::Base
     by_date.last
   end
 
-  def total_instruments
-    cash_desk_closing_instruments.sum(:amount)
-  end
-
-  def total_items
-    cash_desk_closing_items.sum(:amount)
-  end
-
-  def total_collections
-    cash_desk_closing_items.where("client_payment_id IS NOT NULL").sum(:amount)
-  end
-
-  def total_payments
-    cash_desk_closing_items.where("supplier_payment_id IS NOT NULL").sum(:amount)
-  end
-
-  def total_cash_movement
-    cash_desk_closing_items.where("cash_movement_id IS NOT NULL").sum(:amount)
-  end
-
+  #
+  # Records navigator
+  #
   def to_first
     CashDeskClosing.order("id").first
   end
