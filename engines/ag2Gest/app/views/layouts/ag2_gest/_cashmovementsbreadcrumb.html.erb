@@ -1,0 +1,36 @@
+<% content_for :title, "aGestiona2 | ag2ClientPayments" %>
+<% content_for :icon, "/assets/icon/ag2BillCollectionsB.png" %>
+<% content_for :alt, "ag2ClientPayments" %>
+
+<!-- Breadcrumb -->
+<ul class="breadcrumb">
+  <li>
+    <a href="<%= main_app.root_path %>"><i class="icon-home"></i></a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.root_path %>">ag2Gest</a><span class="divider">></span>
+  </li>
+  <li>
+    <a href="<%= ag2_gest.client_payments_path %>"><%=t "ag2_gest.client_payments.index.title" %></a><span class="divider">></span>
+  </li>
+  <% if @cash_movements %>
+  <li>
+    <%=t "ag2_gest.breadcrumb.cash_movements.items" %>
+  </li>
+  <% end %>
+  <% if @cash_movement %>
+  <li>
+    <a href="<%= cash_movements_path %>"><%=t "ag2_gest.breadcrumb.cash_movements.items" %></a><span class="divider">></span>
+  </li>
+  <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
+  <%=t "ag2_gest.breadcrumb.cash_movements.item" %>
+  <% end %>
+  <% if @breadcrumb == 'create' %>
+  <li>
+    <%= t :"breadcrumb.new" %>
+  </li>
+  <% end %>
+  <% end %>
+  <!-- Close -->
+  <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
+</ul>

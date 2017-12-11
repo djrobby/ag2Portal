@@ -1,0 +1,38 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <th><%= t "activerecord.attributes.cash_movement.id" %></th>
+      <th align="center"><%= t :created_at %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.opening_balance_c" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.charges" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.payments" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.others" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.closing_balance_c" %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cash_movements.each do |cash_movement| %>
+      <td><%= cash_movement.id %></td>
+      <td align="center"><%= formatted_timestamp(cash_movement.created_at.utc.getlocal) %></td>
+      <td align="right"><%= number_with_precision(cash_movement.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td align="right"><%= number_with_precision(cash_movement.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_movement.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_movement.amount_others, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_movement.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= render :partial => '/layouts/crud/read', :locals => { :model => CashDeskClosing, :path => cash_movement_path(cash_movement) } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @cash_movements } %>
+

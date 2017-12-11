@@ -23,11 +23,11 @@
   <tbody>
     <% @cash_desk_closings.each do |cash_desk_closing| %>
       <td><%= cash_desk_closing.id %></td>
-      <% if cash_desk_closing == @time_record %>
-        <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at) %></td>
-      <% else %>
-        <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at.utc.getlocal) %></td>
-      <% end %>
+      <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at.utc.getlocal) %></td>
+      <%# if cash_desk_closing == @time_record %>
+        <!--<td align="center"><%#= formatted_timestamp(cash_desk_closing.created_at) %></td>-->
+      <%# else %>
+      <%# end %>
       <td align="right"><%= number_with_precision(cash_desk_closing.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td align="right"><%= number_with_precision(cash_desk_closing.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
       <td align="right"><%= number_with_precision(cash_desk_closing.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>

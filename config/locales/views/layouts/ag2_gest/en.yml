@@ -7,6 +7,9 @@ en:
       cash_desk_closings:
         items: "Cash closings"
         item: "Cash closing"
+      cash_movements:
+        items: "Other cash movements"
+        item: "Movement"
       payment_methods:
         items: "Payment methods"
         item: "Payment method"
