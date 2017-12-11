@@ -196,7 +196,7 @@ module Ag2Admin
       if @company.logo.blank? && !$attachment.avatar.blank?
         @company.logo = $attachment.avatar
       end
-      @company.cache_images
+      # @company.cache_images
 
       respond_to do |format|
         if @company.save
@@ -232,7 +232,7 @@ module Ag2Admin
       if !$attachment.avatar.blank? && $attachment.updated_at > @company.updated_at
         @company.logo = $attachment.avatar
       end
-      @company.cache_images
+      # @company.cache_images
 
       respond_to do |format|
         if @company.update_attributes(params[:company])
@@ -287,7 +287,7 @@ module Ag2Admin
     end
 
     def bank_account_classes_dropdown
-      BankAccountClass.where('id >= ?', 6).order(:id)
+      BankAccountClass.where('id >= ?', BankAccountClass::TODAS).order(:id)
     end
 
     def countries_dropdown

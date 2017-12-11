@@ -85,9 +85,9 @@ module Ag2Gest
 
       # This data is not neccesary & shouldn't be used
       # (don't touch because is used in close_cash_form.pdf.thinreports at 20171210...)
-      @close_cash_items_client = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
-      @close_cash_items_supplier = @close_cash.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
-      @close_cash_items_movement = @close_cash.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
+      # @close_cash_items_client = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
+      # @close_cash_items_supplier = @close_cash.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
+      # @close_cash_items_movement = @close_cash.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
 
       title = t("activerecord.models.cash_desk_closing.few")
         respond_to do |format|

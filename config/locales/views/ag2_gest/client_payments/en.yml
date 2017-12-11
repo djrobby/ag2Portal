@@ -26,6 +26,8 @@ en:
         cash_operations: "Cash operations"
         cash_closing_c: "Closings"
         cash_closing: "Cash closing"
+        other_movements_c: "Movements"
+        other_movements: "Other movements"
         collect_instalments: "Collect instalments"
         back_to_pending: "Back to pending"
         cash: "Cash"

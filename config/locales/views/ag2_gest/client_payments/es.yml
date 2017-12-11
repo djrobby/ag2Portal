@@ -26,6 +26,8 @@ es:
         cash_operations: "Operaciones de caja"
         cash_closing_c: "Cierres"
         cash_closing: "Cerrar caja"
+        other_movements_c: "Movimientos"
+        other_movements: "Otros movimientos"
         collect_instalments: "Cobrar cuotas"
         back_to_pending: "Devolver a pendientes"
         cash: "Caja"
