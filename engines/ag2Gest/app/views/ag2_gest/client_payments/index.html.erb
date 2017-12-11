@@ -387,6 +387,9 @@
           <!-- Have BankAccount? -->
           <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
           <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
+          <!-- Bank -->
+          <%= label_tag "label_bank", I18n.t("activerecord.attributes.client_bank_account.bank"), :class => 'form-label' %>
+          <%= text_field_tag "Bank", params[:Bank], :class => 'x-large-text-field shrinked' %>
           <!-- Bank Order -->
           <%= label_tag "label_bank_order", I18n.t("activerecord.attributes.client_payment.bank_order_no"), :class => 'form-label' %>
           <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
