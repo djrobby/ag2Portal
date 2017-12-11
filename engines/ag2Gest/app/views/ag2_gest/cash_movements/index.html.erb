@@ -1,0 +1,21 @@
+<h1>Listing cash_movements</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @cash_movements.each do |cash_movement| %>
+  <tr>
+    <td><%= link_to 'Show', cash_movement %></td>
+    <td><%= link_to 'Edit', edit_cash_movement_path(cash_movement) %></td>
+    <td><%= link_to 'Destroy', cash_movement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Cash movement', new_cash_movement_path %>

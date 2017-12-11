@@ -4,6 +4,7 @@ es:
       index:
         title: "Cobros"
         btn_new: "Nuevo Cobro"
+        label_bank_account: "¿Tiene cuenta bancaria?"
         back_to_root: "Volver a ag2Gest"
         amount: "Importe"
         payment_method_id: "Forma de pago"

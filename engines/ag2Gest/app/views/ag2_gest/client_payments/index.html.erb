@@ -372,6 +372,9 @@
           <!-- Project -->
           <%= label_tag "label_project", I18n.t("ag2_gest.invoices.index.label_project"), :class => 'form-label' %>
           <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <!-- Period -->
+          <%= label_tag "label_period", I18n.t("ag2_gest.invoices.index.label_period"), :class => 'form-label-under-sel2' %>
+          <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Client -->
           <%= label_tag "label_client", I18n.t("ag2_gest.invoices.index.label_client"), :class => 'form-label-under-sel2' %>
           <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
@@ -381,12 +384,12 @@
           <!-- Street name -->
           <%= label_tag "label_street", I18n.t("ag2_gest.subscribers.index.supply_address"), :class => 'form-label' %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
-          <!-- BankAccount -->
-          <%= label_tag "label_bank_account", I18n.t("ag2_gest.contracting_requests.index.label_bank_account"), :class => 'form-label' %>
+          <!-- Have BankAccount? -->
+          <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
           <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
-          <!-- Period -->
-          <%= label_tag "label_period", I18n.t("ag2_gest.invoices.index.label_period"), :class => 'form-label' %>
-          <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <!-- Bank Order -->
+          <%= label_tag "label_bank_order", I18n.t("activerecord.attributes.client_payment.bank_order_no"), :class => 'form-label' %>
+          <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
           <br /><br />
           <!-- Submit -->
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

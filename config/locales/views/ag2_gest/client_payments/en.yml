@@ -4,11 +4,12 @@ en:
       index:
         title: "Bill Collections"
         btn_new: "New Bill Collection"
+        label_bank_account: "Have bank account?"
         back_to_root: "Back to ag2Gest"
         amount: "Amount"
         payment_method_id: "Payment Method"
         receipt_no: "Lot#"
-        all: "Todos"
+        all: "All"
         total: "Invoices"
         total_consumptions: "Total consumos"
         total_bills: "Total Amount"
