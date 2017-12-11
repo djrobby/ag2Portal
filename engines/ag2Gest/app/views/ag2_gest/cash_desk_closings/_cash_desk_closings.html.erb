@@ -29,9 +29,9 @@
         <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at.utc.getlocal) %></td>
       <% end %>
       <td align="right"><%= number_with_precision(cash_desk_closing.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-      <td align="right"><%= number_with_precision(cash_desk_closing.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-      <td align="right"><%= number_with_precision(cash_desk_closing.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-      <td align="right"><%= number_with_precision(cash_desk_closing.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_desk_closing.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_desk_closing.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+      <td align="right"><%= number_with_precision(cash_desk_closing.amount_others, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
       <td align="right"><%= number_with_precision(cash_desk_closing.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
       <td><%= render :partial => '/layouts/crud/read', :locals => { :model => CashDeskClosing, :path => cash_desk_closing_path(cash_desk_closing) } %></td>
     </tr>

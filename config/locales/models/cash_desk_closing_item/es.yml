@@ -21,3 +21,6 @@ es:
         payment_method: "Forma de pago"
         payment_method_id: "Forma de pago"
         concept: "Concepto"
+        origin_cp: "FC"
+        origin_sp: "FP"
+        origin_om: "OM"

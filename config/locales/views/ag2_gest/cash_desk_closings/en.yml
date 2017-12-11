@@ -2,7 +2,7 @@ en:
   ag2_gest:
     cash_desk_closings:
       index:
-        title: "Bill Collections"
+        title: "Closings"
         btn_new: "New Bill Collection"
         back_to_root: "Back to ag2Gest"
         amount: "Amount"
@@ -38,7 +38,7 @@ en:
         label_from: "Created from"
         label_to: "Created to"
       show:
-        title: "Bill Collection"
+        title: "Closing"
         print: "Print"
         btn_edit: "Edit Bill Collection"
         btn_delete: "Delete Bill Collection"
@@ -62,7 +62,7 @@ en:
         receipt_detail: "We receive the amount of "
         receipt_detail2: ", in payment of the following bill(s):"
         total_bill_payment: "Receipts Charged"
-      back_to_main_page: "Back to Bill Collections"
+      back_to_main_page: "Back to Closings"
       generate_error_payment: "Oops!... You haven't selected the payment method."
       fractionate_error: "<b>Oops!</b> Impossible to defer debt."
       fractionate_ok: "You have successfully created Instalment Plan No. %{var}."

@@ -68,11 +68,8 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @cash_desk_closing = CashDeskClosing.find(params[:id])
-      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
       @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
-      # @cash_desk_closing_cash_items_client = @cash_desk_closing.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
-      # @cash_desk_closing_items_supplier = @cash_desk_closing.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
-      # @cash_desk_closing_items_movement = @cash_desk_closing.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
+      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
 
       respond_to do |format|
         format.html # show.html.erb
@@ -81,11 +78,17 @@ module Ag2Gest
     end
 
     def close_cash_form
+      # Right data to use:
       @close_cash = CashDeskClosing.find(params[:id])
+      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id, cash_desk_closing_items.id')
+      @instrument = @close_cash.cash_desk_closing_instruments.by_cu_value_id
+
+      # This data is not neccesary & shouldn't be used
+      # (don't touch because is used in close_cash_form.pdf.thinreports at 20171210...)
       @close_cash_items_client = @close_cash.cash_desk_closing_items.joins(:client_payment).order('client_payments.payment_method_id, client_payments.bill_id')
       @close_cash_items_supplier = @close_cash.cash_desk_closing_items.joins(:supplier_payment).order('supplier_payments.payment_method_id, supplier_payments.supplier_invoice_id')
       @close_cash_items_movement = @close_cash.cash_desk_closing_items.joins(:cash_movement).order('cash_movements.payment_method_id, cash_movements.id')
-      @instrument = @close_cash.cash_desk_closing_instruments.by_cu_value_id
+
       title = t("activerecord.models.cash_desk_closing.few")
         respond_to do |format|
         format.pdf {

@@ -17,7 +17,8 @@ class CurrencyInstrument < ActiveRecord::Base
                         :uniqueness => { :scope => [:currency_id, :type_i] }
 
   # Scopes
-  scope :by_value, -> { order(type_i: :desc, value_i: :asc) }
+  scope :by_value, -> { order('type_i DESC, value_i ASC') }
+  # scope :by_value, -> { order(type_i: :desc, value_i: :asc) }
   #
   scope :having_currency, -> c { where(currency_id: c).by_value }
 
