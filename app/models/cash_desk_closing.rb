@@ -98,6 +98,7 @@ class CashDeskClosing < ActiveRecord::Base
   searchable do
     integer :id
     integer :office_id
+    integer :company_id
     integer :organization_id
     integer :project_id
     date :created_at

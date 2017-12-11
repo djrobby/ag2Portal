@@ -22,6 +22,7 @@
   </thead>
   <tbody>
     <% @cash_desk_closings.each do |cash_desk_closing| %>
+    <tr>
       <td><%= cash_desk_closing.id %></td>
       <td align="center"><%= formatted_timestamp(cash_desk_closing.created_at.utc.getlocal) %></td>
       <%# if cash_desk_closing == @time_record %>

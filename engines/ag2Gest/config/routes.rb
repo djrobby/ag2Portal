@@ -546,6 +546,7 @@ Ag2Gest::Engine.routes.draw do
     resources :cash_desk_closings do
       get 'close_cash_form', on: :member
     end
+    resources :cash_movements
     #
     resources :formalities
     resources :formality_types

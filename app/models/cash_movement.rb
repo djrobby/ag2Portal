@@ -1,4 +1,6 @@
 class CashMovement < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :cash_movement_type
   belongs_to :payment_method
   belongs_to :organization
@@ -38,12 +40,16 @@ class CashMovement < ActiveRecord::Base
   before_save :check_for_amount # must store negative if cash_movement_type.type_id == CashMovementType.OUTFLOW
 
   # Methods
+  def to_label
+    "#{id.to_s} #{cash_movement_type_code}: #{formatted_amount}"
+  end
+
   def cash_movement_type_full_name
     cash_movement_type.full_name unless cash_movement_type.blank?
   end
 
   def cash_movement_type_code
-    cash_movement_type.code unless cash_movement_type.blank?
+    cash_movement_type.right_code unless cash_movement_type.blank?
   end
 
   def cash_movement_type_full_type_label
@@ -62,6 +68,38 @@ class CashMovement < ActiveRecord::Base
     payment_method.flow_label unless payment_method.blank?
   end
 
+  def formatted_amount
+    formatted_number(amount, 2)
+  end
+
+  def used_in_cash_desk_closing
+    cash_desk_closing_items.count > 0 rescue false
+  end
+
+  def ocop
+    # Organization, Company, Office, Project
+    _ocop = '000'
+    if !organization_id.blank?
+      _ocop = organization_id.to_s.rjust(3, '0')
+    end
+    if !company_id.blank?
+      _ocop += '-' + company_id.to_s.rjust(3, '0')
+    else
+      _ocop += '-000'
+    end
+    if !office_id.blank?
+      _ocop += '-' + office_id.to_s.rjust(3, '0')
+    else
+      _ocop += '-000'
+    end
+    if !project_id.blank?
+      _ocop += '-' + project_id.to_s.rjust(3, '0')
+    else
+      _ocop += '-000'
+    end
+    _ocop
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -72,6 +110,18 @@ class CashMovement < ActiveRecord::Base
     else
       PaymentMethod.used_by_cashier_and_organization(_organization)
     end
+  end
+
+  searchable do
+    integer :id
+    integer :office_id
+    integer :company_id
+    integer :organization_id
+    integer :project_id
+    integer :cash_movement_type_id
+    integer :payment_method_id
+    date :movement_date
+    date :created_at
   end
 
   private

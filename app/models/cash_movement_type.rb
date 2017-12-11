@@ -62,6 +62,10 @@ class CashMovementType < ActiveRecord::Base
     end
   end
 
+  def right_code_and_type_label
+    right_code + '(' + type_label + ')'
+  end
+
   def type_label
     case type_id
       when 1 then I18n.t('activerecord.attributes.cash_movement_type.type_i')

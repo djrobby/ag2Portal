@@ -30,3 +30,4 @@ es:
         cash_movement_type_full_type_label: "Tipo usado para"
         payment_method_description: "Descripción Forma de pago"
         payment_method_flow_label: "Forma de pago usada para"
+        ocop: "OCOP"

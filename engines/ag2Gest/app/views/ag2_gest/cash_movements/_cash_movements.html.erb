@@ -10,26 +10,34 @@
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
-      <th><%= t "activerecord.attributes.cash_movement.id" %></th>
-      <th align="center"><%= t :created_at %></th>
-      <th align="right"><%= t "activerecord.attributes.cash_movement.opening_balance_c" %></th>
-      <th align="right"><%= t "activerecord.attributes.cash_movement.charges" %></th>
-      <th align="right"><%= t "activerecord.attributes.cash_movement.payments" %></th>
-      <th align="right"><%= t "activerecord.attributes.cash_movement.others" %></th>
-      <th align="right"><%= t "activerecord.attributes.cash_movement.closing_balance_c" %></th>
+      <th>Id</th>
+      <th align="center"><%= t "activerecord.attributes.cash_movement.movement_date" %></th>
+      <th><%= t "activerecord.attributes.cash_movement.ocop" %></th>
+      <th><%= t "activerecord.attributes.cash_movement.cash_movement_type" %></th>
+      <th><%= t "activerecord.attributes.cash_movement.payment_method" %></th>
+      <th align="right"><%= t "activerecord.attributes.cash_movement.amount" %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <% @cash_movements.each do |cash_movement| %>
+    <% if !cash_movement.used_in_cash_desk_closing %>
+    <tr class="approved-tr">
+    <% else %>
+    <tr>
+    <% end %>
       <td><%= cash_movement.id %></td>
-      <td align="center"><%= formatted_timestamp(cash_movement.created_at.utc.getlocal) %></td>
-      <td align="right"><%= number_with_precision(cash_movement.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-      <td align="right"><%= number_with_precision(cash_movement.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-      <td align="right"><%= number_with_precision(cash_movement.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-      <td align="right"><%= number_with_precision(cash_movement.amount_others, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
-      <td align="right"><%= number_with_precision(cash_movement.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-      <td><%= render :partial => '/layouts/crud/read', :locals => { :model => CashDeskClosing, :path => cash_movement_path(cash_movement) } %></td>
+      <td align="center"><%= formatted_date(cash_movement.movement_date) unless cash_movement.movement_date.blank? %></td>
+      <td><%= cash_movement.ocop %></td>
+      <td><%= cash_movement.right_code_and_type_label %></td>
+      <td><%= cash_movement.payment_method_description %></td>
+      <td align="right"><%= cash_movement.formatted_amount %></td>
+      <td>
+        <%= render :partial => '/layouts/crud/read', :locals => { :model => CashMovement, :path => cash_movement_path(cash_movement) } %>
+        <%= render :partial => '/layouts/crud/edit', :locals => { :model => CashMovement, :path => edit_cash_movement_path(cash_movement) } %>
+        <%= render :partial => '/layouts/crud/delete', :locals => { :model => CashMovement, :path => cash_movement, :msg => t("activerecord.models.cash_movement.one"), :txt => cash_movement.to_label } %>
+      </td>
+      <td></td>
     </tr>
     <% end %>
   </tbody>
