@@ -12,7 +12,7 @@ module Ag2Admin
 
     # Update expiration and create new (expire_btn)
     def expire
-      expire_type = @tax_type
+      expire_type = TaxType.find(params[:id])
       new_type = TaxType.new
 
       # Create new tax type based on current
@@ -28,6 +28,7 @@ module Ag2Admin
 
       # Update linked tables with the new tax type created
       expire_type.products.where(active: true).update_all(tax_type_id: new_type.id)
+      # Linked ledger accounts
 
       respond_to do |format|
         format.html # expire.html.erb does not exist! JSON only
