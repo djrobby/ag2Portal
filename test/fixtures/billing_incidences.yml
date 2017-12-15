@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  bill: 
+  invoice: 
+  billing_incidence_type: 
+
+two:
+  bill: 
+  invoice: 
+  billing_incidence_type: 

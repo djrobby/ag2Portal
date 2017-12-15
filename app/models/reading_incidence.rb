@@ -4,7 +4,7 @@ class ReadingIncidence < ActiveRecord::Base
   attr_accessible :reading_id, :reading_incidence_type_id, :created_at
 
   def should_estimate?
-    reading_incidence_type.should_estimate ? true : false
+    reading_incidence_type.should_estimate rescue false
   end
 
   #

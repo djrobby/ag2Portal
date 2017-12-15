@@ -20,6 +20,7 @@ class Product < ActiveRecord::Base
   has_many :work_order_items
   has_many :receipt_note_items
   has_many :delivery_note_items
+  has_many :delivery_notes, :through => :delivery_note_items
   has_many :purchase_order_items
   has_many :offer_request_items
   has_many :offer_items
@@ -171,7 +172,7 @@ class Product < ActiveRecord::Base
 
   # Deliveries
   def deliveries
-    delivery_note_items.sum("quantity")
+    delivery_note_items.sum(:quantity)
   end
   def deliveries_price_avg
     delivery_note_items.sum("price") / delivery_note_items.count
@@ -220,6 +221,9 @@ class Product < ActiveRecord::Base
     cnt = deliveries != 0 ? deliveries : 1
     deliveries_costs / cnt
   end
+  def deliveries_last_year
+    delivery_note_items.joins(:delivery_note).where('delivery_notes.delivery_date <= ?', 1.year.ago).sum(:quantity)
+  end
 
   # Inventory counts
   def counts
@@ -234,9 +238,11 @@ class Product < ActiveRecord::Base
     if (initial + stock) == 0
       0
     else
-      deliveries / ((initial + stock) / 2)
+      # Deliveries from 1 year ago
+      deliveries_last_year / ((initial + stock) / 2)
+      # Deliveries from the beginning
+      # deliveries / ((initial + stock) / 2)
     end
-    #deliveries_costs / average_price
   end
 
   #

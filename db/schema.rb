@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171208104456) do
+ActiveRecord::Schema.define(:version => 20171215101633) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -280,6 +280,20 @@ ActiveRecord::Schema.define(:version => 20171208104456) do
   end
 
   add_index "billing_incidence_types", ["code"], :name => "index_billing_incidence_types_on_code"
+
+  create_table "billing_incidences", :force => true do |t|
+    t.integer  "bill_id"
+    t.integer  "invoice_id"
+    t.integer  "billing_incidence_type_id"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "created_by"
+    t.integer  "updated_by"
+  end
+
+  add_index "billing_incidences", ["bill_id"], :name => "index_billing_incidences_on_bill_id"
+  add_index "billing_incidences", ["billing_incidence_type_id"], :name => "index_billing_incidences_on_billing_incidence_type_id"
+  add_index "billing_incidences", ["invoice_id"], :name => "index_billing_incidences_on_invoice_id"
 
   create_table "billing_periods", :force => true do |t|
     t.integer  "project_id"
@@ -2988,9 +3002,9 @@ ActiveRecord::Schema.define(:version => 20171208104456) do
 
   create_table "reading_incidence_types", :force => true do |t|
     t.string   "name"
-    t.boolean  "should_estimate"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.boolean  "should_estimate",              :default => false, :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.boolean  "is_main"
