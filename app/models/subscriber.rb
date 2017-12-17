@@ -211,6 +211,10 @@ class Subscriber < ActiveRecord::Base
     invoice_debts.unpaid.sum(:debt)
   end
 
+  def total_existing_debt
+    invoice_debts.existing_debt.sum(:debt)
+  end
+
   def total_consumption_estimated
     invoices.sum(:consumption_estimated)
   end

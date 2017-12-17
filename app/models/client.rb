@@ -79,18 +79,7 @@ class Client < ActiveRecord::Base
   after_create :should_create_shared_contact, if: :is_contact?
   after_update :should_update_shared_contact, if: :is_contact?
 
-  def total_debt_unpaid
-    invoice_debts.unpaid.sum(:debt)
-  end
-
-  def active_bank_accounts?
-    !client_bank_accounts.where(ending_at: nil).blank?
-  end
-
-  def active_bank_account
-    client_bank_accounts.where(ending_at: nil).order(:starting_at).last
-  end
-
+  # Methods
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -252,8 +241,24 @@ class Client < ActiveRecord::Base
   #
   # Calculated fields
   #
+  def total_debt_unpaid
+    invoice_debts.unpaid.sum(:debt)
+  end
+
+  def total_existing_debt
+    invoice_debts.existing_debt.sum(:debt)
+  end
+
   def active_yes_no
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
+  end
+
+  def active_bank_accounts?
+    !client_bank_accounts.where(ending_at: nil).blank?
+  end
+
+  def active_bank_account
+    client_bank_accounts.where(ending_at: nil).order(:starting_at).last
   end
 
   #
