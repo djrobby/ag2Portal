@@ -94,38 +94,7 @@ class Subscriber < ActiveRecord::Base
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
-  def current_tariffs(_reading_date=nil)
-    unless tariffs.blank?
-      if _reading_date.nil?
-        tariffs.where("subscriber_tariffs.ending_at IS NULL")
-        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
-        .group_by{|t| t.try(:billable_item).try(:biller_id)}
-      else
-        tariffs
-        .where('(? BETWEEN subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at) OR (? >= subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at IS NULL)', _reading_date, _reading_date)
-        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
-        .group_by{|t| t.try(:billable_item).try(:biller_id)}
-      end
-    else
-      []
-    end
-  end
-
-  def tariffs_supply
-    unless tariffs.blank?
-      tariffs
-      .where("subscriber_tariffs.ending_at IS NULL")
-      .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
-      .group_by{|t| t.try(:billable_item).try(:biller_id)}
-    else
-      []
-    end
-  end
-
-  def total_debt_unpaid
-    invoice_debts.unpaid.sum(:debt)
-  end
-
+  # Methods
   def fields_to_uppercase
     if !self.fiscal_id.blank?
       self[:fiscal_id].upcase!
@@ -202,6 +171,48 @@ class Subscriber < ActiveRecord::Base
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
+  end
+
+  #
+  # Tariffs
+  #
+  def current_tariffs(_reading_date=nil)
+    unless tariffs.blank?
+      if _reading_date.nil?
+        tariffs.where("subscriber_tariffs.ending_at IS NULL")
+        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+        .group_by{|t| t.try(:billable_item).try(:biller_id)}
+      else
+        tariffs
+        .where('(? BETWEEN subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at) OR (? >= subscriber_tariffs.starting_at AND subscriber_tariffs.ending_at IS NULL)', _reading_date, _reading_date)
+        .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+        .group_by{|t| t.try(:billable_item).try(:biller_id)}
+      end
+    else
+      []
+    end
+  end
+
+  def tariffs_supply
+    unless tariffs.blank?
+      tariffs
+      .where("subscriber_tariffs.ending_at IS NULL")
+      .sort{|a,b| a.percentage_applicable_formula && b.percentage_applicable_formula ? a.percentage_applicable_formula <=> b.percentage_applicable_formula : a.percentage_applicable_formula ? 1 : -1 }
+      .group_by{|t| t.try(:billable_item).try(:biller_id)}
+    else
+      []
+    end
+  end
+
+  #
+  # Calculated fields
+  #
+  def total_debt_unpaid
+    invoice_debts.unpaid.sum(:debt)
+  end
+
+  def total_consumption_estimated
+    invoices.sum(:consumption_estimated)
   end
 
   #

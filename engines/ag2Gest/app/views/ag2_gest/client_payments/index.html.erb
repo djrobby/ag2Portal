@@ -488,7 +488,10 @@
                       </div>
                     </td>
                     <td align="right" class="button-top">
-                      <%= f.button :submit, t('ag2_gest.client_payments.index.cash'), :class => 'btn btn-primary', id: 'btn-submit-modal-cash' %>
+                      <%= button_tag(type: 'submit', name: 'commit', class: 'btn btn-primary', id: 'btn-submit-modal-cash') do %>
+                        <i class="icon-print icon-white"></i> <%= t('ag2_gest.client_payments.index.cash') %>
+                      <% end %>
+                      <%#= f.button :submit, t('ag2_gest.client_payments.index.cash'), :class => 'btn btn-primary', id: 'btn-submit-modal-cash1' %>
                     </td>
                   </tr>
                 </tbody>
