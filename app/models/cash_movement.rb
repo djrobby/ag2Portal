@@ -56,6 +56,10 @@ class CashMovement < ActiveRecord::Base
     cash_movement_type.type_label unless cash_movement_type.blank?
   end
 
+  def right_code_and_type_label
+    cash_movement_type.right_code_and_type_label unless cash_movement_type.blank?
+  end
+
   def cash_desk_closing_item_type_i
     cash_movement_type.cash_desk_closing_item_type_i unless cash_movement_type.blank?
   end
@@ -126,6 +130,7 @@ class CashMovement < ActiveRecord::Base
 
   private
 
+  # Before save
   def check_for_amount
     self.amount = self.amount * (-1) if (cash_movement_type.type_id == CashMovementType.OUTFLOW && self.amount > 0)
   end
