@@ -1,6 +1,8 @@
-<h1>Editing cash_movement</h1>
+<%= render '/layouts/ag2_gest/cashmovementsbreadcrumb' %>
+
+<h3><%=t '.title' %></h3>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @cash_movement %> |
-<%= link_to 'Back', cash_movements_path %>
+<%= link_to t(".btn_show"), @cash_movement %> |
+<%= link_to t("ag2_gest.cash_movements.back_to_main_page"), cash_movements_path %>

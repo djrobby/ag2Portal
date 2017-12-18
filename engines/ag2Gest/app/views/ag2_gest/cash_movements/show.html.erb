@@ -1,5 +1,26 @@
-<p id="notice"><%= notice %></p>
+<%= render '/layouts/ag2_gest/cashmovementsbreadcrumb' %>
 
+<h3><%= t('.title') %></h3>
+<table class="table">
+  <tbody>
+    <tr>
+      <td><%= t('activerecord.attributes.use.id') %>:</td>
+      <td><%= @use.try(:id) %></td>
+      <td><%= t('activerecord.attributes.use.code') %>:</td>
+      <td class="highlighted bolded"><%= @use.try(:code) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.use.name') %>:</td>
+      <td colspan="3"><%= @use.try(:name) %></td>
+    </tr>
+      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @use } %>
+      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @use } %>
+  </tbody>
+</table>
 
-<%= link_to 'Edit', edit_cash_movement_path(@cash_movement) %> |
-<%= link_to 'Back', cash_movements_path %>
+<%= render partial: '/layouts/crud/update_delete_new', locals:
+{ model: CashMovement, update_path: edit_use_path(@cash_movement), update_txt: t('.btn_edit'),
+delete_path: @cash_movement, delete_txt: t('.btn_delete'), msg: t("activerecord.models.cash_movement.one"), :txt => @cash_movement.code,
+new_path: new_cash_movement_path, new_txt: t('ag2_gest.cash_movements.index.btn_new') } %>
+
+<%= link_to I18n.t('ag2_gest.cash_movements.back_to_main_page'), cash_movements_path %>
