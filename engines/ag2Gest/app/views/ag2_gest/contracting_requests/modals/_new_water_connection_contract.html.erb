@@ -58,7 +58,7 @@
 </script>
 
 <div id="new-water-connection-contract" class="modal fade" style="display: none;">
-  <%= simple_form_for [@contracting_request, @water_connection_contract], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_water_connection_contract' } do |f| %>
+  <%= simple_form_for [@contracting_request, @water_connection_contract], :remote => :true, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_new_water_connection_contract' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
       <h3><%= I18n.t('ag2_gest.contracting_requests.new_water_connection_contract.title') %></h3>

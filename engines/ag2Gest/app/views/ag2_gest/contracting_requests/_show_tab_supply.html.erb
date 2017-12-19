@@ -388,13 +388,9 @@
       if (data.invoice_status_cancellation) {
         if (data.invoice_status_cancellation.id != '1') {
           $("#link-unsubscribe-bill-span").hide();
-          $("#new-subscriber-cancellation").removeClass("disabled");
-          $("#new-subscriber-cancellation").removeClass("hide");
         } else {
           $("#link-unsubscribe-bill-span").show();
           $("#link-unsubscribe-bill-span").text(data.invoice_status_cancellation.code);
-          $("#new-subscriber-cancellation").addClass("disabled");
-          $("#new-subscriber-cancellation").addClass("hide");
         };
       };
 
@@ -514,8 +510,6 @@
         $("#bill-doc").removeClass("hide");
         $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_contract_pdf.pdf");
       };
-      $("#new-subscriber-cancellation").removeClass("hide");
-      $("#new-subscriber-cancellation").addClass("disabled");
       $("#link-unsubscribe-bill-span").show();
       $("#link-unsubscribe-bill-span").text(data.invoice_status_cancellation.code);
       
@@ -777,10 +771,10 @@
     <!-- step 4 -->
     <div class="setup-content" id="step-4">
       <% if @contracting_request.contracting_request_type_id == ContractingRequestType::CANCELLATION %>
-        <% if !@contracting_request.water_supply_contract.blank? and !@contracting_request.water_supply_contract.unsubscribe_bill.blank?  %>
-          <a id="new-subscriber-cancellation" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status_id == InvoiceStatus::PENDING%>" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
+        <% if @contracting_request.old_subscriber.total_debt_unpaid != '0' %>
+          <a id="new-subscriber-cancellation" data-confirm='<%= t('activerecord.attributes.contracting_request.alert_debt') + number_with_precision(@contracting_request.old_subscriber.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",") + t('activerecord.attributes.contracting_request.alert_debt_2')%>' class="btn btn-primary nextBtn" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
         <% else %>
-          <a id="new-subscriber-cancellation" class="btn btn-primary nextBtn hide" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
+          <a id="new-subscriber-cancellation" class="btn btn-primary nextBtn" href="<%= params[:id] %>/new_subscriber_cancellation" data-remote="true"><%= t('activerecord.attributes.contracting_request.cancellation_subscriber') %></a>
         <% end %>
       <% else %>
         <% if !@contracting_request.water_supply_contract.blank? %>

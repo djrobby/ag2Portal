@@ -420,7 +420,7 @@ module Ag2Gest
 
     def sepa_pdf
       @contracting_request = ContractingRequest.find(params[:id])
-      @water_contract = !@contracting_request.water_supply_contract.blank? ? @contracting_request.water_supply_contract : @contracting_request.water_connection_contract
+      @subscriber = @contracting_request.subscriber
       
       title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
       respond_to do |format|
@@ -1905,8 +1905,8 @@ module Ag2Gest
       # @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
       @account_no = @contracting_request.account_no
-      @contracting_request.ccc_dc = @account_no[0..1] unless @account_no.blank?
-      @contracting_request.account_no = @account_no[2..11] unless @account_no.blank?
+      # @contracting_request.ccc_dc = @account_no[0..1] unless @account_no.blank?
+      @contracting_request.account_no = @account_no unless @account_no.blank?
       @contracting_request.contracting_request_status_id = 1
       @contracting_request.created_by = current_user.id if !current_user.nil?
       respond_to do |format|
@@ -1955,8 +1955,8 @@ module Ag2Gest
                 iban_dc: @contracting_request.iban_dc,
                 bank_id: @contracting_request.bank_id,
                 bank_office_id: @contracting_request.bank_office_id,
-                ccc_dc: @contracting_request.account_no[0..1],
-                account_no: @contracting_request.account_no[2..11],
+                # ccc_dc: @contracting_request.account_no[0..1],
+                account_no: @contracting_request.account_no,
                 holder_fiscal_id: @contracting_request.client.fiscal_id,
                 holder_name: @contracting_request.client.to_name)
           else
@@ -1968,8 +1968,8 @@ module Ag2Gest
                 iban_dc: @contracting_request.iban_dc,
                 bank_id: @contracting_request.bank_id,
                 bank_office_id: @contracting_request.bank_office_id,
-                ccc_dc: @contracting_request.account_no[0..1],
-                account_no: @contracting_request.account_no[2..11],
+                # ccc_dc: @contracting_request.account_no[0..1],
+                account_no: @contracting_request.account_no,
                 holder_fiscal_id: @contracting_request.client.fiscal_id,
                 holder_name: @contracting_request.client.to_name)
           end

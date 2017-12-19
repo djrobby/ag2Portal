@@ -23,7 +23,7 @@
       <th><%= t "activerecord.attributes.contracting_request.iban_dc" %>:</th>
       <th><%= t "activerecord.attributes.contracting_request.cb" %>:</th>
       <th><%= t "activerecord.attributes.contracting_request.cs" %>:</th>
-      <th><%= t "activerecord.attributes.contracting_request.ccc_dc" %>:</th>
+      <!-- <th><#%= t "activerecord.attributes.contracting_request.ccc_dc" %>:</th> -->
       <th><%= t "activerecord.attributes.contracting_request.account_no" %>:</th>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
       	<td><%= @contracting_request.try(:iban_dc) %></td>
       	<td><%= @contracting_request.try(:bank).try(:full_name) %></td>
       	<td><%= @contracting_request.try(:bank_office).try(:full_name) %></td>
-      	<td><%= @contracting_request.try(:ccc_dc) %></td>
+      	<!-- <td><#%= @contracting_request.try(:ccc_dc) %></td> -->
       	<td><%= @contracting_request.try(:account_no) %></td>
       </tr>
     </tbody>

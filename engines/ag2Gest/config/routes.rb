@@ -418,6 +418,7 @@ Ag2Gest::Engine.routes.draw do
     resources :clients
     resources :subscribers do
       get 'sub_load_postal', on: :collection
+      get 'sub_sepa_pdf', on: :member
       get 'subscriber_pdf', on: :member
       post 'change_meter', on: :member
       post 'simple_bill', on: :member

@@ -185,7 +185,7 @@ jQuery(function($) {
 </script>
 
 <div id="add-concept" class="modal fade" style="display: none;">
-  <%= simple_form_for [@contracting_request, @water_supply_contract], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_add_concept' } do |f| %>
+  <%= simple_form_for [@contracting_request, @water_supply_contract], :remote => :true, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_add_concept' } do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>
       <h3><%= I18n.t('ag2_gest.contracting_requests.new_water_supply_contract.title') %></h3>

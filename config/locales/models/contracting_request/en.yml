@@ -78,6 +78,8 @@ en:
         subscriber_id: "Abonado que causa baja"
         alert_edit_subscriber_id: "El abonado ha sido editado"
         alert_subscriber_id: "El abonado ha causado baja"
+        alert_debt: "El Abonado tiene una deuda de: "
+        alert_debt_2: ". Are you sure ? "
         subscriber_center: "Núcleo"
         subscriber_center_id: "Núcleo"
         subscriber_building: "Edificio/Bloque"

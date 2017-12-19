@@ -272,7 +272,7 @@
       <div class="span12">
         <a id="sub_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
 
-        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, ag2_gest.sepa_pdf_contracting_request_path(@subscriber.water_supply_contract.contracting_request.id, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber.water_supply_contract.blank? or @subscriber.water_supply_contract.contracting_request.blank? or @subscriber.client.client_bank_accounts.blank?  %>
+        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber.water_supply_contract.blank? or @subscriber.water_supply_contract.contracting_request.blank? or @subscriber.client.client_bank_accounts.blank?  %>
       </div>
       <table class="table table-condensed table-striped shrinked stu">
         <thead>

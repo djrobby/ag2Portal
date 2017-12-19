@@ -32,7 +32,7 @@ jQuery(function($) {
 </script>
 
 <div id="new-subscriber" class="modal fade" style="display: none;">
-  <%= simple_form_for [@contracting_request, @subscriber], :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_subscriber' } do |f| %>
+  <%= simple_form_for [@contracting_request, @subscriber], :remote => :true, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_new_subscriber' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= t('activerecord.attributes.contracting_request.data_subscriber') %></h3>

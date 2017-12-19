@@ -255,9 +255,9 @@ class ContractingRequest < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
       _f += self.account_no.strip
     end
@@ -278,11 +278,11 @@ class ContractingRequest < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f +=  " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
     end
     _f
   end
@@ -301,11 +301,37 @@ class ContractingRequest < ActiveRecord::Base
     if !self.bank_office.blank?
       _f += " " + self.bank_office.code.strip
     end
-    if !self.ccc_dc.blank?
-      _f += " " + self.ccc_dc.strip
-    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
     if !self.account_no.blank?
-      _f += self.account_no[0,2] + " " + self.account_no[2,4] + " " + self.account_no[6,4]
+      _f += " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
+    end
+    if !_f.blank?
+      _f = "IBAN " + _f
+    end
+    _f
+  end
+
+  def p_format_hidden_account
+    _f = ""
+    if !self.country.blank?
+      _f += self.country.code.strip
+    end
+    if !self.iban_dc.blank?
+      _f += self.iban_dc.strip
+    end
+    if !self.bank.blank?
+      _f += " " + self.bank.code.strip
+    end
+    if !self.bank_office.blank?
+      _f += " " + self.bank_office.code.strip
+    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
+    if !self.account_no.blank?
+      _f +=  " " + self.account_no[0,4] + " " + self.account_no[4,2] + self.account_no[6,2].tr(account_no, "*") + " " + self.account_no[8,4].tr(account_no, "*")
     end
     if !_f.blank?
       _f = "IBAN " + _f
@@ -332,7 +358,7 @@ class ContractingRequest < ActiveRecord::Base
 
   # check bank account info
   def data_account?
-    !country_id.blank? && !iban_dc.blank? && !bank_id.blank? && !bank_office_id.blank? && !ccc_dc.blank? && !account_no.blank?
+    !country_id.blank? && !iban_dc.blank? && !bank_id.blank? && !bank_office_id.blank? && !account_no.blank?
   end
 
   # Assign right request no (if current one is empty or already exists)
@@ -385,7 +411,7 @@ class ContractingRequest < ActiveRecord::Base
                               iban_dc: iban_dc,
                               bank_id: bank_id,
                               bank_office_id: bank_office_id,
-                              ccc_dc: ccc_dc,
+                              # ccc_dc: ccc_dc,
                               account_no: account_no,
                               created_by: created_by,
                               holder_fiscal_id: client.fiscal_id,
@@ -498,7 +524,7 @@ class ContractingRequest < ActiveRecord::Base
         iban_dc: client.client_bank_accounts.where(ending_at: nil).last.iban_dc,
         bank_id: client.client_bank_accounts.where(ending_at: nil).last.bank_id,
         bank_office_id: client.client_bank_accounts.where(ending_at: nil).last.bank_office_id,
-        ccc_dc: client.client_bank_accounts.where(ending_at: nil).last.ccc_dc,
+        # ccc_dc: client.client_bank_accounts.where(ending_at: nil).last.ccc_dc,
         created_by: created_by,
         account_no: client.client_bank_accounts.where(ending_at: nil).last.account_no
       )

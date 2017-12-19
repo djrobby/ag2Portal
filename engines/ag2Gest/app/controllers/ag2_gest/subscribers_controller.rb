@@ -26,7 +26,8 @@ module Ag2Gest
                                                 :update_province_textfield_from_town,
                                                 :update_province_textfield_from_zipcode,
                                                 :sub_load_postal,
-                                                :sub_load_bank]
+                                                :sub_load_bank,
+                                                :sub_sepa_pdf]
 
     # Update country text field at view from region select
     def update_country_textfield_from_region
@@ -78,6 +79,17 @@ module Ag2Gest
       respond_to do |format|
         format.html # update_province_textfield.html.erb does not exist! JSON only
         format.json { render json: @json_data }
+      end
+    end
+
+    def sub_sepa_pdf
+      @subscriber = Subscriber.find(params[:id])
+      
+      title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@subscriber.full_code}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
       end
     end
 
@@ -912,7 +924,7 @@ module Ag2Gest
               response_hash[:contracting_request] = @contracting_request
               response_hash[:reading] = @reading
               response_hash[:water_supply_contract] = @contracting_request.water_supply_contract
-              response_hash[:client_bank_accounts] = @subscriber.client.client_bank_accounts.active
+              response_hash[:client_bank_accounts] = ClientBankAccount.where(subscriber_id: @subscriber.id).active.first
               respond_to do |format|
                 format.json { render json: response_hash }
               end

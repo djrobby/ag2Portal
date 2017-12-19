@@ -413,6 +413,13 @@ var_master = WaterSupplyContract.where(:subscriber_id => @water_supply_contract.
 			   					 request_no_master: var_master.last.full_no)
 	end
 	var_title = I18n.t("activerecord.attributes.water_supply_contract.title_contract_subrogation")
+elsif  @contracting_request.contracting_request_type_id == 4
+var_master = WaterSupplyContract.where(subscriber_id: @contracting_request.old_subscriber)
+	if !var_master.last.blank?
+		report.page.values(request_no_c_master: I18n.t("activerecord.attributes.water_supply_contract.master_contract") + ":",
+			   					 request_no_master: var_master.last.full_no)
+	end
+	var_title = I18n.t("activerecord.models.water_supply_contract.one")
 else
 	var_title = I18n.t("activerecord.models.water_supply_contract.one")
 end
