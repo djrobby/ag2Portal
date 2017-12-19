@@ -399,6 +399,20 @@ Ag2Gest::Engine.routes.draw do
     match 'debt_claims/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
     match 'dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
     match 'debt_claims/:id/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
+    #
+    # Cash movements
+    match 'cash_movements/cm_update_selects_from_organization/:org', :controller => 'cash_movements', :action => 'cm_update_selects_from_organization'
+    match 'cm_update_selects_from_organization/:org', :controller => 'cash_movements', :action => 'cm_update_selects_from_organization'
+    match 'cash_movements/:id/cm_update_selects_from_organization/:org', :controller => 'cash_movements', :action => 'cm_update_selects_from_organization'
+    match 'cash_movements/cm_update_selects_from_project/:prj', :controller => 'cash_movements', :action => 'cm_update_selects_from_project'
+    match 'cm_update_selects_from_project/:prj', :controller => 'cash_movements', :action => 'cm_update_selects_from_project'
+    match 'cash_movements/:id/cm_update_selects_from_project/:prj', :controller => 'cash_movements', :action => 'cm_update_selects_from_project'
+    match 'cash_movements/cm_update_selects_from_office/:off', :controller => 'cash_movements', :action => 'cm_update_selects_from_office'
+    match 'cm_update_selects_from_office/:off', :controller => 'cash_movements', :action => 'cm_update_selects_from_office'
+    match 'cash_movements/:id/cm_update_selects_from_office/:off', :controller => 'cash_movements', :action => 'cm_update_selects_from_office'
+    match 'cash_movements/cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
+    match 'cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
+    match 'cash_movements/:id/cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
 
     # Resources
     resources :clients

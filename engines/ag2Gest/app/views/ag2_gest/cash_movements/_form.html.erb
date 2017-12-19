@@ -1,9 +1,259 @@
+<script>
+  $(document).ready(function() {
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    if ($('#cash_movement_movement_date').val() == "") {
+      $('#cash_movement_movement_date').datepicker('setValue', es_date(new Date()));
+    }
+    
+    // Set initial focus
+    $(this).find(".form-label:first").focus();
+  });
+
+  jQuery(function($) {
+    // when the #cash_movement_organization_id field changes
+    $("#cash_movement_organization_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#cash_movement_organization_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('cm_update_selects_from_organization/' + order, function(data) {
+        var p = data.project;
+        var o = data.office
+        var c = data.company;
+        var t = data.type
+        var m = data.payment_method
+        // Project
+        $("#cash_movement_project_id").html("");
+        $("#cash_movement_project_id").select2("val", "");
+        $("#cash_movement_project_id").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'project' && option != "") {
+              $("#cash_movement_project_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+            $("#cash_movement_project_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        // Office
+        $("#cash_movement_office_id").html("");
+        $("#cash_movement_office_id").select2("val", "");
+        $("#cash_movement_office_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'office' && option != "") {
+              $("#cash_movement_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#cash_movement_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        // Company
+        $("#cash_movement_company_id").html("");
+        $("#cash_movement_company_id").select2("val", "");
+        $("#cash_movement_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'company' && option != "") {
+              $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        // Type
+        $("#cash_movement_cash_movement_type_id").html("");
+        $("#cash_movement_cash_movement_type_id").select2("val", "");
+        $("#cash_movement_cash_movement_type_id").append($('<option></option>').val("").html(""));
+        if (!t.length) {
+          $.each(data, function(id, option) {
+            if (id == 'type' && option != "") {
+              $("#cash_movement_cash_movement_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(t, function(id, option) {
+            $("#cash_movement_cash_movement_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        // Payment method
+        $("#cash_movement_payment_method_id").html("");
+        $("#cash_movement_payment_method_id").select2("val", "");
+        $("#cash_movement_payment_method_id").append($('<option></option>').val("").html(""));
+        if (!m.length) {
+          $.each(data, function(id, option) {
+            if (id == 'payment_method' && option != "") {
+              $("#cash_movement_payment_method_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(m, function(id, option) {
+            $("#cash_movement_payment_method_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+      return false;
+    });
+
+    // when the #cash_movement_project_id field changes
+    $("#cash_movement_project_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#cash_movement_project_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('cm_update_selects_from_project/' + order, function(data) {
+        var o = data.office
+        var c = data.company;
+        var o_id = data.office_id
+        var c_id = data.company_id
+        // Office
+        $("#cash_movement_office_id").html("");
+        $("#cash_movement_office_id").select2("val", "");
+        $("#cash_movement_office_id").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function(id, option) {
+            if (id == 'office' && option != "") {
+              $("#cash_movement_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(o, function(id, option) {
+            $("#cash_movement_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        $("#cash_movement_office_id").select2("val", o_id);
+        // Company
+        $("#cash_movement_company_id").html("");
+        $("#cash_movement_company_id").select2("val", "");
+        $("#cash_movement_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'company' && option != "") {
+              $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        $("#cash_movement_company_id").select2("val", c_id);
+      });
+      return false;
+    });
+
+    // when the #cash_movement_office_id field changes
+    $("#cash_movement_office_id").change(function() {
+      // make a POST call and replace the content
+      var order = $('select#cash_movement_office_id :selected').val();
+      if (order == "")
+        order = "0";
+      jQuery.getJSON('cm_update_selects_from_office/' + order, function(data) {
+        var c = data.company;
+        var c_id = data.company_id
+        // Company
+        $("#cash_movement_company_id").html("");
+        $("#cash_movement_company_id").select2("val", "");
+        $("#cash_movement_company_id").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'company' && option != "") {
+              $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#cash_movement_company_id").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        $("#cash_movement_company_id").select2("val", c_id);
+      });
+      return false;
+    });
+
+    // when the #cash_movement_amount field changes
+    $("#cash_movement_amount").change(function() {
+      var num = $('#cash_movement_amount').val();
+      if (num == "") num = "0";
+      var order = $('select#cash_movement_cash_movement_type_id :selected').val();
+      if (order == "") order = "0";
+      // Right formatted for passing as REST parameter
+      num = parseInt(right_number(num, 2) * 100);
+      jQuery.getJSON('cm_format_number/' + num + '/' + order, function(data) {
+        $('#cash_movement_amount').val(data.num);
+      });
+      return false;
+    });
+    
+    // when submit    
+    $(_thisForm).on('submit', function() {
+      // Must change decimal separator, if comma, in numeric fields
+      var num = $('#cash_movement_amount').val().replace(",", ".");
+      $('#cash_movement_amount').val(num);
+    });
+  });
+</script>
+
 <%= simple_form_for @cash_movement, :html => {:class => 'form-vertical well' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :code, input_html: { class: 'large-text-field', maxlength: 3 }, label_html: { class: 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :name, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two">
+    <% if session[:organization] != '0' %>
+    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").order(:name), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.organizations.count > 0 %>
+    <%= f.association :organization, collection: current_user.organizations.order(:name), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :organization, collection: Organization.order(:name), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two"> <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two">
+    <% if session[:office] != '0' %>
+    <%= f.association :office, collection: Office.where("id = ?", "#{session[:office]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.offices.count > 0 %>
+    <%= f.association :office, collection: current_user.offices.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :office, collection: @offices, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+  <label class="multi-field-label-two">
+    <% if session[:company] != '0' %>
+    <%= f.association :company, collection: Company.where("id = ?", "#{session[:company]}").all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% elsif current_user.companies.count > 0 %>
+    <%= f.association :company, collection: current_user.companies.order('name'), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <% else %>
+    <%= f.association :company, collection: @companies, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <% end %>
+  </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :cash_movement_type, collection: @cash_movement_types, input_html: { class: 'large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @cashier_payment_methods, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :movement_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (f.object.movement_date.strftime("%d/%m/%Y") if f.object.movement_date), class: 'mid-text-field date_picker' }, label_html: { class: 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-two"> <%= f.input :amount, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
+</div>
+<div>
+  <label class="multi-field-label-two"> <%= f.association :charge_account, collection: @charge_accounts, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

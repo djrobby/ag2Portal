@@ -4,17 +4,121 @@ module Ag2Gest
   class CashMovementsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
-    # skip_load_and_authorize_resource :only => [:cl_update_textfields_from_organization,
-    #                                            :update_province_textfield_from_town,
-    #                                            :update_province_textfield_from_zipcode,
-    #                                            :update_country_textfield_from_region,
-    #                                            :update_region_textfield_from_province,
-    #                                            :cl_generate_code,
-    #                                            :et_validate_fiscal_id_textfield,
-    #                                            :cl_validate_fiscal_id_textfield,
-    #                                            :check_client_depent_subscribers]
+    skip_load_and_authorize_resource :only => [:cm_update_selects_from_organization,
+                                               :update_province_textfield_from_town,
+                                               :update_province_textfield_from_zipcode,
+                                               :update_country_textfield_from_region,
+                                               :update_region_textfield_from_province,
+                                               :cl_generate_code,
+                                               :et_validate_fiscal_id_textfield,
+                                               :cl_validate_fiscal_id_textfield,
+                                               :check_client_depent_subscribers]
     # Helpers
     helper_method :sort_column
+
+    # Update linked selects at view from organization select
+    def cm_update_selects_from_organization
+      organization = params[:org]
+      if organization != '0'
+        @organization = Organization.find(organization)
+        if @organization.blank?
+          projects = projects_dropdown
+          offices = offices_dropdown
+          companies = companies_dropdown
+          types = cash_movement_types_dropdown
+          payment_methods = cashier_payment_methods_dropdown
+        else
+          projects = projects_dropdown_edit(@organization.id, nil, nil, nil)
+          offices = offices_dropdown_edit(@organization.id)
+          companies = companies_dropdown_edit(@organization.id)
+          types = cash_movement_types_dropdown_edit(@organization.id)
+          payment_methods = cashier_payment_methods_dropdown_edit(@organization.id)
+        end
+      else
+        projects = projects_dropdown
+        offices = offices_dropdown
+        companies = companies_dropdown
+        types = types_dropdown
+        payment_methods = payment_methods_dropdown
+      end
+      # Arrays
+      projects = projects_array(projects)
+      offices = offices_array(offices)
+      companies = companies_array(companies)
+      types = types_array(types)
+      payment_methods = payment_methods_array(payment_methods)
+      # Setup JSON
+      @json_data = { "project" => projects, "office" => offices,
+                     "company" => companies, "type" => types,
+                     "payment_method" => payment_methods }
+      render json: @json_data
+    end
+
+    # Update linked selects at view from project select
+    def cm_update_selects_from_project
+      project = params[:prj]
+      office_id = 0
+      company_id = 0
+      if project != '0'
+        @project = Project.find(project)
+        if @project.blank?
+          offices = offices_dropdown
+          companies = companies_dropdown
+        else
+          offices = @project.office
+          office_id = offices.id
+          companies = @project.company
+          company_id = companies.id
+        end
+      else
+        offices = offices_dropdown
+        companies = companies_dropdown
+      end
+      # Arrays
+      offices = offices_array(offices)
+      companies = companies_array(companies)
+      # Setup JSON
+      @json_data = { "office" => offices, "company" => companies,
+                     "office_id" => office_id, "company_id" => company_id }
+      render json: @json_data
+    end
+
+    # Update linked selects at view from office select
+    def cm_update_selects_from_office
+      office = params[:off]
+      company_id = 0
+      if office != '0'
+        @office = Office.find(office)
+        if @office.blank?
+          companies = companies_dropdown
+        else
+          companies = @office.company
+          company_id = companies.id
+        end
+      else
+        companies = companies_dropdown
+      end
+      # Arrays
+      companies = companies_array(companies)
+      # Setup JSON
+      @json_data = { "company" => companies, "company_id" => company_id }
+      render json: @json_data
+    end
+
+    # Format numbers properly
+    def cm_format_number
+      num = params[:num].to_f / 100
+      type = params[:typ]
+      if type != '0'
+        @type = CashMovementType.find(type)
+        if !@type.blank?
+          num = num * (-1) if (@type.type_id == CashMovementType.OUTFLOW && num > 0)
+        end
+      end
+      num = number_with_precision(num.round(2), precision: 2)
+      @json_data = { "num" => num.to_s }
+      render json: @json_data
+    end
 
     #
     # Default Methods
@@ -93,6 +197,12 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @cash_movement = CashMovement.new
+      @companies = companies_dropdown
+      @offices = offices_dropdown
+      @projects = projects_dropdown
+      @cash_movement_types = cash_movement_types_dropdown
+      @cashier_payment_methods = cashier_payment_methods_dropdown
+      @charge_accounts = []
 
       respond_to do |format|
         format.html # new.html.erb
@@ -104,6 +214,18 @@ module Ag2Gest
     def edit
       @breadcrumb = 'update'
       @cash_movement = CashMovement.find(params[:id])
+      if @cash_movement.organization.blank?
+        @companies = companies_dropdown
+        @offices = offices_dropdown
+        @projects = projects_dropdown
+      else
+        @companies = companies_dropdown_edit(@cash_movement.organization)
+        @offices = offices_dropdown_edit(@cash_movement.organization_id)
+        @projects = projects_dropdown_edit(@cash_movement.organization_id, @cash_movement.company_id, @cash_movement.office_id, @cash_movement.project_id)
+      end
+      @cash_movement_types = cash_movement_types_dropdown
+      @cashier_payment_methods = cashier_payment_methods_dropdown
+      @charge_accounts = []
     end
 
     # POST /cash_movements
@@ -168,11 +290,173 @@ module Ag2Gest
 
     def companies_dropdown
       if session[:company] != '0'
-        [Company.find(session[:company])]
+        Company.where(id: session[:company].to_i)
       elsif session[:organization] != '0'
-        Company.where(organization_id: session[:organization]).order("name")
+        Company.where(organization_id: session[:organization].to_i).order(:name)
       else
-        Company.order("name")
+        Company.order(:name)
+      end
+    end
+
+    def offices_dropdown
+      if session[:office] != '0'
+        Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        offices_by_company(session[:company].to_i)
+      else
+        session[:organization] != '0' ? Office.joins(:company).where(companies: { organization_id: session[:organization].to_i }).order(:name) : Office.order(:name)
+      end
+    end
+
+    def companies_dropdown_edit(_organization)
+      if session[:company] != '0'
+        _companies = Company.where(id: session[:company].to_i)
+      else
+        _companies = _organization.companies.order(:name)
+      end
+    end
+
+    def offices_dropdown_edit(_organization)
+      if session[:office] != '0'
+        _offices = Office.where(id: session[:office].to_i)
+      elsif session[:company] != '0'
+        _offices = offices_by_company(session[:company].to_i)
+      else
+        _offices = Office.joins(:company).where(companies: { organization_id: _organization }).order(:name)
+      end
+    end
+
+    def offices_by_company(_company)
+      Office.where(company_id: _company).order(:name)
+    end
+
+    def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).by_code
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).by_code
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).by_code : Project.by_code
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).by_code
+    end
+
+    def projects_dropdown_edit(_organization, _company, _office, _project)
+      _projects = projects_dropdown
+      if _projects.blank?
+        if !_office.blank?
+          _projects = Project.where(office_id: _office).by_code
+        elsif !_company.blank?
+          _offices = current_user.offices
+          if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+            _projects = Project.where('company_id = ? AND office_id IN (?)', _company, _offices).by_code
+          else
+            _projects = Project.where(company_id: _company).by_code
+          end
+        elsif !_organization.blank?
+          _offices = current_user.offices
+          _companies = current_user.companies
+          if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+            _projects = Project.where('organization_id = ? AND company_id IN (?) AND office_id IN (?)', _organization, _companies, _offices)
+          else
+            _projects = Project.where(organization_id: _organization).by_code
+          end
+        elsif !_project.blank?
+          _projects = Project.where(id: _project)
+        else
+          _offices = current_user.offices
+          _companies = current_user.companies
+          if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+            _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+          else
+            _projects = Project.by_code
+          end
+        end
+      end
+      _projects
+    end
+
+    def cashier_payment_methods_dropdown
+      session[:organization] != '0' ? PaymentMethod.collections_by_organization_used_by_cashier(session[:organization].to_i) : PaymentMethod.collections_used_by_cashier
+    end
+
+    def cashier_payment_methods_dropdown_edit(_organization=nil)
+      !_organization.nil? ? PaymentMethod.collections_by_organization_used_by_cashier(_organization) : PaymentMethod.collections_used_by_cashier
+    end
+
+    def cash_movement_types_dropdown
+      session[:organization] != '0' ? CashMovementType.belongs_to_organization(session[:organization].to_i) : CashMovementType.by_code
+    end
+
+    def cash_movement_types_dropdown_edit(_organization)
+      !_organization.nil? ? CashMovementType.belongs_to_organization(_organization) : CashMovementType.by_code
+    end
+
+    def projects_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def offices_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def companies_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.name]
+      end
+      _array
+    end
+
+    def types_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def payment_methods_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    # Returns _array from _ret table/model filled with _id attribute
+    def ret_array(_array, _ret, _id)
+      if !_ret.nil?
+        _ret.each do |_r|
+          _array = _array << _r.read_attribute(_id) unless _array.include? _r.read_attribute(_id)
+        end
       end
     end
 

@@ -4,23 +4,43 @@
 <table class="table">
   <tbody>
     <tr>
-      <td><%= t('activerecord.attributes.use.id') %>:</td>
-      <td><%= @use.try(:id) %></td>
-      <td><%= t('activerecord.attributes.use.code') %>:</td>
-      <td class="highlighted bolded"><%= @use.try(:code) %></td>
+      <td>Id:</td>
+      <td id="id"><%= @cash_movement.id %></td>
+      <td><%= t('activerecord.attributes.cash_movement.movement_date') %>:</td>
+      <td><%= formatted_date(@cash_movement.movement_date) unless @cash_movement.movement_date.blank? %></td>
     </tr>
     <tr>
-      <td><%= t('activerecord.attributes.use.name') %>:</td>
-      <td colspan="3"><%= @use.try(:name) %></td>
+      <td><%= t('activerecord.attributes.cash_movement.cash_movement_type') %>:</td>
+      <td><%= @cash_movement.right_code_and_type_label unless @cash_movement.cash_movement_type_id.blank? %></td>
+      <td><%= t('activerecord.attributes.cash_movement.payment_method') %>:</td>
+      <td><%= @cash_movement.payment_method_description unless @cash_movement.payment_method_id.blank? %></td>
     </tr>
-      <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @use } %>
-      <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @use } %>
+    <tr>
+      <td><%= t('activerecord.attributes.cash_movement.charge_account') %>:</td>
+      <td><%= @cash_movement.charge_account_description unless @cash_movement.charge_account_id.blank? %></td>
+      <td><%= t('activerecord.attributes.cash_movement.amount') %>:</td>
+      <td class="highlighted bolded"><%= @cash_movement.formatted_amount %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.cash_movement.project') %>:</td>
+      <td><%= @cash_movement.project_description unless @cash_movement.project_id.blank? %></td>
+      <td><%= t('activerecord.attributes.cash_movement.office') %>:</td>
+      <td><%= @cash_movement.office_description unless @cash_movement.office_id.blank? %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.cash_movement.company') %>:</td>
+      <td><%= @cash_movement.company_description unless @cash_movement.company_id.blank? %></td>
+      <td><%= t('activerecord.attributes.cash_movement.organization') %>:</td>
+      <td><%= @cash_movement.organization_description unless @cash_movement.organization_id.blank? %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @cash_movement } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @cash_movement } %>
   </tbody>
 </table>
 
 <%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: CashMovement, update_path: edit_use_path(@cash_movement), update_txt: t('.btn_edit'),
-delete_path: @cash_movement, delete_txt: t('.btn_delete'), msg: t("activerecord.models.cash_movement.one"), :txt => @cash_movement.code,
+{ model: CashMovement, update_path: edit_cash_movement_path(@cash_movement), update_txt: t('.btn_edit'),
+delete_path: @cash_movement, delete_txt: t('.btn_delete'), msg: t("activerecord.models.cash_movement.one"), :txt => @cash_movement.to_label,
 new_path: new_cash_movement_path, new_txt: t('ag2_gest.cash_movements.index.btn_new') } %>
 
 <%= link_to I18n.t('ag2_gest.cash_movements.back_to_main_page'), cash_movements_path %>

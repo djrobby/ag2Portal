@@ -76,6 +76,26 @@ class CashMovement < ActiveRecord::Base
     formatted_number(amount, 2)
   end
 
+  def charge_account_description
+    charge_account.full_name unless charge_account.blank?
+  end
+
+  def project_description
+    project.full_name unless project.blank?
+  end
+
+  def office_description
+    office.name unless office.blank?
+  end
+
+  def company_description
+    company.name unless company.blank?
+  end
+
+  def organization_description
+    organization.name unless organization.blank?
+  end
+
   def used_in_cash_desk_closing
     cash_desk_closing_items.count > 0 rescue false
   end
