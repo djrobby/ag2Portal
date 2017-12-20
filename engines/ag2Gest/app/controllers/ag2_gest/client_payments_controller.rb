@@ -81,6 +81,7 @@ module Ag2Gest
         return
       end
       # If these are invoices, go on from here
+      client_payment = nil
       invoices = Invoice.find_all_by_id(invoice_ids).sort {|a, b| b[:created_at] <=> a[:created_at]}
       acu = amount
       # Receipt No.
@@ -108,12 +109,14 @@ module Ag2Gest
           break
         end
       end
-      redirect_to client_payments_path, notice: "Factura/s traspasadas a Caja."
+      redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
+      # redirect_to client_payments_path, notice: "Recibo/Factura/s traspasados/as a Caja."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar factura/s a Caja."
+      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar recibo/factura/s a Caja."
     end
 
     def cash_instalments(instalment_ids, amount, payment_method)
+      client_payment = nil
       instalments = Instalment.where(id: instalment_ids)
       op = true
       acu = amount
@@ -155,7 +158,8 @@ module Ag2Gest
               break
             end
           end   # instalments.each
-          redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
+          redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
+          # redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
         redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja." and return

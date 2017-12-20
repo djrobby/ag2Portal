@@ -37,6 +37,12 @@ es:
         deferrals: "Aplazamientos"
         pending: "Pendientes"
         charged: "Cobradas"
+        cash_and_receipt: "Cobrar y Justificante"
+        print_receipt: "Justificante"
+        cash_ok: "Recibo/Factura/s traspasados/as a Caja. "
+        cash_error: "¡Error!: Imposible traspasar recibo/factura/s a Caja."
+        click_to_print_receipt: "Click aquí para imprimir Justificante"
+        cash_instalments_ok: "Plazo/s traspasados a Caja. "
       show:
         title: "Cobro"
         btn_edit: "Editar Cobro"

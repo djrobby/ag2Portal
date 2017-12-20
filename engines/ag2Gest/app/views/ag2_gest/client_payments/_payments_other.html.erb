@@ -29,7 +29,7 @@
         <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td>
-          <%= link_to "<i class='icon-print icon-white'></i>".html_safe, payment_receipt_client_payment_path(client_payment, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
+          <%= link_to "<i class='icon-print icon-white'></i>".html_safe, payment_receipt_client_payment_path(client_payment, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: I18n.t('ag2_gest.client_payments.index.print_receipt') %>
         </td>
       </tr>
     <% end %>

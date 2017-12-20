@@ -37,6 +37,12 @@ en:
         deferrals: "Deferrals"
         pending: "Pending"
         charged: "Charged"
+        cash_and_receipt: "Collect & Receipt"
+        print_receipt: "Receipt"
+        cash_ok: "Recibo/Factura/s traspasados/as a Caja. "
+        cash_error: "¡Error!: Imposible traspasar recibo/factura/s a Caja."
+        click_to_print_receipt: "Click here to print Receipt"
+        cash_instalments_ok: "Plazo/s traspasados a Caja. "
       show:
         title: "Bill Collection"
         btn_edit: "Edit Bill Collection"
