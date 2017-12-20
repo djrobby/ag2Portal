@@ -7,6 +7,9 @@ es:
       cash_desk_closings:
         items: "Cierres de Caja"
         item: "Cierre de Caja"
+      cash_movements:
+        items: "Movimientos de caja"
+        item: "Movimiento"
       payment_methods:
         items: "Formas de pago"
         item: "Forma de pago"

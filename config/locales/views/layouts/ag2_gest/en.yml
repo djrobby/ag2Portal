@@ -8,7 +8,7 @@ en:
         items: "Cash closings"
         item: "Cash closing"
       cash_movements:
-        items: "Other cash movements"
+        items: "Cash movements"
         item: "Movement"
       payment_methods:
         items: "Payment methods"
