@@ -21,6 +21,7 @@ es:
         reading_type_id: "Tipo"
         meter_id: "Contador"
         subscriber_id: "Abonado"
+        subscriber: "Abonado"
         reading_route_id: "Ruta"
         reading_route: "Ruta de lectura"
         reading_date: "Fecha"
@@ -55,7 +56,6 @@ es:
         other: "Otros consumos"
         fac: "M3 facturados"
         con: "Consumo medio"
-        subscriber: "Abonado"
         address: "Dirección suministro"
         meter: "Contador"
         period: "Periodo"
@@ -63,7 +63,7 @@ es:
     report:
       reading:
         cod_route: "Cod. ruta"
-        num_route: "Nº ruta"
+        num_route: "Secuencia"
         meter_header: "Contador"
         subs_name: "Abonado"
         read_header_last: "Lect. año ant."

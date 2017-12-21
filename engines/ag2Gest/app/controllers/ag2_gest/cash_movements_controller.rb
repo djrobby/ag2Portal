@@ -65,10 +65,10 @@ module Ag2Gest
           offices = offices_dropdown
           companies = companies_dropdown
         else
-          offices = @project.office
-          office_id = offices.id
-          companies = @project.company
-          company_id = companies.id
+          offices = Office.where(id: @project.office_id)
+          office_id = offices.first.id
+          companies = Company.where(id: @project.company_id)
+          company_id = companies.first.id
         end
       else
         offices = offices_dropdown
@@ -92,8 +92,8 @@ module Ag2Gest
         if @office.blank?
           companies = companies_dropdown
         else
-          companies = @office.company
-          company_id = companies.id
+          companies = Company.where(id: @office.company_id)
+          company_id = companies.first.id
         end
       else
         companies = companies_dropdown
@@ -112,7 +112,7 @@ module Ag2Gest
       if type != '0'
         @type = CashMovementType.find(type)
         if !@type.blank?
-          num = num * (-1) if (@type.type_id == CashMovementType.OUTFLOW && num > 0)
+          num = num * (-1) if (@type.type_id == CashMovementType::OUTFLOW && num > 0)
         end
       end
       num = number_with_precision(num.round(2), precision: 2)
@@ -312,7 +312,7 @@ module Ag2Gest
       if session[:company] != '0'
         _companies = Company.where(id: session[:company].to_i)
       else
-        _companies = _organization.companies.order(:name)
+        _companies = Company.where(organization_id: _organization).by_name
       end
     end
 

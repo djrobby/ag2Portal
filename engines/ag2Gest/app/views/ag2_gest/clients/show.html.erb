@@ -154,7 +154,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
     <tbody>
       <% @bills.each do |bill| %>
       <% bill.invoices.each do |invoice| %>
-      <tr>
+      <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
         <% if invoice.invoice_type_id == InvoiceType::CONTRACT %>
           <td><%= link_to invoice.full_no, invoice_path(invoice) %></td>
         <% else %>

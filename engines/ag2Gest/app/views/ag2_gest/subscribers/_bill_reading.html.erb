@@ -8,15 +8,20 @@
       <div class="span3">
         <%= bill.try(:full_no) %>
       </div>
+      <div class="span1 soft-padding">
+          <span class="blue"><%= bill.invoices.first.invoice_type.code unless bill.invoices.first.invoice_type.blank? %></span>
+          <span class="yellow"><%= bill.invoices.first.invoice_status.code unless bill.invoices.first.invoice_status.blank? %></span>
+          <span class="brown"><%= bill.invoices.first.invoice_operation.code unless bill.invoices.first.invoice_operation.blank? %></span>
+      </div>
       <div class="span1" align="center">
         <%= bill.try(:invoices).try(:first).try(:billing_period).try(:period) %>
       </div>
       <div class="span1" align="center">
         <%= bill.try(:bill_date).strftime("%d/%m/%Y") %>
       </div>
-      <div class="span2">
-        <%= bill.try(:bill_type).try(:name) %>
-      </div>
+      <!-- <div class="span2">
+        <#%= bill.try(:bill_type).try(:name) %>
+      </div> -->
       <div align="right" class="span1">
         <%= number_with_precision(bill.try(:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
@@ -30,9 +35,9 @@
       <div class="accordion-inner">
         <% bill.invoices.each do |invoice| %>
           <table class="table">
-            <div><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:full_no) %></small></div>
-            <div><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
-            <tr>
+            <div class="<%= 'text-error' if invoice.unpaid? %> fields"><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:full_no) %></small></div>
+            <div class="<%= 'text-error' if invoice.unpaid? %> fields"><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
+            <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
               <th><%= t("activerecord.attributes.contracting_request.code") %></th>
               <th><%= t("activerecord.attributes.contracting_request.subcode") %></th>
               <th align="right"><%= t("activerecord.attributes.contracting_request.quantity") %></th>
@@ -44,7 +49,7 @@
               <th align="right"><%= t("activerecord.attributes.contracting_request.total") %></th>
             </tr>
             <% invoice.invoice_items.each do |item| %>
-              <tr>
+              <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
                 <td><%= item.code %></td>
                 <td><%= item.subcode_name %></td>
                 <td align="right"><%= number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
@@ -56,14 +61,14 @@
                 <td align="right"><%= number_with_precision(item.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
             <% end %>
-            <tr class="subtotal">
+            <tr class="subtotal <%= 'text-error' if invoice.unpaid? %> fields">
               <td colspan="7" class="no-boder"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
               <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
             <% invoice.tax_breakdown.each do |tax| %>
               <% if tax[0] != TaxType.exempt.tax %>
-                <tr>
+                <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
                   <td colspan="5" class="no-boder"></td>
                   <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp;  <%= number_with_precision(tax[1], precision: 4, delimiter: I18n.locale == :es ? "." : ",")  %></td>
                   <td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>
@@ -72,7 +77,7 @@
                 </tr>
               <% end %>
             <% end %>
-            <tr>
+            <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
               <td colspan="7" class="black-border"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
               <td  align="right" class="black-border"><%= number_with_precision(invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>

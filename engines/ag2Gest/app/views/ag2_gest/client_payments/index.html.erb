@@ -393,6 +393,9 @@
           <!-- Bank Order -->
           <%= label_tag "label_bank_order", I18n.t("activerecord.attributes.client_payment.bank_order_no"), :class => 'form-label' %>
           <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
+          <!-- User -->
+          <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label' %>
+          <%= text_field_tag "User", params[:User], :class => 'x-large-text-field shrinked' %>
           <br /><br />
           <!-- Submit -->
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

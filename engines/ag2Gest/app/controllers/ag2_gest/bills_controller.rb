@@ -456,7 +456,12 @@ module Ag2Gest
       @billing_periods = billing_periods_dropdown #.select{|b| b.pre_readings.empty?}
       @uses = uses_dropdown
       @reading_routes = reading_routes_dropdown #.select{|r| r.pre_readings.empty?}
-      @centers = Center.all
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       # @bill = Bill.new
 
       # respond_to do |format|

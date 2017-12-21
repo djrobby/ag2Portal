@@ -10,14 +10,14 @@
       <table class="table table-condensed table-striped shrinked stu">
         <thead>
           <tr>
-            <th>Ruta</th>
-            <th>Nº ruta</th>
-            <th>Abonado</th>
-            <th>Dirección suministro</th>
-            <th>Contador</th>
-            <th>Periodo</th>
-            <th>Lec. año ant.</th>
-            <th>Lec. per. ant.</th>
+            <th><%= t("activerecord.attributes.pre_reading.route") %></th>
+            <th align="right"><%= t("activerecord.attributes.pre_reading.reading_seq") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.subscriber_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.delivery_address") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.billing_period_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_2") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_1") %></th>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
                 <td>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
                 </td>
-                <td>
+                <td align="right">
                   <%= pre_reading.reading_sequence %>
                 </td>
                 <td>
@@ -57,7 +57,7 @@
       <%= link_to "Imprimir", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %>
-      <a data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+      <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
     </div>
   </div>
   <br>

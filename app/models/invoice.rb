@@ -339,10 +339,10 @@ class Invoice < ActiveRecord::Base
   end
 
   def unpaid?
-    if payday_limit.nil?
-      false
-    else
+    if invoice_status_id == InvoiceStatus::PENDING && !payday_limit.nil?
       payday_limit < Date.today
+    else
+      false
     end
   end
 

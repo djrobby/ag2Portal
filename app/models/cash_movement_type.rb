@@ -63,7 +63,11 @@ class CashMovementType < ActiveRecord::Base
   end
 
   def right_code_and_type_label
-    right_code + '(' + type_label + ')'
+    right_code + ' (' + type_label + ')'
+  end
+
+  def full_name_and_type_label
+    full_name + ' (' + type_label + ')'
   end
 
   def type_label

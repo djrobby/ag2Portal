@@ -921,7 +921,7 @@
     <%= f.association :subscriber_region, collection: @regions, :readonly => true, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- SUBSCRIBER country -->
     <%= f.association :subscriber_country, collection: @countries, :readonly => true, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
-    <%= f.association :subscriber_center, :readonly => true, collection: Center.all(order: 'name'), :input_html => { :class => 'center-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_center, :readonly => true, collection: @centers, :input_html => { :class => 'center-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>
 

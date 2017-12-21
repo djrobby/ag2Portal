@@ -130,6 +130,12 @@ module Ag2Gest
       @offices = offices_dropdown
       @reading_routes = reading_routes_dropdown
       @zipcodes = zipcodes_dropdown
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
 
       respond_to do |format|
         format.html # new.html.erb
@@ -145,6 +151,12 @@ module Ag2Gest
       @offices = @service_point.organization.blank? ? offices_dropdown : offices_dropdown_edit(@service_point.organization_id)
       @reading_routes = reading_routes_dropdown
       @zipcodes = zipcodes_dropdown
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
     end
 
     # POST /service

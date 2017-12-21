@@ -604,7 +604,7 @@
     <!-- CONNECTION country -->
     <%= f.association :subscriber_country, collection: @countries, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- CONNECTION center -->
-    <%= f.association :subscriber_center, collection: Center.all(order: 'name'), :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_center, collection: @centers, :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>
 

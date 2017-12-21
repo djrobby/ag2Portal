@@ -8,8 +8,8 @@ en:
         other: Invoice statuses
     attributes:
       invoice_status:
-        successfully: "Invoice status se ha actualizado correctamente."
-        create: "Invoice status se ha creado correctamente."
+        successfully: "Invoice status has been updated successfully."
+        create: "Invoice status has been created successfully."
         id: "Id"
         name: "Description"
         code_1: "P"
@@ -17,4 +17,5 @@ en:
         code_3: "B"
         code_4: "R"
         code_5: "I"
+        code_6: "O"
         code_99: "X"

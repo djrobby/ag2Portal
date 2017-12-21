@@ -148,7 +148,7 @@
 <% if @bills and @bills.first.bill_id.nil? %>
   <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
 <% end %>
-<a data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" href="<%= show_pre_bills_bills_path(:pre_group => @bills.first.pre_group_no,format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+<a href="<%= show_pre_bills_bills_path(:pre_group => @bills.first.pre_group_no,format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
 
 <br/><br/>
 

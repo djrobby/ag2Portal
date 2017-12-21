@@ -128,12 +128,13 @@
         <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
         <%= label_tag I18n.t("ag2_gest.cash_desk_closings.index.label_to"), nil, :class => 'form-label' %>
         <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
-        <br><br>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <!-- Buttons -->
+        <%= render :partial => '/layouts/crud/new', :locals => { :model => CashMovement, :path => new_cash_movement_path, :txt => t(".btn_new") } %>
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
         <br /><br />

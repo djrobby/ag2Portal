@@ -1797,6 +1797,12 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       @street_types = StreetType.order(:street_type_code)
       @towns = towns_dropdown
       @provinces = provinces_dropdown
@@ -1823,6 +1829,12 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       @street_types = StreetType.order(:street_type_code)
       @towns = towns_dropdown
       @provinces = provinces_dropdown
@@ -1850,6 +1862,12 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices.group(:town_id).pluck(:town_id)
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       @street_types = StreetType.order(:street_type_code)
       @towns = towns_dropdown
       @provinces = provinces_dropdown
@@ -1871,6 +1889,12 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = [@contracting_request.service_point]
       @offices = current_offices.group(:town_id).pluck(:town_id)
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       @street_types = StreetType.order(:street_type_code)
       @towns = towns_dropdown
       @provinces = provinces_dropdown
@@ -1891,6 +1915,12 @@ module Ag2Gest
       # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
       @offices = current_offices.group(:town_id).pluck(:town_id)
+      if session[:office] != '0'
+        @office_center = Office.find(session[:office])
+        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
+      else
+        @centers = Center.all(order: 'name')
+      end
       @street_types = StreetType.order(:street_type_code)
       @towns = towns_dropdown
       @provinces = provinces_dropdown

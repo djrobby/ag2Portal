@@ -5,6 +5,7 @@ class InvoiceStatus < ActiveRecord::Base
   BANK = 3
   REFUND = 4
   FRACTIONATED = 5
+  OTHER = 6
   CHARGED = 99
 
   attr_accessible :name
@@ -31,6 +32,7 @@ class InvoiceStatus < ActiveRecord::Base
     when 3 then I18n.t('activerecord.attributes.invoice_status.code_3')
     when 4 then I18n.t('activerecord.attributes.invoice_status.code_4')
     when 5 then I18n.t('activerecord.attributes.invoice_status.code_5')
+    when 6 then I18n.t('activerecord.attributes.invoice_status.code_6')
     when 99 then I18n.t('activerecord.attributes.invoice_status.code_99')
     end
   end

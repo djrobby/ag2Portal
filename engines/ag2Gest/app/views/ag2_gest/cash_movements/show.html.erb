@@ -11,7 +11,7 @@
     </tr>
     <tr>
       <td><%= t('activerecord.attributes.cash_movement.cash_movement_type') %>:</td>
-      <td><%= @cash_movement.right_code_and_type_label unless @cash_movement.cash_movement_type_id.blank? %></td>
+      <td><%= @cash_movement.full_name_and_type_label unless @cash_movement.cash_movement_type_id.blank? %></td>
       <td><%= t('activerecord.attributes.cash_movement.payment_method') %>:</td>
       <td><%= @cash_movement.payment_method_description unless @cash_movement.payment_method_id.blank? %></td>
     </tr>
