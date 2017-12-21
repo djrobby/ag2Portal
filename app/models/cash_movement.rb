@@ -100,7 +100,7 @@ class CashMovement < ActiveRecord::Base
     organization.name unless organization.blank?
   end
 
-  def used_in_cash_desk_closing
+  def used_in_cash_desk_closing?
     cash_desk_closing_items.count > 0 rescue false
   end
 

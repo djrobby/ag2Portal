@@ -21,7 +21,7 @@
   </thead>
   <tbody>
     <% @cash_movements.each do |cash_movement| %>
-    <% if !cash_movement.used_in_cash_desk_closing %>
+    <% if cash_movement.used_in_cash_desk_closing? %>
     <tr class="approved-tr">
     <% else %>
     <tr>

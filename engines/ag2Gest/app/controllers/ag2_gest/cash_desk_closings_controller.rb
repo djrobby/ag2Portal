@@ -25,10 +25,7 @@ module Ag2Gest
       @companies = companies_dropdown if @companies.nil?
 
       @search = CashDeskClosing.search do
-        with :project_id, current_projects_ids unless current_projects_ids.blank?
-        if !params[:search].blank?
-          fulltext params[:search]
-        end
+        with :project_id, @project_ids unless @project_ids.blank?
         if !project.blank?
           with :project_id, project
         end
