@@ -1079,6 +1079,7 @@ module Ag2Gest
 
       # Initialize totals
       bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
+      pending_bills_select = 'count(bills.id) as bills, coalesce(sum(invoice_current_debts.debt),0) as debts'
       collections_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
       plans_select = 'count(id) as plans'
       payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
@@ -1092,7 +1093,7 @@ module Ag2Gest
       instalment_invoices_ids = @instalment_invoices.map(&:id)
       instalment_ids = @instalment_invoices.map(&:instalment_id).uniq
 
-      @pending_totals = Bill.select(bills_select).joins(:invoices).where(id: pending_ids).first
+      @pending_totals = Bill.select(pending_bills_select).joins(:invoice_current_debts).where(id: pending_ids).first
       @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
       @cash_totals = ClientPayment.select(collections_select).where(id: cash_ids).first
       @bank_totals = ClientPayment.select(collections_select).where(id: bank_ids).first
