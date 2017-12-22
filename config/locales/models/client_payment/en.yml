@@ -45,3 +45,4 @@ en:
         return_file: "Unpaid/Rejected Receipts File"
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
+        payment_method_c: "PM"

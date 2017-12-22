@@ -106,6 +106,14 @@ class ClientPayment < ActiveRecord::Base
     !self.client_bank_account.blank? ? self.client_bank_account.refere.to_s.strip : ''
   end
 
+  # Payment method used in collection
+  def real_payment_method_name
+    payment_method.to_label rescue ''
+  end
+  def real_payment_method_code
+    payment_method.code rescue ''
+  end
+
   searchable do
     text :receipt_no
     integer :payment_type

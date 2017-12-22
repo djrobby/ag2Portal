@@ -7,27 +7,31 @@
 
 <a href="#modal-other-confirm" id="other-confirm" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.bank_confirm" %></a>
 <a href="#modal-other-to-pending" id="other-to-pending" role="button" class="btn btn-primary btn-small" data-toggle="modal"><%= t "ag2_gest.client_payments.index.back_to_pending" %></a>
-<table class="table table-condensed table-striped shrinked">
+<table id="others-table" class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
+      <th><input type="checkbox" id="other-checkbox-master"></th>
+      <th class="hidden-text-field">Id</th>
       <th>Nº</th>
-      <th>Factura</th>
+      <th>Recibo/Factura</th>
       <th>Cliente</th>
-      <th>F. pago</th>
+      <th>Fecha</th>
       <th align="right"><%= t("activerecord.attributes.client_payment.amount") %></th>
-      <th align="right">Total</th>
+      <th align="right"><%= t("activerecord.attributes.client_payment.payment_method_c") %></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <% @client_payments_others.each do |client_payment| %>
       <tr>
+        <td class="cpo-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "cash-checkbox-slave" %></td>
+        <td class="cpo-id hidden-text-field"><%= client_payment.id %></td>
         <td><%= client_payment.receipt_no %></td>
         <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
         <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
         <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
-        <td align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-        <td align="right"><%= number_with_precision(client_payment.invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cpo-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td align="right" title="<%= client_payment.real_payment_method_name %>"><%= client_payment.real_payment_method_code %></td>
         <td>
           <%= link_to "<i class='icon-print icon-white'></i>".html_safe, payment_receipt_client_payment_path(client_payment, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: I18n.t('ag2_gest.client_payments.index.print_receipt') %>
         </td>

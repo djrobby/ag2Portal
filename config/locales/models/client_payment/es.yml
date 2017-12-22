@@ -45,3 +45,4 @@ es:
         return_file: "Archivo de Devoluciones/Rechazos"
         charge_account: "Cuenta analítica"
         charge_account_id: "Cuenta analítica"
+        payment_method_c: "FP"
