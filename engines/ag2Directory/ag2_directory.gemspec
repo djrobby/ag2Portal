@@ -7,7 +7,7 @@ require "ag2_directory/version"
 Gem::Specification.new do |s|
   s.name        = "ag2_directory"
   s.version     = Ag2Directory::VERSION
-  s.authors     = ["Néstor Rodríguez Maldonado"]
+  s.authors     = ["Nestor Rodriguez Maldonado"]
   s.email       = ["nestor@aguaygestion.com"]
   s.homepage    = "http://agestiona2.aguaygestion.com"
   s.summary     = "Summary of Ag2Directory."
