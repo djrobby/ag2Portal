@@ -18,8 +18,8 @@ class CurrencyInstrument < ActiveRecord::Base
 
   # Scopes
   scope :by_value, -> { order('type_i DESC, value_i ASC') }
-  # scope :by_value, -> { order(type_i: :desc, value_i: :asc) }
   #
+  scope :none, where("1 = 0")
   scope :having_currency, -> c { where(currency_id: c).by_value }
 
   # Callbacks

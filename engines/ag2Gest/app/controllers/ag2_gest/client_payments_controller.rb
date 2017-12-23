@@ -1128,7 +1128,7 @@ module Ag2Gest
 
       # Currencies & instruments
       @currency = Currency.find_by_alphabetic_code('EUR')
-      @currency_instruments = CurrencyInstrument.having_currency(@currency.id)
+      @currency_instruments = CurrencyInstrument.having_currency(@currency.id) rescue CurrencyInstrument.none
 
       respond_to do |format|
         format.html # index.html.erb
