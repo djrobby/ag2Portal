@@ -11,6 +11,7 @@ before 'deploy', 'rvm:install_ruby' # install Ruby and create gemset (both if mi
 require 'rvm/capistrano'
 # Use bundler to install requiered gems after update_code
 require "bundler/capistrano"
+require 'capistrano/sidekiq'
 
 # be sure to change these
 set :user, 'nestor'

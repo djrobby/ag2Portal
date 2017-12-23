@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+ruby '1.9.3', :patchlevel => '327'
 gem 'rails', '3.2.12'
 
 # Bundle edge Rails instead:
@@ -38,8 +38,8 @@ gem 'jquery-rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-gem 'capistrano'
 gem 'rvm-capistrano'
+gem 'capistrano'
 gem "capistrano-sidekiq"
 
 # To use debugger

@@ -7,11 +7,11 @@ require "ag2_admin/version"
 Gem::Specification.new do |s|
   s.name        = "ag2_admin"
   s.version     = Ag2Admin::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Ag2Admin."
-  s.description = "TODO: Description of Ag2Admin."
+  s.authors     = ["Néstor Rodríguez Maldonado"]
+  s.email       = ["nestor@aguaygestion.com"]
+  s.homepage    = "http://agestiona2.aguaygestion.com"
+  s.summary     = "Summary of Ag2Admin."
+  s.description = "Description of Ag2Admin."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
