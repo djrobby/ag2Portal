@@ -607,7 +607,7 @@
           <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
         </div>
       <% end %>
-    </div><!-- Modal Close Cash -->
+    </div><!-- Modal Bank Confirmation -->
 
     <!-- Bank To Pending (modal) -->
     <div id="modal-bank-to-pending" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">
@@ -916,6 +916,52 @@
     }
   });
 
+  $("#others-confirm").click(function(){
+    var cp_ids = [];
+    var cp_amount = 0.0;
+    $('#others-table tr').each(function() {
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cpo-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros a confirmar!');
+      return false;
+    } else {
+      $("#others_confirm_client_payments_ids").val(cp_ids)   // modal-others-confirm
+      $("#others-bills-selected").html(cp_ids.length);
+      $("#others-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    }
+  });
+
+  $("#others-to-pending").click(function(){
+    var cp_ids = [];
+    var cp_amount = 0.0;
+    $('#others-table tr').each(function() {
+      if ($(this).find('td input:checkbox').is(':checked')) {
+        id = $(this).find('td.cpo-id').text();
+        if (id != null && id != '') {
+          cp_ids.push(id);
+          amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+          cp_amount += parseFloat(amount);
+        }
+      }
+    });
+    if (cp_ids.length <= 0) {
+      alert('¡Debes seleccionar cobros a devolver!');
+      return false;
+    } else {
+      $("#others_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-others-to-pending
+      $("#others-to-pending-bills-selected").html(cp_ids.length);
+      $("#others-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    }
+  });
+
   /***
   /* Forms submit
   ***/
@@ -956,10 +1002,29 @@
       alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
       return false;
     }
-    if (isNaN(amount) || amount < 0) {
-      alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-      return false;
+    // if (isNaN(amount) || amount < 0) {
+    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+    //   return false;
+    // }
+    if (_active_tab == "pendings-tab") {
+      if (debt > 0 && (isNaN(amount) || amount < 0)) {
+        alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+        return false;
+      }
+      if (debt < 0 && (isNaN(amount) || amount > 0)) {
+        alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+        return false;
+      }
     }
+
+    // if (_active_tab == "pendings-tab" && debt > 0 && (isNaN(amount) || amount < 0)) {
+    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+    //   return false;
+    // }
+    // if (_active_tab == "pendings-tab" && debt > 0 && (isNaN(amount) || amount < 0)) {
+    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
+    //   return false;
+    // }
     if (_active_tab == "fractionated-tab" && amount < debt) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_amount_debt) %>");
       return false;

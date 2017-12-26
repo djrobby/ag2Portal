@@ -355,9 +355,3 @@ DEPENDENCIES
   thinreports-rails
   uglifier (>= 1.0.3)
   will_paginate (~> 3.0.0)
-
-RUBY VERSION
-   ruby 1.9.3p327
-
-BUNDLED WITH
-   1.16.0

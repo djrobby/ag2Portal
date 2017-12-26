@@ -35,6 +35,8 @@ module Ag2Gest
                                                :close_cash,
                                                :cash_to_pending,
                                                :others,
+                                               :confirm_others,
+                                               :others_to_pending,
                                                :banks,
                                                :bank_instalments,
                                                :confirm_bank,
@@ -339,7 +341,7 @@ module Ag2Gest
             amount_paid = i.debt
             acu -= i.debt
             confirmation_date = Time.now
-            invoice_status = InvoiceStatus::CHARGED
+            invoice_status = InvoiceStatus::OTHER
           else
             amount_paid = acu
             acu = 0
@@ -348,7 +350,7 @@ module Ag2Gest
           end
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
-                               payment_date: Time.now, confirmation_date: confirmation_date, amount: amount_paid, instalment_id: nil,
+                               payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
                                client_bank_account_id: nil, charge_account_id: i.charge_account_id)
           if client_payment.save
             i.invoice_status_id = invoice_status
@@ -359,6 +361,35 @@ module Ag2Gest
         end
       end
       redirect_to client_payments_path
+    end
+
+    def confirm_others
+      client_payment_ids = params[:others_confirm][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payment_ids)
+      client_payments.each do |cp|
+        cp.update_attributes(confirmation_date: Time.now)
+        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+      end
+      redirect_to client_payments_path, notice: "Otros cobros confirmados sin incidencias"
+    end
+
+    def others_to_pending
+      client_payments_ids = params[:others_to_pending][:client_payments_ids].split(",")
+      client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments.each do |cp|
+        cp_instalment = nil
+        if cp.instalment_id.blank?
+          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+        else
+          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          cp_instalment = cp.instalment
+        end
+        cp.destroy
+        # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
+      end
+      redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
     #
@@ -453,7 +484,7 @@ module Ag2Gest
         cp.update_attributes(confirmation_date: Time.now)
         cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
       end
-      redirect_to client_payments_path, notice: "Cobros confirmados sin incidencias"
+      redirect_to client_payments_path, notice: "Cobros domicilados confirmados sin incidencias"
     end
 
     def bank_to_pending
@@ -968,7 +999,9 @@ module Ag2Gest
       end
 
       search_others = ClientPayment.search do
+        # with(:invoice_status_id, 0..98)
         with :payment_type, ClientPayment::OTHERS
+        with :confirmation_date, nil
         if !current_projects.blank?
           with :project_id, current_projects
         end

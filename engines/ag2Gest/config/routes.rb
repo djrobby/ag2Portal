@@ -544,17 +544,19 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :client_payments do
       post 'cash', on: :collection
-      post 'banks', on: :collection
-      post 'fractionate', on: :collection
-      post 'charge_instalment', on: :collection
-      post 'others', on: :collection
       post 'close_cash', on: :collection
-      post 'confirm_bank', on: :collection
-      get 'payment_receipt', on: :member
       post 'cash_to_pending', on: :collection
+      post 'banks', on: :collection
+      post 'confirm_bank', on: :collection
       post 'bank_to_pending', on: :collection
       post 'bank_to_order', on: :collection
       post 'bank_from_return', on: :collection
+      post 'fractionate', on: :collection
+      post 'charge_instalment', on: :collection
+      post 'others', on: :collection
+      post 'confirm_others', on: :collection
+      post 'others_to_pending', on: :collection
+      get 'payment_receipt', on: :member
     end
     resources :payment_methods
     #
