@@ -33,6 +33,26 @@
     }
   }
 
+  function enable_client_payment_amount(b) {
+    if (b) {
+      $('#client_payment_amount').prop('disabled', false);
+    } else {
+      $('#client_payment_amount').prop('disabled', true);
+    }
+  }
+
+  function enable_pending_buttons(b) {
+    if (b) {
+      $('.btn-bank').show();
+      $('.btn-fractionated').show();
+      $('.btn-others').show();
+    } else {
+      $('.btn-bank').hide();
+      $('.btn-fractionated').hide();
+      $('.btn-others').hide();
+    }
+  }
+
   function setupAllSelect2(p, r) {
     projectsSelect2(p);
     periodsSelect2(r);    
@@ -702,6 +722,7 @@
     $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
     $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
     $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+    $("#client_payment_amount").val('')
     $(this).tab('show');
     if (_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") {
       show_cashier();
@@ -709,6 +730,7 @@
       $("#cashier").hide();
       _cashier_shown = false;
     }
+    enable_client_payment_amount(true);
   });  
 
   // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
@@ -980,9 +1002,10 @@
   });
 
   /* cashier form.client_payment: Check required values before submit */
+  /* if debt < 0 => amount is disabled, so is 0 */
   $("form.cashier-form").submit(function() {
     var ids = null;
-    var debt = parseFloat($('.debt-total-cashier').text());
+    var debt = parseFloat($('.debt-total-cashier').text().replace(",", "."));
     var amount = parseFloat($('#client_payment_amount').val());
     if (_active_tab == "pendings-tab") {
       ids = $("#client_payment_invoices_ids").val();
@@ -993,42 +1016,22 @@
       alert('¡Debes seleccionar recibos, facturas o plazos pendientes de cobrar!');
       return false;
     }
+    // Debt must be valid number
     if (isNaN(debt)) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.to_collect') %> <%= I18n.t(:item_error) %>");
       return false;
     }
-    if ($('#client_payment_amount').val() == '' ||
-        $('#client_payment_amount').val() == null) {
+    // If debt greather than 0, amount must be valid number
+    if (debt > 0 && (isNaN(amount) || amount <= 0)) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
       return false;
     }
-    // if (isNaN(amount) || amount < 0) {
-    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-    //   return false;
-    // }
-    if (_active_tab == "pendings-tab") {
-      if (debt > 0 && (isNaN(amount) || amount < 0)) {
-        alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-        return false;
-      }
-      if (debt < 0 && (isNaN(amount) || amount > 0)) {
-        alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-        return false;
-      }
-    }
-
-    // if (_active_tab == "pendings-tab" && debt > 0 && (isNaN(amount) || amount < 0)) {
-    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-    //   return false;
-    // }
-    // if (_active_tab == "pendings-tab" && debt > 0 && (isNaN(amount) || amount < 0)) {
-    //   alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_error) %>");
-    //   return false;
-    // }
+    // If fractionanted, amount must be greater than or equal to debt
     if (_active_tab == "fractionated-tab" && amount < debt) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.amount') %> <%= I18n.t(:item_amount_debt) %>");
       return false;
     }
+    // Payment method must be valid
     if ($('#client_payment_payment_method_id').val() == '' ||
         $('#client_payment_payment_method_id').val() == null) {
       alert("<%= I18n.t('activerecord.attributes.client_payment.payment_method_id') %> <%= I18n.t(:item_error) %>");
@@ -1145,6 +1148,9 @@
        total_debt = Math.round(total_debt * 100) / 100
        $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
        $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+       if (total_debt == 0) $("#client_payment_amount").val('');
+       enable_client_payment_amount(total_debt>=0);
+       enable_pending_buttons(total_debt>=0);
        $('#client_payment_amount').trigger("change");
     }
   });
@@ -1194,6 +1200,9 @@
       total_debt = Math.round(total_debt * 100) / 100
       $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
       $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+      if (total_debt == 0) $("#client_payment_amount").val('');
+      enable_client_payment_amount(total_debt>=0);
+      enable_pending_buttons(total_debt>=0);
       $('#client_payment_amount').trigger("change");
     }
   });
@@ -1226,9 +1235,9 @@
       debt = Math.round(debt * 100) / 100
       $(".debt-total-cashier").text(debt.format(2, 3, _delimiter, _separator));
       $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
-      if (debt == 0) {
-        $("#client_payment_amount").val('');
-      }
+      if (debt == 0) $("#client_payment_amount").val('');
+      enable_client_payment_amount(debt>=0);
+      enable_pending_buttons(debt>=0);
       $('#client_payment_amount').trigger("change");
     }
   });
@@ -1329,8 +1338,13 @@
   });
 
   $("#client_payment_amount").change(function() {
-    cash_return = 0;
-    var ids = $("#client_payment_invoices_ids").val();
+    var cash_return = 0;
+    var ids = null;
+    if (_active_tab == "pendings-tab") {
+      ids = $("#client_payment_invoices_ids").val();
+    } else if (_active_tab == "fractionated-tab") {
+      ids = $("#client_payment_ids").val();
+    }
     if (ids != null && ids != '') {
       amount = parseFloat(this.value) || 0;
       debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text().replace(",", ".")) || 0;

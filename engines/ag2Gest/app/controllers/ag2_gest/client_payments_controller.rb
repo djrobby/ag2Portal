@@ -71,10 +71,11 @@ module Ag2Gest
     #
     # Cash methods
     #
+    # If amount <= 0, must charge every invoice debts!
     def cash
       invoice_ids = params[:client_payment][:invoices_ids].split(",")
       instalment_ids = params[:client_payment][:ids].split(",")
-      amount = BigDecimal.new(params[:client_payment][:amount])
+      amount = BigDecimal.new(params[:client_payment][:amount]) rescue 0  # 0 if error beause :amount is null and debt negative
       payment_method = params[:client_payment][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
       # If these are instalments, call cash_instalments & exit
@@ -84,33 +85,59 @@ module Ag2Gest
       end
       # If these are invoices, go on from here
       client_payment = nil
-      invoices = Invoice.find_all_by_id(invoice_ids).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      invoices = Invoice.find_all_by_id(invoice_ids).sort_by {|a| a[:created_at]}
       acu = amount
       # Receipt No.
       receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
       invoices.each do |i|
-        if acu > 0
-          if acu >= i.debt
-            amount_paid = i.debt
-            acu -= i.debt
-            invoice_status = InvoiceStatus::CASH
+        # if acu > 0
+        #   if acu >= i.debt
+        #     amount_paid = i.debt
+        #     acu -= i.debt
+        #     invoice_status = InvoiceStatus::CASH
+        #   else
+        #     amount_paid = acu
+        #     acu = 0
+        #     invoice_status = InvoiceStatus::PENDING
+        #   end
+        #   client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
+        #                        payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
+        #                        payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
+        #                        client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+        #   if client_payment.save
+        #     i.invoice_status_id = invoice_status
+        #     i.save
+        #   end
+        # else
+        #   break
+        # end
+        if amount > 0
+          if acu > 0
+            if acu >= i.debt
+              amount_paid = i.debt
+              acu -= i.debt
+              invoice_status = InvoiceStatus::CASH
+            else
+              amount_paid = acu
+              acu = 0
+              invoice_status = InvoiceStatus::PENDING
+            end
           else
-            amount_paid = acu
-            acu = 0
-            invoice_status = InvoiceStatus::PENDING
-          end
-          client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
-                               payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
-                               payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
-                               client_bank_account_id: nil, charge_account_id: i.charge_account_id)
-          if client_payment.save
-            i.invoice_status_id = invoice_status
-            i.save
-          end
+            break
+          end # acu > 0
         else
-          break
+          amount_paid = i.debt
+          invoice_status = InvoiceStatus::CASH
+        end # amount > 0
+        client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
+                             payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
+                             payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
+                             client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+        if client_payment.save
+          i.invoice_status_id = invoice_status
+          i.save
         end
-      end
+      end # invoices.each do
       redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
       # redirect_to client_payments_path, notice: "Recibo/Factura/s traspasados/as a Caja."
     rescue
@@ -328,7 +355,7 @@ module Ag2Gest
     # Others methods
     #
     def others
-      invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort_by {|a| a[:created_at]}
       amount = BigDecimal.new(params[:client_payment_other][:amount])
       payment_method = params[:client_payment_other][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
@@ -406,7 +433,7 @@ module Ag2Gest
         return
       end
       # If these are invoices, go on from here
-      invoices = Invoice.find_all_by_id(invoice_ids).sort {|a, b| b[:created_at] <=> a[:created_at]}
+      invoices = Invoice.find_all_by_id(invoice_ids).sort_by {|a| a[:created_at]}
       # Payment type & status
       organization_id = invoices.first.organization_id
       invoice_status = InvoiceStatus::BANK

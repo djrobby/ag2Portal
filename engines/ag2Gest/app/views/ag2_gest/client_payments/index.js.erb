@@ -42,7 +42,8 @@ $('#payments-tabs a').click(function (e) {
   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
   $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
   $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
-  $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+  $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  $("#client_payment_amount").val('')
   $(this).tab('show');
   if (_active_tab == "pendings-tab") {
     <% if !@bills_pending.blank? %>
@@ -64,6 +65,8 @@ $('#payments-tabs a').click(function (e) {
     $("#cashier").hide();
   _cashier_shown = false;
   }
+  enable_client_payment_amount(true);
+  enable_pending_buttons(true);
 });
 
 $('.accor').click(function () {
@@ -478,7 +481,10 @@ $(".checkbox-slave").click(function () {
     }
     total_debt = Math.round(total_debt * 100) / 100
     $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
-    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null));
+    if (total_debt == 0) $("#client_payment_amount").val('');
+    enable_client_payment_amount(total_debt>=0);
+    enable_pending_buttons(total_debt>=0);
     $('#client_payment_amount').trigger("change");
  }
 });
@@ -527,7 +533,10 @@ $(".checkbox-master").click(function () {
     }
     total_debt = Math.round(total_debt * 100) / 100
     $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
-    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+    $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null));
+    if (total_debt == 0) $("#client_payment_amount").val('');
+    enable_client_payment_amount(total_debt>=0);
+    enable_pending_buttons(total_debt>=0);
     $('#client_payment_amount').trigger("change");
   }
 });
@@ -560,9 +569,9 @@ $(".checkbox-main").click(function () {
     debt = Math.round(debt * 100) / 100
     $(".debt-total-cashier").text(debt.format(2, 3, _delimiter, _separator));
     $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
-    if (debt == 0) {
-      $("#client_payment_amount").val('');
-    }
+    if (debt == 0) $("#client_payment_amount").val('');
+    enable_client_payment_amount(debt>=0);
+    enable_pending_buttons(debt>=0);
     $('#client_payment_amount').trigger("change");
   }
 });
@@ -671,8 +680,13 @@ $("#client_payment_cash_amount").change(function() {
 });
 
 $("#client_payment_amount").change(function() {
-  cash_return = 0;
-  var ids = $("#client_payment_invoices_ids").val();
+  var cash_return = 0;
+  var ids = null;
+  if (_active_tab == "pendings-tab") {
+    ids = $("#client_payment_invoices_ids").val();
+  } else if (_active_tab == "fractionated-tab") {
+    ids = $("#client_payment_ids").val();
+  }
   if (ids != null && ids != '') {
     amount = parseFloat(this.value) || 0;
     debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text().replace(",", ".")) || 0;
