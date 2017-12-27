@@ -141,7 +141,7 @@ module Ag2Gest
       redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
       # redirect_to client_payments_path, notice: "Recibo/Factura/s traspasados/as a Caja."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar recibo/factura/s a Caja."
+      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.index.cash_error')
     end
 
     def cash_instalments(instalment_ids, amount, payment_method)
@@ -267,6 +267,7 @@ module Ag2Gest
       amount_others = other_movement_totals.totals
       quantity_others = other_movement_totals.movements
 
+      cash_desk_closing = nil
       # Begin the transaction
       begin
         ActiveRecord::Base.transaction do
@@ -326,9 +327,10 @@ module Ag2Gest
             end # currency_instrument_ids.each_with_index
           end
         end # ActiveRecord::Base.transaction
-        redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
+        redirect_to client_payments_path, notice: (I18n.t('ag2_gest.cash_desk_closings.index.closing_ok') + " #{view_context.link_to I18n.t('ag2_gest.cash_desk_closings.index.click_to_print_closing'), close_cash_form_cash_desk_closing_path(cash_desk_closing, :format => :pdf), target: '_blank'}").html_safe
+        # redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: "¡Error! Imposible cerrar Caja." and return
+        redirect_to client_payments_path, alert: I18n.t('ag2_gest.cash_desk_closings.index.closing_error')
       end # begin
     end
 

@@ -102,6 +102,10 @@ $(".btn-payment").click(function(){
 $("#close-cash").click(function(){
   var cp_ids = [];
   var cp_amount = 0.0;
+  var initial = 0.0;
+  var payments = 0.0;
+  var others = 0.0;
+  var ending = 0.0;
   $('#cash-table tr').each(function() {
     if ($(this).find('td input:checkbox').is(':checked')) {
       id = $(this).find('td.cp-id').text();
@@ -116,10 +120,15 @@ $("#close-cash").click(function(){
     alert('¡Debes seleccionar cobros a confirmar!');
     return false;
   } else {
-    $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash
+    $("#close_cash_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''));   // modal-cash
     $("#initial-cash").val("<%= @opening_balance %>");
     $("#bills-cash").html(cp_ids.length);
     $("#total-cash").html(cp_amount.format(2, 3, _delimiter, _separator));
+    initial = parseFloat($("#initial-cash").val());
+    payments = parseFloat($("#total-paid").text().replace(",", ".")) || 0.0;
+    others = parseFloat($("#total-others").text().replace(",", ".")) || 0.0;
+    ending = initial + cp_amount + payments + others;
+    $("#ending-cash").html(ending.format(2, 3, _delimiter, _separator));
   }
 });
 
@@ -701,10 +710,13 @@ $("#client_payment_amount").change(function() {
 });
 
 $("#initial-cash").change(function() {
-  initial_cash = parseFloat(this.value)
-  cashed = parseFloat($("#total-cash").text());
-  ending_cash = initial_cash + cashed
-  $("#ending-cash").text(ending_cash.format(2, 3, _delimiter, _separator));
+  initial = parseFloat(this.value)
+  cashed = parseFloat($("#total-cash").text().replace(",", ".")) || 0.0;
+  ending = initial + cashed
+  payments = parseFloat($("#total-paid").text().replace(",", ".")) || 0.0;
+  others = parseFloat($("#total-others").text().replace(",", ".")) || 0.0;
+  ending = initial + cashed + payments + others;
+  $("#ending-cash").text(ending.format(2, 3, _delimiter, _separator));
 });
 
 // $(".fnt-currency-quantity").change(function() {

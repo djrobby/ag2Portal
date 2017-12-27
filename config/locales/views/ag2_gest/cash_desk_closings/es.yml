@@ -37,6 +37,9 @@ es:
         label_company: "Compañia"
         label_from: "Creado desde"
         label_to: "Creado hasta"
+        closing_ok: "Caja cerrada sin incidencias. "
+        closing_error: "¡Error! Imposible cerrar Caja."
+        click_to_print_closing: "Click aquí para imprimir"
       show:
         title: "Cierre de Caja"
         print: "Imprimir"

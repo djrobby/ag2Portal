@@ -37,6 +37,9 @@ en:
         label_company: "Company"
         label_from: "Created from"
         label_to: "Created to"
+        closing_ok: "Cash closing successful. "
+        closing_error: "Error! Cash closing can't be done."
+        click_to_print_closing: "Click here to print"
       show:
         title: "Closing"
         print: "Print"
