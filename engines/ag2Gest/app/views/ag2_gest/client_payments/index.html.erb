@@ -53,9 +53,10 @@
     }
   }
 
-  function setupAllSelect2(p, r) {
+  function setupAllSelect2(p, r, u) {
     projectsSelect2(p);
     periodsSelect2(r);    
+    usersSelect2(u);    
   }
 
   function projectsSelect2(intialValue) {
@@ -113,6 +114,33 @@
     });
   }
 
+  function usersSelect2(intialValue) {
+    $('#User').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_users",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -150,7 +178,7 @@
     }
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @period %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>");
 
     // Hide elements at init
     show_cashier();
@@ -193,6 +221,7 @@
     $("#Subscriber").val("<%= params[:Subscriber] %>");
     $("#StreetName").val("<%= params[:StreetName] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
+    $("#BankOrder").val("<%= params[:BankOrder] %>");
     // $("#Period").select2("val", "<%#= params[:billing_period] %>");
     $("#initial-cash").val("<%= @opening_balance %>");
   });
@@ -240,13 +269,15 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
+      $("#Period").select2("val", "");
       $("#Client").val("");
       $("#Subscriber").val("");
       $("#StreetName").val("");
       $("#BankAccount").val("");
-      $("#Period").select2("val", "");
+      $("#BankOrder").val("");
+      $("#User").select2("val", "");
       a = "<%= cp_remove_filters %>";
-      setupAllSelect2(a, a);
+      setupAllSelect2(a, a, a);
       show_cashier();
       // no AJAX
       //_thisForm.submit();
@@ -415,8 +446,9 @@
           <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
           <!-- User -->
           <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label' %>
-          <%= text_field_tag "User", params[:User], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "User", params[:User], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Submit -->
+          <br/><br/>
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
           <!-- Remove filter -->
           <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>

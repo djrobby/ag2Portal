@@ -86,6 +86,7 @@ module Ag2Gest
       # If these are invoices, go on from here
       client_payment = nil
       invoices = Invoice.find_all_by_id(invoice_ids).sort_by {|a| a[:created_at]}
+      created_by = current_user.id if !current_user.nil?
       acu = amount
       # Receipt No.
       receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
@@ -103,7 +104,7 @@ module Ag2Gest
         #   client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
         #                        payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
         #                        payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
-        #                        client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+        #                        client_bank_account_id: nil, charge_account_id: i.charge_account_id, created_by: created_by)
         #   if client_payment.save
         #     i.invoice_status_id = invoice_status
         #     i.save
@@ -132,7 +133,7 @@ module Ag2Gest
         client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: i.bill_id, invoice_id: i.id,
                              payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
                              payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
-                             client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+                             client_bank_account_id: nil, charge_account_id: i.charge_account_id, created_by: created_by)
         if client_payment.save
           i.invoice_status_id = invoice_status
           i.save
@@ -148,6 +149,7 @@ module Ag2Gest
       client_payment = nil
       instalments = Instalment.where(id: instalment_ids)
       op = true
+      created_by = current_user.id if !current_user.nil?
       acu = amount
       # Receipt No.
       invoice_no = instalments.first.instalment_invoices.first.invoice.invoice_no
@@ -169,7 +171,7 @@ module Ag2Gest
                 client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: j.bill_id, invoice_id: j.invoice_id,
                                      payment_method_id: payment_method, client_id: j.bill.client_id, subscriber_id: j.bill.subscriber_id,
                                      payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: i.id,
-                                     client_bank_account_id: nil, charge_account_id: j.invoice.charge_account_id)
+                                     client_bank_account_id: nil, charge_account_id: j.invoice.charge_account_id, created_by: created_by)
                 if !client_payment.save
                   op = false;
                   break
@@ -361,6 +363,7 @@ module Ag2Gest
       amount = BigDecimal.new(params[:client_payment_other][:amount])
       payment_method = params[:client_payment_other][:payment_method_id]
       redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
+      created_by = current_user.id if !current_user.nil?
       acu = amount
       # Receipt No.
       receipt_no = receipt_next_no(invoices.first.invoice_no[3..4]) || '0000000000'
@@ -380,7 +383,7 @@ module Ag2Gest
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::OTHERS, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method, client_id: i.bill.client_id, subscriber_id: i.bill.subscriber_id,
                                payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: nil,
-                               client_bank_account_id: nil, charge_account_id: i.charge_account_id)
+                               client_bank_account_id: nil, charge_account_id: i.charge_account_id, created_by: created_by)
           if client_payment.save
             i.invoice_status_id = invoice_status
             i.save
@@ -443,6 +446,7 @@ module Ag2Gest
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
       end
+      created_by = current_user.id if !current_user.nil?
       # Loop thru invoices and create payments
       invoices.each do |i|
         client_bank_account = i.client.active_bank_account
@@ -450,7 +454,7 @@ module Ag2Gest
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::BANK, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method_id, client_id: i.client.id, subscriber_id: i.subscriber.id,
                                payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
-                               client_bank_account_id: client_bank_account.id, charge_account_id: i.charge_account_id)
+                               client_bank_account_id: client_bank_account.id, charge_account_id: i.charge_account_id, created_by: created_by)
           if client_payment.save
             i.invoice_status_id = invoice_status
             i.save
@@ -470,6 +474,7 @@ module Ag2Gest
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
       end
+      created_by = current_user.id if !current_user.nil?
 
       op = true
       # Begin the transaction
@@ -483,7 +488,7 @@ module Ag2Gest
                 client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::BANK, bill_id: j.bill_id, invoice_id: j.invoice_id,
                                      payment_method_id: payment_method_id, client_id: i.instalment_plan.client_id, subscriber_id: i.instalment_plan.subscriber_id,
                                      payment_date: Time.now, confirmation_date: nil, amount: j.debt, instalment_id: i.id,
-                                     client_bank_account_id: client_bank_account.id, charge_account_id: j.invoice.charge_account_id)
+                                     client_bank_account_id: client_bank_account.id, charge_account_id: j.invoice.charge_account_id, created_by: created_by)
                 if !client_payment.save
                   op = false;
                   break
@@ -623,6 +628,7 @@ module Ag2Gest
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
       end
+      created_by = current_user.id if !current_user.nil?
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
@@ -644,7 +650,8 @@ module Ag2Gest
                                                     amount: i['importe_adeudo'],
                                                     instalment_id: original_client_payment.instalment_id,
                                                     client_bank_account_id: original_client_payment.client_bank_account_id,
-                                                    charge_account_id: original_client_payment.charge_account_id)
+                                                    charge_account_id: original_client_payment.charge_account_id,
+                                                    created_by: created_by)
           if return_client_payment.save
             # Set related invoice status to pending
             original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
@@ -812,17 +819,21 @@ module Ag2Gest
       manage_filter_state
       no = params[:No]
       project = params[:Project]
+      period = params[:Period]
       client = params[:Client]
       subscriber = params[:Subscriber]
       street_name = params[:StreetName]
       bank_account = params[:BankAccount] == t(:yes_on) ? true : false
-      period = params[:Period]
+      bank = params[:Bank]
+      bank_order = params[:BankOrder]
+      user = params[:User]
 
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
       @project = !project.blank? ? Project.find(project).full_name : " "
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
+      @user = !user.blank? ? User.find(user).to_label : " "
       @have_bank_account = have_bank_account_array
       @payment_methods = payment_methods_dropdown
       @cashier_payment_methods = cashier_payment_methods_dropdown
@@ -879,6 +890,9 @@ module Ag2Gest
         if !period.blank?
           with :billing_period_id, period
         end
+        if !user.blank?
+          with :created_by, user
+        end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -925,6 +939,9 @@ module Ag2Gest
         end
         if !period.blank?
           with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
         end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}]
         order_by :sort_no, :asc
@@ -974,6 +991,9 @@ module Ag2Gest
         if !period.blank?
           with :billing_period_id, period
         end
+        if !user.blank?
+          with :created_by, user
+        end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -1021,6 +1041,12 @@ module Ag2Gest
         end
         if !period.blank?
           with :billing_period_id, period
+        end
+        if !bank_order.blank?
+          with :receipt_no, bank_order
+        end
+        if !user.blank?
+          with :created_by, user
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
@@ -1071,6 +1097,9 @@ module Ag2Gest
         if !period.blank?
           with :billing_period_id, period
         end
+        if !user.blank?
+          with :created_by, user
+        end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -1118,13 +1147,17 @@ module Ag2Gest
         if !period.blank?
           with :billing_period_id, period
         end
+        if !user.blank?
+          with :created_by, user
+        end
         data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
 
       # Initialize datasets
-      if no.blank? and client.blank? and subscriber.blank? and project.blank? and bank_account.blank? and period.blank?
+      if no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
+         street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank?
         # Return no results
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
@@ -1666,6 +1699,12 @@ module Ag2Gest
       elsif session[:Project]
         params[:Project] = session[:Project]
       end
+      # period
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
+      end
       # client
       if params[:Client]
         session[:Client] = params[:Client]
@@ -1690,33 +1729,51 @@ module Ag2Gest
       elsif session[:BankAccount]
         params[:BankAccount] = session[:BankAccount]
       end
-      # period
-      if params[:Period]
-        session[:Period] = params[:Period]
-      elsif session[:Period]
-        params[:Period] = session[:Period]
+      # bank
+      if params[:Bank]
+        session[:Bank] = params[:Bank]
+      elsif session[:Bank]
+        params[:Bank] = session[:Bank]
+      end
+      # bank_order
+      if params[:BankOrder]
+        session[:BankOrder] = params[:BankOrder]
+      elsif session[:BankOrder]
+        params[:BankOrder] = session[:BankOrder]
+      end
+      # user
+      if params[:User]
+        session[:User] = params[:User]
+      elsif session[:User]
+        params[:User] = session[:User]
       end
     end
 
     def cp_remove_filters
       params[:No] = ""
       params[:Project] = ""
+      params[:Period] = ""
       params[:Client] = ""
       params[:Subscriber] = ""
       params[:StreetName] = ""
       params[:BankAccount] = ""
-      params[:Period] = ""
+      params[:Bank] = ""
+      params[:BankOrder] = ""
+      params[:User] = ""
       return " "
     end
 
     def cp_restore_filters
       params[:No] = session[:No]
       params[:Project] = session[:Project]
+      params[:Period] = session[:Period]
       params[:Client] = session[:Client]
       params[:Subscriber] = session[:Subscriber]
       params[:StreetName] = session[:StreetName]
       params[:BankAccount] = session[:BankAccount]
-      params[:Period] = session[:Period]
+      params[:Bank] = session[:Bank]
+      params[:BankOrder] = session[:BankOrder]
+      params[:User] = session[:User]
     end
   end
 end

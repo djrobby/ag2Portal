@@ -102,5 +102,6 @@ class CashDeskClosing < ActiveRecord::Base
     integer :organization_id
     integer :project_id
     date :created_at
+    integer :created_by
   end
 end

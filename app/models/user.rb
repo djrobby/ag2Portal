@@ -37,6 +37,14 @@ class User < ActiveRecord::Base
   scope :by_name, -> { order(:name) }
   #
   scope :belongs_to_organization, -> o { joins(:organizations).where(organizations: { id: o }).by_email }
+  scope :g_where, -> w {
+    joins("LEFT JOIN users_organizations ON users.id=users_organizations.user_id")
+    .joins("LEFT JOIN users_companies ON users.id=users_companies.user_id")
+    .joins("LEFT JOIN users_offices ON users.id=users_offices.user_id")
+    .where(w)
+    .select('users.id, users.name, users.email')
+    .by_email
+  }
 
   # Callbacks
   before_save :ensure_authentication_token

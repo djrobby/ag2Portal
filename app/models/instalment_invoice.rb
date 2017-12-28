@@ -41,6 +41,9 @@ class InstalmentInvoice < ActiveRecord::Base
     integer :billing_period_id do
       bill.reading_2.nil? ? nil : bill.reading_2.billing_period_id
     end
+    integer :created_by do
+      instalment.created_by unless (instalment.blank? || instalment.created_by.blank?)
+    end
     string :sort_no do
       bill.bill_no
     end

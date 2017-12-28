@@ -18,7 +18,7 @@ class ClientPayment < ActiveRecord::Base
   belongs_to :charge_account
   attr_accessible :receipt_no, :payment_type, :payment_date, :confirmation_date, :amount, :surcharge,
                   :bill_id, :invoice_id, :client_id, :client_bank_account_id, :subscriber_id,
-                  :instalment_id, :charge_account_id, :payment_method_id
+                  :instalment_id, :charge_account_id, :payment_method_id, :created_by, :updated_by
 
   has_many :cash_desk_closing_items
 
@@ -119,6 +119,9 @@ class ClientPayment < ActiveRecord::Base
     integer :payment_type
     integer :id
     date :confirmation_date
+    date :created_at
+    integer :created_by
+    string :receipt_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     string :client_code_name_fiscal, :multiple => true do
       bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end

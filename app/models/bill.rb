@@ -323,6 +323,7 @@ class Bill < ActiveRecord::Base
   searchable do
     text :bill_no
     date :created_at
+    integer :created_by
     integer :organization_id
     integer :payment_method_id
     string :client_code_name_fiscal, :multiple => true do

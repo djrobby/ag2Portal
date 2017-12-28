@@ -26,6 +26,7 @@ class EnginesController < ApplicationController
     session[:Petitioner] = nil
     session[:Balance] = nil
     session[:Client] = nil
+    session[:User] = nil
     # Ag2Admin
     # ...
     # Ag2Directory
@@ -48,11 +49,11 @@ class EnginesController < ApplicationController
     session[:entity] = nil
     session[:Request] = nil
     session[:BankAccount] = nil
+    session[:BankOrder] = nil
     session[:Use] = nil
     session[:Phase] = nil
     # Ag2HelpDesk
     session[:Id] = nil
-    session[:User] = nil
     session[:OfficeT] = nil
     session[:Category] = nil
     session[:Priority] = nil
@@ -371,6 +372,21 @@ class EnginesController < ApplicationController
                             Api::V1::MetersSerializer)
     end
     render json: @meters
+  end
+
+  # Charge users
+  def search_users
+    @users = []
+    w = ''
+    w = "users_organizations.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "users_companies.company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "users_offices.office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(users.email LIKE '%#{@q}%' OR users.name LIKE '%#{@q}%')"
+      @users = serialized(User.g_where(w),
+                          Api::V1::UsersSerializer)
+    end
+    render json: @users
   end
 
   # Returns JSON list of data
