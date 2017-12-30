@@ -43,7 +43,7 @@ set :use_sudo, false
 set :bundle_flags,    ""
 
 before "deploy", "deploy:check_revision"
-after "deploy", "deploy:cleanup" # keep only the last 5 releases
+# after "deploy", "deploy:cleanup" # keep only the last 5 releases
 
 namespace :deploy do
   task :start do ; end
