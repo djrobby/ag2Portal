@@ -27,7 +27,25 @@ module Ag2Gest
                                                 :update_province_textfield_from_zipcode,
                                                 :sub_load_postal,
                                                 :sub_load_bank,
-                                                :sub_sepa_pdf]
+                                                :sub_sepa_pdf,
+                                                :non_billable_button,
+                                                :billable_button]
+
+    # update true subscriber non-billable
+    def non_billable_button
+      @subscriber = Subscriber.find(params[:id])
+      if @subscriber.non_billable == false
+        @subscriber.update_attributes(non_billable: true)
+      end
+    end
+
+    # update false subscriber non-billable
+    def billable_button
+      @subscriber = Subscriber.find(params[:id])
+      if @subscriber.non_billable == true
+        @subscriber.update_attributes(non_billable: false)
+      end
+    end
 
     # Update country text field at view from region select
     def update_country_textfield_from_region

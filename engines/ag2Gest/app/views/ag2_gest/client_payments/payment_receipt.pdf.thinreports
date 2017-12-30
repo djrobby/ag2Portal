@@ -27,6 +27,7 @@ report.page.values(company_name: @payment.bill.project.company.name,
 				   company_email: @payment.bill.project.company.email_and_website
 				   )
 report.page.values(company_data: (@payment.bill.project.company.invoice_footer_complete + "/r90"))
+
 #
 # Remarks
 
@@ -56,7 +57,7 @@ report.page.values(title: I18n.t("ag2_gest.client_payments.report.payment_receip
 _amount = 0
 _bill = ""
 @payment_receipt.each do |receipt|
-	_amount += receipt.bill.collected
+	_amount += receipt.amount
 end
 
 #
@@ -107,7 +108,7 @@ end
 				row2.item(:receipt_no).value receipt.bill.try(:to_label)
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:debt).value _debt
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
@@ -117,7 +118,7 @@ end
 				row2.item(:receipt_no).value receipt.bill.try(:to_label)
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:debt).value _debt
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
@@ -128,7 +129,7 @@ end
 							row3.item(:receipt_no).value "> " + invoices.try(:full_no)
 							row3.item(:receipt_date).value var_invoice_date
 							row3.item(:total).value number_with_precision(invoices.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-							row3.item(:amount).value number_with_precision(invoices.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+							row3.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 						end
 				end
 	end
@@ -162,5 +163,3 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
 				   street2_1: @payment.try(:client).try(:address_1),
 				   province2_1: @payment.client.address_2 ,
 				   client_code2_1: @payment.client.full_code )
-
-

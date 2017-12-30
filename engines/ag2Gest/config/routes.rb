@@ -260,6 +260,8 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     #
     # Subscriber
+    match 'subscribers/:id/non_billable_button', :controller => 'subscribers', :action => 'non_billable_button'
+    match 'subscribers/:id/billable_button', :controller => 'subscribers', :action => 'billable_button'
     match 'subscribers/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
     match 'subscribers/:id/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
     match 'subscribers/update_region_textfield_from_province/:id', :controller => 'subscribers', :action => 'update_region_textfield_from_province'

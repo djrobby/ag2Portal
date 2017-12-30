@@ -36,7 +36,11 @@
     <!-- <%#= link_to t('ag2_gest.subscribers.show.unpaid_only'), controller: "subscribers", action: "show", ifilter: "unpaid", :remote => true %> | -->
     <%= link_to t('ag2_gest.subscribers.show.charged_only'), controller: "subscribers", action: "show", ifilter: "charged", :remote => true %>
     <button id="collapse-init" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;"><%= "Ver todos" %></button>
-    <a href="#new-bill" role="button" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
+    <% if @subscriber.non_billable %>
+      <a href="#new-bill" role="button" class="disabled btn btn-mini btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
+    <% else %>
+      <a href="#new-bill" role="button" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
+    <% end %>
   </div>
 </div>
 

@@ -34,7 +34,7 @@ class ClientPayment < ActiveRecord::Base
 
   def full_no
     # Receipt no (Office & year & sequential number) => OOOO-YYYY-NNNNN
-    receipt_no.blank? ? "" : receipt_no[0.3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]
+    receipt_no.blank? ? "" : receipt_no[0..3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]
   end
 
   # 9 digits Id for bank orders

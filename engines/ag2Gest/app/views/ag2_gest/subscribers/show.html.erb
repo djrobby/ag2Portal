@@ -78,10 +78,16 @@
       <td> <% if @subscriber.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
     <tr>
-      <td><b><%= t :"activerecord.attributes.subscriber.debt" %>:</b></td>
-      <td><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.non_billable') %>:</b></td>
+      <% if @subscriber.non_billable %>
+        <td> <% if @subscriber.non_billable %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.billable_button') %></a>
+      <% else %>
+        <td> <% if @subscriber.non_billable %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_non_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/non_billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
+      <% end %>
+      <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
+      <td class="highlighted bolded"><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
-      <td  colspan="3"><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td  colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
   </tbody>
 </table>
@@ -124,6 +130,9 @@
 
 <% if !session[:return_to_reading].nil? %>
   <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
+<% end %>
+<% if !session[:return_to_client].nil? %>
+  <%= link_to session[:return_to_client], session[:return_to_client_url] %> |
 <% end %>
 <% if !session[:return_to].nil? %>
   <%= link_to session[:return_to], session[:return_to_url] %> |
@@ -367,6 +376,10 @@
   }
 
   $(document).ready(function () {
+
+    $("#billable_button").click(function(){
+      window.location.reload();
+    });
     
     $("#sub_load_postal_button").click(function(){
       var subscriber_id = $("#fnt_id").val();

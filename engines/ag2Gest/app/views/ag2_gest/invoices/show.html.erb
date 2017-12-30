@@ -120,4 +120,7 @@
 <% if !session[:return_to_bill].nil? %>
   <%= link_to session[:return_to_bill], session[:return_to_bill_url] %> |
 <% end %>
+<% if !session[:return_to_client].nil? %>
+  <%= link_to session[:return_to_client], session[:return_to_client_url] %> |
+<% end %>
 <%= link_to t("ag2_gest.invoices.back_to_main_page"), invoices_path %>

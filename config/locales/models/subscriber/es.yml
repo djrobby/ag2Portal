@@ -215,6 +215,10 @@ es:
         postal_country: "País"
         postal_country_id: "País"
         non_billable: "¿No facturable?"
+        non_billable_button: "No facturable"
+        billable_button: "Facturable"
+        alert_non_billable: "Ha este abonado no se le podrán facturar mas servicios. ¿Estás seguro? "
+        alert_billable: "Ha este abonado se le podrán facturar servicios. ¿Estás seguro? "
 
     report:
       subscriber:
