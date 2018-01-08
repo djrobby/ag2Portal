@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  subscriber: 
+  estimation_balance: 1
+  estimated_init_at: 2018-01-08 11:40:33
+  estimation_reset_at: 2018-01-08 11:40:33
+
+two:
+  subscriber: 
+  estimation_balance: 1
+  estimated_init_at: 2018-01-08 11:40:33
+  estimation_reset_at: 2018-01-08 11:40:33

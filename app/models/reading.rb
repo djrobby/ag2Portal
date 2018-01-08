@@ -311,6 +311,8 @@ class Reading < ActiveRecord::Base
           _i.save
         end # subscriber.current_tariffs(reading_date).each
       end # end transaction
+      # Update estimated consumption if necessary
+      update_current_estimation_balance(ce)
       # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
@@ -321,6 +323,23 @@ class Reading < ActiveRecord::Base
 
   rescue ActiveRecord::RecordInvalid
     puts I18n.t(:transaction_error, var: "generate_bill")
+  end
+
+  # Update estimated consumption
+  def update_current_estimation_balance(ce, cr)
+    if ce > 0
+      subscriber_current_estimation = subscriber.current_estimation
+      if subscriber_current_estimation.nil?
+        # There is not a current estimation: Create new
+        SubscriberEstimationBalance.create!(subscriber_id: subscriber_id, estimation_balance: ce,
+                                            estimation_init_at: Time.now, estimation_reset_at: nil,
+                                            created_by: user_id)
+      else
+        # There is an active estimation: Update it
+        subscriber_current_estimation.estimation_balance += ce
+        subscriber_current_estimation.save
+      end
+    end
   end
 
   #

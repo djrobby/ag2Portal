@@ -31,7 +31,8 @@ class Subscriber < ActiveRecord::Base
                   :readings_attributes, :meter_details_attributes, :postal_last_name, :postal_first_name, :postal_company,
                   :postal_street_directory_id, :postal_street_type_id, :postal_street_name, :postal_street_number,
                   :postal_building, :postal_floor, :postal_floor_office, :postal_zipcode_id, :postal_town_id,
-                  :postal_province_id, :postal_region_id, :postal_country_id, :non_billable
+                  :postal_province_id, :postal_region_id, :postal_country_id, :non_billable,
+                  :consumption_estimated_balance, :consumption_estimated_balance_init_at, :consumption_estimated_balance_reset_at
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -57,6 +58,7 @@ class Subscriber < ActiveRecord::Base
   has_many :invoice_bills
   has_many :invoice_credits
   has_many :invoice_rebills
+  has_many :subscriber_estimation_balances
 
   # Nested attributes
   accepts_nested_attributes_for :readings
@@ -215,8 +217,19 @@ class Subscriber < ActiveRecord::Base
     invoice_debts.existing_debt.sum(:debt)
   end
 
+  # Historical estimation (based on all invoices)
   def total_consumption_estimated
-    invoices.sum(:consumption_estimated)
+    invoices.reject(&:marked_for_destruction?).sum(:consumption_estimated)
+  end
+
+  #
+  # Consumption estimates
+  #
+  def current_estimation
+    subscriber_estimation_balances.active.last rescue nil
+  end
+  def current_estimation_balance
+    current_estimation.estimation_balance rescue 0
   end
 
   #

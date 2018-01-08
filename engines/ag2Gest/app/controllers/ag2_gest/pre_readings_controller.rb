@@ -87,11 +87,14 @@ module Ag2Gest
                               reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
                               reading_index_1: pre_reading.reading_index_1,
                               reading_index_2: pre_reading.reading_index_2,
-                              reading_incidence_types: pre_reading.reading_incidence_types,
+                              # reading_incidence_types: pre_reading.reading_incidence_types,
                               reading_1: pre_reading.reading_1,
                               reading_2: pre_reading.reading_2,
                               created_by: (current_user.id if !current_user.nil?))
         if reading.save
+          pre_reading.reading_incidence_types.each do |i|
+            ReadingIncidence.create(reading_id: reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
+          end
           pre_reading.destroy
         end
       end
@@ -215,7 +218,7 @@ module Ag2Gest
           @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: i)
         end
       end
-      # añdadir incidencia vuelta de contador y no existe. ID 
+      # añdadir incidencia vuelta de contador y no existe. ID
       if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
       end
@@ -223,7 +226,7 @@ module Ag2Gest
       if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
       end
-      # Bajo Consumo 
+      # Bajo Consumo
       if params[:lapconbaj] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
       end
