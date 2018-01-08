@@ -147,7 +147,10 @@
 
 <% if @bills and @bills.first.bill_id.nil? %>
   <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
+<% else %>
+<%= link_to "<i class='icon-print icon-white'></i> #{t 'activerecord.attributes.bill.summary'}".html_safe, bills_summary_bill_path(@bills.first.pre_group_no, :format => :pdf), target: "_blank", class: "btn btn-warning", title: I18n.t("activerecord.attributes.bill.summary") %>
 <% end %>
+
 <a href="<%= show_pre_bills_bills_path(:pre_group => @bills.first.pre_group_no,format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
 
 <br/><br/>

@@ -339,6 +339,20 @@ module Ag2Gest
       end
     end
 
+    def bills_summary
+      @bills = PreBill.where(pre_group_no: params[:id])
+      @invoices_by_biller = PreBill.select('companies.name as company,min(invoices.invoice_no) as from_no,max(invoices.invoice_no) as to_no,sum(invoices.totals) as invoiced_total') \
+                                     .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
+                                     .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:id]) \
+                                     .group('invoices.biller_id')
+      title = t("activerecord.attributes.bill.title_summary")
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@bills.first.pre_group_no}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
+
     # This method executes on Apply Tariffs
     def index
       if params[:bills]
@@ -358,6 +372,10 @@ module Ag2Gest
         @totals = @bills2.select('count(pre_bills.id) as bills, sum(r2.reading_index-r1.reading_index) as consumptions, sum(pre_invoices.totals) as totals') \
                         .joins('INNER JOIN readings r2 ON pre_bills.reading_2_id=r2.id INNER JOIN readings r1 on pre_bills.reading_1_id=r1.id INNER JOIN pre_invoices ON pre_bills.id=pre_invoices.pre_bill_id') \
                         .first
+        @invoices_by_biller = PreBill.select('companies.name as company,min(invoices.invoice_no) as from_no,max(invoices.invoice_no) as to_no,sum(invoices.totals) as invoiced_total') \
+                                     .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
+                                     .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:bills]) \
+                                     .group('invoices.biller_id')
         respond_to do |format|
           format.html # index.html.erb
           format.json { render json: @bills }

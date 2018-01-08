@@ -1489,7 +1489,8 @@ module Ag2Gest
 
     def payment_receipt
       @payment = ClientPayment.find(params[:id])
-      @payment_receipt = ClientPayment.where(receipt_no: @payment.receipt_no).group(:bill_id)
+      @payment_receipt = ClientPayment.where(receipt_no: @payment.receipt_no)
+      @payment_receipt_bill = ClientPayment.where(receipt_no: @payment.receipt_no).group(:bill_id)
       @payment_subscribers = ClientPayment.where(receipt_no: @payment.receipt_no).group(:subscriber_id)
       title = t("activerecord.models.client_payment.one")
       respond_to do |format|

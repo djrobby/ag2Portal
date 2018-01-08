@@ -88,7 +88,7 @@ end
 
 #
 # client payment group receipt_no
-if !@payment_receipt.blank?
+if !@payment_receipt_bill.blank?
 	report.page.list(:default).add_row do |row1|
 		row1.item(:sup).show
 		row1.item(:receipt_no_c).value I18n.t("activerecord.models.bill.one")
@@ -99,17 +99,20 @@ if !@payment_receipt.blank?
 	end
 end
 
-@payment_receipt.each do |receipt|
+@payment_receipt_bill.each do |receipt|
 	var_bill_date = receipt.bill.bill_date.strftime(_format) unless receipt.bill.bill_date.blank?
 	_debt = number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	if _debt < "0"
+		_debt_total = "0,0000"
+	end
 	if _debt == "0,0000"
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:to_label)
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:debt).value _debt
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value _debt_total
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
 	else
@@ -118,8 +121,8 @@ end
 				row2.item(:receipt_no).value receipt.bill.try(:to_label)
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:debt).value _debt
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:debt).value _debt_total
 				_bill += (receipt.bill.try(:to_label) + ", ")
 			end
 				receipt.bill.invoices.each do |invoices|
@@ -129,8 +132,19 @@ end
 							row3.item(:receipt_no).value "> " + invoices.try(:full_no)
 							row3.item(:receipt_date).value var_invoice_date
 							row3.item(:total).value number_with_precision(invoices.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-							row3.item(:amount).value number_with_precision(receipt.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+							row3.item(:amount).value number_with_precision(invoices.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 						end
+					if !receipt.instalment.blank?
+						@payment_receipt.each do |receipt_instalment|
+							report.page.list(:default).add_row do |row4|
+								row4.item(:sup).hide
+								row4.item(:receipt_no).value "> > " + I18n.t("activerecord.models.instalment_plan.one") + ": " + receipt_instalment.instalment.instalment_no.to_s + " " + I18n.t("activerecord.attributes.instalment_plan.instalments_qty_c.") + ": " + receipt_instalment.instalment.instalment.to_s
+								row4.item(:receipt_date).value var_invoice_date
+								row4.item(:total).value number_with_precision(receipt_instalment.instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+								row4.item(:amount).value number_with_precision(receipt_instalment.instalment.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+							end
+						end
+					end 
 				end
 	end
 	_bill

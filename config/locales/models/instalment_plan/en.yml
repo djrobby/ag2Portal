@@ -15,6 +15,7 @@ en:
         client_id: "Client"
         subscriber_id: "Subscriber"
         instalments_qty: "Instalments"
+        instalments_qty_c: "Instalment"
         amount_first: "Amount first instalment"
         organization: "Organization"
         organization_id: "Organization"

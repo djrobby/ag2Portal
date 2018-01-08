@@ -525,6 +525,7 @@ Ag2Gest::Engine.routes.draw do
       get 'biller_connection_contract_pdf', on: :member
       get 'status_prebills', on: :collection
       get 'status_confirm', on: :collection
+      get 'bills_summary', on: :member
       #get 'void', on: :member
       #get 'rebilling', on: :member
     end

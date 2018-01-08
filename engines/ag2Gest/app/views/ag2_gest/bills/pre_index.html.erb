@@ -105,6 +105,9 @@
       <% end %>
     </div>
     <div class="modal-footer">
+      <% if !@invoices_by_biller.blank? %>
+        <%= link_to "<i class='icon-print icon-white'></i> #{t 'activerecord.attributes.bill.summary'}".html_safe, bills_summary_bill_path(params[:pre_bill_no], :format => :pdf), target: "_blank", class: "btn btn-warning", title: I18n.t("activerecord.attributes.bill.summary") %>
+      <% end %>
       <button class="btn btn-primary" data-dismiss="modal"><%= t('activerecord.attributes.subscriber.close') %></button>
     </div>
   </div>

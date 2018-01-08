@@ -1,0 +1,71 @@
+if @bills.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+# Localization for dates
+_format = I18n.locale == :es ? "%d/%m/%Y" : "%m-%d-%Y"
+
+report.set_layout tlf: 'reports/bills_summary', layout_options: { default: true }
+
+
+# New page & start
+report.start_new_page
+
+# Page header: Image block for Logo
+report.page.values company_logo: "public/" + @bills.first.project.company.logo.url(:original).split("?").first unless @bills.first.project.company.logo.blank?
+
+# Page header: Company
+report.page.values(company_name: @bills.first.project.company.name,
+				   company_address_1: @bills.first.project.company.address_1,
+				   company_address_2: @bills.first.project.company.address_2,
+				   company_phones: @bills.first.project.company.phone_and_fax,
+				   company_email: @bills.first.project.company.email_and_website
+				   )
+#
+#
+bill_date_format = @bills.first.bill_date.strftime(_format) unless @bills.first.bill_date.blank?
+report.page.values(form_title: t("activerecord.attributes.bill.summary"),
+				   group_no_c: "Grupo" + ": ",
+				   group_no: @bills.first.pre_group_no,
+				   billing_period_c: I18n.t("activerecord.attributes.invoice.billing_period") + ": ",
+				   billing_period: @bills.first.pre_invoices.first.billing_period.to_label,
+				   bill_date_c: "Fecha" + ": ",
+				   bill_date: bill_date_format)
+#
+# summary
+payday_limit_format = @bills.first.pre_invoices.first.payday_limit.strftime(_format) unless @bills.first.pre_invoices.first.payday_limit.blank?
+consumption = @bills.map{|b| b.reading_2}.sum(&:consumption)
+total = number_with_precision(@bills.sum(&:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+
+report.page.values(total_bill_c: I18n.t('ag2_gest.bills.index.count') + ": ",
+				   total_bill: @bills.count ,
+				   total_pre_bill_c: I18n.t('ag2_gest.bills.index.pre_bills') + ": ",
+				   total_pre_bill: @bills.count ,
+				   total_consumptions_c: I18n.t('ag2_gest.bills.index.consumptions') + ": ",
+				   total_consumptions: consumption.to_s + " " + I18n.t("ag2_gest.bills.index.m3"),
+				   total_total_c: I18n.t('ag2_gest.bills.index.total') + ": ",
+				   total_total: total,
+				   payday_limit_c: I18n.t('ag2_gest.bills.index.payday_limit') + ": ",
+				   payday_limit: payday_limit_format,
+				   first_bill_c: I18n.t('ag2_gest.bills.index.first_bill') + ": ",
+				   first_bill: @bills.first.bill.full_no,
+				   last_bill_c: I18n.t('ag2_gest.bills.index.last_bill') + ": ",
+				   last_bill: @bills.last.bill.full_no)	
+#
+# details
+if !@invoices_by_biller.blank?
+	@invoices_by_biller.each do |invoices|
+		report.page.list(:default).add_row do |row|
+			row.item(:biller_c).value I18n.t('ag2_gest.bills.index.biller') + ": "
+			row.item(:first_invoice_c).value I18n.t('ag2_gest.bills.index.first_invoice') + ": "
+			row.item(:last_invoice_c).value I18n.t('ag2_gest.bills.index.last_invoice') + ": "
+			row.item(:total_c).value I18n.t('ag2_gest.bills.index.total') + ": "
+			row.item(:biller).value invoices.company
+			row.item(:first_invoice).value invoices.from_no
+			row.item(:last_invoice).value invoices.to_no
+			row.item(:total).value number_with_precision(invoices.invoiced_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		end
+	end
+end

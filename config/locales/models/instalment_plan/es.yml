@@ -15,6 +15,7 @@ es:
         client_id: "Cliente"
         subscriber_id: "Abonado"
         instalments_qty: "Plazos"
+        instalments_qty_c: "Plazo"
         amount_first: "Importe primer plazo"
         organization: "Organización"
         organization_id: "Organización"

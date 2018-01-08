@@ -19,6 +19,7 @@ en:
         label_to: "Hasta"
         totals: "TOTALS"
         total_consumptions: "Consumptions m³"
+        m3: "m³"
         total_subscribers: "Subscribers"
         total_bills: "Bills"
         total_total: "Amount €"

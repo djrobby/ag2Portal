@@ -19,6 +19,7 @@ es:
         label_to: "Hasta"
         totals: "TOTALES"
         total_consumptions: "Consumos m³"
+        m3: "m³"
         total_subscribers: "Abonados"
         total_bills: "Recibos"
         total_total: "Importe €"
