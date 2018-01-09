@@ -134,11 +134,11 @@ class Reading < ActiveRecord::Base
   # Generates only one Prebill & associated invoices & items, based on current reading data
   #
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
-    cr = consumption_total_period_to_invoice  # consumption to invoice
-    # cr = consumption_total_period   # consumption real
-    ce = estimated_consumption      # consumption estimated
-    co = 0                          # consumption other
-    cf = cr + ce + co               # consumption invoiced
+    # cr = consumption_total_period             # consumption real
+    cr = consumption_total_period_to_invoice  # consumption real to invoice
+    ce = estimated_consumption(cr)            # consumption estimated
+    co = 0                                    # consumption other
+    cf = cr + ce + co                         # total consumption to invoice
 
     # Launch transaction
     pre_bill = create_pre_bill(group_no, user_id, operation_id, cr, ce, co, cf)
@@ -230,11 +230,11 @@ class Reading < ActiveRecord::Base
   # Generates non-bulk individual bill/invoice
   #
   def generate_bill(next_bill_no=nil,user_id=nil,operation_id=1,payday_limit=nil,invoice_date=nil)
-    cr = consumption_total_period_to_invoice  # consumption to invoice
-    # cr = consumption_total_period   # consumption real
-    ce = estimated_consumption      # consumption estimated
-    co = 0                          # consumption other
-    cf = cr + ce + co               # consumption invoiced
+    # cr = consumption_total_period             # consumption real
+    cr = consumption_total_period_to_invoice  # consumption real to invoice
+    ce = estimated_consumption(cr)            # consumption estimated
+    co = 0                                    # consumption other
+    cf = cr + ce + co                         # total consumption to invoice
 
     # Bill No.
     if next_bill_no.nil?
@@ -325,23 +325,6 @@ class Reading < ActiveRecord::Base
     puts I18n.t(:transaction_error, var: "generate_bill")
   end
 
-  # Update estimated consumption
-  def update_current_estimation_balance(ce, cr)
-    if ce > 0
-      subscriber_current_estimation = subscriber.current_estimation
-      if subscriber_current_estimation.nil?
-        # There is not a current estimation: Create new
-        SubscriberEstimationBalance.create!(subscriber_id: subscriber_id, estimation_balance: ce,
-                                            estimation_init_at: Time.now, estimation_reset_at: nil,
-                                            created_by: user_id)
-      else
-        # There is an active estimation: Update it
-        subscriber_current_estimation.estimation_balance += ce
-        subscriber_current_estimation.save
-      end
-    end
-  end
-
   #
   # Real consumption (by period)
   #
@@ -359,16 +342,18 @@ class Reading < ActiveRecord::Base
   # Consumption to invoice (by period)
   #
   def consumption_total_period_to_invoice
-    meter.is_shared? ? (consumption_total_period / meter.shared_coefficient).round : consumption_total_period
+    ctp = consumption_total_period
+    meter.is_shared? ? (ctp / meter.shared_coefficient).round : ctp
   end
 
   #
   # Estimated consumption
   #
-  def estimated_consumption
+  # If CR is zero
+  def estimated_consumption(cr)
     total = 0
-    # if real consumption equals zero, try to estimate
-    if consumption_total_period == 0
+    # If real consumption equals zero, try to estimate
+    if cr == 0
       # Only estimates if there is an incidence that requires estimating
       if ReadingIncidence.reading_should_be_estimated(self.id)
         # 1. Consumption invoiced in the same period of last year (reading_2)
@@ -396,7 +381,9 @@ class Reading < ActiveRecord::Base
           end # 2
         end # 1
       end # ReadingIncidence.reading_should_be_estimated(self.id)
-    end # consumption_total_period == 0
+    else # If real consumption not equals zero, try to compensate
+      total = estimated_consumption_with_cr(cr)
+    end # cr == 0
     total || 0
   end
 
@@ -419,6 +406,39 @@ class Reading < ActiveRecord::Base
     rescue
       0
     end
+  end
+
+  # If CR is greater than zero
+  def estimated_consumption_with_cr(cr)
+    total = 0
+    # if real consumption greater than zero, must compensate estimation balance
+    if cr > 0
+      total = cr < current_estimation_balance ? cr * (-1) : current_estimation_balance * (-1)
+    end # cr > 0
+    total || 0
+  end
+
+  # Update estimated consumption
+  def update_current_estimation_balance(ce, cr)
+    if ce > 0
+      subscriber_current_estimation = subscriber.current_estimation
+      if subscriber_current_estimation.nil?
+        # There is not a current estimation: Create new
+        SubscriberEstimationBalance.create!(subscriber_id: subscriber_id, estimation_balance: ce,
+                                            estimation_init_at: Time.now, estimation_reset_at: nil,
+                                            created_by: user_id)
+      else
+        # There is an active estimation: Update it
+        subscriber_current_estimation.estimation_balance += ce
+        subscriber_current_estimation.estimation_reset_at = Time.now if subscriber_current_estimation.estimation_balance == 0
+        subscriber_current_estimation.save
+      end
+    end
+  end
+
+  # Current estimation balance
+  def current_estimation_balance
+    subscriber.current_estimation_balance
   end
 
   #
