@@ -60,3 +60,8 @@ en:
         direction: "Dirección"
         successfully: "Punto de servicio se ha actualizado correctamente."
         create: "Punto de servicio se ha creado correctamente."
+        meter: "Meter"
+        meter_id: "Meter/Counter"
+        model: "Model/Brand"
+        caliber: "Caliber"
+        model_brand_caliber: "Model/Brand/Caliber"

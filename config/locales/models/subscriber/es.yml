@@ -62,7 +62,7 @@ es:
         fiscal_id_c: "CIF/NIF"
         service_point_id: "Punto de Servicio"
         meter: "Contador"
-        meter_id: "Contador"
+        meter_id: "Medidor/Contador"
         debt: "Deuda"
         data_contract: "Datos de contrato"
 
@@ -78,7 +78,6 @@ es:
         ending_at: "Fecha de baja"
         tariff_scheme_id: "Esquema de contratación"
         billing_frequency_id: "Frecuencia de facturación"
-        meter_id: "Medidor/Contador"
         reading_route_id: "Ruta de lectura"
         reading_sequence: "Secuencia de lectura"
         reading_variant: "Variante/Fila/Columna de lectura"

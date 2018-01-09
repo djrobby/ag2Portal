@@ -64,6 +64,12 @@
       <td><%= @service_point.try(:zipcode).try(:to_label) %></td>
     </tr>
     <tr>
+      <td><b><%= t('activerecord.attributes.service_point.meter_id') %>:</b></td>
+      <td><%= link_to @service_point.try(:meter).try(:meter_code), ag2_gest.meter_path(@service_point.meter_id) unless @service_point.try(:meter).blank? %></td>
+      <td><b><%= t('activerecord.attributes.service_point.model_brand_caliber') %>:</b></td>
+      <td><%= @service_point.meter.model_brand_caliber unless @service_point.meter.blank? %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.service_point.reading_route_id') %>:</td>
       <td><%= @service_point.try(:reading_route).try(:to_label) unless @service_point.reading_route.nil? %></td>
       <td><%= t('activerecord.attributes.service_point.reading_sequence') %>:</td>

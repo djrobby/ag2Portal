@@ -16,6 +16,7 @@ class Meter < ActiveRecord::Base
   has_many :work_orders
   has_many :readings
   has_many :subscribers
+  has_many :service_points
 
   # Self join
   has_many :child_meters, class_name: 'Meter', foreign_key: 'master_meter_id'
@@ -181,6 +182,17 @@ class Meter < ActiveRecord::Base
     if !self.meter_code.blank?
       full_name += self.meter_code
     end
+    if !self.meter_model.blank?
+      full_name += " " + self.meter_model.full_name
+    end
+    if !self.caliber.blank?
+      full_name += " " + self.caliber.caliber.to_s
+    end
+    full_name
+  end
+
+  def model_brand_caliber
+    full_name = ""
     if !self.meter_model.blank?
       full_name += " " + self.meter_model.full_name
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180108104156) do
+ActiveRecord::Schema.define(:version => 20180109065153) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3373,6 +3373,7 @@ ActiveRecord::Schema.define(:version => 20180108104156) do
     t.string   "km"
     t.integer  "center_id"
     t.string   "pub_record"
+    t.integer  "meter_id"
   end
 
   add_index "service_points", ["cadastral_reference"], :name => "index_service_points_on_cadastral_reference"
@@ -3380,6 +3381,7 @@ ActiveRecord::Schema.define(:version => 20180108104156) do
   add_index "service_points", ["code"], :name => "index_service_points_on_code"
   add_index "service_points", ["company_id"], :name => "index_service_points_on_company_id"
   add_index "service_points", ["gis_id"], :name => "index_service_points_on_gis_id"
+  add_index "service_points", ["meter_id"], :name => "index_service_points_on_meter_id"
   add_index "service_points", ["name"], :name => "index_service_points_on_name"
   add_index "service_points", ["office_id"], :name => "index_service_points_on_office_id"
   add_index "service_points", ["organization_id"], :name => "index_service_points_on_organization_id"

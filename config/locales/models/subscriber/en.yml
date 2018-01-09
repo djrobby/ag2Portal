@@ -62,7 +62,7 @@ en:
         fiscal_id_c: "Fiscal Id"
         service_point_id: "Service Point"
         meter: "Meter"
-        meter_id: "Meter"
+        meter_id: "Meter/Counter"
         debt: "Debt"
         data_contract: "Contract data"
 
@@ -76,7 +76,6 @@ en:
         ending_at: "Fecha de baja"
         tariff_scheme_id: "Tarifa aplicada"
         billing_frequency_id: "Frecuencia de facturación"
-        meter_id: "Medidor/Contador"
         reading_route_id: "Ruta de lectura"
         reading_sequence: "Secuencia de lectura"
         reading_variant: "Variante/Fila/Columna de lectura"
