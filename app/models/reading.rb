@@ -36,7 +36,7 @@ class Reading < ActiveRecord::Base
   validates :billing_frequency,             :presence => true
   validates :reading_type,                  :presence => true
   validates :meter,                         :presence => true
-  validates :subscriber,                    :presence => true
+  # validates :subscriber,                    :presence => true
   validates :reading_route,                 :presence => true
   validates :reading_date,                  :presence => true
   validates_numericality_of :reading_index, :only_integer => true,
@@ -88,11 +88,19 @@ class Reading < ActiveRecord::Base
   def billable?
     # reading_type_id != 4 and (bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?)
     # bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
-    if bill.blank?
+    if bill.blank? && !subscriber.blank?
       Reading.where(subscriber_id: subscriber_id, billing_period_id: billing_period_id, reading_type_id: [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]).select{|r| r.bill != nil}.blank?
     else
       false #!Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
     end
+  end
+
+  def master_meter?
+    meter.is_master?
+  end
+
+  def billable_and_master_meter?
+    billable? && master_meter?
   end
 
   def consumption
@@ -134,80 +142,17 @@ class Reading < ActiveRecord::Base
   # Generates only one Prebill & associated invoices & items, based on current reading data
   #
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
-    # cr = consumption_total_period             # consumption real
-    cr = consumption_total_period_to_invoice  # consumption real to invoice
-    ce = estimated_consumption(cr)            # consumption estimated
-    co = 0                                    # consumption other
-    cf = cr + ce + co                         # total consumption to invoice
+    pre_bill = nil
+    if !subscriber.blank?
+      # cr = consumption_total_period             # consumption real
+      cr = consumption_total_period_to_invoice  # consumption real to invoice
+      ce = estimated_consumption(cr)            # consumption estimated
+      co = 0                                    # consumption other
+      cf = cr + ce + co                         # total consumption to invoice
 
-    # Launch transaction
-    pre_bill = create_pre_bill(group_no, user_id, operation_id, cr, ce, co, cf)
-
-    # # Create PreBill, PreInvoices & PreInvoiceItems
-    # pre_bill = PreBill.create( bill_no: nil,
-    #                     pre_group_no: (group_no || PreBill.next_no),
-    #                     project_id: project_id,
-    #                     invoice_status_id: InvoiceStatus::PENDING,
-    #                     bill_date: (billing_period.try(:prebilling_starting_date) || Date.today),
-    #                     subscriber_id: subscriber_id,
-    #                     client_id: subscriber.client_id,
-    #                     last_name: subscriber.client.last_name,
-    #                     first_name: subscriber.client.first_name,
-    #                     company: subscriber.client.company,
-    #                     fiscal_id: subscriber.client.fiscal_id,
-    #                     street_type_id: subscriber.client.street_type_id,
-    #                     street_name: subscriber.client.street_name,
-    #                     street_number: subscriber.client.street_number,
-    #                     building: subscriber.client.building,
-    #                     floor: subscriber.client.floor,
-    #                     floor_office: subscriber.client.floor_office,
-    #                     zipcode_id: subscriber.client.zipcode_id,
-    #                     town_id: subscriber.client.town_id,
-    #                     province_id: subscriber.client.province_id,
-    #                     region_id: subscriber.client.region_id,
-    #                     country_id: subscriber.client.country_id,
-    #                     confirmation_date: nil,
-    #                     bill_id: nil,
-    #                     created_by: user_id,
-    #                     reading_1_id: reading_1.try(:id),
-    #                     reading_2_id: id)
-
-    # subscriber.current_tariffs(reading_date).each do |tariffs_biller|
-    #   pre_invoice = PreInvoice.create(
-    #     invoice_no: nil,
-    #     pre_bill_id: pre_bill.id,
-    #     invoice_status_id: InvoiceStatus::PENDING,
-    #     invoice_type_id: InvoiceType::WATER,
-    #     invoice_date: (billing_period.try(:prebilling_starting_date) || Date.today),
-    #     tariff_scheme_id: subscriber.tariff_scheme_id,
-    #     payday_limit: billing_period.try(:prebilling_ending_date),
-    #     invoice_operation_id: operation_id,
-    #     billing_period_id: billing_period_id,
-    #     consumption: cf,
-    #     consumption_real: cr,
-    #     consumption_estimated: ce,
-    #     consumption_other: co,
-    #     biller_id: tariffs_biller[0],
-    #     discount_pct: 0.0,
-    #     exemption: 0.0,
-    #     charge_account_id: ChargeAccount.incomes(project_id).first.id,
-    #     created_by: user_id,
-    #     reading_1_date: reading_1.try(:reading_date),
-    #     reading_2_date: reading_date,
-    #     reading_1_index: reading_1.try(:reading_index),
-    #     reading_2_index: reading_index
-    #   )
-
-    #   tariffs_biller[1].each do |tariff|    # tariff: current tariff for current reading
-    #     # Computes & generates Preinvoice Items
-    #     generate_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
-
-    #     # Save totals in generated pre_invoice
-    #     _i = PreInvoice.find(pre_invoice.id)
-    #     _i.totals = _i.total
-    #     _i.save
-    #   end # tariffs_biller[1].each do |tariff|
-    # end # subscriber.current_tariffs(reading_date).each
+      # Launch creation transaction
+      pre_bill = create_pre_bill(group_no, user_id, operation_id, cr, ce, co, cf)
+    end
     return pre_bill
   end
 
@@ -230,21 +175,22 @@ class Reading < ActiveRecord::Base
   # Generates non-bulk individual bill/invoice
   #
   def generate_bill(next_bill_no=nil,user_id=nil,operation_id=1,payday_limit=nil,invoice_date=nil)
-    # cr = consumption_total_period             # consumption real
-    cr = consumption_total_period_to_invoice  # consumption real to invoice
-    ce = estimated_consumption(cr)            # consumption estimated
-    co = 0                                    # consumption other
-    cf = cr + ce + co                         # total consumption to invoice
+    @bill = nil
+    if !subscriber.blank? && bill_id.blank?     # This reading can be billed only if it's released (nil)
+      # cr = consumption_total_period             # consumption real
+      cr = consumption_total_period_to_invoice  # consumption real to invoice
+      ce = estimated_consumption(cr)            # consumption estimated
+      co = 0                                    # consumption other
+      cf = cr + ce + co                         # total consumption to invoice
 
-    # Bill No.
-    if next_bill_no.nil?
-      next_bill_no = bill_next_no(project)
-      if next_bill_no == '$err'
-        return nil
+      # Bill No.
+      if next_bill_no.nil?
+        next_bill_no = bill_next_no(project)
+        if next_bill_no == '$err'
+          return nil
+        end
       end
-    end
 
-    if bill_id.blank?   # This reading can be billed only if it's released (nil)
       # Launch transaction
       ActiveRecord::Base.transaction do
         @bill = Bill.create!(
@@ -316,13 +262,19 @@ class Reading < ActiveRecord::Base
       # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
-      return @bill
-    else
-      return nil
-    end # bill_id.blank?
+    end # !subscriber.blank? && bill_id.blank?
+    return @bill
 
   rescue ActiveRecord::RecordInvalid
     puts I18n.t(:transaction_error, var: "generate_bill")
+  end
+
+  #
+  # Real consumption to invoice (by period)
+  #
+  def consumption_total_period_to_invoice
+    ctp = consumption_total_period
+    meter.is_shared? ? (ctp / meter.shared_coefficient).round : ctp
   end
 
   #
@@ -332,18 +284,32 @@ class Reading < ActiveRecord::Base
     # @readings = Reading.where(billing_period_id: billing_period_id, subscriber_id: subscriber_ids).where('reading_type_id NOT IN (?)',[1,2,5,6]).group_by(&:reading_1_id)
     readings = subscriber.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
     total = 0
+    ccm = 0
     readings.each do |reading|
       total += reading[1].last.consumption
+    end
+    if meter.is_master?
+      # Billable Master Meter:
+      # Consumption to bill must be the substraction between this consumption
+      # and the sum of the child meters consumption
+      ccm = consumption_child_meters
+      total = ccm > total ? 0 : total - ccm
     end
     return total
   end
 
   #
-  # Consumption to invoice (by period)
+  # Child meters real consumption
   #
-  def consumption_total_period_to_invoice
-    ctp = consumption_total_period
-    meter.is_shared? ? (ctp / meter.shared_coefficient).round : ctp
+  def consumption_child_meters
+    total = 0
+    meter.child_meters.each do |c|
+      readings = c.readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
+      readings.each do |reading|
+        total += reading[1].last.consumption
+      end
+    end
+    return total
   end
 
   #

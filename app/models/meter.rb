@@ -36,6 +36,70 @@ class Meter < ActiveRecord::Base
                                   :length => { :is => 4 },
                                   :numericality => { :only_integer => true, :greater_than => 0 }
 
+  # Scopes
+  scope :by_code, -> { order(:meter_code) }
+  scope :from_office, ->(office_id) { where(office_id: office_id).by_code }
+  # BAD, it's too slow!!
+  # scope :availables, ->(old_subscriber_meter=nil) { select{|m| m.subscribers.empty? or m.id == old_subscriber_meter} }
+  # BETTER, only one SELECT from DB is faster
+  scope :availables, ->(old_subscriber_meter_id=nil) {
+    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
+    .select("meters.*")
+    .where("(subscribers.meter_id IS NULL OR subscribers.meter_id=0) OR meters.id = ?", old_subscriber_meter_id)
+    .by_code
+  }
+  scope :availables_by_caliber, ->(old_subscriber_meter_id=nil,cal) {
+    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
+    .select("meters.*")
+    .where("((subscribers.meter_id IS NULL OR subscribers.meter_id=0) AND meters.caliber_id = ?) OR meters.id = ?", cal, old_subscriber_meter_id)
+    .by_code
+  }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    includes([meter_model: :meter_brand], :caliber)
+    .where(w)
+    .by_code
+  }
+  scope :g_where_with_subscribers, -> w {
+    includes([meter_model: :meter_brand], :caliber, :subscribers)
+    .where(w)
+    .by_code
+  }
+  scope :master_meters,
+    joins(:child_meters)
+    .select("meters.*")
+    .group("meters.meter_code")
+    .having("count(child_meters_meters.id) > 0")
+
+  # Callbacks
+  before_validation :fields_to_uppercase
+  before_destroy :check_for_dependent_records
+
+  # Methods
+  def to_label
+    "#{full_name}"
+  end
+
+  def fields_to_uppercase
+    if !self.meter_code.blank?
+      self[:meter_code].upcase!
+    end
+  end
+
+  def full_name
+    full_name = ""
+    if !self.meter_code.blank?
+      full_name += self.meter_code
+    end
+    if !self.meter_model.blank?
+      full_name += " " + self.meter_model.full_name
+    end
+    if !self.caliber.blank?
+      full_name += " " + self.caliber.caliber.to_s
+    end
+    full_name
+  end
+
   # Current meter coding from 2010:
   # Length must be 12 chars
   # Format: BYYMCSSSSSSK (FAAMC000000K)
@@ -105,44 +169,6 @@ class Meter < ActiveRecord::Base
     ret
   end
 
-  # Scopes
-  scope :by_code, -> { order(:meter_code) }
-  scope :from_office, ->(office_id) { where(office_id: office_id).by_code }
-  # BAD, it's too slow!!
-  # scope :availables, ->(old_subscriber_meter=nil) { select{|m| m.subscribers.empty? or m.id == old_subscriber_meter} }
-  # BETTER, only one SELECT from DB is faster
-  scope :availables, ->(old_subscriber_meter_id=nil) {
-    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
-    .select("meters.*")
-    .where("(subscribers.meter_id IS NULL OR subscribers.meter_id=0) OR meters.id = ?", old_subscriber_meter_id)
-    .by_code
-  }
-  scope :availables_by_caliber, ->(old_subscriber_meter_id=nil,cal) {
-    joins("LEFT JOIN `subscribers` ON subscribers.meter_id=meters.id")
-    .select("meters.*")
-    .where("((subscribers.meter_id IS NULL OR subscribers.meter_id=0) AND meters.caliber_id = ?) OR meters.id = ?", cal, old_subscriber_meter_id)
-    .by_code
-  }
-  # generic where (eg. for Select2 from engines_controller)
-  scope :g_where, -> w {
-    includes([meter_model: :meter_brand], :caliber)
-    .where(w)
-    .by_code
-  }
-  scope :g_where_with_subscribers, -> w {
-    includes([meter_model: :meter_brand], :caliber, :subscribers)
-    .where(w)
-    .by_code
-  }
-  scope :master_meters,
-    joins(:child_meters)
-    .select("meters.*")
-    .group("meters.meter_code")
-    .having("count(child_meters_meters.id) > 0")
-
-  before_validation :fields_to_uppercase
-  before_destroy :check_for_dependent_records
-
   def details
     if subscribers.first.blank? || subscribers.first.reading_route.blank?
       "N/A"
@@ -165,30 +191,6 @@ class Meter < ActiveRecord::Base
     else
       subscribers.first.reading_sequence
     end
-  end
-
-  def fields_to_uppercase
-    if !self.meter_code.blank?
-      self[:meter_code].upcase!
-    end
-  end
-
-  def to_label
-    "#{full_name}"
-  end
-
-  def full_name
-    full_name = ""
-    if !self.meter_code.blank?
-      full_name += self.meter_code
-    end
-    if !self.meter_model.blank?
-      full_name += " " + self.meter_model.full_name
-    end
-    if !self.caliber.blank?
-      full_name += " " + self.caliber.caliber.to_s
-    end
-    full_name
   end
 
   def model_brand_caliber

@@ -102,7 +102,7 @@ module Ag2Gest
 
     def sub_sepa_pdf
       @subscriber = Subscriber.find(params[:id])
-      
+
       title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
       respond_to do |format|
         format.pdf {
@@ -158,7 +158,7 @@ module Ag2Gest
       end
       @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, @bill_voided.try(:invoices).try(:first).try(:payday_limit), @bill_voided.try(:invoices).try(:first).try(:invoice_date))
       # @reading.generate_pre_bill(nil,nil,3)
-      Sunspot.index! [@bill]
+      Sunspot.index! [@bill] unless @bill.blank?
       @search_bills = Bill.search do
         with :subscriber_id, params[:id]
         order_by :created_at, :asc
@@ -209,7 +209,7 @@ module Ag2Gest
                             )
       respond_to do |format|
         if @client_bank_account.save
-          if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank? 
+          if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank?
             @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
             redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
           end
@@ -652,7 +652,7 @@ module Ag2Gest
       province_id = !subscriber.postal_province_id.blank? ? subscriber.postal_province_id : subscriber.client.province_id
       region_id = !subscriber.postal_region_id.blank? ? subscriber.postal_region_id : subscriber.client.region_id
       country_id = !subscriber.postal_country_id.blank? ? subscriber.postal_country_id : subscriber.client.country_id
-      @json_data = { "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array, "regions" => regions_array, 
+      @json_data = { "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array, "regions" => regions_array,
                       "countries" => country_array, "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
                       "region_id" => region_id, "country_id" => country_id }
       render json: @json_data
@@ -1254,7 +1254,7 @@ module Ag2Gest
       BankOffice.order(:bank_id, :code).includes(:bank, :country).select("bank_offices.id, bank_offices.code, bank_offices.name, bank_offices.bank_id, bank_offices.country_id ")
       # BankOffice.order(:bank_id, :code).includes(:bank,:country)
     end
-    
+
     def banks_array
       _banks = banks_dropdown
       _array = []
