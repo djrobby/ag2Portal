@@ -4,7 +4,7 @@ class ProductValuedStock < ActiveRecord::Base
   belongs_to :product
   attr_accessible :store_id, :store_name, :product_family_id, :family_code, :family_name,
                   :product_id, :product_code, :main_description, :average_price,
-                  :initial, :current, :current_value
+                  :initial, :current, :current_value, :company_id, :company_name
   # Scopes
   scope :ordered_by_store_family, -> { order(:store_id, :family_code, :product_code) }
   #

@@ -224,7 +224,7 @@ module Ag2Products
       status = params[:status]
       product = params[:product]
       petitioner = params[:petitioner]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -312,7 +312,7 @@ module Ag2Products
       status = params[:status]
       product = params[:product]
       petitioner = params[:petitioner]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -401,7 +401,7 @@ module Ag2Products
       status = params[:status]
       product = params[:product]
       petitioner = params[:petitioner]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -489,7 +489,7 @@ module Ag2Products
       account = params[:account]
       balance = params[:balance]
       product = params[:product]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -658,7 +658,7 @@ module Ag2Products
       account = params[:account]
       balance = params[:balance]
       product = params[:product]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -821,7 +821,7 @@ module Ag2Products
       order = params[:order]
       account = params[:account]
       product = params[:product]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -882,7 +882,7 @@ module Ag2Products
       order = params[:order]
       account = params[:account]
       product = params[:product]
-      
+
       if project.blank?
         init_oco if !session[:organization]
         # Initialize select_tags
@@ -993,7 +993,7 @@ module Ag2Products
             @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_family_stock(store, family) : ProductValuedStock.belongs_to_family_stock(family)
           else
             # By Store: In one store on in every stores
-            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_stock(store) : ProductValuedStock.ordered_by_store_family_stock
+            @stocks_report = !store.blank? ? ProductValuedStock.belongs_to_store_stock(store) : ProductValuedStock.ordered_by_store_family
           end
         end
       else
@@ -1079,7 +1079,7 @@ module Ag2Products
               @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family_stock(store, family) : ProductValuedStockByCompany.belongs_to_family_stock(family)
             else
               # By Store: In one store on in every stores
-              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_stock(store) : ProductValuedStockByCompany.all
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_stock(store) : ProductValuedStockByCompany.ordered_by_store_family
             end
           end
         end
@@ -1103,7 +1103,7 @@ module Ag2Products
               @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store_family(store, family) : ProductValuedStockByCompany.belongs_to_family(family)
             else
               # By Store: In one store on in every stores
-              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store(store) : ProductValuedStockByCompany.all
+              @stocks_report = !store.blank? ? ProductValuedStockByCompany.belongs_to_store(store) : ProductValuedStockByCompany.ordered_by_store_family
             end
           end
         end

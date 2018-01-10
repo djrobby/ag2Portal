@@ -29,7 +29,7 @@ en:
         report_title: "Delivery notes"
         sum_rows_title: "Total Rows:"
       stock_report:
-        report_title: "Valuated Inventory (global WAP)"
+        report_title: "Valued Inventory (global WAP)"
         report_title_catalog: "Products Catalog"
         sum_rows_title: "Total Articles:"
         total_full: "Total"
@@ -37,7 +37,7 @@ en:
         id: "Id"
         average_price: "WAP"
       stock_company_report:
-        report_title: "Valuated Inventory (WAP by company)"
+        report_title: "Valued Inventory (WAP by company)"
       every_report:
         pt: "Page"
         pd: "of"
