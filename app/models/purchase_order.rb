@@ -142,6 +142,18 @@ class PurchaseOrder < ActiveRecord::Base
     cnt > 0 ? Date.parse(Time.at(avg / cnt).to_s) : nil
   end
 
+  def delayed_items
+    c = 0
+    purchase_order_items.each do |i|
+      c += 1 if i.delay > 0
+    end
+    c > 0 ? c : 1
+  end
+
+  def delay_avg
+    purchase_order_items.sum(&:delay) / delayed_items
+  end
+
   def offer_no
     offer.nil? ? nil : offer.offer_no
   end

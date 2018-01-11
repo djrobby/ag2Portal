@@ -93,6 +93,14 @@ class PurchaseOrderItem < ActiveRecord::Base
     purchase_order_item_invoiced_balance.balance
   end
 
+  def delay
+    d = 0
+    if balance > 0
+      d = (Time.now.to_date - purchase_order.order_date).to_i
+    end
+    d
+  end
+
   private
 
   def check_for_dependent_records
