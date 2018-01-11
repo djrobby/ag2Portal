@@ -74,19 +74,18 @@ module Ag2Tech
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
+     from = Time.parse(@from).strftime("%Y-%m-%d")
+     to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      # Format dates
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
-      # Setup filename
+      if project.blank?
+        @budget_report = Budget.where("created_at >= ? AND created_at <= ?",from,to).order(:company_id)
+      else
+        @budget_report = Budget.where("id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
+      end
+
       title = t("activerecord.models.budget.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports('#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",

@@ -870,6 +870,11 @@ module Ag2Products
 
       @receipt_notes_report = @search.results
 
+      @receipt_notes_csv = []
+      @receipt_notes_report.each do |pr|
+        @receipt_notes_csv << pr
+      end
+
       if !@receipt_notes_report.blank?
         title = t("activerecord.models.receipt_note.few")
         @to = formatted_date(@receipt_notes_report.first.created_at)
@@ -880,6 +885,7 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { render text: ReceiptNote.to_csv(@receipt_notes_csv) }
         end
       end
     end

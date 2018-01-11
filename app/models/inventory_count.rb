@@ -95,6 +95,48 @@ class InventoryCount < ActiveRecord::Base
     end
   end
 
+  def self.to_csv(array)
+    attributes = [  "Id" + " " + I18n.t("activerecord.models.company.one"),
+                    I18n.t("activerecord.models.company.one"),
+                    I18n.t("activerecord.attributes.inventory_count.count_no"),
+                    I18n.t("activerecord.attributes.inventory_count.count_date"),
+                    I18n.t("activerecord.attributes.inventory_count.inventory_count_type"),
+                    I18n.t("activerecord.attributes.inventory_count.store"),
+                    I18n.t("activerecord.attributes.product.family_code"),
+                    I18n.t("activerecord.attributes.inventory_count.product_family"),
+                    I18n.t("activerecord.attributes.inventory_count.quantity"),
+                    I18n.t("activerecord.attributes.inventory_count.approval_date"),
+                    I18n.t("activerecord.attributes.inventory_count.approver")]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        c001 = i.store.company.id
+        c002 = i.store.company.name
+        i001 = i.full_no
+        i002 = i.formatted_date(i.count_date) unless i.count_date.blank?
+        i003 = i.inventory_count_type.name unless i.inventory_count_type.blank?
+        i004 = i.store.name unless i.store.blank?
+        i005 = i.product_family.code unless i.product_family.blank?
+        i006 = i.product_family.name unless i.product_family.blank?
+        i007 = i.number_with_precision(i.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.quantity.blank?
+        i008 = i.formatted_timestamp(i.approval_date.utc.getlocal) unless i.approval_date.blank?
+        i009 = i.approver.email unless i.approver.blank?
+        csv << [  c001,
+                  c002,
+                  i001,
+                  i002,
+                  i003,
+                  i004,
+                  i005,
+                  i006,
+                  i007,
+                  i008,
+                  i009]
+      end
+    end
+  end
+
   #
   # Records navigator
   #

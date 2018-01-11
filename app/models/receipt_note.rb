@@ -224,6 +224,54 @@ class ReceiptNote < ActiveRecord::Base
     joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) = sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
   end
 
+  def self.to_csv(array)
+    attributes = [  "Id" + " " + I18n.t("activerecord.models.company.one"),
+                    I18n.t("activerecord.models.company.one"),
+                    I18n.t("activerecord.attributes.receipt_note.receipt_no"),
+                    I18n.t("activerecord.attributes.receipt_note.receipt_date"),
+                    I18n.t("activerecord.attributes.receipt_note.project"),
+                    I18n.t("activerecord.attributes.receipt_note.project"),
+                    I18n.t("activerecord.attributes.receipt_note.store"),
+                    I18n.t("activerecord.attributes.purchase_order.charge_account_code"),
+                    I18n.t("activerecord.attributes.receipt_note.charge_account"),
+                    I18n.t("activerecord.attributes.purchase_order.supplier_code"),
+                    I18n.t("activerecord.attributes.receipt_note.supplier"),
+                    I18n.t("activerecord.attributes.receipt_note.quantity"),
+                    I18n.t("activerecord.attributes.receipt_note.total")]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        c001 = i.project.company.id
+        c002 = i.project.company.name
+        i001 = i.receipt_no
+        i002 = i.formatted_date(i.receipt_date) unless i.receipt_date.blank?
+        i003 = i.project.full_code unless i.project.blank?
+        i004 = i.project.name unless i.project.blank?
+        i005 = i.store.name unless i.store.blank?
+        i006 = i.charge_account.full_code unless i.charge_account.blank?
+        i007 = i.charge_account.partial_name unless i.charge_account.blank?
+        i008 = i.supplier.full_code
+        i009 = i.supplier.partial_name
+        i010 = i.number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
+        i011 = i.number_with_precision(i.taxable, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.taxable.blank?
+        csv << [  c001,
+                  c002,
+                  i001,
+                  i002,
+                  i003,
+                  i004,
+                  i005,
+                  i006,
+                  i007,
+                  i008,
+                  i009,
+                  i010,
+                  i011]
+      end
+    end
+  end
+
   #
   # Records navigator
   #

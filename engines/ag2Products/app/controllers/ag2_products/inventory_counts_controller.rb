@@ -721,6 +721,11 @@ module Ag2Products
       end
 
       @inventory_counts_report = @search.results
+      
+      @inventory_counts_csv = []
+      @inventory_counts_report.each do |pr|
+        @inventory_counts_csv << pr
+      end
 
       if !@inventory_counts_report.blank?
         title = t("activerecord.models.inventory_count.few")
@@ -732,6 +737,7 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { render text: InventoryCount.to_csv(@inventory_counts_csv) }
         end
       end
     end

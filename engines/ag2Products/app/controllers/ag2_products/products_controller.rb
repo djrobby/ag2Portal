@@ -377,6 +377,11 @@ module Ag2Products
      @products_catalog_report = @search.results
      @products_catalog_family =  @products_catalog_report
 
+     @roducts_catalog_csv = []
+     @products_catalog_report.each do |pr|
+       @roducts_catalog_csv << pr
+     end
+
      if !@products_catalog_report.blank?
        title = t("activerecord.models.product.few")
        respond_to do |format|
@@ -385,6 +390,7 @@ module Ag2Products
                       filename: "#{title}.pdf",
                       type: 'application/pdf',
                       disposition: 'inline' }
+          format.csv { render text: Product.to_csv(@roducts_catalog_csv) }
        end
      end
     end

@@ -246,6 +246,42 @@ class Product < ActiveRecord::Base
   end
 
   #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [  I18n.t("activerecord.attributes.product.family_code"),
+                    I18n.t("activerecord.attributes.product.product_family"),
+                    I18n.t("activerecord.attributes.product.product_code"),
+                    I18n.t("activerecord.attributes.product.main_description"),
+                    I18n.t("activerecord.attributes.stock.rotation_rate"),
+                    I18n.t("activerecord.attributes.product.reference_price_c"),
+                    I18n.t("activerecord.attributes.product.average_price_c"),
+                    I18n.t("activerecord.attributes.product.sell_price_c")]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.product_family.family_code
+        i002 = i.product_family.name
+        i003 = i.full_code
+        i004 = i.main_description
+        i005 = i.rotation_rate
+        i006 = i.reference_price
+        i007 = i.average_price
+        i008 = i.sell_price
+        csv << [  i001,
+                  i002,
+                  i003,
+                  i004,
+                  i005,
+                  i006,
+                  i007,
+                  i008]
+      end
+    end
+  end
+
+  #
   # Records navigator
   #
   def to_first

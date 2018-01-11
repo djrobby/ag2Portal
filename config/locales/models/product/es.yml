@@ -26,6 +26,7 @@ es:
         aux_description: "Descripción secundaria"
         product_type: "Tipo"
         product_type_id: "Tipo"
+        family_code: "Codigo Familia"
         product_family: "Familia"
         product_family_id: "Familia"
         measure: "Unidad de medida"

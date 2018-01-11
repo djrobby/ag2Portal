@@ -989,6 +989,11 @@ module Ag2Purchase
 
       @purchase_orders_report = @search.results
 
+      @purchase_orders_csv = []
+      @purchase_orders_report.each do |pr|
+        @purchase_orders_csv << pr
+      end
+
       if !@purchase_orders_report.blank?
         title = t("activerecord.models.purchase_order.few")
         @to = formatted_date(@purchase_orders_report.first.created_at)
@@ -999,6 +1004,7 @@ module Ag2Purchase
                         filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { render text: PurchaseOrder.to_csv(@purchase_orders_csv) }
         end
       end
     end

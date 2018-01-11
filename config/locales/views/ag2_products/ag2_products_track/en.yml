@@ -4,6 +4,7 @@ en:
       index:
         back_to_root: "Back to ag2Logistics"
         report_btn: "Generate selected Report"
+        csv_btn: "Generate selected CSV"
         label_report: "Report "
         label_project: "Project "
         label_supplier: "Supplier "
@@ -38,6 +39,8 @@ en:
         average_price: "WAP"
       stock_company_report:
         report_title: "Valued Inventory (WAP by company)"
+        company_current_value: "Total by company"
+        company_average_price: "WAP by company"
       every_report:
         pt: "Page"
         pd: "of"

@@ -678,6 +678,11 @@ module Ag2Products
       end
 
       @delivery_notes_report = @search.results
+      
+      @delivery_notes_csv = []
+      @delivery_notes_report.each do |pr|
+        @delivery_notes_csv << pr
+      end
 
       if !@delivery_notes_report.blank?
         title = t("activerecord.models.delivery_note.few")
@@ -689,6 +694,7 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { render text: DeliveryNote.to_csv(@delivery_notes_csv) }
         end
       end
     end

@@ -54,6 +54,12 @@
       window.open("products_catalog_report.pdf", "_blank");
       return false;
     });
+    // when #print_csv_btn is clicked
+    $("#print_catalog_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("products_catalog_report.csv", "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -104,6 +110,9 @@
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Product, :path => new_product_path, :txt => t(".btn_new") } %>
         <!-- Catalog -->
         <a href="#" id="print_catalog_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control_catalog' %></a>
+        <br /><br /> 
+        <a href="#" id="print_catalog_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control_catalog' %></a>
+
         <br /><br />     
         <!-- Back -->
         <%= link_to I18n.t("ag2_products.products.index.back_to_root"), ag2_products.root_path %>

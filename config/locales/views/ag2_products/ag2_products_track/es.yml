@@ -4,6 +4,7 @@ es:
       index:
         back_to_root: "Volver a ag2Logistics"
         report_btn: "Generar Informe seleccionado"
+        csv_btn: "Generar CSV seleccionado"
         label_report: "Informe"
         label_project: "Proyecto"
         label_supplier: "Proveedor"
@@ -38,6 +39,8 @@ es:
         average_price: "PMP"
       stock_company_report:
         report_title: "Inventario Valorado (PMP por empresa)"
+        company_current_value: "Total por empresa"
+        company_average_price: "PMP por empresa"
       every_report:
         pt: "Página"
         pd: "de"

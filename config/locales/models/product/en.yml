@@ -26,6 +26,7 @@ en:
         aux_description: "Secondary description"
         product_type: "Type"
         product_type_id: "Type"
+        family_code: "Family Code"
         product_family: "Family"
         product_family_id: "Family"
         measure: "Measure"

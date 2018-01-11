@@ -191,6 +191,12 @@
       window.open("delivery_notes_report.pdf", "_blank");
       return false;
     });
+    // when #print_csv_btn is clicked
+    $("#print_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("delivery_notes_report.csv", "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -235,6 +241,9 @@
         <%= render :partial => '/layouts/crud/new', :locals => { :model => ReceiptNote, :path => new_delivery_note_path, :txt => t(".btn_new") } %>
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <br /><br /> 
+        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+
         <br /><br />
         <!-- Back -->
         <%= link_to t(".back_to_root"), ag2_products.root_path %>

@@ -13,6 +13,7 @@
     });
     // Hide report button
     $('#report_btn').hide();
+    $('#csv_btn').hide();
   }); 
 
   jQuery(function($) {
@@ -32,6 +33,7 @@
           hide("#Status", "<%= t(".label_order_status") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         case 2:
           // Offer
@@ -43,6 +45,7 @@
           hide("#Status", "<%= t(".label_order_status") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         case 3:
           // Purchase order
@@ -54,6 +57,7 @@
           show("#Status", "<%= t(".label_order_status") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         case 4:
           // Supplier invoice
@@ -65,6 +69,7 @@
           hide("#Status", "<%= t(".label_order_status") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         case 5:
           // Supplier payment
@@ -76,6 +81,7 @@
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         case 6:
           // Supplier
@@ -87,6 +93,7 @@
           hide("#Status", "<%= t(".label_order_status") %>");
           hide("#Product", "<%= t(".label_product") %>");
           $('#report_btn').show();
+          $('#csv_btn').show();
           break;
         default:
           show("#Project", "<%= t(".label_project") %>");
@@ -97,6 +104,7 @@
           show("#Status", "<%= t(".label_order_status") %>");
           show("#Product", "<%= t(".label_product") %>");
           $('#report_btn').hide();
+          $('#csv_btn').hide();
       }
       return false;
     });
@@ -239,6 +247,86 @@
       }
       return false;
     });
+
+    // when #csv_btn is clicked
+    $("#csv_btn").click(function() {
+      // make a POST call and get report
+      var report = $('#Report :selected').index();
+      if (report == "")
+        return;
+      var detailed = $('#detailed').prop('checked');
+      var from = $('#From').val();
+      var to = $('#To').val();
+      if ((from == "") || (to == ""))
+        return;
+      switch (report) {
+        case 1:
+          // Offer request
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (product == ""))
+            return;
+          window.open("request_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          break;
+        case 2:
+          // Offer
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (product == ""))
+            return;
+          window.open("offer_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          break;
+        case 3:
+          // Purchase order
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var store = $('select#Store :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var status = $('select#Status :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (order == "") && (account == "") && (status == "") && (product == ""))
+            return;
+          window.open("order_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          break;
+        case 4:
+          // Supplier invoice
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          var order = $('select#Order :selected').val();
+          var account = $('select#Account :selected').val();
+          var product = $('select#Product :selected').val();
+          if ((project == "") && (supplier == "") && (order == "") && (account == "") && (product == ""))
+            return;
+          window.open("invoice_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          break;
+        case 5:
+          // Supplier payment
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          if ((project == "") && (supplier == ""))
+            return;
+          window.open("payment_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          break;
+        case 6:
+          // Supplier
+          var project = $('select#Project :selected').val();
+          var supplier = $('select#Supplier :selected').val();
+          if ((project == "") && (supplier == ""))
+            return;
+          window.open("supplier_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          break;
+      }
+      return false;
+    });
     
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);
@@ -321,10 +409,15 @@
         <%= label_tag t(".label_product"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Product", options_from_collection_for_select(@products, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       </p>
+      <!-- Detailed? -->
+      <%= label_tag 'detailed', :class => 'checkbox inline' do %>
+        <%= t("control_tracking.detailed") %>
+        <%= check_box_tag 'detailed', nil, nil %>
+      <% end %>
       <!-- Buttons -->
       <p>
         <a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%= t '.report_btn' %></a>
-        <%= check_box_tag 'detailed', nil, nil, title: t("control_tracking.detailed") %>
+        <a href="#" id="csv_btn" class="btn btn-success form-button-under-sel2"><%= t '.csv_btn' %></a>
       </p>
       <!-- Links -->
       <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
