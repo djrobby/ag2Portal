@@ -269,128 +269,146 @@
       switch (report) {
         case 1:
           // Inventory count
-          hide("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          show("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 2:
           // Purchase order
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#User", "<%= t(".label_petitioner") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          show("#Status", "label_order_status");
+          show("#User", "label_petitioner");
+          hide("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 3:
           // Purchase pending order
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#User", "<%= t(".label_petitioner") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          show("#Status", "label_order_status");
+          show("#User", "label_petitioner");
+          hide("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 4:
           // Receipt note
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          hide("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 5:
           // Delivery note
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          hide("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          hide("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          hide("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 6:
           // Product
-          hide("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          hide("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          hide("#Product", "<%= t(".label_product") %>");
+          hide_date("#From", "label_from");
+          hide_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Supplier", "label_supplier");
+          hide("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          show("#Family", "label_family");
+          hide("#Product", "label_product");
           show_buttons(true);
           break;
         case 7:
           // Stock
-          hide("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide_date("#From", "label_from");
+          hide_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          show("#Family", "label_family");
+          show("#Product", "label_product");
           show_buttons(true);
           break;
         // MJ
         case 8:
           // Stock by Company
-          hide("#Project", "<%= t(".label_project") %>");
-          hide("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Balance", "<%= t(".label_balance") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#User", "<%= t(".label_petitioner") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          hide_date("#From", "label_from");
+          hide_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Balance", "label_balance");
+          hide("#Status", "label_order_status");
+          hide("#User", "label_petitioner");
+          show("#Family", "label_family");
+          show("#Product", "label_product");
           show_buttons(true);
           break;
         default:
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Balance", "<%= t(".label_balance") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#User", "<%= t(".label_petitioner") %>");
-          show("#Family", "<%= t(".label_family") %>");
-          show("#Product", "<%= t(".label_product") %>");
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Balance", "label_balance");
+          show("#Status", "label_order_status");
+          show("#User", "label_petitioner");
+          show("#Family", "label_family");
+          show("#Product", "label_product");
           show_buttons(false);
       }
       return false;
@@ -736,11 +754,52 @@
       $('label[for=' + _label + ']').show();
       $(_select).addClass('sel2');
       $(_select).show();
-      $(_select).select2({
-        formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-        containerCssClass: 'left-winged',
-        allowClear: true
-      });
+      switch (_select) {
+        case '#Project':
+          projectsSelect2("<%= @project %>");
+          break;
+        case '#Supplier':
+          suppliersSelect2("<%= @supplier %>");
+          break;
+        case '#Store':
+          storesSelect2("<%= @store %>");
+          break;
+        case '#Order':
+          wordersSelect2("<%= @work_order %>");
+          break;
+        case '#Account':
+          caccountsSelect2("<%= @charge_account %>");
+          break;
+        case '#User':
+          usersSelect2("<%= @user %>");
+          break;
+        case '#Family':
+          familiesSelect2("<%= @family %>");
+          break;
+        case '#Product':
+          productsSelect2("<%= @product %>");
+          break;
+        default:
+          $(_select).select2({
+            formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+            containerCssClass: 'left-winged',
+            allowClear: true
+          });
+      }
+    }
+    
+    function hide_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').hide();
+      $(_date).removeClass('date_picker');
+      $(_date).hide();      
+    }
+    
+    function show_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').show();
+      $(_date).addClass('date_picker');
+      $(_date).show();
     }
   });
 </script>
