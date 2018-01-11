@@ -389,6 +389,21 @@ class EnginesController < ApplicationController
     render json: @users
   end
 
+  # Stores
+  def search_stores
+    @stores = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(name LIKE '%#{@q}%')"
+      @stores = serialized(Store.where(w).by_code,
+                             Api::V1::StoresSerializer)
+    end
+    render json: @stores
+  end
+
   # Returns JSON list of data
   def serialized(_data, _serializer)
     ActiveModel::ArraySerializer.new(_data, each_serializer: _serializer, root: false)

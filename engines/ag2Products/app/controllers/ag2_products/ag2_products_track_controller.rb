@@ -1219,22 +1219,39 @@ module Ag2Products
     # Default Methods
     #
     def index
-      #authorize! :update, TimeRecord
+      project = params[:Project]
+      supplier = params[:Supplier]
+      store = params[:Store]
+      order = params[:Order]
+      account = params[:Account]
+      user = params[:User]
+      family = params[:Family]
+      product = params[:Product]
+
       @reports = reports_array
       @organization = nil
       if session[:organization] != '0'
         @organization = Organization.find(session[:organization].to_i)
       end
 
-      @projects = projects_dropdown
-      @suppliers = suppliers_dropdown
-      @stores = projects_stores(@projects)
-      @work_orders = projects_work_orders(@projects)
-      @charge_accounts = projects_charge_accounts(@projects)
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @store = !store.blank? ? Store.find(store).name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
+      @user = !user.blank? ? User.find(user).to_label : " "
+      @family = !family.blank? ? ProductFamily.find(family).full_name : " "
+      @product = !product.blank? ? Product.find(product).full_name : " "
+
+      # @projects = projects_dropdown
+      # @suppliers = suppliers_dropdown
+      # @stores = projects_stores(@projects)
+      # @work_orders = projects_work_orders(@projects)
+      # @charge_accounts = projects_charge_accounts(@projects)
       @statuses = OrderStatus.order('id')
-      @petitioners = User.order('id')
-      @families = families_dropdown
-      @products = products_dropdown
+      # @petitioners = User.order('id')
+      # @families = families_dropdown
+      # @products = products_dropdown
       @balances = balances_dropdown if @balances.nil?
     end
 
