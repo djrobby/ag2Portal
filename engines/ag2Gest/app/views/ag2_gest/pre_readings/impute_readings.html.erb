@@ -6,6 +6,16 @@
       weekStart : 1
   });
 
+  $('.date_picker').datepicker({
+    format : 'dd/mm/yyyy',
+    weekStart : 1
+  }).on('changeDate', function(e){
+    $('.date_picker').datepicker('hide');
+  });
+  if ($('#pre_reading_reading_date').val() == "") {
+    $('#pre_reading_reading_date').datepicker('setValue', es_date(new Date()));
+  }
+
   // propagate date
   $(".icon-calendar").click(function() {
     $("tr").removeClass("date-clicked")
@@ -24,7 +34,7 @@
     var check = new Date(c[2], parseInt(c[1])-1, c[0]);
 
     if (check < from || check > to){
-      alert("Lectura fuera de plazo")
+      alert("La lectura indicada está fuera de plazo")
     };
     $("tr.date-clicked").nextAll().find('input[type="text"]').val(date);
     $('html, body').animate({
@@ -49,7 +59,7 @@
       form.append($(input_date));
     }
     form.find("input[type='checkbox']").prop('checked', false);
-    incidences = row.data("incedences");
+    incidences = row.data("incidences");
     form.attr("action", "/es/ag2_gest/es/pre_readings/"+$(this).attr("id").split("-")[2]);
     $.each(incidences, function( index, value ) {
       form.find('input[value="'+value+'"]').prop('checked', true);
@@ -86,25 +96,15 @@
       };
       previous_consumption = row.data("consumption-one");
       year_consumption = row.data("consumption-two");
-      if( (previous_consumption!="" && year_consumption!="") && (consumption > previous_consumption + (0.5 * previous_consumption)) || (consumption < previous_consumption - (0.5 * previous_consumption)) || (consumption > year_consumption + (0.5 * year_consumption)) || (consumption < year_consumption - (0.5 * year_consumption)) ){
-        alert("Detalles de consumo.\nP. Actual: "+consumption+"\nP. Anterior: "+previous_consumption+"\nA. Anterior: "+year_consumption)
-      }
+      // if( (previous_consumption!="" && year_consumption!="") && (consumption > previous_consumption + (0.5 * previous_consumption)) || (consumption < previous_consumption - (0.5 * previous_consumption)) || (consumption > year_consumption + (0.5 * year_consumption)) || (consumption < year_consumption - (0.5 * year_consumption)) ){
+      //   alert("Detalles de consumo.\nP. Actual: "+consumption+"\nP. Anterior: "+previous_consumption+"\nA. Anterior: "+year_consumption)
+      // }
       if (index != "" ){
         row.find("td").addClass("row-green");
       }else{
         row.find("td").fadeOut(500).fadeIn(500);
       }
     };
-
-    if (index != "" ){
-      row.find("td").addClass("row-green");
-    }else{
-      row.find("td").removeClass("row-green");
-      input_index.val("");
-      var input = $("<input>").attr("type", "hidden").attr("name", "lapnot").val(true);
-      form.append($(input));
-      form.submit();
-    }
     
     cons_act = index - row.data("index-one");
     con_baj = (row.data("consumption-one") / 2);
@@ -112,6 +112,7 @@
 
     // if both inputs have values
     if (inputs.filter(function() { return this.value == '' }).length == 0){
+      if (input_index.val() >= 0){
       // if index last period exits
       if (row.data("index-one") != "" && row.data("index-one") != 0){
         // if index < index last period
@@ -127,6 +128,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -144,6 +146,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -161,6 +164,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -177,6 +181,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -193,6 +198,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -209,6 +215,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -225,6 +232,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -241,6 +249,7 @@
           } else {
             if (row.data("index") == "" ){
               input_index.val("");
+              row.find("td").removeClass("row-green");
             }else{
               input_index.val(row.data("index"));
             }
@@ -253,7 +262,21 @@
       }else{
         form.submit();
       };
+    }else{
+      input_index.val("");
+      row.find("td").removeClass("row-green");
     };
+    };
+    if (index != "" ){
+      row.find("td").addClass("row-green");
+    }else{
+      row.find("td").removeClass("row-green");
+      input_index.val("");
+      input_date.val("");
+      var input = $("<input>").attr("type", "hidden").attr("name", "lapnot").val(true);
+      form.append($(input));
+      form.submit();
+    }
   });
 
   // AJAX SUCCESS update prereading
@@ -266,17 +289,17 @@
     $.each(data["pre_reading_incidences"], function( index, value ) {
       incidences.push(value["reading_incidence_type_id"])
     });
-    if(incidences.length != 0){
+    index = row.find("input[type='number']").val();
+    if(incidences.length != 0 && index.length == 0 ){
       row.find(".wrench-column").show()
-      row.find("input[type='number']").val(row.data("index-one"));
-    }
-    if (row.data("index") == "" ){
       row.find("td").addClass("row-green");
-    }else{
-      row.find("td").fadeOut(500).fadeIn(500);
+      row.find("input[type='number']").val(row.data("index-one"));
+      // row.find("input[type='number']").val(row.data("index-one"));
+    } else {
+      row.find(".wrench-column").hide()
     }
 
-    row.data("incedences", incidences);
+    row.data("incidences", incidences);
     row.data("index", data["reading_index"]);
   });
 
@@ -356,7 +379,7 @@
         </thead>
         <tbody>
           <% @pre_readings.each_with_index do |pre_reading,index| %>
-          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-reading-ending-date="<%= pre_reading.billing_period.reading_ending_date.strftime("%d/%m/%Y") %>" data-reading-starting-date="<%= pre_reading.billing_period.reading_starting_date.strftime("%d/%m/%Y") %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incedences="<%= pre_reading.pre_reading_incidences.map(&:reading_incidence_type_id) %>">
+          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-reading-ending-date="<%= pre_reading.billing_period.reading_ending_date.strftime("%d/%m/%Y") %>" data-reading-starting-date="<%= pre_reading.billing_period.reading_starting_date.strftime("%d/%m/%Y") %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incidences="<%= pre_reading.pre_reading_incidences.map(&:reading_incidence_type_id) %>">
               <%= simple_form_for pre_reading, :remote => true, :html => { "data-type" => :json, :id => "form-prereading-#{pre_reading.id}" } do |f| %>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
@@ -383,13 +406,13 @@
                   <%= "#{pre_reading.reading_1.try(:billing_period).try(:period)} <b>#{pre_reading.reading_index_1}</b>".html_safe %>
                 </td>
                 <td style="width:15%" <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <%= f.input :reading_date, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, label: false, :input_html => { :value => (pre_reading.reading_date ? pre_reading.reading_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")), :class => 'large-text-field date_picker input-sm'}, wrapper_html: { class: "pull-left", style: "width: 80%"}  %>
+                  <%= f.input :reading_date, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, label: false, input_html: { value: (pre_reading.reading_date ? pre_reading.reading_date.strftime("%d/%m/%Y") : Date.today.strftime("%d/%m/%Y")), :class => 'large-text-field date_picker input-sm'}, wrapper_html: { class: "pull-left", style: "width: 80%"}  %>
                   <a href="#" class="btn btn-mini btn-primary ">
                     <i class="icon-calendar icon-white"></i>
                   </a>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm', tabindex: index+1} %>
+                  <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm', tabindex: index+1, min: '0', step: 'any'} %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <i class="wrench-column icon-wrench" <%= 'style=display:none' if pre_reading.pre_reading_incidences.empty? %>></i>
@@ -409,7 +432,7 @@
     </div>
   </div>
   <div class="row">
-    <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary" %>
+    <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary disabled" : "btn btn-primary" %>
     <%= link_to t('activerecord.attributes.pre_reading.print'), to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary", target: "_blank" %>
     <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
 

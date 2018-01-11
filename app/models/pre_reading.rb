@@ -30,10 +30,11 @@ class PreReading < ActiveRecord::Base
   validates :meter,                         :presence => true
   validates :subscriber,                    :presence => true
   validates :reading_route,                 :presence => true
-  validates :reading_date,                  :presence => true
+  validates :reading_date,                  :presence => true, :if => "!reading_index.blank?"
   validates_numericality_of :reading_index, :only_integer => true,
                                             :greater_than_or_equal_to => 0,
-                                            :message => :reading_invalid
+                                            :message => :reading_invalid,
+                                            :if => "!reading_date.blank?"
   validate :check_date
 
   # Scopes
@@ -115,7 +116,7 @@ class PreReading < ActiveRecord::Base
   end
 
   def incomplete?
-    reading_date.blank?
+    reading_date.blank? || reading_index.blank?
   end
 
   def consumption
@@ -134,8 +135,10 @@ class PreReading < ActiveRecord::Base
   private
 
   def check_date
-    if reading_1 and reading_1.reading_date and reading_1.reading_date > reading_date
-      errors[:reading_date] << " no puede ser inferior que la del periodo anterior"
+    if !reading_date.blank?
+      if reading_1 and reading_1.reading_date and reading_1.reading_date > reading_date
+        errors[:reading_date] << " no puede ser inferior que la del periodo anterior"
+      end
     end
   end
 end

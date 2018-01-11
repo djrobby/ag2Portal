@@ -147,6 +147,10 @@ en:
           attributes:
             reading_index:
               reading_invalid: "invalid (must be integer greater than 0)"
+        pre_reading:
+          attributes:
+            reading_index:
+              reading_invalid: "invalid (must be integer greater than 0)"
         formality:
           attributes:
             code:

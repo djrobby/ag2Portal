@@ -147,6 +147,10 @@ es:
           attributes:
             reading_index:
               reading_invalid: "inválido (deber ser entero mayor que 0)"
+        pre_reading:
+          attributes:
+            reading_index:
+              reading_invalid: "inválido (deber ser entero mayor que 0)"
         formality:
           attributes:
             code:

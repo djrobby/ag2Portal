@@ -13,7 +13,7 @@ module Ag2Gest
       reading_date = params[:reading_date]
       reading_date = (reading_date[0..3] + '-' + reading_date[4..5] + '-' + reading_date[6..7]).to_date
       code = ''
-      
+
       if reading_date.between?(billing_period.reading_starting_date, billing_period.reading_ending_date)
         code = '$ok'
       else
@@ -235,20 +235,20 @@ module Ag2Gest
         # vuelta de contador
         if @reading.reading_index < @reading.reading_index_1 and !jj.include?(1)
           @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 1)
-        end 
+        end
 
-        if !@reading.reading_1_id.blank? && Reading.find(@reading.reading_1_id).reading_type_id != ReadingType::INSTALATION
+        if !@reading.reading_1_id.blank? && Reading.find(@reading.reading_1_id).reading_type_id != ReadingType::INSTALACION
           conbaj = (@reading.reading_1.consumption / 2)
           conexc = (@reading.reading_1.consumption * 2)
           # consumo excesivo
           if @reading.consumption > conexc and !jj.include?(21)
             @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 21)
-          end 
+          end
 
           # bajo consumo
           if @reading.consumption < conbaj and !jj.include?(22)
             @reading.reading_incidences.create(pre_reading_id: @reading.id, reading_incidence_type_id: 22)
-          end 
+          end
         end
 
         # fuera de plazo
