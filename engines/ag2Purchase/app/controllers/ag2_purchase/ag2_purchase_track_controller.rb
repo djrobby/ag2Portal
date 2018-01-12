@@ -69,12 +69,9 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -107,12 +104,9 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.offer.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.offer.few") + "_#{from}_#{to}"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -146,12 +140,9 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -183,12 +174,9 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -217,12 +205,9 @@ module Ag2Purchase
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
       # Setup filename
-      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}"
 
       respond_to do |format|
-        # Execute procedure and load aux table
-        ActiveRecord::Base.connection.execute("CALL generate_timerecord_reports(#{worker}, '#{from}', '#{to}', 0);")
-        @time_records = TimerecordReport.all
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
@@ -235,40 +220,33 @@ module Ag2Purchase
     def supplier_report
       detailed = params[:detailed]
       project = params[:project]
-      @from = params[:from]
-      @to = params[:to]
       supplier = params[:supplier]
 
       # Dates are mandatory
-      if @from.blank? || @to.blank?
-        return
-      end
-
-      # Search necessary data
-      #@worker = Worker.find(worker)
-
-      # Format dates
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
+      from = Date.today.to_s
 
       if !project.blank? && !supplier.blank?
-        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ? AND suppliers.id = ? AND suppliers.created_at >= ? AND suppliers.created_at <= ?",project,supplier,from,to).order("suppliers.supplier_code")
+        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ? AND suppliers.id = ?", project, supplier).order("suppliers.supplier_code")
       elsif project.blank? && !supplier.blank?
-        @supplier_report = Supplier.where("id = ? AND created_at >= ? AND created_at <= ?",supplier,from,to).order(:supplier_code)
+        @supplier_report = Supplier.where("id = ?", supplier).order(:supplier_code)
       elsif !project.blank? && supplier.blank?
-        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ? AND suppliers.created_at >= ? AND suppliers.created_at <= ?",project,from,to).order("suppliers.supplier_code")
+        @supplier_report = Supplier.joins(:supplier_invoices).where("supplier_invoices.project_id = ?", project).order("suppliers.supplier_code")
       elsif project.blank? && supplier.blank?
-        @supplier_report = Supplier.where("created_at >= ? AND created_at <= ?",from,to).order(:supplier_code)
+        @supplier_report = Supplier.order(:supplier_code)
       end
 
       # Setup filename
-      title = t("activerecord.models.supplier.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.supplier.few") + "_#{from}"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data Supplier.to_csv(@supplier_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -277,20 +255,27 @@ module Ag2Purchase
     # Default Methods
     #
     def index
+      project = params[:Project]
+      supplier = params[:Supplier]
+      store = params[:Store]
+      order = params[:Order]
+      account = params[:Account]
+      product = params[:Product]
+
       @reports = reports_array
       @organization = nil
       if session[:organization] != '0'
         @organization = Organization.find(session[:organization].to_i)
       end
 
-      @projects = projects_dropdown
-      @suppliers = suppliers_dropdown
-      @stores = projects_stores(@projects)
-      @work_orders = projects_work_orders(@projects)
-      @charge_accounts = projects_charge_accounts(@projects)
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @store = !store.blank? ? Store.find(store).name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
+      @product = !product.blank? ? Product.find(product).full_name : " "
+
       @statuses = OrderStatus.order('id')
-      #@families = families_dropdown
-      @products = products_dropdown
     end
 
     private
@@ -317,7 +302,7 @@ module Ag2Purchase
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
     def stores_dropdown
@@ -390,7 +375,7 @@ module Ag2Purchase
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     # Work orders belonging to projects
@@ -411,11 +396,11 @@ module Ag2Purchase
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
+      ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects
@@ -440,7 +425,7 @@ module Ag2Purchase
     end
 
     def families_dropdown
-      _families = session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
+      session[:organization] != '0' ? ProductFamily.where(organization_id: session[:organization].to_i).order(:family_code) : ProductFamily.order(:family_code)
     end
 
     def products_dropdown

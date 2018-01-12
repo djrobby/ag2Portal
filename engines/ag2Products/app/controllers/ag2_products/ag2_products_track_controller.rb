@@ -1045,10 +1045,6 @@ module Ag2Products
       #   return
       # end
 
-      # Format dates (must use to only!)
-      # from = Time.parse(@from).strftime("%Y-%m-%d")
-      # to = Time.parse(@to).strftime("%Y-%m-%d")
-
       if !family.blank?
         @product_items_report = Product.where("product_family_id = ?",family).order(:product_family_id)
       elsif family.blank?
@@ -1289,15 +1285,7 @@ module Ag2Products
       @family = !family.blank? ? ProductFamily.find(family).full_name : " "
       @product = !product.blank? ? Product.find(product).full_name : " "
 
-      # @projects = projects_dropdown
-      # @suppliers = suppliers_dropdown
-      # @stores = projects_stores(@projects)
-      # @work_orders = projects_work_orders(@projects)
-      # @charge_accounts = projects_charge_accounts(@projects)
       @statuses = OrderStatus.order('id')
-      # @petitioners = User.order('id')
-      # @families = families_dropdown
-      # @products = products_dropdown
       @balances = balances_dropdown if @balances.nil?
     end
 
@@ -1335,7 +1323,7 @@ module Ag2Products
     end
 
     def suppliers_dropdown
-      _suppliers = session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
+      session[:organization] != '0' ? Supplier.where(organization_id: session[:organization].to_i).order(:supplier_code) : Supplier.order(:supplier_code)
     end
 
     def stores_dropdown
@@ -1416,7 +1404,7 @@ module Ag2Products
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     # Work orders belonging to projects
@@ -1437,11 +1425,11 @@ module Ag2Products
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id in (?) OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
+      ChargeAccount.where('project_id in (?) OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects

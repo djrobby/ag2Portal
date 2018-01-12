@@ -4,7 +4,7 @@ en:
       index:
         back_to_root: "Back to ag2Tech"
         report_btn: "Generate selected Report"
-        csv_btn: "Generate selected CSV"
+        csv_btn: "Download selected CSV"
         label_report: "Report"
         label_project: "Project"
         label_work_order: "Work order"

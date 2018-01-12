@@ -4,7 +4,7 @@ es:
       index:
         back_to_root: "Volver a ag2Purchase"
         report_btn: "Generar Informe seleccionado"
-        csv_btn: "Generar CSV seleccionado"
+        csv_btn: "Descargar CSV seleccionado"
         label_report: "Informe"
         label_project: "Proyecto"
         label_supplier: "Proveedor"

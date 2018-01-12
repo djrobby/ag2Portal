@@ -1,4 +1,104 @@
 <script>
+  function show_buttons(_show) {
+    if (_show == true) {
+      $('#report_btn').show();
+      $('#csv_btn').show();
+      $('label[for=label_detailed]').show();
+    } else {
+      $('#report_btn').hide();
+      $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
+    }
+  }
+
+  function setupAllSelect2(p, w, a) {
+    projectsSelect2(p);
+    wordersSelect2(w);
+    caccountsSelect2(a);
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function wordersSelect2(intialValue) {
+    $('#Order').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_work_orders",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function caccountsSelect2(intialValue) {
+    $('#Account').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_charge_accounts",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -11,8 +111,13 @@
       containerCssClass: 'left-winged',
       allowClear: true
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>", "<%= @work_order %>",
+                    "<%= @charge_account %>");
+
     // Hide report button
-    $('#report_btn').hide();
+    show_buttons(false);
   }); 
 
   jQuery(function($) {
@@ -24,119 +129,103 @@
       switch (report) {
         case 1:
           // Project
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Period", "<%= t(".label_budget_period") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Period", "label_budget_period");
+          show_buttons(true);
           break;
         case 2:
           // Budget
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Period", "<%= t(".label_budget_period") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          hide("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Period", "label_budget_period");
+          show_buttons(true);
           break;
         case 3:
           // Work order
-          show("#Project", "<%= t(".label_project") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Period", "<%= t(".label_budget_period") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Period", "label_budget_period");
+          show_buttons(true);
           break;
         default:
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Period", "<%= t(".label_budget_period") %>");
-          $('#report_btn').hide();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Period", "label_budget_period");
+          show_buttons(false);
       }
-      return false;
-    });
-
-    // when the #Project field changes
-    $("#Project").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#Project :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('te_track_project_has_changed/' + order, function(data) {
-        var w = data.work_order;
-        var c = data.charge_account;
-        // Work Order
-        $("#Order").html("");
-        $("#Order").select2("val", "");
-        $("#Order").append($('<option></option>').val("").html(""));
-        if (!w.length) {
-          $.each(data, function(id, option) {
-            if (id == 'work_order' && option != "") {
-              $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-            }
-          });
-        } else {
-          $.each(w, function(id, option) {
-            $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-          });
-        }
-        // Charge Account
-        $("#Account").html("");
-        $("#Account").select2("val", "");
-        $("#Account").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
-      });
       return false;
     });
 
     // when #report_btn is clicked
     $("#report_btn").click(function() {
-      // make a POST call and get report
+      get_report_or_csv(false);
+      return false;
+    });
+
+    // when #csv_btn is clicked
+    $("#csv_btn").click(function() {
+      get_report_or_csv(true);
+      return false;
+    });
+    
+    function get_report_or_csv(_csv) {
+      var nam = '';
+      var ext = '.pdf';
+      var pag = '_blank';
       var report = $('#Report :selected').index();
       if (report == "")
         return;
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if ((from == "") || (to == ""))
+      if (((from == "") || (to == "")) && report <= 3)
         return;
+      // CSV or PDF
+      if (_csv == true) {
+        ext = ".csv";
+        pag = '_self';
+      }
       switch (report) {
         case 1:
           // Project
           var project = $('select#Project :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          window.open("project_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, "_blank");
+          nam = "project_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, pag);
           break;
         case 2:
           // Budget
           var project = $('select#Project :selected').val();
           var account = $('select#Account :selected').val();
           var period = $('select#Period :selected').val();
-          if ((project == "") && (account == "") && (period == ""))
-            return;
-          window.open("budget_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&account=" + account + "&period=" + period, "_blank");
+          // if ((project == "") && (account == "") && (period == ""))
+          //   return;
+          nam = "budget_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&account=" + account + "&period=" + period, pag);
           break;
         case 3:
           // Work order
           var project = $('select#Project :selected').val();
           var order = $('select#Order :selected').val();
           var account = $('select#Account :selected').val();
-          window.open("work_report.pdf?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&from=" + from + "&to=" + to , "_blank");
-          break;
+          nam = "work_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&from=" + from + "&to=" + to , pag);
       }
-      return false;
-    });
+    }
     
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);
@@ -151,11 +240,37 @@
       $('label[for=' + _label + ']').show();
       $(_select).addClass('sel2');
       $(_select).show();
-      $(_select).select2({
-        formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-        containerCssClass: 'left-winged',
-        allowClear: true
-      });
+      switch (_select) {
+        case '#Project':
+          projectsSelect2("<%= @project %>");
+          break;
+        case '#Order':
+          wordersSelect2("<%= @work_order %>");
+          break;
+        case '#Account':
+          caccountsSelect2("<%= @charge_account %>");
+          break;
+        default:
+          $(_select).select2({
+            formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+            containerCssClass: 'left-winged',
+            allowClear: true
+          });
+      }
+    }
+    
+    function hide_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').hide();
+      $(_date).removeClass('date_picker');
+      $(_date).hide();      
+    }
+    
+    function show_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').show();
+      $(_date).addClass('date_picker');
+      $(_date).show();
     }
   });
 </script>
@@ -191,29 +306,34 @@
       <%= label_tag t(".label_report"), nil, :class => 'form-label' %>
       <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Project -->
-      <%= label_tag t(".label_project"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_project", t(".label_project"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Work order -->
-      <%= label_tag t(".label_work_order"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_work_order", t(".label_work_order"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Charge account -->
-      <%= label_tag t(".label_charge_account"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_charge_account", t(".label_charge_account"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Account", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Dates -->
-      <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag "label_from", t("control_tracking.label_from"), :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
+      <%= label_tag "label_to", t("control_tracking.label_to"), :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <!-- Budget period -->
       <!-- Last tag into <p></p> tags for spacing -->
       <p>
-        <%= label_tag t(".label_budget_period"), nil, :class => 'form-label' %>
+        <%= label_tag "label_budget_period", t(".label_budget_period"), :class => 'form-label' %>
         <%= select_tag "Period", options_from_collection_for_select(@periods, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       </p>
+      <!-- Detailed? -->
+      <%= label_tag 'label_detailed', :class => 'checkbox inline' do %>
+        <%= t("control_tracking.detailed") %>
+        <%= check_box_tag 'detailed', nil, nil %>
+      <% end %>
       <!-- Buttons -->
       <p>
         <a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%= t '.report_btn' %></a>
-        <%= check_box_tag 'detailed', nil, nil, title: t("control_tracking.detailed") %>
+        <a href="#" id="csv_btn" class="btn btn-success form-button-under-sel2"><%= t '.csv_btn' %></a>
       </p>
       <!-- Links -->
       <%= link_to t(".back_to_root"), ag2_tech.root_path %>

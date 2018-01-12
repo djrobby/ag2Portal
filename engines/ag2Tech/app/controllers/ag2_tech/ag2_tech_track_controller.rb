@@ -132,15 +132,20 @@ module Ag2Tech
     # Default Methods
     #
     def index
+      project = params[:Project]
+      order = params[:Order]
+      account = params[:Account]
+
       @reports = reports_array
       @organization = nil
       if session[:organization] != '0'
         @organization = Organization.find(session[:organization].to_i)
       end
 
-      @projects = projects_dropdown
-      @work_orders = projects_work_orders(@projects)
-      @charge_accounts = projects_charge_accounts(@projects)
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
+
       @periods = periods_dropdown
     end
 
