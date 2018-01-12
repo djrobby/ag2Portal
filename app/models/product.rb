@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class Product < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :product_type
   belongs_to :product_family
   belongs_to :measure
@@ -245,38 +249,43 @@ class Product < ActiveRecord::Base
     end
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
   def self.to_csv(array)
-    attributes = [  I18n.t("activerecord.attributes.product.family_code"),
-                    I18n.t("activerecord.attributes.product.product_family"),
-                    I18n.t("activerecord.attributes.product.product_code"),
-                    I18n.t("activerecord.attributes.product.main_description"),
-                    I18n.t("activerecord.attributes.stock.rotation_rate"),
-                    I18n.t("activerecord.attributes.product.reference_price_c"),
-                    I18n.t("activerecord.attributes.product.average_price_c"),
-                    I18n.t("activerecord.attributes.product.sell_price_c")]
+    attributes = [ array[0].sanitize(I18n.t("activerecord.attributes.product.family_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.product_family")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.product_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.main_description")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.stock.rotation_rate")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.reference_price_c")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.average_price_c")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.product.sell_price_c")) ]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.product_family.family_code
-        i002 = i.product_family.name
-        i003 = i.full_code
-        i004 = i.main_description
-        i005 = i.rotation_rate
-        i006 = i.reference_price
-        i007 = i.average_price
-        i008 = i.sell_price
-        csv << [  i001,
-                  i002,
-                  i003,
-                  i004,
-                  i005,
-                  i006,
-                  i007,
-                  i008]
+        i005 = i.raw_number(i.rotation_rate, 4)
+        i006 = i.raw_number(i.reference_price, 4)
+        i007 = i.raw_number(i.average_price, 4)
+        i008 = i.raw_number(i.sell_price, 4)
+        csv << [ i.product_family.family_code,
+                 i.product_family.name,
+                 i.full_code,
+                 i.main_description,
+                 i005,
+                 i006,
+                 i007,
+                 i008 ]
       end
     end
   end

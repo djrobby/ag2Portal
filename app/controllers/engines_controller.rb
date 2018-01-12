@@ -398,7 +398,7 @@ class EnginesController < ApplicationController
     w = "office_id = #{session[:office]} AND " if session[:office] != '0'
     if @q != ''
       w += "(name LIKE '%#{@q}%')"
-      @stores = serialized(Store.where(w).by_code,
+      @stores = serialized(Store.where(w).by_name,
                              Api::V1::StoresSerializer)
     end
     render json: @stores

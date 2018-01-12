@@ -3,9 +3,11 @@
     if (_show == true) {
       $('#report_btn').show();
       $('#csv_btn').show();
+      $('label[for=label_detailed]').show();
     } else {
       $('#report_btn').hide();
       $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
     }
   }
 
@@ -379,7 +381,6 @@
           show("#Product", "label_product");
           show_buttons(true);
           break;
-        // MJ
         case 8:
           // Stock by Company
           hide_date("#From", "label_from");
@@ -414,332 +415,145 @@
       return false;
     });
 
-    // when the #Project field changes
-    $("#Project").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#Project :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('pr_track_project_has_changed/' + order, function(data) {
-        var w = data.work_order;
-        var c = data.charge_account;
-        var s = data.store;
-        // Work Order
-        $("#Order").html("");
-        $("#Order").select2("val", "");
-        $("#Order").append($('<option></option>').val("").html(""));
-        if (!w.length) {
-          $.each(data, function(id, option) {
-            if (id == 'work_order' && option != "") {
-              $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-            }
-          });
-        } else {
-          $.each(w, function(id, option) {
-            $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-          });
-        }
-        // Charge Account
-        $("#Account").html("");
-        $("#Account").select2("val", "");
-        $("#Account").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
-        // Store
-        $("#Store").html("");
-        $("#Store").select2("val", "");
-        $("#Store").append($('<option></option>').val("").html(""));
-        if (!s.length) {
-          $.each(data, function(id, option) {
-            if (id == 'store' && option != "") {
-              $("#Store").append($('<option></option>').val(option.id).html(option.name));
-            }
-          });
-        } else {
-          $.each(s, function(id, option) {
-            $("#Store").append($('<option></option>').val(option.id).html(option.name));
-          });
-        }
-      });
-      return false;
-    });
-
-    // when the #Family field changes
-    $("#Family").change(function() {
-      // make a POST call and replace the content
-      var order = $('#Family :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('pr_track_family_has_changed/' + order, function(data) {
-        var prods = data.product
-        $("#Product").html("");
-        $("#Product").select2("val", "");
-        $("#Product").append($('<option></option>').val("").html(""));
-        if (!prods.length) {
-          $.each(data, function(id, option) {
-            if (id == 'product' && option != "") {
-              $("#Product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
-            }
-          });
-        } else {
-          $.each(prods, function(id, option) {
-            $("#Product").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2]));
-          });
-        }
-      });
-      return false;
-    });
-
     // when #report_btn is clicked
     $("#report_btn").click(function() {
-      // make a POST call and get report
-      var report = $('#Report :selected').index();
-      if (report == "")
-        return;
-      var detailed = $('#detailed').prop('checked');
-      var from = $('#From').val();
-      var to = $('#To').val();
-      if (((from == "") || (to == "")) && report <= 5) // MJ CHANGE != 5 TO <= 4
-        return;
-      switch (report) {
-        case 1:
-          // Inventory count
-     //mj var project = $('select#Project :selected').val();
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-    // mj var product = $('select#Product :selected').val();
-          if ((store == "") && (family == ""))
-            return;
-          if (detailed == ""){
-           window.open("inventory_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
-          }else {
-            window.open("inventory_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
-          }
-          break;
-        case 2:
-          // Purchase order
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var petitioner = $('select#User :selected').val();
-     //mj var product = $('select#Product :selected').val();
-          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
-          //   return;
-          if (detailed == ""){
-            window.open("order_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }else {
-            window.open("order_items_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }
-          break;
-        case 3:
-          // Purchase pending order
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var petitioner = $('select#User :selected').val();
-     //mj var product = $('select#Product :selected').val();
-          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
-          //   return;
-          if (detailed == ""){
-            window.open("order_pending_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }else {
-            window.open("order_pending_items_report.pdf?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }
-          break;
-        case 4:
-          // Receipt note
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var balance = $('select#Balance :selected').val();
-     //mj var product = $('select#Product :selected').val();
-          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
-          //   return;
-          if (detailed == ""){
-            window.open("receipt_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  "_blank");
-          }else {
-        window.open("receipt_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance, "_blank");
-          } 
-          break;
-        case 5:
-          // Delivery note
-          var project = $('select#Project :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-     //mj var product = $('select#Product :selected').val();
-          // if ((project == "") && (store == "") && (order == "") && (account == ""))
-          //   return;
-          if (detailed == ""){
-          window.open("delivery_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
-          }else {
-            window.open("delivery_items_report.pdf?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
-          }
-          break;
-        case 6:
-          // Product
-          var family = $('select#Family :selected').val();
-          window.open("product_items_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&family=" + family, "_blank");
-          break;
-        case 7:
-          // Stock valued by global PMP
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
-          window.open("stock_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
-          break;
-         // MJ
-         case 8:
-          // Stock valued by company PMP
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
-          window.open("stock_companies_report.pdf?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
-          break;
-         // MJ
-      }
+      get_report_or_csv(false);
       return false;
     });
 
     // when #csv_btn is clicked
     $("#csv_btn").click(function() {
-      // make a POST call and get report
+      get_report_or_csv(true);
+      return false;
+    });
+    
+    function get_report_or_csv(_csv) {
+      var nam = '';
+      var ext = '.pdf';
+      var pag = '_blank';
       var report = $('#Report :selected').index();
       if (report == "")
         return;
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if (((from == "") || (to == "")) && report <= 5) // MJ CHANGE != 5 TO <= 4
+      if (((from == "") || (to == "")) && report <= 5)
         return;
+      // CSV or PDF
+      if (_csv == true) {
+        ext = ".csv";
+        pag = '_self';
+      }
       switch (report) {
         case 1:
           // Inventory count
-     //mj var project = $('select#Project :selected').val();
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-    // mj var product = $('select#Product :selected').val();
+          var store = $('#Store').val();
+          var family = $('#Family').val();
           if ((store == "") && (family == ""))
             return;
-          if (detailed == ""){
-            window.open("inventory_report.csv?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
-          }else {
-            window.open("inventory_items_report.csv?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, "_blank");
+          if (detailed == "") {
+            nam = "inventory_report" + ext;
+          } else {
+            nam = "inventory_items_report" + ext;
           }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family, pag);
           break;
         case 2:
           // Purchase order
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var petitioner = $('select#User :selected').val();
-     //mj var product = $('select#Product :selected').val();
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var petitioner = $('#User').val();
+          var status = $('#Status :selected').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
           //   return;
-          if (detailed == ""){
-            window.open("order_report.csv?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }else {
-            window.open("order_items_report.csv?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          if (detailed == "") {
+            nam = "order_report" + ext;
+          } else {
+            nam = "order_items_report" + ext;
           }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, pag);
           break;
         case 3:
           // Purchase pending order
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var petitioner = $('select#User :selected').val();
-     //mj var product = $('select#Product :selected').val();
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var petitioner = $('#User').val();
+          var status = $('#Status :selected').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
           //   return;
-          if (detailed == ""){
-            window.open("order_pending_report.csv?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
-          }else {
-            window.open("order_pending_items_report.csv?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, "_blank");
+          if (detailed == "") {
+            nam = "order_pending_report" + ext;
+          } else {
+            nam = "order_pending_items_report" + ext;
           }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, pag);
           break;
         case 4:
           // Receipt note
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var balance = $('select#Balance :selected').val();
-     //mj var product = $('select#Product :selected').val();
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var balance = $('#Balance :selected').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
           //   return;
-          if (detailed == ""){
-            window.open("receipt_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  "_blank");
-          }else {
-        window.open("receipt_items_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance, "_blank");
+          if (detailed == "") {
+            nam = "receipt_report" + ext;
+          } else {
+            nam = "receipt_items_report" + ext;
           } 
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  pag);
           break;
         case 5:
           // Delivery note
-          var project = $('select#Project :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-     //mj var product = $('select#Product :selected').val();
+          var project = $('#Project').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
           // if ((project == "") && (store == "") && (order == "") && (account == ""))
           //   return;
-          if (detailed == ""){
-          window.open("delivery_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
-          }else {
-            window.open("delivery_items_report.csv?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, "_blank");
+          if (detailed == "") {
+            nam = "delivery_report" + ext;
+          } else {
+            nam = "delivery_items_report" + ext;
           }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&store=" + store + "&order=" + order + "&account=" + account, pag);
           break;
         case 6:
           // Product
-          var family = $('select#Family :selected').val();
-          window.open("product_items_report.csv?detailed=" + detailed + "&from=" + from + "&to=" + to + "&family=" + family, "_blank");
+          var family = $('#Family').val();
+          nam = "product_items_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&family=" + family, pag);
           break;
         case 7:
           // Stock valued by global PMP
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
+          var store = $('#Store').val();
+          var family = $('#Family').val();
+          var product = $('#Product').val();
           if ((store == "") && (family == "") && (product == ""))
             return;
-          window.open("stock_report.csv?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          nam = "stock_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&store=" + store + "&family=" + family + "&product=" + product, pag);
           break;
-         // MJ
-         case 8:
+        case 8:
           // Stock valued by company PMP
-          var store = $('select#Store :selected').val();
-          var family = $('select#Family :selected').val();
-          var product = $('select#Product :selected').val();
+          var store = $('#Store').val();
+          var family = $('#Family').val();
+          var product = $('#Product').val();
           if ((store == "") && (family == "") && (product == ""))
               return;
-          window.open("stock_companies_report.csv?detailed=" + detailed + "&from=" + from + "&to=" + to + "&store=" + store + "&family=" + family + "&product=" + product, "_blank");
+          nam = "stock_companies_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&store=" + store + "&family=" + family + "&product=" + product, pag);
           break;
-         // MJ
       }
-      return false;
-    });
+    }
     
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);

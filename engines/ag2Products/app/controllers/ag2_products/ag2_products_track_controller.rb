@@ -72,12 +72,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}"
 
-      @inventory_csv = []
-      @inventory_report.each do |pr|
-        @inventory_csv << pr
-      end
+      # @inventory_csv = []
+      # @inventory_report.each do |pr|
+      #   @inventory_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -85,7 +85,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: InventoryCount.to_csv(@inventory_csv) }
+        format.csv { send_data InventoryCount.to_csv(@inventory_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: InventoryCount.to_csv(@inventory_csv) }
       end
     end
 
@@ -115,12 +119,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.inventory_count.few") + "_#{from}_#{to}"
 
-      @inventory_items_csv = []
-      @inventory_items_report.each do |pr|
-        @inventory_items_csv << pr
-      end
+      # @inventory_items_csv = []
+      # @inventory_items_report.each do |pr|
+      #   @inventory_items_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -128,7 +132,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: InventoryCountItem.to_csv(@inventory_items_csv) }
+        format.csv { send_data InventoryCountItem.to_csv(@inventory_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: InventoryCountItem.to_csv(@inventory_items_csv) }
       end
     end
 
@@ -212,12 +220,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
 
-      @order_csv = []
-      @order_report.each do |pr|
-        @order_csv << pr
-      end
+      # @order_csv = []
+      # @order_report.each do |pr|
+      #   @order_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -225,7 +233,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        format.csv { send_data PurchaseOrder.to_csv(@order_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
       end
     end
 
@@ -306,12 +318,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
 
-      @order_items_csv = []
-      @order_items_report.each do |pr|
-        @order_items_csv << pr
-      end
+      # @order_items_csv = []
+      # @order_items_report.each do |pr|
+      #   @order_items_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -319,7 +331,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
       end
     end
 
@@ -401,12 +417,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
 
-      @order_csv  = []
-      @order_report.each do |pr|
-        @order_csv  << pr
-      end
+      # @order_csv  = []
+      # @order_report.each do |pr|
+      #   @order_csv  << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -414,7 +430,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        format.csv { send_data PurchaseOrder.to_csv(@order_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
       end
     end
 
@@ -495,12 +515,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
 
-      @order_items_csv = []
-      @order_items_report.each do |pr|
-        @order_items_csv << pr
-      end
+      # @order_items_csv = []
+      # @order_items_report.each do |pr|
+      #   @order_items_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -508,7 +528,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
       end
     end
 
@@ -671,12 +695,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}"
 
-      @receipt_csv = []
-      @receipt_report.each do |pr|
-        @receipt_csv << pr
-      end
+      # @receipt_csv = []
+      # @receipt_report.each do |pr|
+      #   @receipt_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -684,7 +708,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: ReceiptNote.to_csv(@receipt_csv) }
+        format.csv { send_data ReceiptNote.to_csv(@receipt_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: ReceiptNote.to_csv(@receipt_csv) }
       end
     end
 
@@ -842,12 +870,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.receipt_note.few") + "_#{from}_#{to}"
 
-      @receipt_items_csv = []
-      @receipt_items_report.each do |pr|
-        @receipt_items_csv << pr
-      end
+      # @receipt_items_csv = []
+      # @receipt_items_report.each do |pr|
+      #   @receipt_items_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -855,7 +883,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: ReceiptNoteItem.to_csv(@receipt_items_csv) }
+        format.csv { send_data ReceiptNoteItem.to_csv(@receipt_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: ReceiptNoteItem.to_csv(@receipt_items_csv) }
       end
     end
 
@@ -909,12 +941,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}"
 
-      @delivery_csv = []
-      @delivery_report.each do |pr|
-        @delivery_csv << pr
-      end
+      # @delivery_csv = []
+      # @delivery_report.each do |pr|
+      #   @delivery_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -922,7 +954,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: DeliveryNote.to_csv(@delivery_csv) }
+        format.csv { send_data DeliveryNote.to_csv(@delivery_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: DeliveryNote.to_csv(@delivery_csv) }
       end
     end
 
@@ -976,12 +1012,12 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.delivery_note.few") + "_#{from}_#{to}"
 
-      @delivery_items_csv = []
-      @delivery_items_report.each do |pr|
-        @delivery_items_csv << pr
-      end
+      # @delivery_items_csv = []
+      # @delivery_items_report.each do |pr|
+      #   @delivery_items_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -989,7 +1025,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: DeliveryNoteItem.to_csv(@delivery_items_csv) }
+        format.csv { send_data DeliveryNoteItem.to_csv(@delivery_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: DeliveryNoteItem.to_csv(@delivery_items_csv) }
       end
     end
 
@@ -1016,20 +1056,18 @@ module Ag2Products
       end
 
       # Setup filename
-      title = t("activerecord.models.product.few" + "_#{from}")
-
-      @product_items_csv = []
-      @product_items_report.each do |pr|
-        @product_items_csv << pr
-      end
+      title = t("activerecord.models.product.few") + "_#{from}"
 
       respond_to do |format|
-        # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: Product.to_csv(@product_items_csv) }
+        format.csv { send_data Product.to_csv(@product_items_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: Product.to_csv(@product_items_report) }
       end
     end
 
@@ -1092,10 +1130,10 @@ module Ag2Products
       # Setup filename
       title = t("activerecord.models.stock.few") + "_#{from}"
 
-      @stocks_csv = []
-      @stocks_report.each do |pr|
-        @stocks_csv << pr
-      end
+      # @stocks_csv = []
+      # @stocks_report.each do |pr|
+      #   @stocks_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -1103,7 +1141,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: ProductValuedStock.to_csv(@stocks_csv) }
+        format.csv { send_data ProductValuedStock.to_csv(@stocks_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: ProductValuedStock.to_csv(@stocks_csv) }
       end
     end
 
@@ -1200,10 +1242,10 @@ module Ag2Products
       # Setup filename
       title = t("activerecord.models.stock.few") + "_#{from}"
 
-      @stocks_csv = []
-      @stocks_report.each do |pr|
-        @stocks_csv << pr
-      end
+      # @stocks_csv = []
+      # @stocks_report.each do |pr|
+      #   @stocks_csv << pr
+      # end
 
       respond_to do |format|
         # Render PDF
@@ -1211,7 +1253,11 @@ module Ag2Products
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
                      disposition: 'inline' }
-        format.csv { render text: ProductValuedStockByCompany.to_csv(@stocks_csv) }
+        format.csv { send_data ProductValuedStockByCompany.to_csv(@stocks_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+        # format.csv { render text: ProductValuedStockByCompany.to_csv(@stocks_csv) }
       end
     end
 
