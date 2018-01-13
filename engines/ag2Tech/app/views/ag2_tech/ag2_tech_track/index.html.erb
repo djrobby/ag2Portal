@@ -201,16 +201,16 @@
       switch (report) {
         case 1:
           // Project
-          var project = $('select#Project :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
+          var project = $('#Project').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
           nam = "project_report" + ext;
           window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, pag);
           break;
         case 2:
           // Budget
-          var project = $('select#Project :selected').val();
-          var account = $('select#Account :selected').val();
+          var project = $('#Project').val();
+          var account = $('#Account').val();
           var period = $('select#Period :selected').val();
           // if ((project == "") && (account == "") && (period == ""))
           //   return;
@@ -219,9 +219,9 @@
           break;
         case 3:
           // Work order
-          var project = $('select#Project :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
+          var project = $('#Project').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
           nam = "work_report" + ext;
           window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&from=" + from + "&to=" + to , pag);
       }

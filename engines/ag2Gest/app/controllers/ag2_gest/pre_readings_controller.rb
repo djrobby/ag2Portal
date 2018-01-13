@@ -60,9 +60,13 @@ module Ag2Gest
       @p_r = PreReading.where(id: pre_readings)
       @pre_readings = @p_r.order(:reading_route_id, :reading_sequence)
 
+      title = t("activerecord.models.pre_reading.few")
       respond_to do |format|
         format.html
-        format.csv { render text: PreReading.to_csv(@pre_readings) }
+        format.csv { send_data PreReading.to_csv(@pre_readings),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
       end
     end
 
@@ -235,19 +239,19 @@ module Ag2Gest
         @prereading.pre_reading_incidences.destroy_all
       end
 
-      # añadir incidencia vuelta de contador y no existe. ID 
+      # añadir incidencia vuelta de contador y no existe. ID
       if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
       end
       if !r_index.blank?
         if r_index.to_i < @prereading.reading_index_1 and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
           @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
-        end 
+        end
 
         if !@prereading.reading_1_id.blank? && Reading.find(@prereading.reading_1_id).reading_type_id != ReadingType::INSTALACION
           conbaj = (@prereading.reading_1.consumption / 2)
           conexc = (@prereading.reading_1.consumption * 2)
-          
+
           if @prereading.reading_index_1 <= r_index.to_i
             consumption = r_index.to_i - @prereading.reading_index_1
           else
@@ -258,12 +262,12 @@ module Ag2Gest
           # consumo excesivo
           if consumption > conexc and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
             @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
-          end 
+          end
 
           # bajo consumo
           if consumption < conbaj and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
             @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
-          end 
+          end
         end
       end
 
@@ -271,7 +275,7 @@ module Ag2Gest
       if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
       end
-      # Bajo Consumo 
+      # Bajo Consumo
       if params[:lapconbaj] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
         @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
       end

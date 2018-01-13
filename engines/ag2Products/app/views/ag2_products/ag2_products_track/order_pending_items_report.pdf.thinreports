@@ -74,6 +74,7 @@ report.page.list(:default).header do |header|
 	header.item(:net_price_items_c).value I18n.t("activerecord.attributes.purchase_order_item.price_c")
 	header.item(:amount_items_c).value I18n.t("activerecord.attributes.purchase_order_item.amount_c")
 	header.item(:balance_items_c).value I18n.t("activerecord.attributes.purchase_order_item.balance_c")
+	header.item(:delay_items_c).value I18n.t("activerecord.attributes.purchase_order.delay")
 end
 
   report.page.list(:default) do |list|
@@ -119,6 +120,7 @@ order_number = @order_items_report.first.purchase_order.order_no
 		row.item(:full_code_items).value i.product.full_code
 		row.item(:description_items).value i.description
 		row.item(:charge_account_items).value i.charge_account.partial_name unless i.charge_account.blank?
+		row.item(:delay_items).value i.delay <= 0 ? "" : i.delay
 		row.item(:quantity_items).value number_with_precision(i.quantity, precision: 4)
 		row.item(:net_price_items).value number_with_precision(i.net_price, precision: 4)
 		row.item(:amount_items).value number_with_precision(i.amount, precision: 4)

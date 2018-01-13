@@ -200,7 +200,7 @@
     // when #print_csv_btn is clicked
     $("#print_csv_btn").click(function() {
       // make a POST call and get report
-      window.open("purchase_orders_report.csv", "_blank");
+      window.open("purchase_orders_report.csv", "_self");
       return false;
     });
   });
@@ -255,7 +255,7 @@
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
         <br /><br /> 
-        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control_csv' %></a>
 
         <br /><br />
         <!-- Back -->

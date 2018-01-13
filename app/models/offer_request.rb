@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class OfferRequest < ActiveRecord::Base
   include ModelsModule
 
@@ -44,6 +46,57 @@ class OfferRequest < ActiveRecord::Base
   before_destroy :check_for_dependent_records
   before_save :calculate_and_store_totals
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.request_no")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.request_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.deadline_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.project")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.work_order")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.charge_account")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.store")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.payment_method")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.approved_offer")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.approval_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer_request.approver"))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.formatted_date(i.request_date) unless i.request_date.blank?
+        i002 = i.formatted_date(i.deadline_date) unless i.deadline_date.blank?
+        i003 = i.formatted_timestamp(i.approval_date.utc.getlocal) unless i.approval_date.blank?
+
+        csv << [  i.try(:project).try(:company).try(:id),
+                  i.try(:project).try(:company).try(:name),
+                  i.full_no,
+                  i001,
+                  i002,
+                  i.try(:project).try(:full_name),
+                  i.try(:work_order).try(:full_name),
+                  i.try(:charge_account).try(:full_name),
+                  i.try(:store).name,
+                  i.try(:payment_method).try(:description),
+                  i.try(:approved_offer).try(:full_name),
+                  i003,
+                  i.try(:approver).try(:email)]
+      end
+    end
+  end
+  
   def to_label
     "#{full_name}"
   end

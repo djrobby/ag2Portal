@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class ProductValuedStockByCompany < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :store
   belongs_to :product_family
   belongs_to :product
@@ -45,51 +49,53 @@ class ProductValuedStockByCompany < ActiveRecord::Base
   scope :belongs_to_store_product_stock, -> store, product { belongs_to_store(store).where("product_id = ? AND current != ?", product,"0.0000").ordered_by_store_family }
   scope :belongs_to_family_product_stock, -> family, product { belongs_to_family(family).where("product_id = ? AND current != ?", product,"0.0000").ordered_by_store_family }
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
   def self.to_csv(array)
-    attributes = [  "Id" + " " + I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.attributes.stock.store"),
-                    I18n.t("activerecord.attributes.product.family_code"),
-                    I18n.t("activerecord.attributes.product.product_family"),
-                    I18n.t("activerecord.attributes.product.product_code"),
-                    I18n.t("activerecord.attributes.product.main_description"),
-                    I18n.t("activerecord.attributes.stock.current"),
-                    I18n.t("ag2_products.ag2_products_track.stock_report.average_price"),
-                    I18n.t("ag2_products.ag2_products_track.stock_report.total_full"),
-                    I18n.t("ag2_products.ag2_products_track.stock_company_report.company_average_price"),
-                    I18n.t("ag2_products.ag2_products_track.stock_company_report.company_current_value")]
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.stock.store")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.product.family_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.product.product_family")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.product.product_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.product.main_description")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.stock.current")),
+                    array[0].sanitize(I18n.t("ag2_products.ag2_products_track.stock_report.average_price")),
+                    array[0].sanitize(I18n.t("ag2_products.ag2_products_track.stock_report.total_full")),
+                    array[0].sanitize(I18n.t("ag2_products.ag2_products_track.stock_company_report.company_average_price")),
+                    array[0].sanitize(I18n.t("ag2_products.ag2_products_track.stock_company_report.company_current_value"))]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        c001 = i.company.id
-        c002 = i.company.name
-        i001 = i.store_name
-        i002 = i.product_family.family_code
-        i003 = i.product_family.name
-        i004 = i.product.full_code
-        i005 = i.product.main_description
-        i006 = i.current
-        i007 = i.average_price
-        i008 = i.current_value
-        i009 = i.company_average_price
-        i010 = i.company_current_value
+        i001 = i.raw_number(i.current, 4)
+        i002 = i.raw_number(i.average_price, 4)
+        i003 = i.raw_number(i.current_value, 4)
+        i004 = i.raw_number(i.company_average_price, 4)
+        i005 = i.raw_number(i.company_current_value, 4)
 
-        csv << [  c001,
-                  c002,
+        csv << [  i.try(:store).try(:company).try(:id),
+                  i.try(:store).try(:company).try(:name),
+                  i.store_name,
+                  i.try(:product_family).try(:family_code),
+                  i.try(:product_family).try(:name),
+                  i.try(:product).try(:full_code),
+                  i.try(:product).try(:main_description),
                   i001,
                   i002,
                   i003,
                   i004,
-                  i005,
-                  i006,
-                  i007,
-                  i008,
-                  i009,
-                  i010]
+                  i005]
       end
     end
   end

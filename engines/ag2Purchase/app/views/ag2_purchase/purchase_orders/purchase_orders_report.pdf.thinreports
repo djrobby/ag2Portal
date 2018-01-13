@@ -62,6 +62,7 @@ report.page.list(:default).header do |header|
 	header.item(:order_date_c).value I18n.t("activerecord.attributes.purchase_order.order_date")
 	header.item(:order_status_c).value I18n.t("activerecord.attributes.purchase_order.order_status")
 	header.item(:supplier_c).value I18n.t("activerecord.attributes.purchase_order.supplier")
+	header.item(:charge_account_c).value I18n.t("activerecord.attributes.purchase_order.charge_account")
 	header.item(:quantity_c).value I18n.t("activerecord.attributes.purchase_order.quantity")
 	header.item(:balance_c).value I18n.t("activerecord.attributes.purchase_order.balance")
 	header.item(:total_c).value I18n.t("activerecord.attributes.purchase_order.total")
@@ -75,6 +76,7 @@ end
 		row.item(:order_date).value formatted_date(i.order_date) unless i.order_date.blank?
 		row.item(:order_status).value i.order_status.name
 		row.item(:supplier).value i.supplier.full_code
+		row.item(:charge_account).value i.charge_account.partial_name unless i.charge_account.blank?
 		row.item(:quantity).value number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
 		row.item(:balance).value number_with_precision(i.balance, precision: 2) unless i.quantity.blank?
 		row.item(:total).value number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?

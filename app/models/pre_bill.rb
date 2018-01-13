@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class PreBill < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :project
   belongs_to :invoice_status
   belongs_to :subscriber
@@ -67,7 +71,18 @@ class PreBill < ActiveRecord::Base
     pre_invoices.reject(&:marked_for_destruction?).sum(&:net_tax)
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
 
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
   def self.to_csv(array)
     attributes = ["Id",
                   I18n.t("activerecord.attributes.invoice.billing_period"),

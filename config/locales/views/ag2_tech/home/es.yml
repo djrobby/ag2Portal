@@ -3,6 +3,7 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
+        control_csv: "Generar CSV"
         control_a: "Control&Seguimto."
         work_order_areas: "Áreas OT"
         work_order_types: "Tipos OT"

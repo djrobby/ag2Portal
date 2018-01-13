@@ -41,6 +41,15 @@ class PreReading < ActiveRecord::Base
   scope :by_date_asc, -> { order(:reading_date) }
   scope :by_date_desc, -> { order('reading_date desc') }
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #

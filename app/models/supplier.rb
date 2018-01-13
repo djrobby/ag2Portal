@@ -315,9 +315,44 @@ class Supplier < ActiveRecord::Base
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
+  def self.to_csv_track(array)
+    attributes = [  array[0].sanitize(I18n.t("activerecord.attributes.supplier.supplier_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.fiscal_id")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.name")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.address")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.phone")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.email")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.supplier.payment_method"))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.sanitize_address_1
+        i002 = i.phone.gsub " ", "" unless i.phone.blank?
+
+        csv << [  i.full_code,
+                  i.fiscal_id,
+                  i.name,
+                  i001,
+                  i002,
+                  i.email,
+                  i.try(:payment_method).try(:description)]
+      end
+    end
+  end
+
   def self.to_csv(array, company_id=nil)
     column_names = [I18n.t('activerecord.csv_sage200.supplier.c001'),
                     I18n.t('activerecord.csv_sage200.supplier.c002'),

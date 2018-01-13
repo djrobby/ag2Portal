@@ -101,7 +101,7 @@
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_tech.home.index.control' %></a>
         <br /><br />
         <!-- Control&Tracking -->
-        <a href="<%= export_work_order_csv_work_orders_path(format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+        <a href="<%= export_work_order_csv_work_orders_path(format: :csv) %>" download class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
         <br /><br />
         <%= link_to t(".back_to_root"), ag2_tech.root_path %>
       </div><!-- /.sidebar-nav -->

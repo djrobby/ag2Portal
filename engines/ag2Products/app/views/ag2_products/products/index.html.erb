@@ -57,7 +57,7 @@
     // when #print_csv_btn is clicked
     $("#print_catalog_csv_btn").click(function() {
       // make a POST call and get report
-      window.open("products_catalog_report.csv", "_blank");
+      window.open("products_catalog_report.csv", "_self");
       return false;
     });
   });
@@ -111,7 +111,7 @@
         <!-- Catalog -->
         <a href="#" id="print_catalog_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control_catalog' %></a>
         <br /><br /> 
-        <a href="#" id="print_catalog_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control_catalog' %></a>
+        <a href="#" id="print_catalog_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control_csv' %></a>
 
         <br /><br />     
         <!-- Back -->

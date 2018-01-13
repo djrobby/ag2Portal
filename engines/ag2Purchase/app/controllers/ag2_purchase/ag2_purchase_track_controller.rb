@@ -51,31 +51,40 @@ module Ag2Purchase
       project = params[:project]
       @from = params[:from]
       @to = params[:to]
-      supplier = params[:supplier]
       store = params[:store]
-      order = params[:order]
-      account = params[:account]
-      product = params[:product]
+      supplier = params[:supplier]
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
+     from = Time.parse(@from).strftime("%Y-%m-%d")
+     to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      # Format dates
-      from = Time.parse(@from).strftime("%Y-%m-%d")
-      to = Time.parse(@to).strftime("%Y-%m-%d")
+      # Search necessary data
+      if !project.blank? && !store.blank?
+        @request_report = OfferRequest.where("project_id = ? AND store_id = ? AND request_date >= ? AND request_date <= ?",project,store,from,to).order(:request_no)
+      elsif project.blank? && !store.blank?
+        @request_report = OfferRequest.where("store_id = ? AND request_date >= ? AND request_date <= ?",store,from,to).order(:request_no)
+      elsif !project.blank? && store.blank?
+        @request_report = OfferRequest.where("project_id = ? AND request_date >= ? AND request_date <= ?",project,from,to).order(:request_no)
+      else
+        @request_report = OfferRequest.where("request_date >= ? AND request_date <= ?",from,to).order(:request_no)
+      end
+
       # Setup filename
-      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}"
+      title = t("activerecord.models.offer_request.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data OfferRequest.to_csv(@request_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -87,30 +96,35 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
-      store = params[:store]
-      order = params[:order]
-      account = params[:account]
-      product = params[:product]
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      # Search necessary data
+      if !project.blank?
+        @offer_report = Offer.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:offer_no)
+      else
+        @offer_report = Offer.where("created_at >= ? AND created_at <= ?",from,to).order(:offer_no)
+      end
+
       # Setup filename
-      title = t("activerecord.models.offer.few") + "_#{from}_#{to}"
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data Offer.to_csv(@offer_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -122,31 +136,35 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
-      store = params[:store]
-      order = params[:order]
-      account = params[:account]
-      status = params[:status]
-      product = params[:product]
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      # Search necessary data
+      if !project.blank?
+        @order_report = PurchaseOrder.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:order_no)
+      else
+        @order_report = PurchaseOrder.where("created_at >= ? AND created_at <= ?",from,to).order(:order_no)
+      end
+
       # Setup filename
-      title = t("activerecord.models.purchase_order.few") + "_#{from}_#{to}"
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data PurchaseOrder.to_csv(@order_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -158,29 +176,35 @@ module Ag2Purchase
       @from = params[:from]
       @to = params[:to]
       supplier = params[:supplier]
-      order = params[:order]
-      account = params[:account]
-      product = params[:product]
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      # Search necessary data
+      if !project.blank?
+        @invoice_report = SupplierInvoice.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:invoice_no)
+      else
+        @invoice_report = SupplierInvoice.where("created_at >= ? AND created_at <= ?",from,to).order(:invoice_no)
+      end
+
       # Setup filename
-      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}"
+      title = t("activerecord.models.supplier_invoice.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data SupplierInvoice.to_report_invoices_csv(@invoice_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -198,20 +222,25 @@ module Ag2Purchase
         return
       end
 
-      # Search necessary data
-      #@worker = Worker.find(worker)
-
       # Format dates
       from = Time.parse(@from).strftime("%Y-%m-%d")
       to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      # Search necessary data
+      @payment_report = SupplierPayment.where("created_at >= ? AND created_at <= ?",from,to).order(:payment_no)
+
       # Setup filename
-      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}"
+      title = t("activerecord.models.supplier_payment.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data SupplierPayment.to_csv(@payment_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end

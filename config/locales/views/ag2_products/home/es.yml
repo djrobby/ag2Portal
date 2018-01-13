@@ -3,6 +3,7 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
+        control_csv: "Generar CSV"
         control_a: "Control&Seguimto."
         control_catalog: "Catálogo de Productos"
         control_stocks: "Existencias"

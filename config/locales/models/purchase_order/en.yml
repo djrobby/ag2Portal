@@ -68,3 +68,4 @@ en:
         reception_status_total: "Total"
         reception_status_partial: "Partial"
         reception_status_unreceived: "Unreceived"
+        delay: "Delay"

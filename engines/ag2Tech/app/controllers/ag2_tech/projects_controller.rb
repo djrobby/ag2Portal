@@ -314,11 +314,15 @@ module Ag2Tech
          @from = formatted_date(@project_report.first.created_at)
          @to = formatted_date(@project_report.last.created_at)
          respond_to do |format|
-           # Render PDF
-           format.pdf { send_data render_to_string,
-                        filename: "#{title}_#{@from}-#{@to}.pdf",
-                        type: 'application/pdf',
-                        disposition: 'inline' }
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+          format.csv { send_data Project.to_csv(@project_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
          end
        end
     end

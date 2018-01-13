@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class PurchaseOrder < ActiveRecord::Base
   include ModelsModule
 
@@ -373,50 +375,53 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
   def self.to_csv(array)
-    attributes = [  "Id" + " " + I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.attributes.purchase_order.order_no"),
-                    I18n.t("activerecord.attributes.purchase_order.order_date"),
-                    I18n.t("activerecord.attributes.purchase_order.order_status"),
-                    I18n.t("activerecord.attributes.purchase_order.supplier_code"),
-                    I18n.t("activerecord.attributes.purchase_order.supplier"),
-                    I18n.t("activerecord.attributes.purchase_order.charge_account_code"),
-                    I18n.t("activerecord.attributes.purchase_order.charge_account"),
-                    I18n.t("activerecord.attributes.purchase_order.quantity"),
-                    I18n.t("activerecord.attributes.purchase_order.balance"),
-                    I18n.t("activerecord.attributes.purchase_order.total"),
-                    I18n.t("activerecord.attributes.purchase_order.approver")]
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.order_no")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.order_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.order_status")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.supplier_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.supplier")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.charge_account_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.charge_account")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.quantity")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.balance")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.total")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.approver"))]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        c001 = i.project.company.id
-        c002 = i.project.company.name
-        i001 = i.full_no
-        i002 = i.formatted_date(i.order_date) unless i.order_date.blank?
-        i003 = i.order_status.name
-        i004 = i.supplier.full_code
-        i005 = i.supplier.name
-        i006 = i.charge_account.full_code unless i.charge_account.blank?
-        i007 = i.charge_account.partial_name unless i.charge_account.blank?
-        i008 = i.number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
-        i009 = i.number_with_precision(i.balance, precision: 2) unless i.quantity.blank?
-        i010 = i.number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total.blank?
-        i011 = i.approver.email unless i.approver.blank?
-        csv << [  c001,
-                  c002,
+        i001 = i.formatted_date(i.order_date) unless i.order_date.blank?
+        i002 = i.raw_number(i.quantity, 2)
+        i003 = i.raw_number(i.balance, 2)
+        i004 = i.raw_number(i.total, 2)
+        csv << [  i.try(:project).try(:company).try(:id),
+                  i.try(:project).try(:company).try(:name),
+                  i.full_no,
                   i001,
+                  i.try(:order_status).try(:name),
+                  i.try(:supplier).try(:full_code),
+                  i.try(:supplier).try(:name),
+                  i.try(:charge_account).try(:full_code),
+                  i.try(:charge_account).try(:partial_name),
                   i002,
                   i003,
                   i004,
-                  i005,
-                  i006,
-                  i007,
-                  i008,
-                  i009,
-                  i010,
-                  i011]
+                  i.try(:approver).try(:email)]
       end
     end
   end

@@ -66,3 +66,4 @@ es:
         reception_status_total: "Total"
         reception_status_partial: "Parcial"
         reception_status_unreceived: "No recibido"
+        delay: "Demora"

@@ -46,7 +46,7 @@ module Ag2Tech
       if project.blank?
         @project_report = Project.where("created_at >= ? AND created_at <= ?",from,to).order(:company_id)
       else
-        @project_report = Project.where("id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
+        @project_report = Project.where("id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
       end
 
       title = t("activerecord.models.project.few") + "_#{from}_#{to}.pdf"
@@ -56,6 +56,10 @@ module Ag2Tech
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data Project.to_csv(@project_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -77,10 +81,10 @@ module Ag2Tech
      from = Time.parse(@from).strftime("%Y-%m-%d")
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      if project.blank?
-        @budget_report = Budget.where("created_at >= ? AND created_at <= ?",from,to).order(:company_id)
+      if !project.blank?
+        @budget_report = Budget.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:budget_no)
       else
-        @budget_report = Budget.where("id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
+        @budget_report = Budget.where("created_at >= ? AND created_at <= ?",from,to).order(:budget_no)
       end
 
       title = t("activerecord.models.budget.few") + "_#{from}_#{to}.pdf"
@@ -90,6 +94,10 @@ module Ag2Tech
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data Budget.to_csv(@budget_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -112,7 +120,7 @@ module Ag2Tech
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank?
-        @work_report = WorkOrder.where("project_id >= ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
+        @work_report = WorkOrder.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
       elsif project.blank?
         @work_report = WorkOrder.where("created_at >= ? AND created_at <= ?",from,to).order(:project_id)
       end
@@ -124,6 +132,10 @@ module Ag2Tech
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
+                     disposition: 'inline' }
+        format.csv { send_data WorkOrder.to_csv(@work_report),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
                      disposition: 'inline' }
       end
     end
@@ -170,7 +182,7 @@ module Ag2Tech
     end
 
     def work_orders_dropdown
-      _orders = session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
+      session[:organization] != '0' ? WorkOrder.where(organization_id: session[:organization].to_i).order(:order_no) : WorkOrder.order(:order_no)
     end
 
     # Work orders belonging to projects
@@ -191,11 +203,11 @@ module Ag2Tech
     end
 
     def charge_accounts_dropdown
-      _accounts = session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
+      session[:organization] != '0' ? ChargeAccount.where(organization_id: session[:organization].to_i).order(:account_code) : ChargeAccount.order(:account_code)
     end
 
     def charge_accounts_dropdown_edit(_project)
-      _accounts = ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
+      ChargeAccount.where('project_id = ? OR (project_id IS NULL AND organization_id = ?)', _project.id, _project.organization_id).order(:account_code)
     end
 
     # Charge accounts belonging to projects

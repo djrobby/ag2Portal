@@ -3,6 +3,7 @@ en:
     home:
       index:
         control: "Control&Tracking"
+        control_csv: "Generate CSV"
         control_a: "Control&Tracking"
         suppliers: "Suppliers"
         activities: "Supplier Activities"

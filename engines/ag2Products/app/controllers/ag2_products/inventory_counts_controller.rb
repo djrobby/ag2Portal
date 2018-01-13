@@ -676,7 +676,7 @@ module Ag2Products
                      disposition: 'inline' }
       end
     end
-    
+
     # Inventory counts report
     def inventory_counts_report
       manage_filter_state
@@ -721,11 +721,6 @@ module Ag2Products
       end
 
       @inventory_counts_report = @search.results
-      
-      @inventory_counts_csv = []
-      @inventory_counts_report.each do |pr|
-        @inventory_counts_csv << pr
-      end
 
       if !@inventory_counts_report.blank?
         title = t("activerecord.models.inventory_count.few")
@@ -737,7 +732,10 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
-          format.csv { render text: InventoryCount.to_csv(@inventory_counts_csv) }
+          format.csv { send_data InventoryCount.to_csv(@inventory_counts_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
         end
       end
     end

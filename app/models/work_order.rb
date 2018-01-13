@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class WorkOrder < ActiveRecord::Base
   include ModelsModule
 
@@ -203,25 +205,41 @@ class WorkOrder < ActiveRecord::Base
     project.nil? ? nil : project.company
   end
 
-  def self.to_report_work_order_csv(array)
-    attributes = [I18n.t("activerecord.attributes.work_order.order_no"),
-                  I18n.t("activerecord.attributes.work_order.description"),
-                  I18n.t("activerecord.attributes.work_order.petitioner"),
-                  I18n.t("activerecord.attributes.work_order.work_order_status"),
-                  I18n.t("activerecord.attributes.work_order.charge_account_report"),
-                  I18n.t("activerecord.attributes.work_order.area"),
-                  I18n.t("activerecord.attributes.work_order.work_order_area"),
-                  I18n.t("activerecord.attributes.work_order.work_order_type"),
-                  I18n.t("activerecord.attributes.work_order.work_order_labor"),
-                  I18n.t("activerecord.attributes.work_order.location"),
-                  I18n.t("activerecord.attributes.work_order.created_at"),
-                  I18n.t("activerecord.attributes.work_order.closed_at"),
-                  I18n.t("activerecord.attributes.work_order.total_costs"),
-                  I18n.t("activerecord.attributes.work_order.project")]
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize(I18n.t("activerecord.attributes.work_order.order_no")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.description")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.petitioner")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_status")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.charge_account_report")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.area")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_area")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_type")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_labor")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.location")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.created_at")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.closed_at")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.total_costs")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.project"))]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
+        i001 = i.formatted_date(i.created_at) unless i.created_at.blank?
+        i002 = i.formatted_date(i.closed_at) unless i.closed_at.blank?
+        i003 = i.raw_number(i.total_costs, 4)
+
         csv << [  i.full_no,
                   i.summary,
                   i.petitioner,
@@ -232,9 +250,9 @@ class WorkOrder < ActiveRecord::Base
                   i.try(:work_order_type).try(:short_name),
                   i.try(:work_order_labor).try(:short_name),
                   i.location,
-                  i.created_at,
-                  i.closed_at,
-                  i.total_costs,
+                  i001,
+                  i002,
+                  i003,
                   i.project.name]
       end
     end

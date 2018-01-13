@@ -385,7 +385,7 @@ class Reading < ActiveRecord::Base
   end
 
   # Update estimated consumption
-  def update_current_estimation_balance(ce, cr)
+  def update_current_estimation_balance(ce)
     if ce > 0
       subscriber_current_estimation = subscriber.current_estimation
       if subscriber_current_estimation.nil?
@@ -976,6 +976,18 @@ class Reading < ActiveRecord::Base
                       .order('subscriber_tariffs.starting_at')
                       .last rescue nil
     end
+  end
+
+  #
+  # CSV
+  #
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
   end
 
   #

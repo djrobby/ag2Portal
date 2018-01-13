@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class Budget < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :project
   belongs_to :organization
   belongs_to :budget_period
@@ -30,6 +34,50 @@ class Budget < ActiveRecord::Base
   validates :project,       :presence => true
   validates :budget_period, :presence => true
   validates :organization,  :presence => true
+  
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.project")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.budget_no")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.description")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.budget_period")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.total_income")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.total_expenditure")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.approval_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.budget.approver"))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.raw_number(i.total_income, 2)
+        i002 = i.raw_number(i.total_expenditure, 2)
+        i003 = i.formatted_timestamp(i.approval_date.utc.getlocal) unless i.approval_date.blank?
+        csv << [  i.try(:project).try(:company).try(:id),
+                  i.try(:project).try(:company).try(:name),
+                  i.try(:project).try(:full_name),
+                  i.try(:full_no),
+                  i.description,
+                  i.try(:budget_period).try(:full_name),
+                  i001,
+                  i002,
+                  i003,
+                  i.approver.email]
+      end
+    end
+  end
 
   def to_label
     "#{full_name}"

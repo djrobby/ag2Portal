@@ -245,6 +245,11 @@ class SupplierInvoice < ActiveRecord::Base
     formatted_number_without_delimiter(_number, _d)
   end
 
+  # Aux methods for CSV
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -742,26 +747,26 @@ class SupplierInvoice < ActiveRecord::Base
   end
 
   def self.to_report_invoices_csv(array)
-    attributes = [I18n.t('activerecord.attributes.supplier_invoice.invoice_no'),
-                  I18n.t('activerecord.attributes.supplier_invoice.invoice_date'),
-                  I18n.t('activerecord.attributes.supplier_invoice.payday_limit'),
-                  I18n.t('activerecord.attributes.supplier_invoice.receipt_note'),
-                  I18n.t('activerecord.attributes.supplier_invoice.supplier'),
-                  I18n.t('activerecord.attributes.supplier_invoice.payment_method'),
-                  I18n.t('activerecord.attributes.supplier_invoice.project'),
-                  I18n.t('activerecord.attributes.supplier_invoice.work_order'),
-                  I18n.t('activerecord.attributes.supplier_invoice.charge_account'),
-                  I18n.t('activerecord.attributes.supplier_invoice.purchase_order'),
-                  I18n.t('activerecord.attributes.supplier_invoice.internal_no'),
-                  I18n.t('activerecord.attributes.supplier_invoice.debt'),
-                  I18n.t('activerecord.attributes.supplier_invoice.quantity'),
-                  I18n.t('activerecord.attributes.supplier_invoice.subtotal'),
-                  I18n.t('activerecord.attributes.supplier_invoice.withholding'),
-                  I18n.t('activerecord.attributes.supplier_invoice.discount_pct'),
-                  I18n.t('activerecord.attributes.supplier_invoice.bonus'),
-                  I18n.t('activerecord.attributes.supplier_invoice.taxable'),
-                  I18n.t('activerecord.attributes.supplier_invoice.taxes'),
-                  I18n.t('activerecord.attributes.supplier_invoice.total')]
+    attributes = [ array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.invoice_no')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.invoice_date')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.payday_limit')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.receipt_note')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.supplier')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.payment_method')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.project')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.work_order')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.charge_account')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.purchase_order')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.internal_no')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.debt')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.quantity')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.subtotal')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.withholding')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.discount_pct')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.bonus')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.taxable')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.taxes')),
+                   array[0].sanitize(I18n.t('activerecord.attributes.supplier_invoice.total')) ]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes

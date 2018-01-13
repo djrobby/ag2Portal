@@ -3,6 +3,7 @@ es:
     home:
       index:
         control: "Control&Seguimiento"
+        control_csv: "Generar CSV"
         control_a: "Control&Seguimto."
         clients: "Clientes"
         payment_methods: "Formas de Pago"

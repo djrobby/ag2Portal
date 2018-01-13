@@ -1287,10 +1287,12 @@ module Ag2Purchase
       end
       @supplier_invoices = @search.results
 
+      title = t("activerecord.models.supplier_invoice.few")
       respond_to do |format|
-        format.html # index.html.erb
-        format.csv { render text: SupplierInvoice.to_report_invoices_csv(@supplier_invoices) }
-        format.js
+        format.csv { send_data SupplierInvoice.to_report_invoices_csv(@supplier_invoices),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
       end
     end
 

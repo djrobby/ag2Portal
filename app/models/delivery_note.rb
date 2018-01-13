@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class DeliveryNote < ActiveRecord::Base
   include ModelsModule
 
@@ -115,44 +117,49 @@ class DeliveryNote < ActiveRecord::Base
     joins(:project, :delivery_note_items).where('projects.company_id = ? AND delivery_note_items.product_id = ?', _company, _product)
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
   def self.to_csv(array)
-    attributes = [  "Id" + " " + I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.models.company.one"),
-                    I18n.t("activerecord.attributes.delivery_note.delivery_no"),
-                    I18n.t("activerecord.attributes.delivery_note.delivery_date"),
-                    I18n.t("activerecord.attributes.delivery_note.project"),
-                    I18n.t("activerecord.attributes.delivery_note.project"),
-                    I18n.t("activerecord.attributes.delivery_note.store"),
-                    I18n.t("activerecord.attributes.purchase_order.charge_account_code"),
-                    I18n.t("activerecord.attributes.receipt_note.charge_account"),
-                    I18n.t("activerecord.attributes.delivery_note.quantity"),
-                    I18n.t("activerecord.attributes.delivery_note.costs")]
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.delivery_no")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.delivery_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.project")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.project")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.store")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.charge_account_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.receipt_note.charge_account")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.quantity")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.delivery_note.costs"))]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        c001 = i.project.company.id
-        c002 = i.project.company.name
-        i001 = i.full_no
-        i002 = i.formatted_date(i.delivery_date) unless i.delivery_date.blank?
-        i003 = i.project.full_code unless i.project.blank?
-        i004 = i.project.name unless i.project.blank?
-        i005 = i.store.name unless i.store.blank?
-        i006 = i.charge_account.full_code unless i.charge_account.blank?
-        i007 = i.charge_account.partial_name unless i.charge_account.blank?
-        i008 = i.number_with_precision(i.quantity, precision: 2) unless i.quantity.blank?
-        i009 = i.number_with_precision(i.costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.costs.blank?
-        csv << [  c001,
-                  c002,
+        i001 = i.formatted_date(i.delivery_date) unless i.delivery_date.blank?
+        i002 = i.raw_number(i.quantity, 2)
+        i003 = i.raw_number(i.costs, 2)
+
+        csv << [  i.try(:project).try(:company).try(:id),
+                  i.try(:project).try(:company).try(:name),
+                  i.full_no,
                   i001,
+                  i.try(:project).try(:full_code),
+                  i.try(:project).try(:name),
+                  i.try(:store).try(:name),
+                  i.try(:charge_account).try(:full_code),
+                  i.try(:charge_account).try(:partial_name),
                   i002,
-                  i003,
-                  i004,
-                  i005,
-                  i006,
-                  i007,
-                  i008,
-                  i009]
+                  i003]
       end
     end
   end

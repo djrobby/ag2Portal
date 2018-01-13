@@ -48,8 +48,8 @@ module Ag2Gest
       # Search invoice & items
       @biller_printer = Bill.find(params[:id])
       @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
-      @water_connection_contract = @biller_printer.water_connection_contract 
-      
+      @water_connection_contract = @biller_printer.water_connection_contract
+
       @contracting_request = !@water_supply_contract.blank? ? @water_supply_contract.contracting_request : @water_connection_contract.contracting_request
       @invoice = @biller_printer.invoices.first
       @items = @invoice.invoice_items.order('id')
@@ -69,8 +69,8 @@ module Ag2Gest
       # Search invoice & items
       @biller_printer = Bill.find(params[:id])
       @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
-      @water_connection_contract = @biller_printer.water_connection_contract 
-      
+      @water_connection_contract = @biller_printer.water_connection_contract
+
       @contracting_request = !@water_supply_contract.blank? ? @water_supply_contract.contracting_request : @water_connection_contract.contracting_request
       @invoice = @biller_printer.invoices.first
       @items = @invoice.invoice_items.order('id')
@@ -318,9 +318,13 @@ module Ag2Gest
       @@readings = Reading.where(id: readings)
       @readings = @@readings.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
 
+      title = t("activerecord.models.reading.few")
       respond_to do |format|
         format.html
-        format.csv { render text: Reading.to_csv(@readings) }
+        format.csv { send_data Reading.to_csv(@readings),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
       end
     end
 
@@ -333,9 +337,13 @@ module Ag2Gest
       @p_r = PreBill.where(id: bills)
       @bills = @p_r
 
+      title = t("activerecord.models.pre_bill.few")
       respond_to do |format|
         format.html
-        format.csv { render text: PreBill.to_csv(@bills) }
+        format.csv { send_data PreBill.to_csv(@bills),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
       end
     end
 

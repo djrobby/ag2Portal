@@ -1270,8 +1270,11 @@ module Ag2Tech
         @from = formatted_date(@work_order_report.first.created_at)
         @to = formatted_date(@work_order_report.last.created_at)
         respond_to do |format|
-          format.html # index.html.erb
-          format.csv { render text: WorkOrder.to_report_work_order_csv(@work_order_report) }
+          # format.html # index.html.erb
+          format.csv { send_data WorkOrder.to_report_work_order_csv(@work_order_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
           format.js
         end
       end

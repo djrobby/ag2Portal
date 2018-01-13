@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Offer < ActiveRecord::Base
   include ModelsModule
 
@@ -47,6 +49,56 @@ class Offer < ActiveRecord::Base
   before_save :calculate_and_store_totals
   after_create :notify_on_create
   after_update :notify_on_update
+
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.offer_no")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.offer_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.payment_method")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.supplier")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.offer_request")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.project")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.work_order")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.charge_account")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.store")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.approval_date")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.offer.approver"))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.formatted_date(i.offer_date) unless i.offer_date.blank?
+        i002 = i.formatted_timestamp(i.approval_date.utc.getlocal) unless i.approval_date.blank?
+
+        csv << [  i.try(:project).try(:company).try(:id),
+                  i.try(:project).try(:company).try(:name),
+                  i.offer_no,
+                  i001,
+                  i.try(:payment_method).try(:description),
+                  i.try(:supplier).try(:full_name),
+                  i.try(:offer_request).ftry(:ull_name),
+                  i.try(:project).try(:full_name),
+                  i.try(:work_order).try(:full_name),
+                  i.try(:charge_account).ftry(:ull_name),
+                  i.try(:store).try(:name),
+                  i002,
+                  i.try(:approver).try(:email)]
+      end
+    end
+  end
 
   def to_label
     "#{full_name}"
