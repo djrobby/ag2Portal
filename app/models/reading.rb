@@ -356,8 +356,7 @@ class Reading < ActiveRecord::Base
   # Previous average readed consumption
   def consumption_previous_readings(from_date, to_date)
     begin
-      previous_readings = subscriber.readings.where('reading_date between ? AND ?', from_date, to_date)
-                                    .select('SUM(reading_index - reading_index_1) CONSUMPTION,COUNT(*) COUNTER')
+      previous_readings = subscriber.readings.where('reading_date between ? AND ?', from_date, to_date).select('SUM(reading_index - reading_index_1) CONSUMPTION,COUNT(*) COUNTER')
       (previous_readings[0].CONSUMPTION / previous_readings[0].COUNTER).round
     rescue
       0
@@ -418,11 +417,16 @@ class Reading < ActiveRecord::Base
   def months_between_last_normal_reading_and_current_reading
     # If current reading type is NORMAL
     # and the previous year reading type is NORMAL
-    # and the previous readings are AUTO or do not exist
+    # and the intermediate readings are AUTO or do not exist
     # must obtain the difference in months to apply
+    mm = 0
     if reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL
-      if reading_1.reading_type_id == ReadingType::NORMAL
+      intermediate = subscriber.readings.where('(readings.id > ? AND readings.id < ?) AND reading_type_id IN (?)',reading_2.id,reading.id,[ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA]).group(:reading_type_id).select('reading_type_id,count(*) AS COUNTER')
+      if intermediate.blank?  # No NORMAL intermediate readings, obtain months
+         mm = ((reading.reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
+      end
     end
+    mm
   end
 
   #
