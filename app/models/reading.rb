@@ -408,6 +408,24 @@ class Reading < ActiveRecord::Base
   end
 
   #
+  # Seasonal Rates:
+  # Open Billing Blocks
+  #
+  # Creates Preinvoice Item
+  def open_billing_blocks
+  end
+
+  def months_between_last_normal_reading_and_current_reading
+    # If current reading type is NORMAL
+    # and the previous year reading type is NORMAL
+    # and the previous readings are AUTO or do not exist
+    # must obtain the difference in months to apply
+    if reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL
+      if reading_1.reading_type_id == ReadingType::NORMAL
+    end
+  end
+
+  #
   # Preinvoice & Invoice Items creation
   #
   # Creates Preinvoice Item
@@ -464,6 +482,7 @@ class Reading < ActiveRecord::Base
     # Variables
     block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
+      #+++ Blocks +++
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
@@ -494,6 +513,7 @@ class Reading < ActiveRecord::Base
         end
       end # (1..8).each
     elsif tariff.percentage_fee > 0 and !tariff.percentage_applicable_formula.blank?
+      #+++ Percentage +++
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "VP",
@@ -504,6 +524,7 @@ class Reading < ActiveRecord::Base
                               tariff.try(:discount_pct_p),
                               user_id, '')
     elsif tariff.variable_fee > 0
+      #+++ Variable (like one block-tariff) +++
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "CV",
