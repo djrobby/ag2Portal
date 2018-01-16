@@ -13,7 +13,7 @@ class BillingFrequency < ActiveRecord::Base
   has_paper_trail
 
   def total_months
-    months.nil? || months.zero? ? (days / 30.0).round : months
+    months.nil? || months.zero? ? (days / 30.436875).round : months
   end
 
   def to_label

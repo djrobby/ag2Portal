@@ -407,29 +407,6 @@ class Reading < ActiveRecord::Base
   end
 
   #
-  # Seasonal Rates:
-  # Open Billing Blocks
-  #
-  # Creates Preinvoice Item
-  def open_billing_blocks
-  end
-
-  def months_between_last_normal_reading_and_current_reading
-    # If current reading type is NORMAL
-    # and the previous year reading type is NORMAL
-    # and the intermediate readings are AUTO or do not exist
-    # must obtain the difference in months to apply
-    mm = 0
-    if reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL
-      intermediate = subscriber.readings.where('(readings.id > ? AND readings.id < ?) AND reading_type_id IN (?)',reading_2.id,reading.id,[ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA]).group(:reading_type_id).select('reading_type_id,count(*) AS COUNTER')
-      if intermediate.blank?  # No NORMAL intermediate readings, obtain months
-         mm = ((reading.reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
-      end
-    end
-    mm
-  end
-
-  #
   # Preinvoice & Invoice Items creation
   #
   # Creates Preinvoice Item
@@ -484,7 +461,8 @@ class Reading < ActiveRecord::Base
     end
 
     # Variables
-    block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    # block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    block_frequency = coefficient_for_billing_blocks(tariff)
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       #+++ Blocks +++
       limit_before = 0
@@ -590,7 +568,8 @@ class Reading < ActiveRecord::Base
     end
 
     # Variables
-    block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    # block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    block_frequency = coefficient_for_billing_blocks(tariff)
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
@@ -675,6 +654,36 @@ class Reading < ActiveRecord::Base
     end # should_prorate
   end
 
+  #
+  # Seasonal Rates:
+  # Open Billing Blocks
+  #
+  # Calculate coefficient for variable fee by blocks.
+  # Should be applied to block_limits
+  def coefficient_for_billing_blocks(tariff)
+    mm = months_between_last_normal_reading_and_current_reading
+    mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+  end
+
+  # Calculate months between readings
+  def months_between_last_normal_reading_and_current_reading
+    # If current reading type is NORMAL
+    # and the previous year reading type is NORMAL
+    # and the intermediate readings are AUTO or do not exist
+    # must obtain the difference in months to apply
+    mm = 0
+    if reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL
+      intermediate = subscriber.readings.where('(readings.id > ? AND readings.id < ?) AND reading_type_id IN (?)',reading_2.id,reading.id,[ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA]).group(:reading_type_id).select('reading_type_id,count(*) AS COUNTER')
+      if intermediate.blank?  # No NORMAL intermediate readings, obtain months
+         mm = ((reading.reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
+      end
+    end
+    mm
+  end
+
+  #
+  # Proration
+  #
   # Should prorate?
   def should_prorate?(tariff)
     ret = false
