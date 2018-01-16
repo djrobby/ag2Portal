@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180110095144) do
+ActiveRecord::Schema.define(:version => 20180116123431) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -246,6 +246,8 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.boolean  "tariffs_by_caliber",  :default => false
+    t.boolean  "bill_by_endowments",  :default => false, :null => false
+    t.boolean  "bill_by_inhabitants", :default => false, :null => false
   end
 
   add_index "billable_items", ["billable_concept_id"], :name => "index_billable_items_on_billable_concept_id"
@@ -1090,6 +1092,8 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3704,8 +3708,8 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
-    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
     t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,   :null => false
     t.string   "old_code"
     t.string   "postal_last_name"
@@ -4098,9 +4102,9 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
     t.integer  "tariff_type_id"
     t.integer  "caliber_id"
     t.integer  "billing_frequency_id"
-    t.decimal  "fixed_fee",                     :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "variable_fee",                  :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "percentage_fee",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "fixed_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "variable_fee",                               :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "percentage_fee",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.string   "percentage_applicable_formula"
     t.integer  "block1_limit"
     t.integer  "block2_limit"
@@ -4110,31 +4114,33 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
     t.integer  "block6_limit"
     t.integer  "block7_limit"
     t.integer  "block8_limit"
-    t.decimal  "block1_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block2_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block3_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block4_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block5_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block6_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block7_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block8_fee",                    :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "discount_pct_f",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_v",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_p",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_b",                :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "block1_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block2_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block3_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block4_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block5_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block6_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block7_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block8_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "discount_pct_f",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_v",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_p",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_b",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "tax_type_f_id"
     t.integer  "tax_type_v_id"
     t.integer  "tax_type_p_id"
     t.integer  "tax_type_b_id"
-    t.datetime "created_at",                                                                    :null => false
-    t.datetime "updated_at",                                                                    :null => false
+    t.datetime "created_at",                                                                                 :null => false
+    t.datetime "updated_at",                                                                                 :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.date     "starting_at"
     t.date     "ending_at"
-    t.decimal  "percentage_fixed_fee",          :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "connection_fee_a",              :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "connection_fee_b",              :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "percentage_fixed_fee",                       :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "connection_fee_a",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "connection_fee_b",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.integer  "endowments_from",               :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants_from",              :limit => 2,                                :default => 0,   :null => false
   end
 
   add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"
@@ -4392,6 +4398,28 @@ ActiveRecord::Schema.define(:version => 20180110095144) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
+
+  create_table "update_wap", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "reference_price",  :precision => 12, :scale => 4
+    t.decimal "global_wap",       :precision => 12, :scale => 4
+    t.integer "supplier_id"
+    t.decimal "price",            :precision => 12, :scale => 4
+    t.decimal "discount_rate",    :precision => 12, :scale => 2
+    t.decimal "net_price",        :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_0", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_strange", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false
