@@ -29,7 +29,7 @@
       <% end %>
       <!--<td><a data-toggle="modal" href="#info<%#= client.id.to_s %>"><%#= client.client_code %></a></td>-->
       <td><%= link_to client.full_code, client %>
-        <% b = client.subscribers.count %>
+        <% b = client.subscribers.size %>
         <% if b > 0 %>
         <i class="icon-star-empty" style="margin-left: 0.2em;" 
         title="<%= b %>">
