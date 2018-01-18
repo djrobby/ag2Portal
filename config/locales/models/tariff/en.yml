@@ -1,6 +1,6 @@
 en:
   activerecord:
-    models: 
+    models:
       tariff:
         zero:  Tariffs
         one:   Tariff
@@ -75,3 +75,7 @@ en:
         new_item: "New Billable item"
         porcentual_increment: "Porcentual increment"
         date_starting_at: "Date Effective since"
+        endowments_from: "Applies endowments from"
+        inhabitants_from: "Applies inhabitants from"
+        endowments_increment: "Increase of m3 per endowment"
+        inhabitants_increment: "Increase of m3 per inhabitant"

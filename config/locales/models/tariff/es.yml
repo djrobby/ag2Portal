@@ -75,3 +75,7 @@ es:
         new_item: "Nuevo Item facturable"
         porcentual_increment: "Incremento porcentual"
         date_starting_at: "Fecha inicio de vigencia"
+        endowments_from: "Aplica dotaciones desde"
+        inhabitants_from: "Aplica habitantes desde"
+        endowments_increment: "Incremento m3 por dotación"
+        inhabitants_increment: "Incremento m3 por habitante"

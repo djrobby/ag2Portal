@@ -22,3 +22,6 @@ es:
         billable_concept_id: "Concepto facturable"
         company_id: "Empresa"
         office_id: "Oficina"
+        bill_by_endowments: "¿Por dotación?"
+        bill_by_inhabitants: "¿Por habitante?"
+        bill_by_users: "¿Por usuario?"

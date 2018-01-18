@@ -16,7 +16,8 @@ class Tariff < ActiveRecord::Base
                   :tax_type_f_id, :tax_type_p_id, :tax_type_v_id, :variable_fee, :tariff_type_id,
                   :billable_item_id, :caliber_id, :tariff_scheme_id, :billing_frequency_id,
                   :starting_at, :ending_at, :tariff_ids, :percentage_fixed_fee,
-                  :connection_fee_a, :connection_fee_b, :endowments_from, :inhabitants_from
+                  :connection_fee_a, :connection_fee_b, :endowments_from, :inhabitants_from,
+                  :endowments_increment, :inhabitants_increment
 
   has_one :active_tariff
   has_one :billable_concept, through: :billable_item

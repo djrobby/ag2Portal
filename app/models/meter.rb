@@ -229,11 +229,25 @@ class Meter < ActiveRecord::Base
   end
 
   # Have child meters? (Is master?)
+  def child_meters_count
+    child_meters.size
+  end
   def have_child_meters?
     child_meters.size > 0
   end
   def is_master?
     have_child_meters?
+  end
+  def is_child?
+    !master_meter_id.nil? && master_meter_id > 0
+  end
+  # Users
+  def users
+    child_meters.joins(:subscribers).where("(subscribers.ending_at IS NULL OR subscribers.ending_at >= ?) AND subscribers.active = true", Date.today).size
+  end
+  # Individual or Collective?
+  def individual_or_collective
+    users > 0 ? 'C' : 'I'
   end
 
   #

@@ -11,7 +11,7 @@ class BillableItem < ActiveRecord::Base
   has_paper_trail
 
   attr_accessible :biller_id, :project_id, :billable_concept_id, :regulation_id, :organization_id,
-                  :tariffs_by_caliber, :bill_by_endowments, :bill_by_inhabitants
+                  :tariffs_by_caliber, :bill_by_endowments, :bill_by_inhabitants, :bill_by_users
 
   validates :project,             :presence => true
   validates :billable_concept,    :presence => true

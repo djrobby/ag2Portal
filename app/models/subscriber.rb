@@ -89,7 +89,7 @@ class Subscriber < ActiveRecord::Base
   scope :active_by_office, -> office { where(active: true, office_id: office).by_code }
   scope :availables, -> { where("ending_at IS NULL OR ending_at >= ?", Date.today)}
   scope :unavailables, -> { where("NOT ending_at IS NULL OR active = false") }
-  scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today)}
+  scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today) }
   scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
 
   # Callbacks
@@ -173,6 +173,10 @@ class Subscriber < ActiveRecord::Base
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
+  end
+
+  def activated?
+    (ending_at.nil? || ending_at >= Date.today) && active
   end
 
   #
@@ -472,14 +476,6 @@ class Subscriber < ActiveRecord::Base
     _ret
   end
 
-  def meter_code
-    meter.blank? ? "" : meter.meter_code
-  end
-
-  def meter_caliber
-    meter.blank? ? "" : meter.caliber_id
-  end
-
   def use_name
     use.blank? ? "" : use.right_name
   end
@@ -501,6 +497,28 @@ class Subscriber < ActiveRecord::Base
     _e = endowments.nil? ? 0 : endowments
     _ie = _i + _e
     _ie == 0 ? 1 : _ie
+  end
+
+  #
+  # Meter & users
+  #
+  def meter_code
+    meter.blank? ? "" : meter.meter_code
+  end
+
+  def meter_caliber
+    meter.blank? ? "" : meter.caliber_id
+  end
+
+  def is_master_meter?
+    meter.is_master? rescue false
+  end
+  def is_child_meter?
+    meter.is_child? rescue false
+  end
+
+  def meter_users
+    meter.users + 1
   end
 
   #

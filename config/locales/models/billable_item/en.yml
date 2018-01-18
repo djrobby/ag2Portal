@@ -22,3 +22,6 @@ en:
         billable_concept_id: "Billable concept"
         company_id: "Company"
         office_id: "Office"
+        bill_by_endowments: "By endowment?"
+        bill_by_inhabitants: "By inhabitant?"
+        bill_by_users: "By user?"

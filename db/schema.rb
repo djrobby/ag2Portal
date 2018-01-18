@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180116123431) do
+ActiveRecord::Schema.define(:version => 20180118131442) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(:version => 20180116123431) do
     t.boolean  "tariffs_by_caliber",  :default => false
     t.boolean  "bill_by_endowments",  :default => false, :null => false
     t.boolean  "bill_by_inhabitants", :default => false, :null => false
+    t.boolean  "bill_by_users",       :default => false, :null => false
   end
 
   add_index "billable_items", ["billable_concept_id"], :name => "index_billable_items_on_billable_concept_id"
@@ -4141,6 +4142,8 @@ ActiveRecord::Schema.define(:version => 20180116123431) do
     t.decimal  "connection_fee_b",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
     t.integer  "endowments_from",               :limit => 2,                                :default => 0,   :null => false
     t.integer  "inhabitants_from",              :limit => 2,                                :default => 0,   :null => false
+    t.integer  "endowments_increment",          :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants_increment",         :limit => 2,                                :default => 0,   :null => false
   end
 
   add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"

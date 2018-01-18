@@ -682,6 +682,21 @@ class Reading < ActiveRecord::Base
   end
 
   #
+  # Rates by Inhabitants or Endowments or Users
+  #
+  def coefficient_by_users(tariff)
+    tariff.billable_item.bill_by_users ? subscriber.meter_users : 1
+  end
+
+  def coefficient_by_inhabitants(tariff)
+    if tariff.billable_item.bill_by_inabitants && subscriber.inhabitants > tariff.inhabitants_from
+      (subscriber.inhabitants - tariff.inhabitants_from) * tariff.inhabitants_increment rescue 0
+    else
+      0
+    end
+  end
+
+  #
   # Proration
   #
   # Should prorate?
