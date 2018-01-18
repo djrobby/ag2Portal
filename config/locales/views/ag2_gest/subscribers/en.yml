@@ -27,6 +27,8 @@ en:
         charged_only: "Cobradas"
         are_you_sure_to_void: "Are you sure to void this "
         are_you_sure_to_rebill: "Are you sure to rebill this "
+        total_consumptions: "Consumption"
+        total_bills: "Total"
       edit:
         title: "Editar Subscriber"
         btn_show: "Ver Subscriber"
@@ -39,6 +41,11 @@ en:
         subscriber_report: "Subscribers Registry"
         subscriber_tec_report: "Subscribers Technical Registry"
         subscriber_eco_report: "Subscribers Economical Registry"
+      client_bank_account:
+        title: "New bank account"
+        successful: "Bank account succesfully created"
+        failure: "Error creating bank account"
+        fail_assing_ending_at: "Error closing active bank account"
       back_to_main_page: "Volver a Subscribers"
       generate_code_btn: "Código de Subscriber"
       personal_info: "Información del Subscriber"
