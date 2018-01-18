@@ -1,5 +1,5 @@
 class Subscriber < ActiveRecord::Base
-  belongs_to :client
+  belongs_to :client, :counter_cache => true
   belongs_to :office
   belongs_to :center
   belongs_to :street_directory
