@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180118131442) do
+ActiveRecord::Schema.define(:version => 20180118150427) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -4103,9 +4103,9 @@ ActiveRecord::Schema.define(:version => 20180118131442) do
     t.integer  "tariff_type_id"
     t.integer  "caliber_id"
     t.integer  "billing_frequency_id"
-    t.decimal  "fixed_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "variable_fee",                               :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "percentage_fee",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "fixed_fee",                                   :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "variable_fee",                                :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "percentage_fee",                              :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.string   "percentage_applicable_formula"
     t.integer  "block1_limit"
     t.integer  "block2_limit"
@@ -4115,35 +4115,40 @@ ActiveRecord::Schema.define(:version => 20180118131442) do
     t.integer  "block6_limit"
     t.integer  "block7_limit"
     t.integer  "block8_limit"
-    t.decimal  "block1_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block2_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block3_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block4_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block5_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block6_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block7_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "block8_fee",                                 :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "discount_pct_f",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_v",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_p",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "discount_pct_b",                             :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "block1_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block2_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block3_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block4_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block5_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block6_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block7_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "block8_fee",                                  :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "discount_pct_f",                              :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_v",                              :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_p",                              :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "discount_pct_b",                              :precision => 6,  :scale => 2, :default => 0.0, :null => false
     t.integer  "tax_type_f_id"
     t.integer  "tax_type_v_id"
     t.integer  "tax_type_p_id"
     t.integer  "tax_type_b_id"
-    t.datetime "created_at",                                                                                 :null => false
-    t.datetime "updated_at",                                                                                 :null => false
+    t.datetime "created_at",                                                                                  :null => false
+    t.datetime "updated_at",                                                                                  :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.date     "starting_at"
     t.date     "ending_at"
-    t.decimal  "percentage_fixed_fee",                       :precision => 6,  :scale => 2, :default => 0.0, :null => false
-    t.decimal  "connection_fee_a",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.decimal  "connection_fee_b",                           :precision => 12, :scale => 6, :default => 0.0, :null => false
-    t.integer  "endowments_from",               :limit => 2,                                :default => 0,   :null => false
-    t.integer  "inhabitants_from",              :limit => 2,                                :default => 0,   :null => false
-    t.integer  "endowments_increment",          :limit => 2,                                :default => 0,   :null => false
-    t.integer  "inhabitants_increment",         :limit => 2,                                :default => 0,   :null => false
+    t.decimal  "percentage_fixed_fee",                        :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "connection_fee_a",                            :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.decimal  "connection_fee_b",                            :precision => 12, :scale => 6, :default => 0.0, :null => false
+    t.integer  "endowments_from",                :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants_from",               :limit => 2,                                :default => 0,   :null => false
+    t.integer  "endowments_increment",           :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants_increment",          :limit => 2,                                :default => 0,   :null => false
+    t.integer  "endowments_increment_apply_to",  :limit => 2,                                :default => 0,   :null => false
+    t.integer  "inhabitants_increment_apply_to", :limit => 2,                                :default => 0,   :null => false
+    t.integer  "users_from",                     :limit => 2,                                :default => 0,   :null => false
+    t.integer  "users_increment",                :limit => 2,                                :default => 0,   :null => false
+    t.integer  "users_increment_apply_to",       :limit => 2,                                :default => 0,   :null => false
   end
 
   add_index "tariffs", ["billable_item_id"], :name => "index_tariffs_on_billable_item_id"

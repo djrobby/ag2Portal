@@ -1,4 +1,11 @@
 class Tariff < ActiveRecord::Base
+  # CONSTANTS
+  # increment_apply_to
+  NONE = 0
+  FIXED = 1
+  VARIABLE = 2
+  BOTH = 3
+
   #belongs_to :tariff_scheme
   belongs_to :billable_item
   belongs_to :tariff_type
@@ -16,8 +23,11 @@ class Tariff < ActiveRecord::Base
                   :tax_type_f_id, :tax_type_p_id, :tax_type_v_id, :variable_fee, :tariff_type_id,
                   :billable_item_id, :caliber_id, :tariff_scheme_id, :billing_frequency_id,
                   :starting_at, :ending_at, :tariff_ids, :percentage_fixed_fee,
-                  :connection_fee_a, :connection_fee_b, :endowments_from, :inhabitants_from,
-                  :endowments_increment, :inhabitants_increment
+                  :connection_fee_a, :connection_fee_b,
+                  :endowments_from, :inhabitants_from,
+                  :endowments_increment, :inhabitants_increment,
+                  :endowments_increment_apply_to, :inhabitants_increment_apply_to,
+                  :users_from, :users_increment, :users_increment_apply_to
 
   has_one :active_tariff
   has_one :billable_concept, through: :billable_item

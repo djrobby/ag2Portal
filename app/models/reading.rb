@@ -468,7 +468,7 @@ class Reading < ActiveRecord::Base
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = (tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
+        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants) * block_frequency * coefficient_by_users).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_pre_invoice_item(tariff,
@@ -574,7 +574,7 @@ class Reading < ActiveRecord::Base
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = (tariff.instance_eval("block#{i}_limit") * block_frequency).round rescue nil
+        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants) * block_frequency * coefficient_by_users).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_invoice_item(tariff,
@@ -659,8 +659,8 @@ class Reading < ActiveRecord::Base
   # Open Billing Blocks
   #
   # Calculate coefficient for variable fee by blocks.
-  # Should be applied to block_limits
   def coefficient_for_billing_blocks(tariff)
+    # Should be applied to block_limits
     mm = months_between_last_normal_reading_and_current_reading
     mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
   end
@@ -684,16 +684,26 @@ class Reading < ActiveRecord::Base
   #
   # Rates by Inhabitants or Endowments or Users
   #
-  def coefficient_by_users(tariff)
-    tariff.billable_item.bill_by_users ? subscriber.meter_users : 1
+  def coefficient_by_endowments(tariff)
+    if tariff.billable_item.bill_by_endowments && subscriber.endowments > tariff.endowments_from
+      (subscriber.endowments - tariff.endowments_from) * tariff.endowments_increment rescue 0
+    else
+      0
+    end
   end
 
   def coefficient_by_inhabitants(tariff)
+    # Should be used to add to block limits
     if tariff.billable_item.bill_by_inabitants && subscriber.inhabitants > tariff.inhabitants_from
       (subscriber.inhabitants - tariff.inhabitants_from) * tariff.inhabitants_increment rescue 0
     else
       0
     end
+  end
+
+  def coefficient_by_users(tariff)
+    # Should be used to multiply to block limits and fixed fee price
+    tariff.billable_item.bill_by_users ? subscriber.meter_users : 1
   end
 
   #
