@@ -163,6 +163,15 @@ class ReceiptNote < ActiveRecord::Base
     _status
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -226,18 +235,6 @@ class ReceiptNote < ActiveRecord::Base
     joins(:receipt_note_item_balances).group('receipt_notes.id').having('sum(receipt_note_item_balances.balance) = sum(receipt_note_items.quantity) AND sum(receipt_note_item_balances.balance) > ? ', 0)
   end
 
-  # Aux methods for CSV
-  def raw_number(_number, _d)
-    formatted_number_without_delimiter(_number, _d)
-  end
-
-  def sanitize(s)
-    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
-  end
-
-  #
-  # Class (self) user defined methods
-  #
   def self.to_csv(array)
     attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
                     array[0].sanitize(I18n.t("activerecord.models.company.one")),
@@ -258,8 +255,8 @@ class ReceiptNote < ActiveRecord::Base
       array.each do |i|
 
         i001 = i.formatted_date(i.receipt_date) unless i.receipt_date.blank?
-        i002 = i.raw_number(i.quantity, 2)
-        i003 = i.raw_number(i.taxable, 2)
+        i002 = i.raw_number(i.quantity, 2) unless i.quantity.blank?
+        i003 = i.raw_number(i.taxable, 2) unless i.taxable.blank?
         csv << [  i.try(:project).try(:company).try(:id),
                   i.try(:project).try(:company).try(:name),
                   i.receipt_no,

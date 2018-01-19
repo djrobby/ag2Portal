@@ -146,9 +146,8 @@ class DeliveryNote < ActiveRecord::Base
       csv << attributes
       array.each do |i|
         i001 = i.formatted_date(i.delivery_date) unless i.delivery_date.blank?
-        i002 = i.raw_number(i.quantity, 2)
-        i003 = i.raw_number(i.costs, 2)
-
+        i002 = i.raw_number(i.quantity, 2) unless i.quantity.blank?
+        i003 = i.raw_number(i.costs, 2) unless i.costs.blank?
         csv << [  i.try(:project).try(:company).try(:id),
                   i.try(:project).try(:company).try(:name),
                   i.full_no,

@@ -54,6 +54,12 @@
       window.open("work_order_report.pdf", "_blank");
       return false;
     });
+    // when #print_csv_btn is clicked
+    $("#print_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("export_work_order_csv.csv", "_self");
+      return false;
+    });
   });
 </script>
 
@@ -101,7 +107,7 @@
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_tech.home.index.control' %></a>
         <br /><br />
         <!-- Control&Tracking -->
-        <a href="<%= export_work_order_csv_work_orders_path(format: :csv) %>" download class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
+        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_products.home.index.control_csv' %></a>
         <br /><br />
         <%= link_to t(".back_to_root"), ag2_tech.root_path %>
       </div><!-- /.sidebar-nav -->

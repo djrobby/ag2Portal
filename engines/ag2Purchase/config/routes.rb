@@ -22,7 +22,11 @@ Ag2Purchase::Engine.routes.draw do
     match 'payment_report', :controller => 'ag2_purchase_track', :action => 'payment_report'
     match 'supplier_report', :controller => 'ag2_purchase_track', :action => 'supplier_report'
 
-    match 'purchase_orders_report', :controller => 'purchase_orders', :action => 'purchase_orders_report'
+    match 'request_items_report', :controller => 'ag2_purchase_track', :action => 'request_items_report' #MJ
+    match 'offer_items_report', :controller => 'ag2_purchase_track', :action => 'offer_items_report' #MJ
+    match 'order_items_report', :controller => 'ag2_purchase_track', :action => 'order_items_report' #MJ
+    match 'invoice_items_report', :controller => 'ag2_purchase_track', :action => 'invoice_items_report' #MJ
+    match 'supplier_prices_report', :controller => 'ag2_purchase_track', :action => 'supplier_prices_report' #MJ
 
     # Patterns
     DECIMAL_PATTERN = /-?\d+(\.\d+)/
@@ -140,6 +144,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'purchase_orders/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
     match 'purchase_orders/:id/send_notification/:id/:user', :controller => 'purchase_orders', :action => 'send_notification'
+    match 'purchase_orders_report', :controller => 'purchase_orders', :action => 'purchase_orders_report'
     #
     # Purchase order Reports
     #match 'purchase_order_form', :controller => 'purchase_orders', :action => 'purchase_order_form'
@@ -260,6 +265,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_invoices/si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
     match 'si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
     match 'supplier_invoices/:id/si_generate_no', :controller => 'supplier_invoices', :action => 'si_generate_no'
+    match 'export_invoices', :controller => 'supplier_invoices', :action => 'export_invoices'
     #
     # Offer requests
     match 'offer_requests/or_totals/:qty/:amount/:tax/:discount_p', :controller => 'offer_requests', :action => 'or_totals'
@@ -314,6 +320,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'or_product_all_stocks/:product', :controller => 'purchase_orders', :action => 'offer_requests'
     match 'offer_requests/:id/or_product_all_stocks/:product', :controller => 'offer_requests', :action => 'or_product_all_stocks'
     match 'or_generate_request/', :controller => 'offer_requests', :action => 'or_generate_request'
+    match 'offer_request_view_report', :controller => 'offer_requests', :action => 'offer_request_view_report'
     #
     # Offers
     match 'offers/of_totals/:qty/:amount/:tax/:discount_p', :controller => 'offers', :action => 'of_totals'
@@ -367,6 +374,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'offers/of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
     match 'of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
     match 'offers/:id/of_attachment_changed', :controller => 'offers', :action => 'of_attachment_changed'
+    match 'offer_view_report', :controller => 'offers', :action => 'offer_view_report'
     #
     # Supplier payments
     match 'supplier_payments/sp_generate_no/:org', :controller => 'supplier_payments', :action => 'sp_generate_no'
@@ -387,6 +395,7 @@ Ag2Purchase::Engine.routes.draw do
     match 'supplier_payments/sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
     match 'sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
     match 'supplier_payments/:id/sp_format_number/:num', :controller => 'supplier_payments', :action => 'sp_format_number'
+    match 'supplier_payment_report', :controller => 'supplier_payments', :action => 'supplier_payment_report'
 
     # Resources
     resources :suppliers
@@ -403,7 +412,7 @@ Ag2Purchase::Engine.routes.draw do
     end
     resources :offers
     resources :supplier_invoices do
-      get 'export_invoices_csv', on: :collection
+      get 'export_invoices', on: :collection
     end
     resources :supplier_payments
     resources :purchase_to_files

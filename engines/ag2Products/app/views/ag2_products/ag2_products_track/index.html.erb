@@ -449,8 +449,8 @@
           // Inventory count
           var store = $('#Store').val();
           var family = $('#Family').val();
-          if ((store == "") && (family == ""))
-            return;
+          // if ((store == "") && (family == ""))
+          //   return;
           if (detailed == "") {
             nam = "inventory_report" + ext;
           } else {
@@ -537,8 +537,8 @@
           var store = $('#Store').val();
           var family = $('#Family').val();
           var product = $('#Product').val();
-          if ((store == "") && (family == "") && (product == ""))
-            return;
+          // if ((store == "") && (family == "") && (product == ""))
+          //   return;
           nam = "stock_report" + ext;
           window.open(nam + "?detailed=" + detailed + "&store=" + store + "&family=" + family + "&product=" + product, pag);
           break;
@@ -547,8 +547,8 @@
           var store = $('#Store').val();
           var family = $('#Family').val();
           var product = $('#Product').val();
-          if ((store == "") && (family == "") && (product == ""))
-              return;
+          // if ((store == "") && (family == "") && (product == ""))
+          //     return;
           nam = "stock_companies_report" + ext;
           window.open(nam + "?detailed=" + detailed + "&store=" + store + "&family=" + family + "&product=" + product, pag);
           break;

@@ -166,6 +166,18 @@
     $("#new_from_request").click(function() {
       $("#new-offer-from-request").modal('show');
     });
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("offer_view_report.pdf", "_blank");
+      return false;
+    });
+    // when #print_csv_btn is clicked
+    $("#print_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("offer_view_report.csv", "_self");
+      return false;
+    });
   });
 </script>
 
@@ -207,6 +219,12 @@
         <button id="new_from_request" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new_from_request") %></button>
         <br /><br />
         <% end %>
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_tech.home.index.control' %></a>
+        <br /><br /> 
+        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
+
+        <br /><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

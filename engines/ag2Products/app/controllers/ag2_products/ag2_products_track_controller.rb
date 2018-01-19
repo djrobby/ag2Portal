@@ -69,6 +69,8 @@ module Ag2Products
         @inventory_report = InventoryCount.where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_no)
       elsif !store.blank? && family.blank?
         @inventory_report = InventoryCount.where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_no)
+      elsif store.blank? && family.blank?
+        @inventory_report = InventoryCount.where("count_date >= ? AND count_date <= ?",from,to).order(:count_no)
       end
 
       # Setup filename
@@ -81,15 +83,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data InventoryCount.to_csv(@inventory_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: InventoryCount.to_csv(@inventory_csv) }
+        if !@inventory_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data InventoryCount.to_csv(@inventory_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: InventoryCount.to_csv(@inventory_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -116,6 +123,8 @@ module Ag2Products
         @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_no)
       elsif !store.blank? && family.blank?
         @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_no)
+      elsif store.blank? && family.blank?
+        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("count_date >= ? AND count_date <= ?",from,to).order(:count_no)
       end
 
       # Setup filename
@@ -128,15 +137,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data InventoryCountItem.to_csv(@inventory_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: InventoryCountItem.to_csv(@inventory_items_csv) }
+        if !@inventory_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data InventoryCountItem.to_csv(@inventory_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: InventoryCountItem.to_csv(@inventory_items_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -201,21 +215,21 @@ module Ag2Products
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,store,petitioner,from,to).order(:order_no)
 
-      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,order,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,account,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND created_by = ? AND order_date >= ? AND order_date <= ?",project,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_no)
       end
 
@@ -229,15 +243,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data PurchaseOrder.to_csv(@order_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        if !@order_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data PurchaseOrder.to_csv(@order_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -299,21 +318,21 @@ module Ag2Products
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
 
-      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,project,order,account,status,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
       end
 
@@ -327,15 +346,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        if !@order_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -376,16 +400,14 @@ module Ag2Products
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,status,from,to).order(:order_no)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,from,to).order(:order_no)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,from,to).order(:order_no)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,from,to).order(:order_no)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",from,to).order(:order_no)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
@@ -400,19 +422,19 @@ module Ag2Products
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
 
-      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",account,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",petitioner,from,to).order(:order_no)
       end
 
@@ -426,15 +448,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data PurchaseOrder.to_csv(@order_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        if !@order_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data PurchaseOrder.to_csv(@order_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: PurchaseOrder.to_csv(@order_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -496,21 +523,21 @@ module Ag2Products
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
 
-      elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_no)
-      elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
+      elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
         @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
       end
 
@@ -524,15 +551,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        if !@order_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data PurchaseOrderItem.to_csv(@order_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: PurchaseOrderItem.to_csv(@order_items_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -588,15 +620,15 @@ module Ag2Products
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       elsif balance == '1'
@@ -619,15 +651,15 @@ module Ag2Products
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       elsif balance == '2'
@@ -650,15 +682,15 @@ module Ag2Products
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       else
@@ -681,15 +713,15 @@ module Ag2Products
           @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_report = ReceiptNote.where("project_id in (?) AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_report = ReceiptNote.where("project_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       end
@@ -704,15 +736,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data ReceiptNote.to_csv(@receipt_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: ReceiptNote.to_csv(@receipt_csv) }
+        if !@receipt_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ReceiptNote.to_csv(@receipt_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: ReceiptNote.to_csv(@receipt_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -766,15 +803,15 @@ module Ag2Products
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       elsif balance == '1'
@@ -796,15 +833,15 @@ module Ag2Products
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       elsif balance == '2'
@@ -826,15 +863,15 @@ module Ag2Products
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       else
@@ -856,15 +893,15 @@ module Ag2Products
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
 
-        elsif project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
-        elsif project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
+        elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
           @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
         end
       end
@@ -879,15 +916,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data ReceiptNoteItem.to_csv(@receipt_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: ReceiptNoteItem.to_csv(@receipt_items_csv) }
+        if !@receipt_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ReceiptNoteItem.to_csv(@receipt_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: ReceiptNoteItem.to_csv(@receipt_items_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -930,13 +972,13 @@ module Ag2Products
         @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,from,to).order(:delivery_no)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
         @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && !order.blank? && account.blank?
+      elsif !project.blank? && store.blank? && !order.blank? && account.blank?
         @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && order.blank? && !account.blank?
+      elsif !project.blank? && store.blank? && order.blank? && !account.blank?
         @delivery_report = DeliveryNote.where("project_id in (?) AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,account,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && !order.blank? && !account.blank?
+      elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
         @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,account,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && order.blank? && account.blank?
+      elsif !project.blank? && store.blank? && order.blank? && account.blank?
         @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_no)
       end
 
@@ -950,15 +992,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data DeliveryNote.to_csv(@delivery_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: DeliveryNote.to_csv(@delivery_csv) }
+        if !@delivery_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data DeliveryNote.to_csv(@delivery_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: DeliveryNote.to_csv(@delivery_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -1001,13 +1048,13 @@ module Ag2Products
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,from,to).order(:delivery_no)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && !order.blank? && account.blank?
+      elsif !project.blank? && store.blank? && !order.blank? && account.blank?
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.work_order_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && order.blank? && !account.blank?
+      elsif !project.blank? && store.blank? && order.blank? && !account.blank?
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,account,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && !order.blank? && !account.blank?
+      elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_notes.work_order_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,account,from,to).order(:delivery_no)
-      elsif project.blank? && store.blank? && order.blank? && account.blank?
+      elsif !project.blank? && store.blank? && order.blank? && account.blank?
         @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_no)
       end
 
@@ -1021,15 +1068,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data DeliveryNoteItem.to_csv(@delivery_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: DeliveryNoteItem.to_csv(@delivery_items_csv) }
+        if !@delivery_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data DeliveryNoteItem.to_csv(@delivery_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: DeliveryNoteItem.to_csv(@delivery_items_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -1052,15 +1104,20 @@ module Ag2Products
       title = t("activerecord.models.product.few") + "_#{from}"
 
       respond_to do |format|
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data Product.to_csv(@product_items_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: Product.to_csv(@product_items_report) }
+        if !@product_items_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Product.to_csv(@product_items_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: Product.to_csv(@product_items_report) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -1130,15 +1187,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data ProductValuedStock.to_csv(@stocks_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: ProductValuedStock.to_csv(@stocks_csv) }
+        if !@stocks_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ProductValuedStock.to_csv(@stocks_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: ProductValuedStock.to_csv(@stocks_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -1242,15 +1304,20 @@ module Ag2Products
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data ProductValuedStockByCompany.to_csv(@stocks_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
-        # format.csv { render text: ProductValuedStockByCompany.to_csv(@stocks_csv) }
+        if !@stocks_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ProductValuedStockByCompany.to_csv(@stocks_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+          # format.csv { render text: ProductValuedStockByCompany.to_csv(@stocks_csv) }
+        else
+          format.csv { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_products_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 

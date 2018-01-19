@@ -14,18 +14,25 @@ en:
         label_order_status: "Order status"
         label_family: "Product family"
         label_product: "Product"
+        error_report: "There are no data to generate the report"
       request_report:
         report_title: "Offer requests"
+        sum_rows_title: "Total Rows:" #MJ
       offer_report:
         report_title: "Offers"
+        sum_rows_title: "Total Rows:" #MJ
       order_report:
         report_title: "Purchase orders"
+        sum_rows_title: "Total Rows:" #MJ
       invoice_report:
         report_title: "Invoices"
+        sum_rows_title: "Total Rows:" #MJ
       payment_report:
         report_title: "Payments"
+        sum_rows_title: "Total Rows:" #MJ
       supplier_report:
         report_title: "Suppliers"
+        sum_rows_title: "Total Rows:" #MJ
       every_report:
         pt: "Page"
         pd: "of"

@@ -722,12 +722,12 @@ module Ag2Products
 
       @inventory_counts_report = @search.results
 
-      if !@inventory_counts_report.blank?
-        title = t("activerecord.models.inventory_count.few")
-        @to = formatted_date(@inventory_counts_report.first.created_at)
-        @from = formatted_date(@inventory_counts_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
+      title = t("activerecord.models.inventory_count.few")
+      @to = formatted_date(@inventory_counts_report.first.created_at)
+      @from = formatted_date(@inventory_counts_report.last.created_at)
+      respond_to do |format|
+        # Render PDF
+        if !@inventory_counts_report.blank?
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
@@ -736,6 +736,9 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
+        else
+          format.csv { redirect_to inventory_counts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to inventory_counts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end

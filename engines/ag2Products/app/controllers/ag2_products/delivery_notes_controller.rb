@@ -679,12 +679,12 @@ module Ag2Products
 
       @delivery_notes_report = @search.results
 
-      if !@delivery_notes_report.blank?
-        title = t("activerecord.models.delivery_note.few")
-        @to = formatted_date(@delivery_notes_report.first.created_at)
-        @from = formatted_date(@delivery_notes_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
+      title = t("activerecord.models.delivery_note.few")
+      @to = formatted_date(@delivery_notes_report.first.created_at)
+      @from = formatted_date(@delivery_notes_report.last.created_at)
+      respond_to do |format|
+      # Render PDF
+        if !@delivery_notes_report.blank?
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
@@ -693,6 +693,9 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
+        else
+          format.csv { redirect_to delivery_notes_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to delivery_notes_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end

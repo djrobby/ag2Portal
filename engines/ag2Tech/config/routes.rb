@@ -13,8 +13,7 @@ Ag2Tech::Engine.routes.draw do
     match 'project_report', :controller => 'ag2_tech_track', :action => 'project_report'
     match 'budget_report', :controller => 'ag2_tech_track', :action => 'budget_report'
     match 'work_report', :controller => 'ag2_tech_track', :action => 'work_report'
-    match 'work_order_report', :controller => 'work_orders', :action => 'work_order_report'
-    match 'project_view_report', :controller => 'projects', :action => 'project_view_report'
+    match 'charge_account_track_report', :controller => 'ag2_tech_track', :action => 'charge_account_track_report'
 
     # Routes for jQuery POSTs
     # Numbers with decimals (.) must be multiplied (by 1xxx and the same zeroes x positions) before passed as REST parameter!
@@ -36,6 +35,7 @@ Ag2Tech::Engine.routes.draw do
     match 'projects/pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
     match 'pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
     match 'projects/:id/pr_add_plan/:id/:project', :controller => 'projects', :action => 'pr_add_plan'
+    match 'project_view_report', :controller => 'projects', :action => 'project_view_report'
     #
     # Accounts
     match 'charge_accounts/cc_generate_code/:group/:org/:prj', :controller => 'charge_accounts', :action => 'cc_generate_code'
@@ -51,6 +51,7 @@ Ag2Tech::Engine.routes.draw do
     match 'charge_accounts/cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
     match 'cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
     match 'charge_accounts/:id/cc_update_ledger_account_select_from_company/:company', :controller => 'charge_accounts', :action => 'cc_update_ledger_account_select_from_company'
+    match 'charge_account_report', :controller => 'charge_accounts', :action => 'charge_account_report'
     #
     # Groups
     match 'charge_groups/cg_update_heading_textfield_from_organization/:org', :controller => 'charge_groups', :action => 'cg_update_heading_textfield_from_organization'
@@ -146,6 +147,8 @@ Ag2Tech::Engine.routes.draw do
     match 'work_orders/wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
     match 'wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
     match 'work_orders/:id/wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
+    match 'work_order_report', :controller => 'work_orders', :action => 'work_order_report'
+    match 'export_work_order_csv', :controller => 'work_orders', :action => 'export_work_order_csv'
     #
     # Work order types
     match 'work_order_types/wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'

@@ -339,9 +339,8 @@ class Supplier < ActiveRecord::Base
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.sanitize_address_1
+        i001 = i.sanitize_address_1 unless i.sanitize_address_1.blank?
         i002 = i.phone.gsub " ", "" unless i.phone.blank?
-
         csv << [  i.full_code,
                   i.fiscal_id,
                   i.name,

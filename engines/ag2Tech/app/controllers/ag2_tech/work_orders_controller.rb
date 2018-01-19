@@ -1228,11 +1228,15 @@ module Ag2Tech
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
+      projects = projects_dropdown
 
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = WorkOrder.search do
+        with :project_id, current_projects
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -1265,17 +1269,19 @@ module Ag2Tech
 
       @work_order_report = @search.results
 
-      if !@work_order_report.blank?
-        title = t("activerecord.models.work_order.few")
-        @from = formatted_date(@work_order_report.first.created_at)
-        @to = formatted_date(@work_order_report.last.created_at)
-        respond_to do |format|
-          # format.html # index.html.erb
-          format.csv { send_data WorkOrder.to_report_work_order_csv(@work_order_report),
+      title = t("activerecord.models.work_order.few")
+      @from = formatted_date(@work_order_report.first.created_at)
+      @to = formatted_date(@work_order_report.last.created_at)
+      respond_to do |format|
+        # format.html # index.html.erb
+        if !@work_order_report.blank?
+          format.csv { send_data WorkOrder.to_csv(@work_order_report),
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
           format.js
+        else
+          format.csv { redirect_to work_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end
@@ -1291,11 +1297,15 @@ module Ag2Tech
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
+      projects = projects_dropdown
 
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = WorkOrder.search do
+        with :project_id, current_projects
         fulltext params[:search]
         if session[:organization] != '0'
           with :organization_id, session[:organization]
@@ -1328,16 +1338,18 @@ module Ag2Tech
 
       @work_order_report = @search.results
 
-      if !@work_order_report.blank?
-        title = t("activerecord.models.work_order.few")
-        @from = formatted_date(@work_order_report.first.created_at)
-        @to = formatted_date(@work_order_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
+      title = t("activerecord.models.work_order.few")
+      @from = formatted_date(@work_order_report.first.created_at)
+      @to = formatted_date(@work_order_report.last.created_at)
+      respond_to do |format|
+        # Render PDF
+        if !@work_order_report.blank?
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+        else
+          format.pdf { redirect_to work_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end

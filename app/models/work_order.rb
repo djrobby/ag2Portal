@@ -238,8 +238,7 @@ class WorkOrder < ActiveRecord::Base
       array.each do |i|
         i001 = i.formatted_date(i.created_at) unless i.created_at.blank?
         i002 = i.formatted_date(i.closed_at) unless i.closed_at.blank?
-        i003 = i.raw_number(i.total_costs, 4)
-
+        i003 = i.raw_number(i.total_costs, 4) unless i.total_costs.blank?
         csv << [  i.full_no,
                   i.summary,
                   i.petitioner,

@@ -6,6 +6,7 @@ module Ag2Tech
     skip_load_and_authorize_resource :only => [:project_report,
                                                :budget_report,
                                                :work_report,
+                                               :charge_account_track_report,
                                                :te_track_project_has_changed,
                                                :te_track_family_has_changed]
 
@@ -53,14 +54,61 @@ module Ag2Tech
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data Project.to_csv(@project_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        if !@project_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Project.to_csv(@project_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
+    # Charge Accounts report
+    def charge_account_track_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      order = params[:order]
+      account = params[:account]
+
+      if project.blank?
+        init_oco if !session[:organization]
+        # Initialize select_tags
+        @projects = projects_dropdown if @projects.nil?
+        # Arrays for search
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.to_a
+      end
+
+      from = Date.today.to_s
+
+      @charge_account_report = ChargeAccount.where("project_id in (?) ",project).order(:charge_group_id, :account_code)
+
+      title = t("activerecord.models.charge_account.few") + "_#{from}.pdf"
+
+      respond_to do |format|
+        # Render PDF
+        if !@charge_account_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ChargeAccount.to_csv(@charge_account_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -73,6 +121,15 @@ module Ag2Tech
       account = params[:account]
       period = params[:period]
 
+      if project.blank?
+        init_oco if !session[:organization]
+        # Initialize select_tags
+        @projects = projects_dropdown if @projects.nil?
+        # Arrays for search
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.to_a
+      end
+
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
@@ -81,24 +138,25 @@ module Ag2Tech
      from = Time.parse(@from).strftime("%Y-%m-%d")
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      if !project.blank?
-        @budget_report = Budget.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:budget_no)
-      else
-        @budget_report = Budget.where("created_at >= ? AND created_at <= ?",from,to).order(:budget_no)
-      end
+      @budget_report = Budget.where("project_id in (?) AND created_at >= ? AND created_at <= ?",project,from,to).order(:budget_no)
 
       title = t("activerecord.models.budget.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data Budget.to_csv(@budget_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        if !@budget_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Budget.to_csv(@budget_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -111,6 +169,15 @@ module Ag2Tech
       order = params[:order]
       account = params[:account]
 
+      if project.blank?
+        init_oco if !session[:organization]
+        # Initialize select_tags
+        @projects = projects_dropdown if @projects.nil?
+        # Arrays for search
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.to_a
+      end
+
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
@@ -119,24 +186,33 @@ module Ag2Tech
      from = Time.parse(@from).strftime("%Y-%m-%d")
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      if !project.blank?
-        @work_report = WorkOrder.where("project_id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
-      elsif project.blank?
-        @work_report = WorkOrder.where("created_at >= ? AND created_at <= ?",from,to).order(:project_id)
+      if !project.blank? and !order.blank?
+        @work_report = WorkOrder.where("project_id in (?) AND id = ? AND created_at >= ? AND created_at <= ?",project,order,from,to).order(:project_id)
+      elsif !project.blank? and !order.blank?
+        @work_report = WorkOrder.where("project_id in (?) AND id = ? AND created_at >= ? AND created_at <= ?",order,from,to).order(:project_id)
+      elsif !project.blank? and order.blank?
+        @work_report = WorkOrder.where("project_id in (?) AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
+      elsif !project.blank? and order.blank?
+        @work_report = WorkOrder.where("project_id in (?) AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
       end
 
       title = t("activerecord.models.work_order.few") + "_#{from}_#{to}.pdf"
 
       respond_to do |format|
         # Render PDF
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data WorkOrder.to_csv(@work_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        if !@work_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data WorkOrder.to_csv(@work_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 
@@ -168,7 +244,16 @@ module Ag2Tech
       _array = _array << t("activerecord.models.project.few")
       _array = _array << t("activerecord.models.budget.few")
       _array = _array << t("activerecord.models.work_order.few")
+      _array = _array << t("activerecord.models.charge_account.few")
       _array
+    end
+
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
     end
 
     def projects_dropdown

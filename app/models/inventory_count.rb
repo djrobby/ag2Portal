@@ -126,16 +126,15 @@ class InventoryCount < ActiveRecord::Base
       csv << attributes
       array.each do |i|
         i001 = i.formatted_date(i.count_date) unless i.count_date.blank?
-        i002 = i.raw_number(i.quantity, 2)
+        i002 = i.raw_number(i.quantity, 2) unless i.quantity.blank?
         i003 = i.formatted_timestamp(i.approval_date.utc.getlocal) unless i.approval_date.blank?
-
         csv << [  i.try(:store).try(:company).try(:id),
                   i.try(:store).try(:company).try(:name),
                   i.full_no,
                   i001,
                   i.try(:inventory_count_type).try(:name),
                   i.try(:store).try(:name),
-                  i.try(:product_family).try(:code),
+                  i.try(:product_family).try(:family_code),
                   i.try(:product_family).try(:name),
                   i002,
                   i003,

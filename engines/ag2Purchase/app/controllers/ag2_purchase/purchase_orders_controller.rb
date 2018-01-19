@@ -989,20 +989,24 @@ module Ag2Purchase
 
       @purchase_orders_report = @search.results
 
-      if !@purchase_orders_report.blank?
-        title = t("activerecord.models.purchase_order.few")
-        @to = formatted_date(@purchase_orders_report.first.created_at)
-        @from = formatted_date(@purchase_orders_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
+
+      title = t("activerecord.models.purchase_order.few")
+      @to = formatted_date(@purchase_orders_report.first.created_at)
+      @from = formatted_date(@purchase_orders_report.last.created_at)
+      respond_to do |format|
+        # Render PDF
+        if !@purchase_orders_report.blank?
           format.pdf { send_data render_to_string,
-                        filename: "#{title}_#{@from}-#{@to}.pdf",
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
           format.csv { send_data PurchaseOrder.to_csv(@purchase_orders_report),
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
+        else
+          format.csv { redirect_to purchase_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to purchase_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end

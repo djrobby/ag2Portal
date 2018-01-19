@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class ChargeAccount < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :project
   belongs_to :organization
   belongs_to :charge_group
@@ -121,6 +125,15 @@ class ChargeAccount < ActiveRecord::Base
     self.charge_group.flow
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -162,6 +175,35 @@ class ChargeAccount < ActiveRecord::Base
 
   def self.no_project
     where("charge_accounts.closed_at IS NULL AND charge_accounts.project_id IS NULL").order(:account_code)
+  end
+
+  def self.to_csv(array)
+    attributes = [ array[0].sanitize(I18n.t("activerecord.attributes.charge_group.group_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.charge_group")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.account_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.name")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.ledger_account")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.opened_at")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.closed_at")) ]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+        i002 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+        csv << [ i.charge_group.group_code,
+                 i.charge_group.name,
+                 i.full_code,
+                 i.name,
+                 i.try(:project).try(:full_code),
+                 i.try(:project).try(:name),
+                 i.try(:ledger_account).try(:full_name),
+                 i001,
+                 i002 ]
+      end
+    end
   end
 
   #

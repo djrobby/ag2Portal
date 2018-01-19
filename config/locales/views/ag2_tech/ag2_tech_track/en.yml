@@ -19,6 +19,9 @@ en:
       work_report:
         report_title: "Work orders"
         sum_rows_title: "Total Rows:"
+      charge_account_report:
+        report_title: "Charge Accounts"
+        sum_rows_title: "Total Rows:"
       every_report:
         pt: "Page"
         pd: "of"

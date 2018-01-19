@@ -870,12 +870,12 @@ module Ag2Products
 
       @receipt_notes_report = @search.results
 
-      if !@receipt_notes_report.blank?
-        title = t("activerecord.models.receipt_note.few")
-        @to = formatted_date(@receipt_notes_report.first.created_at)
-        @from = formatted_date(@receipt_notes_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
+      title = t("activerecord.models.receipt_note.few")
+      @to = formatted_date(@receipt_notes_report.first.created_at)
+      @from = formatted_date(@receipt_notes_report.last.created_at)
+      respond_to do |format|
+        # Render PDF
+        if !@receipt_notes_report.blank?
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
@@ -884,6 +884,9 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
+        else
+          format.csv { redirect_to receipt_notes_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to receipt_notes_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end

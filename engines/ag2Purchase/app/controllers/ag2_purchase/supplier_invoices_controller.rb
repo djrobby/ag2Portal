@@ -1238,7 +1238,7 @@ module Ag2Purchase
       return invoice_item
     end
 
-    def export_invoices_csv
+    def export_invoices
       manage_filter_state
       no = params[:No]
       supplier = params[:Supplier]
@@ -1289,10 +1289,20 @@ module Ag2Purchase
 
       title = t("activerecord.models.supplier_invoice.few")
       respond_to do |format|
-        format.csv { send_data SupplierInvoice.to_report_invoices_csv(@supplier_invoices),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        # Render PDF
+        if !@supplier_invoices.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data SupplierInvoice.to_report_invoices_csv(@supplier_invoices),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to supplier_invoices_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to supplier_invoices_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
       end
     end
 

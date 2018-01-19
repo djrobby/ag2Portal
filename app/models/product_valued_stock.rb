@@ -55,10 +55,9 @@ class ProductValuedStock < ActiveRecord::Base
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.raw_number(i.current, 4)
-        i002 = i.raw_number(i.average_price, 4)
-        i003 = i.raw_number(i.current_value, 4)
-        
+        i001 = i.raw_number(i.current, 4) unless i.current.blank?
+        i002 = i.raw_number(i.average_price, 4) unless i.average_price.blank?
+        i003 = i.raw_number(i.current_value, 4) unless i.current_value.blank?
         csv << [  i.try(:store).try(:company).try(:id),
                   i.try(:store).try(:company).try(:name),
                   i.store_name,

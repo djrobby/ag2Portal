@@ -43,6 +43,19 @@ class SupplierPayment < ActiveRecord::Base
     .by_no
   }
 
+  # Methods
+  def full_no
+    # Payment no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
+    payment_no.blank? ? "" : payment_no[0..3] + '-' + payment_no[4..7] + '-' + payment_no[8..13]
+  end
+
+  #
+  # Calculated fields
+  #
+  def invoice_debt
+    supplier_invoice.nil? ? 0 : supplier_invoice.debt
+  end
+
   # Aux methods for CSV
   def raw_number(_number, _d)
     formatted_number_without_delimiter(_number, _d)
@@ -73,32 +86,18 @@ class SupplierPayment < ActiveRecord::Base
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.raw_number(i.amount, 2)
-
+        i001 = i.raw_number(i.amount, 2) unless i.amount.blank?
         csv << [  i.try(:supplier_invoice).try(:project).try(:company).try(:id),
                   i.try(:supplier_invoice).try(:project).try(:company).try(:name),
                   i.full_no,
                   i.payment_date,
-                  i.try(:supplier_invoice).itry(:nvoice_no) ,
+                  i.try(:supplier_invoice).try(:invoice_no) ,
                   i.try(:supplier).try(:full_name),
                   i.try(:payment_method).try(:description),
                   i.try(:approver).try(:email),
                   i001]
       end
     end
-  end
-
-  # Methods
-  def full_no
-    # Payment no (Organization id & year & sequential number) => OOOO-YYYY-NNNNNN
-    payment_no.blank? ? "" : payment_no[0..3] + '-' + payment_no[4..7] + '-' + payment_no[8..13]
-  end
-
-  #
-  # Calculated fields
-  #
-  def invoice_debt
-    supplier_invoice.nil? ? 0 : supplier_invoice.debt
   end
 
   #

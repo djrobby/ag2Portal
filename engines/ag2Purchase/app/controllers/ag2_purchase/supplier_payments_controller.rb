@@ -10,7 +10,8 @@ module Ag2Purchase
                                                :sp_update_from_supplier,
                                                :sp_update_from_invoice,
                                                :sp_update_from_approval,
-                                               :sp_format_number]
+                                               :sp_format_number,
+                                               :supplier_payment_report]
     # Update payment number at view (generate_code_btn)
     def sp_generate_no
       organization = params[:org]
@@ -264,6 +265,62 @@ module Ag2Purchase
         end
       end
     end
+
+    def supplier_payment_report
+      manage_filter_state
+      no = params[:No]
+      supplier = params[:Supplier]
+      invoice = params[:Invoice]
+
+      # Arrays for search
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = SupplierPayment.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :payment_no, no
+          else
+            with(:payment_no).starting_with(no)
+          end
+        end
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !invoice.blank?
+          with :supplier_invoice_id, invoice
+        end
+        data_accessor_for(SupplierPayment).include = [:supplier, :supplier_invoice, :payment_method]
+        order_by :sort_no, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @supplier_payments = @search.results
+
+      title = t("activerecord.models.supplier_payment.few")
+      @from = formatted_date(@supplier_payments.first.created_at)
+      @to = formatted_date(@supplier_payments.last.created_at)
+      respond_to do |format|
+      # Render PDF
+        if !@supplier_payments.blank?
+          format.pdf { send_data render_to_string,
+                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+          format.csv { send_data SupplierPayment.to_csv(@supplier_payments),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to supplier_payments_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to supplier_payments_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
 
     private
 

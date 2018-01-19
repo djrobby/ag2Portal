@@ -188,6 +188,15 @@ class PurchaseOrder < ActiveRecord::Base
     _status
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -375,18 +384,6 @@ class PurchaseOrder < ActiveRecord::Base
     end
   end
 
-  # Aux methods for CSV
-  def raw_number(_number, _d)
-    formatted_number_without_delimiter(_number, _d)
-  end
-
-  def sanitize(s)
-    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
-  end
-
-  #
-  # Class (self) user defined methods
-  #
   def self.to_csv(array)
     attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
                     array[0].sanitize(I18n.t("activerecord.models.company.one")),
@@ -400,15 +397,16 @@ class PurchaseOrder < ActiveRecord::Base
                     array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.quantity")),
                     array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.balance")),
                     array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.total")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.delay")),
                     array[0].sanitize(I18n.t("activerecord.attributes.purchase_order.approver"))]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
         i001 = i.formatted_date(i.order_date) unless i.order_date.blank?
-        i002 = i.raw_number(i.quantity, 2)
-        i003 = i.raw_number(i.balance, 2)
-        i004 = i.raw_number(i.total, 2)
+        i002 = i.raw_number(i.quantity, 2) unless i.quantity.blank?
+        i003 = i.raw_number(i.balance, 2) unless i.balance.blank?
+        i004 = i.raw_number(i.total, 2) unless i.total.blank?
         csv << [  i.try(:project).try(:company).try(:id),
                   i.try(:project).try(:company).try(:name),
                   i.full_no,
@@ -421,6 +419,7 @@ class PurchaseOrder < ActiveRecord::Base
                   i002,
                   i003,
                   i004,
+                  i.delay_avg == 0 ? "" : i.delay_avg,
                   i.try(:approver).try(:email)]
       end
     end

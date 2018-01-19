@@ -174,6 +174,13 @@
     $("#new_from_purchase_order").click(function() {
       $("#new-invoice-from-order").modal('show');
     });
+
+    // when #print_report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("export_invoices.pdf", "_blank");
+      return false;
+    });
   });
 </script>
 
@@ -218,7 +225,9 @@
         <br /><br />
         <% end %>
         <!-- Control&Tracking -->
-        <a href="<%= export_invoices_csv_supplier_invoices_path(format: :csv) %>" download class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_purchase.home.index.control_csv' %></a>
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_products.home.index.control' %></a>
+        <br /><br /> 
+        <a href="<%= export_invoices_supplier_invoices_path(format: :csv) %>" download class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_purchase.home.index.control_csv' %></a>
         <br /><br />
         <%= link_to t(".back_to_root"), ag2_purchase.root_path %>
       </div><!-- /.sidebar-nav -->

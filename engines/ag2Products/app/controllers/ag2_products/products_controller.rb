@@ -377,10 +377,12 @@ module Ag2Products
      @products_catalog_report = @search.results
      @products_catalog_family =  @products_catalog_report
 
-     if !@products_catalog_report.blank?
-       title = t("activerecord.models.product.few")
-       respond_to do |format|
-         # Render PDF
+     from = Date.today.to_s
+
+     title = t("activerecord.models.product.few") + "_#{from}"
+     respond_to do |format|
+      # Render PDF
+      if !@products_catalog_report.blank?
         format.pdf { send_data render_to_string,
                      filename: "#{title}.pdf",
                      type: 'application/pdf',
@@ -389,7 +391,10 @@ module Ag2Products
                      filename: "#{title}.csv",
                      type: 'application/csv',
                      disposition: 'inline' }
-       end
+      else
+        format.csv { redirect_to products_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        format.pdf { redirect_to products_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+      end
      end
     end
 

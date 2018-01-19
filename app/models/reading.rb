@@ -432,7 +432,8 @@ class Reading < ActiveRecord::Base
     # Fixed
     if !tariff.fixed_fee.zero?
       tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
-      tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      # tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      tariff_price = (tariff.fixed_fee / tariff.billing_frequency.total_months) * coefficient_by_users(tariff)
       if tariff_code == 'SUM'
         tariff_price = tariff_price * subscriber.right_inhabitants_and_endowments
       end
@@ -442,7 +443,7 @@ class Reading < ActiveRecord::Base
       create_pre_invoice_item(tariff,
                               pre_invoice.id,
                               "CF",
-                              (tariff.fixed_fee / tariff.billing_frequency.total_months),
+                              tariff_price,
                               billing_frequency.total_months,
                               tariff.billing_frequency.fix_measure_id,
                               tariff.try(:tax_type_f_id),
@@ -468,7 +469,7 @@ class Reading < ActiveRecord::Base
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants) * block_frequency * coefficient_by_users).round rescue nil
+        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants(tariff)) * block_frequency * coefficient_by_users(tariff)).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_pre_invoice_item(tariff,
@@ -542,7 +543,11 @@ class Reading < ActiveRecord::Base
     # Fixed
     if !tariff.fixed_fee.zero?
       tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
-      tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      # tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
+      tariff_price = (tariff.fixed_fee / tariff.billing_frequency.total_months) * coefficient_by_users(tariff)
+      if tariff_code == 'SUM'
+        tariff_price = tariff_price * subscriber.right_inhabitants_and_endowments
+      end
       if tariff_code == 'DEP'
         tariff_price = tariff_price * subscriber.right_equiv_dwelling
       end
@@ -574,7 +579,7 @@ class Reading < ActiveRecord::Base
       limit_before = 0
       block_limit = 0
       (1..8).each do |i|
-        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants) * block_frequency * coefficient_by_users).round rescue nil
+        block_limit = ((tariff.instance_eval("block#{i}_limit") + coefficient_by_inhabitants(tariff)) * block_frequency * coefficient_by_users(tariff)).round rescue nil
         # if limit nil (last block) or limit > consumption
         if block_limit.nil? || block_limit >= (cf || 0)
           create_invoice_item(tariff,
@@ -694,7 +699,7 @@ class Reading < ActiveRecord::Base
 
   def coefficient_by_inhabitants(tariff)
     # Should be used to add to block limits
-    if tariff.billable_item.bill_by_inabitants && subscriber.inhabitants > tariff.inhabitants_from
+    if tariff.billable_item.bill_by_inhabitants && subscriber.inhabitants > tariff.inhabitants_from
       (subscriber.inhabitants - tariff.inhabitants_from) * tariff.inhabitants_increment rescue 0
     else
       0

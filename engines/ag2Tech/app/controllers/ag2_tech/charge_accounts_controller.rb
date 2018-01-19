@@ -235,6 +235,71 @@ module Ag2Tech
       end
     end
 
+    def charge_account_report
+      manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      group = params[:Group]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @groups = groups_dropdown if @groups.nil?
+
+      # Arrays for search
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = ChargeAccount.search do
+        any_of do
+          with :project_id, current_projects
+          with :project_id, nil
+        end
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :account_code, no
+          else
+            with(:account_code).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !group.blank?
+          with :charge_group_id, group
+        end
+         order_by :charge_group_id, :asc
+         order_by :sort_no, :asc
+         paginate :page => params[:page] || 1, :per_page => ChargeAccount.count
+      end
+      @charge_account_report = @search.results
+      from = Date.today.to_s
+
+      title = t("activerecord.models.charge_account.few") + "_#{from}"
+
+      respond_to do |format|
+      # Render PDF
+        if !@charge_account_report.blank?
+          format.pdf { send_data render_to_string,
+                      filename: "#{title}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+          format.csv { send_data ChargeAccount.to_csv(@charge_account_report),
+                      filename: "#{title}.csv",
+                      type: 'application/csv',
+                      disposition: 'inline' }
+        else
+          format.csv { redirect_to charge_accounts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to charge_accounts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
     private
 
     def current_projects_for_index(_projects)

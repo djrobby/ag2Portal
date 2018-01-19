@@ -19,6 +19,9 @@ es:
       work_report:
         report_title: "Ordenes de trabajo"
         sum_rows_title: "Total Filas:"
+      charge_account_report:
+        report_title: "Cuentas Analiticas"
+        sum_rows_title: "Total Filas:"
       every_report:
         pt: "Página"
         pd: "de"

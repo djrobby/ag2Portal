@@ -14,18 +14,25 @@ es:
         label_order_status: "Estado del pedido"
         label_family: "Familia de producto"
         label_product: "Producto"
+        error_report: "No existen datos para generar el informe."
       request_report:
         report_title: "Solicitudes de oferta"
+        sum_rows_title: "Total Filas:" #MJ
       offer_report:
         report_title: "Ofertas"
+        sum_rows_title: "Total Filas:" #MJ
       order_report:
         report_title: "Pedidos"
+        sum_rows_title: "Total Filas:" #MJ
       invoice_report:
         report_title: "Facturas"
+        sum_rows_title: "Total Filas:" #MJ
       payment_report:
         report_title: "Pagos"
+        sum_rows_title: "Total Filas:" #MJ
       supplier_report:
         report_title: "Proveedores"
+        sum_rows_title: "Total Filas:" #MJ
       every_report:
         pt: "Página"
         pd: "de"

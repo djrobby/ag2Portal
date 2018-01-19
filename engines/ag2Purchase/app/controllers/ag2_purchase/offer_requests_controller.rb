@@ -26,7 +26,8 @@ module Ag2Purchase
                                                :offer_request_form,
                                                :offer_request_form_no_prices,
                                                :send_offer_request_form,
-                                               :or_generate_request]
+                                               :or_generate_request,
+                                               :offer_request_view_report]
     # Helper methods for
     # => index filters
     helper_method :or_remove_filters, :or_restore_filters
@@ -784,6 +785,69 @@ module Ag2Purchase
         else
           format.html { redirect_to offer_requests_url, alert: "#{@offer_request.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @offer_request.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    def offer_request_view_report
+      manage_filter_state
+      no = params[:No]
+      supplier = params[:Supplier]
+      project = params[:Project]
+      order = params[:Order]
+      # OCO
+      init_oco if !session[:organization]
+      projects = projects_dropdown
+
+      # Arrays for search
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      # If inverse no search is required
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      @search = OfferRequest.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !no.blank?
+          if no.class == Array
+            with :offer_no, no
+          else
+            with(:offer_no).starting_with(no)
+          end
+        end
+        if !supplier.blank?
+          with :supplier_id, supplier
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !order.blank?
+          with :work_order_id, order
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+      @offer_requests = @search.results
+
+      title = t("activerecord.models.offer_request.few")
+      @from = formatted_date(@offer_requests.first.created_at)
+      @to = formatted_date(@offer_requests.last.created_at)
+      respond_to do |format|
+      # Render PDF
+        if !@offer_requests.blank?
+          format.pdf { send_data render_to_string,
+                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+          format.csv { send_data OfferRequest.to_csv(@offer_requests),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to offer_requests_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to offer_requests_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end
