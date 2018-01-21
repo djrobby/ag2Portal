@@ -142,6 +142,7 @@ module Ag2Products
         paginate :page => params[:page] || 1, :per_page => per_page
       end
       @products = @search.results
+      # session[:pc] = @products.map(&:id)
 
       respond_to do |format|
         format.html # index.html.erb
@@ -335,7 +336,7 @@ module Ag2Products
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @product_families = families_dropdown if @product_families.nil?
+      # @product_families = families_dropdown if @product_families.nil?
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
@@ -370,33 +371,53 @@ module Ag2Products
         if !tax.blank?
           with :tax_type_id, tax
         end
+        data_accessor_for(Product).include = [:product_type, :product_family]
         order_by :product_family_id, :asc
-        paginate :page => params[:page] || 1, :per_page => Product.count
+        paginate :per_page => Product.count
+        # paginate :page => params[:page] || 1, :per_page => Product.count
       end
+      @products_catalog_report = @search.results
+      # @products_catalog_family =  @products_catalog_report
 
-     @products_catalog_report = @search.results
-     @products_catalog_family =  @products_catalog_report
-
-     from = Date.today.to_s
-
-     title = t("activerecord.models.product.few") + "_#{from}"
-     respond_to do |format|
-      # Render PDF
+      from = Date.today.to_s
+      title = t("activerecord.models.product.few") + "_#{from}"
       if !@products_catalog_report.blank?
-        format.pdf { send_data render_to_string,
-                     filename: "#{title}.pdf",
-                     type: 'application/pdf',
-                     disposition: 'inline' }
-        format.csv { send_data Product.to_csv(@products_catalog_report),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        respond_to do |format|
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Product.to_csv(@products_catalog_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        end
       else
-        format.csv { redirect_to products_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
-        format.pdf { redirect_to products_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        redirect_to products_url, alert: I18n.t("every_report.no_data")
       end
-     end
     end
+
+    # def products_catalog_report
+    #   @products_catalog_report = Product.where(id: session[:pc]).includes(:product_type, :product_family).order(:product_family_id)
+
+    #   from = Date.today.to_s
+    #   title = t("activerecord.models.product.few") + "_#{from}"
+
+    #   if !@products_catalog_report.blank?
+    #     respond_to do |format|
+    #       format.pdf { send_data render_to_string,
+    #                    filename: "#{title}.pdf",
+    #                    type: 'application/pdf',
+    #                    disposition: 'inline' }
+    #       format.csv { send_data Product.to_csv(@products_catalog_report),
+    #                    filename: "#{title}.csv",
+    #                    type: 'application/csv',
+    #                    disposition: 'inline' }
+    #     end
+    #   else
+    #     redirect_to products_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report")
+    #   end
+    # end
 
     private
 

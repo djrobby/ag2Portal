@@ -5,17 +5,17 @@
     <td class="header-title">
       <h3><%= t '.title' %></h3>
     </td>
-    <td class="header-image">
-      <% if !@product.image.blank? %>
-      <% if session[:resolution] == "LD" %>
-      <%= image_tag @product.image.url(:small) %> <!-- small image size -->
-      <% elsif session[:resolution] == "SD" %>
-      <%= image_tag @product.image.url(:medium) %> <!-- medium image size -->
-      <% else %>
-      <%= image_tag @product.image.url %> <!-- big image size -->
-      <% end %>
-      <% end %>
-    </td>
+    <% if @product.image.file? && @product.image.exists? %>
+      <td class="header-image">
+        <% if session[:resolution] == "LD" %>
+        <%= image_tag @product.image.url(:small) %> <!-- small image size -->
+        <% elsif session[:resolution] == "SD" %>
+        <%= image_tag @product.image.url(:medium) %> <!-- medium image size -->
+        <% else %>
+        <%= image_tag @product.image.url %> <!-- big image size -->
+        <% end %>
+      </td>
+    <% end %>
   </tr>
 </table>
 <table class="table odd_even_table">

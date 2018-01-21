@@ -111,3 +111,4 @@ es:
     payment_note: "El pago de este/a %{singular} se acredita con la posesión del justificante de cobro o el adeudo bancario, y no presupone el pago de los/las %{plural} anteriores. "
     from_title: "Desde:"
     to_title: "Hasta:"
+    no_data: "No hay datos que mostrar o descargar."

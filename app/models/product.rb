@@ -56,6 +56,7 @@ class Product < ActiveRecord::Base
   # Scopes
   scope :by_code, -> { order(:product_code) }
   #
+  scope :none, where("1 = 0")
   scope :belongs_to_organization, -> o { where("organization_id = ?", o).by_code }
   scope :actives, -> { where(active: true).by_code }
   scope :active_by_organization, -> o { where(active: true, organization_id: o).by_code }
