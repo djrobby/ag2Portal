@@ -228,15 +228,13 @@ module Ag2Gest
           @prereading.reading_type_id = ReadingType::NORMAL
         end
       end
+      @prereading.pre_reading_incidences.destroy_all
       if params["incidence_type_ids"]
         # @prereading.reading_incidence_types.destroy_all
         # @prereading.reading_incidence_types << ReadingIncidenceType.where(id:params["incidence_type_ids"])
-        @prereading.pre_reading_incidences.destroy_all
         params["incidence_type_ids"].each do |i|
           @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: i)
         end
-      else
-        @prereading.pre_reading_incidences.destroy_all
       end
 
       # añadir incidencia vuelta de contador y no existe. ID
@@ -295,10 +293,10 @@ module Ag2Gest
 
       respond_to do |format|
         if @prereading.update_attributes(params[:pre_reading])
-          format.html { redirect_to @prereading, notice: t('activerecord.attribute.sale_offer.successfully') }
+          # format.html { redirect_to @prereading, notice: t('activerecord.attribute.sale_offer.successfully') }
           format.json { render json: @prereading.to_json( include: :pre_reading_incidences ) }
         else
-          format.html { render action: "edit" }
+          # format.html { render action: "edit" }
           format.json { render json: @prereading.errors.full_messages.join(" ,"), status: :unprocessable_entity }
         end
       end

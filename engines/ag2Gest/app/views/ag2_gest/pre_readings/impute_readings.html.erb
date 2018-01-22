@@ -1,10 +1,10 @@
 <script>
   $(document).ready(function () {
   $(".sel2").select2();
-  $('.date_picker').datepicker({
-      format : 'dd/mm/yyyy',
-      weekStart : 1
-  });
+  // $('.date_picker').datepicker({
+  //     format : 'dd/mm/yyyy',
+  //     weekStart : 1
+  // });
 
   $('.date_picker').datepicker({
     format : 'dd/mm/yyyy',
@@ -75,8 +75,8 @@
     input_date = row.find("input[type='text']");
     input_index = row.find("input[type='number']");
     values = inputs.map(function () { return $(this).val(); }).get();
-    date = values[0];
-    index = values[1];
+    date = input_date.val();
+    index = input_index.val();
     reading_ending_date = row.data("reading-ending-date");
     reading_starting_date = row.data("reading-starting-date");
 
@@ -113,8 +113,9 @@
     // if both inputs have values
     if (inputs.filter(function() { return this.value == '' }).length == 0){
       if (input_index.val() >= 0){
-      // if index last period exits
+      // if index last period exists
       if (row.data("index-one") != "" && row.data("index-one") != 0){
+        alert(row.data("index-one") + '-' + index);
         // if index < index last period
         if (index < row.data("index-one")){
           // vuelta de contador
@@ -272,7 +273,7 @@
     }else{
       row.find("td").removeClass("row-green");
       input_index.val("");
-      input_date.val("");
+      // input_date.val("");
       var input = $("<input>").attr("type", "hidden").attr("name", "lapnot").val(true);
       form.append($(input));
       form.submit();
@@ -290,14 +291,25 @@
       incidences.push(value["reading_incidence_type_id"])
     });
     index = row.find("input[type='number']").val();
-    if(incidences.length != 0 && index.length == 0 ){
+
+    if (incidences.length > 0) {
       row.find(".wrench-column").show()
       row.find("td").addClass("row-green");
-      row.find("input[type='number']").val(row.data("index-one"));
-      // row.find("input[type='number']").val(row.data("index-one"));
+      if (index.length == 0) {
+        row.find("input[type='number']").val(row.data("index-one"));        
+      }
     } else {
       row.find(".wrench-column").hide()
     }
+
+    // if(incidences.length > 0 && index.length == 0 ){
+    //   row.find(".wrench-column").show()
+    //   row.find("td").addClass("row-green");
+    //   row.find("input[type='number']").val(row.data("index-one"));
+    //   // row.find("input[type='number']").val(row.data("index-one"));
+    // } else {
+    //   row.find(".wrench-column").hide()
+    // }
 
     row.data("incidences", incidences);
     row.data("index", data["reading_index"]);
@@ -307,8 +319,8 @@
   $("form").bind("ajax:error", function(xhr, data, status) {
     var row = $(this).closest(".prereading-row");
     $(".alert.alert-error").hide();
-    row.find("input[type='text']").val("");
-    row.after('<tr class="alert alert-error"><td colspan="10" style="text-align: center;">'+ data.responseText +'</div>');
+    // row.find("input[type='text']").val("");
+    row.after('<tr class="alert alert-error"><td colspan="15" style="text-align: center;">' + data.responseText + '</td></tr>');
     $(".alert.alert-error").delay( 5000 ).fadeOut( 1500 );
   });
 
@@ -374,7 +386,7 @@
             <th><%= t('activerecord.attributes.pre_reading.reading_index_2') %></th>
             <th><%= t('activerecord.attributes.pre_reading.reading_index_1') %></th>
             <th><%= t('activerecord.attributes.pre_reading.reading_date') %></th>
-            <th colspan="5"><%= t('activerecord.attributes.pre_reading.index') %></th>
+            <th colspan="5" align="left"><%= t('activerecord.attributes.pre_reading.index') %></th>
           </tr>
         </thead>
         <tbody>
@@ -412,7 +424,7 @@
                   </a>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm', tabindex: index+1, min: '0', step: 'any'} %>
+                  <%= f.input :reading_index, label: false, :input_html => { :value => (pre_reading.reading_index), :class => 'large-text-field input-sm number-text-field', tabindex: index+1, min: '0', step: 'any'} %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <i class="wrench-column icon-wrench" <%= 'style=display:none' if pre_reading.pre_reading_incidences.empty? %>></i>
@@ -447,7 +459,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">Incidencias</h3>
   </div>
-  <%= form_tag("", method: "put", "data-type" => :json, remote: true) do  %>
+  <%= form_tag("", method: "put", "data-type" => :json, remote: true, class: 'modal-footer-right') do  %>
     <div class="modal-body">
       <!-- <form accept-charset="UTF-8" action="/es/ag2_gest/es/pre_readings/1513" class="simple_form edit_pre_reading" data-remote="true" data-type="json" id="form-prereading-1513" method="post" novalidate="novalidate">
       </form> -->

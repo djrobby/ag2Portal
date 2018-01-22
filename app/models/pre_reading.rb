@@ -33,8 +33,8 @@ class PreReading < ActiveRecord::Base
   validates :reading_date,                  :presence => true, :if => "!reading_index.blank?"
   validates_numericality_of :reading_index, :only_integer => true,
                                             :greater_than_or_equal_to => 0,
-                                            :message => :reading_invalid,
-                                            :if => "!reading_date.blank?"
+                                            :allow_nil => true,
+                                            :message => :reading_invalid
   validate :check_date
 
   # Scopes
