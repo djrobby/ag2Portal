@@ -27,7 +27,8 @@ class SupplierInvoice < ActiveRecord::Base
   attr_accessible :discount, :discount_pct, :invoice_date, :invoice_no, :remarks,
                   :supplier_id, :payment_method_id, :project_id, :work_order_id, :charge_account_id,
                   :posted_at, :organization_id, :receipt_note_id, :purchase_order_id, :attachment,
-                  :internal_no, :withholding, :totals, :payday_limit, :company_id
+                  :internal_no, :withholding, :payday_limit, :company_id,
+                  :totals, :taxables, :total_taxes
   attr_accessible :supplier_invoice_items_attributes, :supplier_invoice_approvals_attributes
   has_attached_file :attachment, :styles => { :medium => "192x192>", :small => "128x128>" }, :default_url => "/images/missing/:style/attachment.png"
 
@@ -831,10 +832,14 @@ class SupplierInvoice < ActiveRecord::Base
   private
 
   def calculate_and_store_totals
+    # Withhoding must be negative
     self.withholding = self.withholding * (-1) if self.withholding > 0
-    self.totals = total
     # Payday limit
     self.payday_limit = calc_payday_limit if self.payday_limit.blank?
+    # Totals
+    self.totals = total
+    self.taxables = taxable
+    self.total_taxes = taxes
   end
 
   def check_for_dependent_records

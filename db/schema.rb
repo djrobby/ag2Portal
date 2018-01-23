@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180123133921) do
+ActiveRecord::Schema.define(:version => 20180123154002) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3940,6 +3940,8 @@ ActiveRecord::Schema.define(:version => 20180123133921) do
     t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.date     "payday_limit"
     t.integer  "company_id"
+    t.decimal  "taxables",                :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "total_taxes",             :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "supplier_invoices", ["charge_account_id"], :name => "index_supplier_invoices_on_charge_account_id"
