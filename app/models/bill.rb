@@ -21,7 +21,7 @@ class Bill < ActiveRecord::Base
                   :project_id, :invoice_status_id, :subscriber_id, :client_id,
                   :street_type_id, :street_name, :street_number, :building, :floor, :floor_office,
                   :zipcode_id, :town_id, :province_id, :region_id, :country_id, :created_by, :updated_by,
-                  :reading_1_id, :reading_2_id, :organization_id, :payment_method_id
+                  :reading_1_id, :reading_2_id, :organization_id, :payment_method_id, :old_no
 
   has_many :invoices, dependent: :destroy
   has_many :invoice_items, through: :invoices
@@ -99,6 +99,14 @@ class Bill < ActiveRecord::Base
   # 16 characters unformatted invoice_no
   def real_no_unformatted
     invoices.first.invoice_no rescue bill_no.last(16)
+  end
+
+  # Old program No
+  def invoice_based_old_no
+    invoices.first.old_no rescue old_no
+  end
+  def old_no_based_real_no
+    invoice_based_old_no.blank? ? real_no : invoice_based_old_no
   end
 
   # Short No

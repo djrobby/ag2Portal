@@ -716,6 +716,7 @@ module Ag2Products
         if !type.blank?
           with :inventory_count_type_id, type
         end
+        data_accessor_for(InventoryCount).include = [:inventory_count_type, :store, :product_family]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => InventoryCount.count
       end
@@ -725,9 +726,8 @@ module Ag2Products
       title = t("activerecord.models.inventory_count.few")
       @to = formatted_date(@inventory_counts_report.first.created_at)
       @from = formatted_date(@inventory_counts_report.last.created_at)
-      respond_to do |format|
-        # Render PDF
-        if !@inventory_counts_report.blank?
+      if !@inventory_counts_report.blank?
+        respond_to do |format|
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
@@ -736,10 +736,9 @@ module Ag2Products
                        filename: "#{title}_#{@from}-#{@to}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
-        else
-          format.csv { redirect_to inventory_counts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
-          format.pdf { redirect_to inventory_counts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
+      else
+        redirect_to inventory_counts_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report")
       end
     end
 

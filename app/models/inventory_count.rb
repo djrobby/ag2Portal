@@ -10,7 +10,7 @@ class InventoryCount < ActiveRecord::Base
   belongs_to :approver, class_name: 'User'
   attr_accessible :count_date, :count_no, :remarks, :inventory_count_type_id,
                   :store_id, :product_family_id, :organization_id,
-                  :approver_id, :approval_date, :quick
+                  :approver_id, :approval_date, :quick, :totals, :quantities
   attr_accessible :inventory_count_items_attributes
 
   has_many :inventory_count_items, dependent: :destroy
@@ -37,6 +37,7 @@ class InventoryCount < ActiveRecord::Base
   # Callbacks
   after_create :notify_on_create
   after_update :notify_on_update
+  # before_save :calculate_and_store_totals
 
   def to_label
     "#{full_name}"
@@ -62,7 +63,7 @@ class InventoryCount < ActiveRecord::Base
   # Calculated fields
   #
   def quantity
-    inventory_count_items.sum("quantity")
+    inventory_count_items.sum(:quantity)
   end
 
   def total
@@ -176,6 +177,11 @@ class InventoryCount < ActiveRecord::Base
   end
 
   private
+
+  def calculate_and_store_totals
+    self.totals = total
+    self.quantities = quantity
+  end
 
   #
   # Notifiers

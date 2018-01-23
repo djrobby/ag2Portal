@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180118200143) do
+ActiveRecord::Schema.define(:version => 20180123100141) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -353,11 +353,13 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
     t.string   "remarks"
     t.integer  "organization_id"
     t.integer  "payment_method_id"
+    t.string   "old_no"
   end
 
   add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
   add_index "bills", ["country_id"], :name => "index_bills_on_country_id"
   add_index "bills", ["invoice_status_id"], :name => "index_bills_on_invoice_status_id"
+  add_index "bills", ["old_no"], :name => "index_bills_on_old_no"
   add_index "bills", ["organization_id"], :name => "index_bills_on_organization_id"
   add_index "bills", ["payment_method_id"], :name => "index_bills_on_payment_method_id"
   add_index "bills", ["project_id"], :name => "index_bills_on_project_id"
@@ -1094,6 +1096,8 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -1750,13 +1754,15 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
     t.integer  "product_family_id"
     t.integer  "organization_id"
     t.string   "remarks"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at",                                                                :null => false
+    t.datetime "updated_at",                                                                :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "approver_id"
     t.datetime "approval_date"
-    t.boolean  "quick",                   :default => false
+    t.boolean  "quick",                                                  :default => false
+    t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "quantities",              :precision => 13, :scale => 4, :default => 0.0,   :null => false
   end
 
   add_index "inventory_counts", ["approver_id"], :name => "index_inventory_counts_on_approver_id"
@@ -2015,6 +2021,8 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
     t.integer  "sale_offer_id"
     t.decimal  "totals",                :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "receivables",           :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "total_taxes",           :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.string   "old_no"
   end
 
   add_index "invoices", ["bill_id"], :name => "index_invoices_on_bill_id"
@@ -2026,6 +2034,7 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
   add_index "invoices", ["invoice_operation_id"], :name => "index_invoices_on_invoice_operation_id"
   add_index "invoices", ["invoice_status_id"], :name => "index_invoices_on_invoice_status_id"
   add_index "invoices", ["invoice_type_id"], :name => "index_invoices_on_invoice_type_id"
+  add_index "invoices", ["old_no"], :name => "index_invoices_on_old_no"
   add_index "invoices", ["organization_id"], :name => "index_invoices_on_organization_id"
   add_index "invoices", ["original_invoice_id"], :name => "index_invoices_on_original_invoice_id"
   add_index "invoices", ["payment_method_id"], :name => "index_invoices_on_payment_method_id"
@@ -3708,8 +3717,8 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
-    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
     t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,   :null => false
     t.string   "old_code"
     t.string   "postal_last_name"
@@ -4405,6 +4414,28 @@ ActiveRecord::Schema.define(:version => 20180118200143) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
+
+  create_table "update_wap", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "reference_price",  :precision => 12, :scale => 4
+    t.decimal "global_wap",       :precision => 12, :scale => 4
+    t.integer "supplier_id"
+    t.decimal "price",            :precision => 12, :scale => 4
+    t.decimal "discount_rate",    :precision => 12, :scale => 2
+    t.decimal "net_price",        :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_0", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_strange", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false

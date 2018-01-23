@@ -23,7 +23,8 @@ class Invoice < ActiveRecord::Base
                   :bill_id, :invoice_status_id, :invoice_type_id, :tariff_scheme_id, :invoice_operation_id,
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
                   :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
-                  :remarks, :organization_id, :payment_method_id, :sale_offer_id, :totals, :receivables
+                  :remarks, :organization_id, :payment_method_id, :sale_offer_id, :old_no,
+                  :totals, :receivables, :total_taxes
   attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
@@ -105,6 +106,11 @@ class Invoice < ActiveRecord::Base
   def full_no
     # Invoice no (Invoice code & office & year & sequential number) => SSSOO-YYYY-NNNNNNN
     invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]
+  end
+
+  # Old program No
+  def old_no_based_real_no
+    old_no.blank? ? full_no : old_no
   end
 
   def formatted_payday_limit
@@ -471,6 +477,7 @@ class Invoice < ActiveRecord::Base
   def calculate_and_store_totals
     self.totals = total
     self.receivables = receivable
+    self.total_taxes = taxes
   end
 
   def item_repeat
