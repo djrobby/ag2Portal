@@ -18,7 +18,8 @@ class PurchaseOrder < ActiveRecord::Base
                   :supplier_id, :payment_method_id, :order_status_id, :project_id, :offer_id,
                   :store_id, :work_order_id, :charge_account_id, :retention_pct, :retention_time,
                   :organization_id, :approver_id, :approval_date,
-                  :store_address_1, :store_address_2, :store_phones, :created_by, :totals
+                  :store_address_1, :store_address_2, :store_phones, :created_by,
+                  :totals, :quantities, :balances
   attr_accessible :purchase_order_items_attributes
 
   has_many :purchase_order_items, dependent: :destroy
@@ -471,6 +472,8 @@ class PurchaseOrder < ActiveRecord::Base
 
   def calculate_and_store_totals
     self.totals = total
+    self.quantities = quantity
+    self.balances = balance
   end
 
   def reindex

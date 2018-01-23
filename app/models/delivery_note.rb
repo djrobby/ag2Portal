@@ -13,7 +13,8 @@ class DeliveryNote < ActiveRecord::Base
   belongs_to :organization
   attr_accessible :delivery_date, :delivery_no, :discount, :discount_pct, :remarks,
                   :client_id, :payment_method_id, :project_id, :store_id, :work_order_id,
-                  :charge_account_id, :sale_offer_id, :organization_id, :totals, :total_costs
+                  :charge_account_id, :sale_offer_id, :organization_id,
+                  :totals, :total_costs, :quantities
   attr_accessible :delivery_note_items_attributes
 
   has_many :delivery_note_items, dependent: :destroy
@@ -203,6 +204,7 @@ class DeliveryNote < ActiveRecord::Base
   def calculate_and_store_totals
     self.totals = total
     self.total_costs = costs
+    self.quantities = quantity
   end
 
   def check_for_dependent_records

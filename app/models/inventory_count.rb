@@ -37,7 +37,7 @@ class InventoryCount < ActiveRecord::Base
   # Callbacks
   after_create :notify_on_create
   after_update :notify_on_update
-  # before_save :calculate_and_store_totals
+  before_save :calculate_and_store_totals
 
   def to_label
     "#{full_name}"

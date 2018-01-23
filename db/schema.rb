@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180123100141) do
+ActiveRecord::Schema.define(:version => 20180123133921) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1484,6 +1484,7 @@ ActiveRecord::Schema.define(:version => 20180123100141) do
     t.integer  "organization_id"
     t.decimal  "totals",            :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal  "total_costs",       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantities",        :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "delivery_notes", ["charge_account_id"], :name => "index_delivery_notes_on_charge_account_id"
@@ -1931,8 +1932,10 @@ ActiveRecord::Schema.define(:version => 20180123100141) do
     t.integer  "updated_by"
     t.integer  "sale_offer_id"
     t.integer  "sale_offer_item_id"
+    t.integer  "charge_account_id"
   end
 
+  add_index "invoice_items", ["charge_account_id"], :name => "index_invoice_items_on_charge_account_id"
   add_index "invoice_items", ["invoice_id"], :name => "index_invoice_items_on_invoice_id"
   add_index "invoice_items", ["measure_id"], :name => "index_invoice_items_on_measure_id"
   add_index "invoice_items", ["product_id"], :name => "index_invoice_items_on_product_id"
@@ -2943,6 +2946,8 @@ ActiveRecord::Schema.define(:version => 20180123100141) do
     t.string   "store_address_2"
     t.string   "store_phones"
     t.decimal  "totals",            :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantities",        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "balances",          :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "purchase_orders", ["approver_id"], :name => "index_purchase_orders_on_approver_id"
@@ -3168,6 +3173,8 @@ ActiveRecord::Schema.define(:version => 20180123100141) do
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
     t.decimal  "totals",                  :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "quantities",              :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "taxables",                :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "receipt_notes", ["charge_account_id"], :name => "index_receipt_notes_on_charge_account_id"

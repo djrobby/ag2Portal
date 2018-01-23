@@ -10,10 +10,11 @@ class InvoiceItem < ActiveRecord::Base
   belongs_to :measure
   belongs_to :sale_offer
   belongs_to :sale_offer_item
+  belongs_to :charge_account
   attr_accessor :thing
   attr_accessible :code, :subcode, :description, :quantity, :price, :discount, :discount_pct,
                   :invoice_id, :tariff_id, :tax_type_id, :product_id, :measure_id,
-                  :sale_offer_id, :sale_offer_item_id,
+                  :sale_offer_id, :sale_offer_item_id, :charge_account_id,
                   :created_by, :updated_by, :thing
 
   has_paper_trail

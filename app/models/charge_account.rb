@@ -35,6 +35,8 @@ class ChargeAccount < ActiveRecord::Base
   has_many :sale_offers
   has_many :sale_offer_items
   has_many :charge_account_ledger_accounts, dependent: :destroy
+  has_many :invoices
+  has_many :invoice_items
 
   # Nested attributes
   accepts_nested_attributes_for :charge_account_ledger_accounts,
