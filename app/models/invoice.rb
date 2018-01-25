@@ -64,6 +64,7 @@ class Invoice < ActiveRecord::Base
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
   #
+  scope :unpaids, -> { where("invoice_status_id = 1 AND payday_limit < ?", Date.today).by_no }
   scope :commercial, -> { where("invoice_type_id != 1 AND invoice_type_id != 3").by_no }
   scope :service, -> { where(invoice_type_id: InvoiceType::WATER).by_no }
   scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
@@ -458,6 +459,7 @@ class Invoice < ActiveRecord::Base
     integer :billing_period_id
     integer :charge_account_id
     date :invoice_date
+    date :payday_limit
     integer :client_id do
       bill.client_id unless (bill.blank? || bill.client_id.blank?)
     end
