@@ -181,11 +181,15 @@
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- Buttons -->
-        <%= render :partial => '/layouts/crud/new', :locals => { :model => DebtClaim, :path => new_debt_claim_path, :txt => t(".btn_new") } %>
         <% if can? :update, DebtClaim %>
-        <button id="generate" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new") %></button>
+        <button id="generate" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new") %></button>
         <br /><br />
+        <button id="show_generate" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show_and_new") %></button>
+        <% else %>
+        <button id="show" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show") %></button>
         <% end %>
+        <br />
+        <br />
         <%= link_to t(".back_to_management"), ag2_gest.debt_claim_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

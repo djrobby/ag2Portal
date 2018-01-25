@@ -461,8 +461,8 @@ class PurchaseOrder < ActiveRecord::Base
     integer :organization_id
     integer :created_by
     integer :reception_status_id
-    float :quantity
-    float :balance
+    float :quantities
+    float :balances
     string :sort_no do
       order_no
     end

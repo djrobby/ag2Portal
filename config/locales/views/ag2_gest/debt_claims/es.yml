@@ -3,8 +3,9 @@ es:
     debt_claims:
       index:
         title: "Reclamaciones de deuda"
-        btn_new: "Nueva Reclamación"
-        btn_new_from_sale_offer: "Nueva Reclamación desde Oferta"
+        btn_new: "Nueva Reclamación de deuda"
+        btn_show: "Ver facturas reclamables"
+        btn_show_and_new: "Ver facturas reclamables y Nueva Reclamación de deuda"
         back_to_root: "Volver a ag2Gest"
         back_to_management: "Volver a Gestión de Deudas"
         label_project: "Proyecto"

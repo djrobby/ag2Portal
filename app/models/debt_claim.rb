@@ -2,7 +2,7 @@ class DebtClaim < ActiveRecord::Base
   belongs_to :office
   belongs_to :project
   belongs_to :debt_claim_phase
-  attr_accessible :claim_no, :closed_at,
+  attr_accessible :claim_no, :closed_at, :totals,
                   :office_id, :project_id, :debt_claim_phase_id
   attr_accessible :debt_claim_items_attributes
 

@@ -3,8 +3,9 @@ en:
     debt_claims:
       index:
         title: "Debt claims"
-        btn_new: "New Claim"
-        btn_new_from_sale_offer: "New Claim from S.Offer"
+        btn_new: "New Debt claim"
+        btn_show: "Show reclaimable bills"
+        btn_show_and_new: "Show reclaimable bills & New Debt claim"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Debt Management"
         label_project: "Project"
@@ -19,7 +20,7 @@ en:
         title: "Debt claim"
         btn_edit: "Edit Claim"
         btn_delete: "Delete Claim"
-        return_to: "Volver a Claim"
+        return_to: "Back to Claim"
         print: "Print"
         show_to: "Show Sale offer"
       edit:
@@ -28,7 +29,7 @@ en:
       new:
         title: "New Debt claim"
       generate:
-        title: "New Debt claim"
+        title: "New Debt Claim"
         notice: "Debt claim was successfully created."
         alert: "Error! Unable to generate new Debt claim."
       back_to_main_page: "Back to Debt claims"
