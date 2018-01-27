@@ -1,4 +1,9 @@
 class Invoice < ActiveRecord::Base
+  # Pending status
+  # PENDING: invoice_status_id == 1
+  # UNPAID: invoice_status_id == 1 AND payday_limit < Date.today
+  # CLAIMED: invoice_status_id == 1 AND payday_limit < Date.today AND debt_claim_items.size > 0
+
   include ModelsModule
 
   @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
@@ -38,6 +43,7 @@ class Invoice < ActiveRecord::Base
   has_one :active_invoice
   has_one :cancelled_invoice
   has_one :active_supply_invoice
+  has_many :debt_claim_items
 
   # Nested attributes
   accepts_nested_attributes_for :invoice_items,
@@ -63,8 +69,22 @@ class Invoice < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
+  scope :by_id, -> { order(:id) }
   #
-  scope :unpaids, -> { where("invoice_status_id = 1 AND payday_limit < ?", Date.today).by_no }
+  scope :unpaid, -> { where("invoice_status_id = 1 AND payday_limit < ?", Date.today).by_id }
+  scope :unpaid_and_unclaimed, -> {
+    joins('LEFT JOIN debt_claim_items ON invoices.id=debt_claim_items.invoice_id')
+    .where('debt_claim_items.invoice_id IS NULL AND invoices.invoice_status_id = 1 AND invoices.payday_limit < ?', Date.today).by_id
+  }
+  scope :unpaid_and_claimed, -> {
+    joins(:debt_claim_items).where('invoices.invoice_status_id = 1 AND invoices.payday_limit < ?', Date.today).by_id
+  }
+  scope :unclaimed, -> {
+    joins('LEFT JOIN debt_claim_items ON invoices.id=debt_claim_items.invoice_id')
+    .where('debt_claim_items.invoice_id IS NULL').by_id
+  }
+  scope :claimed, -> { joins(:debt_claim_items).by_id }
+  #
   scope :commercial, -> { where("invoice_type_id != 1 AND invoice_type_id != 3").by_no }
   scope :service, -> { where(invoice_type_id: InvoiceType::WATER).by_no }
   scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
@@ -314,26 +334,6 @@ class Invoice < ActiveRecord::Base
     formatted_date(client_payments.last.payment_date) rescue ''
   end
 
-  # Calculates & returns the average billed consumption up to the last six invoices
-  def average_billed_consumption
-    _prev_consumptions = []
-    _average_consumption = 0
-    if !billing_period.blank? && invoice_type_id == InvoiceType::WATER
-      ii = ActiveSupplyInvoice.joins(:billing_period).where('period <= ? AND subscriber_id = ?', billing_period.period, subscriber.id).order('period DESC').first(6)
-      if !ii.blank?
-        ii.each do |_i|
-          _prev_consumptions << _i.invoice.consumption
-          _average_consumption += _i.invoice.consumption
-        end
-        _average_consumption = _average_consumption / ii.count
-      end
-    end
-    return _prev_consumptions, _average_consumption
-  end
-
-  #
-  # Calculated fields
-  #
   def item_discount_present?
     present = false
     invoice_items.each do |i|
@@ -353,6 +353,17 @@ class Invoice < ActiveRecord::Base
     end
   end
 
+  def claimed?
+    !debt_claim_items.empty?
+  end
+
+  def claims_count
+    debt_claim_items.size
+  end
+  def claim_ids
+    debt_claim_items.map(&:id)
+  end
+
   def reading_1
     bill.reading_1
   end
@@ -369,6 +380,9 @@ class Invoice < ActiveRecord::Base
     bill.try(:reading_2).try(:id)
   end
 
+  #
+  # Calculated fields
+  #
   def tax_breakdown
     invoice_items.group_by{|i| i.tax_type_id}.map do |t|
       tax = t[0].nil? ? 0 : TaxType.find(t[0]).tax
@@ -426,6 +440,23 @@ class Invoice < ActiveRecord::Base
 
   def quantity
     invoice_items.sum(:quantity)
+  end
+
+  # Calculates & returns the average billed consumption up to the last six invoices
+  def average_billed_consumption
+    _prev_consumptions = []
+    _average_consumption = 0
+    if !billing_period.blank? && invoice_type_id == InvoiceType::WATER
+      ii = ActiveSupplyInvoice.joins(:billing_period).where('period <= ? AND subscriber_id = ?', billing_period.period, subscriber.id).order('period DESC').first(6)
+      if !ii.blank?
+        ii.each do |_i|
+          _prev_consumptions << _i.invoice.consumption
+          _average_consumption += _i.invoice.consumption
+        end
+        _average_consumption = _average_consumption / ii.count
+      end
+    end
+    return _prev_consumptions, _average_consumption
   end
 
   searchable do
