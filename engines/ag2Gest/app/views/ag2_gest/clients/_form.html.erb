@@ -388,6 +388,20 @@
   <label class="multi-field-label-two"> <%= f.association :payment_method, collection: @payment_methods, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.association :ledger_account, collection: @ledger_accounts, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
+<!-- Bank accounts -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_purchase.suppliers.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <%= link_to_add_fields(t("ag2_purchase.suppliers.btn_new_account"), f, :client_bank_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-btn") %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<%= render 'accounts_table', f: f %>
 <!-- Buttons -->
 <table class="form-table">
   <tbody>

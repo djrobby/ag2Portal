@@ -23,3 +23,9 @@ en:
       commercial_info: "Accounting & Commercial Info"
       fiscal_error: "Wrong Fiscal Id or Entity (TaxPayer) does not exist."
       code_error: "Unable to generate Client Code: No Organization chosen."
+      accounts_info: "Bank Accounts"
+      delete_account: "Delete this Account"
+      add_account: "Add new Bank Account"
+      add_account_to: "Client %{var}"
+      btn_new_account: "New Account"
+

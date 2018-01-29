@@ -218,6 +218,9 @@ es:
         billable_button: "Facturable"
         alert_non_billable: "Ha este abonado no se le podrán facturar mas servicios. ¿Estás seguro? "
         alert_billable: "Ha este abonado se le podrán facturar servicios. ¿Estás seguro? "
+        total_estimations: "Bolsa estimados"
+        reset_estimation: "Vaciar bolsa estimados"
+        alert_reset_estimation: "Se procedera a eliminar la bolsa de estimado para este abonado. ¿Estás seguro? "
 
     report:
       subscriber:

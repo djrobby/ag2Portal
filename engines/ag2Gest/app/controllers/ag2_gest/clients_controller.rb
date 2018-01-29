@@ -12,7 +12,33 @@ module Ag2Gest
                                                :cl_generate_code,
                                                :et_validate_fiscal_id_textfield,
                                                :cl_validate_fiscal_id_textfield,
+                                               :cl_update_office_select_from_bank,
+                                               :cl_check_iban,
                                                :check_client_depent_subscribers]
+    # Update office select at view from bank select
+    def cl_update_office_select_from_bank
+      bank = params[:bank]
+      if bank != '0'
+        @bank = Bank.find(bank)
+        @offices = @bank.blank? ? BankOffice.order(:bank_id, :code) : @bank.bank_offices.order(:bank_id, :code)
+      else
+        @offices = BankOffice.order(:bank_id, :code)
+      end
+      # Offers array
+      @offices_dropdown = bank_offices_array(@offices)
+      # Setup JSON
+      @json_data = { "office" => @offices_dropdown }
+      render json: @json_data
+    end
+
+    # Check IBAN
+    def cl_check_iban
+      iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
+      # Setup JSON
+      @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
     # not desactive client if client.subscribers.count > 0
     def check_client_depent_subscribers
       client_id = params[:id]
@@ -21,7 +47,7 @@ module Ag2Gest
       @json_data = { "subscriber_count" => @subscriber}
 
       respond_to do |format|
-        format.html # 
+        format.html #
         format.json { render json: @json_data }
       end
     end
@@ -270,6 +296,17 @@ module Ag2Gest
       @client = Client.find(params[:id])
       @subscribers = @client.subscribers.paginate(:page => params[:page], :per_page => per_page).order(:subscriber_code)
       @bills = @client.bills.not_service.paginate(:page => params[:page], :per_page => per_page).order(:bill_no)
+      @accounts = @client.client_bank_accounts.paginate(:page => params[:page], :per_page => per_page).order('id DESC')
+      @payment_methods = []
+      @ledger_accounts = []
+      @classes = []
+      @banks = []
+      @offices = []
+      @towns = []
+      @provinces = []
+      @zipcodes = []
+      @regions = []
+      @countries = []
 
       respond_to do |format|
         format.html # show.html.erb
@@ -284,11 +321,14 @@ module Ag2Gest
       @client = Client.new
       @payment_methods = payment_methods_dropdown
       @ledger_accounts = ledger_accounts_dropdown
+      @classes = bank_account_classes_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
       @towns = towns_dropdown
       @provinces = provinces_dropdown
       @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
-      @countries = Country.order(:name)
+      @countries = countries_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -302,11 +342,14 @@ module Ag2Gest
       @client = Client.find(params[:id])
       @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
       @ledger_accounts = ledger_accounts_dropdown
+      @classes = bank_account_classes_dropdown
+      @banks = banks_dropdown
+      @offices = bank_offices_dropdown
       @towns = towns_dropdown
       @provinces = provinces_dropdown
       @zipcodes = zipcodes_dropdown
       @regions = Region.order(:name)
-      @countries = Country.order(:name)
+      @countries = countries_dropdown
     end
 
     # POST /clients
@@ -321,11 +364,15 @@ module Ag2Gest
           format.html { redirect_to @client, notice: crud_notice('created', @client) }
           format.json { render json: @client, status: :created, location: @client }
         else
+          @classes = bank_account_classes_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           @payment_methods = payment_methods_dropdown
           @ledger_accounts = ledger_accounts_dropdown
           @towns = towns_dropdown
           @provinces = provinces_dropdown
           @zipcodes = zipcodes_dropdown
+          @countries = countries_dropdown
           format.html { render action: "new" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -345,11 +392,15 @@ module Ag2Gest
                         notice: (crud_notice('updated', @client) + "#{undo_link(@client)}").html_safe }
           format.json { head :no_content }
         else
+          @classes = bank_account_classes_dropdown
+          @banks = banks_dropdown
+          @offices = bank_offices_dropdown
           @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
           @ledger_accounts = ledger_accounts_dropdown
           @towns = towns_dropdown
           @provinces = provinces_dropdown
           @zipcodes = zipcodes_dropdown
+          @countries = countries_dropdown
           format.html { render action: "edit" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -375,6 +426,18 @@ module Ag2Gest
 
     private
 
+    def bank_account_classes_dropdown
+      BankAccountClass.all(order: 'name')
+    end
+
+    def banks_dropdown
+      Bank.order(:code)
+    end
+
+    def bank_offices_dropdown
+      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+    end
+
     def towns_dropdown
       Town.order(:name).includes(:province)
     end
@@ -386,6 +449,104 @@ module Ag2Gest
     def zipcodes_dropdown
       Zipcode.order(:zipcode).includes(:town,:province)
     end
+
+    def countries_dropdown
+      Country.order(:code)
+    end
+
+    def banks_array
+      _banks = banks_dropdown
+      _array = []
+      _banks.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def bank_offices_array(_offices)
+      _array = []
+      _offices.each do |i|
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      end
+      _array
+    end
+
+    def zipcodes_array
+      _zipcodes = zipcodes_dropdown
+      _array = []
+      _zipcodes.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def towns_array
+      _towns = towns_dropdown
+      _array = []
+      _towns.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def provinces_array
+      _provinces = provinces_dropdown
+      _array = []
+      _provinces.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def regions_array
+      _regions = regions_dropdown
+      _array = []
+      _regions.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def country_array
+      _country = countries_dropdown
+      _array = []
+      _country.each do |i|
+        _array = _array << [i.id, i.full_name]
+      end
+      _array
+    end
+
+    # def banks_dropdown
+    #   Bank.order(:code)
+    # end
+
+    # def bank_offices_dropdown
+    #   BankOffice.order(:bank_id, :code)
+    # end
+
+    # def bank_offices_array(_offices)
+    #   _array = []
+    #   _offices.each do |i|
+    #     _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+    #   end
+    #   _array
+    # end
+
+    # def countries_dropdown
+    #   Country.order(:code)
+    # end
+
+    # def towns_dropdown
+    #   Town.order(:name).includes(:province)
+    # end
+
+    # def provinces_dropdown
+    #   Province.order(:name).includes(:region)
+    # end
+
+    # def zipcodes_dropdown
+    #   Zipcode.order(:zipcode).includes(:town,:province)
+    # end
 
     # Ledger accounts belonging to projects
     def projects_ledger_accounts(_projects)

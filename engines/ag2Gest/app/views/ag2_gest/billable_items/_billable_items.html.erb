@@ -16,6 +16,9 @@
       <th><%= sortable "office_id", t('activerecord.attributes.billable_item.office_id') %></th>
       <th><%= sortable "biller_id", t('activerecord.attributes.billable_item.biller_id') %></th>
       <th><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %></th>
+      <th><%= t('activerecord.attributes.billable_item.bill_by_endowments') %></th>
+      <th><%= t('activerecord.attributes.billable_item.bill_by_inhabitants') %></th>
+      <th><%= t('activerecord.attributes.billable_item.bill_by_users') %></th>
       <th></th>
     </tr>
   </thead>
@@ -28,6 +31,9 @@
         <td><%= billable.try(:office).try(:name) %></td>
         <td><%= billable.try(:biller).try(:name) %></td>
         <td><% if billable.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+        <td><% if billable.try(:bill_by_endowments) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+        <td><% if billable.try(:bill_by_inhabitants) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+        <td><% if billable.try(:bill_by_users) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
         <td>
           <%= render :partial => '/layouts/crud/read', :locals => { :model => BillableItem, :path => billable_item_path(billable) } %>
           <%= render :partial => '/layouts/crud/edit', :locals => { :model => BillableItem, :path => edit_billable_item_path(billable) } %>

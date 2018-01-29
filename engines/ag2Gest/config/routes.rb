@@ -77,6 +77,12 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/cl_update_textfields_from_organization/:org', :controller => 'clients', :action => 'cl_update_textfields_from_organization'
     match 'cl_update_textfields_from_organization/:org', :controller => 'clients', :action => 'cl_update_textfields_from_organization'
     match 'clients/:id/cl_update_textfields_from_organization/:org', :controller => 'clients', :action => 'cl_update_textfields_from_organization'
+    match 'clients/cl_update_office_select_from_bank/:bank', :controller => 'clients', :action => 'cl_update_office_select_from_bank'
+    match 'cl_update_office_select_from_bank/:bank', :controller => 'clients', :action => 'cl_update_office_select_from_bank'
+    match 'clients/:id/cl_update_office_select_from_bank/:bank', :controller => 'clients', :action => 'cl_update_office_select_from_bank'
+    match 'clients/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
+    match 'cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
+    match 'clients/:id/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
     #
     # Payment methods
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
@@ -216,6 +222,9 @@ Ag2Gest::Engine.routes.draw do
     match 'tariffs/update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
     match 'tariffs/:id/update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
     match 'update_new_item_select_from_billing_concept2/:billable_concept_ids/:project_ids', :controller => 'tariffs', :action => 'update_new_item_select_from_billing_concept2'
+    match 'tariffs/bi_endowments_inhabitants_users_from/:billable_item_id', :controller => 'tariffs', :action => 'bi_endowments_inhabitants_users_from'
+    match 'tariffs/:id/bi_endowments_inhabitants_users_from/:billable_item_id', :controller => 'tariffs', :action => 'bi_endowments_inhabitants_users_from'
+    match 'bi_endowments_inhabitants_users_from/:billable_item_id', :controller => 'tariffs', :action => 'bi_endowments_inhabitants_users_from'
     #
     # Prototype
     match "sale_offers/show_test", controller: "sale_offers", action: 'show_test'
@@ -260,6 +269,7 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     #
     # Subscriber
+    match 'subscribers/:id/reset_estimation', :controller => 'subscribers', :action => 'reset_estimation'
     match 'subscribers/:id/non_billable_button', :controller => 'subscribers', :action => 'non_billable_button'
     match 'subscribers/:id/billable_button', :controller => 'subscribers', :action => 'billable_button'
     match 'subscribers/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'

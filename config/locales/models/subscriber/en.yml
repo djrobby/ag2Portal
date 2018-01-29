@@ -217,6 +217,7 @@ en:
         billable_button: "Billable"
         alert_non_billable: "This subscriber can not be billed for more services. Are you sure? "
         alert_billable: "This subscriber can be billed for services. Are you sure? "
+        total_estimations: "Estimation balance"
 
     report:
       subscriber:

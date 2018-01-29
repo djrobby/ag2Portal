@@ -29,7 +29,14 @@ module Ag2Gest
                                                 :sub_load_bank,
                                                 :sub_sepa_pdf,
                                                 :non_billable_button,
+                                                :reset_estimation,
                                                 :billable_button]
+
+   # update subscriber estimation
+   def reset_estimation
+     @subscriber = Subscriber.find(params[:id])
+     @subscriber.current_estimation.update_attributes(estimation_reset_at: Time.now)
+   end
 
     # update true subscriber non-billable
     def non_billable_button
@@ -193,6 +200,10 @@ module Ag2Gest
       @countries = Country.order(:name)
       @bank = banks_dropdown
       @bank_offices = bank_offices_dropdown
+      if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank?
+        @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
+        redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
+      end
       @client_bank_account = ClientBankAccount.new(
                               client_id: params[:client_bank_account][:client_id],
                               subscriber_id: params[:client_bank_account][:subscriber_id],
@@ -209,10 +220,6 @@ module Ag2Gest
                             )
       respond_to do |format|
         if @client_bank_account.save
-          if !@subscriber.client.client_bank_accounts.where(ending_at: nil).blank?
-            @subscriber.client.client_bank_accounts.where(ending_at: nil).update_all(ending_at: params[:client_bank_account][:starting_at])
-            redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.fail_assing_ending_at') and return if !@subscriber.client.client_bank_accounts.where(ending_at: nil).empty?
-          end
           format.html { redirect_to @subscriber, notice: t('ag2_gest.subscribers.client_bank_account.successful') }
           format.json { render json: @client_bank_account, status: :created, location: @client_bank_account }
         else

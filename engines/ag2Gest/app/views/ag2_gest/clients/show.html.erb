@@ -102,6 +102,45 @@
   </tbody>
 </table>
 
+<!-- Bank accounts -->
+<% if (@accounts.count > 0) %>
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_gest.clients.accounts_info' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <!-- class -->
+  <col width="15%" />
+  <!-- account e_format -->
+  <col width="20%" />
+  <!-- subscriber_code -->
+  <col width="12%" />
+  <!-- holder name -->
+  <col width="26%" />
+  <!-- holder fiscal_id -->
+  <col width="15%" />
+  <!-- starting_at -->
+  <col width="12%" />
+  <!-- ending_at -->
+  <col width="12%" />
+  <thead>
+    <%= render 'accounts_header' %>
+  </thead>
+  <tbody>
+    <%= render partial: 'account', collection: @accounts %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @accounts } %>
+<% end %> <!-- @accounts.count > 0 -->
+
 <!-- Remarks -->
 <table class="table">
   <tbody>
@@ -136,6 +175,8 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
     <col width="5%" />
     <!-- date -->
     <col width="9%" />
+    <!-- date payday -->
+    <col width="9%" />
     <!-- bill -->
     <col width="20%" />
     <!-- biller -->
@@ -148,6 +189,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
         <th><%= t 'activerecord.attributes.commercial_billing.invoice_no' %></th>
         <th><%= t 'activerecord.attributes.commercial_billing.codes' %></th>
         <th align="center"><%= t 'activerecord.attributes.commercial_billing.invoice_date' %></th>
+        <th align="center"><%= t 'activerecord.attributes.invoice.payday_limit' %></th>
         <th><%= t 'activerecord.attributes.commercial_billing.bill' %></th>
         <th><%= t 'activerecord.attributes.invoice.biller' %></th>
         <th align="right"><%= t 'activerecord.attributes.commercial_billing.total' %></th>
@@ -168,6 +210,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
           <span class="brown"><%= invoice.invoice_operation.code unless invoice.invoice_operation.blank? %></span>
         </td>
         <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
+        <td align="center"><%= formatted_date(invoice.payday_limit) unless invoice.payday_limit.blank? %></td>
         <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
         <td><%= invoice.biller.name unless invoice.biller.blank? %></td>
         <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>

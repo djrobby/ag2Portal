@@ -24,8 +24,20 @@
     <tr>
       <td><%= t('activerecord.attributes.billable_item.regulation_id') %>:</td>
       <td><%= link_to @billable_item.try(:regulation).to_label, ag2_gest.regulation_path(@billable_item.regulation_id) if @billable_item.regulation %></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.billable_item.tariffs_by_caliber') %>:</td>
       <td><% if @billable_item.try(:tariffs_by_caliber) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+      <td><%= t('activerecord.attributes.billable_item.bill_by_endowments') %>:</td>
+      <td><% if @billable_item.try(:bill_by_endowments) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.billable_item.bill_by_inhabitants') %>:</td>
+      <td><% if @billable_item.try(:bill_by_inhabitants) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+      <td><%= t('activerecord.attributes.billable_item.bill_by_users') %>:</td>
+      <td><% if @billable_item.try(:bill_by_users) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
     </tr>
 
     <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @billable_item } %>

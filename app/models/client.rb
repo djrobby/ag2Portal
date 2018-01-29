@@ -15,6 +15,7 @@ class Client < ActiveRecord::Base
                   :entity_id, :street_type_id, :zipcode_id, :town_id, :province_id, :region_id, :country_id,
                   :created_by, :updated_by, :is_contact, :shared_contact_id, :ledger_account_id, :payment_method_id,
                   :old_code
+  attr_accessible :client_bank_accounts_attributes, :client_ledger_accounts_attributes
 
   has_many :delivery_notes
   has_many :sale_offers
@@ -38,12 +39,16 @@ class Client < ActiveRecord::Base
   has_many :client_ledger_accounts, dependent: :destroy
 
   # Nested attributes
+  accepts_nested_attributes_for :client_bank_accounts,
+                                :reject_if => :all_blank,
+                                :allow_destroy => true
   accepts_nested_attributes_for :client_ledger_accounts,
                                 :reject_if => :all_blank,
                                 :allow_destroy => true
 
   has_paper_trail
 
+  validates_associated :client_bank_accounts
   validates_associated :client_ledger_accounts
 
   validates :first_name,    :presence => true, :if => "company.blank?"

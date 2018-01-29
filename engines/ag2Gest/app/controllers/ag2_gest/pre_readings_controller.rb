@@ -237,56 +237,60 @@ module Ag2Gest
         end
       end
 
-      # añadir incidencia vuelta de contador y no existe. ID
-      if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
-      end
-      if !r_index.blank?
-        if r_index.to_i < @prereading.reading_index_1 and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
-          @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
-        end
+      if !r_params.blank?
+        if !r_index.blank?
+          # añadir incidencia vuelta de contador y no existe. ID
+          if params[:lap] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
+            @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
+          end
+          if !r_index.blank?
+            if r_index.to_i < @prereading.reading_index_1 and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 1
+              @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 1)
+            end
 
-        if !@prereading.reading_1_id.blank? && Reading.find(@prereading.reading_1_id).reading_type_id != ReadingType::INSTALACION
-          conbaj = (@prereading.reading_1.consumption / 2)
-          conexc = (@prereading.reading_1.consumption * 2)
+            if !@prereading.reading_1_id.blank? && Reading.find(@prereading.reading_1_id).reading_type_id != ReadingType::INSTALACION
+              conbaj = (@prereading.reading_1.consumption / 2)
+              conexc = (@prereading.reading_1.consumption * 2)
 
-          if @prereading.reading_index_1 <= r_index.to_i
-            consumption = r_index.to_i - @prereading.reading_index_1
-          else
-            # vuelta de contador
-            consumption = (((10 ** @prereading.meter.meter_model.digits)-1) - @prereading.reading_index_1) + r_index.to_i
+              if @prereading.reading_index_1 <= r_index.to_i
+                consumption = r_index.to_i - @prereading.reading_index_1
+              else
+                # vuelta de contador
+                consumption = (((10 ** @prereading.meter.meter_model.digits)-1) - @prereading.reading_index_1) + r_index.to_i
+              end
+
+              # consumo excesivo
+              if consumption > conexc and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
+                @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
+              end
+
+              # bajo consumo
+              if consumption < conbaj and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
+                @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
+              end
+            end
           end
 
-          # consumo excesivo
-          if consumption > conexc and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
+          # Consumo Excesivo
+          if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
             @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
           end
-
-          # bajo consumo
-          if consumption < conbaj and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
+          # Bajo Consumo
+          if params[:lapconbaj] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
             @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
           end
-        end
-      end
 
-      # Consumo Excesivo
-      if params[:lapconexs] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 21
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 21)
-      end
-      # Bajo Consumo
-      if params[:lapconbaj] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 22
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 22)
-      end
-
-      # fuera de plazo
-      if params[:lapdate] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 27
-        @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 27)
-      end
-      if !r_date.blank?
-        if @prereading.reading_1 and @prereading.reading_1.reading_date and @prereading.reading_1.reading_date < r_date.to_date
-          if r_date.to_date.between?(@prereading.billing_period.reading_starting_date, @prereading.billing_period.reading_ending_date) and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include?(27)
-          else
+          # fuera de plazo
+          if params[:lapdate] == "true" and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include? 27
             @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 27)
+          end
+          if !r_date.blank?
+            if @prereading.reading_1 and @prereading.reading_1.reading_date and @prereading.reading_1.reading_date < r_date.to_date
+              if r_date.to_date.between?(@prereading.billing_period.reading_starting_date, @prereading.billing_period.reading_ending_date) and !@prereading.pre_reading_incidences.map(&:reading_incidence_type_id).include?(27)
+              else
+                @prereading.pre_reading_incidences.create(pre_reading_id: @prereading.id, reading_incidence_type_id: 27)
+              end
+            end
           end
         end
       end

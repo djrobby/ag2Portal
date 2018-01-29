@@ -174,6 +174,24 @@
     </div>
   </div>
   <br>
+  <tr class="<%= 'hide' if @tariff.billable_item.bill_by_endowments.blank? %>">
+    <td><%= t('activerecord.attributes.billable_item.bill_by_endowments') + ": " %><% if @tariff.billable_item.try(:bill_by_endowments) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    <td><%= t('activerecord.attributes.tariff.endowments_from') + ": " %> <%= @tariff.endowments_from  %></td>
+    <td><%= t('activerecord.attributes.tariff.endowments_increment') + ": " %> <%= @tariff.endowments_increment  %></td>
+    <td><%= t('activerecord.attributes.tariff.apply_to') + ": " %> <%= Tariff::APPLY_TO.select{ |k,v| v == @tariff.endowments_increment_apply_to }.first.first %></td>
+  </tr>
+  <tr class="<%= 'hide' if @tariff.billable_item.bill_by_inhabitants.blank? %>">
+    <td><%= t('activerecord.attributes.billable_item.bill_by_inhabitants') + ": " %><% if @tariff.billable_item.try(:bill_by_inhabitants) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    <td><%= t('activerecord.attributes.tariff.inhabitants_from') + ": " %> <%= @tariff.inhabitants_from  %></td>
+    <td><%= t('activerecord.attributes.tariff.inhabitants_increment') + ": " %> <%= @tariff.inhabitants_increment  %></td>
+    <td><%= t('activerecord.attributes.tariff.apply_to') + ": " %> <%= Tariff::APPLY_TO.select{ |k,v| v == @tariff.inhabitants_increment_apply_to }.first.first %></td>
+  </tr>  
+  <tr class="<%= 'hide' if @tariff.billable_item.bill_by_users.blank? %>">
+    <td><%= t('activerecord.attributes.billable_item.bill_by_users') + ": " %><% if @tariff.billable_item.try(:bill_by_users) %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %></td>
+    <td><%= t('activerecord.attributes.tariff.users_from') + ": " %> <%= @tariff.users_from  %></td>
+    <td><%= t('activerecord.attributes.tariff.users_increment') + ": " %> <%= @tariff.users_increment  %></td>
+    <td><%= t('activerecord.attributes.tariff.apply_to') + ": " %> <%= Tariff::APPLY_TO.select{ |k,v| v == @tariff.users_increment_apply_to }.first.first %></td>
+  </tr>
       <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @tariff } %>
       <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @tariff } %>
   </tbody>

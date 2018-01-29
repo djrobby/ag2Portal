@@ -91,7 +91,7 @@ jQuery(function($) {
       <!-- <#%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %> -->
       <%= f.input :account_no, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :holder_name, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :holder_name, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name_or_company }, :label_html => { :class => 'form-label' } %>
       <%= f.input :holder_fiscal_id, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id }, :label_html => { :class => 'form-label' } %>
 
       <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>

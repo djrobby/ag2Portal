@@ -5,7 +5,7 @@
       <div class="span1">
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
       </div>
-      <div class="span3">
+      <div class="span3 soft-padding">
         <%= bill.try(:full_no) %>
       </div>
       <div class="span1 soft-padding">
@@ -13,16 +13,19 @@
           <span class="yellow"><%= bill.invoices.first.invoice_status.code unless bill.invoices.first.invoice_status.blank? %></span>
           <span class="brown"><%= bill.invoices.first.invoice_operation.code unless bill.invoices.first.invoice_operation.blank? %></span>
       </div>
-      <div class="span1" align="center">
+      <div class="span1 soft-padding" align="center">
         <%= bill.try(:invoices).try(:first).try(:billing_period).try(:period) %>
       </div>
-      <div class="span1" align="center">
+      <div class="span1 soft-padding" align="center">
         <%= bill.try(:bill_date).strftime("%d/%m/%Y") %>
+      </div>
+      <div class="span1 soft-padding" align="center">
+        <%= bill.try(:payday_limit).strftime("%d/%m/%Y") %>
       </div>
       <!-- <div class="span2">
         <#%= bill.try(:bill_type).try(:name) %>
       </div> -->
-      <div align="right" class="span1">
+      <div align="right" class="span1 soft-padding">
         <%= number_with_precision(bill.try(:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
       <div class="span2 soft-padding pull-right">

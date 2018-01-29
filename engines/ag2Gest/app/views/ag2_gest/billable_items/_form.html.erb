@@ -11,22 +11,20 @@
 <%= simple_form_for @billable_item, :html => {:class => 'form-vertical well' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
-
   <div class="row-fluid">
-
     <!-- lambda -->
     <%= f.association :project, label: t('activerecord.attributes.billable_item.project_id'), collection: @projects, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |pr| pr.name + " (" + pr.project_code + ")" }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
     <%= f.association :billable_concept, label: t('activerecord.attributes.billable_item.billable_concept_id'), collection: BillableConcept.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |bc| bc.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
     <%= f.association :biller, label: t('activerecord.attributes.billable_item.biller_id'), collection: @companies, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |cp| cp.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
   </div>
   <div class="row-fluid">
-
     <%= f.association :regulation, label: t('activerecord.attributes.billable_item.regulation_id'), collection: @regulations, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |rg| rg.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
-    <%= f.input :tariffs_by_caliber, label: t('activerecord.attributes.billable_item.tariffs_by_caliber'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %>
-
+  </div>
+  <div class="row-fluid">
+    <%= f.input :tariffs_by_caliber, label: t('activerecord.attributes.billable_item.tariffs_by_caliber'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %> 
+    <%= f.input :bill_by_endowments, label: t('activerecord.attributes.billable_item.bill_by_endowments'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %>
+    <%= f.input :bill_by_inhabitants, label: t('activerecord.attributes.billable_item.bill_by_inhabitants'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %>
+    <%= f.input :bill_by_users, label: t('activerecord.attributes.billable_item.bill_by_users'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span3"} %>
   </div>
   <%= f.button :submit, :class => 'btn-primary' %>
 <% end %>

@@ -11,6 +11,37 @@
       allowClear: true
     });
   });
+  jQuery(function($) {
+    // when the #contracting_request_bank_id field changes
+    // $('#endowments').hide();
+    // $('#inhabitants').hide();
+    // $('#users').hide();
+
+    $("#billable-item").change(function() {
+      // make a POST call and replace the content
+      var bi = $('select#billable-item :selected').val();
+      if (bi == "")
+        bi = "0";
+      jQuery.getJSON('bi_endowments_inhabitants_users_from/' + bi, function(data) {
+        if (data.endowment == true) {
+          $('#endowments').show();
+        } else {
+          $('#endowments').hide();
+        }
+        if (data.inhabitant == true) {
+          $('#inhabitants').show();
+        } else {
+          $('#inhabitants').hide();
+        }
+        if (data.user == true) {
+          $('#users').show();
+        } else {
+          $('#users').hide();
+        }
+      });
+      return false;
+    });
+  });
 </script>
 <%= simple_form_for @tariff, :html => {:class => 'form-vertical well' } do |f| %>
   <%= f.error_notification %>
@@ -21,7 +52,7 @@
       <%= f.input :tariff_type_id, :required => true, :autofocus => true, :label => t('activerecord.attributes.tariff.tariff_type_id'), collection: @tariff_types, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="span3">
-      <%= f.input :billable_item_id, :required => true, :label => t('activerecord.attributes.tariff.billable_item_id'), collection: @billable_items, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :billable_item_id, :required => true, :label => t('activerecord.attributes.tariff.billable_item_id'), collection: @billable_items, :input_html => { :class => 'sel2 x-large-text-field', id: 'billable-item' }, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="span3">
       <%= f.input :caliber_id, :label => t('activerecord.attributes.tariff.caliber_id'), collection: @calibers, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -85,6 +116,21 @@
         <div class="span5"><%= f.input :block8_limit, :as => :hidden, label: false, required: false %></div>
         <div class="span5"><%= f.input :block8_fee, label: false %></div>
       </div>
+      <div id="endowments" class="row-fluid <%= 'hide' if @tariff.billable_item.blank? || @tariff.billable_item.bill_by_endowments.blank? %>">
+        <div class="span4"><%= f.input :endowments_from, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.endowments_from') %></div>
+        <div class="span5"><%= f.input :endowments_increment, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.endowments_increment') %></div>
+        <div class="span3"><%= f.input :endowments_increment_apply_to, :collection => Tariff::APPLY_TO, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.tariff.apply_to')  %> </div>
+      </div>
+      <div id="inhabitants" class="row-fluid <%= 'hide' if @tariff.billable_item.blank? || @tariff.billable_item.bill_by_inhabitants.blank? %>">
+        <div class="span4"><%= f.input :inhabitants_from, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.inhabitants_from') %></div>
+        <div class="span5"><%= f.input :inhabitants_increment, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.inhabitants_increment') %></div>
+        <div class="span3"><%= f.input :inhabitants_increment_apply_to, :collection => Tariff::APPLY_TO, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.tariff.apply_to')  %> </div>
+      </div>
+      <div id="users" class="row-fluid <%= 'hide' if @tariff.billable_item.blank? || @tariff.billable_item.bill_by_users.blank? %>">
+        <div class="span4"><%= f.input :users_from, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.users_from') %></div>
+        <div class="span5"><%= f.input :users_increment, input_html: { class: 'mid-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.users_increment') %></div>
+        <div class="span3"><%= f.input :users_increment_apply_to, :collection => Tariff::APPLY_TO, input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.tariff.apply_to')  %> </div>
+      </div>
     </div>
 
     <div class="span3">
@@ -94,8 +140,8 @@
       <%= f.input :percentage_fixed_fee, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.percentage_fixed_fee') %>
       <%= f.input :percentage_applicable_formula, collection: @billable_concept_percentage, required: false, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff_scheme.percentage_applicable_formula') %>
       <h4><%= t('activerecord.attributes.tariff.connection') %></h4>
-      <%= f.input :connection_fee_a, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.connection_fee_a') %>
-      <%= f.input :connection_fee_b, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.connection_fee_b') %>
+      <div class="span5"><%= f.input :connection_fee_a, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.connection_fee_a') %></div>
+      <div class="span5"><%= f.input :connection_fee_b, input_html: { class: 'large-text-field' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.tariff.connection_fee_b') %></div>
     </div>
 
     <div class="span3">

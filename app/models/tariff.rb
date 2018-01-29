@@ -5,6 +5,7 @@ class Tariff < ActiveRecord::Base
   FIXED = 1
   VARIABLE = 2
   BOTH = 3
+  APPLY_TO = { I18n.t('activerecord.attributes.tariff.NONE') => 0, I18n.t('activerecord.attributes.tariff.FIXED') => 1, I18n.t('activerecord.attributes.tariff.VARIABLE') => 2, I18n.t('activerecord.attributes.tariff.BOTH') => 3 }
 
   #belongs_to :tariff_scheme
   belongs_to :billable_item
@@ -133,13 +134,6 @@ class Tariff < ActiveRecord::Base
     else
       BillableConcept.find(percentage_applicable_formula).try(:code)
     end
-  end
-
-  def apply_to
-    [ I18n.t('activerecord.attributes.tariff.NONE'),
-      I18n.t('activerecord.attributes.tariff.FIXED'),
-      I18n.t('activerecord.attributes.tariff.VARIABLE'),
-      I18n.t('activerecord.attributes.tariff.BOTH') ]
   end
 
   #

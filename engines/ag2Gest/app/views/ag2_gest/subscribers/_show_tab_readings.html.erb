@@ -10,6 +10,9 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+    $("#reset_estimation").click(function(){
+      window.location.reload();
+    });
   });
 </script>
 
@@ -23,7 +26,13 @@
       <a href="#addMeter" id="add_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal" data-confirm="<%= t("activerecord.attributes.subscriber.alert_add_meter")%>" ><%= t('activerecord.attributes.subscriber.add_meter') %></a>
     <% end %>
   </div>
-  <div align="right" class="span7"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_consumptions") %>:</b> <%= @subscriber_readings.sum{|r| r.consumption } %></h5></div>
+  <div align="right" class="span7">
+    <a href="<%= params[:id] %>/reset_estimation" data-remote="true" id="reset_estimation" role="button" class="btn btn-mini btn-primary  <%= 'hide' if @subscriber.current_estimation.nil? %>" data-confirm="<%= t("activerecord.attributes.subscriber.alert_reset_estimation")%>" ><%= t('activerecord.attributes.subscriber.reset_estimation') %></a>
+    &nbsp;
+    <span class="<%= 'hide' if @subscriber.current_estimation.nil? %>"><b><%= I18n.t('activerecord.attributes.subscriber.total_estimations') %>:</b> <%= @subscriber.current_estimation_balance %></span>
+    &nbsp;
+    <span><b><%= I18n.t("activerecord.attributes.reading.con") %>:</b> <%= @subscriber_readings.first.consumption_previous_readings(@subscriber_readings.last.reading_date, @subscriber_readings.first.reading_date) %></span>
+  </div>
 </div>
 
 

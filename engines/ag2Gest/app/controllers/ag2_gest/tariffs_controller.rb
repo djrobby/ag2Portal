@@ -7,7 +7,21 @@ module Ag2Gest
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :create_pct,
                                                 :update_billable_concept_select_from_project,
-                                                :update_tariff_type_select_from_billing_concept2 ]
+                                                :update_tariff_type_select_from_billing_concept2,
+                                                :bi_endowments_inhabitants_users_from ]
+
+    def bi_endowments_inhabitants_users_from
+      bi = params[:billable_item_id]
+
+      @billable_item = BillableItem.find(bi)
+      response_hash = { billable_item: @billable_item }
+      response_hash[:endowment] = @billable_item.bill_by_endowments
+      response_hash[:inhabitant] = @billable_item.bill_by_inhabitants
+      response_hash[:user] = @billable_item.bill_by_users
+      respond_to do |format|
+        format.json { render json: response_hash }
+      end
+    end
 
     def update_billable_concept_select_from_project
       project_ids = params[:project_ids]
@@ -52,7 +66,7 @@ module Ag2Gest
       @json_data = { "new_item_ids" => @new_item_dropdown }
       render json: @json_data
     end
-    
+
 
     def create_pct
       @project = Project.find(params[:project_id])
