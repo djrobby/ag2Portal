@@ -79,3 +79,7 @@ es:
         inhabitants_from: "Aplica habitantes desde"
         endowments_increment: "Incremento m3 por dotación"
         inhabitants_increment: "Incremento m3 por habitante"
+        NONE: "Ninguna"
+        FIXED: "Fija"
+        VARIABLE: "Variable"
+        BOTH: "Ambas"
