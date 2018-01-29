@@ -141,6 +141,11 @@
     $("#generate").click(function() {
       $("#generate-debt-claim").modal('show');
     });
+
+    // when the #show button clicked
+    $("#show").click(function() {
+      // Show reclaimable bills
+    });
   });
 </script>
 
@@ -184,7 +189,6 @@
         <% if can? :update, DebtClaim %>
         <button id="generate" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new") %></button>
         <br /><br />
-        <button id="show_generate" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show_and_new") %></button>
         <% else %>
         <button id="show" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show") %></button>
         <% end %>
