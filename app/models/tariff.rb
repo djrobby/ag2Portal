@@ -5,6 +5,7 @@ class Tariff < ActiveRecord::Base
   FIXED = 1
   VARIABLE = 2
   BOTH = 3
+  APPLY_TO = { NONE:0, FIXED:1, VARIABLE:2, BOTH:3 }
 
   #belongs_to :tariff_scheme
   belongs_to :billable_item

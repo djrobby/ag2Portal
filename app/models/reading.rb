@@ -258,7 +258,7 @@ class Reading < ActiveRecord::Base
         end # subscriber.current_tariffs(reading_date).each
       end # end transaction
       # Update estimated consumption if necessary
-      update_current_estimation_balance(ce)
+      update_current_estimation_balance(ce, user_id)
       # Save generated bill_id in current reading
       self.bill_id = @bill.id
       self.save
@@ -384,8 +384,8 @@ class Reading < ActiveRecord::Base
   end
 
   # Update estimated consumption
-  def update_current_estimation_balance(ce)
-    if ce > 0
+  def update_current_estimation_balance(ce, user_id)
+    if ce != 0
       subscriber_current_estimation = subscriber.current_estimation
       if subscriber_current_estimation.nil?
         # There is not a current estimation: Create new
@@ -677,10 +677,10 @@ class Reading < ActiveRecord::Base
     # and the intermediate readings are AUTO or do not exist
     # must obtain the difference in months to apply
     mm = 0
-    if reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL
-      intermediate = subscriber.readings.where('(readings.id > ? AND readings.id < ?) AND reading_type_id IN (?)',reading_2.id,reading.id,[ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA]).group(:reading_type_id).select('reading_type_id,count(*) AS COUNTER')
+    if !reading_2.nil? && (reading_type_id == ReadingType::NORMAL && reading_2.reading_type_id == ReadingType::NORMAL)
+      intermediate = subscriber.readings.where('(readings.id > ? AND readings.id < ?) AND reading_type_id IN (?)',reading_2.id,id,[ReadingType::INSTALACION,ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA]).group(:reading_type_id).select('reading_type_id,count(*) AS COUNTER')
       if intermediate.blank?  # No NORMAL intermediate readings, obtain months
-         mm = ((reading.reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
+         mm = ((reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
       end
     end
     mm
