@@ -17,20 +17,47 @@ class InvoiceCurrentDebt < ActiveRecord::Base
   attr_accessible :invoice_id, :organization_id, :client_id, :subscriber_id, :bill_id, :project_id, :office_id,
                   :invoice_status_id, :invoice_type_id, :invoice_operation_id, :invoice_no, :invoice_date, :payday_limit,
                   :subtotal, :taxes, :bonus, :taxable, :total, :paid, :calc_debt, :totals, :receivables, :debt
+  delegate :id, :to => :invoice, :allow_nil => true
+  delegate :billing_period_id, :to => :invoice, :allow_nil => true
+  delegate :biller_id, :to => :invoice, :allow_nil => true
+
+  has_many :debt_claim_items, through: :invoice
 
   # Scopes
   scope :by_no, -> { order(:invoice_no) }
   scope :by_project_bill_invoice, -> { order(:project_id, :bill_id, :invoice_id) }
   #
+  scope :unpaid, -> { where("invoice_status_id = 1 AND payday_limit < ?", Date.today).by_project_bill_invoice }
+  scope :unpaid_and_unclaimed, -> {
+    joins('LEFT JOIN debt_claim_items ON invoice_current_debts.invoice_id=debt_claim_items.invoice_id')
+    .where('debt_claim_items.invoice_id IS NULL AND invoice_current_debts.invoice_status_id = 1 AND invoice_current_debts.payday_limit < ?', Date.today)
+    .by_project_bill_invoice
+  }
+  scope :unpaid_and_claimed, -> {
+    joins(:debt_claim_items).where('invoice_current_debts.invoice_status_id = 1 AND invoice_current_debts.payday_limit < ?', Date.today)
+    .by_project_bill_invoice
+  }
+  scope :unclaimed, -> {
+    joins('LEFT JOIN debt_claim_items ON invoice_current_debts.invoice_id=debt_claim_items.invoice_id')
+    .where('debt_claim_items.invoice_id IS NULL').by_project_bill_invoice
+  }
+  scope :claimed, -> { joins(:debt_claim_items).by_project_bill_invoice }
+  #
+  scope :commercial, -> { where("invoice_type_id != 1 AND invoice_type_id != 3").by_no }
+  scope :service, -> { where(invoice_type_id: InvoiceType::WATER).by_no }
+  scope :contracting, -> { where(invoice_type_id: InvoiceType::CONTRACT).by_no }
+  #
   scope :g_where, -> w {
     joins('LEFT JOIN subscribers ON invoice_current_debts.subscriber_id = subscribers.id')
     .where(w).by_project_bill_invoice
   }
-  # scope :g_where, -> w {
-  #   joins(:bill)
-  #   .where(w)
-  #   .by_no
-  # }
+  scope :g_where_and_unclaimed, -> w {
+    joins(:invoice)
+    .joins('LEFT JOIN debt_claim_items ON invoice_current_debts.invoice_id=debt_claim_items.invoice_id')
+    .joins('LEFT JOIN subscribers ON invoice_current_debts.subscriber_id = subscribers.id')
+    .where('debt_claim_items.invoice_id IS NULL AND invoice_current_debts.invoice_status_id = 1 AND invoice_current_debts.payday_limit < ?', Date.today)
+    .where(w).by_project_bill_invoice
+  }
 
   def to_label
     "#{full_name}"

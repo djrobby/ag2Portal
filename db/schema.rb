@@ -1873,6 +1873,7 @@ ActiveRecord::Schema.define(:version => 20180123154002) do
   end
 
   create_table "invoice_current_debts", :id => false, :force => true do |t|
+    t.integer "id",                                                   :default => 0,   :null => false
     t.integer "invoice_id",                                           :default => 0,   :null => false
     t.integer "organization_id"
     t.integer "bill_id"

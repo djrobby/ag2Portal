@@ -15,6 +15,8 @@ en:
         label_biller: "Biller"
         label_period: "Period"
         label_others: "Others"
+        label_from: "From"
+        label_to: "To"
       show:
         title: "Invoice"
         btn_edit: "Edit Invoice"
@@ -28,4 +30,4 @@ en:
         title: "New Invoice"
       back_to_main_page: "Back to Invoices"
       items_info: "Invoice Items"
-      
+

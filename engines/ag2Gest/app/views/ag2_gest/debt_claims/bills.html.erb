@@ -1,0 +1,234 @@
+<script>
+  var _thisForm = '';
+  var changing = false;
+
+  function setupAllSelect2(p, b, r) {
+    projectsSelect2(p);
+    billersSelect2(b);    
+    periodsSelect2(r);    
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function billersSelect2(intialValue) {
+    $('#Biller').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_companies",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function periodsSelect2(intialValue) {
+    $('#Period').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_billing_periods",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+     format:'dd/mm/yyyy',weekStart:1
+    });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>", "<%= @biller %>", "<%= @period %>");
+
+    // Initialized form variable
+    _thisForm = $("#Client").closest('form')[0];
+  }); 
+
+  $(document).ajaxSuccess(function() {
+    // hide loader on success
+    $("#loader").hide();
+  });
+
+  $(window).bind("load", function() {
+    a = "<%= dcb_restore_filters %>";
+    $("#No").val("<%= params[:No] %>");
+    $("#Client").val("<%= params[:Client] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
+    $("#Status").val("<%= params[:Status] %>");
+    $("#Type").val("<%= params[:Type] %>");
+    $("#Operation").val("<%= params[:Operation] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
+    $("#search").val("<%= params[:search] %>");
+  });
+
+  jQuery(function($) {
+    // when .icon-refresh-link is clicked
+    $(".icon-refresh-link").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when #submit_btn is clicked
+    $("#submit_btn").click(function() {
+      // show loader
+      $("#div_table").html("");
+      $("#loader").show();
+    });
+
+    // when the #removeFilter button clicked
+    $("#removeFilter").click(function() {
+      $("#No").val("");
+      $("#Project").select2("val", "");
+      $("#Client").val("");
+      $("#Subscriber").val("");
+      $("#StreetName").val("");
+      $("#Status").val("");
+      $("#Type").val("");
+      $("#Operation").val("");
+      $("#Biller").select2("val", "");
+      $("#Period").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
+      $("#search").val("");
+      a = "<%= dcb_remove_filters %>";
+      setupAllSelect2(a, a, a);
+      // no AJAX
+      //_thisForm.submit();
+      // AJAX
+      $("#submit_btn").trigger("click");
+    });
+  });
+</script>
+
+<%= render '/layouts/ag2_gest/debtclaimsbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.invoices_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <!-- Search form -->
+        <%= form_tag "bills", :method => 'get', :remote => true do %>
+        <!-- No -->
+        <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
+        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <!-- Project -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
+        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Client -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <!-- Subscriber -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
+        <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
+        <!-- Street name -->
+        <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
+        <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+        <!-- Type -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
+        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Status -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label' %>
+        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Operation -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label' %>
+        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <!-- Biller -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
+        <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Period -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+
+        <!-- Dates -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>
+        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_to"), nil, :class => 'form-label' %>
+        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+
+        <!-- Others -->
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label' %>
+        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
+        <!-- Submit -->
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <!-- Remove filter -->
+        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <% end %>
+        <!-- <br /><br /> -->
+        <%= link_to t("ag2_gest.debt_claims.back_to_main_page"), ag2_gest.debt_claims_path %>
+        <%= link_to t(".back_to_management"), ag2_gest.debt_claim_management_path %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'bills' %>
+      </div>
+    </div><!-- /.span9 -->
+  </div><!-- /.row-fluid -->
+</div><!-- /.container-fluid -->

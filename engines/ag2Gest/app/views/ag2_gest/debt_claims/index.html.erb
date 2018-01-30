@@ -142,8 +142,8 @@
       $("#generate-debt-claim").modal('show');
     });
 
-    // when the #show button clicked
-    $("#show").click(function() {
+    // when the #bills button clicked
+    $("#bills").click(function() {
       // Show reclaimable bills
     });
   });
@@ -189,9 +189,9 @@
         <% if can? :update, DebtClaim %>
         <button id="generate" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t(".btn_new") %></button>
         <br /><br />
-        <% else %>
-        <button id="show" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show") %></button>
         <% end %>
+        <%= link_to t(".btn_show_bills"), ag2_gest.bills_debt_claims_path, class: "btn btn-warning" %>
+        <!-- <button id="bills" type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true"><%= t(".btn_show_bills") %></button> -->
         <br />
         <br />
         <%= link_to t(".back_to_management"), ag2_gest.debt_claim_management_path %>

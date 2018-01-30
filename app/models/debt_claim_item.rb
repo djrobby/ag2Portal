@@ -5,8 +5,11 @@ class DebtClaimItem < ActiveRecord::Base
   belongs_to :bill
   belongs_to :invoice
   belongs_to :debt_claim_status
+  # delegate :invoice_current_debt, :to => :invoice, :allow_nil => true
   attr_accessible :debt, :payday_limit,
                   :debt_claim_id, :bill_id, :invoice_id, :debt_claim_status_id
+
+  has_one :invoice_current_debt, through: :invoice
 
   has_paper_trail
 

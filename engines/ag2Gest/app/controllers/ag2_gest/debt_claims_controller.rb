@@ -15,6 +15,8 @@ module Ag2Gest
     helper_method :client_name
     # => index filters
     helper_method :dc_remove_filters, :dc_restore_filters
+    # => bills filters
+    helper_method :dcb_remove_filters, :dcb_restore_filters
 
     # Update claim number at view (generate_code_btn)
     def dc_generate_no
@@ -33,6 +35,7 @@ module Ag2Gest
       payday_limit = params[:debt_claim][:payday_limit]   # YYYYMMDD
       # optional params
       projects = params[:debt_claim][:projects]
+      periods = params[:debt_claim][:periods]
       reading_routes = params[:debt_claim][:reading_routes]
       clients = params[:debt_claim][:clients]
       subscribers = params[:debt_claim][:subscribers]
@@ -47,6 +50,7 @@ module Ag2Gest
       # Formats input params data
       payday_limit = (payday_limit[0..3] + '-' + payday_limit[4..5] + '-' + payday_limit[6..7]).to_date
       projects = projects.split(",") if !projects.blank?
+      periods = periods.split(",") if !periods.blank?
       reading_routes = reading_routes.split(",") if !reading_routes.blank?
       clients = clients.split(",") if !clients.blank?
       subscribers = subscribers.split(",") if !subscribers.blank?
@@ -54,7 +58,7 @@ module Ag2Gest
 
       # Builds WHERE
       w = ''
-      w = "office_id = #{office}" if !office.blank?
+      w = "invoice_current_debts.office_id = #{office}" if !office.blank?
       if !payday_limit.blank?
         w += " AND " if w == ''
         w += "payday_limit < #{payday_limit}"
@@ -62,6 +66,10 @@ module Ag2Gest
       if !projects.blank?
         w += " AND " if w == ''
         w = "project_id IN (#{projects})"
+      end
+      if !periods.blank?
+        w += " AND " if w == ''
+        w = "period_id IN (#{periods})"
       end
       if !reading_routes.blank?
         w += " AND " if w == ''
@@ -81,8 +89,8 @@ module Ag2Gest
       end
 
       # Retrieve current outstanding invoices
-      invoices = InvoiceCurrentDebt.g_where(w)
-      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.count < 1
+      invoices = InvoiceCurrentDebt.g_where_and_unclaimed(w)
+      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.size < 1
 
       # Group & total: Retrieve clients with right pending_amount or pending_invoices
       g = invoices.group(:client_id)
@@ -120,6 +128,168 @@ module Ag2Gest
       rescue ActiveRecord::RecordInvalid
         redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate.alert") and return
       end # begin
+    end
+
+    # Show reclaimable bills
+    def bills
+      dcb_manage_filter_state
+      no = params[:No]
+      project = params[:Project]
+      client = params[:Client]
+      subscriber = params[:Subscriber]
+      street_name = params[:StreetName]
+      status = params[:Status]
+      type = params[:Type]
+      operation = params[:Operation]
+      biller = params[:Biller]
+      period = params[:Period]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+      # Initialize select_tags
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
+      @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
+      @status = invoice_statuses_dropdown if @status.nil?
+      @types = invoice_types_dropdown if @types.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
+
+      # Formats input params data
+      from = (from[0..3] + '-' + from[4..5] + '-' + from[6..7]).to_date rescue nil
+      to = (to[0..3] + '-' + to[4..5] + '-' + to[6..7]).to_date rescue nil
+      no = !no.blank? && (no.first != '%' && no.last != '%') ? no + '%' : no
+
+      # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
+      client = !client.blank? ? inverse_client_search(client) : client
+      subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+
+      # Builds WHERE
+      w = ''
+      w = "invoice_current_debts.invoice_no LIKE #{no}" if !no.blank?
+      if !project.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.project_id = #{project}"
+      end
+      if !client.blank?
+        w += " AND " if w == ''
+        w = "client_id IN (#{clients})"
+      end
+      if !subscriber.blank?
+        w += " AND " if w == ''
+        w = "subscriber_id IN (#{subscribers})"
+      end
+      if !street_name.blank?
+        w += " AND " if w == ''
+        w = "subscriber_id IN (#{subscribers})"
+      end
+      if !status.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.invoice_status_id = #{status}"
+      end
+      if !type.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.invoice_type_id = #{type}"
+      end
+      if !operation.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.invoice_operation_id = #{operation}"
+      end
+      if !biller.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.billing_period_id = #{period}"
+      end
+      if !period.blank?
+        w += " AND " if w == ''
+        w = "invoice_current_debts.billing_period_id = #{period}"
+      end
+      if !from.blank?
+        w += " AND " if w == ''
+        w += "invoice_current_debts.invoice_date >= #{from}"
+      end
+      if !to.blank?
+        w += " AND " if w == ''
+        w += "invoice_current_debts.invoice_date <= #{to}"
+      end
+
+      @search = Invoice.search do
+        with :project_id, current_projects
+        fulltext params[:search]
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        if !client.blank?
+          if client.class == Array
+            with :client_code_name_fiscal, client
+          else
+            with(:client_code_name_fiscal).starting_with(client)
+          end
+        end
+        if !subscriber.blank?
+          if subscriber.class == Array
+            with :subscriber_code_name_fiscal, subscriber
+          else
+            with(:subscriber_code_name_fiscal).starting_with(subscriber)
+          end
+        end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !type.blank?
+          with :invoice_type_id, type
+        end
+        if !status.blank?
+          with :invoice_status_id, status
+        end
+        if !operation.blank?
+          with :invoice_operation_id, operation
+        end
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
+        end
+        data_accessor_for(Invoice).include = [:invoice_type, :invoice_status, :invoice_operation, {bill: :client}, :biller, {invoice_items: :tax_type}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @bills = InvoiceCurrentDebt.g_where_and_unclaimed(w).paginate(:page => params[:page], :per_page => per_page || 10)
+
+      respond_to do |format|
+        format.html # bills.html.erb
+        format.json { render json: @debt_claims }
+        format.js
+      end
     end
 
     #
@@ -453,6 +623,121 @@ module Ag2Gest
       params[:Client] = session[:Client]
       params[:Phase] = session[:Phase]
       params[:Status] = session[:Status]
+    end
+
+    # Keeps filter state
+    def dcb_manage_filter_state
+      # search
+      if params[:search]
+        session[:search] = params[:search]
+      elsif session[:search]
+        params[:search] = session[:search]
+      end
+      # no
+      if params[:No]
+        session[:No] = params[:No]
+      elsif session[:No]
+        params[:No] = session[:No]
+      end
+      # project
+      if params[:Project]
+        session[:Project] = params[:Project]
+      elsif session[:Project]
+        params[:Project] = session[:Project]
+      end
+      # client
+      if params[:Client]
+        session[:Client] = params[:Client]
+      elsif session[:Client]
+        params[:Client] = session[:Client]
+      end
+      # subscriber
+      if params[:Subscriber]
+        session[:Subscriber] = params[:Subscriber]
+      elsif session[:Subscriber]
+        params[:Subscriber] = session[:Subscriber]
+      end
+      # street_name
+      if params[:StreetName]
+        session[:StreetName] = params[:StreetName]
+      elsif session[:StreetName]
+        params[:StreetName] = session[:StreetName]
+      end
+      # status
+      if params[:Status]
+        session[:Status] = params[:Status]
+      elsif session[:Status]
+        params[:Status] = session[:Status]
+      end
+      # type
+      if params[:Type]
+        session[:Type] = params[:Type]
+      elsif session[:Type]
+        params[:Type] = session[:Type]
+      end
+      # operation
+      if params[:Operation]
+        session[:Operation] = params[:Operation]
+      elsif session[:Operation]
+        params[:Operation] = session[:Operation]
+      end
+      # biller
+      if params[:Biller]
+        session[:Biller] = params[:Biller]
+      elsif session[:Biller]
+        params[:Biller] = session[:Biller]
+      end
+      # period
+      if params[:Period]
+        session[:Period] = params[:Period]
+      elsif session[:Period]
+        params[:Period] = session[:Period]
+      end
+      # From
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # To
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
+    end
+
+    def dcb_remove_filters
+      params[:search] = ""
+      params[:No] = ""
+      params[:Project] = ""
+      params[:Client] = ""
+      params[:Subscriber] = ""
+      params[:StreetName] = ""
+      params[:Status] = ""
+      params[:Type] = ""
+      params[:Operation] = ""
+      params[:Biller] = ""
+      params[:Period] = ""
+      params[:From] = ""
+      params[:To] = ""
+      return " "
+    end
+
+    def dcb_restore_filters
+      params[:search] = session[:search]
+      params[:No] = session[:No]
+      params[:Project] = session[:Project]
+      params[:Client] = session[:Client]
+      params[:Subscriber] = session[:Subscriber]
+      params[:StreetName] = session[:StreetName]
+      params[:Status] = session[:Status]
+      params[:Type] = session[:Type]
+      params[:Operation] = session[:Operation]
+      params[:Biller] = session[:Biller]
+      params[:Period] = session[:Period]
+      params[:From] = session[:From]
+      params[:To] = session[:To]
     end
   end
 end

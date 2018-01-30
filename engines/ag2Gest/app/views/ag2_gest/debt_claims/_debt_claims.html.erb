@@ -32,7 +32,7 @@
       <td align="center"><%= formatted_date(claim.closed_at) unless claim.closed_at.blank? %></td>
       <td align="right"><%= claim.debt_claim_items.size %></td>
       <td align="right"><%= number_with_precision(claim.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless claim.totals.blank? %></td>
-      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Saleclaim, :path => edit_sale_claim_path(claim) } unless cannot_edit(claim) %>
+      <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => Saleclaim, :path => edit_debt_claim_path(claim) } unless cannot_edit(claim) %>
       <%= render :partial => '/layouts/crud/delete', :locals => { :model => Saleclaim, :path => claim, :msg => t("activerecord.models.sale_claim.one"), :txt => claim.claim_no } unless cannot_edit(claim) %> </td>
     </tr>
     <% end %>

@@ -583,6 +583,7 @@ Ag2Gest::Engine.routes.draw do
     #
     resources :debt_claims do
       post 'generate', on: :collection
+      get 'bills', on: :collection
     end
     resources :debt_claim_phases
     resources :debt_claim_statuses
