@@ -34,7 +34,7 @@ en:
         notice: "Debt claim was successfully created."
         alert: "Error! Unable to generate new Debt claim."
       bills:
-        title: "Reclaimable Bills-Invoices"
+        title: "Reclaimable Bills"
         back_to_management: "Back to Debt Management"
         label_project: "Project"
         label_client: "Client"

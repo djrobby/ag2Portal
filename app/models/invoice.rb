@@ -326,8 +326,20 @@ class Invoice < ActiveRecord::Base
     invoice_type.name rescue ''
   end
 
+  def invoice_type_code
+    invoice_type.code rescue ''
+  end
+
   def invoice_type_by_item_description
     invoice_items.first.description.capitalize rescue ''
+  end
+
+  def invoice_status_code
+    invoice_status.code rescue ''
+  end
+
+  def invoice_operation_code
+    invoice_operation.code rescue ''
   end
 
   def payment_date

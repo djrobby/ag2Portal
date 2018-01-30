@@ -7,12 +7,13 @@ module Ag2Gest
     skip_load_and_authorize_resource :only => [:dc_remove_filters,
                                                :dc_restore_filters,
                                                :dc_generate_no,
-                                               :generate]
+                                               :generate,
+                                               :bills]
     # Helper methods for
     # => allow edit (hide buttons)
     helper_method :cannot_edit
     # => returns client code & full name
-    helper_method :client_name
+    helper_method :client_name, :biller_name
     # => index filters
     helper_method :dc_remove_filters, :dc_restore_filters
     # => bills filters
@@ -152,9 +153,9 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
-      @status = invoice_statuses_dropdown if @status.nil?
-      @types = invoice_types_dropdown if @types.nil?
-      @operations = invoice_operations_dropdown if @operations.nil?
+      @status = InvoiceStatus.all if @status.nil?
+      @types = InvoiceType.all if @types.nil?
+      @operations = InvoiceOperation.all if @operations.nil?
 
       # Formats input params data
       from = (from[0..3] + '-' + from[4..5] + '-' + from[6..7]).to_date rescue nil
@@ -163,127 +164,65 @@ module Ag2Gest
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
-      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      current_projects = @projects.blank? ? nil : current_projects_for_index(@projects).join(", ")
       # If inverse no search is required
-      client = !client.blank? ? inverse_client_search(client) : client
-      subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
-      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      client = inverse_client_search(client) if !client.blank?
+      subscriber = inverse_subscriber_search(subscriber) if !subscriber.blank?
+      street_name = inverse_street_name_search(street_name) if !street_name.blank?
 
       # Builds WHERE
       w = ''
-      w = "invoice_current_debts.invoice_no LIKE #{no}" if !no.blank?
-      if !project.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.project_id = #{project}"
-      end
-      if !client.blank?
-        w += " AND " if w == ''
-        w = "client_id IN (#{clients})"
-      end
-      if !subscriber.blank?
-        w += " AND " if w == ''
-        w = "subscriber_id IN (#{subscribers})"
-      end
-      if !street_name.blank?
-        w += " AND " if w == ''
-        w = "subscriber_id IN (#{subscribers})"
-      end
-      if !status.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.invoice_status_id = #{status}"
-      end
-      if !type.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.invoice_type_id = #{type}"
-      end
-      if !operation.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.invoice_operation_id = #{operation}"
-      end
-      if !biller.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.billing_period_id = #{period}"
-      end
-      if !period.blank?
-        w += " AND " if w == ''
-        w = "invoice_current_debts.billing_period_id = #{period}"
-      end
-      if !from.blank?
-        w += " AND " if w == ''
-        w += "invoice_current_debts.invoice_date >= #{from}"
-      end
-      if !to.blank?
-        w += " AND " if w == ''
-        w += "invoice_current_debts.invoice_date <= #{to}"
-      end
+      w = "invoice_current_debts.project_id IN (#{current_projects})" if !current_projects.blank?
+      # if !no.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.invoice_no LIKE #{no}"
+      # end
+      # if !project.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.project_id = #{project}"
+      # end
+      # if !client.blank?
+      #   w += " AND " if w == ''
+      #   w = "client_id IN (#{client})"
+      # end
+      # if !subscriber.blank?
+      #   w += " AND " if w == ''
+      #   w = "subscriber_id IN (#{subscriber})"
+      # end
+      # if !street_name.blank?
+      #   w += " AND " if w == ''
+      #   w = "subscriber_id IN (#{street_name})"
+      # end
+      # if !status.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.invoice_status_id = #{status}"
+      # end
+      # if !type.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.invoice_type_id = #{type}"
+      # end
+      # if !operation.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.invoice_operation_id = #{operation}"
+      # end
+      # if !biller.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.billing_period_id = #{period}"
+      # end
+      # if !period.blank?
+      #   w += " AND " if w == ''
+      #   w = "invoice_current_debts.billing_period_id = #{period}"
+      # end
+      # if !from.blank?
+      #   w += " AND " if w == ''
+      #   w += "invoice_current_debts.invoice_date >= #{from}"
+      # end
+      # if !to.blank?
+      #   w += " AND " if w == ''
+      #   w += "invoice_current_debts.invoice_date <= #{to}"
+      # end
 
-      @search = Invoice.search do
-        with :project_id, current_projects
-        fulltext params[:search]
-        if !no.blank?
-          if no.class == Array
-            with :invoice_no, no
-          else
-            with(:invoice_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        if !client.blank?
-          if client.class == Array
-            with :client_code_name_fiscal, client
-          else
-            with(:client_code_name_fiscal).starting_with(client)
-          end
-        end
-        if !subscriber.blank?
-          if subscriber.class == Array
-            with :subscriber_code_name_fiscal, subscriber
-          else
-            with(:subscriber_code_name_fiscal).starting_with(subscriber)
-          end
-        end
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !type.blank?
-          with :invoice_type_id, type
-        end
-        if !status.blank?
-          with :invoice_status_id, status
-        end
-        if !operation.blank?
-          with :invoice_operation_id, operation
-        end
-        if !biller.blank?
-          with :biller_id, biller
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !from.blank?
-          any_of do
-            with(:invoice_date).greater_than(from)
-            with :invoice_date, from
-          end
-        end
-        if !to.blank?
-          any_of do
-            with(:invoice_date).less_than(to)
-            with :invoice_date, to
-          end
-        end
-        data_accessor_for(Invoice).include = [:invoice_type, :invoice_status, :invoice_operation, {bill: :client}, :biller, {invoice_items: :tax_type}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-
-      @bills = InvoiceCurrentDebt.g_where_and_unclaimed(w).paginate(:page => params[:page], :per_page => per_page || 10)
+      @bills = InvoiceCurrentDebt.g_where_and_unclaimed(w).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
 
       respond_to do |format|
         format.html # bills.html.erb
@@ -316,6 +255,7 @@ module Ag2Gest
       # Initialize modal generate tags
       @offices = offices_dropdown if @offices.nil?
       @projects = []
+      @periods = []
       @reading_routes = []
       @clients = []
       @subscribers = []
@@ -466,6 +406,11 @@ module Ag2Gest
       _name.blank? ? '' : _name[0,40]
     end
 
+    def biller_name(_bill)
+      _name = _bill.biller_name rescue nil
+      _name.blank? ? '' : _name[0,40]
+    end
+
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
@@ -478,13 +423,42 @@ module Ag2Gest
       _items.pluck(:debt_claim_id)
     end
 
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
+    end
+
     def inverse_no_search(no)
       _numbers = []
       # Add numbers found
-      SaleOffer.where('offer_no LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.offer_no
+      InvoiceCurrentDebt.where('invoice_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.invoice_no
       end
       _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_client_search(client)
+      _numbers = []
+      no = setup_no(client)
+      w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      _numbers = Client.where(w).order(:id).limit(1000).pluck(:id)
+      _numbers = client if _numbers.blank?
+    end
+
+    def inverse_subscriber_search(subscriber)
+      _numbers = []
+      no = setup_no(subscriber)
+      w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
+      _numbers = Subscriber.where(w).order(:id).limit(1000).pluck(:id)
+      _numbers = subscriber if _numbers.blank?
+    end
+
+    def inverse_street_name_search(supply_address)
+      _numbers = []
+      no = setup_no(supply_address)
+      w = "supply_address LIKE '#{no}'"
+      _numbers = SubscriberSupplyAddress.where(w).order(:subscriber_id).limit(1000).pluck(:subscriber_id)
+      _numbers = supply_address if _numbers.blank?
     end
 
     def projects_dropdown

@@ -39,16 +39,15 @@
   <tbody>
     <% @bills.each do |invoice| %>
       <td><%= invoice.full_no unless invoice.invoice_no.blank? %></td>
-      <td><%= link_to invoice.full_no, invoice %></td>
       <td>
-        <span class="blue"><%= invoice.invoice_type.code unless invoice.invoice_type.blank? %></span>
-        <span class="yellow"><%= invoice.invoice_status.code unless invoice.invoice_status.blank? %></span>
-        <span class="brown"><%= invoice.invoice_operation.code unless invoice.invoice_operation.blank? %></span>
+        <span class="blue"><%= invoice.invoice_type_code %></span>
+        <span class="yellow"><%= invoice.invoice_status_code %></span>
+        <span class="brown"><%= invoice.invoice_operation_code %></span>
       </td>
       <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
       <td align="center"><%= formatted_date(invoice.payday_limit) unless invoice.payday_limit.blank? %></td>
       <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
-      <td><%= invoice.biller.name[0,40] unless invoice.biller.blank? %></td>
+      <td><%= biller_name(invoice) %></td>
       <td><%= client_name(invoice) %></td>
       <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
     </tr>

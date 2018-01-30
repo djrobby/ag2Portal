@@ -20,6 +20,10 @@ class InvoiceCurrentDebt < ActiveRecord::Base
   delegate :id, :to => :invoice, :allow_nil => true
   delegate :billing_period_id, :to => :invoice, :allow_nil => true
   delegate :biller_id, :to => :invoice, :allow_nil => true
+  delegate :full_no, :to => :invoice, :allow_nil => true
+  delegate :invoice_type_code, :to => :invoice, :allow_nil => true
+  delegate :invoice_status_code, :to => :invoice, :allow_nil => true
+  delegate :invoice_operation_code, :to => :invoice, :allow_nil => true
 
   has_many :debt_claim_items, through: :invoice
 
