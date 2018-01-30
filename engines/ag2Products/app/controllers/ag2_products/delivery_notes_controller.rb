@@ -641,13 +641,18 @@ module Ag2Products
       client = params[:Client]
       project = params[:Project]
       order = params[:Order]
+      account = params[:Account]
       # OCO
       init_oco if !session[:organization]
-      # Initialize projects for array search
-      projects = projects_dropdown
+      # Initialize select_tags
+      @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -673,15 +678,19 @@ module Ag2Products
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => DeliveryNote.count
+        if !account.blank?
+          with :charge_account_id, account
+        end
+        data_accessor_for(DeliveryNote).include = [:client, :project, :work_order, :products]
+        order_by :delivery_date, :asc
+        paginate :per_page => DeliveryNote.count
       end
 
       @delivery_notes_report = @search.results
 
       title = t("activerecord.models.delivery_note.few")
-      @to = formatted_date(@delivery_notes_report.first.created_at)
-      @from = formatted_date(@delivery_notes_report.last.created_at)
+      @from = formatted_date(@delivery_notes_report.first.delivery_date)
+      @to = formatted_date(@delivery_notes_report.last.delivery_date)
       respond_to do |format|
       # Render PDF
         if !@delivery_notes_report.blank?

@@ -1251,7 +1251,7 @@ module Ag2Purchase
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @receipt_notes = receipts_dropdown if @receipt_notes.nil?
-      @purchase_orders = unbilled_purchase_orders_dropdown if @purchase_orders.nil?
+      @purchase_orders = unbilled_and_undelivered_purchase_orders_dropdown if @purchase_orders.nil?
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?
@@ -1282,8 +1282,8 @@ module Ag2Purchase
           with :work_order_id, order
         end
         data_accessor_for(SupplierInvoice).include = [:supplier_invoice_approvals, :supplier, :project]
-        order_by :id, :desc
-        paginate :page => params[:page] || 1, :per_page => SupplierInvoice.count
+        order_by :id, :asc
+        paginate :per_page => SupplierInvoice.count
       end
       @supplier_invoices = @search.results
 

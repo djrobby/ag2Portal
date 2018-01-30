@@ -947,14 +947,32 @@ module Ag2Products
       no = params[:No]
       project = params[:Project]
       supplier = params[:Supplier]
+      family = params[:Family]
+      product = params[:Products]
       status = params[:Status]
       petitioner = params[:Petitioner]
+      balance = params[:Balance]
       # OCO
       init_oco if !session[:organization]
-      projects = projects_dropdown
+      # Initialize select_tags
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @family = !family.blank? ? ProductFamily.find(family).full_name : " "
+      @product = !product.blank? ? Product.find(product).full_name : " "
+      @statuses = OrderStatus.order('id') if @statuses.nil?
+      @petitioners = PurchaseOrder.petitioners if @petitioners.nil?
+      @balances = balances_dropdown if @balances.nil?
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      if !family.blank?
+        @items = PurchaseOrder.has_family(family, current_projects)
+      end
+      if !product.blank?
+        @items = PurchaseOrder.has_product(product, current_projects)
+      end
+      current_items = @items.blank? ? [0] : current_items_for_index(@items)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -977,21 +995,28 @@ module Ag2Products
         if !supplier.blank?
           with :supplier_id, supplier
         end
+        if !family.blank? || !product.blank?
+          with :id, current_items
+        end
         if !status.blank?
           with :order_status_id, status
         end
         if !petitioner.blank?
           with :created_by, petitioner
         end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => PurchaseOrder.count
+        if !balance.blank?
+          with :reception_status_id, balance
+        end
+        data_accessor_for(PurchaseOrder).include = [:order_status, :supplier, :offer, :products, :approver]
+        order_by :order_date, :asc
+        paginate :per_page => PurchaseOrder.count
       end
 
       @purchase_orders_report = @search.results
 
       title = t("activerecord.models.purchase_order.few")
-      @to = formatted_date(@purchase_orders_report.first.created_at)
-      @from = formatted_date(@purchase_orders_report.last.created_at)
+      @from = formatted_date(@purchase_orders_report.first.order_date)
+      @to = formatted_date(@purchase_orders_report.last.order_date)
       respond_to do |format|
         # Render PDF
         if !@purchase_orders_report.blank?

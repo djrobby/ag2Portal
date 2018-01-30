@@ -795,14 +795,35 @@ module Ag2Purchase
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
+      account = params[:Account]
       # OCO
       init_oco if !session[:organization]
-      projects = projects_dropdown
+      # Initialize select_tags
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      if !supplier.blank?   # Offer requests that include current supplier
+        @request_suppliers = OfferRequestSupplier.group(:offer_request_id).where(supplier_id: supplier)
+      else
+        @request_suppliers = OfferRequestSupplier.group(:offer_request_id)
+      end
+      @projects = projects_dropdown if @projects.nil?
+      current_suppliers = @request_suppliers.blank? ? [0] : current_suppliers_for_index(@request_suppliers)
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+
+      # Auto generate request
+      @suppliers = suppliers_dropdown if @suppliers.nil?
+      @current_projects = Project.where(id: current_projects) if @current_projects.nil?
+      @search_projects = @current_projects.map{ |p| p.id }.map(&:inspect).join(',')
+      @families = families_dropdown if @families.nil?
+      # @charge_accounts = projects_charge_accounts(@current_projects) if @charge_accounts.nil?
+      @stores = projects_stores(@current_projects) if @stores.nil?
+      @payment_methods = payment_methods_dropdown if @payment_methods.nil?
 
       @search = OfferRequest.search do
         with :project_id, current_projects
@@ -812,13 +833,13 @@ module Ag2Purchase
         end
         if !no.blank?
           if no.class == Array
-            with :offer_no, no
+            with :request_no, no
           else
-            with(:offer_no).starting_with(no)
+            with(:request_no).starting_with(no)
           end
         end
         if !supplier.blank?
-          with :supplier_id, supplier
+          with :id, current_suppliers
         end
         if !project.blank?
           with :project_id, project
@@ -826,14 +847,15 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        data_accessor_for(OfferRequest).include = [{approved_offer: :supplier}]
+        order_by :request_date, :asc
+        paginate :per_page => OfferRequest.count
       end
       @offer_requests = @search.results
 
       title = t("activerecord.models.offer_request.few")
-      @from = formatted_date(@offer_requests.first.created_at)
-      @to = formatted_date(@offer_requests.last.created_at)
+      @from = formatted_date(@offer_requests.first.request_date)
+      @to = formatted_date(@offer_requests.last.request_date)
       respond_to do |format|
       # Render PDF
         if !@offer_requests.blank?

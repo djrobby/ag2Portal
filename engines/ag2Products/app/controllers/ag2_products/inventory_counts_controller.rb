@@ -716,16 +716,16 @@ module Ag2Products
         if !type.blank?
           with :inventory_count_type_id, type
         end
-        data_accessor_for(InventoryCount).include = [:inventory_count_type, :store, :product_family]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => InventoryCount.count
+        data_accessor_for(InventoryCount).include = [:inventory_count_type, :store, :product_family, :approver]
+        order_by :count_date, :asc
+        paginate :per_page => InventoryCount.count
       end
 
       @inventory_counts_report = @search.results
 
       title = t("activerecord.models.inventory_count.few")
-      @to = formatted_date(@inventory_counts_report.first.created_at)
-      @from = formatted_date(@inventory_counts_report.last.created_at)
+      @from = formatted_date(@inventory_counts_report.first.count_date)
+      @to = formatted_date(@inventory_counts_report.last.count_date)
       if !@inventory_counts_report.blank?
         respond_to do |format|
           format.pdf { send_data render_to_string,

@@ -319,23 +319,24 @@ module Ag2Tech
         if !office.blank?
           with :office_id, office
         end
+        data_accessor_for(Project).include = [:company, :office]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :per_page => Project.count
       end
       @project_report = @search.results
 
       title = t("activerecord.models.project.few")
-      @from = formatted_date(@project_report.first.created_at)
-      @to = formatted_date(@project_report.last.created_at)
+      from = Date.today.to_s
+
       respond_to do |format|
        # Render PDF
         if !@project_report.blank?
           format.pdf { send_data render_to_string,
-                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                      filename: "#{title}_#{@from}.pdf",
                       type: 'application/pdf',
                       disposition: 'inline' }
           format.csv { send_data Project.to_csv(@project_report),
-                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       filename: "#{title}_#{@from}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
         else

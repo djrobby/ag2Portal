@@ -128,6 +128,15 @@ module Ag2Gest
           tax_type_b_id: tariff.tax_type_b_id,
           connection_fee_a: tariff.connection_fee_a,
           connection_fee_b: tariff.connection_fee_b,
+          endowments_from: tariff.endowments_from,
+          endowments_increment: tariff.endowments_increment,
+          endowments_increment_apply_to: tariff.endowments_increment_apply_to,
+          inhabitants_from: tariff.inhabitants_from,
+          inhabitants_increment: tariff.inhabitants_increment,
+          inhabitants_increment_apply_to: tariff.inhabitants_increment_apply_to,
+          users_from: tariff.users_from,
+          users_increment: tariff.users_increment,
+          users_increment_apply_to: tariff.users_increment_apply_to,
           starting_at: params[:init_date]
         )
       end

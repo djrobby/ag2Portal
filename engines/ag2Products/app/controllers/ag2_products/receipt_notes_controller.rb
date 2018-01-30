@@ -832,13 +832,19 @@ module Ag2Products
       supplier = params[:Supplier]
       project = params[:Project]
       order = params[:Order]
+      balance = params[:Balance]
       # OCO
       init_oco if !session[:organization]
-      # Initialize projects for array search
-      projects = projects_dropdown
+      # Initialize select_tags
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @balances = balances_dropdown if @balances.nil?
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @orders = orders_dropdown(@projects) if @orders.nil?
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -864,15 +870,19 @@ module Ag2Products
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :id, :asc
-        paginate :page => params[:page] || 1, :per_page => ReceiptNote.count
+        if !balance.blank?
+          with :billing_status_id, balance
+        end
+        data_accessor_for(ReceiptNote).include = [:supplier, :project, :products, :purchase_order]
+        order_by :receipt_date, :asc
+        paginate :per_page => ReceiptNote.count
       end
 
       @receipt_notes_report = @search.results
 
       title = t("activerecord.models.receipt_note.few")
-      @to = formatted_date(@receipt_notes_report.first.created_at)
-      @from = formatted_date(@receipt_notes_report.last.created_at)
+      @from = formatted_date(@receipt_notes_report.first.receipt_date)
+      @to = formatted_date(@receipt_notes_report.last.receipt_date)
       respond_to do |format|
         # Render PDF
         if !@receipt_notes_report.blank?

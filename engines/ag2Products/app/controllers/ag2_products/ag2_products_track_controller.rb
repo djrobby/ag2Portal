@@ -64,13 +64,13 @@ module Ag2Products
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !store.blank? && !family.blank?
-        @inventory_report = InventoryCount.where("store_id = ? AND product_family_id = ? AND count_date >= ? AND count_date <= ?",store,family,from,to).order(:count_no)
+        @inventory_report = InventoryCount.where("store_id = ? AND product_family_id = ? AND count_date >= ? AND count_date <= ?",store,family,from,to).order(:count_date)
       elsif store.blank? && !family.blank?
-        @inventory_report = InventoryCount.where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_no)
+        @inventory_report = InventoryCount.where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_date)
       elsif !store.blank? && family.blank?
-        @inventory_report = InventoryCount.where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_no)
+        @inventory_report = InventoryCount.where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_date)
       elsif store.blank? && family.blank?
-        @inventory_report = InventoryCount.where("count_date >= ? AND count_date <= ?",from,to).order(:count_no)
+        @inventory_report = InventoryCount.where("count_date >= ? AND count_date <= ?",from,to).order(:count_date)
       end
 
       # Setup filename
@@ -118,13 +118,13 @@ module Ag2Products
      to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !store.blank? && !family.blank?
-        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("store_id = ? AND product_family_id = ? AND count_date >= ? AND count_date <= ?",store,family,from,to).order(:count_no)
+        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("store_id = ? AND product_family_id = ? AND count_date >= ? AND count_date <= ?",store,family,from,to).order(:count_date)
       elsif store.blank? && !family.blank?
-        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_no)
+        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("product_family_id = ? AND count_date >= ? AND count_date <= ?",family,from,to).order(:count_date)
       elsif !store.blank? && family.blank?
-        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_no)
+        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("store_id = ? AND count_date >= ? AND count_date <= ?",store,from,to).order(:count_date)
       elsif store.blank? && family.blank?
-        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("count_date >= ? AND count_date <= ?",from,to).order(:count_no)
+        @inventory_items_report = InventoryCountItem.joins(:inventory_count).where("count_date >= ? AND count_date <= ?",from,to).order(:count_date)
       end
 
       # Setup filename
@@ -188,49 +188,49 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_date)
 
 
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_date >= ? AND order_date <= ?",project,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_date >= ? AND order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,store,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,store,petitioner,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND created_by = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND created_by = ? AND order_date >= ? AND order_date <= ?",project,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND created_by = ? AND order_date >= ? AND order_date <= ?",project,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -293,47 +293,47 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,project,order,account,status,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,project,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -396,46 +396,46 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",petitioner,from,to).order(:order_no)
+        @order_report = PurchaseOrder.pending_balance(project).where("purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",petitioner,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -498,47 +498,47 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,petitioner,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && !petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.created_by = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,petitioner,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank? && petitioner.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order => :purchase_order_item_balances).group('purchase_order_items.id').having('sum(purchase_order_item_balances.balance) > ?', 0).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -602,127 +602,127 @@ module Ag2Products
 
       if balance == '0'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_total.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       elsif balance == '1'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND .receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND .receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_partial.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       elsif balance == '2'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND rreceipt_notes.eceipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.bill_unbilled.where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       else
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND receipt_date >= ? AND receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND receipt_date >= ? AND receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND supplier_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND work_order_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.where("project_id in (?) AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id in (?) AND charge_account_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_report = ReceiptNote.where("project_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_report = ReceiptNote.where("project_id = ? AND receipt_date >= ? AND receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       end
 
@@ -786,123 +786,123 @@ module Ag2Products
 
       if balance == '0'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_total.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       elsif balance == '1'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_partial.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       elsif balance == '2'
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.bill_unbilled.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       else
         if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,store,from,to).order(:receipt_date)
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,from,to).order(:receipt_date)
 
         elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.project_id in (?) AND receipt_notes.store_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,store,account,from,to).order(:receipt_date)
 
         elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.supplier_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,supplier,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.work_order_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,order,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,account,from,to).order(:receipt_date)
         elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank?
-          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_no)
+          @receipt_items_report = ReceiptNoteItem.joins(:receipt_note).where("receipt_notes.charge_account_id = ? AND receipt_notes.receipt_date >= ? AND receipt_notes.receipt_date <= ?",project,from,to).order(:receipt_date)
         end
       end
 
@@ -963,23 +963,23 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,order,account,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,order,account,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,order,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,order,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,account,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,account,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND store_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,store,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,account,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,account,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,account,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND delivery_date >= ? AND delivery_date <= ?",project,order,account,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_no)
+        @delivery_report = DeliveryNote.where("project_id in (?) AND delivery_date >= ? AND delivery_date <= ?",project,from,to).order(:delivery_date)
       end
 
       # Setup filename
@@ -1039,23 +1039,23 @@ module Ag2Products
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.work_order_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,order,account,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.work_order_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,order,account,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.work_order_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,order,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.work_order_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,order,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,account,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,account,from,to).order(:delivery_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.store_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,store,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.work_order_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.work_order_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,account,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,account,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_notes.work_order_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,account,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_notes.work_order_id = ? AND delivery_notes.charge_account_id = ? AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,order,account,from,to).order(:delivery_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_no)
+        @delivery_items_report = DeliveryNoteItem.joins(:delivery_note).where("delivery_notes.project_id in (?) AND delivery_notes.delivery_date >= ? AND delivery_notes.delivery_date <= ?",project,from,to).order(:delivery_date)
       end
 
       # Setup filename

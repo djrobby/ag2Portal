@@ -820,10 +820,15 @@ module Ag2Purchase
       order = params[:Order]
       # OCO
       init_oco if !session[:organization]
-      projects = projects_dropdown
+      # Initialize select_tags
+      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
+      @offer_requests = offer_requests_dropdown if @offer_requests.nil?
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -849,14 +854,15 @@ module Ag2Purchase
         if !order.blank?
           with :work_order_id, order
         end
-        order_by :id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        data_accessor_for(Offer).include = [:supplier, :offer_request, :approver]
+        order_by :offer_date, :asc
+        paginate :per_page => Offer.count
       end
       @offers = @search.results
 
       title = t("activerecord.models.offer.few")
-      @from = formatted_date(@offers.first.created_at)
-      @to = formatted_date(@offers.last.created_at)
+      @from = formatted_date(@offers.first.offer_date)
+      @to = formatted_date(@offers.last.offer_date)
       respond_to do |format|
       # Render PDF
         if !@offers.blank?

@@ -1228,10 +1228,15 @@ module Ag2Tech
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
-      projects = projects_dropdown
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @areas = work_order_areas_dropdown if @areas.nil?
+      @labors = work_order_labors_dropdown if @labors.nil?
+      @types = work_order_types_dropdown if @types.nil?
+      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -1263,8 +1268,9 @@ module Ag2Tech
         if !status.blank?
           with :work_order_status_id, status
         end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
+        data_accessor_for(WorkOrder).include = [:work_order_area, :work_order_type, :work_order_status, :suborders]
+        order_by :sort_no, :desc
+        paginate :per_page => WorkOrder.count
       end
 
       @work_order_report = @search.results
@@ -1297,10 +1303,15 @@ module Ag2Tech
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
-      projects = projects_dropdown
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      @areas = work_order_areas_dropdown if @areas.nil?
+      @labors = work_order_labors_dropdown if @labors.nil?
+      @types = work_order_types_dropdown if @types.nil?
+      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
 
       # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -1332,20 +1343,21 @@ module Ag2Tech
         if !status.blank?
           with :work_order_status_id, status
         end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
+        data_accessor_for(WorkOrder).include = [:work_order_area, :work_order_type, :work_order_status, :suborders]
+        order_by :sort_no, :desc
+        paginate :per_page => WorkOrder.count
       end
 
       @work_order_report = @search.results
 
       title = t("activerecord.models.work_order.few")
-      @from = formatted_date(@work_order_report.first.created_at)
-      @to = formatted_date(@work_order_report.last.created_at)
+      from = Date.today.to_s
+
       respond_to do |format|
         # Render PDF
         if !@work_order_report.blank?
           format.pdf { send_data render_to_string,
-                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       filename: "#{title}_#{@from}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
         else

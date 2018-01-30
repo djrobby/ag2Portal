@@ -273,9 +273,9 @@ module Ag2Tech
         if !group.blank?
           with :charge_group_id, group
         end
-         order_by :charge_group_id, :asc
-         order_by :sort_no, :asc
-         paginate :page => params[:page] || 1, :per_page => ChargeAccount.count
+        data_accessor_for(ChargeAccount).include = [:charge_group, :project]
+        order_by :sort_no, :asc
+        paginate :per_page => ChargeAccount.count
       end
       @charge_account_report = @search.results
       from = Date.today.to_s

@@ -296,7 +296,7 @@ module Ag2Purchase
         end
         data_accessor_for(SupplierPayment).include = [:supplier, :supplier_invoice, :payment_method]
         order_by :sort_no, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :per_page => SupplierPayment.count
       end
       @supplier_payments = @search.results
 

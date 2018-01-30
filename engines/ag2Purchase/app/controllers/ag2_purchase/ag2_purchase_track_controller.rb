@@ -76,21 +76,21 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,store,order,account,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,store,order,account,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND request_date >= ? AND request_date <= ?",project,store,order,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND request_date >= ? AND request_date <= ?",project,store,order,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND request_date >= ? AND request_date <= ?",project,store,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND request_date >= ? AND request_date <= ?",project,store,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND request_date >= ? AND request_date <= ?",project,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND request_date >= ? AND request_date <= ?",project,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,store,account,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,store,account,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,order,account,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,order,account,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND work_order_id = ? AND request_date >= ? AND request_date <= ?",project,order,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND work_order_id = ? AND request_date >= ? AND request_date <= ?",project,order,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @request_report = OfferRequest.where("project_id in (?) AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,account,from,to).order(:request_no)
+        @request_report = OfferRequest.where("project_id in (?) AND charge_account_id = ? AND request_date >= ? AND request_date <= ?",project,account,from,to).order(:request_date)
        end
 
       # Setup filename
@@ -145,21 +145,21 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.work_order_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,order,account,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.work_order_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,order,account,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.work_order_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,order,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.work_order_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,order,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,from,to).order(:request_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,account,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.store_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,store,account,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.work_order_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,order,account,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.work_order_id = ? AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,order,account,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.work_order_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,order,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.work_order_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,order,from,to).order(:request_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,account,from,to).order(:request_no)
+        @request_items_report = OfferRequestItem.joins(:offer_request).where("offer_requests.project_id in (?) AND offer_requests.charge_account_id = ? AND offer_requests.request_date >= ? AND offer_requests.request_date <= ?",project,account,from,to).order(:request_date)
        end
 
       # Setup filename
@@ -214,21 +214,21 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,order,account,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,order,account,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,order,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,order,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @offer_report = Offer.where("project_id in (?) AND offer_date >= ? AND offer_date <= ?",project,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND offer_date >= ? AND offer_date <= ?",project,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,account,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,store,account,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @offer_report = Offer.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,order,account,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,order,account,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @offer_report = Offer.where("project_id in (?) AND work_order_id = ? AND offer_date >= ? AND offer_date <= ?",project,order,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND work_order_id = ? AND offer_date >= ? AND offer_date <= ?",project,order,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @offer_report = Offer.where("project_id in (?) AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,account,from,to).order(:offer_no)
+        @offer_report = Offer.where("project_id in (?) AND charge_account_id = ? AND offer_date >= ? AND offer_date <= ?",project,account,from,to).order(:offer_date)
        end
 
       # Setup filename
@@ -283,21 +283,21 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !store.blank? && !order.blank? && !account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.work_order_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,order,account,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.work_order_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,order,account,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && !order.blank? && account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.work_order_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,order,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.work_order_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,order,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && order.blank? && account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && order.blank? && account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.offer_date >= ? AND offers.offer_date <= ?",project,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.offer_date >= ? AND offers.offer_date <= ?",project,from,to).order(:offer_date)
       elsif !project.blank? && !store.blank? && order.blank? && !account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,account,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.store_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,store,account,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && !order.blank? && !account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.work_order_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,order,account,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.work_order_id = ? AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,order,account,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && !order.blank? && account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.work_order_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,order,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.work_order_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,order,from,to).order(:offer_date)
       elsif !project.blank? && store.blank? && order.blank? && !account.blank?
-        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,account,from,to).order(:offer_no)
+        @offer_items_report = OfferItem.joins(:offer).where("offers.project_id in (?) AND offers.charge_account_id = ? AND offers.offer_date >= ? AND offers.offer_date <= ?",project,account,from,to).order(:offer_date)
        end
 
 
@@ -355,37 +355,37 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND store_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND order_date >= ? AND order_date <= ?",project,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_date >= ? AND order_date <= ?",project,store,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_date >= ? AND order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND store_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,store,status,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND supplier_id = ? AND order_date >= ? AND order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,order,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND work_order_id = ? AND order_date >= ? AND order_date <= ?",project,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,account,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND charge_account_id = ? AND order_date >= ? AND order_date <= ?",project,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank?
-        @order_report = PurchaseOrder.where("project_id in (?) AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,status,from,to).order(:order_no)
+        @order_report = PurchaseOrder.where("project_id in (?) AND order_status_id = ? AND order_date >= ? AND order_date <= ?",project,status,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -441,37 +441,37 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && !status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && !account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,account,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,order,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,store,from,to).order(:order_date)
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,from,to).order(:order_date)
 
       elsif !project.blank? && supplier.blank? && !store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && !account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && !store.blank? && order.blank? && account.blank? && !status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.store_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,store,status,from,to).order(:order_date)
 
       elsif !project.blank? && !supplier.blank? && store.blank? && order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.supplier_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,supplier,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && !account.blank? && !status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.charge_account_id = ? AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,account,status,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && !order.blank? && account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.work_order_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,order,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && !account.blank? && status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.charge_account_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,account,from,to).order(:order_date)
       elsif !project.blank? && supplier.blank? && store.blank? && order.blank? && account.blank? && !status.blank?
-        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_no)
+        @order_items_report = PurchaseOrderItem.joins(:purchase_order).where("purchase_orders.project_id in (?) AND purchase_orders.order_status_id = ? AND purchase_orders.order_date >= ? AND purchase_orders.order_date <= ?",project,status,from,to).order(:order_date)
       end
 
       # Setup filename
@@ -525,33 +525,33 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank? && !order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND invoice_date >= ? AND invoice_date <= ?",project,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND invoice_date >= ? AND invoice_date <= ?",project,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND supplier_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,supplier,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && !account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,account,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && account.blank?
-        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,from,to).order(:invoice_no)
+        @invoice_report = SupplierInvoice.where("project_id in (?) AND work_order_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,order,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && !account.blank?
-       @invoice_report = SupplierInvoice.where("project_id in (?) AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,account,from,to).order(:invoice_no)
+       @invoice_report = SupplierInvoice.where("project_id in (?) AND charge_account_id = ? AND invoice_date >= ? AND invoice_date <= ?",project,account,from,to).order(:invoice_date)
       end
 
 
@@ -608,33 +608,33 @@ module Ag2Purchase
       #SupplierInvoice.joins(:supplier_invoice_approvals,:supplier_invoice_items)
 
       if !project.blank? && !supplier.blank? && !order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && !order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,order,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,account,from,to).order(:invoice_date)
       elsif !project.blank? && !supplier.blank? && order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.supplier_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,supplier,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && !account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,account,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,account,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && !order.blank? && account.blank?
-        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,from,to).order(:invoice_no)
+        @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.work_order_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,order,from,to).order(:invoice_date)
       elsif !project.blank? && supplier.blank? && order.blank? && !account.blank?
-       @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,account,from,to).order(:invoice_no)
+       @invoice_items_report = SupplierInvoiceItem.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_invoices.charge_account_id = ? AND supplier_invoices.invoice_date >= ? AND supplier_invoices.invoice_date <= ?",project,account,from,to).order(:invoice_date)
       end
 
 
@@ -686,9 +686,9 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
       if !project.blank? && !supplier.blank?
-        @payment_report = SupplierPayment.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_payments.supplier_id = ? AND supplier_payments.payment_date >= ? AND supplier_payments.payment_date <= ?",project,supplier,from,to).order("supplier_payments.id")
+        @payment_report = SupplierPayment.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_payments.supplier_id = ? AND supplier_payments.payment_date >= ? AND supplier_payments.payment_date <= ?",project,supplier,from,to).order("supplier_payments.payment_date")
       elsif !project.blank? && supplier.blank?
-        @payment_report = SupplierPayment.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_payments.payment_date >= ? AND supplier_payments.payment_date <= ?",project,from,to).order("supplier_payments.id")
+        @payment_report = SupplierPayment.joins(:supplier_invoice).where("supplier_invoices.project_id in (?) AND supplier_payments.payment_date >= ? AND supplier_payments.payment_date <= ?",project,from,to).order("supplier_payments.payment_date")
       end
 
       # Setup filename
@@ -771,9 +771,9 @@ module Ag2Purchase
       to = Time.parse(@to).strftime("%Y-%m-%d")
 
      if !supplier.blank?
-         @supplier_prices_report = PurchasePrice.joins(:supplier).where("supplier_id = ? AND suppliers.created_at >= ? AND suppliers.created_at <= ?",supplier,from,to).order(:supplier_code)
+         @supplier_prices_report = PurchasePrice.joins(:supplier).where("supplier_id = ? AND purchase_prices.created_at >= ? AND purchase_prices.created_at <= ?",supplier,from,to).order(:created_at)
      elsif supplier.blank?
-        @supplier_prices_report = PurchasePrice.joins(:supplier).where("suppliers.created_at >= ? AND suppliers.created_at <= ?",from,to).order(:supplier_code)
+        @supplier_prices_report = PurchasePrice.joins(:supplier).where("purchase_prices.created_at >= ? AND purchase_prices.created_at <= ?",from,to).order(:created_at)
       end
 
       # Setup filename
