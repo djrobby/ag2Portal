@@ -61,32 +61,32 @@ module Ag2Gest
       w = ''
       w = "invoice_current_debts.office_id = #{office}" if !office.blank?
       if !payday_limit.blank?
-        w += " AND " if w == ''
+        w += " AND " if w != ''
         w += "payday_limit < #{payday_limit}"
       end
       if !projects.blank?
-        w += " AND " if w == ''
-        w = "project_id IN (#{projects})"
+        w += " AND " if w != ''
+        w += "project_id IN (#{projects})"
       end
       if !periods.blank?
-        w += " AND " if w == ''
-        w = "period_id IN (#{periods})"
+        w += " AND " if w != ''
+        w += "period_id IN (#{periods})"
       end
       if !reading_routes.blank?
-        w += " AND " if w == ''
-        w = "subscribers.reading_route_id IN (#{reading_routes})"
+        w += " AND " if w != ''
+        w += "subscribers.reading_route_id IN (#{reading_routes})"
       end
       if !clients.blank?
-        w += " AND " if w == ''
-        w = "client_id IN (#{clients})"
+        w += " AND " if w != ''
+        w += "client_id IN (#{clients})"
       end
       if !subscribers.blank?
-        w += " AND " if w == ''
-        w = "subscriber_id IN (#{subscribers})"
+        w += " AND " if w != ''
+        w += "subscriber_id IN (#{subscribers})"
       end
       if !invoice_types.blank?
-        w += " AND " if w == ''
-        w = "invoice_type_id IN (#{invoice_types})"
+        w += " AND " if w != ''
+        w += "invoice_type_id IN (#{invoice_types})"
       end
 
       # Retrieve current outstanding invoices
@@ -134,18 +134,17 @@ module Ag2Gest
     # Show reclaimable bills
     def bills
       dcb_manage_filter_state
-      no = params[:No]
-      project = params[:Project]
-      client = params[:Client]
-      subscriber = params[:Subscriber]
-      street_name = params[:StreetName]
-      status = params[:Status]
-      type = params[:Type]
-      operation = params[:Operation]
-      biller = params[:Biller]
-      period = params[:Period]
-      from = params[:From]
-      to = params[:To]
+      no = params[:NoB]
+      project = params[:ProjectB]
+      client = params[:ClientB]
+      subscriber = params[:SubscriberB]
+      street_name = params[:StreetNameB]
+      type = params[:TypeB]
+      operation = params[:OperationB]
+      biller = params[:BillerB]
+      period = params[:PeriodB]
+      from = params[:FromB]
+      to = params[:ToB]
       # OCO
       init_oco if !session[:organization]
 
@@ -153,7 +152,6 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
-      @status = InvoiceStatus.all if @status.nil?
       @types = InvoiceType.all if @types.nil?
       @operations = InvoiceOperation.all if @operations.nil?
 
@@ -169,60 +167,62 @@ module Ag2Gest
       client = inverse_client_search(client) if !client.blank?
       subscriber = inverse_subscriber_search(subscriber) if !subscriber.blank?
       street_name = inverse_street_name_search(street_name) if !street_name.blank?
+      client = client.class == Array ? client.join(", ") : ''
+      subscriber = subscriber.class == Array ? subscriber.join(", ") : ''
+      street_name = street_name.class == Array ? street_name.join(", ") : ''
 
       # Builds WHERE
       w = ''
       w = "invoice_current_debts.project_id IN (#{current_projects})" if !current_projects.blank?
-      # if !no.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.invoice_no LIKE #{no}"
-      # end
-      # if !project.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.project_id = #{project}"
-      # end
-      # if !client.blank?
-      #   w += " AND " if w == ''
-      #   w = "client_id IN (#{client})"
-      # end
-      # if !subscriber.blank?
-      #   w += " AND " if w == ''
-      #   w = "subscriber_id IN (#{subscriber})"
-      # end
-      # if !street_name.blank?
-      #   w += " AND " if w == ''
-      #   w = "subscriber_id IN (#{street_name})"
-      # end
-      # if !status.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.invoice_status_id = #{status}"
-      # end
-      # if !type.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.invoice_type_id = #{type}"
-      # end
-      # if !operation.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.invoice_operation_id = #{operation}"
-      # end
-      # if !biller.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.billing_period_id = #{period}"
-      # end
-      # if !period.blank?
-      #   w += " AND " if w == ''
-      #   w = "invoice_current_debts.billing_period_id = #{period}"
-      # end
-      # if !from.blank?
-      #   w += " AND " if w == ''
-      #   w += "invoice_current_debts.invoice_date >= #{from}"
-      # end
-      # if !to.blank?
-      #   w += " AND " if w == ''
-      #   w += "invoice_current_debts.invoice_date <= #{to}"
-      # end
+      if !no.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.invoice_no LIKE #{no}"
+      end
+      if !project.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.project_id = #{project}"
+      end
+      if !client.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.client_id IN (#{client})"
+      end
+      if !subscriber.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.subscriber_id IN (#{subscriber})"
+      end
+      if !street_name.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.subscriber_id IN (#{street_name})"
+      end
+      if !type.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.invoice_type_id = #{type}"
+      end
+      if !operation.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.invoice_operation_id = #{operation}"
+      end
+      if !biller.blank?
+        w += " AND " if w != ''
+        w += "invoices.biller_id = #{biller}"
+      end
+      if !period.blank?
+        w += " AND " if w != ''
+        w += "invoices.billing_period_id = #{period}"
+      end
+      if !from.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.payday_limit >= #{from}"
+      end
+      if !to.blank?
+        w += " AND " if w != ''
+        w += "invoice_current_debts.payday_limit <= #{to}"
+      end
 
       @bills = InvoiceCurrentDebt.g_where_and_unclaimed(w).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      bill_totals = @bills.select('COUNT(*) DEBT_COUNT, SUM(invoice_current_debts.debt) DEBT_TOTAL').first
+      @bill_totals_count = bill_totals.DEBT_COUNT || 0
+      @bill_totals_total = bill_totals.DEBT_TOTAL || 0
 
       respond_to do |format|
         format.html # bills.html.erb
@@ -402,12 +402,12 @@ module Ag2Gest
     end
 
     def client_name(_bill)
-      _name = _bill.client.full_name_or_company_and_code rescue nil
+      _name = _bill.CLIENT_CODE + ' ' + _bill.CLIENT_NAME rescue nil
       _name.blank? ? '' : _name[0,40]
     end
 
     def biller_name(_bill)
-      _name = _bill.biller_name rescue nil
+      _name = _bill.BILLER rescue nil
       _name.blank? ? '' : _name[0,40]
     end
 
@@ -442,7 +442,7 @@ module Ag2Gest
       no = setup_no(client)
       w = "(client_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
       _numbers = Client.where(w).order(:id).limit(1000).pluck(:id)
-      _numbers = client if _numbers.blank?
+      _numbers.blank? ? nil : _numbers
     end
 
     def inverse_subscriber_search(subscriber)
@@ -450,7 +450,7 @@ module Ag2Gest
       no = setup_no(subscriber)
       w = "(subscriber_code LIKE '#{no}' OR last_name LIKE '#{no}' OR first_name LIKE '#{no}' OR company LIKE '#{no}' OR fiscal_id LIKE '#{no}')"
       _numbers = Subscriber.where(w).order(:id).limit(1000).pluck(:id)
-      _numbers = subscriber if _numbers.blank?
+      _numbers.blank? ? nil : _numbers
     end
 
     def inverse_street_name_search(supply_address)
@@ -458,7 +458,7 @@ module Ag2Gest
       no = setup_no(supply_address)
       w = "supply_address LIKE '#{no}'"
       _numbers = SubscriberSupplyAddress.where(w).order(:subscriber_id).limit(1000).pluck(:subscriber_id)
-      _numbers = supply_address if _numbers.blank?
+      _numbers.blank? ? nil : _numbers
     end
 
     def projects_dropdown
@@ -608,110 +608,110 @@ module Ag2Gest
         params[:search] = session[:search]
       end
       # no
-      if params[:No]
-        session[:No] = params[:No]
-      elsif session[:No]
-        params[:No] = session[:No]
+      if params[:NoB]
+        session[:NoB] = params[:NoB]
+      elsif session[:NoB]
+        params[:NoB] = session[:NoB]
       end
       # project
-      if params[:Project]
-        session[:Project] = params[:Project]
-      elsif session[:Project]
-        params[:Project] = session[:Project]
+      if params[:ProjectB]
+        session[:ProjectB] = params[:ProjectB]
+      elsif session[:ProjectB]
+        params[:ProjectB] = session[:ProjectB]
       end
       # client
-      if params[:Client]
-        session[:Client] = params[:Client]
-      elsif session[:Client]
-        params[:Client] = session[:Client]
+      if params[:ClientB]
+        session[:ClientB] = params[:ClientB]
+      elsif session[:ClientB]
+        params[:ClientB] = session[:ClientB]
       end
       # subscriber
-      if params[:Subscriber]
-        session[:Subscriber] = params[:Subscriber]
-      elsif session[:Subscriber]
-        params[:Subscriber] = session[:Subscriber]
+      if params[:SubscriberB]
+        session[:SubscriberB] = params[:SubscriberB]
+      elsif session[:SubscriberB]
+        params[:SubscriberB] = session[:SubscriberB]
       end
       # street_name
-      if params[:StreetName]
-        session[:StreetName] = params[:StreetName]
-      elsif session[:StreetName]
-        params[:StreetName] = session[:StreetName]
+      if params[:StreetNameB]
+        session[:StreetNameB] = params[:StreetNameB]
+      elsif session[:StreetNameB]
+        params[:StreetNameB] = session[:StreetNameB]
       end
       # status
-      if params[:Status]
-        session[:Status] = params[:Status]
-      elsif session[:Status]
-        params[:Status] = session[:Status]
+      if params[:StatusB]
+        session[:StatusB] = params[:StatusB]
+      elsif session[:StatusB]
+        params[:StatusB] = session[:StatusB]
       end
       # type
-      if params[:Type]
-        session[:Type] = params[:Type]
-      elsif session[:Type]
-        params[:Type] = session[:Type]
+      if params[:TypeB]
+        session[:TypeB] = params[:TypeB]
+      elsif session[:TypeB]
+        params[:TypeB] = session[:TypeB]
       end
       # operation
-      if params[:Operation]
-        session[:Operation] = params[:Operation]
-      elsif session[:Operation]
-        params[:Operation] = session[:Operation]
+      if params[:OperationB]
+        session[:OperationB] = params[:OperationB]
+      elsif session[:OperationB]
+        params[:OperationB] = session[:OperationB]
       end
       # biller
-      if params[:Biller]
-        session[:Biller] = params[:Biller]
-      elsif session[:Biller]
-        params[:Biller] = session[:Biller]
+      if params[:BillerB]
+        session[:BillerB] = params[:BillerB]
+      elsif session[:BillerB]
+        params[:BillerB] = session[:BillerB]
       end
       # period
-      if params[:Period]
-        session[:Period] = params[:Period]
-      elsif session[:Period]
-        params[:Period] = session[:Period]
+      if params[:PeriodB]
+        session[:PeriodB] = params[:PeriodB]
+      elsif session[:PeriodB]
+        params[:PeriodB] = session[:PeriodB]
       end
       # From
-      if params[:From]
-        session[:From] = params[:From]
-      elsif session[:From]
-        params[:From] = session[:From]
+      if params[:FromB]
+        session[:FromB] = params[:FromB]
+      elsif session[:FromB]
+        params[:FromB] = session[:FromB]
       end
       # To
-      if params[:To]
-        session[:To] = params[:To]
-      elsif session[:To]
-        params[:To] = session[:To]
+      if params[:ToB]
+        session[:ToB] = params[:ToB]
+      elsif session[:ToB]
+        params[:ToB] = session[:ToB]
       end
     end
 
     def dcb_remove_filters
       params[:search] = ""
-      params[:No] = ""
-      params[:Project] = ""
-      params[:Client] = ""
-      params[:Subscriber] = ""
-      params[:StreetName] = ""
-      params[:Status] = ""
-      params[:Type] = ""
-      params[:Operation] = ""
-      params[:Biller] = ""
-      params[:Period] = ""
-      params[:From] = ""
-      params[:To] = ""
+      params[:NoB] = ""
+      params[:ProjectB] = ""
+      params[:ClientB] = ""
+      params[:SubscriberB] = ""
+      params[:StreetNameB] = ""
+      params[:StatusB] = ""
+      params[:TypeB] = ""
+      params[:OperationB] = ""
+      params[:BillerB] = ""
+      params[:PeriodB] = ""
+      params[:FromB] = ""
+      params[:ToB] = ""
       return " "
     end
 
     def dcb_restore_filters
       params[:search] = session[:search]
-      params[:No] = session[:No]
-      params[:Project] = session[:Project]
-      params[:Client] = session[:Client]
-      params[:Subscriber] = session[:Subscriber]
-      params[:StreetName] = session[:StreetName]
-      params[:Status] = session[:Status]
-      params[:Type] = session[:Type]
-      params[:Operation] = session[:Operation]
-      params[:Biller] = session[:Biller]
-      params[:Period] = session[:Period]
-      params[:From] = session[:From]
-      params[:To] = session[:To]
+      params[:NoB] = session[:NoB]
+      params[:ProjectB] = session[:ProjectB]
+      params[:ClientB] = session[:ClientB]
+      params[:SubscriberB] = session[:SubscriberB]
+      params[:StreetNameB] = session[:StreetNameB]
+      params[:StatusB] = session[:StatusB]
+      params[:TypeB] = session[:TypeB]
+      params[:OperationB] = session[:OperationB]
+      params[:BillerB] = session[:BillerB]
+      params[:PeriodB] = session[:PeriodB]
+      params[:FromB] = session[:FromB]
+      params[:ToB] = session[:ToB]
     end
   end
 end

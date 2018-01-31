@@ -1,0 +1,49 @@
+es:
+  activerecord:
+    models:
+      invoice_current_debt:
+        zero:  Facturas por Cobrar
+        one:   Factura por Cobrar
+        few:   Facturas por Cobrar
+        other: Facturas por Cobrar
+        one_or_many: Factura/s por Cobrar
+    attributes:
+      invoice_current_debt:
+        bill: "Recibo"
+        bill_id: "Recibo"
+        invoice: "Factura"
+        invoice_id: "Factura"
+        organization: "Organización"
+        organization_id: "Organización"
+        office: "Oficina"
+        office_id: "Oficina"
+        project: "Proyecto"
+        project_id: "Proyecto"
+        client: "Cliente"
+        client_id: "Cliente"
+        subscriber: "Abonado"
+        subscriber_id: "Abonado"
+        invoice_type: "Tipo"
+        invoice_type_id: "Tipo"
+        invoice_operation: "Operación"
+        invoice_operation_id: "Operación"
+        invoice_status: "Estado"
+        invoice_status_id: "Estado"
+        invoice_no: "Nº"
+        invoice_date: "Fecha"
+        payday_limit: "Vto."
+        billing_period: "Período"
+        billing_period_id: "Período"
+        biller: "Facturante"
+        biller_id: "Facturante"
+        subtotal: "Subtotal"
+        taxes: "Impuestos"
+        bonus: "Bonificación"
+        taxable: "Base"
+        total: "Total"
+        paid: "Cobrado"
+        calc_debt: "DeudaCalc"
+        totals: "Total"
+        receivable: "A Cobrar"
+        debt: "Deuda"
+        codes: "T O"

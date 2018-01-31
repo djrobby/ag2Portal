@@ -169,6 +169,7 @@ en:
       debt_claims:
         items: "Debt claims"
         item: "Claim"
+        bills: "Reclaimable bills"
       debt_claim_phases:
         items: "DC Phases"
         item: "Phase"

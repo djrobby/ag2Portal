@@ -17,9 +17,15 @@
     <%=t "ag2_gest.breadcrumb.debt_claims.items" %>
   </li>
   <% end %>
+  <% if @bills %>
+  <li>
+    <a href="<%= debt_claims_path %>"><%=t "ag2_gest.breadcrumb.debt_claims.items" %></a><span class="divider">></span>
+    <%=t "ag2_gest.breadcrumb.debt_claims.bills" %>
+  </li>
+  <% end %>
   <% if @debt_claim %>
   <li>
-    <a href="<%= debt_claims_path %>"><%=t :"ag2_gest.breadcrumb.debt_claims.items" %></a><span class="divider">></span>
+    <a href="<%= debt_claims_path %>"><%=t "ag2_gest.breadcrumb.debt_claims.items" %></a><span class="divider">></span>
   </li>
   <% if @breadcrumb == 'read' || @breadcrumb == 'update' %>
   <%=t :"ag2_gest.breadcrumb.debt_claims.item" %>

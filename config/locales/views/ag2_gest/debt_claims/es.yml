@@ -35,7 +35,7 @@ es:
         alert: "¡Error! Imposible generar nueva Reclamacion de deuda."
       bills:
         title: "Facturas Reclamables"
-        back_to_management: "Volver a Facturación"
+        back_to_management: "Volver a Gestión de Deudas"
         label_project: "Proyecto"
         label_client: "Cliente"
         label_subscriber: "Abonado"
@@ -47,6 +47,7 @@ es:
         label_others: "Otros"
         label_from: "Desde"
         label_to: "Hasta"
+        total_debt: "Deuda Total"
       back_to_main_page: "Volver a Reclamaciones de deuda"
       items_info: "Items de la Reclamación"
       generate_code_btn: "Nº de Reclamación"

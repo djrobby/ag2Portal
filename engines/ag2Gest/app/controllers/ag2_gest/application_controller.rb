@@ -8,7 +8,6 @@ module Ag2Gest
       session[:search] = nil
       session[:letter] = nil
       session[:No] = nil
-      session[:Subscriber] = nil
       session[:name] = nil
       session[:Type] = nil
       session[:Status] = nil
@@ -18,11 +17,17 @@ module Ag2Gest
       session[:direction] = nil
       session[:ifilter] = nil
       session[:Period] = nil
+      session[:PeriodB] = nil
       session[:Group] = nil
       session[:Project] = nil
+      session[:ProjectB] = nil
       session[:Client] = nil
+      session[:ClientB] = nil
+      session[:Subscriber] = nil
+      session[:SubscriberB] = nil
       session[:Operation] = nil
       session[:Biller] = nil
+      session[:BillerB] = nil
       session[:entity] = nil
       session[:Request] = nil
       session[:ReadingRoute] = nil
@@ -35,6 +40,7 @@ module Ag2Gest
       session[:ServicePoint] = nil
       session[:SubscriberCode] = nil
       session[:StreetName] = nil
+      session[:StreetNameB] = nil
       session[:BankAccount] = nil
       session[:BankOrder] = nil
       session[:Use] = nil

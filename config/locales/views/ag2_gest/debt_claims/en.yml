@@ -47,6 +47,7 @@ en:
         label_others: "Others"
         label_from: "From"
         label_to: "To"
+        total_debt: "Total Debt"
       back_to_main_page: "Back to Debt claims"
       items_info: "Claim Items"
       generate_code_btn: "Claim No."

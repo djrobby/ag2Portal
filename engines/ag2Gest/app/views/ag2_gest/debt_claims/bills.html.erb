@@ -2,14 +2,14 @@
   var _thisForm = '';
   var changing = false;
 
-  function setupAllSelect2(p, b, r) {
-    projectsSelect2(p);
-    billersSelect2(b);    
-    periodsSelect2(r);    
+  function setupAllSelect2B(p, b, r) {
+    projectsSelect2B(p);
+    billersSelect2B(b);    
+    periodsSelect2B(r);    
   }
 
-  function projectsSelect2(intialValue) {
-    $('#Project').select2({
+  function projectsSelect2B(intialValue) {
+    $('#ProjectB').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -36,8 +36,8 @@
     });
   }
 
-  function billersSelect2(intialValue) {
-    $('#Biller').select2({
+  function billersSelect2B(intialValue) {
+    $('#BillerB').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -63,8 +63,8 @@
     });
   }
 
-  function periodsSelect2(intialValue) {
-    $('#Period').select2({
+  function periodsSelect2B(intialValue) {
+    $('#PeriodB').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -96,7 +96,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @biller %>", "<%= @period %>");
+    setupAllSelect2B("<%= @project %>", "<%= @biller %>", "<%= @period %>");
 
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
@@ -109,54 +109,50 @@
 
   $(window).bind("load", function() {
     a = "<%= dcb_restore_filters %>";
-    $("#No").val("<%= params[:No] %>");
-    $("#Client").val("<%= params[:Client] %>");
-    $("#Subscriber").val("<%= params[:Subscriber] %>");
-    $("#StreetName").val("<%= params[:StreetName] %>");
-    $("#Status").val("<%= params[:Status] %>");
-    $("#Type").val("<%= params[:Type] %>");
-    $("#Operation").val("<%= params[:Operation] %>");
-    $("#From").val("<%= params[:From] %>");
-    $("#To").val("<%= params[:To] %>");
-    $("#search").val("<%= params[:search] %>");
+    $("#NoB").val("<%= params[:NoB] %>");
+    $("#ClientB").val("<%= params[:ClientB] %>");
+    $("#SubscriberB").val("<%= params[:SubscriberB] %>");
+    $("#StreetNameB").val("<%= params[:StreetNameB] %>");
+    $("#TypeB").val("<%= params[:TypeB] %>");
+    $("#OperationB").val("<%= params[:OperationB] %>");
+    $("#FromB").val("<%= params[:FromB] %>");
+    $("#ToB").val("<%= params[:ToB] %>");
   });
 
   jQuery(function($) {
-    // when .icon-refresh-link is clicked
-    $(".icon-refresh-link").click(function() {
+    // when #icon_refresh_b is clicked
+    $("#icon_refresh_b").click(function() {
       // show loader
-      $("#div_table").html("");
+      $("#div_table_bills").html("");
       $("#loader").show();
     });
 
-    // when #submit_btn is clicked
-    $("#submit_btn").click(function() {
+    // when #submit_btn_b is clicked
+    $("#submit_btn_b").click(function() {
       // show loader
-      $("#div_table").html("");
+      $("#div_table_bills").html("");
       $("#loader").show();
     });
 
-    // when the #removeFilter button clicked
-    $("#removeFilter").click(function() {
-      $("#No").val("");
-      $("#Project").select2("val", "");
-      $("#Client").val("");
-      $("#Subscriber").val("");
-      $("#StreetName").val("");
-      $("#Status").val("");
-      $("#Type").val("");
-      $("#Operation").val("");
-      $("#Biller").select2("val", "");
-      $("#Period").select2("val", "");
-      $("#From").val("");
-      $("#To").val("");
-      $("#search").val("");
+    // when the #remove_filter_b button clicked
+    $("#remove_filter_b").click(function() {
+      $("#NoB").val("");
+      $("#ProjectB").select2("val", "");
+      $("#ClientB").val("");
+      $("#SubscriberB").val("");
+      $("#StreetNameB").val("");
+      $("#TypeB").val("");
+      $("#OperationB").val("");
+      $("#BillerB").select2("val", "");
+      $("#PeriodB").select2("val", "");
+      $("#FromB").val("");
+      $("#ToB").val("");
       a = "<%= dcb_remove_filters %>";
-      setupAllSelect2(a, a, a);
+      setupAllSelect2B(a, a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
-      $("#submit_btn").trigger("click");
+      $("#submit_btn_b").trigger("click");
     });
   });
 </script>
@@ -170,53 +166,47 @@
     <div class="span3">
       <div class="well sidebar-nav">
         <!-- Refresh -->
-        <%= link_to ag2_gest.invoices_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        <%= link_to ag2_gest.bills_debt_claims_path, title: I18n.t(:refresh), class: "icon-refresh-link", id: 'icon_refresh_b', remote: true do %> <i class="icon-refresh"></i> <% end %>
         <!-- Search form -->
         <%= form_tag "bills", :method => 'get', :remote => true do %>
         <!-- No -->
         <%= label_tag I18n.t("activerecord.attributes.invoice.invoice_no"), nil, :class => 'form-label' %>
-        <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+        <%= text_field_tag "NoB", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
         <!-- Project -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
-        <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <%= hidden_field_tag "ProjectB", params[:ProjectB], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Client -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <%= text_field_tag "ClientB", params[:ClientB], :class => 'x-large-text-field shrinked' %>
         <!-- Subscriber -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
+        <%= text_field_tag "SubscriberB", params[:SubscriberB], :class => 'x-large-text-field shrinked' %>
         <!-- Street name -->
         <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
-        <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+        <%= text_field_tag "StreetNameB", params[:StreetNameB], :class => 'x-large-text-field shrinked' %>
         <!-- Type -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
-        <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
-        <!-- Status -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label' %>
-        <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "TypeB", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Operation -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_operation"), nil, :class => 'form-label' %>
-        <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+        <%= select_tag "OperationB", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Biller -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_biller"), nil, :class => 'form-label' %>
-        <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <%= hidden_field_tag "BillerB", params[:BillerB], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Period -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_period"), nil, :class => 'form-label-under-sel2' %>
-        <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <%= hidden_field_tag "PeriodB", params[:PeriodB], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
 
         <!-- Dates -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_from"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag "From", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= text_field_tag "FromB", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_to"), nil, :class => 'form-label' %>
-        <%= text_field_tag "To", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
+        <%= text_field_tag "ToB", params[:date], :class =>  'x-large-text-field shrinked date_picker' %>
 
-        <!-- Others -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_others"), nil, :class => 'form-label' %>
-        <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>
         <!-- Submit -->
-        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
+        <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn_b' %>
         <!-- Remove filter -->
-        <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+        <button id="remove_filter_b" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
         <!-- <br /><br /> -->
         <%= link_to t("ag2_gest.debt_claims.back_to_main_page"), ag2_gest.debt_claims_path %><br />
@@ -226,7 +216,7 @@
 
     <div class="span9">
       <div id="loader"></div>
-      <div id="div_table">
+      <div id="div_table_bills">
         <%= render 'bills' %>
       </div>
     </div><!-- /.span9 -->

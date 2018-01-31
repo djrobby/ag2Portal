@@ -7,49 +7,58 @@
   }); 
 </script>
 
+<div class="row-fluid">
+  <b>
+  <div class="span6"><%= I18n.t("activerecord.models.invoice.few") %>: <%= @bill_totals_count %></div>
+  <div class="span6" align="right"><%= I18n.t("ag2_gest.debt_claims.bills.total_debt") %>: <%= number_with_precision(@bill_totals_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></div>
+  </b>
+</div>
 <table class="table table-condensed table-striped shrinked">
   <!-- no -->
-  <col width="14%" />
+  <col width="13%" />
   <!-- codes -->
-  <col width="5%" />
+  <col width="4%" />
   <!-- date -->
-  <col width="8%" />
+  <col width="9%" />
   <!-- payday_limit -->
-  <col width="8%" />
+  <col width="9%" />
   <!-- bill -->
-  <col width="20%" />
+  <col width="17%" />
   <!-- biller -->
-  <col width="18%" />
+  <col width="16%" />
   <!-- client -->
-  <col width="18%" />
+  <col width="17%" />
+  <!-- period -->
+  <col width="6%" />
   <!-- total -->
   <col width="9%" />
   <thead>
     <tr>
-      <th><%= t 'activerecord.attributes.invoice.invoice_no' %></th>
-      <th><%= t 'activerecord.attributes.invoice.codes' %></th>
-      <th align="center"><%= t 'activerecord.attributes.invoice.invoice_date' %></th>
-      <th align="center"><%= t 'activerecord.attributes.invoice.payday_limit' %></th>
-      <th><%= t 'activerecord.attributes.invoice.bill' %></th>
-      <th><%= t 'activerecord.attributes.invoice.biller' %></th>
-      <th><%= t 'activerecord.attributes.bill.client' %></th>
-      <th align="right"><%= t 'activerecord.attributes.invoice.total' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.invoice_no' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.codes' %></th>
+      <th align="center"><%= t 'activerecord.attributes.invoice_current_debt.invoice_date' %></th>
+      <th align="center"><%= t 'activerecord.attributes.invoice_current_debt.payday_limit' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.bill' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.biller' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.client' %></th>
+      <th><%= t 'activerecord.attributes.invoice_current_debt.billing_period' %></th>
+      <th align="right"><%= t 'activerecord.attributes.invoice_current_debt.debt' %></th>
     </tr>
   </thead>
   <tbody>
-    <% @bills.each do |invoice| %>
-      <td><%= invoice.full_no unless invoice.invoice_no.blank? %></td>
+    <% @bills.each do |i| %>
+      <td><%= i.INVOICE_NO unless i.INVOICE_NO.blank? %></td>
       <td>
-        <span class="blue"><%= invoice.invoice_type_code %></span>
-        <span class="yellow"><%= invoice.invoice_status_code %></span>
-        <span class="brown"><%= invoice.invoice_operation_code %></span>
+        <span class="blue"><%= i.TYPE_CODE unless i.TYPE_CODE.blank? %></span>
+        <span class="brown"><%= i.OPERATION_CODE unless i.OPERATION_CODE.blank? %></span>
       </td>
-      <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
-      <td align="center"><%= formatted_date(invoice.payday_limit) unless invoice.payday_limit.blank? %></td>
-      <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
-      <td><%= biller_name(invoice) %></td>
-      <td><%= client_name(invoice) %></td>
-      <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
+      <td align="center"><%= formatted_date_slash(i.invoice_date) unless i.invoice_date.blank? %></td>
+      <td align="center"><%= formatted_date_slash(i.payday_limit) unless i.payday_limit.blank? %></td>
+      <td><%= i.BILL_NO unless i.BILL_NO.blank? %></td>
+      <td><%= biller_name(i) %></td>
+      <td><%= client_name(i) %></td>
+      <td><%= i.PERIOD unless i.PERIOD.blank? %></td>
+      <td align="right"><%= number_with_precision(i.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.debt.blank? %></td>
     </tr>
     <% end %>
   </tbody>

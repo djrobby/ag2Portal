@@ -27,6 +27,7 @@ class EnginesController < ApplicationController
     session[:Balance] = nil
     session[:Client] = nil
     session[:User] = nil
+    session[:Period] = nil
     # Ag2Admin
     # ...
     # Ag2Directory
@@ -41,17 +42,23 @@ class EnginesController < ApplicationController
     session[:RequestStatus] = nil
     session[:ClientInfo] = nil
     session[:Subscriber] = nil
+    session[:SubscriberB] = nil
     session[:Operation] = nil
     session[:Biller] = nil
+    session[:BillerB] = nil
     session[:ServicePoint] = nil
     session[:SubscriberCode] = nil
     session[:StreetName] = nil
+    session[:StreetNameB] = nil
     session[:entity] = nil
     session[:Request] = nil
     session[:BankAccount] = nil
     session[:BankOrder] = nil
     session[:Use] = nil
     session[:Phase] = nil
+    session[:PeriodB] = nil
+    session[:ProjectB] = nil
+    session[:ClientB] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:OfficeT] = nil
@@ -68,14 +75,12 @@ class EnginesController < ApplicationController
     session[:Measure] = nil
     session[:Manufacturer] = nil
     session[:Tax] = nil
-    session[:Client] = nil
     session[:Stores] = nil
     session[:Companies] = nil
     # Ag2Purchase
     session[:Supplier] = nil
     session[:Invoice] = nil
     # Ag2Tech
-    session[:Period] = nil
     session[:Group] = nil
     session[:Area] = nil
     session[:Labor] = nil

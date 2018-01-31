@@ -1,0 +1,49 @@
+en:
+  activerecord:
+    models:
+      invoice_current_debt:
+        zero:  Invoices Receivable
+        one:   Invoice Receivable
+        few:   Invoices Receivable
+        other: Invoices Receivable
+        one_or_many: Invoice(s) Receivable
+    attributes:
+      invoice_current_debt:
+        bill: "Bill"
+        bill_id: "Bill"
+        invoice: "Invoice"
+        invoice_id: "Invoice"
+        organization: "Organization"
+        organization_id: "Organization"
+        office: "Office"
+        office_id: "Office"
+        project: "Project"
+        project_id: "Project"
+        client: "Client"
+        client_id: "Client"
+        subscriber: "Subscriber"
+        subscriber_id: "Subscriber"
+        invoice_type: "Type"
+        invoice_type_id: "Type"
+        invoice_operation: "Operation"
+        invoice_operation_id: "Operation"
+        invoice_status: "Status"
+        invoice_status_id: "Status"
+        invoice_no: "No."
+        invoice_date: "Date"
+        payday_limit: "Payday"
+        billing_period: "Period"
+        billing_period_id: "Period"
+        biller: "Biller"
+        biller_id: "Biller"
+        subtotal: "Subtotal"
+        taxes: "Taxes"
+        bonus: "Bonus"
+        taxable: "Taxable"
+        total: "Total"
+        paid: "Collected"
+        calc_debt: "CalcDebt"
+        totals: "Total"
+        receivables: "Receivable"
+        debt: "Debt"
+        codes: "T O"

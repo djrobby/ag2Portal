@@ -169,6 +169,7 @@ es:
       debt_claims:
         items: "Reclamaciones de deuda"
         item: "Reclamación"
+        bills: "Facturas reclamables"
       debt_claim_phases:
         items: "Fases RD"
         item: "Fase"
