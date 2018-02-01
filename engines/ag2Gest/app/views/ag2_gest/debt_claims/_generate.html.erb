@@ -1,11 +1,165 @@
 <!-- Modal Generate -->
 <script type="text/javascript">
+
+  function setup_AllSelect2(p, e, r, c, s) {
+    projects_Select2(p);
+    periods_Select2(e);
+    routes_Select2(r)
+    clients_Select2(c);    
+    subscribers_Select2(s);    
+  }
+
+  function projects_Select2(intialValue) {
+    $('#debt_claim_projects').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      // dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      multiple: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function periods_Select2(intialValue) {
+    $('#debt_claim_periods').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      // dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      multiple: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_billing_periods",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function routes_Select2(intialValue) {
+    $('#debt_claim_reading_routes').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      // dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      multiple: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_reading_routes",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function clients_Select2(intialValue) {
+    $('#debt_claim_clients').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      // dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      multiple: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function subscribers_Select2(intialValue) {
+    $('#debt_claim_subscribers').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      // dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      multiple: true,
+      ajax: {
+        url: "/search_subscribers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $("#proc_mesage_dc").hide();
+
+    // Setup special search (select2)
+    setup_AllSelect2("<%= @project %>", "<%= @period %>", "<%= @reading_route %>", "<%= @client %>", "<%= @subscriber %>");
   });
 
   jQuery(function($) {
-    /* modal_cash form.generate-form: Check required values before submit */
     $("form.generate-form").submit(function(){
       if ($('#debt_claim_office').val() == '' ||
           $('#debt_claim_office').val() == null) {
@@ -17,97 +171,10 @@
         alert("<%= I18n.t('activerecord.attributes.debt_claim.payday_limit') %> <%= I18n.t(:item_error) %>");
         return false;
       }
-      // Show message
-      $("#proc_mesage_dc").show();
-    });
-
-    // when #generate_code_btn is clicked
-    $("#generate_code_btn").click(function() {
-      // make a POST call and replace the content
-      var company = $('#CompanyO_').val();
-      if (company == "")
-        company = "$";
-      var posted_at = $('#PostedDateO_').val();
-      if (posted_at == "")
-        posted_at = "$";
-      jQuery.getJSON('si_generate_no/' + company + '/' + posted_at, function(data) {
-        $("#InternalNoO_").val(data.code);
-        if ($("#InternalNoO_").val() == "$err") {
-          $("#InternalNoO_").css('color', 'red');
-          alert('<%= I18n.t("ag2_purchase.purchase_orders.no_error") %>');
-          $('#InternalNoO_').select();
-        } else {
-          $("#InternalNoO_").css('color', text_field_color);
-          // $('#InternalNoO_').trigger("change");
-        }
-      });
-      return false;
-    });
-
-    $('#btn_accept_o').click(function() {
-      var supplier = $('#SupplierO_ :selected').val();
-      var order = $('#Order_').val();
-      if (order == null) order = "";
-      var offer_no = $('#NoO_').val();
-      var offer_date = $('#DateO_').val();
-      var internal_no = $('#InternalNoO_').val();
-      var posted_at = $('#PostedDateO_').val();
-      var company = $('#CompanyO_').val();
-      if ((supplier == "") || (order == "")  || (offer_no == "")  || (offer_date == "") || (internal_no == "") || (posted_at == "") || (company == "")) {
-        // Error
-        alert('<%= I18n.t(:mandatory_subtitle) %>');
-        return false;
-      }
-      // Right formatted date
-      offer_date = right_date(offer_date, "<%= I18n.locale %>");
-      posted_at = right_date(posted_at, "<%= I18n.locale %>");
-      // Show message
-      $("#proc_mesage_o").show();
-      // make the POST call
-      jQuery.getJSON('si_generate_invoice_from_order?supplier=' + supplier + '&order=' + order + '&offer_no=' + offer_no + '&offer_date=' + offer_date + '&internal_no=' + internal_no + '&posted_at=' + posted_at + '&company=' + company, function(data) {
-        // Hide message
-        $("#proc_mesage_o").hide();
-        // AJAX refresh index table is necessary
-        $(".icon-refresh-link").click();
-        // Go on based on result
-        if (data.code == "$err") {
-          alert('<%= I18n.t("ag2_purchase.supplier_invoices.generate_invoice_error") %>');
-        } else if (data.code == "$write") {
-          alert('<%= I18n.t("ag2_purchase.supplier_invoices.generate_invoice_write") %>');
-        } else {
-          // Hide the modal and exit
-          alert(data.code);
-          $("#new-invoice-from-order").modal('hide');
-        }
-      });
-      return false;
-    });
-
-    // when the #debt_claim_office field changes
-    $("#debt_claim_office").change(function() {
-      // make a POST call and replace the content
-      var o = $('#debt_claim_office').val();
-      if (o == "") o = 0;
-      jQuery.getJSON('dc_update_order_select_from_o/' + o, function(data) {
-        var r = data.order;
-        $("#Order_").html("");
-        $("#Order_").select2("val", "");
-        $("#Order_").append($('<option></option>').val("").html(""));
-        if (!r.length) {
-          $.each(data, function(id, option) {
-            if (id == 'order' && option != "") {
-              $("#Order_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
-            }
-          });
-        } else {
-          $.each(r, function(id, option) {
-            $("#Order_").append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
-          });
-        }
-      });
       // AJAX refresh index table is necessary
       $(".icon-refresh-link").click();
-      return false;
+      // Show message
+      $("#proc_mesage_dc").show();
     });
   });
 </script>
@@ -126,14 +193,14 @@
     <div class="modal-body">
       <%= f.input :office, required: true, label: I18n.t("activerecord.attributes.debt_claim.office"), collection: @offices, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, :label_html => { :class => 'form-label' } %>
       <%= f.input :payday_limit, required: true, label: I18n.t("activerecord.attributes.debt_claim.payday_limit"), inline_label: "Yes", input_html: { class: 'x-large-text-field ndate_picker', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-      <%= f.input :projects, label: I18n.t("activerecord.attributes.debt_claim.project"), collection: @projects, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4' }, label_html: { class: 'form-label' } %>
-      <%= f.input :periods, label: I18n.t("activerecord.attributes.invoice.billing_period"), collection: @periods, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4' }, label_html: { class: 'form-label' } %>
-      <%= f.input :reading_routes, label: I18n.t("activerecord.attributes.debt_claim.reading_route"), collection: @reading_routes, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-      <%= f.input :clients, label: I18n.t("activerecord.attributes.debt_claim.client"), collection: @clients, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-      <%= f.input :subscribers, label: I18n.t("activerecord.attributes.debt_claim.subscriber"), collection: @subscribers, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-      <%= f.input :invoice_types, label: I18n.t("activerecord.attributes.debt_claim.invoice_type"), collection: @invoice_types, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4', multiple: 'multiple', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
-      <%= f.input :pending_amount, label: I18n.t("activerecord.attributes.debt_claim.pending_amount"), as: :decimal, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %>
-      <%= f.input :pending_invoices, label: I18n.t("activerecord.attributes.debt_claim.pending_invoices"), as: :integer, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :projects, required: false, label: I18n.t("activerecord.attributes.debt_claim.project"), inline_label: "Yes", input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :periods, required: false, label: I18n.t("activerecord.attributes.invoice.billing_period"), inline_label: "Yes", input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :reading_routes, required: false, label: I18n.t("activerecord.attributes.debt_claim.reading_route"), inline_label: "Yes", input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :clients, required: false, label: I18n.t("activerecord.attributes.debt_claim.client"), inline_label: "Yes", input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :subscribers, required: false, label: I18n.t("activerecord.attributes.debt_claim.subscriber"), inline_label: "Yes", input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :invoice_types, required: false, label: I18n.t("activerecord.attributes.debt_claim.invoice_type"), collection: @invoice_types, inline_label: "Yes", input_html: { class: 'x-large-text-field sel4', multiple: 'multiple' }, label_html: { class: 'form-label' } %>
+      <%= f.input :pending_amount, required: false, label: I18n.t("activerecord.attributes.debt_claim.pending_amount"), as: :decimal, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %>
+      <%= f.input :pending_invoices, required: false, label: I18n.t("activerecord.attributes.debt_claim.pending_invoices"), as: :integer, inline_label: "Yes", input_html: { class: 'x-large-text-field number-text-field' }, label_html: { class: 'form-label' } %>
     </div>
     <div class="modal-footer">
       <%= f.button :submit, t(:generate), :class => 'btn btn-primary', id: 'btn-submit-generate' %>

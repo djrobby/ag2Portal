@@ -6,6 +6,8 @@ module Ag2Gest
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:dc_remove_filters,
                                                :dc_restore_filters,
+                                               :dcb_remove_filters,
+                                               :dcb_restore_filters,
                                                :dc_generate_no,
                                                :generate,
                                                :bills]
@@ -254,12 +256,10 @@ module Ag2Gest
 
       # Initialize modal generate tags
       @offices = offices_dropdown if @offices.nil?
-      @projects = []
-      @periods = []
-      @reading_routes = []
-      @clients = []
-      @subscribers = []
       @invoice_types = invoice_types_dropdown if @invoice_types.nil?
+      @period = " "
+      @reading_route = " "
+      @subscriber = " "
 
       # Arrays for search
       @projects = projects_dropdown if @projects.nil?

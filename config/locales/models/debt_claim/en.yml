@@ -31,7 +31,7 @@ en:
         debt_claim_status_id: "DC Status"
         debt_claim_status_c: "Status"
         totals: "Totals"
-        pending_amount: "Amount outstanding greater than"
+        pending_amount: "Amount of pending bills greater than"
         pending_invoices: "No. of pending bills greater than"
         payday_limit: "Payday limit"
         reading_route: "Reading route"

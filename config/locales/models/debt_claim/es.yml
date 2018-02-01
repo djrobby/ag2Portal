@@ -31,7 +31,7 @@ es:
         debt_claim_status_id: "Estado RD"
         debt_claim_status_c: "Estado"
         totals: "Totales"
-        pending_amount: "Importe pendiente mayor que"
+        pending_amount: "Importe de recibos pendientes mayor que"
         pending_invoices: "Nº de recibos pendientes mayor que"
         payday_limit: "Vencimiento"
         reading_route: "Ruta de lectura"

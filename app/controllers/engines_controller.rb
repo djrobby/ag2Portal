@@ -404,9 +404,22 @@ class EnginesController < ApplicationController
     if @q != ''
       w += "(name LIKE '%#{@q}%')"
       @stores = serialized(Store.where(w).by_name,
-                             Api::V1::StoresSerializer)
+                            Api::V1::StoresSerializer)
     end
     render json: @stores
+  end
+
+  # Stores
+  def search_reading_routes
+    @routes = []
+    w = ''
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(routing_code LIKE '%#{@q}%' OR name LIKE '%#{@q}%')"
+      @routes = serialized(ReadingRoute.where(w).by_code,
+                             Api::V1::ReadingRoutesSerializer)
+    end
+    render json: @routes
   end
 
   # Returns JSON list of data
