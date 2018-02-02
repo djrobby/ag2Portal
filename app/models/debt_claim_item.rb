@@ -6,7 +6,7 @@ class DebtClaimItem < ActiveRecord::Base
   belongs_to :invoice
   belongs_to :debt_claim_status
   # delegate :invoice_current_debt, :to => :invoice, :allow_nil => true
-  attr_accessible :debt, :payday_limit,
+  attr_accessible :debt, :payday_limit, :created_by,
                   :debt_claim_id, :bill_id, :invoice_id, :debt_claim_status_id
 
   has_one :invoice_current_debt, through: :invoice
@@ -131,6 +131,6 @@ class DebtClaimItem < ActiveRecord::Base
   # Before create
   def init_debt
     self.debt = current_debt
-    self.debt_claim_status_id = DebtClaimStatus.first.id if debt_claim_status_id.blank?
+    self.debt_claim_status_id = DebtClaimStatus::INITIATED if debt_claim_status_id.blank?
   end
 end

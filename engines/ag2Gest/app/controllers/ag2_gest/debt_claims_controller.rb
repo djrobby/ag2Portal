@@ -35,14 +35,14 @@ module Ag2Gest
     def generate
       # required params
       office = params[:debt_claim][:office]
-      payday_limit = params[:debt_claim][:payday_limit]   # YYYYMMDD
+      payday_limit = params[:debt_claim][:payday_limit]   # es: dd/mm/yyyy - en: mm/dd/yyyy
       # optional params
       projects = params[:debt_claim][:projects]
       periods = params[:debt_claim][:periods]
       reading_routes = params[:debt_claim][:reading_routes]
       clients = params[:debt_claim][:clients]
       subscribers = params[:debt_claim][:subscribers]
-      invoice_types = params[:debt_claim][:invoice_types]
+      invoice_types = params[:debt_claim][:invoice_types]   # Array
       # numeric params
       pending_amount = BigDecimal(params[:debt_claim][:pending_amount]) rescue 0.0
       pending_invoices = Integer(params[:debt_claim][:pending_amount]) rescue 0
@@ -51,24 +51,30 @@ module Ag2Gest
       end
 
       # Formats input params data
-      payday_limit = (payday_limit[0..3] + '-' + payday_limit[4..5] + '-' + payday_limit[6..7]).to_date
-      projects = projects.split(",") if !projects.blank?
-      periods = periods.split(",") if !periods.blank?
-      reading_routes = reading_routes.split(",") if !reading_routes.blank?
-      clients = clients.split(",") if !clients.blank?
-      subscribers = subscribers.split(",") if !subscribers.blank?
-      invoice_types = invoice_types.split(",") if !invoice_types.blank?
+      #  payday_limit to YYYY-mm-dd format
+      if I18n.locale == :es   # dd/mm/yyyy
+        payday_limit = (payday_limit[6..9] + '-' + payday_limit[3..4] + '-' + payday_limit[0..1]).to_date
+      else  # mm/dd/yyyy
+        payday_limit = (payday_limit[6..9] + '-' + payday_limit[0..1] + '-' + payday_limit[3..4]).to_date
+      end
+      # projects = projects.split(",") if !projects.blank?
+      # periods = periods.split(",") if !periods.blank?
+      # reading_routes = reading_routes.split(",") if !reading_routes.blank?
+      # clients = clients.split(",") if !clients.blank?
+      # subscribers = subscribers.split(",") if !subscribers.blank?
+      invoice_types.delete_at(0)
+      invoice_types = invoice_types.empty? ? "" : invoice_types.join(", ")
 
       # Builds WHERE
       w = ''
       w = "invoice_current_debts.office_id = #{office}" if !office.blank?
       if !payday_limit.blank?
         w += " AND " if w != ''
-        w += "payday_limit < #{payday_limit}"
+        w += "invoice_current_debts.payday_limit < '#{payday_limit}'"
       end
       if !projects.blank?
         w += " AND " if w != ''
-        w += "project_id IN (#{projects})"
+        w += "invoice_current_debts.project_id IN (#{projects})"
       end
       if !periods.blank?
         w += " AND " if w != ''
@@ -80,37 +86,42 @@ module Ag2Gest
       end
       if !clients.blank?
         w += " AND " if w != ''
-        w += "client_id IN (#{clients})"
+        w += "invoice_current_debts.client_id IN (#{clients})"
       end
       if !subscribers.blank?
         w += " AND " if w != ''
-        w += "subscriber_id IN (#{subscribers})"
+        w += "invoice_current_debts.subscriber_id IN (#{subscribers})"
       end
       if !invoice_types.blank?
         w += " AND " if w != ''
-        w += "invoice_type_id IN (#{invoice_types})"
+        w += "invoice_current_debts.invoice_type_id IN (#{invoice_types})"
       end
 
       # Retrieve current outstanding invoices
       invoices = InvoiceCurrentDebt.g_where_and_unclaimed(w)
-      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if invoices.size < 1
+      redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate_error_no_data") and return if (invoices.nil? || invoices.size < 1)
 
-      # Group & total: Retrieve clients with right pending_amount or pending_invoices
-      g = invoices.group(:client_id)
-                  .select('client_id, SUM(debt) AS pending_amount, COUNT(invoice_id) AS pending_invoices')
-                  .having('pending_amount > ? OR pending_invoices > ?', pending_amount, pending_invoices)
+      # Retrieve invoices grouped by client, and where amount and/or invoices number are greater than those requested
+      totals = 0
+      g = InvoiceCurrentDebt.g_where_and_unclaimed_grouped_by_client(w, pending_amount, pending_invoices)
       if !g.blank?
         # Filter invoice records
-        c = g.pluck(:client_id)
+        c = g.pluck('invoice_current_debts.client_id')
         invoices = invoices.where(client_id: c)
+        g.each do |t|
+          totals += t.pending_amount
+        end
       end
+      puts "+++++>>>>>" + totals.to_s
 
       # Set project if it's unique
       project = nil
-      project = projects[0] if projects.count == 1
+      project = projects[0] if projects.size == 1
 
       # Claim No.
       claim_no = dc_next_no(office)
+      # Current user
+      created_by = current_user.id if !current_user.nil?
 
       # Begin the transaction
       begin
@@ -118,15 +129,22 @@ module Ag2Gest
           # Create debt claim
           claim = DebtClaim.create(office_id: office, project_id: project,
                                    claim_no: claim_no, closed_at: nil,
-                                   debt_claim_phase_id: DebtClaimPhase::FIRST_CLAIM)
-          # Loop thru invoices and create items
-          invoices.each do |i|
-            DebtClaimItem.create(debt_claim_id: claim.id, bill_id: i.bill_id,
-                                 invoice_id: i.invoice_id, debt_claim_status_id: DebtClaimStatus::INITIATED,
-                                 debt: i.debt, payday_limit: Time.now.to_date + 1.month)
-          end # invoices.each
+                                   debt_claim_phase_id: DebtClaimPhase::FIRST_CLAIM,
+                                   totals: totals, created_by: created_by)
+          if !claim.id.nil?
+            # Loop thru invoices and create items
+            invoices.each do |i|
+              DebtClaimItem.create(debt_claim_id: claim.id, bill_id: i.bill_id,
+                                   invoice_id: i.invoice_id, debt_claim_status_id: DebtClaimStatus::INITIATED,
+                                   debt: i.debt, payday_limit: Time.now.to_date + 1.month,
+                                   created_by: created_by)
+            end # invoices.each
+          else
+            redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate.alert") and return
+          end # claim.save
 
-          redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.notice")
+          # redirect_to debt_claim_path(claim), notice: I18n.t("ag2_gest.debt_claims.generate.notice")
+          redirect_to debt_claims_path, notice: I18n.t("ag2_gest.debt_claims.generate.notice")
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
         redirect_to debt_claims_path, alert: I18n.t("ag2_gest.debt_claims.generate.alert") and return
@@ -243,8 +261,8 @@ module Ag2Gest
       no = params[:No]
       project = params[:Project]
       client = params[:Client]
-      status = params[:Status]
       phase = params[:Phase]
+      status = params[:Status]
       # OCO
       init_oco if !session[:organization]
 
@@ -253,6 +271,8 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @status = debt_claim_statuses_dropdown if @status.nil?
       @phase = debt_claim_phases_dropdown if @phase.nil?
+
+      @date_format = I18n.locale == :es ? "dd/mm/yyyy" : "mm/dd/yyyy"
 
       # Initialize modal generate tags
       @offices = offices_dropdown if @offices.nil?
@@ -278,8 +298,8 @@ module Ag2Gest
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
       @search = DebtClaim.search do
-        with :id, current_items
-        with :project_id, current_projects
+        # with :id, current_items
+        # with :project_id, current_projects
         fulltext params[:search]
         if !no.blank?
           if no.class == Array

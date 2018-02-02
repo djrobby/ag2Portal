@@ -78,7 +78,8 @@
       allowClear: true
     });
     $('.ndate_picker').datepicker({
-      format : 'dd/mm/yyyy',
+      format : "<%= @date_format %>",
+      // format : "dd/mm/yyyy",
       weekStart : 1
     }).on('changeDate', function(e){
       $('.ndate_picker').datepicker('hide');

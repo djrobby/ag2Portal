@@ -166,8 +166,8 @@
         alert("<%= I18n.t('activerecord.attributes.debt_claim.office') %> <%= I18n.t(:item_error) %>");
         return false;
       }
-      if ($('#debt_claim_cash_payday_limit').val() == '' ||
-          $('#debt_claim_cash_payday_limit').val() == null) {
+      if ($('#debt_claim_payday_limit').val() == '' ||
+          $('#debt_claim_payday_limit').val() == null) {
         alert("<%= I18n.t('activerecord.attributes.debt_claim.payday_limit') %> <%= I18n.t(:item_error) %>");
         return false;
       }

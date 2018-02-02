@@ -2,7 +2,7 @@ class DebtClaim < ActiveRecord::Base
   belongs_to :office
   belongs_to :project
   belongs_to :debt_claim_phase
-  attr_accessible :claim_no, :closed_at, :totals,
+  attr_accessible :claim_no, :closed_at, :totals, :created_by,
                   :office_id, :project_id, :debt_claim_phase_id
   attr_accessible :debt_claim_items_attributes
 
@@ -22,6 +22,7 @@ class DebtClaim < ActiveRecord::Base
                                 :length => { :is => 13 },
                                 :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
                                 :uniqueness => { :scope => :office_id }
+                                # :uniqueness => true
   validates :office,            :presence => true
   validates :debt_claim_phase,  :presence => true
 
@@ -44,7 +45,7 @@ class DebtClaim < ActiveRecord::Base
     if claim_no == "$err"
       "0000-0000-00000"
     else
-      claim_no.blank? ? "" : claim_no[0.3] + '-' + claim_no[4..7] + '-' + claim_no[8..12]
+      claim_no.blank? ? "" : claim_no[0..3] + '-' + claim_no[4..7] + '-' + claim_no[8..12]
     end
   end
 
@@ -142,10 +143,14 @@ class DebtClaim < ActiveRecord::Base
 
   # Before create
   def init_phase
-    self.debt_claim_phase_id = DebtClaimPhase.first.id if debt_claim_phase_id.blank?
+    self.debt_claim_phase_id = DebtClaimPhase::FIRST_CLAIM if debt_claim_phase_id.blank?
   end
 
   def calculate_and_store_totals
-    self.totals = total
+    self.totals = total if totals.blank?
+  end
+
+  def reindex_items
+    Sunspot.index(debt_claim_items)
   end
 end

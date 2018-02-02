@@ -73,6 +73,19 @@ class InvoiceCurrentDebt < ActiveRecord::Base
              CASE invoices.invoice_operation_id WHEN 1 THEN 'F' WHEN 2 THEN 'A' WHEN 3 THEN 'R' ELSE 'P' END OPERATION_CODE")
     .by_project_bill_invoice
   }
+  scope :g_where_and_unclaimed_grouped_by_client, -> w, a, i {
+    select("invoice_current_debts.client_id, SUM(invoice_current_debts.debt) AS pending_amount, COUNT(invoice_current_debts.invoice_id) AS pending_invoices")
+    .joins(:client, invoice: [:bill, :biller])
+    .joins('LEFT JOIN billing_periods ON invoices.billing_period_id = billing_periods.id')
+    .joins('LEFT JOIN debt_claim_items ON invoice_current_debts.invoice_id = debt_claim_items.invoice_id')
+    .joins('LEFT JOIN invoices A ON invoice_current_debts.invoice_id = A.original_invoice_id')
+    .joins('LEFT JOIN subscribers ON invoice_current_debts.subscriber_id = subscribers.id')
+    .where('debt_claim_items.invoice_id IS NULL')
+    .where('A.original_invoice_id IS NULL')
+    .where('invoice_current_debts.invoice_status_id = 1 AND invoice_current_debts.payday_limit < ? AND invoice_current_debts.debt > 0', Date.today)
+    .where(w)
+    .group('invoice_current_debts.client_id').having('pending_amount > ? OR pending_invoices > ?', a, i)
+  }
 
   def to_label
     "#{full_name}"
