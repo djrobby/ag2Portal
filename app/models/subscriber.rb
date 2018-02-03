@@ -83,6 +83,7 @@ class Subscriber < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order(:subscriber_code) }
+  scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :subscriber_code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
   scope :actives, -> { where(active: true).by_code }
@@ -91,6 +92,19 @@ class Subscriber < ActiveRecord::Base
   scope :unavailables, -> { where("NOT ending_at IS NULL OR active = false") }
   scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today) }
   scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
+  # *** For readings ***
+  scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
+  scope :activated_with_meter, -> { activated.with_meter.by_reading_sequence }
+  scope :activated_by_routes, -> r { activated.where("reading_route_id IN (?)", r).by_reading_sequence }
+  scope :activated_by_routes_with_meter, -> r {
+    activated_with_meter.where("reading_route_id IN (?)", r).by_reading_sequence
+  }
+  scope :activated_by_centers_with_meter, -> c {
+    activated_with_meter.where("center_id IN (?)", c).by_reading_sequence
+  }
+  scope :activated_by_centers_and_routes_with_meter, -> c, r {
+    activated_with_meter.where("center_id IN (?) AND reading_route_id IN (?)", c, r).by_reading_sequence
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase

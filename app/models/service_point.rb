@@ -12,10 +12,11 @@ class ServicePoint < ActiveRecord::Base
   belongs_to :reading_route
   belongs_to :meter
   attr_accessible :available_for_contract, :building, :cadastral_reference, :code, :diameter, :floor, :floor_office,
-                  :gis_id, :name, :reading_sequence, :reading_variant, :street_number, :verified,
+                  :gis_id, :name, :street_number, :verified,
                   :service_point_type_id, :service_point_location_id, :service_point_purpose_id,
                   :water_connection_id, :organization_id, :company_id, :office_id, :center_id,
-                  :street_directory_id, :zipcode_id, :reading_route_id, :km, :meter_id
+                  :street_directory_id, :zipcode_id, :km,
+                  :meter_id, :reading_route_id, :reading_sequence, :reading_variant
 
   has_paper_trail
 
@@ -29,6 +30,21 @@ class ServicePoint < ActiveRecord::Base
   validates :organization,            :presence => true
   validates :center,                  :presence => true
   validates :street_directory,        :presence => true
+
+  # Scopes
+  scope :by_code, -> { order(:code) }
+  scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :code) }
+  #
+  scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
+  # *** For readings ***
+  scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
+  scope :belongs_to_routes, -> r { where("reading_route_id IN (?)", r).by_reading_sequence }
+  scope :belongs_to_routes_with_meter, -> r { belongs_to_routes(r).with_meter.by_reading_sequence }
+  scope :belongs_to_centers, -> c { where("center_id IN (?)", c).by_reading_sequence }
+  scope :belongs_to_centers_with_meter, -> c { belongs_to_centers(c).with_meter.by_reading_sequence }
+  scope :belongs_to_centers_and_routes_with_meter, -> c, r {
+    belongs_to_centers(c).belongs_to_routes(r).with_meter.by_reading_sequence
+  }
 
   def to_label
     _ret = code

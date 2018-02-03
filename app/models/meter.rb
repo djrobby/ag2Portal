@@ -65,11 +65,69 @@ class Meter < ActiveRecord::Base
     .where(w)
     .by_code
   }
+  # Masters & Childs
   scope :master_meters,
     joins(:child_meters)
     .select("meters.*")
     .group("meters.meter_code")
     .having("count(child_meters_meters.id) > 0")
+  # *******************
+  # * Readable meters *
+  # *******************
+  # *** By service points ***
+  # Return all rows, including duplicate meters
+  scope :readable_service_point_meters_by_routes, -> r {
+    joins(:service_points)
+    .where("service_points.reading_route_id IN (?)", r)
+    .order('service_points.reading_route_id, service_points.reading_sequence, service_points.reading_variant, meters.id')
+  }
+  scope :readable_service_point_meters_by_centers, -> c {
+    joins(:service_points)
+    .where("service_points.center_id IN (?)", c)
+    .order('service_points.reading_route_id, service_points.reading_sequence, service_points.reading_variant, meters.id')
+  }
+  scope :readable_service_point_meters_by_centers_and_routes, -> c, r {
+    joins(:service_points)
+    .where("service_points.center_id IN (?) AND service_points.reading_route_id IN (?)", c, r)
+    .order('service_points.reading_route_id, service_points.reading_sequence, service_points.reading_variant, meters.id')
+  }
+  # Return only one distinct row per meter, no duplicates
+  scope :distinct_readable_service_point_meters_by_routes, -> r {
+    readable_service_point_meters_by_routes(r).uniq
+  }
+  scope :distinct_readable_service_point_meters_by_centers, -> c {
+    readable_service_point_meters_by_centers(c).uniq
+  }
+  scope :distinct_readable_service_point_meters_by_centers_and_routes, -> c, r {
+    readable_service_point_meters_by_centers_and_routes(c, r).uniq
+  }
+  # *** By subscribers ***
+  # Return all rows, including duplicate meters
+  scope :readable_subscriber_meters_by_routes, -> r {
+    joins(:subscribers)
+    .where("subscribers.reading_route_id IN (?)", r)
+    .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
+  }
+  scope :readable_subscriber_meters_by_centers, -> c {
+    joins(:subscribers)
+    .where("subscribers.center_id IN (?)", c)
+    .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
+  }
+  scope :readable_subscriber_meters_by_centers_and_routes, -> c, r {
+    joins(:subscribers)
+    .where("subscribers.center_id IN (?) AND subscribers.reading_route_id IN (?)", c, r)
+    .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
+  }
+  # Return only one distinct row per meter, no duplicates
+  scope :distinct_readable_subscriber_meters_by_routes, -> r {
+    readable_subscriber_meters_by_routes(r).uniq
+  }
+  scope :distinct_readable_subscriber_meters_by_centers, -> c {
+    readable_subscriber_meters_by_centers(c).uniq
+  }
+  scope :distinct_readable_subscriber_meters_by_centers_and_routes, -> c, r {
+    readable_subscriber_meters_by_centers_and_routes(c, r).uniq
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase
@@ -210,6 +268,9 @@ class Meter < ActiveRecord::Base
 
   def assigned_to_subscriber?
     !subscribers.empty?
+  end
+  def assigned_to_service_point?
+    !service_points.empty?
   end
 
   # Shared meter
