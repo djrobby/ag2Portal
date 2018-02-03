@@ -103,18 +103,22 @@ class Meter < ActiveRecord::Base
   }
   # *** By subscribers ***
   # Return all rows, including duplicate meters
-  scope :readable_subscriber_meters_by_routes, -> r {
+  scope :active_subscribers, -> {
     joins(:subscribers)
+    .where("(subscribers.ending_at IS NULL OR subscribers.ending_at >= ?) AND subscribers.active = true", Date.today)
+  }
+  scope :readable_subscriber_meters_by_routes, -> r {
+    active_subscribers
     .where("subscribers.reading_route_id IN (?)", r)
     .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
   }
   scope :readable_subscriber_meters_by_centers, -> c {
-    joins(:subscribers)
+    active_subscribers
     .where("subscribers.center_id IN (?)", c)
     .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
   }
   scope :readable_subscriber_meters_by_centers_and_routes, -> c, r {
-    joins(:subscribers)
+    active_subscribers
     .where("subscribers.center_id IN (?) AND subscribers.reading_route_id IN (?)", c, r)
     .order('subscribers.reading_route_id, subscribers.reading_sequence, subscribers.reading_variant, meters.id')
   }
