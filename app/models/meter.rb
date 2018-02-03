@@ -328,6 +328,49 @@ class Meter < ActiveRecord::Base
     end
   end
 
+  # *******************
+  # * Readable meters *
+  # *******************
+  # By reading_route_id
+  def self.readable_by_route_array(r)
+    asp = []
+    asu = []
+    msp = Meter.distinct_readable_service_point_meters_by_routes(r)
+    asp = msp.pluck('meters.id') if !msp.blank?
+    msu = Meter.distinct_readable_subscriber_meters_by_routes(r)
+    asu = msu.pluck('meters.id') if !msu.blank?
+    return (asp + asu).uniq
+  end
+  def self.readable_by_route(r)
+    Meter.where(id: readable_by_route_array(r))
+  end
+  # By center_id
+  def self.readable_by_center_array(c)
+    asp = []
+    asu = []
+    msp = Meter.distinct_readable_service_point_meters_by_centers(c)
+    asp = msp.pluck('meters.id') if !msp.blank?
+    msu = Meter.distinct_readable_subscriber_meters_by_centers(c)
+    asu = msu.pluck('meters.id') if !msu.blank?
+    return (asp + asu).uniq
+  end
+  def self.readable_by_center(c)
+    Meter.where(id: readable_by_center_array(c))
+  end
+  # By center_id & reading_route_id
+  def self.readable_by_center_and_route_array(c, r)
+    asp = []
+    asu = []
+    msp = Meter.distinct_readable_service_point_meters_by_centers_and_routes(c, r)
+    asp = msp.pluck('meters.id') if !msp.blank?
+    msu = Meter.distinct_readable_subscriber_meters_by_centers_and_routes(c, r)
+    asu = msu.pluck('meters.id') if !msu.blank?
+    return (asp + asu).uniq
+  end
+  def self.readable_by_center_and_route(c, r)
+    Meter.where(id: readable_by_center_and_route_array(c, r))
+  end
+
   #
   # Records navigator
   #
