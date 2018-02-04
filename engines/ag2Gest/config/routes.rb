@@ -411,6 +411,7 @@ Ag2Gest::Engine.routes.draw do
     match 'debt_claims/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
     match 'dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
     match 'debt_claims/:id/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'
+    match 'debt_claims/:claim/destroy_item/:item', :controller => 'debt_claims', :action => 'destroy_item'
     #
     # Cash movements
     match 'cash_movements/cm_update_selects_from_organization/:org', :controller => 'cash_movements', :action => 'cm_update_selects_from_organization'

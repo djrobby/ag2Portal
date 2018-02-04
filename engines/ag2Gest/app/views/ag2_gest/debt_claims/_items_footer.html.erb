@@ -8,6 +8,7 @@
   Original debt
   Original debt + current surcharge
   Current debt
+  Delete button
 -->
 <tr class="totals">
   <td></td>
@@ -16,7 +17,8 @@
   <td></td>
   <td></td>
   <td></td>
-  <td align="right"><%= number_with_precision(claim.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless claim.debt.blank? %></td>
-  <td align="right"><%= number_with_precision(claim.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless claim.total.blank? %></td>
+  <td align="right"><%= number_with_precision(claim.subtotals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless claim.subtotals.blank? %></td>
+  <td align="right"><%= number_with_precision(claim.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless claim.totals.blank? %></td>
   <td align="right"><%= number_with_precision(claim.current_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless claim.current_total.blank? %></td>
+  <td></td>
 </tr>

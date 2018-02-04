@@ -28,6 +28,7 @@ class DebtClaimItem < ActiveRecord::Base
 
   # Callbacks
   before_create :init_debt
+  before_destroy :update_debt_claim_totals
 
   #
   # Instance methods
@@ -77,10 +78,7 @@ class DebtClaimItem < ActiveRecord::Base
   #
   # Calculated fields
   #
-  def current_debt
-    invoice.debt
-  end
-
+  # Based on cache values
   def surcharge
     debt * debt_claim.surcharge_pct
   end
@@ -89,8 +87,17 @@ class DebtClaimItem < ActiveRecord::Base
     debt + surcharge
   end
 
+  # Based on current values
+  def current_debt
+    invoice.debt
+  end
+
+  def current_surcharge
+    current_debt * debt_claim.surcharge_pct
+  end
+
   def current_total
-    current_debt + surcharge
+    current_debt + current_surcharge
   end
 
   #
@@ -132,5 +139,12 @@ class DebtClaimItem < ActiveRecord::Base
   def init_debt
     self.debt = current_debt
     self.debt_claim_status_id = DebtClaimStatus::INITIATED if debt_claim_status_id.blank?
+  end
+
+  def update_debt_claim_totals
+    debt_claim.totals -= total if (!debt_claim.totals.blank? && debt_claim.totals > 0)
+    debt_claim.subtotals -= debt if (!debt_claim.subtotals.blank? && debt_claim.subtotals > 0)
+    debt_claim.surcharges -= surcharge if (!debt_claim.surcharges.blank? && debt_claim.surcharges > 0)
+    debt_claim.save!
   end
 end

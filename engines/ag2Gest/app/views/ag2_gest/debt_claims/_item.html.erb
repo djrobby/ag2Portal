@@ -5,7 +5,14 @@
   <td align="center"><%= item.invoice.formatted_payday_limit %></td>
   <td><%= item.status_name %></td>
   <td align="center"><%= item.formatted_payday_limit %></td>
-  <td align="right"><%= number_with_precision(item.debt, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.total, precision: 4) %></td>
-  <td align="right"><%= number_with_precision(item.current_total, precision: 4) %></td>
+  <td align="right"><%= number_with_precision(item.debt, precision: 4) %></td> <!-- original invoice debt -->
+  <td align="right"><%= number_with_precision(item.total, precision: 4) %></td> <!-- original invoice debt + surcharge -->
+  <td align="right"><%= number_with_precision(item.current_total, precision: 4) %></td> <!-- invoice current debt + current surcharge -->
+  <td>
+    <% if (can? :destroy, DebtClaimItem) && (!cannot_edit(claim)) %>
+    <%#= link_to(claim, :data => { :confirm => I18n.t("are_you_sure_to_delete") + "#{I18n.t("activerecord.models.debt_claim_item.one")}? (#{item.invoice_full_no})" }, :method => :delete, :class => 'btn btn-mini') do %> <!--<i class="icon-trash"></i>--> <%# end %>
+    <%= link_to(debt_claim_path + '/destroy_item/' + item.id.to_s, data: { confirm: I18n.t("are_you_sure_to_delete") + "#{I18n.t("activerecord.models.debt_claim_item.one")}? (#{item.invoice_full_no})" }) do %> <i class="icon-trash"></i> <% end %>
+    <% end %>
+    <%#= render :partial => '/layouts/crud/delete', :locals => { :model => DebtClaimItem, :path => item, :msg => t("activerecord.models.debt_claim_item.one"), :txt => item.invoice_full_no } %>
+  </td>
 </tr>

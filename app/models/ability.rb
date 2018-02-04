@@ -255,6 +255,7 @@ class Ability
       can :crud, DebtClaimPhase
       can :crud, DebtClaimStatus
       can :crud, DebtClaim
+      can :crud, DebtClaimItem
       can :crud, Formality
       can :crud, FormalityType
       can :crud, TariffSchemeItem
@@ -331,6 +332,7 @@ class Ability
       can :read, DebtClaimPhase
       can :read, DebtClaimStatus
       can :read, DebtClaim
+      can :read, DebtClaimItem
       can :read, Formality
       can :read, FormalityType
       can :read, TariffSchemeItem
@@ -409,6 +411,7 @@ class Ability
       cannot :manage, DebtClaimPhase
       cannot :manage, DebtClaimStatus
       cannot :manage, DebtClaim
+      cannot :manage, DebtClaimItem
       cannot :manage, Formality
       cannot :manage, FormalityType
       cannot :manage, TariffSchemeItem

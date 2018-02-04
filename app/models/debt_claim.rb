@@ -2,8 +2,9 @@ class DebtClaim < ActiveRecord::Base
   belongs_to :office
   belongs_to :project
   belongs_to :debt_claim_phase
-  attr_accessible :claim_no, :closed_at, :totals, :created_by,
-                  :office_id, :project_id, :debt_claim_phase_id
+  attr_accessible :claim_no, :closed_at, :created_by,
+                  :office_id, :project_id, :debt_claim_phase_id,
+                  :totals, :subtotals, :surcharges
   attr_accessible :debt_claim_items_attributes
 
   has_many :debt_claim_items, dependent: :destroy
@@ -85,7 +86,8 @@ class DebtClaim < ActiveRecord::Base
   end
 
   def max_status_name
-    max_status.nil? ? '' : max_status.name
+    s = max_status
+    s.nil? ? '' : s.name
   end
 
   def min_status
@@ -93,30 +95,37 @@ class DebtClaim < ActiveRecord::Base
   end
 
   def min_status_name
-    min_status.nil? ? '' : min_status.name
+    s = min_status
+    s.nil? ? '' : s.name
   end
 
   #
   # Calculated fields
   #
+  # Based on cache values
   def subtotal
     debt_claim_items.reject(&:marked_for_destruction?).sum(&:debt)
   end
 
-  def surcharges
+  def surcharge
     subtotal * surcharge_pct
   end
 
   def total
-    subtotal + surcharges
+    subtotal + surcharge
   end
 
+  # Based on current values
   def current_subtotal
     debt_claim_items.reject(&:marked_for_destruction?).sum(&:current_debt)
   end
 
+  def current_surcharge
+    current_subtotal * surcharge_pct
+  end
+
   def current_total
-    current_subtotal + surcharge
+    current_subtotal + current_surcharge
   end
 
   #
@@ -148,6 +157,8 @@ class DebtClaim < ActiveRecord::Base
 
   def calculate_and_store_totals
     self.totals = total if totals.blank?
+    self.subtotals = subtotal if subtotals.blank?
+    self.surcharges = surcharge if surcharges.blank?
   end
 
   def reindex_items

@@ -40,13 +40,13 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.debt_claim.debt_claim_status_c' %>:</td>
-      <td><%= @debt_claim.status_name unless @debt_claim.status_name.blank? %> </td>
+      <td><%= @debt_claim.min_status_name %> </td>
       <td><%= t "activerecord.attributes.debt_claim.surcharge_pct" %>:</td>
-      <td><%= number_with_precision(@supplier.surcharge_pct, precision: 2) unless @supplier.surcharge_pct.blank? %></td>
+      <td><%= number_with_precision(@debt_claim.surcharge_pct, precision: 2) unless @debt_claim.surcharge_pct.blank? %></td>
     </tr>
     <tr>
       <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.total" %>:</td>
-      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.total.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@debt_claim.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.total.blank? %></td>
       <td class="highlighted bolded"><%= t "activerecord.attributes.debt_claim.current_total" %>:</td>
       <td class="highlighted bolded"><%= number_with_precision(@debt_claim.current_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @debt_claim.current_total.blank? %></td>
     </tr>
@@ -77,7 +77,7 @@
     <%= render partial: 'items_footer', :locals => { claim: @debt_claim } %>
   </tfoot>
   <tbody>
-    <%= render partial: 'item', collection: @items %>
+    <%= render partial: 'item', collection: @items, :locals => { claim: @debt_claim } %>
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
@@ -88,8 +88,8 @@
 <% if cannot_edit(@debt_claim) %>
 <%= render partial: '/layouts/crud/new', locals: { model: DebtClaim, path: new_debt_claim_path, txt: t('ag2_gest.debt_claims.index.btn_new') } %>
 <% else %>
-<%= render partial: '/layouts/crud/update_delete_new', locals:
-{ model: DebtClaim, update_path: edit_debt_claim_path(@debt_claim), update_txt: t('.btn_edit'),
+<%= render partial: '/layouts/crud/delete_new', locals:
+{ model: DebtClaim,
 delete_path: @debt_claim, delete_txt: t('.btn_delete'), msg: t("activerecord.models.debt_claim.one"), txt: @debt_claim.claim_no,
 new_path: new_debt_claim_path, new_txt: t('ag2_gest.debt_claims.index.btn_new') } %>
 <% end %>

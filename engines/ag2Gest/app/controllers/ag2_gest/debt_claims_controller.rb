@@ -112,7 +112,6 @@ module Ag2Gest
           totals += t.pending_amount
         end
       end
-      puts "+++++>>>>>" + totals.to_s
 
       # Set project if it's unique
       project = nil
@@ -130,7 +129,8 @@ module Ag2Gest
           claim = DebtClaim.create(office_id: office, project_id: project,
                                    claim_no: claim_no, closed_at: nil,
                                    debt_claim_phase_id: DebtClaimPhase::FIRST_CLAIM,
-                                   totals: totals, created_by: created_by)
+                                   totals: totals, subtotals: totals,
+                                   surcharges: 0, created_by: created_by)
           if !claim.id.nil?
             # Loop thru invoices and create items
             invoices.each do |i|
@@ -402,12 +402,28 @@ module Ag2Gest
 
       respond_to do |format|
         if @debt_claim.destroy
-          format.html { redirect_to debt_claims_url,
-                      notice: (crud_notice('destroyed', @debt_claim) + "#{undo_link(@debt_claim)}").html_safe }
+          format.html { redirect_to debt_claims_url, notice: crud_notice('destroyed', @debt_claim) }
           format.json { head :no_content }
         else
           format.html { redirect_to debt_claims_url, alert: "#{@debt_claim.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
           format.json { render json: @debt_claim.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+
+    # DELETE /debt_claim_items/1
+    # DELETE /debt_claim_items/1.json
+    def destroy_item
+      @debt_claim = DebtClaim.find(params[:claim])
+      @item = DebtClaimItem.find(params[:item])
+
+      respond_to do |format|
+        if @item.destroy
+          format.html { redirect_to @debt_claim, notice: crud_notice('destroyed', @item) }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to @debt_claim, alert: "#{@item.errors[:base].to_s}".gsub('["', '').gsub('"]', '') }
+          format.json { render json: @item.errors, status: :unprocessable_entity }
         end
       end
     end
