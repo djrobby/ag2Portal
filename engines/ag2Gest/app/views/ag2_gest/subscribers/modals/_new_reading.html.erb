@@ -85,8 +85,8 @@
   </div>
   <div class="modal-body">
     <%= f.input :subscriber_id, :as => :hidden, :input_html => { :value => @subscriber.try(:id) } %>
-
-    <%= f.input :meter_id, :as => :hidden, :input_html => { :value => @subscriber.try(:meter).try(:id) } %>
+    <%= f.input :service_point_id, :as => :hidden, :input_html => { :value => @service_point.try(:id) } %>
+    <%= f.input :meter_id, :as => :hidden, :input_html => { :value => @meter.try(:id) } %>
 
     <%#= f.association :billing_frequency, collection: BillingFrequency.where(), input_html: { class: 'x-large-text-field sel2', :id => "billing_frequency" }, label_html: { class: 'form-label' }, include_blank: true %>
     <%#= f.association :reading_route, collection: ReadingRoute.all, input_html: { class: 'x-large-text-field sel2', :id => "reading_route" }, label_html: { class: 'form-label' }, include_blank: true %>

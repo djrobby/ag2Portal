@@ -279,7 +279,7 @@ class Meter < ActiveRecord::Base
 
   # Shared meter
   def shared_coefficient
-    subscribers.size
+    subscribers.activated.size
   end
   def is_shared?
     shared_coefficient > 1

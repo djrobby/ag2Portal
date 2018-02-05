@@ -117,81 +117,105 @@ module Ag2Gest
     # POST /readings
     # POST /readings.json
     def create
-
       @breadcrumb = 'create'
-      #All associations
-      @subscriber = Subscriber.find(params[:reading][:subscriber_id])
-      @meter = Meter.find(params[:reading][:meter_id])
-      @project = Project.find(params[:reading][:project_id])
-      @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
-      @reading_exits = Reading.where( meter_id: params[:reading][:meter_id],
-                                      project_id: params[:reading][:project_id],
-                                      billing_period_id: params[:reading][:billing_period_id],
-                                      reading_type_id: params[:reading][:reading_type_id]).
-                              where("date(reading_date) = ?", params[:reading][:reading_date].split(' ')[0].to_date)
-
-
-      if @reading_exits.blank?
-
-        @reading = Reading.new(params[:reading])
-        if !params[:incidence_type_ids].blank? #[]
-          @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
-          @reading.reading_incidence_types << @my_read_inci_type
-        end
-
-        rdg_1 = set_reading_1_to_reading(@subscriber,@meter,@billing_period)
-        rdg_2 = set_reading_2_to_reading(@subscriber,@meter,@billing_period)
-        @reading.reading_1 = rdg_1
-        @reading.reading_index_1 = rdg_1.try(:reading_index)
-        @reading.reading_2 = rdg_2
-        @reading.reading_index_2 = rdg_2.try(:reading_index)
-        @reading.reading_sequence = @subscriber.reading_sequence
-        @reading.reading_variant = @subscriber.reading_variant
-        @reading.reading_route_id = @subscriber.reading_route_id
-        @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
-        @reading.created_by = current_user.id if !current_user.nil?
-        if @reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
-        else
-          @reading.reading_incidences.create(reading_id: @reading.id, reading_incidence_type_id: 27)
-        end
-
-        if @reading.save
-          respond_to do |format|
+      @meter = Meter.find(params[:reading][:meter_id]) rescue nil
+      if !@meter.blank?
+        # All associations
+        @subscriber = Subscriber.find(params[:reading][:subscriber_id]) rescue nil
+        @service_point = ServicePoint.find(params[:reading][:service_point_id]) rescue nil
+        @project = Project.find(params[:reading][:project_id])
+        @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
+        @reading_exits = Reading.where( meter_id: params[:reading][:meter_id],
+                                        project_id: params[:reading][:project_id],
+                                        billing_period_id: params[:reading][:billing_period_id],
+                                        reading_type_id: params[:reading][:reading_type_id]) \
+                                .where("date(reading_date) = ?", params[:reading][:reading_date].split(' ')[0].to_date)
+        created_by = current_user.id if !current_user.nil?
+        if @reading_exits.blank?
+          if @meter.is_shared?
+            @meters.subscribers.activated do |s|
+              rdg_1 = set_reading_1_to_reading(s, @meter, @billing_period)
+              rdg_2 = set_reading_2_to_reading(s, @meter, @billing_period)
+              @reading = Reading.new(project_id: params[:reading][:project_id],
+                                     billing_period_id: params[:reading][:billing_period_id],
+                                     billing_frequency_id: @billing_period.try(:billing_frequency_id),
+                                     reading_type_id: params[:reading][:reading_type_id],
+                                     meter_id: params[:reading][:meter_id],
+                                     subscriber_id: s.id,
+                                     service_point_id: s.try(:service_point_id) || @service_point.try(:id),
+                                     reading_route: s.try(:reading_route_id) || @service_point.try(:reading_route_id),
+                                     reading_sequence: s.try(:reading_sequence) || @service_point.try(:reading_sequence),
+                                     reading_variant: s.try(:reading_variant) || @service_point.try(:reading_variant),
+                                     reading_date: params[:reading][:reading_date].to_date,
+                                     reading_index: params[:reading][:reading_index],
+                                     reading_1: rdg_1,
+                                     reading_index_1: rdg_1.try(:reading_index),
+                                     reading_2: rdg_2,
+                                     reading_index_2: rdg_2.try(:reading_index),
+                                     created_by: created_by)
+              if !params[:incidence_type_ids].blank?
+                @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
+                @reading.reading_incidence_types << @my_read_inci_type
+              end
+              if !@reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
+                @reading.reading_incidences.create(reading_id: @reading.id, reading_incidence_type_id: 27)
+              end
+              if !@reading.save
+                if session[:return_to_subscriber].nil?
+                  redirect_to @reading, alert: t('activerecord.attributes.reading.wrongly')
+                else
+                  redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+                end
+                break
+              end
+            end # @meters.subscribers.activated do |s|
             if session[:return_to_subscriber].nil?
-              format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.successfully') }
+              redirect_to @reading, notice: t('activerecord.attributes.reading.create')
             else
-              format.html { redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.successfully') }
+              redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
             end
-          end
-        else
-          respond_to do |format|
-            if session[:return_to_subscriber].nil?
-              format.html { redirect_to @reading, alert: t('activerecord.attributes.reading.repeat') }
-            else
-              format.html { redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat') }
-            end
-          end
-        end
-      else
-        respond_to do |format|
-          if session[:return_to_subscriber].nil?
-            format.html { redirect_to @reading, alert: t('activerecord.attributes.reading.repeat') }
           else
-            format.html { redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat') }
+            @reading = Reading.new(params[:reading])
+            if !params[:incidence_type_ids].blank?
+              @my_read_inci_type = ReadingIncidenceType.where(id: params[:incidence_type_ids])
+              @reading.reading_incidence_types << @my_read_inci_type
+            end
+            rdg_1 = set_reading_1_to_reading(@subscriber, @meter, @billing_period)
+            rdg_2 = set_reading_2_to_reading(@subscriber, @meter, @billing_period)
+            @reading.reading_1 = rdg_1
+            @reading.reading_index_1 = rdg_1.try(:reading_index)
+            @reading.reading_2 = rdg_2
+            @reading.reading_index_2 = rdg_2.try(:reading_index)
+            @reading.reading_sequence = @subscriber.reading_sequence
+            @reading.reading_variant = @subscriber.reading_variant
+            @reading.reading_route_id = @subscriber.reading_route_id
+            @reading.billing_frequency_id = @billing_period.try(:billing_frequency_id)
+            @reading.created_by = current_user.id if !current_user.nil?
+            if !@reading.reading_date.between?(@billing_period.reading_starting_date, @billing_period.reading_ending_date)
+              @reading.reading_incidences.create(reading_id: @reading.id, reading_incidence_type_id: 27)
+            end
+            if @reading.save
+              if session[:return_to_subscriber].nil?
+                redirect_to @reading, notice: t('activerecord.attributes.reading.create')
+              else
+                redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
+              end
+            else
+              if session[:return_to_subscriber].nil?
+                redirect_to @reading, alert: t('activerecord.attributes.reading.wrongly')
+              else
+                redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+              end
+            end
+          end # @meter.is_shared?
+        else
+          if session[:return_to_subscriber].nil?
+            redirect_to @reading, alert: t('activerecord.attributes.reading.repeat')
+          else
+            redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat')
           end
-        end
-      end
-
-
-#      respond_to do |format|
-#        if @reading.save
-#          format.html { redirect_to @reading, notice: t('activerecord.attributes.reading.create') }
-#          format.json { render json: @reading, status: :created, location: @reading }
-#        else
-#          format.html { render action: "new" }
-#          format.json { render json: @reading.errors, status: :unprocessable_entity }
-#        end
-#      end
+        end # @reading_exits.blank?
+      end # !@meter.blank?
     end
 
     # PUT /readings/1

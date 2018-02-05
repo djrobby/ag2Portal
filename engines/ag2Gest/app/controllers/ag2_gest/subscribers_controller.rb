@@ -683,6 +683,8 @@ module Ag2Gest
 
       @breadcrumb = 'read'
       @subscriber = Subscriber.find(params[:id])
+      @service_point = @subscriber.service_point rescue nil
+      @meter = @subscriber.meter rescue nil
       @reading = Reading.new
       @street_types = StreetType.order(:street_type_code)
       @towns = []
