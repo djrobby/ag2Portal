@@ -10,6 +10,7 @@ class Reading < ActiveRecord::Base
   belongs_to :reading_type
   belongs_to :meter
   belongs_to :subscriber
+  belongs_to :service_point
   belongs_to :reading_route
   belongs_to :reading_1, class_name: "Reading"  # Previous (period) reading
   belongs_to :reading_2, class_name: "Reading"  # Previous year reading
@@ -17,8 +18,9 @@ class Reading < ActiveRecord::Base
 
   attr_accessible :reading_date, :reading_index, :reading_sequence, :reading_variant,
                   :project_id, :billing_period_id, :billing_frequency_id, :reading_type_id,
-                  :meter_id, :subscriber_id, :reading_route_id, :reading_index_1, :bill_id,
-                  :reading_index_2, :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id,
+                  :meter_id, :subscriber_id, :service_point_id, :bill_id,
+                  :reading_route_id, :reading_index_1, :reading_index_2,
+                  :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id,
                   :created_by, :updated_by, :lat, :lng
 
   #:reading_incidence_types_attributtes

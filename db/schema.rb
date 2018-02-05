@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180204083746) do
+ActiveRecord::Schema.define(:version => 20180205080828) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2631,6 +2631,7 @@ ActiveRecord::Schema.define(:version => 20180204083746) do
     t.decimal  "lat",                                      :precision => 18, :scale => 15
     t.decimal  "lng",                                      :precision => 18, :scale => 15
     t.binary   "image",                :limit => 16777215
+    t.integer  "service_point_id"
   end
 
   add_index "pre_readings", ["billing_frequency_id"], :name => "index_pre_readings_on_billing_frequency_id"
@@ -2643,6 +2644,7 @@ ActiveRecord::Schema.define(:version => 20180204083746) do
   add_index "pre_readings", ["reading_date"], :name => "index_pre_readings_on_reading_date"
   add_index "pre_readings", ["reading_route_id"], :name => "index_pre_readings_on_reading_route_id"
   add_index "pre_readings", ["reading_type_id"], :name => "index_pre_readings_on_reading_type_id"
+  add_index "pre_readings", ["service_point_id"], :name => "index_pre_readings_on_service_point_id"
   add_index "pre_readings", ["subscriber_id"], :name => "index_pre_readings_on_subscriber_id"
 
   create_table "processed_file_types", :force => true do |t|
@@ -3095,6 +3097,7 @@ ActiveRecord::Schema.define(:version => 20180204083746) do
     t.decimal  "lat",                                      :precision => 18, :scale => 15
     t.decimal  "lng",                                      :precision => 18, :scale => 15
     t.binary   "image",                :limit => 16777215
+    t.integer  "service_point_id"
   end
 
   add_index "readings", ["bill_id"], :name => "index_readings_on_bill_id"
@@ -3107,6 +3110,7 @@ ActiveRecord::Schema.define(:version => 20180204083746) do
   add_index "readings", ["reading_date"], :name => "index_readings_on_reading_date"
   add_index "readings", ["reading_route_id"], :name => "index_readings_on_reading_route_id"
   add_index "readings", ["reading_type_id"], :name => "index_readings_on_reading_type_id"
+  add_index "readings", ["service_point_id"], :name => "index_readings_on_service_point_id"
   add_index "readings", ["subscriber_id"], :name => "index_readings_on_subscriber_id"
 
   create_table "receipt_note_item_balances", :id => false, :force => true do |t|

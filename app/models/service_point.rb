@@ -21,6 +21,8 @@ class ServicePoint < ActiveRecord::Base
   has_paper_trail
 
   has_many :subscribers
+  has_many :readings
+  has_many :pre_readings
 
   validates :code,                    :presence => true,
                                       :length => { :minimum => 3, :maximum => 11 }
