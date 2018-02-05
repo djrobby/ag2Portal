@@ -1,4 +1,188 @@
 <script>
+  function show_buttons(_show) {
+    if (_show == true) {
+      $('#report_btn').show();
+      $('#csv_btn').show();
+      $('label[for=label_detailed]').show();
+    } else {
+      $('#report_btn').hide();
+      $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
+    }
+  }
+
+  function setupAllSelect2(p, s, t, w, a, r) {
+    projectsSelect2(p);
+    suppliersSelect2(s);
+    storesSelect2(t);
+    wordersSelect2(w);
+    caccountsSelect2(a);
+    productsSelect2(r);
+  }
+
+  function projectsSelect2(intialValue) {
+    $('#Project').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      data: intialValue,
+      ajax: {
+        url: "/search_projects",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function suppliersSelect2(intialValue) {
+    $('#Supplier').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_suppliers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function storesSelect2(intialValue) {
+    $('#Store').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_stores",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function wordersSelect2(intialValue) {
+    $('#Order').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_work_orders",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function caccountsSelect2(intialValue) {
+    $('#Account').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_charge_accounts",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function productsSelect2(intialValue) {
+    $('#Product').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_products",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return { 
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -11,8 +195,14 @@
       containerCssClass: 'left-winged',
       allowClear: true
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @project %>", "<%= @supplier %>",
+                    "<%= @store %>", "<%= @work_order %>",
+                    "<%= @charge_account %>", "<%= @product %>");
+
     // Hide report button
-    $('#report_btn').hide();
+    show_buttons(false);
   }); 
 
   jQuery(function($) {
@@ -24,220 +214,215 @@
       switch (report) {
         case 1:
           // Offer request
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Status", "label_order_status");
+          show("#Product", "label_product");
+          show_buttons(true);
           break;
         case 2:
           // Offer
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Status", "label_order_status");
+          show("#Product", "label_product");
+          show_buttons(true);
           break;
         case 3:
           // Purchase order
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Status", "label_order_status");
+          show("#Product", "label_product");
+          show_buttons(true);
           break;
         case 4:
           // Supplier invoice
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          hide("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          show("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          hide("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          hide("#Status", "label_order_status");
+          show("#Product", "label_product");
+          show_buttons(true);
           break;
         case 5:
           // Supplier payment
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          hide("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          hide("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Status", "label_order_status");
+          hide("#Product", "label_product");
+          show_buttons(true);
           break;
         case 6:
           // Supplier
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          hide("#Store", "<%= t(".label_store") %>");
-          hide("#Order", "<%= t(".label_work_order") %>");
-          hide("#Account", "<%= t(".label_charge_account") %>");
-          hide("#Status", "<%= t(".label_order_status") %>");
-          hide("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').show();
+          hide_date("#From", "label_from");
+          hide_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          hide("#Store", "label_store");
+          hide("#Order", "label_work_order");
+          hide("#Account", "label_charge_account");
+          hide("#Status", "label_order_status");
+          hide("#Product", "label_product");
+          show_buttons(true);
           break;
         default:
-          show("#Project", "<%= t(".label_project") %>");
-          show("#Supplier", "<%= t(".label_supplier") %>");
-          show("#Store", "<%= t(".label_store") %>");
-          show("#Order", "<%= t(".label_work_order") %>");
-          show("#Account", "<%= t(".label_charge_account") %>");
-          show("#Status", "<%= t(".label_order_status") %>");
-          show("#Product", "<%= t(".label_product") %>");
-          $('#report_btn').hide();
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Supplier", "label_supplier");
+          show("#Store", "label_store");
+          show("#Order", "label_work_order");
+          show("#Account", "label_charge_account");
+          show("#Status", "label_order_status");
+          show("#Product", "label_product");
+          show_buttons(false);
       }
-      return false;
-    });
-
-    // when the #Project field changes
-    $("#Project").change(function() {
-      // make a POST call and replace the content
-      var order = $('select#Project :selected').val();
-      if (order == "")
-        order = "0";
-      jQuery.getJSON('pu_track_project_has_changed/' + order, function(data) {
-        var w = data.work_order;
-        var c = data.charge_account;
-        var s = data.store;
-        // Work Order
-        $("#Order").html("");
-        $("#Order").select2("val", "");
-        $("#Order").append($('<option></option>').val("").html(""));
-        if (!w.length) {
-          $.each(data, function(id, option) {
-            if (id == 'work_order' && option != "") {
-              $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-            }
-          });
-        } else {
-          $.each(w, function(id, option) {
-            $("#Order").append($('<option></option>').val(option.id).html(option.order_no.substring(0,10) + "-" + option.order_no.substring(10,14) + "-" + option.order_no.substring(14,20) + " " + option.description));
-          });
-        }
-        // Charge Account
-        $("#Account").html("");
-        $("#Account").select2("val", "");
-        $("#Account").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'charge_account' && option != "") {
-              $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-            $("#Account").append($('<option></option>').val(option.id).html(option.account_code.substring(0,4) + "-" + option.account_code.substring(4,11) + " " + option.name));
-          });
-        }
-        // Store
-        $("#Store").html("");
-        $("#Store").select2("val", "");
-        $("#Store").append($('<option></option>').val("").html(""));
-        if (!s.length) {
-          $.each(data, function(id, option) {
-            if (id == 'store' && option != "") {
-              $("#Store").append($('<option></option>').val(option.id).html(option.name));
-            }
-          });
-        } else {
-          $.each(s, function(id, option) {
-            $("#Store").append($('<option></option>').val(option.id).html(option.name));
-          });
-        }
-      });
       return false;
     });
 
     // when #report_btn is clicked
     $("#report_btn").click(function() {
-      // make a POST call and get report
+      get_report_or_csv(false);
+      return false;
+    });
+
+    // when #csv_btn is clicked
+    $("#csv_btn").click(function() {
+      get_report_or_csv(true);
+      return false;
+    });
+    
+    function get_report_or_csv(_csv) {
+      var nam = '';
+      var ext = '.pdf';
+      var pag = '_blank';
       var report = $('#Report :selected').index();
       if (report == "")
         return;
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if ((from == "") || (to == ""))
+      if (((from == "") || (to == "")) && report <= 5)
         return;
+      // CSV or PDF
+      if (_csv == true) {
+        ext = ".csv";
+        pag = '_self';
+      }
       switch (report) {
         case 1:
           // Offer request
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (product == ""))
-            return;
-          window.open("request_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var product = $('#Product').val();
+          // if ((project == "") && (supplier == "") && (product == ""))
+          //   return;
+          if (detailed == "") {
+            nam = "request_report" + ext;
+          } else {
+            nam = "request_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, pag);
           break;
         case 2:
           // Offer
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (product == ""))
-            return;
-          window.open("offer_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var product = $('#Product').val();
+          // if ((project == "") && (supplier == "") && (product == ""))
+          //   return;
+          if (detailed == "") {
+            nam = "offer_report" + ext;
+          } else {
+            nam = "offer_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, pag);
           break;
         case 3:
           // Purchase order
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var store = $('select#Store :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var status = $('select#Status :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (order == "") && (account == "") && (status == "") && (product == ""))
-            return;
-          window.open("order_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status + "&product=" + product, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var store = $('#Store').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var petitioner = $('#User').val();
+          var status = $('#Status :selected').val();
+          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
+          //   return;
+          if (detailed == "") {
+            nam = "order_report" + ext;
+          } else {
+            nam = "order_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, pag);
           break;
         case 4:
           // Supplier invoice
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          var order = $('select#Order :selected').val();
-          var account = $('select#Account :selected').val();
-          var product = $('select#Product :selected').val();
-          if ((project == "") && (supplier == "") && (order == "") && (account == "") && (product == ""))
-            return;
-          window.open("invoice_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          var order = $('#Order').val();
+          var account = $('#Account').val();
+          var product = $('#Product').val();
+          // if ((project == "") && (supplier == "") && (order == "") && (account == "") && (product == ""))
+          //   return;
+          if (detailed == "") {
+            nam = "invoice_report" + ext;
+          } else {
+            nam = "invoice_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, pag);
           break;
         case 5:
           // Supplier payment
-          var project = $('select#Project :selected').val();
-          var supplier = $('select#Supplier :selected').val();
-          if ((project == "") && (supplier == ""))
-            return;
-          window.open("payment_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          // if ((project == "") && (supplier == ""))
+          //   return;
+          nam = "payment_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, pag);
           break;
         case 6:
           // Supplier
-          var supplier = $('select#Supplier :selected').val();
-          if ((project == "") && (supplier == ""))
-            return;
-          window.open("supplier_report.pdf?detailed=" + detailed + "project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, "_blank");
+          var project = $('#Project').val();
+          var supplier = $('#Supplier').val();
+          // if ((project == "") && (supplier == ""))
+          //   return;
+          nam = "supplier_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&supplier=" + supplier, pag);
           break;
       }
-      return false;
-    });
+    }
     
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);
@@ -252,16 +437,51 @@
       $('label[for=' + _label + ']').show();
       $(_select).addClass('sel2');
       $(_select).show();
-      $(_select).select2({
-        formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-        containerCssClass: 'left-winged',
-        allowClear: true
-      });
+      switch (_select) {
+        case '#Project':
+          projectsSelect2("<%= @project %>");
+          break;
+        case '#Supplier':
+          suppliersSelect2("<%= @supplier %>");
+          break;
+        case '#Store':
+          storesSelect2("<%= @store %>");
+          break;
+        case '#Order':
+          wordersSelect2("<%= @work_order %>");
+          break;
+        case '#Account':
+          caccountsSelect2("<%= @charge_account %>");
+          break;
+        case '#Product':
+          productsSelect2("<%= @product %>");
+          break;
+        default:
+          $(_select).select2({
+            formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+            containerCssClass: 'left-winged',
+            allowClear: true
+          });
+      }
+    }
+    
+    function hide_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').hide();
+      $(_date).removeClass('date_picker');
+      $(_date).hide();      
+    }
+    
+    function show_date(_date, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').show();
+      $(_date).addClass('date_picker');
+      $(_date).show();
     }
   });
 </script>
 
-<%= render '/layouts/ag2_purchase/trackbreadcrumb' %>
+<%= render '/layouts/ag2_gest/trackbreadcrumb' %>
 
 <div class="row">
   <div class="span12">
@@ -287,43 +507,48 @@
   </div>
   <div class="span5 track-box">
     <div align="center">
-      <%= form_tag "bills_to_file", :method => 'get' do %>
+      <%= form_tag "ag2_purchase_track", :method => 'get' do %>
       <!-- Report -->
       <%= label_tag t(".label_report"), nil, :class => 'form-label' %>
       <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Project -->
-      <%= label_tag t(".label_project"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Project", options_from_collection_for_select(@projects, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_project", t(".label_project"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Supplier -->
-      <%= label_tag t(".label_supplier"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Supplier", options_from_collection_for_select(@suppliers, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_supplier", t(".label_supplier"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Supplier", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Store -->
-      <%= label_tag t(".label_store"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Store", options_from_collection_for_select(@stores, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_store", t(".label_store"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Store", params[:Store], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Work order -->
-      <%= label_tag t(".label_work_order"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Order", options_from_collection_for_select(@work_orders, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_work_order", t(".label_work_order"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Charge account -->
-      <%= label_tag t(".label_charge_account"), nil, :class => 'form-label-under-sel2' %>
-      <%= select_tag "Account", options_from_collection_for_select(@charge_accounts, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <%= label_tag "label_charge_account", t(".label_charge_account"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Account", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Dates -->
-      <%= label_tag t("control_tracking.label_from"), nil, :class => 'form-label-under-sel2' %>
+      <%= label_tag "label_from", t("control_tracking.label_from"), :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <%= label_tag t("control_tracking.label_to"), nil, :class => 'form-label' %>
+      <%= label_tag "label_to", t("control_tracking.label_to"), :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <!-- Purchase order Status -->
-      <%= label_tag t(".label_order_status"), nil, :class => 'form-label' %>
+      <%= label_tag "label_order_status", t(".label_order_status"), :class => 'form-label' %>
       <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Product -->
       <!-- Last tag into <p></p> tags for spacing -->
       <p>
-        <%= label_tag t(".label_product"), nil, :class => 'form-label-under-sel2' %>
-        <%= select_tag "Product", options_from_collection_for_select(@products, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+        <%= label_tag "label_product", t(".label_product"), :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "Product", params[:Product], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       </p>
+      <!-- Detailed? -->
+      <%= label_tag 'label_detailed', :class => 'checkbox inline' do %>
+        <%= t("control_tracking.detailed") %>
+        <%= check_box_tag 'detailed', nil, nil %>
+      <% end %>
       <!-- Buttons -->
       <p>
         <a href="#" id="report_btn" class="btn btn-primary form-button-under-sel2"><%= t '.report_btn' %></a>
-        <%= check_box_tag 'detailed', nil, nil, title: t("control_tracking.detailed") %>
+        <a href="#" id="csv_btn" class="btn btn-success form-button-under-sel2"><%= t '.csv_btn' %></a>
       </p>
       <!-- Links -->
       <%= link_to t(".back_to_root"), ag2_purchase.root_path %>

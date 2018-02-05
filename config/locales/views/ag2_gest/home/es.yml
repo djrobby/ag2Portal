@@ -26,6 +26,7 @@ es:
         centers: "Núcleos Urbanos"
         street_directories: "Callejeros"
         frauds: "Fraudes"
+        sale_to_file: "Archivos de Venta"
       tariff:
         schemes: "Esquemas (contratación)"
         tariffs: "Tarifas Generales"

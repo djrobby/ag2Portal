@@ -26,6 +26,7 @@ en:
         centers: "Urban Centers"
         street_directories: "Street Directories"
         frauds: "Frauds"
+        sale_to_file: "Sale Files"
       tariff:
         schemes: "Schemes (contracting)"
         tariffs: "General Tariffs"
