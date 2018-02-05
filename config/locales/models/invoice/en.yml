@@ -7,6 +7,7 @@ en:
         few:   Invoices
         other: Invoices
         one_or_many: Invoice(s)
+        pending:   Pending Invoices
     attributes:
       invoice:
         successfully: "Invoice updated correctly."

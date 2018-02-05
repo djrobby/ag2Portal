@@ -3,49 +3,21 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class Ag2GestTrackController < ApplicationController
     before_filter :authenticate_user!
-    skip_load_and_authorize_resource :only => [:request_report,
-                                               :offer_report,
-                                               :order_report,
+    skip_load_and_authorize_resource :only => [:supply_contract_report,
+                                               :connection_contract_report,
+                                               :contracting_request_report,
+                                               :pre_invoice_report,
                                                :invoice_report,
-                                               :payment_report,
-                                               :supplier_report,
-                                               :pu_track_project_has_changed,
-                                               :pu_track_family_has_changed]
+                                               :pending_invoice_report,
+                                               :client_payment_report,
+                                               :debt_claim_report,
+                                               :pre_reading_report,
+                                               :reading_report,
+                                               :meter_report,
+                                               :service_point_report,
+                                               :subscriber_report,
+                                               :client_report]
 
-    # Update work order, charge account and store select fields at view from project select
-    def pu_track_project_has_changed
-      project = params[:order]
-      projects = projects_dropdown
-      if project != '0'
-        @project = Project.find(project)
-        @work_order = @project.blank? ? projects_work_orders(projects) : @project.work_orders.order(:order_no)
-        @charge_account = @project.blank? ? projects_charge_accounts(projects) : charge_accounts_dropdown_edit(@project)
-        @store = @project.blank? ? projects_stores(projects) : project_stores(@project)
-      else
-        @work_order = projects_work_orders(projects)
-        @charge_account = projects_charge_accounts(projects)
-        @store = projects_stores(projects)
-      end
-      @json_data = { "work_order" => @work_order, "charge_account" => @charge_account, "store" => @store }
-      render json: @json_data
-    end
-
-    # Update product select fields at view from family select
-    def pu_track_family_has_changed
-      family = params[:order]
-      if family != '0'
-        @family = ProductFamily.find(family)
-        @products = @family.blank? ? products_dropdown : @family.products.order(:product_code)
-      else
-        @products = products_dropdown
-      end
-      # Products array
-      @products_dropdown = products_array(@products)
-      @json_data = { "product" => @products_dropdown }
-      render json: @json_data
-    end
-
-    # Offer request report
     def request_report
       detailed = params[:detailed]
       project = params[:project]
@@ -114,7 +86,6 @@ module Ag2Gest
       end
     end
 
-    # Offer request items report
     def request_items_report
       detailed = params[:detailed]
       project = params[:project]
@@ -802,11 +773,10 @@ module Ag2Gest
     #
     def index
       project = params[:Project]
-      supplier = params[:Supplier]
-      store = params[:Store]
+      client = params[:Supplier]
+      subscriber = params[:Subscriber]
       order = params[:Order]
       account = params[:Account]
-      product = params[:Product]
 
       @reports = reports_array
       @organization = nil
@@ -815,11 +785,10 @@ module Ag2Gest
       end
 
       @project = !project.blank? ? Project.find(project).full_name : " "
-      @supplier = !supplier.blank? ? Supplier.find(supplier).full_name : " "
-      @store = !store.blank? ? Store.find(store).name : " "
+      @client = !client.blank? ? Client.find(client).full_name : " "
+      @subscriber = !subscriber.blank? ? Subscriber.find(subscriber).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
-      @product = !product.blank? ? Product.find(product).full_name : " "
 
       @statuses = OrderStatus.order('id')
     end
@@ -828,12 +797,20 @@ module Ag2Gest
 
     def reports_array()
       _array = []
-      _array = _array << t("activerecord.models.offer_request.few")
-      _array = _array << t("activerecord.models.offer.few")
-      _array = _array << t("activerecord.models.purchase_order.few")
-      _array = _array << t("activerecord.models.supplier_invoice.few")
-      _array = _array << t("activerecord.models.supplier_payment.few")
-      _array = _array << t("activerecord.models.supplier.few")
+      _array = _array << t("activerecord.models.water_supply_contract.few")
+      _array = _array << t("activerecord.models.water_connection_contract.few")
+      _array = _array << t("activerecord.models.contracting_request.few")
+      _array = _array << t("activerecord.models.pre_invoice.few")
+      _array = _array << t("activerecord.models.invoice.few")
+      _array = _array << t("activerecord.models.invoice.pending")
+      _array = _array << t("activerecord.models.client_payment.few")
+      _array = _array << t("activerecord.models.debt_claim.few")
+      _array = _array << t("activerecord.models.pre_reading.few")
+      _array = _array << t("activerecord.models.reading.few")
+      _array = _array << t("activerecord.models.meter.few")
+      _array = _array << t("activerecord.models.service_point.few")
+      _array = _array << t("activerecord.models.subscriber.few")
+      _array = _array << t("activerecord.models.client.few")
       _array
     end
 
