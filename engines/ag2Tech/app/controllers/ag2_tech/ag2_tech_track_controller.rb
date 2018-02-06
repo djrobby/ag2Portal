@@ -50,7 +50,7 @@ module Ag2Tech
         @project_report = Project.where("id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
       end
 
-      title = t("activerecord.models.project.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.project.few") + "_#{from}_#{to}"
 
       respond_to do |format|
         # Render PDF
@@ -78,6 +78,8 @@ module Ag2Tech
       @to = params[:to]
       order = params[:order]
       account = params[:account]
+      group = params[:group]
+      budget = params[:budget]
 
       if project.blank?
         init_oco if !session[:organization]
@@ -88,11 +90,40 @@ module Ag2Tech
         project = current_projects.to_a
       end
 
-      from = Date.today.to_s
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
 
-      @charge_account_report = ChargeAccount.where("project_id in (?) ",project).order(:charge_group_id, :account_code)
+      @from_date = @from
+      @to_date = @to
 
-      title = t("activerecord.models.charge_account.few") + "_#{from}.pdf"
+      @from = Time.parse(@from).strftime("%Y-%m-%d")
+      @to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? and !budget.blank? and !group.blank? and !account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.charge_group_id = ? AND charge_accounts.id = ? ",project,budget,group,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and !budget.blank? and !group.blank? and account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.charge_group_id = ? ",project,budget,group).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and !budget.blank? and group.blank? and !account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.id = ? ",project,budget,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and !budget.blank? and group.blank? and account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? ",project,budget).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and budget.blank? and !group.blank? and account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.charge_group_id = ? ",project,group).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and budget.blank? and group.blank? and !account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.id = ? ",project,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and budget.blank? and !group.blank? and !account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.charge_group_id = ? AND charge_accounts.id = ?",project,group,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      elsif !project.blank? and budget.blank? and group.blank? and account.blank?
+        @charge_account_report = ChargeGroup.joins(:charge_accounts).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) ",project).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code').group(:charge_group_id)
+      end
+
+      @project_ids = project
+      @group = !group.blank? ? group : nil
+
+
+      title = t("activerecord.models.charge_account.few") + "_#{@from_date}_#{@to_date}"
 
       respond_to do |format|
         # Render PDF
@@ -101,7 +132,79 @@ module Ag2Tech
                        filename: "#{title}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
-          format.csv { send_data ChargeAccount.to_csv(@charge_account_report),
+          format.csv { send_data ChargeAccount.to_group_date_csv(@charge_account_report_group,@project_ids,@from,@to,@group),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_tech_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
+    # Charge Accounts report
+    def charge_account_track_detailed_report
+      detailed = params[:detailed]
+      project = params[:project]
+      @from = params[:from]
+      @to = params[:to]
+      order = params[:order]
+      account = params[:account]
+      group = params[:group]
+      budget = params[:budget]
+
+      if project.blank?
+        init_oco if !session[:organization]
+        # Initialize select_tags
+        @projects = projects_dropdown if @projects.nil?
+        # Arrays for search
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.to_a
+      end
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      @from_date = @from
+      @to_date = @to
+
+      @from = Time.parse(@from).strftime("%Y-%m-%d")
+      @to = Time.parse(@to).strftime("%Y-%m-%d")
+
+      if !project.blank? and !budget.blank? and !group.blank? and !account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.charge_group_id = ? AND charge_accounts.id = ? ",project,budget,group,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and !budget.blank? and !group.blank? and account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.charge_group_id = ? ",project,budget,group).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and !budget.blank? and group.blank? and !account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? AND charge_accounts.id = ? ",project,budget,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and !budget.blank? and group.blank? and account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_groups.budget_heading_id = ? ",project,budget).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and budget.blank? and !group.blank? and account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.charge_group_id = ? ",project,group).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and budget.blank? and group.blank? and !account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.id = ? ",project,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and budget.blank? and !group.blank? and !account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) AND charge_accounts.charge_group_id = ? AND charge_accounts.id = ?",project,group,account).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      elsif !project.blank? and budget.blank? and group.blank? and account.blank?
+        @charge_account_report = ChargeAccount.joins(:charge_group).where("(charge_accounts.project_id in (?) OR charge_accounts.project_id IS NULL) ",project).order('charge_groups.budget_heading_id,charge_accounts.charge_group_id,charge_accounts.account_code')
+      end
+
+      @project_ids = project
+      @group = !group.blank? ? group : nil
+
+      title = t("activerecord.models.charge_account.few") + "_#{@from_date}_#{@to_date}"
+
+      respond_to do |format|
+        # Render PDF
+        if !@charge_account_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ChargeAccount.to_date_csv(@charge_account_report,@project_ids,@from,@to,@group),
                        filename: "#{title}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }
@@ -140,7 +243,7 @@ module Ag2Tech
 
       @budget_report = Budget.where("project_id in (?) AND created_at >= ? AND created_at <= ?",project,from,to).order(:budget_no)
 
-      title = t("activerecord.models.budget.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.budget.few") + "_#{from}_#{to}"
 
       respond_to do |format|
         # Render PDF
@@ -196,7 +299,7 @@ module Ag2Tech
         @work_report = WorkOrder.where("project_id in (?) AND created_at >= ? AND created_at <= ?",project,from,to).order(:project_id)
       end
 
-      title = t("activerecord.models.work_order.few") + "_#{from}_#{to}.pdf"
+      title = t("activerecord.models.work_order.few") + "_#{from}_#{to}"
 
       respond_to do |format|
         # Render PDF
@@ -223,6 +326,8 @@ module Ag2Tech
       project = params[:Project]
       order = params[:Order]
       account = params[:Account]
+      group = params[:Group]
+      budget = params[:Budget]
 
       @reports = reports_array
       @organization = nil
@@ -233,7 +338,8 @@ module Ag2Tech
       @project = !project.blank? ? Project.find(project).full_name : " "
       @work_order = !order.blank? ? WorkOrder.find(order).full_name : " "
       @charge_account = !account.blank? ? ChargeAccount.find(account).full_name : " "
-
+      @charge_group = ChargeGroup.order(:group_code)
+      @budget_heading = BudgetHeading.order(:heading_code)
       @periods = periods_dropdown
     end
 
@@ -244,7 +350,7 @@ module Ag2Tech
       _array = _array << t("activerecord.models.project.few")
       _array = _array << t("activerecord.models.budget.few")
       _array = _array << t("activerecord.models.work_order.few")
-      _array = _array << t("activerecord.models.charge_account.few")
+      _array = _array << t("activerecord.models.charge_account.control_analitic")
       _array
     end
 

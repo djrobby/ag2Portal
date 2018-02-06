@@ -628,7 +628,6 @@ module Ag2Gest
 
 
     def subscriber_pdf
-
       @subscriber = Subscriber.find(params[:id])
       @billing_periods = BillingPeriod.all
       #@from = params[:from]
@@ -694,13 +693,11 @@ module Ag2Gest
       @countries = []
       @bank = []
       @bank_offices = []
-      # @regions = Region.order(:name)
-      # @countries = Country.order(:name)
       @client = Client.find(@subscriber.client_id)
       @client_bank_account = ClientBankAccount.new
-      # @billing_periods = BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
-      @billing_period = BillingPeriod.order('period DESC').all
-      @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq #BillingPeriod.where(billing_frequency_id: @subscriber.billing_frequency_id).order("period DESC")
+      @billing_period = billing_periods_dropdown(@subscriber.office_id, @subscriber.billing_frequency_id)
+      # @billing_period = BillingPeriod.order('period DESC').all
+      @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
       _tariff_type = []
       if !@subscriber.water_supply_contract.blank?
         @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
@@ -732,7 +729,12 @@ module Ag2Gest
       # reading_types_ids = @subscriber.readings.map(&:reading_type_id).uniq
       # @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
 
-      @project_dropdown = session[:company].blank? ? Project.all : Project.where(company_id: session[:company])
+      _projects, _oco = projects_dropdown
+      if _oco == false
+        @project_dropdown = Project.active_only
+      else
+        @project_dropdown = _projects
+      end
 
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
@@ -756,9 +758,6 @@ module Ag2Gest
 
       @search_readings = Reading.search do
         with :subscriber_id, params[:id]
-        # order_by :billing_period_id, :desc
-        # order_by :reading_date, :desc
-        # order_by :reading_index
         order_by :sort_id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
@@ -1264,6 +1263,50 @@ module Ag2Gest
       # BankOffice.order(:bank_id, :code).includes(:bank,:country)
     end
 
+    def billing_periods_dropdown(o, f)
+      if (!o.blank? && !f.blank?)
+        billing_periods_by_office_and_frequency(o, f)
+      elsif (!o.blank? && f.blank?)
+        billing_periods_by_office(o)
+      elsif (o.blank? && !f.blank?)
+        billing_periods_by_frequenct(f)
+      else
+        BillingPeriod.by_period_desc
+      end
+    end
+
+    def billing_periods_by_office_and_frequency(o, f)
+      BillingPeriod.belongs_to_office_and_frequency(o, f)
+    end
+
+    def billing_periods_by_office(o)
+      BillingPeriod.belongs_to_office(o)
+    end
+
+    def billing_periods_by_frequency(f)
+      BillingPeriod.belongs_to_frequency(f)
+    end
+
+    def read_billing_periods
+      @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
+    end
+
+    def projects_dropdown
+      _projects = nil
+      _oco = false
+      if session[:office] != '0'
+        _projects = Project.active_only.where(office_id: session[:office].to_i)
+        _oco = true
+      elsif session[:company] != '0'
+        _projects = Project.active_only.where(company_id: session[:company].to_i)
+        _oco = true
+      elsif session[:organization] != '0'
+        _projects = Project.active_only.where(organization_id: session[:organization].to_i)
+        _oco = true
+      end
+      return _projects, _oco
+    end
+
     def banks_array
       _banks = banks_dropdown
       _array = []
@@ -1281,7 +1324,6 @@ module Ag2Gest
       end
       _array
     end
-
 
     def zipcodes_array
       _zipcodes = zipcodes_dropdown
@@ -1327,7 +1369,6 @@ module Ag2Gest
       end
       _array
     end
-
 
     def reports_array()
       _array = []

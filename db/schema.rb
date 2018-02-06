@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180205080828) do
+ActiveRecord::Schema.define(:version => 20180206081755) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -798,8 +798,8 @@ ActiveRecord::Schema.define(:version => 20180205080828) do
     t.string   "email"
     t.boolean  "active"
     t.string   "remarks"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "organization_id"
@@ -811,7 +811,8 @@ ActiveRecord::Schema.define(:version => 20180205080828) do
     t.string   "last_name"
     t.string   "company"
     t.string   "old_code"
-    t.integer  "subscribers_count", :default => 0
+    t.integer  "subscribers_count",          :default => 0
+    t.integer  "client_bank_accounts_count", :default => 0
   end
 
   add_index "clients", ["client_code"], :name => "index_clients_on_client_code"
@@ -3750,6 +3751,7 @@ ActiveRecord::Schema.define(:version => 20180205080828) do
     t.integer  "postal_country_id"
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
+    t.integer  "client_bank_accounts_count",                                             :default => 0
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"

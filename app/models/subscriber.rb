@@ -36,6 +36,7 @@ class Subscriber < ActiveRecord::Base
 
   attr_accessor :reading_index_add, :reading_date_add
 
+  has_many :client_bank_accounts, dependent: :destroy
   has_many :work_orders
   has_many :meter_details
   has_one :contracting_request
@@ -425,6 +426,13 @@ class Subscriber < ActiveRecord::Base
 
   def for_sepa_mandate_id
     self.id.blank? ? '00000000' : self.id.to_s.rjust(8,'0')
+  end
+
+  def active_bank_accounts?
+    (client_bank_accounts_count > 0) && (!client_bank_accounts.where(ending_at: nil).blank?)
+  end
+  def active_bank_account
+    client_bank_accounts.where(ending_at: nil).order(:starting_at).last
   end
 
   #

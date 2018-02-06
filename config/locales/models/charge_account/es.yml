@@ -15,6 +15,7 @@ es:
         check_for_offers: "Cuenta analítica no puede ser eliminada mientras existan ofertas vinculadas."
         check_for_supplier_invoices: "Cuenta analítica no puede ser eliminada mientras existan facturas S vinculadas."
         check_for_sale_offers: "Cuenta analítica no puede ser eliminada mientras existan presupuestos vinculados."
+        control_analitic: "Acumulado por Conceptos Analíticos"
     attributes:
       charge_account:
         account_code: "Código"

@@ -1,6 +1,6 @@
 class ClientBankAccount < ActiveRecord::Base
-  belongs_to :client
-  belongs_to :subscriber
+  belongs_to :client, :counter_cache => true
+  belongs_to :subscriber, :counter_cache => true
   belongs_to :bank_account_class
   belongs_to :country
   belongs_to :bank

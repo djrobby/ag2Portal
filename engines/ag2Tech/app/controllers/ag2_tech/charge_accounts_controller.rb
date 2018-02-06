@@ -140,7 +140,14 @@ module Ag2Tech
       @breadcrumb = 'read'
       @charge_account = ChargeAccount.find(params[:id])
       @ledger_accounts = @charge_account.charge_account_ledger_accounts.paginate(:page => params[:page], :per_page => per_page).order(:id)
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      @project_ids = current_projects.to_a
 
+      # Arrays for search
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @charge_account }
@@ -278,6 +285,9 @@ module Ag2Tech
         paginate :per_page => ChargeAccount.count
       end
       @charge_account_report = @search.results
+      @project_ids = current_projects.to_a
+      @group = !group.blank? ? group : nil
+
       from = Date.today.to_s
 
       title = t("activerecord.models.charge_account.few") + "_#{from}"
@@ -289,7 +299,7 @@ module Ag2Tech
                       filename: "#{title}.pdf",
                       type: 'application/pdf',
                       disposition: 'inline' }
-          format.csv { send_data ChargeAccount.to_csv(@charge_account_report),
+          format.csv { send_data ChargeAccount.to_csv(@charge_account_report,@project_ids,@group),
                       filename: "#{title}.csv",
                       type: 'application/csv',
                       disposition: 'inline' }
@@ -350,21 +360,43 @@ module Ag2Tech
     end
 
     def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
       if session[:office] != '0'
-        _projects = Project.active_only.where(office_id: session[:office].to_i)
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
       elsif session[:company] != '0'
-        _projects = Project.active_only.where(company_id: session[:company].to_i)
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
       else
-        _projects = session[:organization] != '0' ? Project.active_only.where(organization_id: session[:organization].to_i) : Project.active_only
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
       end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).order(:project_code)
     end
 
-    def projects_dropdown_edit(_project)
-      _projects = projects_dropdown
-      if _projects.blank?
-        _projects = Project.where(id: _project)
+    def projects_dropdown_old
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+      else
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
       end
-      _projects
     end
 
     def groups_dropdown

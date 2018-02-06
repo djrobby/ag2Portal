@@ -87,13 +87,17 @@ class Reading < ActiveRecord::Base
     _codes
   end
 
+  # ************************************************
+  # * WARNING!                                     *
+  # * It must be treated in the opposite direction *
+  # ************************************************
   def billable?
     # reading_type_id != 4 and (bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?)
     # bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
     if bill.blank? && !subscriber.blank?
       Reading.where(subscriber_id: subscriber_id, billing_period_id: billing_period_id, reading_type_id: [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]).select{|r| r.bill != nil}.blank?
     else
-      false #!Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
+      false
     end
   end
 

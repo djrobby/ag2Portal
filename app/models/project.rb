@@ -72,44 +72,6 @@ class Project < ActiveRecord::Base
 
   before_destroy :check_for_dependent_records
 
-  # Aux methods for CSV
-  def raw_number(_number, _d)
-    formatted_number_without_delimiter(_number, _d)
-  end
-
-  def sanitize(s)
-    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
-  end
-
-  #
-  # Class (self) user defined methods
-  #
-  def self.to_csv(array)
-    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
-                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.office")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.opened_at")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.closed_at"))]
-    col_sep = I18n.locale == :es ? ";" : ","
-    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
-      csv << attributes
-      array.each do |i|
-        i001 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank? 
-        i002 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
-        
-        csv << [  i.try(:company).try(:id),
-                  i.try(:company).try(:name),
-                  i.full_code,
-                  i.name,
-                  i.try(:office).try(:name),
-                  i001,
-                  i002]
-      end
-    end
-  end
-
   def to_label
     "#{full_name}"
   end
@@ -138,11 +100,46 @@ class Project < ActiveRecord::Base
     charge_accounts.size > 0 ? true : false
   end
 
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
   def self.active_only
     where("closed_at IS NULL").order(:project_code)
+  end
+
+  def self.to_csv(array)
+    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.project.office")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.project.opened_at")),
+                    array[0].sanitize(I18n.t("activerecord.attributes.project.closed_at"))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+        i002 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+
+        csv << [  i.try(:company).try(:id),
+                  i.try(:company).try(:name),
+                  i.full_code,
+                  i.name,
+                  i.try(:office).try(:name),
+                  i001,
+                  i002]
+      end
+    end
   end
 
   #

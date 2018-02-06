@@ -133,6 +133,8 @@
           show_date("#To", "label_to");
           show("#Project", "label_project");
           hide("#Order", "label_work_order");
+          hide("#Budget", "label_budget_heading");
+          hide("#Group", "label_charge_group");
           hide("#Account", "label_charge_account");
           hide("#Period", "label_budget_period");
           show_buttons(true);
@@ -143,6 +145,8 @@
           show_date("#To", "label_to");
           show("#Project", "label_project");
           hide("#Order", "label_work_order");
+          hide("#Budget", "label_budget_heading");
+          hide("#Group", "label_charge_group");
           show("#Account", "label_charge_account");
           show("#Period", "label_budget_period");
           show_buttons(true);
@@ -153,17 +157,21 @@
           show_date("#To", "label_to");
           show("#Project", "label_project");
           show("#Order", "label_work_order");
+          hide("#Budget", "label_budget_heading");
+          hide("#Group", "label_charge_group");
           hide("#Account", "label_charge_account");
           hide("#Period", "label_budget_period");
           show_buttons(true);
           break;
         case 4:
-          // Project
-          hide_date("#From", "label_from");
-          hide_date("#To", "label_to");
+          // Charge_account
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
           show("#Project", "label_project");
           hide("#Order", "label_work_order");
-          hide("#Account", "label_charge_account");
+          show("#Budget", "label_budget_heading");
+          show("#Group", "label_charge_group");
+          show("#Account", "label_charge_account");
           hide("#Period", "label_budget_period");
           show_buttons(true);
           break;
@@ -172,6 +180,8 @@
           show_date("#To", "label_to");
           show("#Project", "label_project");
           show("#Order", "label_work_order");
+          show("#Budget", "label_budget_heading");
+          show("#Group", "label_charge_group");
           show("#Account", "label_charge_account");
           show("#Period", "label_budget_period");
           show_buttons(false);
@@ -201,7 +211,7 @@
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if (((from == "") || (to == "")) && report <= 3)
+      if (((from == "") || (to == "")) && report <= 4)
         return;
       // CSV or PDF
       if (_csv == true) {
@@ -214,34 +224,46 @@
           var project = $('#Project').val();
           var order = $('#Order').val();
           var account = $('#Account').val();
+          var group = $('#Group').val();
+          var budget = $('#Budget').val();
           nam = "project_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account, pag);
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&order=" + order + "&account=" + account + "&group=" + group + "&budget=" + budget, pag);
           break;
         case 2:
           // Budget
           var project = $('#Project').val();
           var account = $('#Account').val();
+          var group = $('#Group').val();
+          var budget = $('#Budget').val();
           var period = $('select#Period :selected').val();
           // if ((project == "") && (account == "") && (period == ""))
           return;
           nam = "budget_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&account=" + account + "&period=" + period, pag);
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&account=" + account + "&group=" + group + "&budget=" + budget + "&period=" + period, pag);
           break;
         case 3:
           // Work order
           var project = $('#Project').val();
           var order = $('#Order').val();
           var account = $('#Account').val();
+          var group = $('#Group').val();
+          var budget = $('#Budget').val();
           nam = "work_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&from=" + from + "&to=" + to , pag);
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&group=" + group + "&budget=" + budget + "&from=" + from + "&to=" + to , pag);
           break;
         case 4:
           // charge_account_track_report
           var project = $('#Project').val();
           var order = $('#Order').val();
           var account = $('#Account').val();
-          nam = "charge_account_track_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account, pag);
+          var group = $('#Group').val();
+          var budget = $('#Budget').val();
+          if (detailed == "") {
+            nam = "charge_account_track_report" + ext;
+          } else {
+            nam = "charge_account_track_detailed_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&order=" + order + "&account=" + account + "&group=" + group + "&budget=" + budget + "&from=" + from + "&to=" + to , pag);
           break;
       }
     }
@@ -330,6 +352,12 @@
       <!-- Work order -->
       <%= label_tag "label_work_order", t(".label_work_order"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Budget heading -->
+      <%= label_tag "label_budget_heading", t(".label_budget_heading"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "Budget", options_from_collection_for_select(@budget_heading, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
+      <!-- Charge Group -->
+      <%= label_tag "label_charge_group", t(".label_charge_group"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "Group", options_from_collection_for_select(@charge_group, "id", "full_name"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Charge account -->
       <%= label_tag "label_charge_account", t(".label_charge_account"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "Account", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>

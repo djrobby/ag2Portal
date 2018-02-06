@@ -15,6 +15,7 @@ en:
         check_for_offers: "Analytical account cannot be destroyed while linked offers exist."
         check_for_supplier_invoices: "Analytical account cannot be destroyed while linked S invoices exist."
         check_for_sale_offers: "Analytical account cannot be destroyed while linked offers exist."
+        control_analitic: "Accumulated by analytical concepts"
     attributes:
       charge_account:
         account_code: "Code"

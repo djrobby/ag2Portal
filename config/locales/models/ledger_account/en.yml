@@ -23,3 +23,5 @@ en:
         project_id: "Project"
         company: "Company"
         company_id: "Company"
+        ledger_account_c: "Ledger Account"
+

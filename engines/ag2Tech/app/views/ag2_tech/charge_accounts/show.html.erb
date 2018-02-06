@@ -60,6 +60,45 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @ledger_accounts } %>
 <% end %> <!-- @charge_account.charge_account_ledger_accounts.count > 0 -->
 
+<!-- charge Accounts cumulative-->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%= t 'ag2_tech.ag2_tech_track.charge_account_report.cumulative_report_title' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <a href="#" id="print_report_btn"><i class="icon-arrow-up"></i></a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="table table-condensed table-striped shrinked">
+  <col width="20%" />
+  <col width="20%" />
+  <col width="20%" />
+  <col width="20%" />
+  <col width="20%" />
+  <thead>
+    <tr>
+      <th><%= t :"ag2_tech.work_orders.index.title" %></th>
+      <th><%= t :"ag2_products.receipt_notes.index.title" %></th>
+      <th><%= t :"ag2_products.delivery_notes.index.title" %></th>
+      <th><%= t :"ag2_tech.ag2_tech_track.every_report.supplier_invoice_items_c" %></th>
+      <th><%= t :"ag2_tech.ag2_tech_track.every_report.invoice_items_c" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= @charge_account.wo_total(@project_ids, @group).blank? ? "0,00" : number_with_precision(@charge_account.wo_total(@project_ids, @group), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= @charge_account.rni_total(@project_ids, @group).blank? ? "0,00" : number_with_precision(@charge_account.rni_total(@project_ids, @group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= @charge_account.dni_total(@project_ids, @group).blank? ? "0,00" : number_with_precision(@charge_account.dni_total(@project_ids, @group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= @charge_account.sii_total(@project_ids, @group).blank? ? "0,00" : number_with_precision(@charge_account.sii_total(@project_ids, @group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+      <td><%= @charge_account.ii_total(@project_ids, @group).blank? ? "0,00" : number_with_precision(@charge_account.ii_total(@project_ids, @group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+    </tr>
+  </tbody>
+</table>
+
 <%= render partial: '/layouts/crud/update_delete_new', locals:
 { model: ChargeAccount, update_path: edit_charge_account_path(@charge_account), update_txt: t('.btn_edit'),
 delete_path: @charge_account, delete_txt: t('.btn_delete'), msg: t("activerecord.models.charge_account.one"), txt: @charge_account.full_name,

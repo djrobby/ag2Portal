@@ -23,9 +23,20 @@ class BillingPeriod < ActiveRecord::Base
 
   # Scopes
   scope :by_period, -> { order(:period) }
+  scope :by_period_desc, -> { order('period DESC') }
   #
   scope :belongs_to_project, -> project { where(project_id: project).by_period }
   scope :belongs_to_projects, -> projects { where(project_id: projects).by_period }
+  scope :belongs_to_office_and_frequency, -> o, f {
+    joins(:project)
+    .where('projects.office_id = ? AND billing_periods.billing_frequency_id = ?', o, f).order('billing_periods.period DESC')
+  }
+  scope :belongs_to_office, -> o {
+    joins(:project).where('projects.office_id = ?', o).order('billing_periods.period DESC')
+  }
+  scope :belongs_to_frequency, -> f {
+    where('billing_periods.billing_frequency_id = ?', f).order('billing_periods.period DESC')
+  }
 
   def period_to_date
     year = period.to_s[0..3].to_i

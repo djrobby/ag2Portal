@@ -1,0 +1,119 @@
+if @charge_account_report.blank?
+  return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/charge_account_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+  # Define the variables used in list
+  c.use_stores page_rows: 0, page_rows_ct: 0, p_wo_t: 0, p_dl_t: 0, p_i_t:0,  p_wo_ct: 0, p_dl_ct: 0, p_i_ct:0
+
+  # On list page footer insertion
+  c.events.on :page_footer_insert do |e|
+    # Display page sutotals
+    e.section.item(:sum_items_title).value(I18n.t("ag2_tech.ag2_tech_track.every_report.full_total"))
+    e.section.item(:sum_rows_title).value(I18n.t("ag2_tech.ag2_tech_track.charge_account_report.sum_rows_title"))
+    e.section.item(:sum_rows).value(e.store.page_rows)
+    e.section.item(:wo_cost_t).value(number_with_precision(e.store.p_wo_t, precision: 2))
+    e.section.item(:dl_cost_t).value(number_with_precision(e.store.p_dl_t, precision: 2))
+    e.section.item(:i_price_t).value(number_with_precision(e.store.p_i_t, precision: 2))
+    e.section.item(:sum_cumulative_title).value(I18n.t("ag2_tech.ag2_tech_track.every_report.cumulative_total"))
+    e.section.item(:wo_cost_ct).value(number_with_precision(e.store.p_wo_ct, precision: 2))
+    e.section.item(:dl_cost_ct).value(number_with_precision(e.store.p_dl_ct, precision: 2))
+    e.section.item(:i_price_ct).value(number_with_precision(e.store.p_i_ct, precision: 2))
+    e.section.item(:sum_rows_ct).value(e.store.page_rows_ct)
+    # Initialize subtotals to 0
+    #e.store.page_rows = 0
+  end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_tech.ag2_tech_track.charge_account_report.report_title")
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+  header.item(:account_code_c).value I18n.t("activerecord.attributes.charge_account.account_code")
+  header.item(:description_c).value I18n.t("activerecord.attributes.charge_account.name")
+  header.item(:project_c).value I18n.t("activerecord.attributes.charge_account.project")
+  header.item(:ledger_account_c).value I18n.t("activerecord.attributes.charge_account.ledger_account")
+  header.item(:wo_cost_c).value I18n.t("ag2_tech.ag2_tech_track.every_report.work_orders_cost")
+  header.item(:dl_cost_c).value I18n.t("ag2_tech.ag2_tech_track.every_report.delivery_notes_cost")
+  header.item(:i_price_c).value I18n.t("ag2_tech.ag2_tech_track.every_report.invoice_items_price")
+  header.item(:opened_at_c).value I18n.t("activerecord.attributes.charge_account.opened_at")
+  header.item(:closed_at_c).value I18n.t("activerecord.attributes.charge_account.closed_at")
+end
+
+
+# Page Title list
+charge_group_id = @charge_account_report.first.charge_group_id
+
+# List detail
+@charge_account_report.each do |i|
+  if !i.charge_group_id.blank? && (i.charge_group_id != charge_group_id)
+    report.page.list(:default).page_break
+    report.page.list(:default) do |list|
+      list.store.page_rows = 0
+      list.store.p_wo_t = 0
+      list.store.p_dl_t = 0
+      list.store.p_i_t = 0
+    end
+    charge_group_id = i.charge_group_id
+  end
+  report.page.list(:default).add_row do |row|
+    report.page.values budget_heading_c: I18n.t("activerecord.attributes.charge_group.budget_heading") + ": "
+    report.page.values budget_heading: i.charge_group.budget_heading.full_name unless i.charge_group.budget_heading.blank?
+    report.page.values charge_group_c: I18n.t("activerecord.attributes.charge_account.charge_group") + ": "
+    report.page.values charge_group: i.charge_group.to_label unless i.charge_group.blank?
+    row.item(:account_code).value i.full_code
+    row.item(:description).value i.name
+    row.item(:project).value i.project.full_code unless i.project.blank?
+    row.item(:ledger_account).value i.ledger_account.code unless i.ledger_account.blank?
+    row.item(:wo_cost).value number_with_precision(i.work_orders_total_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.work_orders_total_cost.blank?
+    row.item(:dl_cost).value number_with_precision(i.delivery_notes_total_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.delivery_notes_total_cost.blank?
+    row.item(:i_price).value number_with_precision(i.invoice_items_total_price, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice_items_total_price.blank?
+    row.item(:opened_at).value i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+    row.item(:closed_at).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+  end
+  # Store page subtotals
+  report.page.list(:default) do |list|
+    list.store.page_rows += 1
+    list.store.page_rows_ct += 1
+    list.store.p_wo_t += i.work_orders_total_cost unless i.work_orders_total_cost.blank?
+    list.store.p_dl_t += i.delivery_notes_total_cost unless i.delivery_notes_total_cost.blank?
+    list.store.p_i_t += i.invoice_items_total_price unless i.invoice_items_total_price.blank?
+    list.store.p_wo_ct += i.work_orders_total_cost unless i.work_orders_total_cost.blank?
+    list.store.p_dl_ct += i.delivery_notes_total_cost unless i.delivery_notes_total_cost.blank?
+    list.store.p_i_ct += i.invoice_items_total_price unless i.invoice_items_total_price.blank?
+  end
+end

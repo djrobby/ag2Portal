@@ -259,9 +259,8 @@ class Client < ActiveRecord::Base
   end
 
   def active_bank_accounts?
-    !client_bank_accounts.where(ending_at: nil).blank?
+    (client_bank_accounts_count > 0) && (!client_bank_accounts.where(ending_at: nil).blank?)
   end
-
   def active_bank_account
     client_bank_accounts.where(ending_at: nil).order(:starting_at).last
   end

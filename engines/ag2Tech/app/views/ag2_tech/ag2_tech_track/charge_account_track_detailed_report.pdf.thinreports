@@ -30,6 +30,10 @@ report.start_new_page
 
 # Page header
 report.page.values report_title: I18n.t("ag2_tech.ag2_tech_track.charge_account_report.cumulative_report_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from_date
+report.page.values to: @to_date
 report.page.values charge_group_c: I18n.t("ag2_tech.ag2_tech_track.every_report.concept")
 report.page.values wo_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.work_orders")
 report.page.values rn_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.receipt_notes")
@@ -43,7 +47,6 @@ report.page.values ledger_account_c: I18n.t("activerecord.attributes.ledger_acco
 report.page.values(printed_at: formatted_timestamp(Time.now),
            pt: I18n.t("every_report.pt"),
            pd: I18n.t("every_report.pd"))
-
 
 # Page Title list
 charge_group_id = ""
@@ -72,11 +75,6 @@ last_id = @charge_account_report.last.id
 
 # List detail
 @charge_account_report.each do |i|
-  report.page.item(:from_title).hide
-  report.page.item(:to_title).hide
-  report.page.item(:from).hide
-  report.page.item(:to).hide
-  report.page.item(:l13).hide
 
   if !i.charge_group_id.blank? && (i.charge_group_id != charge_group_id)
     if page_rows != 0
@@ -146,11 +144,11 @@ last_id = @charge_account_report.last.id
       if !i.charge_group.budget_heading_id.blank? && (i.charge_group.budget_heading_id != budget_heading_id)
         first.add_row do |row2|
             row2.item(:budget_heading).value i.charge_group.budget_heading.full_name unless i.charge_group.budget_heading.blank?
-            row2.item(:wo_cost_bg).value i.charge_group.budget_heading.wo_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.wo_total(@project_ids,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            row2.item(:rn_cost_bg).value i.charge_group.budget_heading.rni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.rni_total(@project_ids,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            row2.item(:dn_cost_bg).value i.charge_group.budget_heading.dni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.dni_total(@project_ids,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            row2.item(:si_cost_bg).value i.charge_group.budget_heading.sii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.sii_total(@project_ids,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            row2.item(:i_price_bg).value i.charge_group.budget_heading.ii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.ii_total(@project_ids,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:wo_cost_bg).value i.charge_group.budget_heading.wo_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.wo_total_date(@project_ids,@from,@to,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:rn_cost_bg).value i.charge_group.budget_heading.rni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.rni_total_date(@project_ids,@from,@to,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:dn_cost_bg).value i.charge_group.budget_heading.dni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.dni_total_date(@project_ids,@from,@to,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:si_cost_bg).value i.charge_group.budget_heading.sii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.sii_total_date(@project_ids,@from,@to,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:i_price_bg).value i.charge_group.budget_heading.ii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.budget_heading.ii_total_date(@project_ids,@from,@to,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             # row2.item(:l11).hide
             row2.item(:l12).hide
             row2.item(:l13).hide
@@ -160,11 +158,11 @@ last_id = @charge_account_report.last.id
 
       first.add_row do |row3|
           row3.item(:charge_group).value i.charge_group.to_label unless i.charge_group.blank?
-          row3.item(:wo_cost_cg).value i.charge_group.wo_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.wo_total(@project_ids,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-          row3.item(:rn_cost_cg).value i.charge_group.rni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.rni_total(@project_ids,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-          row3.item(:dn_cost_cg).value i.charge_group.dni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.dni_total(@project_ids,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-          row3.item(:si_cost_cg).value i.charge_group.sii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.sii_total(@project_ids,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-          row3.item(:i_price_cg).value i.charge_group.ii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.charge_group.ii_total(@project_ids,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:wo_cost_cg).value i.charge_group.wo_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.wo_total_date(@project_ids,@from,@to,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:rn_cost_cg).value i.charge_group.rni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.rni_total_date(@project_ids,@from,@to,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:dn_cost_cg).value i.charge_group.dni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.dni_total_date(@project_ids,@from,@to,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:si_cost_cg).value i.charge_group.sii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.sii_total_date(@project_ids,@from,@to,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:i_price_cg).value i.charge_group.ii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.charge_group.ii_total_date(@project_ids,@from,@to,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
           row3.item(:l11).hide
           row3.item(:l12).hide
           row3.item(:l13).hide
@@ -190,32 +188,32 @@ last_id = @charge_account_report.last.id
     row.item(:charge_account).value i.full_code + " " + i.partial_name
     row.item(:project).value i.project.full_code unless i.project.blank?
     row.item(:ledger_account).value i.ledger_account.code unless i.ledger_account.blank?
-    row.item(:wo_cost).value i.wo_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.wo_total(@project_ids,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:rn_cost).value i.rni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.rni_total(@project_ids,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:dn_cost).value i.dni_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.dni_total(@project_ids,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:si_cost).value i.sii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.sii_total(@project_ids,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:i_price).value i.ii_total(@project_ids,@group).blank? ? "0,00" : number_with_precision(i.ii_total(@project_ids,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:wo_cost).value i.wo_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.wo_total_date(@project_ids,@from,@to,@group), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:rn_cost).value i.rni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.rni_total_date(@project_ids,@from,@to,@group).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:dn_cost).value i.dni_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.dni_total_date(@project_ids,@from,@to,@group).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:si_cost).value i.sii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.sii_total_date(@project_ids,@from,@to,@group).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:i_price).value i.ii_total_date(@project_ids,@from,@to,@group).blank? ? "0,00" : number_with_precision(i.ii_total_date(@project_ids,@from,@to,@group).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
   end
 
   # Store page subtotals
   page_rows += 1
-  p_wo_t += i.wo_total(@project_ids,@group) unless i.wo_total(@project_ids,@group).blank?
-  p_rn_t += i.rni_total(@project_ids,@group).first.rni_t unless i.rni_total(@project_ids,@group).blank?
-  p_dn_t += i.dni_total(@project_ids,@group).first.dni_t unless i.dni_total(@project_ids,@group).blank?
-  p_si_t += i.sii_total(@project_ids,@group).first.sii_t unless i.sii_total(@project_ids,@group).blank?
-  p_ii_t += i.ii_total(@project_ids,@group).first.ii_t unless i.ii_total(@project_ids,@group).blank?
+  p_wo_t += i.wo_total_date(@project_ids,@from,@to,@group) unless i.wo_total_date(@project_ids,@from,@to,@group).blank?
+  p_rn_t += i.rni_total_date(@project_ids,@from,@to,@group).first.rni_t unless i.rni_total_date(@project_ids,@from,@to,@group).blank?
+  p_dn_t += i.dni_total_date(@project_ids,@from,@to,@group).first.dni_t unless i.dni_total_date(@project_ids,@from,@to,@group).blank?
+  p_si_t += i.sii_total_date(@project_ids,@from,@to,@group).first.sii_t unless i.sii_total_date(@project_ids,@from,@to,@group).blank?
+  p_ii_t += i.ii_total_date(@project_ids,@from,@to,@group).first.ii_t unless i.ii_total_date(@project_ids,@from,@to,@group).blank?
   page_rows_act += 1
-  p_wo_act += i.wo_total(@project_ids,@group) unless i.wo_total(@project_ids,@group).blank?
-  p_rn_act += i.rni_total(@project_ids,@group).first.rni_t unless i.rni_total(@project_ids,@group).blank?
-  p_dn_act += i.dni_total(@project_ids,@group).first.dni_t unless i.dni_total(@project_ids,@group).blank?
-  p_si_act += i.sii_total(@project_ids,@group).first.sii_t unless i.sii_total(@project_ids,@group).blank?
-  p_ii_act += i.ii_total(@project_ids,@group).first.ii_t unless i.ii_total(@project_ids,@group).blank?
+  p_wo_act += i.wo_total_date(@project_ids,@from,@to,@group) unless i.wo_total_date(@project_ids,@from,@to,@group).blank?
+  p_rn_act += i.rni_total_date(@project_ids,@from,@to,@group).first.rni_t unless i.rni_total_date(@project_ids,@from,@to,@group).blank?
+  p_dn_act += i.dni_total_date(@project_ids,@from,@to,@group).first.dni_t unless i.dni_total_date(@project_ids,@from,@to,@group).blank?
+  p_si_act += i.sii_total_date(@project_ids,@from,@to,@group).first.sii_t unless i.sii_total_date(@project_ids,@from,@to,@group).blank?
+  p_ii_act += i.ii_total_date(@project_ids,@from,@to,@group).first.ii_t unless i.ii_total_date(@project_ids,@from,@to,@group).blank?
   page_rows_ct += 1
-  p_wo_ct += i.wo_total(@project_ids,@group) unless i.wo_total(@project_ids,@group).blank?
-  p_rn_ct += i.rni_total(@project_ids,@group).first.rni_t unless i.rni_total(@project_ids,@group).blank?
-  p_dn_ct += i.dni_total(@project_ids,@group).first.dni_t unless i.dni_total(@project_ids,@group).blank?
-  p_si_ct += i.sii_total(@project_ids,@group).first.sii_t unless i.sii_total(@project_ids,@group).blank?
-  p_ii_ct += i.ii_total(@project_ids,@group).first.ii_t unless i.ii_total(@project_ids,@group).blank?
+  p_wo_ct += i.wo_total_date(@project_ids,@from,@to,@group) unless i.wo_total_date(@project_ids,@from,@to,@group).blank?
+  p_rn_ct += i.rni_total_date(@project_ids,@from,@to,@group).first.rni_t unless i.rni_total_date(@project_ids,@from,@to,@group).blank?
+  p_dn_ct += i.dni_total_date(@project_ids,@from,@to,@group).first.dni_t unless i.dni_total_date(@project_ids,@from,@to,@group).blank?
+  p_si_ct += i.sii_total_date(@project_ids,@from,@to,@group).first.sii_t unless i.sii_total_date(@project_ids,@from,@to,@group).blank?
+  p_ii_ct += i.ii_total_date(@project_ids,@from,@to,@group).first.ii_t unless i.ii_total_date(@project_ids,@from,@to,@group).blank?
 
   # Ultima linea con totales acumulados
   if page_rows != 0 && (i.id == last_id)

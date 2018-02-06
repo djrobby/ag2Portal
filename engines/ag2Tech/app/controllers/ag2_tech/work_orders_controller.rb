@@ -1228,15 +1228,10 @@ module Ag2Tech
       status = params[:Status]
       # OCO
       init_oco if !session[:organization]
-      # Initialize select_tags
-      @projects = projects_dropdown if @projects.nil?
-      @areas = work_order_areas_dropdown if @areas.nil?
-      @labors = work_order_labors_dropdown if @labors.nil?
-      @types = work_order_types_dropdown if @types.nil?
-      @statuses = WorkOrderStatus.order('id') if @statuses.nil?
+      projects = projects_dropdown
 
       # Arrays for search
-      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
 
@@ -1268,9 +1263,8 @@ module Ag2Tech
         if !status.blank?
           with :work_order_status_id, status
         end
-        data_accessor_for(WorkOrder).include = [:work_order_area, :work_order_type, :work_order_status, :suborders]
-        order_by :sort_no, :desc
-        paginate :per_page => WorkOrder.count
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
       end
 
       @work_order_report = @search.results
@@ -1530,6 +1524,36 @@ module Ag2Tech
     end
 
     def projects_dropdown
+      _array = []
+      _projects = nil
+      _offices = nil
+      _companies = nil
+
+      if session[:office] != '0'
+        _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
+      elsif session[:company] != '0'
+        _offices = current_user.offices
+        if _offices.count > 1 # If current user has access to specific active company offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id = ? AND office_id IN (?)', session[:company].to_i, _offices)
+        else
+          _projects = Project.where(company_id: session[:company].to_i).order(:project_code)
+        end
+      else
+        _offices = current_user.offices
+        _companies = current_user.companies
+        if _companies.count > 1 and _offices.count > 1 # If current user has access to specific active organization companies or offices (more than one: not exclusive, previous if)
+          _projects = Project.where('company_id IN (?) AND office_id IN (?)', _companies, _offices)
+        else
+          _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).order(:project_code) : Project.order(:project_code)
+        end
+      end
+
+      # Returning founded projects
+      ret_array(_array, _projects, 'id')
+      _projects = Project.where(id: _array).order(:project_code)
+    end
+
+    def projects_dropdown_old
       if session[:office] != '0'
         _projects = Project.where(office_id: session[:office].to_i).order(:project_code)
       elsif session[:company] != '0'

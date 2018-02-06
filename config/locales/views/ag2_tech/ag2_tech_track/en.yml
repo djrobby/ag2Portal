@@ -10,6 +10,8 @@ en:
         label_work_order: "Work order"
         label_charge_account: "Analytical account"
         label_budget_period: "Budget period"
+        label_budget_heading: "Activity"
+        label_charge_group: "Analytical group"
       project_report:
         report_title: "Projects"
         sum_rows_title: "Total Rows:"
@@ -21,6 +23,7 @@ en:
         sum_rows_title: "Total Rows:"
       charge_account_report:
         report_title: "Charge Accounts"
+        cumulative_report_title: "Accumulated by analytical concepts"
         sum_rows_title: "Total Rows:"
       every_report:
         pt: "Page"
@@ -44,3 +47,15 @@ en:
         sum_rec_count_title: "Total Records:"
         sum_rows_title: "Total Rows (Days):"
         average_title: "Average Worked Time: "
+        full_total: "Totals %{text}"
+        cumulative_total: "Cumulative Total"
+        work_orders: "WO"
+        receipt_notes: "RN"
+        delivery_notes: "DN"
+        supplier_invoice_items: "SI"
+        invoice_items: "CI"
+        supplier_invoice_items_c: "Purchase invoices"
+        invoice_items_c: "Sales invoices"
+        budget_heading: "Activity / Analitical Group"
+        concept: "Concept"
+        act_cumulative_total: "Cumulative Total (Activity):"
