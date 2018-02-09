@@ -88,10 +88,9 @@ class Reading < ActiveRecord::Base
   end
 
   # ************************************************
-  # * WARNING!                                     *
-  # * It must be treated in the opposite direction *
+  # * WARNING! Do not use!                         *
   # ************************************************
-  def billable?
+  def dont_use_billable?
     # reading_type_id != 4 and (bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?)
     # bill.nil? or !Invoice.where(original_invoice_id: bill.try(:invoices).try(:first).try(:id)).blank?
     if bill.blank? && !subscriber.blank?
@@ -99,6 +98,10 @@ class Reading < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def billable?
+    bill_id.nil?
   end
 
   def master_meter?

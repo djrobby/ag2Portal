@@ -33,6 +33,10 @@ class ReadingType < ActiveRecord::Base
     [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::INSTALACION, ReadingType::AUTO]
   end
 
+  def self.single_manual_reading
+    where(id: [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::CONTROL])
+  end
+
   private
 
   def check_for_dependent_records
