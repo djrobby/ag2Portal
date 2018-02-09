@@ -1,4 +1,9 @@
 class Subscriber < ActiveRecord::Base
+  # CONSTANTS
+  # landlord_tenant:
+  LANDLORD = 0
+  TENANT = 1
+
   belongs_to :client, :counter_cache => true
   belongs_to :office
   belongs_to :center
@@ -32,6 +37,7 @@ class Subscriber < ActiveRecord::Base
                   :postal_street_directory_id, :postal_street_type_id, :postal_street_name, :postal_street_number,
                   :postal_building, :postal_floor, :postal_floor_office, :postal_zipcode_id, :postal_town_id,
                   :postal_province_id, :postal_region_id, :postal_country_id, :non_billable,
+                  :sub_use, :pub_entity, :landlord_tenant,
                   :consumption_estimated_balance, :consumption_estimated_balance_init_at, :consumption_estimated_balance_reset_at
 
   attr_accessor :reading_index_add, :reading_date_add

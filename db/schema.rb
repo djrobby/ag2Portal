@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180209135958) do
+ActiveRecord::Schema.define(:version => 20180209202238) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1097,8 +1097,6 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
     t.date     "ending_at"
   end
 
-  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
-  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3732,8 +3730,8 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
-    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0,   :null => false
     t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,   :null => false
     t.string   "old_code"
     t.string   "postal_last_name"
@@ -3753,6 +3751,9 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
+    t.string   "pub_entity"
+    t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"
@@ -3766,6 +3767,7 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
   add_index "subscribers", ["first_name"], :name => "index_subscribers_on_first_name"
   add_index "subscribers", ["fiscal_id"], :name => "index_subscribers_on_fiscal_id"
   add_index "subscribers", ["gis_id"], :name => "index_subscribers_on_gis_id"
+  add_index "subscribers", ["landlord_tenant"], :name => "index_subscribers_on_landlord_tenant"
   add_index "subscribers", ["last_name"], :name => "index_subscribers_on_last_name"
   add_index "subscribers", ["meter_id"], :name => "index_subscribers_on_meter_id"
   add_index "subscribers", ["office_id", "subscriber_code"], :name => "index_subscribers_unique", :unique => true
@@ -3779,6 +3781,7 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
   add_index "subscribers", ["postal_street_type_id"], :name => "index_subscribers_on_postal_street_type_id"
   add_index "subscribers", ["postal_town_id"], :name => "index_subscribers_on_postal_town_id"
   add_index "subscribers", ["postal_zipcode_id"], :name => "index_subscribers_on_postal_zipcode_id"
+  add_index "subscribers", ["pub_entity"], :name => "index_subscribers_on_pub_entity"
   add_index "subscribers", ["pub_record"], :name => "index_subscribers_on_pub_record"
   add_index "subscribers", ["reading_route_id"], :name => "index_subscribers_on_reading_route_id"
   add_index "subscribers", ["reading_sequence"], :name => "index_subscribers_on_reading_sequence"
@@ -3787,6 +3790,7 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
   add_index "subscribers", ["street_directory_id"], :name => "index_subscribers_on_street_directory_id"
   add_index "subscribers", ["subscriber_code"], :name => "index_subscribers_on_subscriber_code"
   add_index "subscribers", ["tariff_scheme_id"], :name => "index_subscribers_on_tariff_scheme_id"
+  add_index "subscribers", ["use_id", "sub_use"], :name => "index_subscribers_on_use_id_and_sub_use"
   add_index "subscribers", ["use_id"], :name => "index_subscribers_on_use_id"
   add_index "subscribers", ["zipcode_id"], :name => "index_subscribers_on_zipcode_id"
 
@@ -4432,28 +4436,6 @@ ActiveRecord::Schema.define(:version => 20180209135958) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
-
-  create_table "update_wap", :id => false, :force => true do |t|
-    t.integer "id"
-    t.string  "product_code"
-    t.string  "main_description"
-    t.decimal "reference_price",  :precision => 12, :scale => 4
-    t.decimal "global_wap",       :precision => 12, :scale => 4
-    t.integer "supplier_id"
-    t.decimal "price",            :precision => 12, :scale => 4
-    t.decimal "discount_rate",    :precision => 12, :scale => 2
-    t.decimal "net_price",        :precision => 12, :scale => 4
-  end
-
-  create_table "update_wap_0", :id => false, :force => true do |t|
-    t.string  "product_code"
-    t.decimal "wap",          :precision => 12, :scale => 4
-  end
-
-  create_table "update_wap_strange", :id => false, :force => true do |t|
-    t.string  "product_code"
-    t.decimal "wap",          :precision => 12, :scale => 4
-  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false
