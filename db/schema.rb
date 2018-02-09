@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180206081755) do
+ActiveRecord::Schema.define(:version => 20180209135958) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1097,6 +1097,8 @@ ActiveRecord::Schema.define(:version => 20180206081755) do
     t.date     "ending_at"
   end
 
+  add_index "contracted_tariffs", ["ending_at"], :name => "index_contracted_tariffs_on_ending_at"
+  add_index "contracted_tariffs", ["starting_at"], :name => "index_contracted_tariffs_on_starting_at"
   add_index "contracted_tariffs", ["tariff_id"], :name => "index_contracted_tariffs_on_tariff_id"
   add_index "contracted_tariffs", ["water_supply_contract_id"], :name => "index_contracted_tariffs_on_water_supply_contract_id"
 
@@ -3097,6 +3099,7 @@ ActiveRecord::Schema.define(:version => 20180206081755) do
     t.decimal  "lng",                                      :precision => 18, :scale => 15
     t.binary   "image",                :limit => 16777215
     t.integer  "service_point_id"
+    t.integer  "coefficient",          :limit => 2,                                        :default => 1, :null => false
   end
 
   add_index "readings", ["bill_id"], :name => "index_readings_on_bill_id"
@@ -3729,8 +3732,8 @@ ActiveRecord::Schema.define(:version => 20180206081755) do
     t.string   "gis_id_wc"
     t.string   "pub_record"
     t.integer  "use_id"
-    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0,   :null => false
-    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0,   :null => false
+    t.decimal  "m2",                                      :precision => 12, :scale => 4, :default => 0.0
+    t.decimal  "equiv_dwelling",                          :precision => 12, :scale => 4, :default => 0.0
     t.decimal  "deposit",                                 :precision => 13, :scale => 4, :default => 0.0,   :null => false
     t.string   "old_code"
     t.string   "postal_last_name"
@@ -4429,6 +4432,28 @@ ActiveRecord::Schema.define(:version => 20180206081755) do
 
   add_index "towns", ["ine_cmun"], :name => "index_towns_on_ine_cmun"
   add_index "towns", ["province_id"], :name => "index_towns_on_province_id"
+
+  create_table "update_wap", :id => false, :force => true do |t|
+    t.integer "id"
+    t.string  "product_code"
+    t.string  "main_description"
+    t.decimal "reference_price",  :precision => 12, :scale => 4
+    t.decimal "global_wap",       :precision => 12, :scale => 4
+    t.integer "supplier_id"
+    t.decimal "price",            :precision => 12, :scale => 4
+    t.decimal "discount_rate",    :precision => 12, :scale => 2
+    t.decimal "net_price",        :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_0", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
+
+  create_table "update_wap_strange", :id => false, :force => true do |t|
+    t.string  "product_code"
+    t.decimal "wap",          :precision => 12, :scale => 4
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "",   :null => false

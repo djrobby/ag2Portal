@@ -21,7 +21,7 @@ class Reading < ActiveRecord::Base
                   :meter_id, :subscriber_id, :service_point_id, :bill_id,
                   :reading_route_id, :reading_index_1, :reading_index_2,
                   :reading_incidence_types, :reading_1, :reading_2, :reading_1_id, :reading_2_id,
-                  :created_by, :updated_by, :lat, :lng
+                  :created_by, :updated_by, :lat, :lng, :coefficient
 
   #:reading_incidence_types_attributtes
 
