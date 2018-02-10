@@ -19,7 +19,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel"><%=t "ag2_gest.subscribers.index.add_tariff" %></h3>
   </div>
-  <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post do |f| %>
+  <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :html => { class: 'modal-footer-right' } do |f| %>
     <div class="modal-body">
         <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :to_label, :item_wrapper_class => 'checkbox_container') %>
     </div>
@@ -42,7 +42,7 @@
         </tr>
       </thead>
       <tbody>
-        <% SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |t| %>
+        <% @subscriber_tariffs.each do |t| %>
           <tr>
             <td class="billable_concept"><%= t.tariff.try(:billable_concept).try(:name) %></td>
             <td class="tariff_type"><%= t.tariff.try(:tariff_type).try(:name) %></td>

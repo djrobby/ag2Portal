@@ -113,7 +113,7 @@ class Project < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.active_only
-    where("closed_at IS NULL").order(:project_code)
+    where("closed_at IS NULL OR closed_at >= ?", Date.today).order(:project_code)
   end
 
   def self.to_csv(array)

@@ -33,6 +33,10 @@ class ReadingType < ActiveRecord::Base
     [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::INSTALACION, ReadingType::AUTO]
   end
 
+  def self.without_control
+    [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO]
+  end
+
   def self.single_manual_reading
     where(id: [ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::CONTROL])
   end

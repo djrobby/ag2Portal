@@ -37,6 +37,11 @@ class BillingPeriod < ActiveRecord::Base
   scope :belongs_to_frequency, -> f {
     where('billing_periods.billing_frequency_id = ?', f).order('billing_periods.period DESC')
   }
+  scope :readings_unbilled_by_subscriber, -> s {
+    joins(:readings)
+    .where('readings.bill_id IS NULL AND readings.subscriber_id = ? AND readings.reading_type_id IN (?)', s, ReadingType.without_control)
+    .select('billing_periods.*').by_period_desc
+  }
 
   def period_to_date
     year = period.to_s[0..3].to_i

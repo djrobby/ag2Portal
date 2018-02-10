@@ -120,17 +120,17 @@
   <!-- class -->
   <col width="15%" />
   <!-- account e_format -->
-  <col width="20%" />
+  <col width="18%" />
   <!-- subscriber_code -->
   <col width="12%" />
   <!-- holder name -->
-  <col width="26%" />
+  <col width="25%" />
   <!-- holder fiscal_id -->
-  <col width="15%" />
+  <col width="10%" />
   <!-- starting_at -->
-  <col width="12%" />
+  <col width="10%" />
   <!-- ending_at -->
-  <col width="12%" />
+  <col width="10%" />
   <thead>
     <%= render 'accounts_header' %>
   </thead>
@@ -163,7 +163,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
 </ul>
 
 <div class="tab-content" id="myTabContent">
-  
+
 <!-- Bills -->
 <div class="tab-pane fade active in" id="bills">
 
@@ -211,7 +211,7 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
         </td>
         <td align="center"><%= formatted_date(invoice.invoice_date) unless invoice.invoice_date.blank? %></td>
         <td align="center"><%= formatted_date(invoice.payday_limit) unless invoice.payday_limit.blank? %></td>
-        <td><%= invoice.bill.to_label unless invoice.bill.blank? %></td>
+        <td><%= bill.to_label unless bill.blank? %></td>
         <td><%= invoice.biller.name unless invoice.biller.blank? %></td>
         <td align="right"><%= number_with_precision(invoice.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless invoice.totals.blank? %></td>
       </tr>

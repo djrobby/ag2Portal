@@ -665,7 +665,7 @@ module Ag2Gest
     end
 
     def sub_load_bank
-      subscriber = Subscriber.find(params[:subscriber_id])
+      # subscriber = Subscriber.find(params[:subscriber_id])
       bank_id = 0
       bank_office_id = 0
       country_id = 0
@@ -697,27 +697,28 @@ module Ag2Gest
       @client_bank_account = ClientBankAccount.new
       @billing_period = billing_periods_dropdown(@subscriber.office_id, @subscriber.billing_frequency_id)
       # @billing_period = BillingPeriod.order('period DESC').all
-      @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
+      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber)
+      # @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
+
       _tariff_type = []
+      _tariff_type_ids = []
       if !@subscriber.water_supply_contract.blank?
         @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
-            if !_tariff_type.include? tt.tariff.tariff_type.name
-              _tariff_type = _tariff_type << tt.tariff.tariff_type.name
-            end
+          if !_tariff_type.include? tt.tariff.tariff_type.name
+            _tariff_type << tt.tariff.tariff_type.name
+          end
+          if !_tariff_type_ids.include? tt.tariff.tariff_type.id
+            _tariff_type_ids << tt.tariff.tariff_type.id
+          end
         end
         @tariff_type = _tariff_type.join(", ")
       end
-       _tariff_type_ids = []
-       if !@subscriber.water_supply_contract.blank?
-         @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
-             if !_tariff_type_ids.include? tt.tariff.tariff_type.id
-               _tariff_type_ids << tt.tariff.tariff_type.id
-             end
-         end
-         @tariff_type_ids = _tariff_type_ids
-       end
-      @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", @tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice(_tariff_type_ids)
+                          .includes(:billable_concept, :tariff_type, :billing_frequency)
+      # @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", _tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
 
+      @subscriber_tariffs = SubscriberTariff.availables_to_subscriber(@subscriber.id)
+                            .includes(tariff: [:billable_concept, :tariff_type, :billing_frequency])
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
       # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first
@@ -730,40 +731,42 @@ module Ag2Gest
       # @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
 
       _projects, _oco = projects_dropdown
-      if _oco == false
-        @project_dropdown = Project.active_only
-      else
-        @project_dropdown = _projects
-      end
+      @project_dropdown = !_oco ? Project.active_only : _projects
 
-      # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
-      @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
-      # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
+      @subscriber_accounts = ClientBankAccount.by_subscriber(@subscriber.id)
+      @subscriber_accounts = ClientBankAccount.by_client(@subscriber.client_id) if @subscriber_accounts.blank?
+      @subscriber_accounts = @subscriber_accounts
+                            .includes(:bank_account_class, :country, :bank, :bank_office)
+                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      # @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
       #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
 
-      @search_bills = Bill.search do
+      # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
+      search_bills = Bill.search do
         if filter == "pending" or filter == "unpaid"
           with(:invoice_status_id, 0..98)
         elsif filter == "charged"
           with :invoice_status_id, 99
         end
         with :subscriber_id, params[:id]
-        order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-
-      @search_readings = Reading.search do
-        with :subscriber_id, params[:id]
+        data_accessor_for(Bill).include = [:invoice_status, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}]
         order_by :sort_id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
+      @subscriber_bills = search_bills.results
 
-      @subscriber_readings = @search_readings.results
-      @subscriber_bills = @search_bills.results
+      # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
+      search_readings = Reading.search do
+        with :subscriber_id, params[:id]
+        data_accessor_for(Reading).include = [:meter, :billing_period, :reading_type, :reading_incidence_types]
+        order_by :sort_id, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+      @subscriber_readings = search_readings.results
 
       respond_to do |format|
        format.html # show.html.erb

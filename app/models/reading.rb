@@ -50,6 +50,8 @@ class Reading < ActiveRecord::Base
   scope :by_date_desc, -> { order('reading_date desc') }
   scope :by_period_date, -> { order('billing_period_id desc, reading_date desc, reading_index') }
   scope :by_id_desc, -> { order('id desc') }
+  scope :unbilled, -> { where(bill_id: nil, reading_type_id: ReadingType.without_control) }
+  scope :unbilled_by_subscriber, -> s { unbilled.where(subscriber_id: s) }
 
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date

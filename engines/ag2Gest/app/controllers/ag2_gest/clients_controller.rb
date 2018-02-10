@@ -294,9 +294,15 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @client = Client.find(params[:id])
-      @subscribers = @client.subscribers.paginate(:page => params[:page], :per_page => per_page).order(:subscriber_code)
-      @bills = @client.bills.not_service.paginate(:page => params[:page], :per_page => per_page).order(:bill_no)
-      @accounts = @client.client_bank_accounts.paginate(:page => params[:page], :per_page => per_page).order('id DESC')
+      @subscribers = @client.subscribers.by_code
+                     .includes(:zipcode, street_directory: [:street_type, town: [province: [region: :country]]])
+                     .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @bills = @client.bills.not_service
+              .includes(invoices: [:biller, :invoice_type, :invoice_status, :invoice_operation, invoice_items: :tax_type])
+              .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @accounts = ClientBankAccount.by_client(@client.id)
+                  .includes(:bank_account_class, :subscriber, :country, :bank, :bank_office)
+                  .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       @payment_methods = []
       @ledger_accounts = []
       @classes = []
@@ -595,7 +601,7 @@ module Ag2Gest
     end
 
     def payment_methods_dropdown
-      _methods = session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
+      session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
     def payment_payment_methods(_organization)

@@ -10,7 +10,7 @@
       </div>
       <div class="span1 soft-padding">
           <span class="blue"><%= bill.invoices.first.invoice_type.code unless bill.invoices.first.invoice_type.blank? %></span>
-          <span class="yellow"><%= bill.invoices.first.invoice_status.code unless bill.invoices.first.invoice_status.blank? %></span>
+          <span class="yellow"><%= bill.invoice_status.code unless bill.invoice_status.blank? %></span>
           <span class="brown"><%= bill.invoices.first.invoice_operation.code unless bill.invoices.first.invoice_operation.blank? %></span>
       </div>
       <div class="span1 soft-padding">
@@ -19,11 +19,8 @@
         <%= bill.try(:bill_date).strftime("%d/%m/%Y") %>
       </div>
       <div class="span1 soft-padding" align="center">
-        <%= bill.try(:payday_limit).strftime("%d/%m/%Y") %>
+        <%= bill.payday_limit.strftime("%d/%m/%Y") unless bill.payday_limit.blank? %>
       </div>
-      <!-- <div class="span2 soft-padding">
-        <#%= bill.try(:bill_type).name unless bill.bill_type.blank? %>
-      </div> -->
       <div align="right" class="span1 soft-padding">
         <%= number_with_precision(bill.try(:total), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
@@ -82,7 +79,7 @@
             <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
               <td colspan="7" class="black-border"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
-              <td  align="right" class="black-border"><%= number_with_precision(invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td  align="right" class="black-border"><%= number_with_precision(invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
         <% end %>
         </table>

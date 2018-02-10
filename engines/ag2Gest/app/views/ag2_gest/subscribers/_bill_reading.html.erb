@@ -20,7 +20,7 @@
         <%= bill.try(:bill_date).strftime("%d/%m/%Y") %>
       </div>
       <div class="span1 soft-padding" align="center">
-        <%= bill.try(:payday_limit).strftime("%d/%m/%Y") %>
+        <%= bill.payday_limit.strftime("%d/%m/%Y") unless bill.payday_limit.blank? %>
       </div>
       <!-- <div class="span2">
         <#%= bill.try(:bill_type).try(:name) %>
@@ -83,7 +83,7 @@
             <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
               <td colspan="7" class="black-border"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
-              <td  align="right" class="black-border"><%= number_with_precision(invoice.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td  align="right" class="black-border"><%= number_with_precision(invoice.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
         <% end %>
         </table>

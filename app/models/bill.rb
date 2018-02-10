@@ -321,6 +321,10 @@ class Bill < ActiveRecord::Base
     invoices.select{|i| !i.payday_limit.nil?}.all? {|i| i.payday_limit > Date.today}
   end
 
+  def sort_id
+    self.id
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -359,6 +363,9 @@ class Bill < ActiveRecord::Base
     end
     string :sort_no do
       bill_no
+    end
+    integer :sort_id do
+      sort_id
     end
   end
 end

@@ -79,27 +79,17 @@ class Tariff < ActiveRecord::Base
   scope :availables_to_project_type, -> p,t { joins(:billable_item).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", p, t, Date.today)}
   scope :availables_to_project_type_document, -> p,t,d { joins(:billable_item).joins(:billable_concept).where("billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", p, t, d, Date.today)}
   scope :availables_to_project_type_document_caliber, -> b,p,t,d,c { joins(:billable_item).joins(:billable_concept).order("billable_items.billable_concept_id").where("billable_items.id = ? AND billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", b, p, t, d, c, Date.today)}
+  scope :current, -> { where('tariffs.ending_at IS NULL OR tariffs.ending_at >= ?', Date.today) }
+  scope :current_by_type, -> t { current.where(tariff_type_id: t) }
+  scope :current_by_type_and_use_in_service_invoice, -> t {
+    joins(billable_item: :billable_concept)
+    .current_by_type(t).where("billable_concepts.billable_document = '1'")
+  }
 
   # Callbacks
   before_destroy :check_for_dependent_records
   after_save :assing_ending_at, :reindex_tariff
   after_destroy :reindex_tariff
-
-  searchable do
-    integer :id
-    integer :project_id do
-      billable_item.project_id
-    end
-    integer :tariff_type_id
-    integer :billable_item_id
-    integer :caliber_id
-    integer :billing_frequency_id
-    integer :billable_concept_code do
-      billable_item.billable_concept_id unless billable_item.blank?
-    end
-    time :ending_at
-    time :starting_at
-  end
 
   def to_label
     "#{tariff_type.name} #{try(:billable_item).try(:billable_concept).try(:name)} - #{caliber.try(:caliber)} (#{I18n.l(starting_at)})"
@@ -157,6 +147,22 @@ class Tariff < ActiveRecord::Base
 
   def to_last
     Tariff.order("id").last
+  end
+
+  searchable do
+    integer :id
+    integer :project_id do
+      billable_item.project_id
+    end
+    integer :tariff_type_id
+    integer :billable_item_id
+    integer :caliber_id
+    integer :billing_frequency_id
+    integer :billable_concept_code do
+      billable_item.billable_concept_id unless billable_item.blank?
+    end
+    time :ending_at
+    time :starting_at
   end
 
   private

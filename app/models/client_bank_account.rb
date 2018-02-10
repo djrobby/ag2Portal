@@ -39,7 +39,16 @@ class ClientBankAccount < ActiveRecord::Base
   validates :starting_at,         :presence => true
 
   # Scopes
+  scope :by_ending_at, -> { order(:ending_at) }
+  scope :by_ending_at_desc, -> { order('ending_at DESC') }
+  #
   scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
+  scope :by_client_or_subscriber, -> c, s { where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }
+  scope :by_client, -> c { where('client_id = ?', c).by_ending_at }
+  scope :by_subscriber, -> s { where('subscriber_id = ?', s).by_ending_at }
+  scope :active_by_client_or_subscriber, -> c, s { active.where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }
+  scope :active_by_client, -> c { active.where('client_id = ?', c).by_ending_at }
+  scope :active_by_subscriber, -> s { active.where('subscriber_id = ?', s).by_ending_at }
 
   before_validation :fields_to_uppercase
 
