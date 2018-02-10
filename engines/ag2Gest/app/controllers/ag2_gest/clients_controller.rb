@@ -300,9 +300,9 @@ module Ag2Gest
       @bills = @client.bills.not_service
               .includes(invoices: [:biller, :invoice_type, :invoice_status, :invoice_operation, invoice_items: :tax_type])
               .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
-      @accounts = ClientBankAccount.by_client(@client.id)
-                  .includes(:bank_account_class, :subscriber, :country, :bank, :bank_office)
+      @accounts = ClientBankAccount.by_client_full(@client.id)
                   .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @current_debt = @client.total_existing_debt
       @payment_methods = []
       @ledger_accounts = []
       @classes = []

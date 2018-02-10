@@ -44,7 +44,42 @@ class ClientBankAccount < ActiveRecord::Base
   #
   scope :active, -> { where("ending_at IS NULL OR ending_at > ?", Date.today) }
   scope :by_client_or_subscriber, -> c, s { where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }
-  scope :by_client, -> c { where('client_id = ?', c).by_ending_at }
+  scope :by_client, -> c { where('client_id = ?', c).by_ending_at
+  }
+  scope :by_client_full, -> c {
+    joins(:bank_account_class, :country, :bank, :bank_office)
+    .joins('LEFT JOIN subscribers ON client_bank_accounts.subscriber_id = subscribers.id')
+    .where('client_bank_accounts.client_id = ?', c)
+    .select("bank_account_classes.name bank_account_class_name,
+             CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
+             CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) subscriber_full_code,
+             client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
+             client_bank_accounts.starting_at, client_bank_accounts.ending_at")
+    .by_ending_at
+  }
+  def e_format_with_spaces
+    _f = ""
+    if !self.country.blank?
+      _f += self.country.code.strip
+    end
+    if !self.iban_dc.blank?
+      _f += self.iban_dc.strip
+    end
+    if !self.bank.blank?
+      _f += " " + self.bank.code.strip
+    end
+    if !self.bank_office.blank?
+      _f += " " + self.bank_office.code.strip
+    end
+    # if !self.ccc_dc.blank?
+    #   _f += " " + self.ccc_dc.strip
+    # end
+    if !self.account_no.blank?
+      _f +=  " " + self.account_no[0,4] + " " + self.account_no[4,4] + " " + self.account_no[8,4]
+    end
+    _f
+  end
+
   scope :by_subscriber, -> s { where('subscriber_id = ?', s).by_ending_at }
   scope :active_by_client_or_subscriber, -> c, s { active.where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }
   scope :active_by_client, -> c { active.where('client_id = ?', c).by_ending_at }

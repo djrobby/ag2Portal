@@ -15,6 +15,9 @@ class InvoiceDebt < ActiveRecord::Base
     "#{full_name}"
   end
 
+  #
+  # Class (self) user defined methods
+  #
   def self.unpaid
     where('debt > 0')
   end

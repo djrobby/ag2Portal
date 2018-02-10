@@ -1,13 +1,14 @@
+<!-- ClientBankAccount.by_client_full -->
 <% if !account.ending_at.blank? %>
   <tr class="inactive-row">
 <% else %>
   <tr>
 <% end %>
-  <td><%= account.bank_account_class.name %></td>
-  <td><%= account.e_format_with_spaces %></td>
-  <td><%= account.try(:subscriber).try(:full_code) %></td>
-  <td><%= account.holder_name %></td>
-  <td><%= account.holder_fiscal_id %></td>
-  <td align="center"><%= account.starting_at.strftime("%d/%m/%Y") %></td>
-  <td align="center"><%= account.ending_at.strftime("%d/%m/%Y") unless account.ending_at.blank? %></td>
+  <td><%= account.bank_account_class_name unless account.bank_account_class_name.blank? %></td>
+  <td><%= account.iban_with_spaces unless account.iban_with_spaces.blank? %></td>
+  <td><%= account.subscriber_full_code unless account.subscriber_full_code.blank? %></td>
+  <td><%= account.holder_name unless account.holder_name.blank? %></td>
+  <td><%= account.holder_fiscal_id unless account.holder_fiscal_id.blank? %></td>
+  <td align="center"><%= formatted_date(account.starting_at) unless account.starting_at.blank? %></td>
+  <td align="center"><%= formatted_date(account.ending_at) unless account.ending_at.blank? %></td>
 </tr>
