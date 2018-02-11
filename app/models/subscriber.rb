@@ -47,6 +47,7 @@ class Subscriber < ActiveRecord::Base
   has_many :meter_details
   has_one :contracting_request
   has_one :water_supply_contract
+  has_many :contracted_tariffs, through: :water_supply_contract
   has_one :subscriber_supply_address
   has_one :subscriber_filiation
   has_many :readings

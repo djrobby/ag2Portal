@@ -704,7 +704,7 @@ module Ag2Gest
       _tariff_type = []
       _tariff_type_ids = []
       if !@subscriber.water_supply_contract.blank?
-        @subscriber.water_supply_contract.contracted_tariffs.each do |tt|
+        @subscriber.contracted_tariffs.each do |tt|
           if !_tariff_type.include? tt.tariff.tariff_type.name
             _tariff_type << tt.tariff.tariff_type.name
           end
@@ -714,12 +714,11 @@ module Ag2Gest
         end
         @tariff_type = _tariff_type.join(", ")
       end
-      @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice(_tariff_type_ids)
-                          .includes(:billable_concept, :tariff_type, :billing_frequency)
+      @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
+      # @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice(_tariff_type_ids)
       # @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", _tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
 
-      @subscriber_tariffs = SubscriberTariff.availables_to_subscriber(@subscriber.id)
-                            .includes(tariff: [:billable_concept, :tariff_type, :billing_frequency])
+      @subscriber_tariffs = SubscriberTariff.availables_to_subscriber_full(@subscriber.id)
       #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
       # @reading_types = ReadingType.all
       # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first
@@ -762,7 +761,7 @@ module Ag2Gest
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       search_readings = Reading.search do
         with :subscriber_id, params[:id]
-        data_accessor_for(Reading).include = [:meter, :billing_period, :reading_type, :reading_incidence_types]
+        data_accessor_for(Reading).include = [:meter, :billing_period, :reading_type, :reading_incidences, :reading_incidence_types]
         order_by :sort_id, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class BillingFrequency < ActiveRecord::Base
   belongs_to :fix_measure, class_name: 'Measure'
   belongs_to :var_measure, class_name: 'Measure'
@@ -18,9 +20,9 @@ class BillingFrequency < ActiveRecord::Base
 
   def to_label
     if days.zero?
-      return name + " - " + months.to_s + (months==1 ? ' mes' : ' meses')
+      return name + " - " + months.to_s + ' mes/es'
     else
-      return name + " - " + days.to_s + (days==1 ? ' dia' : ' dias')
+      return name + " - " + days.to_s + ' día/s'
     end
   end
 
@@ -28,7 +30,7 @@ class BillingFrequency < ActiveRecord::Base
 
   def days_xor_months
     if !(days? ^ months?)
-      errors[:days] << "Especifica dias o meses, no ambos"
+      errors[:days] << "Especifica días o meses, no ambos"
     end
   end
 end

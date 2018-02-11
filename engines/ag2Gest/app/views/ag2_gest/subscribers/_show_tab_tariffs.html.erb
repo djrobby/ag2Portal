@@ -21,7 +21,8 @@
   </div>
   <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :html => { class: 'modal-footer-right' } do |f| %>
     <div class="modal-body">
-        <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :to_label, :item_wrapper_class => 'checkbox_container') %>
+        <%#= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :to_label, :item_wrapper_class => 'checkbox_container') %>
+        <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :tariff_label, :item_wrapper_class => 'checkbox_container') %>
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
@@ -44,12 +45,12 @@
       <tbody>
         <% @subscriber_tariffs.each do |t| %>
           <tr>
-            <td class="billable_concept"><%= t.tariff.try(:billable_concept).try(:name) %></td>
-            <td class="tariff_type"><%= t.tariff.try(:tariff_type).try(:name) %></td>
-            <td class="billing_frequency"><%= t.tariff.try(:billing_frequency).try(:to_label) %></td>
-            <td class="starting_at"><%=l t.try(:starting_at) unless t.try(:starting_at).blank? %></td>
-            <td class="ending_at"><%=l t.try(:ending_at) unless t.try(:ending_at).blank? %></td>
-            <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff) } %></td>
+            <td class="billable_concept"><%= t.billable_concept_name unless t.billable_concept_name.blank? %></td>
+            <td class="tariff_type"><%= t.tariff_type_name unless t.tariff_type_name.blank? %></td>
+            <td class="billing_frequency"><%= t.billing_frequency_label unless t.billing_frequency_label.blank? %></td>
+            <td class="starting_at"><%= formatted_date(t.starting_at) unless t.starting_at.blank? %></td>
+            <td class="ending_at"><%= formatted_date(t.ending_at) unless t.ending_at.blank? %></td>
+            <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff_id) } %></td>
           </tr>
         <% end %>
       </tbody>

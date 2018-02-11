@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Tariff < ActiveRecord::Base
   # CONSTANTS
   # increment_apply_to
@@ -82,8 +84,16 @@ class Tariff < ActiveRecord::Base
   scope :current, -> { where('tariffs.ending_at IS NULL OR tariffs.ending_at >= ?', Date.today) }
   scope :current_by_type, -> t { current.where(tariff_type_id: t) }
   scope :current_by_type_and_use_in_service_invoice, -> t {
-    joins(billable_item: :billable_concept)
+    joins(:tariff_type, :billing_frequency, [billable_item: :billable_concept])
+    .joins('LEFT JOIN calibers ON tariffs.caliber_id=calibers.id')
     .current_by_type(t).where("billable_concepts.billable_document = '1'")
+  }
+  scope :current_by_type_and_use_in_service_invoice_full, -> t {
+    joins(:tariff_type, :billing_frequency, [billable_item: :billable_concept])
+    .joins('LEFT JOIN calibers ON tariffs.caliber_id=calibers.id')
+    .current_by_type(t).where("billable_concepts.billable_document = '1'")
+    .select("tariffs.id id,
+             CONCAT(tariff_types.name, ' ', billable_concepts.name, CASE ISNULL(tariffs.caliber_id) WHEN TRUE THEN '' ELSE CONCAT(' - ',calibers.caliber) END, ' (', DATE_FORMAT(tariffs.starting_at,'%d/%m/%Y'),')') tariff_label")
   }
 
   # Callbacks
