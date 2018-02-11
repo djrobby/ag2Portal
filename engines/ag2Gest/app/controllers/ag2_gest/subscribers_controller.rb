@@ -699,6 +699,7 @@ module Ag2Gest
       # @billing_period = BillingPeriod.order('period DESC').all
       @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber)
       # @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
+      @current_debt = @subscriber.total_existing_debt
 
       _tariff_type = []
       _tariff_type_ids = []
@@ -733,10 +734,9 @@ module Ag2Gest
       _projects, _oco = projects_dropdown
       @project_dropdown = !_oco ? Project.active_only : _projects
 
-      @subscriber_accounts = ClientBankAccount.by_subscriber(@subscriber.id)
-      @subscriber_accounts = ClientBankAccount.by_client(@subscriber.client_id) if @subscriber_accounts.blank?
+      @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
+      @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
       @subscriber_accounts = @subscriber_accounts
-                            .includes(:bank_account_class, :country, :bank, :bank_office)
                             .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       # @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
 

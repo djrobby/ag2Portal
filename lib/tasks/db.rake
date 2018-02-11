@@ -7,6 +7,72 @@ namespace :db do
     Client.find_each { |p| Client.reset_counters(p.id, :subscribers) }
   end
 
+  desc "Reset totals"
+  task :reset_totals => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    puts "\tOfferRequest"
+    OfferRequest.find_each do |p|
+      p.update_column(:totals, p.total)
+    end
+    puts "\tOffer"
+    Offer.find_each do |p|
+      p.update_column(:totals, p.total)
+    end
+    puts "\tReceiptNote"
+    ReceiptNote.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:quantities, p.quantity)
+      p.update_column(:taxables, p.taxable)
+    end
+    puts "\tDeliveryNote"
+    DeliveryNote.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:total_costs, p.costs)
+      p.update_column(:quantities, p.quantity)
+    end
+    puts "\tPurchaseOrder"
+    PurchaseOrder.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:quantities, p.quantity)
+      p.update_column(:balances, p.balance)
+    end
+    puts "\tSupplierInvoice"
+    SupplierInvoice.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:taxables, p.taxable)
+      p.update_column(:total_taxes, p.taxes)
+    end
+    puts "\tWorkOrder"
+    WorkOrder.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:this_costs, p.this_total_costs)
+      p.update_column(:with_suborder_costs, p.total_costs)
+    end
+    puts "\tInventoryCount"
+    InventoryCount.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:quantities, p.quantity)
+    end
+    puts "\tPreInvoice"
+    PreInvoice.find_each do |p|
+      p.update_column(:totals, p.total)
+    end
+    puts "\tInvoice"
+    Invoice.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:receivables, p.receivable)
+      p.update_column(:total_taxes, p.taxes)
+    end
+    puts "\tDebtClaim"
+    DebtClaim.find_each do |p|
+      p.update_column(:subtotals, p.subtotal)
+      p.update_column(:surcharges, p.surcharge)
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
   desc "Solr reindex searchable models"
   task :reindex_models => :environment do
     puts "Task started at " + Time.now.to_s + "."

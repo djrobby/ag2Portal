@@ -85,7 +85,7 @@
         <td> <% if @subscriber.non_billable %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_non_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/non_billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       <% end %>
       <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
-      <td class="highlighted bolded"><%= number_with_precision(@subscriber.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.total_debt_unpaid.blank? %></td>
+      <td class="highlighted bolded"><%= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td  colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.try(:deposit), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
     </tr>
@@ -297,12 +297,12 @@
         <tbody>
           <% @subscriber_accounts.each do |client_bank_account| %>
             <tr>
-              <td><%= client_bank_account.bank_account_class.name %></td>
-              <td><%= client_bank_account.e_format_with_spaces %></td>
-              <td><%= client_bank_account.holder_name %></td>
-              <td><%= client_bank_account.holder_fiscal_id %></td>
-              <td align="center"><%= client_bank_account.starting_at.strftime("%d/%m/%Y") %></td>
-              <td align="center"><%= client_bank_account.ending_at.strftime("%d/%m/%Y") unless client_bank_account.ending_at.blank? %></td>
+              <td><%= client_bank_account.bank_account_class_name unless client_bank_account.bank_account_class_name.blank? %></td>
+              <td><%= client_bank_account.iban_with_spaces unless client_bank_account.iban_with_spaces.blank? %></td>
+              <td><%= client_bank_account.holder_name unless client_bank_account.holder_name.blank? %></td>
+              <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
+              <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>
+              <td align="center"><%= formatted_date(client_bank_account.ending_at) unless client_bank_account.ending_at.blank? %></td>
             </tr>
             </tr>
           <% end %>
@@ -379,7 +379,7 @@
     $("#billable_button").click(function(){
       window.location.reload();
     });
-    
+
     $("#sub_load_postal_button").click(function(){
       var subscriber_id = $("#fnt_id").val();
       if (subscriber_id == "")
@@ -479,7 +479,7 @@
         return false;
       });
     });
-    
+
     $("#sub_load_bank_button").click(function(){
       var subscriber_id = $("#fnt_id").val();
       if (subscriber_id == "")
