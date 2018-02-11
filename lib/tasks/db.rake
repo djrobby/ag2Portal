@@ -7,7 +7,7 @@ namespace :db do
     Client.find_each { |p| Client.reset_counters(p.id, :subscribers) }
   end
 
-  desc "Reset totals"
+  desc "Reset totals (should stop server before!)"
   task :reset_totals => :environment do
     puts "Task started at " + Time.now.to_s + "."
 
