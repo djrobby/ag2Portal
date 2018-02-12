@@ -744,6 +744,16 @@ module Ag2Gest
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
 
+      @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
+      # search_readings = Reading.search do
+      #   with :subscriber_id, params[:id]
+      #   data_accessor_for(Reading).include = [:meter, :billing_period, :reading_type, :reading_incidences, :reading_incidence_types]
+      #   order_by :sort_id, :desc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @subscriber_readings = search_readings.results
+
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       search_bills = Bill.search do
         if filter == "pending" or filter == "unpaid"
@@ -757,15 +767,6 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscriber_bills = search_bills.results
-
-      # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
-      search_readings = Reading.search do
-        with :subscriber_id, params[:id]
-        data_accessor_for(Reading).include = [:meter, :billing_period, :reading_type, :reading_incidences, :reading_incidence_types]
-        order_by :sort_id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-      @subscriber_readings = search_readings.results
 
       respond_to do |format|
        format.html # show.html.erb

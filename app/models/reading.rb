@@ -52,6 +52,17 @@ class Reading < ActiveRecord::Base
   scope :by_id_desc, -> { order('id desc') }
   scope :unbilled, -> { where(bill_id: nil, reading_type_id: ReadingType.without_control) }
   scope :unbilled_by_subscriber, -> s { unbilled.where(subscriber_id: s) }
+  scope :by_subscriber_full, -> s {
+    joins(:billing_period, :reading_type, [meter: :meter_model])
+    .joins('LEFT JOIN (reading_incidences INNER JOIN reading_incidence_types ON reading_incidences.reading_incidence_type_id=reading_incidence_types.id) ON reading_incidences.reading_id=readings.id')
+    .where('readings.subscriber_id = ?', s)
+    .select("meters.meter_code, billing_periods.period, reading_types.name reading_type_name,
+             readings.reading_date, readings.reading_index,
+             GROUP_CONCAT(reading_incidence_types.code) reading_incidence_types_pluck, readings.reading_index_1,
+             CASE ISNULL(readings.reading_index) OR ISNULL(readings.reading_index_1) WHEN TRUE THEN 0 ELSE (CASE WHEN readings.reading_index_1 <= readings.reading_index THEN readings.reading_index-readings.reading_index_1 ELSE ((POWER(10,meter_models.digits)-1)-readings.reading_index_1) + readings.reading_index END) END consumption,
+             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable")
+    .group('readings.id DESC')
+  }
 
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
@@ -112,6 +123,10 @@ class Reading < ActiveRecord::Base
 
   def billable_and_master_meter?
     billable? && master_meter?
+  end
+
+  def is_shared?
+    coefficient > 1
   end
 
   def consumption
