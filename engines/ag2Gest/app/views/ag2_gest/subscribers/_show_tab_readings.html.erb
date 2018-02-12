@@ -31,10 +31,10 @@
     &nbsp;
     <span class="<%= 'hide' if @subscriber.current_estimation.nil? %>"><b><%= I18n.t('activerecord.attributes.subscriber.total_estimations') %>:</b> <%= @subscriber.current_estimation_balance %></span>
     &nbsp;
-    <span><b><%= I18n.t("activerecord.attributes.reading.con") %>:</b> <%= @subscriber_readings.first.consumption_previous_readings(@subscriber_readings.last.reading_date, @subscriber_readings.first.reading_date) %></span>
+    <!--<span><b><%#= I18n.t("activerecord.attributes.reading.con") %>:</b> <%#= @subscriber_readings.first.consumption_previous_readings(@subscriber_readings.last.reading_date, @subscriber_readings.first.reading_date) %></span>-->
+    <span><b><%= I18n.t("activerecord.attributes.reading.con") %>:</b> <%= (@subscriber_readings.sum(&:consumption) / @subscriber_readings.size).round %></span>
   </div>
 </div>
-
 
 <table class="table table-condensed table-striped shrinked">
   <thead>

@@ -74,17 +74,12 @@
   </div>
 </div>
 <% @subscriber_bills.each do |bill| %>
-  <%# unless (session[:ifilter] == "pending" and bill.unpaid?) or (session[:ifilter] == "unpaid" and bill.payable?) %>
-    <!-- Make two Render (Example Controller) -->
-    <% if !bill.water_supply_contract.nil? %>
-      <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
-      <%= render 'bill_contracting_request', :bill => bill %>
-
-    <% else %>
-      <!-- RENDER2 FACTURA DE SUMINISTRO-->
-      <%= render 'bill_reading', :bill => bill %>
-    <% end %>
-  <%# end %>
-
+  <% if !bill.water_supply_contract.nil? %>
+    <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
+    <%= render 'bill_contracting_request', :bill => bill %>
+  <% else %>
+    <!-- RENDER2 FACTURA DE SUMINISTRO-->
+    <%= render 'bill_reading', :bill => bill %>
+  <% end %>
 <% end %>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>

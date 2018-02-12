@@ -754,6 +754,12 @@ module Ag2Gest
       # end
       # @subscriber_readings = search_readings.results
 
+      invoice_status = (0..99).to_a
+      if filter == "pending" or filter == "unpaid"
+        invoice_status = (0..98).to_a
+      elsif filter == "charged"
+        invoice_status = [99]
+      end
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       search_bills = Bill.search do
         if filter == "pending" or filter == "unpaid"

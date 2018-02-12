@@ -72,6 +72,10 @@ class Bill < ActiveRecord::Base
     .where(w)
     .by_no
   }
+  scope :by_subscriber_full, -> s, t {
+    joins[:invoice_status, invoices: [:invoice_type, :invoice_operation, [invoice_items: :tax_type]]]
+    .where("bills.subscriber_id = ? AND invoices.invoice_status_id IN (?)", s, t)
+  }
 
   def to_label
     full_no
