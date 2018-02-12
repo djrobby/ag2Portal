@@ -15,6 +15,7 @@ class Meter < ActiveRecord::Base
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
   has_many :readings
+  has_many :pre_readings
   has_many :subscribers
   has_many :service_points
 
@@ -131,6 +132,11 @@ class Meter < ActiveRecord::Base
   }
   scope :distinct_readable_subscriber_meters_by_centers_and_routes, -> c, r {
     readable_subscriber_meters_by_centers_and_routes(c, r).uniq
+  }
+  # Active subscriber shared meters
+  scope :shared, -> {
+    active_subscribers.group('subscribers.id').having('count(subscribers.id) > 1')
+    .select('meters.id meter_id, count(subscribers.id) count_id')
   }
 
   # Callbacks

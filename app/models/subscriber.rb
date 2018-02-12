@@ -99,6 +99,7 @@ class Subscriber < ActiveRecord::Base
   scope :availables, -> { where("ending_at IS NULL OR ending_at >= ?", Date.today)}
   scope :unavailables, -> { where("NOT ending_at IS NULL OR active = false") }
   scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today) }
+  scope :inactivated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = false AND meter_id IS NULL", Date.today) }
   scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
   # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }

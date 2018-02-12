@@ -218,4 +218,8 @@ class ClientBankAccount < ActiveRecord::Base
   def swift
     !self.bank.blank? ? self.bank.swift_to_label : ''
   end
+
+  def is_active?
+    ending_at IS NULL OR ending_at > Date.today
+  end
 end

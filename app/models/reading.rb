@@ -25,7 +25,7 @@ class Reading < ActiveRecord::Base
 
   #:reading_incidence_types_attributtes
 
-  attr_accessor :reading_index_add, :reading_date_add, :meter_location_id, :q_reading_index, :q_reading_date, :q_billing_period_id, :q_reading_incidence_type_ids, :a_reading_index, :a_reading_date, :a_billing_period, :a_reading_incidence_type_ids
+  attr_accessor :reading_index_add, :reading_date_add, :meter_location_id, :q_reading_index, :q_reading_date, :q_billing_period_id, :q_reading_incidence_type_ids, :a_reading_index, :a_reading_date, :a_billing_period, :a_reading_incidence_type_ids, :meter_code_input
 
   has_many :reading_incidences
   has_one :bill, foreign_key: "reading_2_id"

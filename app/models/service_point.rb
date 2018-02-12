@@ -18,6 +18,8 @@ class ServicePoint < ActiveRecord::Base
                   :street_directory_id, :zipcode_id, :km,
                   :meter_id, :reading_route_id, :reading_sequence, :reading_variant
 
+  attr_accessor :meter_code_input
+
   has_paper_trail
 
   has_many :subscribers
