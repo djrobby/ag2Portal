@@ -73,8 +73,14 @@ class Bill < ActiveRecord::Base
     .by_no
   }
   scope :by_subscriber_full, -> s, t {
-    joins(:invoice_status, invoices: [:invoice_type, :invoice_operation, [invoice_items: :tax_type]])
+    # joins(:invoice_status, invoices: [:invoice_type, :invoice_operation, [invoice_items: :tax_type]])
+    joins('LEFT JOIN invoices ON bills.id=invoices.bill_id')
     .where("bills.subscriber_id = ? AND bills.invoice_status_id IN (#{t})", s)
+    .select("bills.id bill_id_, bills.bill_no bill_no_, bills.old_no old_no_, bills.invoice_status_id bill_status_id_,
+             MIN(invoices.invoice_type_id) bill_type_id_, MIN(invoices.invoice_operation_id) bill_operation_id_,
+             bills.client_id client_id_, bills.subscriber_id subscriber_id_,
+             bills.bill_date bill_date_, MAX(invoices.payday_limit) bill_payday_limit_, SUM(invoices.totals) bill_total_")
+    .group('bills.id').order('bills.id DESC')
   }
 
   def to_label
@@ -109,8 +115,14 @@ class Bill < ActiveRecord::Base
   def invoice_based_old_no
     invoices.first.old_no rescue old_no
   end
-  def old_no_based_real_no
+  def invoice_based_old_no_real_no
     invoice_based_old_no.blank? ? real_no : invoice_based_old_no
+  end
+  def old_no_based_no
+    old_no.blank? ? full_no : old_no
+  end
+  def old_no_based_real_no
+    old_no.blank? ? real_no : old_no
   end
 
   # Short No

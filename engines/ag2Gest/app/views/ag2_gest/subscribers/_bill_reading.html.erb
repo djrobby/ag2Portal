@@ -6,7 +6,7 @@
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
       </div>
       <div class="span3 soft-padding">
-        <%= bill.try(:full_no) %>
+        <%= bill.try(:old_no_based_no) %>
       </div>
       <div class="span1 soft-padding">
           <span class="blue"><%= bill.invoices.first.invoice_type.code unless bill.invoices.first.invoice_type.blank? %></span>

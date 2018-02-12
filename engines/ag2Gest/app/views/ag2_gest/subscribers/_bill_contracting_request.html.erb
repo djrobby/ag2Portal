@@ -6,7 +6,7 @@
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
       </div>
       <div class="span3 soft-padding">
-        <%= bill.try(:full_no) %>
+        <%= bill.try(:old_no_based_no) %>
       </div>
       <div class="span1 soft-padding">
           <span class="blue"><%= bill.invoices.first.invoice_type.code unless bill.invoices.first.invoice_type.blank? %></span>
@@ -26,7 +26,7 @@
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir"  %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"}, title: "Abonar"  %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.old_no_based_no})"}, title: "Abonar"  %>
         <%#= link_to "<i class='icon-plus icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
       </div>
     </div>
