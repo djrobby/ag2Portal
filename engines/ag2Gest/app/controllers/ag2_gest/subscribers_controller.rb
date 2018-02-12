@@ -754,25 +754,26 @@ module Ag2Gest
       # end
       # @subscriber_readings = search_readings.results
 
-      invoice_status = (0..99).to_a
+      invoice_status = (0..99).to_a.join(',')
       if filter == "pending" or filter == "unpaid"
-        invoice_status = (0..98).to_a
+        invoice_status = (0..98).to_a.join(',')
       elsif filter == "charged"
-        invoice_status = [99]
+        invoice_status = 99
       end
+      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
-      search_bills = Bill.search do
-        if filter == "pending" or filter == "unpaid"
-          with(:invoice_status_id, 0..98)
-        elsif filter == "charged"
-          with :invoice_status_id, 99
-        end
-        with :subscriber_id, params[:id]
-        data_accessor_for(Bill).include = [:invoice_status, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}]
-        order_by :sort_id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-      @subscriber_bills = search_bills.results
+      # search_bills = Bill.search do
+      #   if filter == "pending" or filter == "unpaid"
+      #     with(:invoice_status_id, 0..98)
+      #   elsif filter == "charged"
+      #     with :invoice_status_id, 99
+      #   end
+      #   with :subscriber_id, params[:id]
+      #   data_accessor_for(Bill).include = [:invoice_status, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}]
+      #   order_by :sort_id, :desc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @subscriber_bills = search_bills.results
 
       respond_to do |format|
        format.html # show.html.erb

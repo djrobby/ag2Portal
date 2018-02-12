@@ -61,9 +61,9 @@ class Reading < ActiveRecord::Base
              readings.reading_date, readings.reading_index,
              GROUP_CONCAT(reading_incidence_types.code) reading_incidence_types_pluck, readings.reading_index_1,
              CASE ISNULL(readings.reading_index) OR ISNULL(readings.reading_index_1) WHEN TRUE THEN 0 ELSE (CASE WHEN readings.reading_index_1 <= readings.reading_index THEN readings.reading_index-readings.reading_index_1 ELSE ((POWER(10,meter_models.digits)-1)-readings.reading_index_1) + readings.reading_index END) END consumption,
-             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable,
+             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable, readings.coefficient, readings.coefficient > 1 is_shared,
              CASE ISNULL(service_points.code) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(service_points.code,1,4),'-',SUBSTR(service_points.code,5,7)) END service_point_full_code")
-    .group('readings.id DESC')
+    .group('readings.id').order('readings.id DESC')
   }
   scope :by_service_point_full, -> s {
     joins(:billing_period, :reading_type, [meter: :meter_model])
@@ -74,9 +74,9 @@ class Reading < ActiveRecord::Base
              readings.reading_date, readings.reading_index,
              GROUP_CONCAT(reading_incidence_types.code) reading_incidence_types_pluck, readings.reading_index_1,
              CASE ISNULL(readings.reading_index) OR ISNULL(readings.reading_index_1) WHEN TRUE THEN 0 ELSE (CASE WHEN readings.reading_index_1 <= readings.reading_index THEN readings.reading_index-readings.reading_index_1 ELSE ((POWER(10,meter_models.digits)-1)-readings.reading_index_1) + readings.reading_index END) END consumption,
-             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable,
+             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable, readings.coefficient, readings.coefficient > 1 is_shared,
              CASE ISNULL(subscribers.subscriber_code) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code")
-    .group('readings.id DESC')
+    .group('readings.id').order('readings.id DESC')
   }
   scope :by_meter_full, -> m {
     joins(:billing_period, :reading_type, [meter: :meter_model])
@@ -88,10 +88,10 @@ class Reading < ActiveRecord::Base
              readings.reading_date, readings.reading_index,
              GROUP_CONCAT(reading_incidence_types.code) reading_incidence_types_pluck, readings.reading_index_1,
              CASE ISNULL(readings.reading_index) OR ISNULL(readings.reading_index_1) WHEN TRUE THEN 0 ELSE (CASE WHEN readings.reading_index_1 <= readings.reading_index THEN readings.reading_index-readings.reading_index_1 ELSE ((POWER(10,meter_models.digits)-1)-readings.reading_index_1) + readings.reading_index END) END consumption,
-             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable,
+             readings.id reading_id, readings.bill_id, ISNULL(readings.bill_id) is_billable, readings.coefficient, readings.coefficient > 1 is_shared,
              CASE ISNULL(service_points.code) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(service_points.code,1,4),'-',SUBSTR(service_points.code,5,7)) END service_point_full_code,
              CASE ISNULL(subscribers.subscriber_code) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code")
-    .group('readings.id DESC')
+    .group('readings.id').order('readings.id DESC')
   }
 
   def to_label
