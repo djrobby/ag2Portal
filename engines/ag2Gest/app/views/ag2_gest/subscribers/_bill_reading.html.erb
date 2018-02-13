@@ -9,9 +9,9 @@
         <%= bill.try(:old_no_based_no) %>
       </div>
       <div class="span1 soft-padding">
-          <span class="blue"><%= bill.invoices.first.invoice_type.code unless bill.invoices.first.invoice_type.blank? %></span>
-          <span class="yellow"><%= bill.invoices.first.invoice_status.code unless bill.invoices.first.invoice_status.blank? %></span>
-          <span class="brown"><%= bill.invoices.first.invoice_operation.code unless bill.invoices.first.invoice_operation.blank? %></span>
+          <span class="blue"><%= InvoiceType.code_with_param(bill.bill_type_id_) unless bill.bill_type_id_.blank? %></span>
+          <span class="yellow"><%= InvoiceStatus.code_with_param(bill.bill_status_id_) unless bill.bill_status_id_.blank? %></span>
+          <span class="brown"><%= InvoiceOperation.code_with_param(bill.bill_operation_id_) unless bill.bill_operation_id_.blank? %></span>
       </div>
       <div class="span1 soft-padding" align="center">
         <%= bill.try(:invoices).try(:first).try(:billing_period).try(:period) %>
@@ -34,9 +34,9 @@
         <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.full_no})"}, title: "Refacturar" %>
       </div>
     </div>
-    <div id="collapse-<%= bill.id %>" class="accordion-body collapse">
+    <div id="collapse-<%= bill.bill_id_ %>" class="accordion-body collapse">
       <div class="accordion-inner">
-        <% bill.invoices.each do |invoice| %>
+        <% Invoice.by_bill_id(bill.bill_id_).each do |invoice| %>
           <table class="table">
             <div class="<%= 'text-error' if invoice.unpaid? %> fields"><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:full_no) %></small></div>
             <div class="<%= 'text-error' if invoice.unpaid? %> fields"><small><%= invoice.try(:biller).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:biller).try(:fiscal_id) %></small></div>
@@ -51,17 +51,17 @@
               <th align="right"><%= t("activerecord.attributes.contracting_request.discount_pct") %></th>
               <th align="right"><%= t("activerecord.attributes.contracting_request.total") %></th>
             </tr>
-            <% invoice.invoice_items.each do |item| %>
+            <% InvoiceItem.by_invoice_id(invoice.invoice_id_) do |item| %>
               <tr class="<%= 'text-error' if invoice.unpaid? %> fields">
                 <td><%= item.code %></td>
                 <td><%= item.subcode_name %></td>
-                <td align="right"><%= number_with_precision(item.quantity, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.tax_type.try(:tax), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.discount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.discount_pct, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.quantity_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.price_, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.amount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.tax_type_tax, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.discount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.discount_pct_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.total_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
             <% end %>
             <tr class="subtotal <%= 'text-error' if invoice.unpaid? %> fields">

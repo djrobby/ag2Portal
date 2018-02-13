@@ -95,8 +95,13 @@ class Invoice < ActiveRecord::Base
   }
   scope :by_bill_ids, -> i {
     where("invoices.bill_id IN (#{i})")
-    .select("invoices.*")
+    .select("invoices.bill_id bill_id_, invoices.id invoice_id_")
     .group('invoices.id').order('invoices.id DESC')
+  }
+  scope :by_bill_id, -> i {
+    where("invoices.bill_id = #{i}")
+    .select("invoices.bill_id bill_id_, invoices.id invoice_id_")
+    .order('invoices.id')
   }
 
   # Callbacks

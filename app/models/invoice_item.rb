@@ -31,8 +31,31 @@ class InvoiceItem < ActiveRecord::Base
 
   # Scopes
   scope :by_invoice_ids, -> i {
-    where("invoice_items.invoice_id IN (#{i})")
-    .select("invoice_items.*")
+    joins(:tax_type)
+    .where("invoice_items.invoice_id IN (#{i})")
+    .select("invoice_items.invoice_id invoice_id_, invoice_items.id invoice_item_id_,
+             invoice_items.quantity quantity_, invoice_items.price price_,
+             tax_types.tax tax_type_tax_, invoice_items.discount discount_, invoice_items.discount_pct discount_pct_,
+             (invoice_items.price - invoice_items.discount) net_price_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) amount_,
+             CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END bonus_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) - CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END net_,
+             CASE tax_types.tax IS NULL WHEN TRUE THEN 0 ELSE (tax_types.tax / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) END tax_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) - CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END + CASE tax_types.tax IS NULL WHEN TRUE THEN 0 ELSE (tax_types.tax / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) END total_")
+    .order('invoice_items.invoice_id, invoice_items.id')
+  }
+  scope :by_invoice_id, -> i {
+    joins(:tax_type)
+    .where("invoice_items.invoice_id = #{i}")
+    .select("invoice_items.invoice_id invoice_id_, invoice_items.id invoice_item_id_,
+             invoice_items.quantity quantity_, invoice_items.price price_,
+             tax_types.tax tax_type_tax_, invoice_items.discount discount_, invoice_items.discount_pct discount_pct_,
+             (invoice_items.price - invoice_items.discount) net_price_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) amount_,
+             CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END bonus_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) - CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END net_,
+             CASE tax_types.tax IS NULL WHEN TRUE THEN 0 ELSE (tax_types.tax / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) END tax_,
+             ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) - CASE invoice_items.discount_pct IS NULL WHEN TRUE THEN 0 ELSE ((invoice_items.discount_pct / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity)) END + CASE tax_types.tax IS NULL WHEN TRUE THEN 0 ELSE (tax_types.tax / 100) * ((invoice_items.price - invoice_items.discount) * invoice_items.quantity) END total_")
     .order('invoice_items.id')
   }
 
