@@ -93,6 +93,11 @@ class Invoice < ActiveRecord::Base
     .where(w)
     .by_no
   }
+  scope :by_bill_ids, -> i {
+    where("invoices.bill_id IN (#{i})")
+    .select("invoices.*")
+    .group('invoices.id').order('invoices.id DESC')
+  }
 
   # Callbacks
   before_save :calculate_and_store_totals
@@ -100,6 +105,9 @@ class Invoice < ActiveRecord::Base
   before_create :assign_payday_limit
   after_save :bill_status
 
+  #
+  # Methods
+  #
   def discount_zero?
     invoice_items.map(&:discount).all?{|d| d==0}
   end

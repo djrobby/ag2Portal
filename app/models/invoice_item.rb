@@ -29,6 +29,14 @@ class InvoiceItem < ActiveRecord::Base
   validates :price,               :numericality => true
   validates :sale_offer_item,     :presence => true, :if => "!sale_offer_id.blank?"
 
+  # Scopes
+  scope :by_invoice_ids, -> i {
+    where("invoice_items.invoice_id IN (#{i})")
+    .select("invoice_items.*")
+    .order('invoice_items.id')
+  }
+
+  # Callbacks
   before_validation :item_repeat, :on => :create
 
   #

@@ -36,4 +36,16 @@ class InvoiceStatus < ActiveRecord::Base
     when 99 then I18n.t('activerecord.attributes.invoice_status.code_99')
     end
   end
+
+  def self.code_with_param(p)
+    case p
+    when 1 then I18n.t('activerecord.attributes.invoice_status.code_1')
+    when 2 then I18n.t('activerecord.attributes.invoice_status.code_2')
+    when 3 then I18n.t('activerecord.attributes.invoice_status.code_3')
+    when 4 then I18n.t('activerecord.attributes.invoice_status.code_4')
+    when 5 then I18n.t('activerecord.attributes.invoice_status.code_5')
+    when 6 then I18n.t('activerecord.attributes.invoice_status.code_6')
+    when 99 then I18n.t('activerecord.attributes.invoice_status.code_99')
+    end
+  end
 end

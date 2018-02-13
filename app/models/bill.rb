@@ -74,7 +74,7 @@ class Bill < ActiveRecord::Base
   }
   scope :by_subscriber_full, -> s, t {
     # joins(:invoice_status, invoices: [:invoice_type, :invoice_operation, [invoice_items: :tax_type]])
-    joins('LEFT JOIN invoices ON bills.id=invoices.bill_id')
+    joins("LEFT JOIN invoices ON bills.id=invoices.bill_id AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
     .where("bills.subscriber_id = ? AND bills.invoice_status_id IN (#{t})", s)
     .select("bills.id bill_id_, bills.bill_no bill_no_, bills.old_no old_no_, bills.invoice_status_id bill_status_id_,
              MIN(invoices.invoice_type_id) bill_type_id_, MIN(invoices.invoice_operation_id) bill_operation_id_,
@@ -83,6 +83,9 @@ class Bill < ActiveRecord::Base
     .group('bills.id').order('bills.id DESC')
   }
 
+  #
+  # Methods
+  #
   def to_label
     full_no
   end

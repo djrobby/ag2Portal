@@ -35,4 +35,25 @@ class InvoiceType < ActiveRecord::Base
     else I18n.t('activerecord.attributes.invoice_type.code_5')
     end
   end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.code_with_param(p)
+    case p
+    when 1 then I18n.t('activerecord.attributes.invoice_type.code_1')
+    when 2 then I18n.t('activerecord.attributes.invoice_type.code_2')
+    when 3 then I18n.t('activerecord.attributes.invoice_type.code_3')
+    when 4 then I18n.t('activerecord.attributes.invoice_type.code_4')
+    when 5 then I18n.t('activerecord.attributes.invoice_type.code_5')
+    else I18n.t('activerecord.attributes.invoice_type.code_5')
+    end
+  end
+
+  def self.billable_by_subscriber_array
+    [WATER, CONTRACT]
+  end
+  def self.billable_by_subscriber
+    billable_by_subscriber_array.join(',')
+  end
 end

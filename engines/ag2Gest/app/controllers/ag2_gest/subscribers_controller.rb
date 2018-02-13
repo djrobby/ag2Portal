@@ -773,6 +773,7 @@ module Ag2Gest
       _projects, _oco = projects_dropdown
       @project_dropdown = !_oco ? Project.active_only : _projects
 
+      ### Bank accounts ###
       @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
       @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
       @subscriber_accounts = @subscriber_accounts
@@ -784,6 +785,7 @@ module Ag2Gest
       #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
 
+      ### Readings ###
       @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       # search_readings = Reading.search do
@@ -794,13 +796,23 @@ module Ag2Gest
       # end
       # @subscriber_readings = search_readings.results
 
+      ### Bills ###
       invoice_status = (0..99).to_a.join(',')
       if filter == "pending" or filter == "unpaid"
         invoice_status = (0..98).to_a.join(',')
       elsif filter == "charged"
         invoice_status = 99
       end
-      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @subscriber_invoice_items = []
+      @subscriber_invoices = []
+      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
+      if !@subscriber_bills.empty?
+        @subscriber_invoices = Invoice.by_bill_ids(@subscriber_bills.map(&:bill_id_))
+        if !@subscriber_invoices.empty?
+          @subscriber_invoice_items = InvoiceItem.by_invoice_ids(@subscriber_invoices.map(&:invoice_id_))
+        end
+      end
+      @subscriber_bills = @subscriber_bills.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       # search_bills = Bill.search do
       #   if filter == "pending" or filter == "unpaid"
