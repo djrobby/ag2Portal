@@ -30,10 +30,17 @@
   }  
 
   $(document).ready(function() {
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
+    
     // Select2
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -128,7 +135,7 @@
         if (data.code == "$err") {
           $("#alert_change").css('color', 'red');
           alert('<%= I18n.t("activerecord.attributes.meter.master_meter") %>' + " " + data.alert);
-          $('#input_change_meter').select();
+          $('#input_change_meter').val("");
         } else {
           $("#alert_change").css('color', text_field_color);
           $('#sel2_association_change').val(data.meter_id);

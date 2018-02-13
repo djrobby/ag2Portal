@@ -8,9 +8,15 @@ var text_field_color;
       allowClear: true
     });
 
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
 
     // Save default text color
@@ -128,6 +134,26 @@ var text_field_color;
       });
       return false;
     });
+    
+    // when #input_change_meter changes
+    $("#input_add_meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#input_add_meter').val();
+      if (meter == "")
+        meter = "$";
+      jQuery.getJSON('sp_find_meter/' + meter, function(data) {
+        $("#alert_change").html(data.alert);
+        if (data.code == "$err") {
+          $("#alert_change").css('color', 'red');
+          alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
+          $('#input_change_meter').val("");
+        } else {
+          $("#alert_change").css('color', text_field_color);
+          $('#sel2_association_change').val(data.meter_id);
+        }
+      });
+      return false;
+    });
   }); //end jQuery
 
 
@@ -198,6 +224,10 @@ var text_field_color;
   <label class="multi-field-label-two"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
   <label class="multi-field-label-two"> <%= f.association :reading_route, collection: @reading_routes, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>
 </div>
+<!-- <div>
+  <label class="multi-field-label-two"> <%#= f.input :meter, required: false, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @service_point.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+  <%#= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @service_point.try(:meter_id) } %> </label>
+</div> -->
 <div>
   <label class="multi-field-label-two"> <%= f.input :reading_sequence, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :reading_variant, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>

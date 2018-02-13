@@ -6,6 +6,12 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
 
     // Save default text color
     text_field_color = $("#alert").css('color')
@@ -18,7 +24,7 @@
 
   jQuery(function($) {
 
-    $("#form_add_meter").bind("ajax:success", function(xhr, data, status) {
+    $("#form_install_meter").bind("ajax:success", function(xhr, data, status) {
 
       //Clean fields to update after of to insert
       $('#info_meter, #info_brand, #info_caliber').empty();
@@ -33,10 +39,10 @@
       $('.modalMeter').modal('toggle');
 
       //Display buttons
-      var add_buttons = `<a href='#newReadingModal' id='link_reading' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.reading_new') %></a> <a href='#quitMeter' id='quit_meter' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.remove_meter') %></a> <a href='#changeMeter' id='change_meter' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.change_meter') %></a>`;
+      var add_buttons = `<a href='#newReadingModal' id='link_reading' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.reading_new') %></a> <a href='#withdrawalMeter' id='withdrawal_meter' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.remove_meter') %></a> <a href='#changeMeter' id='change_meter' role='button' class='btn btn-mini btn-primary' data-toggle='modal'><%= t('activerecord.attributes.subscriber.change_meter') %></a>`;
 
-      $('#add_meter').after(add_buttons);
-      $('#add_meter').remove();
+      $('#install_meter').after(add_buttons);
+      $('#install_meter').remove();
 
       //Formatt Date
       var date =``;
@@ -71,7 +77,7 @@
       $('#readings table tbody').after(text);
 
       //Put Values to 0
-      $('#form_add_meter').find('[type=checkbox]').prop('checked', false);
+      $('#form_install_meter').find('[type=checkbox]').prop('checked', false);
       //$('#sel2_association').select2("val", "");
       $('#sel2_association').val("");
       $('#input_add_reading_index, #input_add_reading_date, #input_add_meter').val("");
@@ -87,7 +93,7 @@
       var meter = $('#input_add_meter').val();
       if (meter == "")
         meter = "$";
-      jQuery.getJSON('su_find_meter/' + meter, function(data) {
+      jQuery.getJSON('sp_find_meter/' + meter, function(data) {
         $("#alert").html(data.alert);
         if (data.code == "$err") {
           $("#alert").css('color', 'red');
@@ -106,13 +112,13 @@
 </script>
 
 <!-- AddMeter -->
-<div id="addMeter" class="modal modalMeter hide fade" data-backdrop="static">
+<div id="installMeter" class="modal modalMeter hide fade" data-backdrop="static">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3><%= t('activerecord.attributes.subscriber.add_meter') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
-  <%= simple_form_for @reading, url: { action: :add_meter, controller: 'subscribers'},  :method => :post, :html => { :class => 'modal-footer-right form-inline', :id => 'form_add_meter' } do |f| %>
+  <%= simple_form_for @reading, url: { action: :install_meter, controller: 'service_points'},  :method => :post, :html => { :class => 'modal-footer-right form-inline', :id => 'form_install_meter' } do |f| %>
     <div class="modal-body">
       <%#= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
 
@@ -122,17 +128,17 @@
 
       <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2', id: 'input_add_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
-      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', id: 'input_add_reading_index', min: '0', step: 'any' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', id: 'input_add_reading_index', min: '0', step: 'any'  }, :label_html => { :class => 'form-label' } %>
 
       <%= f.input :reading_date, :as => :hidden, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', id: 'input_add_reading_date' }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.association :billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "input_add_billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" href="#collapseAddMeter"><%= t('activerecord.attributes.subscriber.incidences') %></a>
+          <a class="accordion-toggle" data-toggle="collapse" href="#collapseinstallMeter"><%= t('activerecord.attributes.subscriber.incidences') %></a>
         </div>
-        <div id="collapseAddMeter" class="accordion-body collapse">
+        <div id="collapseinstallMeter" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
               <% ReadingIncidenceType.all.each do |incidence_type| %>
@@ -151,14 +157,14 @@
     </div>
     <div class="modal-footer">
       <span class="left-floated shrinked" style="vertical-align: bottom" id="alert"></span>
-      <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "submit_add" %>
+      <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "submit_install" %>
       <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
     </div>
   <% end %>
 </div>
 <script>
   jQuery(function($) {
-    $("#submit_add").click(function () { 
+    $("#submit_install").click(function () { 
       var meter = $("#input_add_meter").val();
       var meter_location = $("#input_add_meter_location").val();
       var reading_index = $("#input_add_reading_index").val();

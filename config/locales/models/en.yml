@@ -135,6 +135,7 @@ en:
           code_not_found: "%{var} not found."
           code_wrong: "%{var} is not correct."
           installed: "%{var} is already installed (unavailable)."
+          installed_share: "%{var} is already installed (Meter is shared)."
           available: "%{var} is available to be installed."
           attributes:
             meter_code:

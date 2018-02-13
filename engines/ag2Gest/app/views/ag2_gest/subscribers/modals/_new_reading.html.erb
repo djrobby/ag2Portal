@@ -6,11 +6,17 @@
       allowClear: true
     });
 
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
-
+    
     $("#form_new_reading") //Element form
       .bind("ajax:success", function(xhr, data, status){ //enlazar pasandole param this
 
@@ -78,7 +84,7 @@
 
 <!-- NewReading -->
 <div id="newReadingModal" class="modal hide fade">
-  <%= simple_form_for [@reading], :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_reading' } do |f| %>
+  <%= simple_form_for [@reading], :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_new_reading' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= t('activerecord.attributes.subscriber.new_reading') %></h3>
@@ -95,11 +101,11 @@
 
     <%= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
     <%= f.association :billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.billing_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
-    <%= f.association :reading_type, collection: ReadingType.all, label: t('activerecord.attributes.subscriber.reading_type'), input_html: { class: 'x-large-text-field sel2', :id => "reading_type" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
+    <%= f.association :reading_type, collection: @reading_type, label: t('activerecord.attributes.subscriber.reading_type'), input_html: { class: 'x-large-text-field sel2', :id => "reading_type" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
     
     <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y %H:%M:%S") if f.object.reading_date), :class => 'mid-text-field date_picker', id: "reading_date" }, :label_html => { :class => 'form-label' } %>
 
-    <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', id: "reading_index", min: '0', step: 'any'  }, :label_html => { :class => 'form-label' } %>
 
     <div class="accordion-group">
       <div class="accordion-heading">
@@ -123,8 +129,28 @@
 
   </div>
   <div class="modal-footer">
-    <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary" %>
+    <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => "submit_new_reading" %>
     <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
   </div>
   <% end %>
 </div>
+
+<script>
+  jQuery(function($) {
+    $("#submit_new_reading").click(function () { 
+      var project = $("#project").val();
+      var billing_period = $("#billing_period").val();
+      var reading_type = $("#reading_type").val();
+      var reading_date = $("#reading_index").val();
+      var reading_index= $("#reading_index").val();
+
+      if (project == "" || billing_period == "" || reading_type == "" || reading_date == "" || reading_index == "") {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      } else if (reading_index < 0) {
+        alert("<%= I18n.t(:index_negative) %>");
+        return false;
+      }
+    });
+  });
+</script>

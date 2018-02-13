@@ -80,7 +80,7 @@ jQuery(function($) {
         if (data.code == "$err") {
           $("#alert").css('color', 'red');
           alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-          $('#input_add_meter').select();
+          $('#input_add_meter').val("");
         } else {
           $("#alert").css('color', text_field_color);
           $('#sel2_association').val(data.meter_id);

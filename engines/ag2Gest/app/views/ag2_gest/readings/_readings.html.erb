@@ -24,7 +24,11 @@
   </thead>
   <tbody>
     <% @readings.each do |reading| %>
-      <tr>
+      <% if reading.is_shared? %>
+        <tr class = "shared">
+      <% else %>
+        <tr>
+      <% end %>
         <td><%= reading.try(:subscriber).try(:to_label) %></td> <!-- subscriber.name -->
         <td><%= reading.try(:meter).try(:meter_code) %></td>
         <td align="center"><%= reading.try(:billing_period).try(:period) %></td>

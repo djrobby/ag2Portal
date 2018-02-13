@@ -11,11 +11,17 @@
       allowClear: true
     });
 
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
-
+    
     $(document).ajaxStart(function() {
 
       // show loader on start

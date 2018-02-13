@@ -20,6 +20,7 @@ es:
         billing_frequency_id: "Frecuencia de facturación"
         reading_type_id: "Tipo de lectura"
         subscriber_id: "Abonado"
+        service_point_id : "Punto de Suministro"
         reading_variant: "Reading variant"
         reading_1_id: "reading_1_id"
         reading_2_id: "reading_2_id"

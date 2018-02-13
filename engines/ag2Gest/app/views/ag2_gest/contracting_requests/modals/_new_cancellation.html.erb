@@ -1,5 +1,11 @@
 <script type="text/javascript">
   $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
   // Events post water supply contract
   // $('select.sel2').select2({
   //     formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -89,7 +95,7 @@ jQuery(function($) {
         if (data.code == "$err") {
           $("#alert").css('color', 'red');
           alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-          $('#input_add_meter').select();
+          $('#input_add_meter').val("");
         } else {
           $("#alert").css('color', text_field_color);
           $('#sel2_association').val(data.meter_id);

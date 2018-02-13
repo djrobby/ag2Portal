@@ -80,9 +80,9 @@
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.non_billable') %>:</b></td>
       <% if @subscriber.non_billable %>
-        <td> <% if @subscriber.non_billable %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.billable_button') %></a>
+        <td> <i class="icon-thumbs-down"></i> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.billable_button') %></a></td>
       <% else %>
-        <td> <% if @subscriber.non_billable %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_non_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/non_billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
+        <td> <i class="icon-thumbs-up"></i> &nbsp; <a id='billable_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_non_billable')%>' class="btn btn-primary btn-mini nextBtn" href="<%= params[:id] %>/non_billable_button" data-remote="true"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a></td>
       <% end %>
       <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
       <td class="highlighted bolded"><%= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
@@ -173,7 +173,7 @@
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
-          <td id="info_meter"><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
+          <td id="info_meter"><% if @subscriber.try(:meter).try(:is_shared?) %><i class="icon-screenshot"></i> &nbsp;<% end %><%= link_to @subscriber.try(:meter).try(:meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.try(:meter).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
           <td id="info_brand"><%= link_to @subscriber.meter.meter_model.full_name, ag2_gest.meter_model_path(@subscriber.meter.meter_model) unless @subscriber.meter.blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
@@ -281,7 +281,7 @@
       <div class="span12">
         <a id="sub_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
 
-        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber.water_supply_contract.blank? or @subscriber.water_supply_contract.contracting_request.blank? or @subscriber.client.client_bank_accounts.blank?  %>
+        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber_accounts.blank?  %>
       </div>
       <table class="table table-condensed table-striped shrinked stu">
         <thead>
@@ -292,6 +292,7 @@
             <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
             <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
             <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -303,6 +304,10 @@
               <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
               <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>
               <td align="center"><%= formatted_date(client_bank_account.ending_at) unless client_bank_account.ending_at.blank? %></td>
+              <td>
+                <%#= link_to "<i class='icon-print icon-white'></i>".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank"  %>
+                <a id='disable_bank_account_button' data-confirm='<%= t('activerecord.attributes.subscriber.alert_disable_bank_account')%>' class="btn btn-danger btn-mini <%= 'hide' unless client_bank_account.is_active != 0 %>" href="<%= params[:id] %>/disable_bank_account/<%= client_bank_account.id %>" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>' data-remote="true"><i class='icon-trash icon-white'></i></a>
+              </td>
             </tr>
             </tr>
           <% end %>
@@ -377,6 +382,10 @@
   $(document).ready(function () {
 
     $("#billable_button").click(function(){
+      window.location.reload();
+    });
+
+    $("#disable_bank_account_button").click(function(){
       window.location.reload();
     });
 
@@ -561,8 +570,17 @@
       $(this).parent().addClass('active');
       $('.tab-pane.active').removeClass('active').removeClass('in');
       $('#'+this.href.split('#')[1]).addClass('active').addClass('in');
+      // MJ
+      window.location.hash = $(this).attr('href');
     });
 
+    // if(window.location.hash){
+    //    $('#myTab a[href="'+window.location.hash+'"]').tab('show');
+    // }
+    if (location.hash !== '') $('#myTab a[href="' + location.hash + '"]').tab('show');
+      return $('#myTab a[data-toggle="tab"]').on('shown', function(e) {
+       return location.hash = $(e.target).attr('href').substr(1);
+    });
 
     $("#payment-method-select").on("change", function(){
       if (this.value == "Caja") {

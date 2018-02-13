@@ -133,8 +133,14 @@
     }).on('changeDate', function(e){
       $('.ndate_picker').datepicker('hide');
     });
+    // $('.date_picker').datepicker({
+    //  format:'dd/mm/yyyy',weekStart:1
+    // });
     $('.date_picker').datepicker({
-     format:'dd/mm/yyyy',weekStart:1
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
 
     // Setup special search (select2)

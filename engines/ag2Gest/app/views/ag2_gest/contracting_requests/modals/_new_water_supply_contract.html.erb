@@ -102,7 +102,7 @@ jQuery(function($) {
         if (data.code == "$err") {
           $("#alert").css('color', 'red');
           alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-          $('#input_add_meter').select();
+          $('#input_add_meter').val("");
         } else {
           $("#alert").css('color', text_field_color);
           $('#sel2_association').val(data.meter_id);
@@ -228,7 +228,7 @@ jQuery(function($) {
       
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
 
-<!--       <#%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->
+<!--       <%#= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->
 
       <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
 
@@ -237,20 +237,25 @@ jQuery(function($) {
       <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
       <!--<%#= f.association :meter, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>-->
-      <!-- <#%= f.association :meter, collection: available_meters_for_contract(@contracting_request), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %> -->
+      <!-- <%#= f.association :meter, collection: available_meters_for_contract(@contracting_request), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %> -->
 
-      <% if @contracting_request.work_order.blank? or @contracting_request.work_order.meter.blank? %>
-        <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
-        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' }%>
-      <% else %>
+      <% if !@contracting_request.work_order.blank? and !@contracting_request.work_order.meter.blank? %>
         <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @contracting_request.try(:work_order).try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
         <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association', :value => @contracting_request.try(:work_order).try(:meter).try(:id) }%>
+      <% elsif !@contracting_request.service_point.blank? and !@contracting_request.service_point.meter.blank? %>
+        <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @contracting_request.try(:service_point).try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association', :value => @contracting_request.try(:service_point).try(:meter).try(:id) }%>
+      <% else %>
+        <%= f.input :meter_code_input, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' }%>
       <% end %>
 
-      <% if @contracting_request.work_order.blank? or @contracting_request.work_order.caliber.blank? %>
-        <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, include_blank: true %>
-      <% else %>
+      <% if !@contracting_request.work_order.blank? and !@contracting_request.work_order.meter.blank? %>
         <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, selected: (@contracting_request.try(:work_order).try(:caliber).try(:id)), :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter', :value => @contracting_request.try(:work_order).try(:caliber).try(:caliber) }, :label_html => { :class => 'form-label' }, include_blank: true %>
+      <% elsif !@contracting_request.service_point.blank? and !@contracting_request.service_point.meter.blank? %>
+        <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, selected: (@contracting_request.try(:service_point).try(:meter).try(:caliber).try(:id)), :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter', :value => @contracting_request.try(:service_point).try(:meter).try(:caliber).try(:caliber) }, :label_html => { :class => 'form-label' }, include_blank: true %>
+      <% else %>
+        <%= f.association :caliber, required: true, collection: @calibers.map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, include_blank: true %>
       <% end %>
 
       <h4><%= t('activerecord.attributes.contracting_request.others') %></h4>

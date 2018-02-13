@@ -135,6 +135,7 @@ es:
           code_not_found: "%{var} no hallado."
           code_wrong: "%{var} no es correcto."
           installed: "%{var} ya se encuentra instalado (no disponible)."
+          installed_share: "%{var} ya se encuentra instalado (Contador Compartido)."
           available: "%{var} está disponible para ser instalado."
           attributes:
             meter_code:

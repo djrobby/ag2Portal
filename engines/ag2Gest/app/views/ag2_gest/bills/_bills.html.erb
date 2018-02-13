@@ -1,5 +1,12 @@
 <script>
   $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    
     $("#div_table #pages a").on("click", function() {
       $.getScript(this.href);
       return false;
@@ -159,7 +166,7 @@
 
 <!-- Modal -->
 <div id="confirm-bills" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
-  <%= simple_form_for :pre_bill, url: confirm_bills_path, method: :get do |f| %>
+  <%= simple_form_for :pre_bill, url: confirm_bills_path, method: :get, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline'} do |f| %>
     <%= f.input :ids, :as => :hidden, :input_html => { :value =>  params[:bills] } %>
     <div class="modal-header">
       <h4>Confirmar facturas</h4>

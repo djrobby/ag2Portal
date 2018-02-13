@@ -35,22 +35,34 @@ module Ag2Tech
       @to = params[:to]
       order = params[:order]
       account = params[:account]
+      office = params[:office]
 
+      if project.blank?
+        init_oco if !session[:organization]
+        # Initialize select_tags
+        @projects = projects_dropdown if @projects.nil?
+        # Arrays for search
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.to_a
+      end
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
       end
 
-     from = Time.parse(@from).strftime("%Y-%m-%d")
-     to = Time.parse(@to).strftime("%Y-%m-%d")
+      @from_date = @from
+      @to_date = @to
 
-      if project.blank?
-        @project_report = Project.where("created_at >= ? AND created_at <= ?",from,to).order(:company_id)
-      else
-        @project_report = Project.where("id = ? AND created_at >= ? AND created_at <= ?",project,from,to).order(:company_id)
-      end
+      @from = Time.parse(@from).strftime("%Y-%m-%d")
+      @to = Time.parse(@to).strftime("%Y-%m-%d")
 
-      title = t("activerecord.models.project.few") + "_#{from}_#{to}"
+      @project_report = Project.where("id in (?)",project).order(:company_id,:office_id,:project_code)
+
+      @project_ids = project
+      @office = !office.blank? ? office : nil
+
+
+      title = t("activerecord.models.project.few") + "_#{@from_date}_#{@to_date}"
 
       respond_to do |format|
         # Render PDF
@@ -59,7 +71,7 @@ module Ag2Tech
                        filename: "#{title}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
-          format.csv { send_data Project.to_csv(@project_report),
+          format.csv { send_data Project.to_date_csv(@project_report,@project_ids,@from,@to,@office),
                        filename: "#{title}.csv",
                        type: 'application/csv',
                        disposition: 'inline' }

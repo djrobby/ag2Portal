@@ -5,6 +5,15 @@ label.checkbox {
 }
 </style>
 <script>
+  $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    
+  });
 jQuery(function($) {
   // when #input_change_meter changes
   $("#input_change_meter").change(function() {
@@ -17,7 +26,7 @@ jQuery(function($) {
       if (data.code == "$err") {
         $("#alert_change").css('color', 'red');
         alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-        $('#input_change_meter').select();
+        $('#input_change_meter').val("");
       } else {
         $("#alert_change").css('color', text_field_color);
         $('#sel2_association_change').val(data.meter_id);
@@ -41,12 +50,15 @@ jQuery(function($) {
 
     <h4><%= t('activerecord.attributes.contracting_request.data_meter') %></h4>
     <% if !@contracting_request.water_supply_contract.blank? %>
-      <% if @contracting_request.water_supply_contract.work_order.blank? or @contracting_request.water_supply_contract.work_order.meter.blank? %>
-        <%= f.input :meter_code_input, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
-        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.water_supply_contract.try(:meter_id) } %>
-      <% else %>
+      <% if !@contracting_request.water_supply_contract.work_order.blank? and !@contracting_request.water_supply_contract.work_order.meter.blank? %>
         <%= f.input :meter_code_input, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:work_order).try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
         <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.water_supply_contract.try(:work_order).try(:meter).try(:id) }%>
+      <% elsif !@contracting_request.service_point.blank? and !@contracting_request.service_point.meter.blank? %>
+        <%= f.input :meter_code_input, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.try(:service_point).try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.try(:service_point).try(:meter).try(:id) }%>
+      <% else %>
+        <%= f.input :meter_code_input, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter', :value => @contracting_request.water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @contracting_request.water_supply_contract.try(:meter_id) } %>
       <% end %>
     <% end %>
     <!--

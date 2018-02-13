@@ -36,7 +36,10 @@
       <tr class="attention-row">
     <% end %>
       <td><%= link_to meter.try(:meter_code), ag2_gest.meter_path(meter) %></td>
-      <td><% if meter.is_installed_now? %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></td>      
+      <td>
+        <% if meter.is_installed_now? %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %>
+        <% if meter.is_shared? %><i class="icon-screenshot"></i><% end %>
+      </td>      
       <td><%= meter.try(:meter_model).try(:full_name) %></td>
       <td class="center"><%= meter.try(:caliber).try(:caliber) %></td>
       <td class="center"><%= meter.try(:manufacturing_year) %></td>

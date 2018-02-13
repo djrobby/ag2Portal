@@ -19,6 +19,11 @@ class Project < ActiveRecord::Base
 
   has_many :charge_accounts
   has_many :work_orders
+  has_many :work_order_items, through: :work_orders
+  has_many :work_order_subcontractors, through: :work_orders
+  has_many :work_order_tools, through: :work_orders
+  has_many :work_order_vehicles, through: :work_orders
+  has_many :work_order_workers, through: :work_orders
   has_many :purchase_orders
   has_many :purchase_order_items
   has_many :receipt_notes
@@ -26,7 +31,7 @@ class Project < ActiveRecord::Base
   has_many :offer_requests
   has_many :offer_request_items
   has_many :offers
-  has_many :offers_items
+  has_many :offer_items
   has_many :supplier_invoices
   has_many :supplier_invoice_items
   has_many :delivery_notes
@@ -34,6 +39,8 @@ class Project < ActiveRecord::Base
   has_many :sale_offers
   has_many :sale_offer_items
   has_many :bills
+  has_many :invoices, through: :bills
+  has_many :invoice_items, through: :invoices
   has_many :billing_periods
   has_many :billable_items
   has_many :tariffs, through: :billable_items

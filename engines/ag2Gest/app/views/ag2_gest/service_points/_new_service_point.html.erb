@@ -7,11 +7,17 @@ var text_field_color;
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
-
+    
     $('#form_new_service_point').bind("ajax:success", function(xhr, data, status) {
       var option = new Option(data.to_full_label,data.id);
       option.selected = true;
@@ -173,7 +179,7 @@ var text_field_color;
 </script>
 
 <div id="new-service-point" class="modal fade" style="display: none;">
-  <%= simple_form_for ServicePoint.new, :method => :post, :remote => :true, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_new_service_point' } do |f| %>
+  <%= simple_form_for ServicePoint.new, :method => :post, :remote => :true, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_new_service_point' } do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3>Nuevo punto de servicio</h3>

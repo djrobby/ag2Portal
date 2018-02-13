@@ -24,89 +24,108 @@ report.page.list(:list).header.item(:index_read).value I18n.t("activerecord.repo
 report.page.values printed_at: Time.now
 
 report.events.on :page_create do |e|
-	# Set page-number
-	e.page.item(:page_no).value(e.page.no)
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
 
-	#Hide items
-	#if e.page.no > 1
-	#	e.page.item(:form_title).hide
-	#	e.report.page.list(:list).style(:visible, 'none')
-	#end
+  #Hide items
+  #if e.page.no > 1
+  # e.page.item(:form_title).hide
+  # e.report.page.list(:list).style(:visible, 'none')
+  #end
 
 end
 
 report.events.on :generate do |e|
-	e.pages.each do |page|
-		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count)
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
 
-		#Hide
-		#if e.report.page_count > 1
-			#page.item(:form_title).hide
-		#end
+    #Hide
+    #if e.report.page_count > 1
+      #page.item(:form_title).hide
+    #end
 
-	end
+  end
 end
 
 cond = true
 #ORDENAR ARRAY
 @pre_readings.each do |preading|
-	report.page.list(:list).add_row do |row|
-		if cond
-			row.item(:code_route).value(preading.reading_route.route_code).style(:color, "#6E6E6E")
-			row.item(:number_route).value(preading.reading_sequence).style(:color, "#6E6E6E")
-			row.item(:subscriber).value(preading.subscriber.subscriber_code).style(:color, "#6E6E6E")
+  reading_date = Reading.where(meter_id: preading.try(:meter_id),reading_type_id: ReadingType::INSTALACION)
+  report.page.list(:list).add_row do |row|
+    if cond
+      row.item(:code_route).value(preading.reading_route.route_code).style(:color, "#6E6E6E")
+      row.item(:number_route).value(preading.reading_sequence).style(:color, "#6E6E6E")
+      row.item(:subscriber).value(preading.try(:subscriber).try(:subscriber_code)).style(:color, "#6E6E6E")
 
-			#NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
-			#firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
-			#surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
-			#new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
-			#new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
-			#row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
-			row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:full_name)}").style(:color, "#6E6E6E")
-			row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_directory).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)}#{','} #{preading.try(:subscriber).try(:street_number)}#{','} #{preading.try(:subscriber).try(:building)}#{','} #{preading.try(:subscriber).try(:floor)}#{','} #{preading.try(:subscriber).try(:floor_office)} #{'('}#{preading.try(:subscriber).try(:zipcode).try(:zipcode)}#{')'} #{preading.try(:subscriber).try(:street_directory).try(:town).try(:name)} ").style(:color, "#6E6E6E")
-			row.item(:meter).value(preading.try(:meter).try(:meter_code)).style(:color, "#6E6E6E")
-			#row.item(:meter).value(preading.try(:subscriber).try(:meter).try(:meter_code)).style(:color, "#6E6E6E")
+      #NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
+      #firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
+      #surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
+      #new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
+      #new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
+      #row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
+      row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:full_name)}").style(:color, "#6E6E6E")
+      if !preading.subscriber.blank?
+        row.item(:address_subscriber).value(preading.try(:subscriber).try(:address_1)).style(:color, "#6E6E6E")
+      else
+        row.item(:address_subscriber).value(preading.try(:service_point).try(:address_1)).style(:color, "#6E6E6E")
+      end
+      # row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_directory).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)}#{','} #{preading.try(:subscriber).try(:street_number)}#{','} #{preading.try(:subscriber).try(:building)}#{','} #{preading.try(:subscriber).try(:floor)}#{','} #{preading.try(:subscriber).try(:floor_office)} #{'('}#{preading.try(:subscriber).try(:zipcode).try(:zipcode)}#{')'} #{preading.try(:subscriber).try(:street_directory).try(:town).try(:name)} ").style(:color, "#6E6E6E")
+      row.item(:meter).value(preading.try(:meter).try(:meter_code)).style(:color, "#6E6E6E")
+      #row.item(:meter).value(preading.try(:subscriber).try(:meter).try(:meter_code)).style(:color, "#6E6E6E")
 
-			row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
-			#row.item(:caliber).value(preading.try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
+      row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
+      #row.item(:caliber).value(preading.try(:meter).try(:caliber).try(:caliber)).style(:color, "#6E6E6E")
 
-			row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:meter_brand).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}").style(:color, "#6E6E6E")
+      row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:meter_brand).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}").style(:color, "#6E6E6E")
 
-			#DATE INSTALLATION
-			row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.subscriber.meter_id, preading.subscriber.id)).try(:installation_date))).style(:color, "#6E6E6E")  # OR row.item(:date_installation).value((MeterDetail.find_by_meter_id_and_subscriber_id(preading.meter_id, preading.subscriber_id)).try(:installation_date)).style(:color, "#6E6E6E")
-			row.item(:period).value(preading.try(:billing_period).try(:period)).style(:color, "#6E6E6E")
-			row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}").style(:color, "#6E6E6E")
-			row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}").style(:color, "#6E6E6E")
-			row.item(:date).style(:color, "#6E6E6E").value formatted_date(preading.reading_date) unless preading.reading_date.blank?
-			row.item(:index).value(preading.try(:reading_index)).style(:color, "#6E6E6E")
+      #DATE INSTALLATION
+      if !preading.subscriber.blank?
+        row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.try(:subscriber).try(:meter_id), preading.try(:subscriber).try(:id))).try(:installation_date))).style(:color, "#6E6E6E")  # OR row.item(:date_installation).value((MeterDetail.find_by_meter_id_and_subscriber_id(preading.meter_id, preading.subscriber_id)).try(:installation_date)).style(:color, "#6E6E6E")
+      else
+        row.item(:date_installation).value(formatted_date(reading_date.first.try(:reading_date))).style(:color, "#6E6E6E")# OR row.item(:date_installation).value((MeterDetail.find_by_meter_id_and_subscriber_id(preading.meter_id, preading.subscriber_id)).try(:installation_date)).style(:color, "#6E6E6E")
+      end
+      row.item(:period).value(preading.try(:billing_period).try(:period)).style(:color, "#6E6E6E")
+      row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}").style(:color, "#6E6E6E")
+      row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}").style(:color, "#6E6E6E")
+      row.item(:date).style(:color, "#6E6E6E").value formatted_date(preading.reading_date) unless preading.reading_date.blank?
+      row.item(:index).value(preading.try(:reading_index)).style(:color, "#6E6E6E")
 
 
-			cond = false
-		else
-			row.item(:code_route).value(preading.reading_route.route_code)
-			row.item(:number_route).value(preading.reading_sequence)
-			row.item(:subscriber).value(preading.subscriber.subscriber_code)
+      cond = false
+    else
+      row.item(:code_route).value(preading.reading_route.route_code)
+      row.item(:number_route).value(preading.reading_sequence)
+      row.item(:subscriber).value(preading.try(:subscriber).try(:subscriber_code))
 
-			#NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
-			#firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
-			#surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
-			#new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
-			#new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
-			#row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
-			row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:full_name)}")
-			row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_directory).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)} #{preading.try(:subscriber).try(:street_number)} #{preading.try(:subscriber).try(:building)} #{preading.try(:subscriber).try(:floor)} #{preading.try(:subscriber).try(:floor_office)} #{preading.try(:subscriber).try(:zipcode).try(:zipcode)} #{preading.try(:subscriber).try(:street_directory).try(:town).try(:name)} ")
-			row.item(:meter).value(preading.try(:meter).try(:meter_code))
-			row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber))
-			row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:meter_brand).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}")
-			row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.subscriber.meter_id, preading.subscriber.id)).try(:installation_date)))
-			row.item(:period).value(preading.try(:billing_period).try(:period))
-			row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}")
-			row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}")
-			row.item(:date).value formatted_date(preading.reading_date) unless preading.reading_date.blank?
-			row.item(:index).value(preading.try(:reading_index))
+      #NOMBRE Y APELLIDOS CON MAYÚSCULAS (CamelCase)
+      #firstname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:first_name)
+      #surname = ""+preading.try(:subscriber).try(:client).try(:entity).try(:last_name)
+      #new_firstname = firstname.slice(0,1).capitalize + firstname.slice(1..-1)
+      #new_surname = surname.slice(0,1).capitalize + surname.slice(1..-1)
+      #row.item(:name_subscriber).value("#{new_firstname} #{new_surname}").style(:color, "#6E6E6E")
+      row.item(:name_subscriber).value("#{preading.try(:subscriber).try(:full_name)}")
+      if !preading.subscriber.blank?
+        row.item(:address_subscriber).value(preading.try(:subscriber).try(:address_1))
+      else
+        row.item(:address_subscriber).value(preading.try(:service_point).try(:address_1))
+      end
+      # row.item(:address_subscriber).value("#{preading.try(:subscriber).try(:street_directory).try(:street_type).try(:street_type_code)} #{preading.try(:subscriber).try(:street_directory).try(:street_name)} #{preading.try(:subscriber).try(:street_number)} #{preading.try(:subscriber).try(:building)} #{preading.try(:subscriber).try(:floor)} #{preading.try(:subscriber).try(:floor_office)} #{preading.try(:subscriber).try(:zipcode).try(:zipcode)} #{preading.try(:subscriber).try(:street_directory).try(:town).try(:name)} ")
+      row.item(:meter).value(preading.try(:meter).try(:meter_code))
+      row.item(:caliber).value(preading.try(:subscriber).try(:meter).try(:caliber).try(:caliber))
+      row.item(:model_brand).value("#{preading.try(:meter).try(:meter_model).try(:meter_brand).try(:brand)} #{'/'} #{preading.try(:meter).try(:meter_model).try(:model)}")
+      if !preading.subscriber.blank?
+        row.item(:date_installation).value(I18n.localize((MeterDetail.find_by_meter_id_and_subscriber_id(preading.try(:subscriber).try(:meter_id), preading.try(:subscriber).try(:id))).try(:installation_date)))
+      else
+        row.item(:date_installation).value formatted_date(reading_date.first.try(:reading_date))
+      end
+      row.item(:period).value(preading.try(:billing_period).try(:period))
+      row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}")
+      row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}")
+      row.item(:date).value formatted_date(preading.reading_date) unless preading.reading_date.blank?
+      row.item(:index).value(preading.try(:reading_index))
 
-			cond = true
-		end
-	end
+      cond = true
+    end
+  end
 end

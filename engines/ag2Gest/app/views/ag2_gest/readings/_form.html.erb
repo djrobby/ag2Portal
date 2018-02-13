@@ -1,4 +1,6 @@
 <script type="text/javascript">
+  var text_field_color;
+
   $(document).ready(function() {
     // Select2
     $('select.sel2').select2({
@@ -6,11 +8,17 @@
       allowClear: true
     });
 
+    // $('.date_picker').datepicker({
+    //   format : 'dd/mm/yyyy',
+    //   weekStart : 1
+    // });
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
       weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
-
+    
   });
   jQuery(function($) {
     $("#reading_date").on('changeDate', function() {
@@ -28,6 +36,56 @@
       });
       return false;
     });
+    // when #input_change_meter changes
+    $("#input_add_meter").change(function() {
+      // make a POST call and replace the content
+      var meter = $('#input_add_meter').val();
+      if (meter == "")
+        meter = "$";
+      jQuery.getJSON('r_find_meter/' + meter, function(data) {
+        $("#alert_change").html(data.alert);
+        if (data.code == "$err") {
+          $("#alert_change").css('color', 'red');
+          alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
+          $('#input_add_meter').val("");
+        } else {
+          $("#alert_change").css('color', text_field_color);
+          $('#sel2_association_change').val(data.meter_id);
+        }
+      });
+      return false;
+    });
+    // when #Subscriber changes
+    $("#Subscriber").change(function() {
+      // make a POST call and replace the content
+      var m = $('#Subscriber').val();
+      if (m == "")
+        m = "$";
+      jQuery.getJSON('r_find_subscriber/' + m, function(data) {
+        var w = data.subscriber;
+        if (data.code == "$err") {
+          alert(data.alert);
+          $('#Subscriber').select();
+        } else {
+          $("#old-subscriber").html("");
+          $("#old-subscriber").select2("val", "");
+          $("#old-subscriber").append($('<option></option>').val("").html(""));
+          if (!w.length) {
+            $.each(data, function(id, option) {
+              if (id == 'subscriber' && option != "") {
+                $("#old-subscriber").append($('<option></option>').val(option[0]).html(option[1]));
+              }
+            });
+          } else {
+            $.each(w, function(id, option) {
+              $("#old-subscriber").append($('<option></option>').val(option[0]).html(option[1]));
+            });
+          }
+          $('#old-subscriber').select();
+        }
+      });
+      return false;
+    });
   });
 </script>
 
@@ -36,37 +94,51 @@
   <%= display_base_errors resource %>
 
     <div class="row-fluid">
-      <%= f.association :project, label: t('activerecord.attributes.reading.project_id'),:required => true, collection: Project.all(order: 'name'), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <%= f.association :project, label: t('activerecord.attributes.reading.project_id'),:required => true, collection: @projects, :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 
-      <%= f.association :billing_period, label: t('activerecord.attributes.reading.billing_period_id'),:required => true, collection: BillingPeriod.all(), :input_html => { :class => 'sel2 x-large-text-field', id: 'billing_period' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <%= f.association :billing_period, label: t('activerecord.attributes.reading.billing_period_id'),:required => true, collection: @billing_periods, :input_html => { :class => 'sel2 x-large-text-field', id: 'billing_period' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 
       <%= f.association :reading_type, label: t('activerecord.attributes.reading.reading_type_id'),:required => true, collection: ReadingType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
     </div>
-
-    <div class="row-fluid">
-      <%#= f.association :billing_frequency, label: t('activerecord.attributes.reading.billing_frequency_id'),:required => true, collection: BillingFrequency.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-
-      <% if @breadcrumb == 'create'%>
-        <%= f.association :meter, label: t('activerecord.attributes.reading.meter_id'),:required => true, collection: Meter.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.meter_code }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-      <% else %>
-        <%= f.input :meter_id, :as => :hidden %>
-      <% end %>
-
-      <% if @breadcrumb == 'create'%>
-        <%= f.association :subscriber, label: t('activerecord.attributes.reading.subscriber_id'),:required => true, collection: Subscriber.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
-      <% else %>
-        <%= f.input :subscriber_id, :as => :hidden %>
-      <% end %>
-
-    </div>
-
     <div class="row-fluid">
       <%#= f.association :reading_route, label: t('activerecord.attributes.reading.reading_route_id'),:required => true, collection: ReadingRoute.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.route_code }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 
-      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label-under-sel2' }, wrapper_html: {class: "span4"} %>
 
-      <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y %H:%M:%S") if f.object.reading_date), :class => 'mid-text-field date_picker', id: "reading_date" }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+      <%= f.input :reading_date, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y %H:%M:%S") if f.object.reading_date), :class => 'mid-text-field date_picker', id: "reading_date" }, :label_html => { :class => 'form-label-under-sel2' }, wrapper_html: {class: "span4"} %>
 
+    </div>
+    <div class="row-fluid">
+      <% if @breadcrumb == 'create' %>
+        <%= f.input :meter_code_input, required: true, input_html: { class: 'x-large-text-field', maxlength: 20, id: 'input_add_meter', :value => @service_point.try(:meter).try(:meter_code) }, label_html: { class: 'form-label-under-sel2' }, label: t('activerecord.attributes.meter.meter_code_f'), wrapper_html: {class: "span4"} %>
+        <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change', :value => @service_point.try(:meter_id) } %>
+      <% else %>
+        <%= f.input :meter_id, :as => :hidden %>
+      <% end %>
+    </div>
+    <div class="row-fluid">
+      <%#= f.association :billing_frequency, label: t('activerecord.attributes.reading.billing_frequency_id'),:required => true, collection: BillingFrequency.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+
+      <!-- <%# if @breadcrumb == 'create'%> -->
+        <!-- <%#= f.association :meter, label: t('activerecord.attributes.reading.meter_id'),:required => true, collection: Meter.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.meter_code }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %> -->
+      <!-- <%# else %> -->
+        <!-- <%#= f.input :meter_id, :as => :hidden %> -->
+      <!-- <%# end %> -->
+
+      <!-- <%# if @breadcrumb == 'create'%> -->
+        <!-- <%#= f.association :subscriber, label: t('activerecord.attributes.reading.subscriber_id'),:required => false, collection: Subscriber.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.to_label }, value_method: :id, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %> -->
+      <!-- <%# else %> -->
+        <!-- <%#= f.input :subscriber_id, :as => :hidden %> -->
+      <!-- <%# end %> -->
+
+      <!-- Subscriber search -->
+      <% if @breadcrumb == 'create'%>
+        <%= label_tag I18n.t("activerecord.attributes.reading.subscriber_id"), nil, :class => 'form-label'%>
+        <%= text_field_tag "Subscriber", nil, :class => 'mid-text-field', :label_html => { :class => 'form-label' }, label: t('activerecord.attributes.reading.subscriber_id') %>
+        <%= f.input :subscriber_id, collection: @subscribers, :input_html => { :class => 'mid-text-field sel2', id: 'old-subscriber' }, label: false %> 
+      <% else %>
+        <%= f.input :subscriber_id, :as => :hidden %>
+      <% end %>
     </div>
     <div class="row-fluid">
       <h4>INCIDENCIAS</h4>
@@ -81,7 +153,13 @@
 
 
     </div>
-
-    <%= f.button :submit, :class => 'btn-primary' %>
-
+    <!-- Buttons -->
+    <table class="form-table">
+      <tbody>
+        <tr class="form-tr">
+          <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
+          <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+        </tr>
+      </tbody>
+    </table>
 <% end %>

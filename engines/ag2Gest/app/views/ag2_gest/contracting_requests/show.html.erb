@@ -162,3 +162,18 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
   </div>
 
 </div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#myTab').on('click', 'a', function (e) {
+      e.preventDefault();
+      // add this line
+      window.location.hash = $(this).attr('href');
+      $(this).tab('show');
+    })
+    
+    if (location.hash !== '') $('#myTab a[href="' + location.hash + '"]').tab('show');
+      return $('#myTab a[data-toggle="tab"]').on('shown', function(e) {
+       return location.hash = $(e.target).attr('href').substr(1);
+    });
+  });
+</script>

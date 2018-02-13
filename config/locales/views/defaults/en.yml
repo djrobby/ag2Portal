@@ -59,6 +59,7 @@ en:
   disapproving: "Disapproving..."
   sending: "Sending..."
   mandatory_subtitle: "Remember that the fields marked with * are mandatory!"
+  index_negative: "The index can not have a negative value!"
   item_error: "can`t be blank or have errors"
   item_amount_debt: "can`t be less than Debt or To Collect"
   dd_image_message: "Drop image here"

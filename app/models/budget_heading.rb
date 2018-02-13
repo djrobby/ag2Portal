@@ -161,9 +161,9 @@ class BudgetHeading < ActiveRecord::Base
 
   def ii_total(_project, _group)
     if _group.nil?
-      invoice_items.joins(invoice: :bill).where("bills.project_id in (?)",_project).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_total')
+      invoice_items.joins(invoice: :bill).where("bills.project_id in (?)",_project).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_t')
     else
-      invoice_items.joins(:charge_account).where("charge_accounts.charge_group_id = ?",_group).joins(invoice: :bill).where("bills.project_id in (?) AND charge_accounts.charge_group_id = ?",_project, _group).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_total')
+      invoice_items.joins(:charge_account).where("charge_accounts.charge_group_id = ?",_group).joins(invoice: :bill).where("bills.project_id in (?) AND charge_accounts.charge_group_id = ?",_project, _group).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_t')
     end
   end
 
@@ -279,9 +279,9 @@ class BudgetHeading < ActiveRecord::Base
 
   def ii_total_date(_project, _from, _to, _group)
     if _group.nil?
-      invoice_items.joins(invoice: :bill).where("bills.project_id in (?) AND invoices.invoice_date >= ? AND invoices.invoice_date <= ?",_project,_from,_to).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_total')
+      invoice_items.joins(invoice: :bill).where("bills.project_id in (?) AND invoices.invoice_date >= ? AND invoices.invoice_date <= ?",_project,_from,_to).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_t')
     else
-      invoice_items.joins(:charge_account).where("charge_accounts.charge_group_id = ?",_group).joins(invoice: :bill).where("bills.project_id in (?) AND invoices.invoice_date >= ? AND invoices.invoice_date <= ?",_project,_from,_to).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_total')
+      invoice_items.joins(:charge_account).where("charge_accounts.charge_group_id = ?",_group).joins(invoice: :bill).where("bills.project_id in (?) AND invoices.invoice_date >= ? AND invoices.invoice_date <= ?",_project,_from,_to).select('SUM(invoice_items.quantity * (invoice_items.price - invoice_items.discount)) ii_t')
     end
   end
 

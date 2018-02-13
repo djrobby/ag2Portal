@@ -1,43 +1,28 @@
 if @project_report.blank?
-	return
+  return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/project_view_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/project_report', layout_options: { default: true }
 
 #
 # Report events
 #
 # On page create
 report.events.on :page_create do |e|
-	# Set page-number
-	e.page.item(:page_no).value(e.page.no)
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+  e.page.item(:currency_note).value("* " + I18n.t("every_report.currency_note"))
+
 end
 # On report generate
 report.events.on :generate do |e|
-	e.pages.each do |page|
-		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count)
-	end
-end
-
-#
-# List configuration (stores & events)
-#
-report.layout.config.list(:default) do |c|
-	# Define the variables used in list
-	c.use_stores page_rows: 0
-
-	# On list page footer insertion
-	c.events.on :page_footer_insert do |e|
-		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("ag2_tech.ag2_tech_track.project_report.sum_rows_title"))
-		e.section.item(:sum_rows).value(e.store.page_rows)
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
-	end
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
 end
 
 # New page & start
@@ -45,49 +30,249 @@ report.start_new_page
 
 # Page header
 report.page.values report_title: I18n.t("ag2_tech.ag2_tech_track.project_report.report_title")
+# report.page.values from_title: I18n.t("every_report.from_title")
+# report.page.values to_title: I18n.t("every_report.to_title")
+# report.page.values from: @from_date
+# report.page.values to: @to_date
+report.page.values project_c: I18n.t("ag2_tech.ag2_tech_track.every_report.concept")
+report.page.values wo_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.work_orders")
+report.page.values rn_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.receipt_notes")
+report.page.values dn_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.delivery_notes")
+report.page.values si_cost_c: I18n.t("ag2_tech.ag2_tech_track.every_report.supplier_invoice_items")
+report.page.values i_price_c: I18n.t("ag2_tech.ag2_tech_track.every_report.invoice_items")
+report.page.values open_c: I18n.t("activerecord.attributes.project.opened_at")
+report.page.values closed_c: I18n.t("activerecord.attributes.project.closed_at")
 
 # Page footer
 report.page.values(printed_at: formatted_timestamp(Time.now),
-				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"))
-
-
-# List header
-report.page.list(:default).header do |header|
-  header.item(:code_c).value I18n.t("activerecord.attributes.project.project_code")
-  header.item(:name_c).value I18n.t("activerecord.attributes.project.name")
-  header.item(:office_c).value I18n.t("activerecord.attributes.project.office")
-  header.item(:opened_at_c).value I18n.t("activerecord.attributes.project.opened_at")
-  header.item(:closed_at_c).value I18n.t("activerecord.attributes.project.closed_at")
-end
-
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"))
 
 # Page Title list
-company_id = @project_report.first.company_id
+office_id = ""
+company_id = ""
+office_name = ""
+company_name = ""
+page_rows = 0
+p_wo_t = 0
+p_rn_t = 0
+p_dn_t = 0
+p_si_t = 0
+p_ii_t = 0
+page_rows_act = 0
+p_wo_act = 0
+p_rn_act = 0
+p_dn_act = 0
+p_si_act = 0
+p_ii_act = 0
+page_rows_ct = 0
+p_wo_ct = 0
+p_rn_ct = 0
+p_dn_ct = 0
+p_si_ct = 0
+p_ii_ct = 0
+last_id = @project_report.last.id
 
 # List detail
 @project_report.each do |i|
-	if !i.company_id.blank? && (i.company_id != company_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|
-			list.store.page_rows = 0
-		end
-		company_id = i.company_id
-	end
+  report.page.item(:from_title).hide
+  report.page.item(:to_title).hide
+  report.page.item(:from).hide
+  report.page.item(:to).hide
+  report.page.item(:l13).hide
 
-	report.page.list(:default).add_row do |row|
-    report.page.values company_c: I18n.t("activerecord.attributes.project.company")+": "
-    report.page.values company: i.company.name[0,50] unless i.company.blank? 
+  if !i.office_id.blank? && (i.office_id != office_id)
+    if page_rows != 0
 
-    row.item(:code).value i.full_code
-    row.item(:name).value i.name
-    row.item(:office).value i.office.name unless i.office.blank? 
-    row.item(:opened_at).value i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank? 
-    row.item(:closed_at).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
-	end
+      report.page.list(:default).add_row do |row1|
+        row1.item(:office).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: office_name)
+        row1.item(:sum_rows_cg).value page_rows
+        row1.item(:wo_cost_cg).value number_with_precision(p_wo_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:rn_cost_cg).value number_with_precision(p_rn_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:dn_cost_cg).value number_with_precision(p_dn_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:si_cost_cg).value number_with_precision(p_si_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:i_price_cg).value number_with_precision(p_ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:l11).hide
+        row1.item(:l12).hide
+        row1.item(:l13).hide
+        row1.item(:l14).hide
+      end
 
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-	end
+      report.page.list(:default).add_row do |row11|
+        row11.item(:l11).hide
+        row11.item(:l12).hide
+        # row11.item(:l13).hide
+        row11.item(:l14).hide
+      end
+
+      if !i.office.company_id.blank? && (i.office.company_id != company_id)
+
+        report.page.list(:default).add_row do |row111|
+          row111.item(:company).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: company_name)
+          row111.item(:sum_rows_bg).value page_rows_act
+          row111.item(:wo_cost_bg).value number_with_precision(p_wo_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row111.item(:rn_cost_bg).value number_with_precision(p_rn_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row111.item(:dn_cost_bg).value number_with_precision(p_dn_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row111.item(:si_cost_bg).value number_with_precision(p_si_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row111.item(:i_price_bg).value number_with_precision(p_ii_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row111.item(:l11).hide
+          # row111.item(:l12).hide
+          row111.item(:l13).hide
+          row111.item(:l14).hide
+        end
+
+        report.page.list(:default).add_row do |row1111|
+          row1111.item(:l11).hide
+          row1111.item(:l12).hide
+          row1111.item(:l13).hide
+          row1111.item(:l14).hide
+        end
+
+        page_rows_act = 0
+        p_wo_act = 0
+        p_rn_act = 0
+        p_dn_act = 0
+        p_si_act = 0
+        p_ii_act = 0
+      end
+    end
+
+    page_rows = 0
+    p_wo_t = 0
+    p_rn_t = 0
+    p_dn_t = 0
+    p_si_t = 0
+    p_ii_t = 0
+
+    report.page.list(:default) do |first|
+
+      if !i.office.company_id.blank? && (i.office.company_id != company_id)
+        first.add_row do |row2|
+            row2.item(:company).value i.office.company.full_name unless i.office.company.blank?
+            row2.item(:wo_cost_bg).value i.office.company.wo_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.company.wo_total(@project_ids,@office), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:rn_cost_bg).value i.office.company.rni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.company.rni_total(@project_ids,@office).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:dn_cost_bg).value i.office.company.dni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.company.dni_total(@project_ids,@office).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:si_cost_bg).value i.office.company.sii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.company.sii_total(@project_ids,@office).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            row2.item(:i_price_bg).value i.office.company.ii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.company.ii_total(@project_ids,@office).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            # row2.item(:l11).hide
+            row2.item(:l12).hide
+            row2.item(:l13).hide
+            row2.item(:l14).hide
+        end
+      end
+
+      first.add_row do |row3|
+          row3.item(:office).value i.office.to_label unless i.office.blank?
+          row3.item(:wo_cost_cg).value i.office.wo_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.wo_total(@project_ids,@office), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:rn_cost_cg).value i.office.rni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.rni_total(@project_ids,@office).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:dn_cost_cg).value i.office.dni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.dni_total(@project_ids,@office).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:si_cost_cg).value i.office.sii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.sii_total(@project_ids,@office).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:i_price_cg).value i.office.ii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.office.ii_total(@project_ids,@office).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row3.item(:l11).hide
+          row3.item(:l12).hide
+          row3.item(:l13).hide
+          row3.item(:l14).hide
+      end
+
+    end
+
+    office_id = i.office_id
+    company_id = i.office.company_id
+    office_name = i.office.to_label
+    company_name = i.office.company.full_name
+
+  end
+
+  report.page.list(:default).add_row do |row|
+    # row.item(:blue).hide
+    row.item(:l11).hide
+    row.item(:l12).hide
+    row.item(:l13).hide
+    row.item(:l14).hide
+    # row.item(:account_code).value i.full_code
+    row.item(:project).value i.full_name
+    row.item(:wo_cost).value i.wo_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.wo_total(@project_ids,@office), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:rn_cost).value i.rni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.rni_total(@project_ids,@office).first.rni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:dn_cost).value i.dni_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.dni_total(@project_ids,@office).first.dni_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:si_cost).value i.sii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.sii_total(@project_ids,@office).first.sii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:i_price).value i.ii_total(@project_ids,@office).blank? ? "0,00" : number_with_precision(i.ii_total(@project_ids,@office).first.ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    row.item(:open).value i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+    row.item(:closed).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+  end
+
+  # Store page subtotals
+  page_rows += 1
+  p_wo_t += i.wo_total(@project_ids,@office) unless i.wo_total(@project_ids,@office).blank?
+  p_rn_t += i.rni_total(@project_ids,@office).first.rni_t unless i.rni_total(@project_ids,@office).blank?
+  p_dn_t += i.dni_total(@project_ids,@office).first.dni_t unless i.dni_total(@project_ids,@office).blank?
+  p_si_t += i.sii_total(@project_ids,@office).first.sii_t unless i.sii_total(@project_ids,@office).blank?
+  p_ii_t += i.ii_total(@project_ids,@office).first.ii_t unless i.ii_total(@project_ids,@office).blank?
+  page_rows_act += 1
+  p_wo_act += i.wo_total(@project_ids,@office) unless i.wo_total(@project_ids,@office).blank?
+  p_rn_act += i.rni_total(@project_ids,@office).first.rni_t unless i.rni_total(@project_ids,@office).blank?
+  p_dn_act += i.dni_total(@project_ids,@office).first.dni_t unless i.dni_total(@project_ids,@office).blank?
+  p_si_act += i.sii_total(@project_ids,@office).first.sii_t unless i.sii_total(@project_ids,@office).blank?
+  p_ii_act += i.ii_total(@project_ids,@office).first.ii_t unless i.ii_total(@project_ids,@office).blank?
+  page_rows_ct += 1
+  p_wo_ct += i.wo_total(@project_ids,@office) unless i.wo_total(@project_ids,@office).blank?
+  p_rn_ct += i.rni_total(@project_ids,@office).first.rni_t unless i.rni_total(@project_ids,@office).blank?
+  p_dn_ct += i.dni_total(@project_ids,@office).first.dni_t unless i.dni_total(@project_ids,@office).blank?
+  p_si_ct += i.sii_total(@project_ids,@office).first.sii_t unless i.sii_total(@project_ids,@office).blank?
+  p_ii_ct += i.ii_total(@project_ids,@office).first.ii_t unless i.ii_total(@project_ids,@office).blank?
+
+  # Ultima linea con totales acumulados
+  if page_rows != 0 && (i.id == last_id)
+      report.page.list(:default).add_row do |row1|
+        row1.item(:office).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: office_name)
+        row1.item(:sum_rows_cg).value page_rows
+        # row1.item(:sum_rows).value page_rows
+        row1.item(:wo_cost_cg).value number_with_precision(p_wo_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:rn_cost_cg).value number_with_precision(p_rn_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:dn_cost_cg).value number_with_precision(p_dn_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:si_cost_cg).value number_with_precision(p_si_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:i_price_cg).value number_with_precision(p_ii_t, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:l11).hide
+        row1.item(:l12).hide
+        row1.item(:l13).hide
+        row1.item(:l14).hide
+      end
+      report.page.list(:default).add_row do |row11|
+        row11.item(:l11).hide
+        row11.item(:l12).hide
+        # row11.item(:l13).hide
+        row11.item(:l14).hide
+      end
+      report.page.list(:default).add_row do |row111|
+        row111.item(:company).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: company_name)
+        row111.item(:sum_rows_cg).value page_rows_act
+        row111.item(:wo_cost_bg).value number_with_precision(p_wo_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row111.item(:rn_cost_bg).value number_with_precision(p_rn_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row111.item(:dn_cost_bg).value number_with_precision(p_dn_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row111.item(:si_cost_bg).value number_with_precision(p_si_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row111.item(:i_price_bg).value number_with_precision(p_ii_act, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row111.item(:l11).hide
+        # row111.item(:l12).hide
+        row111.item(:l13).hide
+        row111.item(:l14).hide
+      end
+      # report.page.list(:default).add_row do |row1111|
+      #   row1111.item(:l11).hide
+      #   row1111.item(:l12).hide
+      #   row1111.item(:l13).hide
+      #   row1111.item(:l14).hide
+      # end
+      report.page.list(:default).add_row do |row1111|
+        row1111.item(:company).value I18n.t("ag2_tech.ag2_tech_track.every_report.cumulative_total")
+        row1111.item(:sum_rows_cg).value page_rows_ct
+        row1111.item(:wo_cost_bg).value number_with_precision(p_wo_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1111.item(:rn_cost_bg).value number_with_precision(p_rn_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1111.item(:dn_cost_bg).value number_with_precision(p_dn_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1111.item(:si_cost_bg).value number_with_precision(p_si_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1111.item(:i_price_bg).value number_with_precision(p_ii_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1111.item(:l11).hide
+        # row111.item(:l12).hide
+        row1111.item(:l13).hide
+        row1111.item(:l14).hide
+      end
+  end
 end

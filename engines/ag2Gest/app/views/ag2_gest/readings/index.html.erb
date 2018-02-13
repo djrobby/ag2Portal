@@ -15,8 +15,14 @@
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true
     });
+    // $('.date_picker').datepicker({
+    //  format:'dd/mm/yyyy',weekStart:1
+    // });
     $('.date_picker').datepicker({
-     format:'dd/mm/yyyy',weekStart:1
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
     // Initialized form variable
     _thisForm = $("#Subscriber").closest('form')[0];

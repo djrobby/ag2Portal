@@ -7,9 +7,9 @@ label.checkbox {
 <script>
 jQuery(function($) {
   // when #input_change_meter changes
-  $("#input_change_meter").change(function() {
+  $("#input_c_meter").change(function() {
     // make a POST call and replace the content
-    var meter = $('#input_change_meter').val();
+    var meter = $('#input_c_meter').val();
     if (meter == "")
       meter = "$";
     jQuery.getJSON('su_find_meter/' + meter, function(data) {
@@ -17,7 +17,7 @@ jQuery(function($) {
       if (data.code == "$err") {
         $("#alert_change").css('color', 'red');
         alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-        $('#input_change_meter').select();
+        $('#input_c_meter').val("");
       } else {
         $("#alert_change").css('color', text_field_color);
         $('#sel2_association_change').val(data.meter_id);
@@ -35,16 +35,16 @@ jQuery(function($) {
     <h3><%= t('activerecord.attributes.subscriber.change_meter') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
-  <%= simple_form_for :reading, url: { action: :change_meter, controller: 'subscribers'}, :html => { "data-type" => :json, :class => 'form-inline', :id => 'form_change_meter' } do |f| %>
+  <%= simple_form_for :reading, url: { action: :change_meter, controller: 'subscribers'}, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_change_meter' } do |f| %>
     <div class="modal-body">
  
       <h4><%= t('activerecord.attributes.subscriber.quit_meter') %></h4>
 
-      <%= f.input :q_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', :id => 'input_quit_reading_index' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :q_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', :id => 'input_q_reading_index', min: '0', step: 'any'  }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :q_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker'}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :q_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker', :id => 'input_q_reading_date'}, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :q_billing_period_id, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.input :q_billing_period_id, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_q_billing_period'}, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -58,16 +58,16 @@ jQuery(function($) {
       </div>
       <h4><%= t('activerecord.attributes.subscriber.add_meter') %></h4>
 
-      <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_change_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
+      <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_c_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change' } %>
 
-      <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
+      <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2', id: 'input_c_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
-      <%= f.input :a_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field'}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :a_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', :id => 'input_a_reading_index', min: '0', step: 'any' }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :a_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker'}, :label_html => { :class => 'form-label' } %>
+      <%= f.input :a_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker', :id => 'input_a_reading_date'}, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :a_billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.input :a_billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_a_billing_period' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -82,10 +82,32 @@ jQuery(function($) {
     </div>
     <div class="modal-footer">
       <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
-      <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary" %>
+      <%= f.submit t('activerecord.attributes.subscriber.accept'), :class => "btn btn-primary", :id => 'submit_change_meter' %>
       <button id="cancelButton" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
     </div>
 
   <% end %>
 
 </div>
+<script>
+  jQuery(function($) {
+    $("#submit_change_meter").click(function () { 
+      var q_reading_index = $("#input_q_reading_index").val();
+      var q_reading_date = $("#input_q_reading_date").val();
+      var q_billing_period = $("#input_q_billing_period").val();
+      var meter = $("#input_c_meter").val();
+      var meter_location = $("#input_c_meter_location").val();
+      var a_reading_index = $("#input_a_reading_index").val();
+      var a_reading_date = $("#input_a_reading_date").val();
+      var a_billing_period = $("#input_a_billing_period").val();
+      if (q_reading_index == "" || q_reading_date == "" || q_billing_period == "" || meter == "" || meter_location == "" || a_reading_index == "" || a_reading_date == "" || a_billing_period == "") {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      } else if (q_reading_index < 0 || a_reading_index < 0) {
+        alert("<%= I18n.t(:index_negative) %>");
+        return false;
+      }
+    });
+  });
+</script>
+

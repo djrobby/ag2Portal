@@ -182,7 +182,7 @@ module Ag2Gest
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
       @caliber = @meter.try(:caliber) || Caliber.find(params[:water_supply_contract][:caliber_id])
-    
+
       # @billable_item = BillableItem.find_by_project_id_and_billable_concept_id(@contracting_request.project_id, 3) # 3 for contrataction
       # @tariff = Tariff.find_by_tariff_scheme_id_and_caliber_id_and_billable_item_id(@tariff_scheme.id, @caliber.id, @billable_item.id)
       # @meters_availables_subscriber = Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)).select{|m| m.caliber_id == @water_supply_contract.caliber_id}
@@ -211,6 +211,8 @@ module Ag2Gest
             #lectura de retirada
               @reading = Reading.create(
                 subscriber_id: @contracting_request.old_subscriber.id,
+                service_point_id: @contracting_request.old_subscriber.service_point_id,
+                coefficient: @contracting_request.old_subscriber.meter.shared_coefficient,
                 project_id: @contracting_request.project_id,
                 billing_period_id: @billing_period.id,
                 billing_frequency_id: BillingPeriod.find(params[:BillingPeriodForReading]).billing_frequency_id,
@@ -226,7 +228,7 @@ module Ag2Gest
                 reading_1: rdg_1,
                 reading_2: rdg_2,
                 created_by: @contracting_request.try(:created_by)
-              ) 
+              )
           elsif @contracting_request.old_subscriber.readings.last.reading_type_id == ReadingType::RETIRADA and @contracting_request.old_subscriber.readings.last.billable?
             @contracting_request.old_subscriber.readings.last.update_attributes(billing_period_id: @billing_period.id,
               reading_date: @contracting_request.water_supply_contract.try(:installation_date).strftime("%d/%m/%Y %H:%M"),

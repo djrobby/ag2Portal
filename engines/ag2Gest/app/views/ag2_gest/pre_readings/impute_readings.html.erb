@@ -25,16 +25,17 @@
     reading_ending_date = row.data("reading-ending-date");
     reading_starting_date = row.data("reading-starting-date");
     
-    var d1 = reading_starting_date.split("/");
-    var d2 = reading_ending_date.split("/");
-    var c = date.split("/");
+    if (reading_ending_date != 0 || reading_starting_date != 0 ){
+      var d1 = reading_starting_date.split("/");
+      var d2 = reading_ending_date.split("/");
+      var c = date.split("/");
 
-    var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
-    var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
-    var check = new Date(c[2], parseInt(c[1])-1, c[0]);
-
-    if (check < from || check > to){
-      alert("La lectura indicada está fuera de plazo")
+      var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+      var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+      var check = new Date(c[2], parseInt(c[1])-1, c[0]);
+      if (check < from || check > to){
+        alert("La lectura indicada está fuera de plazo")
+      };
     };
     $("tr.date-clicked").nextAll().find('input[type="text"]').val(date);
     $('html, body').animate({
@@ -80,13 +81,15 @@
     reading_ending_date = row.data("reading-ending-date");
     reading_starting_date = row.data("reading-starting-date");
 
-    var d1 = reading_starting_date.split("/");
-    var d2 = reading_ending_date.split("/");
-    var c = date.split("/");
+    if (reading_ending_date != 0 || reading_starting_date != 0 ){
+      var d1 = reading_starting_date.split("/");
+      var d2 = reading_ending_date.split("/");
+      var c = date.split("/");
 
-    var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
-    var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
-    var check = new Date(c[2], parseInt(c[1])-1, c[0]);
+      var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+      var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+      var check = new Date(c[2], parseInt(c[1])-1, c[0]);
+    };
 
     check_consumption = function(){
       if(row.data("index-one") <= parseInt(index)){
@@ -128,8 +131,10 @@
         if ( row.data("meters") > 1 ){
           alert_incidences.push("Posible contador parado" + '\r\n')
         }
-        if (check < from || check > to){
-          alert_incidences.push("Lectura fuera de plazo" + '\r\n')
+        if (reading_ending_date != 0 || reading_starting_date != 0 ){
+          if (check < from || check > to){
+            alert_incidences.push("Lectura fuera de plazo" + '\r\n')
+          }
         }
 
         if (alert_incidences.length > 0){
@@ -258,21 +263,23 @@
             }
           };
         // Lectura fuera de plazo
-        } else if (check < from || check > to){
-          // var lap_meter = confirm("Lectura fuera de plazo");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapdate").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
+        } else if (reading_ending_date != 0 || reading_starting_date != 0 ) { 
+          if (check < from || check > to){
+            // var lap_meter = confirm("Lectura fuera de plazo");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapdate").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              }
+            };
           };
         } else {
           check_consumption();
@@ -399,6 +406,7 @@
           <tr>
             <th><%= t('activerecord.attributes.pre_reading.route') %></th>
             <th><%= t('activerecord.attributes.pre_reading.reading_sequence_acronym') %></th>
+            <th><%= t('activerecord.attributes.pre_reading.service_point_id') %></th>
             <th><%= t('activerecord.attributes.pre_reading.subscriber_id') %></th>
             <th><%= t('activerecord.attributes.pre_reading.delivery_address') %></th>
             <th><%= t('activerecord.attributes.pre_reading.meter_id') %></th>
@@ -411,7 +419,7 @@
         </thead>
         <tbody>
           <% @pre_readings.each_with_index do |pre_reading,index| %>
-          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-reading-ending-date="<%= pre_reading.billing_period.reading_ending_date.strftime("%d/%m/%Y") %>" data-reading-starting-date="<%= pre_reading.billing_period.reading_starting_date.strftime("%d/%m/%Y") %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incidences="<%= pre_reading.pre_reading_incidences.map(&:reading_incidence_type_id) %>">
+          <tr id="prereading-<%= pre_reading.id %>" class="prereading-row" data-id="<%= pre_reading.id %>" data-reading-ending-date="<%= pre_reading.billing_period.reading_ending_date.strftime("%d/%m/%Y") unless pre_reading.billing_period.reading_ending_date.blank? %>" data-reading-starting-date="<%= pre_reading.billing_period.reading_starting_date.strftime("%d/%m/%Y") unless pre_reading.billing_period.reading_starting_date.blank? %>" data-index="<%= pre_reading.reading_index %>" data-index-one="<%= pre_reading.reading_index_1 %>" data-index-two="<%= pre_reading.reading_index_2 %>" data-consumption-one="<%= pre_reading.try(:reading_1).try(:consumption) %>" data-consumption-two="<%= pre_reading.try(:reading_2).try(:consumption) %>" data-meters="<%= pre_reading.try(:meter).try(:subscribers).count %>" data-digits="<%= pre_reading.try(:meter).try(:meter_model).try(:digits) %>" data-incidences="<%= pre_reading.pre_reading_incidences.map(&:reading_incidence_type_id) %>">
               <%= simple_form_for pre_reading, :remote => true, :html => { "data-type" => :json, :id => "form-prereading-#{pre_reading.id}" } do |f| %>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:reading_route).try(:route_code) %>
@@ -420,10 +428,13 @@
                   <%= pre_reading.reading_sequence %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
+                  <%= pre_reading.try(:service_point).try(:full_code) %>
+                </td>
+                <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:subscriber).try(:subscriber_code) %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <%= pre_reading.try(:subscriber).try(:address_1) %>
+                  <%= !pre_reading.subscriber.blank? ? pre_reading.try(:subscriber).try(:address_1) : pre_reading.try(:meter).try(:service_points).first.try(:address_1) %>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= pre_reading.try(:meter).try(:meter_code) %>
@@ -466,8 +477,7 @@
   <div class="row">
     <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary disabled" : "btn btn-primary" %>
     <%= link_to t('activerecord.attributes.pre_reading.print'), to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary", target: "_blank" %>
-    <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
-
+    <%= link_to t('activerecord.attributes.reading.exportcsv'), show_list_pre_readings_path(:format => :csv, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-success pull-right" %>
   </div>
   <br>
       <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>

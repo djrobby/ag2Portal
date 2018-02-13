@@ -200,6 +200,12 @@ Ag2Gest::Engine.routes.draw do
     match 'readings/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
     match 'r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
     match 'readings/:id/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
+    match 'readings/r_find_meter/:meter', :controller => 'readings', :action => 'r_find_meter'
+    match 'readings/:id/r_find_meter/:meter', :controller => 'readings', :action => 'r_find_meter'
+    match 'r_find_meter/:meter', :controller => 'readings', :action => 'r_find_meter'
+    match 'readings/r_find_subscriber/:subscriber', :controller => 'readings', :action => 'r_find_subscriber'
+    match 'readings/:id/r_find_subscriber/:subscriber', :controller => 'readings', :action => 'r_find_subscriber'
+    match 'r_find_subscriber/:subscriber', :controller => 'readings', :action => 'r_find_subscriber'
     #
     # Meter
     match 'meters/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
@@ -267,11 +273,21 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
     match 'service_points/:id/serpoint_generate_no/:id', :controller => 'service_points', :action => 'serpoint_generate_no'
+    match 'service_points/sp_find_meter/:meter', :controller => 'service_points', :action => 'sp_find_meter'
+    match 'service_points/:id/sp_find_meter/:meter', :controller => 'service_points', :action => 'sp_find_meter'
+    match 'sp_find_meter/:meter', :controller => 'service_points', :action => 'sp_find_meter'
+    match 'service_points/install_meter/:id', :controller => 'service_points', :action => 'install_meter', :via => [:post]
+    match 'service_points/:id/install_meter/:id', :controller => 'service_points', :action => 'install_meter', :via => [:post]
+    match 'service_points/withdrawal_meter/:id', :controller => 'service_points', :action => 'withdrawal_meter'#, :via => [:post]
+    match 'service_points/:id/withdrawal_meter/:id', :controller => 'service_points', :action => 'withdrawal_meter'#, :via => [:post]
+    match 'service_points/change_meter/:id', :controller => 'service_points', :action => 'change_meter', :via => [:post]
+    match 'service_points/:id/change_meter/:id', :controller => 'service_points', :action => 'change_meter', :via => [:post]
     #
     # Subscriber
     match 'subscribers/:id/reset_estimation', :controller => 'subscribers', :action => 'reset_estimation'
     match 'subscribers/:id/non_billable_button', :controller => 'subscribers', :action => 'non_billable_button'
     match 'subscribers/:id/billable_button', :controller => 'subscribers', :action => 'billable_button'
+    match 'subscribers/:id/disable_bank_account/:cba_id', :controller => 'subscribers', :action => 'disable_bank_account'
     match 'subscribers/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
     match 'subscribers/:id/update_country_textfield_from_region/:id', :controller => 'subscribers', :action => 'update_country_textfield_from_region'
     match 'subscribers/update_region_textfield_from_province/:id', :controller => 'subscribers', :action => 'update_region_textfield_from_province'

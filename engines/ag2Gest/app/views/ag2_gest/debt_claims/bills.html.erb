@@ -91,10 +91,16 @@
   }
 
   $(document).ready(function() {
+    // $('.date_picker').datepicker({
+    //  format:'dd/mm/yyyy',weekStart:1
+    // });
     $('.date_picker').datepicker({
-     format:'dd/mm/yyyy',weekStart:1
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
-
+    
     // Setup special search (select2)
     setupAllSelect2B("<%= @project %>", "<%= @biller %>", "<%= @period %>");
 

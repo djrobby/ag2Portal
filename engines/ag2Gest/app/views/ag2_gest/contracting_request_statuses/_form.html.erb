@@ -1,9 +1,15 @@
 <script type="text/javascript">
   $(document).ready(function() {
     // Select2
+    // $('.date_picker').datepicker({
+    //     format : 'dd/mm/yyyy',
+    //     weekStart : 1
+    // });
     $('.date_picker').datepicker({
-        format : 'dd/mm/yyyy',
-        weekStart : 1
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
     });
 
     $('select.sel2').select2({

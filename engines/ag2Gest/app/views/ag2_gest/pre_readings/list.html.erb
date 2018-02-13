@@ -12,6 +12,7 @@
           <tr>
             <th><%= t("activerecord.attributes.pre_reading.route") %></th>
             <th align="right"><%= t("activerecord.attributes.pre_reading.reading_seq") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.service_point_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.subscriber_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.delivery_address") %></th>
             <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
@@ -30,10 +31,13 @@
                   <%= pre_reading.reading_sequence %>
                 </td>
                 <td>
-                  <%= pre_reading.try(:subscriber).try(:subscriber_code) %>
+                  <%= pre_reading.try(:service_point).try(:full_code) %>
                 </td>
                 <td>
-                  <%= pre_reading.try(:subscriber).try(:street_directory).try(:street_name) %>
+                  <%= pre_reading.try(:subscriber).try(:to_label) %>
+                </td>
+                <td>
+                  <%= !pre_reading.subscriber.blank? ? pre_reading.try(:subscriber).try(:address_1) : pre_reading.try(:service_point).try(:address_1) %>
                 </td>
                 <td>
                   <%= pre_reading.try(:meter).try(:meter_code) %>
@@ -56,7 +60,7 @@
     <div>
       <%= link_to "Imprimir", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
-      <!-- <#%= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %> -->
+      <!-- <%#= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %> -->
       <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary" %>
       <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
     </div>

@@ -2,6 +2,13 @@
 <script>
 
   $(document).ready(function() {
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
+    
     $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {
       $('#Date_').datepicker('setValue', es_date(new Date()));

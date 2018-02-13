@@ -1,5 +1,7 @@
 <% session[:return_to_meter] = I18n.t('ag2_gest.meters.show.return_to') %>
 <% session[:return_to_meter_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
+<% session[:return_to_subscriber] = I18n.t('ag2_gest.meters.show.return_to') %>
+<% session[:return_to_subscriber_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <%= render '/layouts/ag2_gest/metersbreadcrumb' %>
 
@@ -72,8 +74,21 @@ new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
 <% end %>
 
 <!-- Readings -->
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h4><%=t '.subtable_title_readings' %></h4>
+      </td>
+      <td class="form-td-two right-winged">
+        <% if @meter.is_installed_now? %>
+          <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <% if (@readings.count > 0) %>
-<h4><%=t '.subtable_title_readings' %></h4>
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <%= render :partial => '/layouts/ag2_gest/readingsheader', :locals => { :source => 'M' } %>
@@ -110,4 +125,8 @@ new_path: new_meter_path, new_txt: t('ag2_gest.meters.index.btn_new') } %>
   <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
 <% end %>
 
+
 <%= link_to I18n.t('ag2_gest.meters.back_to_main_page'), meters_path %>
+
+<!-- MODALS -->
+<%= render '/ag2_gest/subscribers/modals/new_reading' %>

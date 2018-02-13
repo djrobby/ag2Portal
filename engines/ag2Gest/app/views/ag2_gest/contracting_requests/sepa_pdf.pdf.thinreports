@@ -1,5 +1,5 @@
 if @subscriber.blank?
-	return
+  return
 end
 
 # Localization for numbers
@@ -12,15 +12,15 @@ report.set_layout tlf: 'reports/sepa_pdf', layout_options: { default: true }
 #
 # On page create
 report.events.on :page_create do |e|
-	# Set page-number
-	e.page.item(:page_no).value(e.page.no)
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
 end
 # On report generate
 report.events.on :generate do |e|
-	e.pages.each do |page|
-		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count)
-	end
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
 end
 
 # New page & start
@@ -33,19 +33,19 @@ var_client_bank = ClientBankAccount.where(subscriber_id: @subscriber.id).active.
 
 # Page header: Creditor
 report.page.values(refere: var_client_bank.try(:refere),
-				   company_name: @subscriber.office.company.name,
-				   company_address_1: @subscriber.office.company.address_1,
-				   company_address_2: @subscriber.office.company.address_3,
-				   company_fiscal_id: @subscriber.office.company.fiscal_id,
-				   company_country: @subscriber.office.company.province.region.country.name
-				   )
+           company_name: @subscriber.office.company.name,
+           company_address_1: @subscriber.office.company.address_1,
+           company_address_2: @subscriber.office.company.address_3,
+           company_fiscal_id: @subscriber.office.company.fiscal_id,
+           company_country: @subscriber.office.company.province.region.country.name
+           )
 #
 # Page footer
 var_full_date = I18n.l(var_client_bank.starting_at, format: :long_whit_day) unless !@var_client_bank.blank?
 report.page.values(printed_at: Time.now,
-				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"),
-				   full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"),
+           full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
 
 # Page header: debtor
 var_client_bank_full = var_client_bank.try(:e_format_with_spaces)
@@ -53,15 +53,15 @@ var_client_bank_titular = var_client_bank.try(:holder_name)
 
 contract_tariff = SubscriberTariff.where(subscriber_id: @subscriber.id).count
 report.page.values(refere: var_client_bank.try(:refere),
-				   holder_name: var_client_bank_titular,
-				   holder_address_1: @subscriber.try(:client).address_1,
-				   holder_address_2: @subscriber.try(:client).try(:address_3),
-				   holder_country: @subscriber.try(:client).province.region.country.name,
-				   swift_bic: var_client_bank.bank.swift,
-				   cs1_img: contract_tariff > 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
-				   cs2_img: contract_tariff == 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
-				   pay_bank: var_client_bank_full
-				   )
+           holder_name: var_client_bank_titular,
+           holder_address_1: @subscriber.try(:client).address_1,
+           holder_address_2: @subscriber.try(:client).try(:address_3),
+           holder_country: @subscriber.try(:client).province.region.country.name,
+           swift_bic: var_client_bank.bank.swift,
+           cs1_img: contract_tariff > 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
+           cs2_img: contract_tariff == 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
+           pay_bank: var_client_bank_full
+           )
 #
 # SEPA B2B
 report.set_layout tlf: 'reports/sepa_b2b_pdf', layout_options: { default: true }
@@ -77,19 +77,19 @@ var_client_bank = ClientBankAccount.where(subscriber_id: @subscriber.id).active.
 
 # Page header: Creditor
 report.page.values(refere: var_client_bank.try(:refere),
-				   company_name: @subscriber.office.company.name,
-				   company_address_1: @subscriber.office.company.address_1,
-				   company_address_2: @subscriber.office.company.address_3,
-				   company_fiscal_id: @subscriber.office.company.fiscal_id,
-				   company_country: @subscriber.office.company.province.region.country.name
-				   )
+           company_name: @subscriber.office.company.name,
+           company_address_1: @subscriber.office.company.address_1,
+           company_address_2: @subscriber.office.company.address_3,
+           company_fiscal_id: @subscriber.office.company.fiscal_id,
+           company_country: @subscriber.office.company.province.region.country.name
+           )
 #
 # Page footer
 var_full_date = I18n.l(var_client_bank.starting_at, format: :long_whit_day) unless !@var_client_bank.blank?
 report.page.values(printed_at: Time.now,
-				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"),
-				   full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"),
+           full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
 
 # Page header: debtor
 var_client_bank_full = var_client_bank.try(:e_format_with_spaces)
@@ -97,12 +97,12 @@ var_client_bank_titular = var_client_bank.try(:holder_name)
 
 contract_tariff = SubscriberTariff.where(subscriber_id: @subscriber.id).count
 report.page.values(refere: var_client_bank.try(:refere),
-				   holder_name: var_client_bank_titular,
-				   holder_address_1: @subscriber.try(:client).address_1,
-				   holder_address_2: @subscriber.try(:client).try(:address_3),
-				   holder_country: @subscriber.try(:client).province.region.country.name,
-				   swift_bic: var_client_bank.bank.swift,
-				   cs1_img: contract_tariff > 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
-				   cs2_img: contract_tariff == 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
-				   pay_bank: var_client_bank_full
-				   )
+           holder_name: var_client_bank_titular,
+           holder_address_1: @subscriber.try(:client).address_1,
+           holder_address_2: @subscriber.try(:client).try(:address_3),
+           holder_country: @subscriber.try(:client).province.region.country.name,
+           swift_bic: var_client_bank.bank.swift,
+           cs1_img: contract_tariff > 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
+           cs2_img: contract_tariff == 0 ? "app/assets/images/icon/glyph/black/ok.png" : "",
+           pay_bank: var_client_bank_full
+           )

@@ -13,6 +13,7 @@
           <tr>
             <th><%= t("activerecord.attributes.pre_reading.route") %></th>
             <th align="right"><%= t("activerecord.attributes.pre_reading.reading_seq") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.service_point_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.subscriber_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.delivery_address") %></th>
             <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
@@ -26,6 +27,7 @@
             <tr>
               <td><%= pre_reading.try(:reading_route).try(:route_code) %></td>
               <td align="right"><%= pre_reading.reading_sequence %></td>
+              <td><%= pre_reading.try(:service_point).try(:full_code) %></td>
               <td><%= pre_reading.try(:subscriber).try(:to_label) %></td>
               <td><%= pre_reading.try(:subscriber).try(:address_1) %></td>
               <td><%= pre_reading.try(:meter).try(:meter_code) %></td>

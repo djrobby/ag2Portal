@@ -325,6 +325,12 @@ module Ag2Tech
       end
       @project_report = @search.results
 
+      current_projects = @project_report.blank? ? [0] : current_projects_for_index(@project_report)
+      project = current_projects.to_a
+      @project_ids = project
+
+      @office = !office.blank? ? office : nil
+
       title = t("activerecord.models.project.few")
       from = Date.today.to_s
 
@@ -335,10 +341,10 @@ module Ag2Tech
                       filename: "#{title}_#{@from}.pdf",
                       type: 'application/pdf',
                       disposition: 'inline' }
-          format.csv { send_data Project.to_csv(@project_report),
-                       filename: "#{title}_#{@from}.csv",
-                       type: 'application/csv',
-                       disposition: 'inline' }
+          format.csv { send_data Project.to_csv(@project_report,@project_ids,@office),
+                      filename: "#{title}_#{@from}.csv",
+                      type: 'application/csv',
+                      disposition: 'inline' }
         else
           format.csv { redirect_to projects_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
           format.pdf { redirect_to projects_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
@@ -395,6 +401,14 @@ module Ag2Tech
 
     def offices_by_company(_company)
       Office.where(company_id: _company).order(:name)
+    end
+
+    def current_projects_for_index(_projects)
+      _current_projects = []
+      _projects.each do |i|
+        _current_projects = _current_projects << i.id
+      end
+      _current_projects
     end
 
     def projects_dropdown
