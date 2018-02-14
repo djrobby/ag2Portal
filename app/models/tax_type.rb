@@ -44,7 +44,7 @@ class TaxType < ActiveRecord::Base
   end
 
   def self.exempt_id
-    self.exempt || 0
+    self.exempt.id rescue 0
   end
 
   private

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180209202238) do
+ActiveRecord::Schema.define(:version => 20180214103717) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1986,6 +1986,21 @@ ActiveRecord::Schema.define(:version => 20180209202238) do
     t.integer  "updated_by"
   end
 
+  create_table "invoice_taxes", :force => true do |t|
+    t.integer  "invoice_id"
+    t.integer  "tax_type_id"
+    t.string   "description", :limit => 100
+    t.decimal  "tax",                        :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "taxable",                    :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "tax_amount",                 :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "items_qty",   :limit => 3,                                  :default => 0,   :null => false
+    t.datetime "created_at",                                                                 :null => false
+    t.datetime "updated_at",                                                                 :null => false
+  end
+
+  add_index "invoice_taxes", ["invoice_id"], :name => "index_invoice_taxes_on_invoice_id"
+  add_index "invoice_taxes", ["tax_type_id"], :name => "index_invoice_taxes_on_tax_type_id"
+
   create_table "invoice_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -2559,6 +2574,21 @@ ActiveRecord::Schema.define(:version => 20180209202238) do
   add_index "pre_invoice_items", ["product_id"], :name => "index_pre_invoice_items_on_product_id"
   add_index "pre_invoice_items", ["tariff_id"], :name => "index_pre_invoice_items_on_tariff_id"
   add_index "pre_invoice_items", ["tax_type_id"], :name => "index_pre_invoice_items_on_tax_type_id"
+
+  create_table "pre_invoice_taxes", :force => true do |t|
+    t.integer  "pre_invoice_id"
+    t.integer  "tax_type_id"
+    t.string   "description",    :limit => 100
+    t.decimal  "tax",                           :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "taxable",                       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "tax_amount",                    :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "items_qty",      :limit => 3,                                  :default => 0,   :null => false
+    t.datetime "created_at",                                                                    :null => false
+    t.datetime "updated_at",                                                                    :null => false
+  end
+
+  add_index "pre_invoice_taxes", ["pre_invoice_id"], :name => "index_pre_invoice_taxes_on_pre_invoice_id"
+  add_index "pre_invoice_taxes", ["tax_type_id"], :name => "index_pre_invoice_taxes_on_tax_type_id"
 
   create_table "pre_invoices", :force => true do |t|
     t.string   "invoice_no"

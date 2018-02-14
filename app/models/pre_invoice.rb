@@ -17,6 +17,7 @@ class PreInvoice < ActiveRecord::Base
   alias_attribute :company, :biller
 
   has_many :pre_invoice_items, dependent: :destroy
+  has_many :pre_invoice_taxes, class_name: "PreInvoiceTax", dependent: :destroy
   has_one :active_supply_invoice
 
   # Callbacks
@@ -55,10 +56,18 @@ class PreInvoice < ActiveRecord::Base
 
   def tax_breakdown
     pre_invoice_items.group_by{|i| i.tax_type_id}.map do |t|
-      tax = t[0].nil? ? 0 : TaxType.find(t[0]).tax
+      tax_id = 0
+      tax = 0
+      description = ''
+      if !t[0].nil?
+        tt = TaxType.find(t[0])
+        tax_id = tt.id
+        tax = tt.tax
+        description = tt.description
+      end
       sum_total = t[1].sum{|j| j.total}
       tax_total = sum_total * (tax/100)
-      [tax, sum_total, tax_total ,t[1].count]
+      [tax, sum_total, tax_total ,t[1].count, description, tax_id]
     end
   end
 
@@ -68,24 +77,10 @@ class PreInvoice < ActiveRecord::Base
 
   def subtotal
     pre_invoice_items.reject(&:marked_for_destruction?).sum(&:amount)
-    # subtotal = 0
-    # pre_invoice_items.each do |i|
-    #   if !i.total.blank?
-    #     subtotal += i.total
-    #   end
-    # end
-    # subtotal
   end
 
   def bonus
     (discount_pct / 100) * subtotal if !discount_pct.blank?
-    # bonus = 0
-    # pre_invoice_items.each do |i|
-    #   if !i.bonus.blank?
-    #     bonus += i.bonus
-    #   end
-    # end
-    # bonus
   end
 
   def taxable

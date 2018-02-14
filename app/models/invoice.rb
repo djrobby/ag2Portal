@@ -33,6 +33,7 @@ class Invoice < ActiveRecord::Base
   attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
+  has_many :invoice_taxes, class_name: "InvoiceTax", dependent: :destroy
   has_many :client_payments
   has_one :pre_invoice
   has_one :invoice_debt
@@ -100,7 +101,9 @@ class Invoice < ActiveRecord::Base
   }
   scope :by_bill_id, -> i {
     where("invoices.bill_id = #{i}")
-    .select("invoices.bill_id bill_id_, invoices.id invoice_id_")
+    .select("invoices.bill_id bill_id_, invoices.id invoice_id_,
+             CASE WHEN (invoices.invoice_status_id = 1 AND NOT ISNULL(invoices.payday_limit)) THEN invoices.payday_limit < CURDATE() ELSE FALSE END unpaid_,
+             invoices.totals totals_")
     .order('invoices.id')
   }
 
@@ -410,11 +413,18 @@ class Invoice < ActiveRecord::Base
   #
   def tax_breakdown
     invoice_items.group_by{|i| i.tax_type_id}.map do |t|
-      tax = t[0].nil? ? 0 : TaxType.find(t[0]).tax
+      tax_id = 0
+      tax = 0
+      description = ''
+      if !t[0].nil?
+        tt = TaxType.find(t[0])
+        tax_id = tt.id
+        tax = tt.tax
+        description = tt.description
+      end
       sum_total = t[1].sum{|invoice_item| invoice_item.amount}
       tax_total = sum_total * (tax/100)
-      description = t[0].nil? ? 0 : TaxType.find(t[0]).description
-      [tax, sum_total, tax_total ,t[1].count, description]
+      [tax, sum_total, tax_total ,t[1].count, description, tax_id]
     end
   end
 
@@ -452,7 +462,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def receivable
-    totals - exemption
+    total - exemption
   end
 
   def collected
@@ -545,6 +555,15 @@ class Invoice < ActiveRecord::Base
   def bill_status
     b = self.bill rescue nil
     b.update_attributes(invoice_status_id: b.invoices.select('min(invoice_status_id) as min_status').first.min_status) unless b.nil?
+    update_invoice_taxes
+  end
+
+  def update_invoice_taxes
+    InvoiceTax.where(invoice_id: self.id).delete_all
+    tax_breakdown.each do |tb|
+      InvoiceTax.create(invoice_id: self.id, tax_type_id: tb[5], description: tb[4],
+                        tax: tb[0], taxable: tb[1], tax_amount: tb[2], items_qty: tb[3])
+    end
   end
 
   def assign_payday_limit

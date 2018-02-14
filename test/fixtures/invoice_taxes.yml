@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  invoice: 
+  tax_type: 
+  description: MyString
+  tax: 9.99
+  taxable: 9.99
+  tax_amount: 9.99
+  items_qty: 1
+
+two:
+  invoice: 
+  tax_type: 
+  description: MyString
+  tax: 9.99
+  taxable: 9.99
+  tax_amount: 9.99
+  items_qty: 1

@@ -803,16 +803,17 @@ module Ag2Gest
       elsif filter == "charged"
         invoice_status = 99
       end
-      @subscriber_invoice_items = []
-      @subscriber_invoices = []
-      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
-      if !@subscriber_bills.empty?
-        @subscriber_invoices = Invoice.by_bill_ids(@subscriber_bills.map(&:bill_id_).join(','))
-        if !@subscriber_invoices.empty?
-          @subscriber_invoice_items = InvoiceItem.by_invoice_ids(@subscriber_invoices.map(&:invoice_id_).join(','))
-        end
-      end
-      @subscriber_bills = @subscriber_bills.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      # @subscriber_invoice_items = []
+      # @subscriber_invoices = []
+      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      # @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
+      # if !@subscriber_bills.empty?
+      #   @subscriber_invoices = Invoice.by_bill_ids(@subscriber_bills.map(&:bill_id_).join(','))
+      #   if !@subscriber_invoices.empty?
+      #     @subscriber_invoice_items = InvoiceItem.by_invoice_ids(@subscriber_invoices.map(&:invoice_id_).join(','))
+      #   end
+      # end
+      # @subscriber_bills = @subscriber_bills.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       # search_bills = Bill.search do
       #   if filter == "pending" or filter == "unpaid"
