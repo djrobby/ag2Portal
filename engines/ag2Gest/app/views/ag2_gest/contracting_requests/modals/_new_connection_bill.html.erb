@@ -93,7 +93,7 @@
     //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
     var subtotal = 0.0;
     for (var k=0; k < total_invoiceitem; k++){
-      subtotal = subtotal + parseFloat($(invoice).find('td.total_b')[k].textContent);
+      subtotal = subtotal + parseFloat($(invoice).find('td.amount_b')[k].textContent);
     }
     $(`.subtotal_b${index_table}`).get(0).innerHTML = subtotal.toFixed(2);
     /*END SUBTOTAL*/
@@ -112,7 +112,7 @@
     var taxes_value = [];
     for (var t = 0; t < total_invoiceitem; t++) {
       //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
-      taxes_value[t] = {tax: $(invoice).find('tr.in_item_b select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_b td.total_b')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item_b select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_b td.amount_b')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
 
       //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
     }
@@ -223,8 +223,8 @@
               <td><%= item.code %></td>
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>
               <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>
-              <td class="td-amount-b<%= item.id %> amount"><%= item.amount %></td>
-              <td><%= collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {selected: item.tax_type_id}, {:class=>'x-large-text-field' , :disabled => "disabled" }) %></td>
+              <td class="td-amount-b<%= item.id %> amount_b"><%= item.amount %></td>
+              <td><%= collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {selected: item.tax_type_id}, {:class=>'x-large-text-field' }) %></td>
               <% unless invoice.discount_zero? %>
                 <td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td>
               <% else %>
@@ -266,6 +266,7 @@
 
   </div>
   <div class="modal-footer">
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.contracting_request.text_footer") %></span>
     <a class="btn btn-primary" id="submit-bill"><%= t("activerecord.attributes.contracting_request.update") %></a>
     <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t("activerecord.attributes.contracting_request.close") %></a>
   </div>

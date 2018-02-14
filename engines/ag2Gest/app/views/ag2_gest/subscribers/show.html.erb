@@ -359,13 +359,12 @@
 
     <%= simple_form_for :simple_bill, url: update_simple_subscriber_path(@subscriber), method: "post" do |f| %>
     <% end %>
-    <!-- <form id="bill-supply-form" action="<%= update_simple_subscriber_path(@subscriber) %>" method="post" accept-charset="UTF-8" action="" class="form-inline" novalidate="novalidate">
-    </form> -->
 
   </div>
   <div class="modal-footer">
-    <a class="btn btn-primary" id="submit-simple-bill">Actualizar Factura</a>
-    <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cerrar</a>
+    <span class="left-floated shrinked" style="vertical-align: bottom"><%= t("activerecord.attributes.contracting_request.text_footer") %></span>
+    <a class="btn btn-primary" id="submit-simple-bill"><%= t("activerecord.attributes.contracting_request.update") %></a>
+    <a class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t("activerecord.attributes.contracting_request.close") %></a>
   </div>
 </div>
 

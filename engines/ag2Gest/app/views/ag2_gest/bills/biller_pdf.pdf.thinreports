@@ -385,7 +385,7 @@ end
           to = item.quantity + _qty_ant
 
           if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
-            max = _bll
+            max = _bll + 1
             row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_more") + max.to_i.to_s
           else
             row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_from") + from.to_i.to_s + I18n.t("activerecord.attributes.invoice_item.bl_to") + to.to_i.to_s

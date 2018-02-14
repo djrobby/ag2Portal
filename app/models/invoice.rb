@@ -100,10 +100,13 @@ class Invoice < ActiveRecord::Base
     .group('invoices.id').order('invoices.id DESC')
   }
   scope :by_bill_id, -> i {
-    where("invoices.bill_id = #{i}")
+    joins(:company)
+    .where("invoices.bill_id = #{i}")
     .select("invoices.bill_id bill_id_, invoices.id invoice_id_,
              CASE WHEN (invoices.invoice_status_id = 1 AND NOT ISNULL(invoices.payday_limit)) THEN invoices.payday_limit < CURDATE() ELSE FALSE END unpaid_,
-             invoices.totals totals_")
+             invoices.totals totals_, invoices.receivables receivables_, invoices.total_taxes total_taxes_,
+             CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_no_,
+             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_")
     .order('invoices.id')
   }
 

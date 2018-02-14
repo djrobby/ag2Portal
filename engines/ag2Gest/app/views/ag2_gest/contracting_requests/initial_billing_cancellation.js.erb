@@ -20,8 +20,8 @@ var content = '';
       content+= '<td><%= item.code %></td>';
       content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
       content+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-      content+= '<td class="td-amount<%= item.id %>"><%= item.amount %></td>';
-      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content+= '<td class="amount td-amount<%= item.id %>"><%= item.amount %></td>';
+      content+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
       content+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
       content+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
       content+= '<td class="total total<%= item.id %>"><%= item.total %></td>';
@@ -83,8 +83,8 @@ var content_u = '';
       content_u+= '<td><%= item.code + " - " + item.subcode %></td>';
       content_u+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
       content_u+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-      content_u+= '<td class="td-amount-u<%= item.id %>"><%= item.amount %></td>';
-      content_u+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content_u+= '<td class="amount_u td-amount-u<%= item.id %>"><%= item.amount %></td>';
+      content_u+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
       content_u+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
       content_u+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
       content_u+= '<td class="total_u total_u<%= item.id %>"><%= item.total %></td>';
@@ -146,8 +146,8 @@ var content_b = '';
       content_b+= '<td><%= item.code %></td>';
       content_b+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]quantity" type="number" value="<%= item.quantity %>"></td>';
       content_b+= '<td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]price" type="number" value="<%= item.price %>"></td>';
-      content_b+= '<td class="td-amount-b<%= item.id %>"><%= item.amount %></td>';
-      content_b+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field", :disabled => "disabled"})) %></td>';
+      content_b+= '<td class="amount_b td-amount-b<%= item.id %>"><%= item.amount %></td>';
+      content_b+= '<td><%= escape_javascript(collection_select("invoice_item["+item.id.to_s+"]", :tax_type_id, TaxType.where("expiration >= 'Date.today' OR expiration IS NULL").order('description'), :id, :tax, {include_blank: true, selected: item.tax_type_id}, {:class=>"x-large-text-field"})) %></td>';
       content_b+= '<% unless invoice.discount_zero? %><td><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% else %><td><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount" type="number" value="<%= item.discount %>"></td><% end %>';
       content_b+= '<% unless invoice.discount_pct_zero? %><td class="inp"><input class="mid-text-field input-sm" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% else %><td class="inp"><input class="mid-text-field input-sm hide" name="invoice_item[<%= item.id %>]discount_pct" type="number" value="<%= item.discount_pct %>"></td><% end %>';
       content_b+= '<td class="total_b total_b<%= item.id %>"><%= item.total %></td>';
@@ -329,7 +329,7 @@ $(document).ready(function() {
     //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
     var subtotal = 0.0;
     for (var k=0; k < total_invoiceitem; k++){
-      subtotal = subtotal + parseFloat($(invoice).find('td.total')[k].textContent);
+      subtotal = subtotal + parseFloat($(invoice).find('td.amount')[k].textContent);
     }
 
 
@@ -351,7 +351,7 @@ $(document).ready(function() {
     var taxes_value = [];
     for (var t = 0; t < total_invoiceitem; t++) {
       //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
-      taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item td.total')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item td.amount')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
 
       //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
     }
@@ -511,7 +511,7 @@ $(document).ready(function() {
     //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
     var subtotal = 0.0;
     for (var k=0; k < total_invoiceitem; k++){
-      subtotal = subtotal + parseFloat($(invoice).find('td.total_u')[k].textContent);
+      subtotal = subtotal + parseFloat($(invoice).find('td.amount_u')[k].textContent);
     }
 
 
@@ -533,7 +533,7 @@ $(document).ready(function() {
     var taxes_value = [];
     for (var t = 0; t < total_invoiceitem; t++) {
       //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
-      taxes_value[t] = {tax: $(invoice).find('tr.in_item_u select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_u td.total_u')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item_u select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_u td.amount_u')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
 
       //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
     }
@@ -693,7 +693,7 @@ $(document).ready(function() {
     //var subtotal_arra = $(invoice).find('td.total'); //Get Array with totales de cada InvoiceItem de cada Invoice
     var subtotal = 0.0;
     for (var k=0; k < total_invoiceitem; k++){
-      subtotal = subtotal + parseFloat($(invoice).find('td.total_b')[k].textContent);
+      subtotal = subtotal + parseFloat($(invoice).find('td.amount_b')[k].textContent);
     }
 
 
@@ -715,7 +715,7 @@ $(document).ready(function() {
     var taxes_value = [];
     for (var t = 0; t < total_invoiceitem; t++) {
       //taxes_value[t] = {tax: $(invoice).find('tr.in_item select option:selected')[t], value:    }
-      taxes_value[t] = {tax: $(invoice).find('tr.in_item_b select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_b td.total_b')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
+      taxes_value[t] = {tax: $(invoice).find('tr.in_item_b select option:selected')[t].textContent, base_imp: $(invoice).find('tr.in_item_b td.amount_b')[t].textContent } //Array Object {Tax: "1.5", Value: "56"}
 
       //taxes[p] = $(invoice).find('tr.in_item select option')[p].textContent;
     }

@@ -70,7 +70,7 @@ class ServicePoint < ActiveRecord::Base
 
   def full_code
     # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
-    code.blank? ? "" : code[0..3] + '-' + code[4..10]
+    code.blank? ? "" : code.length <= 3 ? code[0..3] : code[0..3] + '-' + code[4..10]
   end
 
   def full_address

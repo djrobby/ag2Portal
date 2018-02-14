@@ -85,7 +85,7 @@
 
 jQuery(function($) {
     // when #input_add_meter changes
-    $("#input_add_meter").change(function() {
+    $("#input_cancellation_add_meter").change(function() {
       // make a POST call and replace the content
       var meter = $('#input_add_meter').val();
       if (meter == "")
@@ -95,7 +95,7 @@ jQuery(function($) {
         if (data.code == "$err") {
           $("#alert").css('color', 'red');
           alert('<%= I18n.t("activerecord.errors.models.meter.installation_error") %>\n' + data.alert);
-          $('#input_add_meter').val("");
+          $('#input_cancellation_add_meter').val("");
         } else {
           $("#alert").css('color', text_field_color);
           $('#sel2_association').val(data.meter_id);
@@ -258,7 +258,7 @@ jQuery(function($) {
       <!--<%#= f.association :meter, collection: Meter.from_office(session[:office]).availables(@contracting_request.try(:old_subscriber).try(:meter_id)), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>-->
 
       <%= f.input :meter_id, :as => :hidden, :input_html => { :value => @water_supply_contract.meter_id } %>
-      <%= f.input :meter_code_input, :disabled => true, input_html: { class: 'x-large-text-field', maxlength: 20, id: 'input_add_meter', :value => @water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f'), wrapper_html: { class: "span5" } %>
+      <%= f.input :meter_code_input, :disabled => true, input_html: { class: 'x-large-text-field', maxlength: 20, id: 'input_cancellation_add_meter', :value => @water_supply_contract.try(:meter).try(:meter_code) }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f'), wrapper_html: { class: "span5" } %>
 
       <%= f.input :caliber_id, :as => :hidden, :input_html => { :value => @water_supply_contract.caliber_id } %>
       <%= f.association :caliber, :disabled => true, required: true, collection: Caliber.order(:caliber).map{|c| [c.caliber,c.id]}, :input_html => { :class => 'x-large-text-field sel2', :id => 'wsc_meter' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span5" } %>

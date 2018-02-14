@@ -743,17 +743,16 @@ module Ag2Gest
 
       _tariff_type = []
       _tariff_type_ids = []
-      if !@subscriber.water_supply_contract.blank?
-        @subscriber.contracted_tariffs.each do |tt|
-          if !_tariff_type.include? tt.tariff.tariff_type.name
-            _tariff_type << tt.tariff.tariff_type.name
-          end
-          if !_tariff_type_ids.include? tt.tariff.tariff_type.id
-            _tariff_type_ids << tt.tariff.tariff_type.id
-          end
+      _tariffs = !@subscriber.water_supply_contract.blank? ? @subscriber.contracted_tariffs : @subscriber.subscriber_tariffs
+      _tariffs.each do |tt|
+        if !_tariff_type.include? tt.tariff.tariff_type.name
+          _tariff_type << tt.tariff.tariff_type.name
         end
-        @tariff_type = _tariff_type.join(", ")
+        if !_tariff_type_ids.include? tt.tariff.tariff_type.id
+          _tariff_type_ids << tt.tariff.tariff_type.id
+        end
       end
+      @tariff_type = _tariff_type.join(", ")
       @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
       # @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice(_tariff_type_ids)
       # @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", _tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
