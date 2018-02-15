@@ -73,6 +73,39 @@ namespace :db do
     puts "Task finished at " + Time.now.to_s + "."
   end
 
+  desc "Reset invoice totals (should stop server before!)"
+  task :reset_invoice_totals => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    puts "\tPreInvoice"
+    PreInvoice.find_each do |p|
+      p.update_column(:totals, p.total)
+    end
+    puts "\tInvoice"
+    Invoice.find_each do |p|
+      p.update_column(:totals, p.total)
+      p.update_column(:receivables, p.receivable)
+      p.update_column(:total_taxes, p.taxes)
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
+  desc "Create invoices taxes (should stop server before!)"
+  task :create_invoice_taxes => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    Invoice.find_each do |p|
+      InvoiceTax.where(invoice_id: p.id).delete_all
+      p.tax_breakdown.each do |tb|
+        InvoiceTax.create(invoice_id: p.id, tax_type_id: tb[5], description: tb[4],
+                          tax: tb[0], taxable: tb[1], tax_amount: tb[2], items_qty: tb[3])
+      end
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
   desc "Solr reindex searchable models"
   task :reindex_models => :environment do
     puts "Task started at " + Time.now.to_s + "."

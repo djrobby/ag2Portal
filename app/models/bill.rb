@@ -74,16 +74,18 @@ class Bill < ActiveRecord::Base
   }
   scope :by_subscriber_full, -> s, t {
     # joins(:invoice_status, invoices: [:invoice_type, :invoice_operation, [invoice_items: :tax_type]])
-    joins("LEFT JOIN invoices ON bills.id=invoices.bill_id AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
+    joins("LEFT JOIN invoices ON bills.id=invoices.bill_id")
     .joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id")
-    .where("bills.subscriber_id = ? AND bills.invoice_status_id IN (#{t})", s)
+    .joins("LEFT JOIN readings ON bills.reading_2_id=readings.id")
+    .where("bills.subscriber_id = #{s} AND bills.invoice_status_id IN (#{t}) AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
     .select("bills.id bill_id_, bills.bill_no bill_no_, bills.old_no old_no_, bills.invoice_status_id bill_status_id_,
              MIN(invoices.invoice_type_id) bill_type_id_, MIN(invoices.invoice_operation_id) bill_operation_id_,
              bills.client_id client_id_, bills.subscriber_id subscriber_id_,
-             bills.bill_date bill_date_, MAX(invoices.payday_limit) bill_payday_limit_, SUM(invoices.totals) bill_total_,
-             CASE WHEN ISNULL(bills.old_no) THEN CONCAT(SUBSTR(bills.bill_no,1,12),'-',SUBSTR(bills.bill_no,13,4),'-',SUBSTR(bills.bill_no,17,7)) ELSE bills.old_no END bill_no_,
-             CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_")
-    .group('bills.id').order('bills.id DESC')
+             bills.bill_date bill_date_, MIN(invoices.payday_limit) bill_payday_limit_, SUM(invoices.totals) bill_total_,
+             CASE WHEN ISNULL(bills.old_no) THEN CONCAT(SUBSTR(bills.bill_no,1,12),'-',SUBSTR(bills.bill_no,13,4),'-',SUBSTR(bills.bill_no,17,7)) ELSE bills.old_no END bill_right_no_,
+             CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
+             CASE WHEN (MIN(invoices.invoice_operation_id)=1 OR MIN(invoices.invoice_operation_id)=3) AND MIN(invoices.invoice_type_id)=#{InvoiceType::WATER} THEN readings.bill_id = bills.id ELSE TRUE END nullable_")
+     .group('bills.id').order('bills.id DESC')
   }
 
   #

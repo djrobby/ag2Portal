@@ -95,16 +95,25 @@ class Invoice < ActiveRecord::Base
     .by_no
   }
   scope :by_bill_ids, -> i {
-    where("invoices.bill_id IN (#{i})")
-    .select("invoices.bill_id bill_id_, invoices.id invoice_id_")
+    joins(:biller)
+    .where("invoices.bill_id IN (#{i})")
+    .select("invoices.bill_id bill_id_, invoices.id invoice_id_, invoices.invoice_status_id invoice_status_id_,
+             invoices.invoice_type_id invoice_type_id_, invoices.invoice_operation_id invoice_operation_id_,
+             CASE WHEN (invoices.invoice_status_id = 1 AND NOT ISNULL(invoices.payday_limit)) THEN invoices.payday_limit < CURDATE() ELSE FALSE END unpaid_,
+             invoices.totals totals_, invoices.receivables receivables_,
+             invoices.total_taxes total_taxes_, (invoices.totals-invoices.total_taxes) subtotal_,
+             CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_no_,
+             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_")
     .group('invoices.id').order('invoices.id DESC')
   }
   scope :by_bill_id, -> i {
-    joins(:company)
+    joins(:biller)
     .where("invoices.bill_id = #{i}")
-    .select("invoices.bill_id bill_id_, invoices.id invoice_id_,
+    .select("invoices.bill_id bill_id_, invoices.id invoice_id_, invoices.invoice_status_id invoice_status_id_,
+             invoices.invoice_type_id invoice_type_id_, invoices.invoice_operation_id invoice_operation_id_,
              CASE WHEN (invoices.invoice_status_id = 1 AND NOT ISNULL(invoices.payday_limit)) THEN invoices.payday_limit < CURDATE() ELSE FALSE END unpaid_,
-             invoices.totals totals_, invoices.receivables receivables_, invoices.total_taxes total_taxes_,
+             invoices.totals totals_, invoices.receivables receivables_,
+             invoices.total_taxes total_taxes_, (invoices.totals-invoices.total_taxes) subtotal_,
              CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_no_,
              companies.name biller_name_, companies.fiscal_id biller_fiscal_id_")
     .order('invoices.id')

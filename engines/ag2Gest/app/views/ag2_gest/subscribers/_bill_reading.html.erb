@@ -1,4 +1,5 @@
 <!-- RENDER2 FACTURA DE SUMINISTRO-->
+<% nullable = bill.nullable_ != 0 ? true : false %>
 <div class="accordion">
   <div class="accordion-group">
     <div class="accordion-heading row">
@@ -6,7 +7,7 @@
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.bill_id_ %>"><i class='icon-plus'></i></a>
       </div>
       <div class="span3 soft-padding">
-        <%= bill.bill_no_ %>
+        <%= bill.bill_right_no_ %>
       </div>
       <div class="span1 soft-padding">
           <span class="blue"><%= InvoiceType.code_with_param(bill.bill_type_id_) unless bill.bill_type_id_.blank? %></span>
@@ -17,10 +18,10 @@
         <%= bill.billing_period_ %>
       </div>
       <div class="span1 soft-padding" align="center">
-        <%= formatted_date(bill.bill_date_) unless bill.bill_date_.blank? %>
+        <%= formatted_date_slash(bill.bill_date_) unless bill.bill_date_.blank? %>
       </div>
       <div class="span1 soft-padding" align="center">
-        <%= formatted_date(bill.payday_limit_) unless bill.payday_limit_.blank? %>
+        <%= formatted_date_slash(bill.bill_payday_limit_) unless bill.bill_payday_limit_.blank? %>
       </div>
       <!-- <div class="span2">
         <#%= bill.try(:bill_type).try(:name) %>
@@ -29,9 +30,9 @@
         <%= number_with_precision(bill.bill_total_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
       <div class="span2 soft-padding pull-right">
-        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(bill, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_no_})"}, title: "Abonar" if bill.nullable?  %>
-        <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_no_})"}, title: "Refacturar" %>
+        <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(bill.bill_id_, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Abonar" if nullable  %>
+        <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Refacturar" %>
       </div>
     </div>
     <div id="collapse-<%= bill.bill_id_ %>" class="accordion-body collapse">
@@ -54,12 +55,12 @@
             </tr>
             <% InvoiceItem.by_invoice_id(invoice.invoice_id_).each do |item| %>
               <tr class="<%= 'text-error' if unpaid %> fields">
-                <td><%= item.code %></td>
-                <td><%= item.subcode_name %></td>
+                <td><%= item.code_ %></td>
+                <td><%= InvoiceItem.subcode_names(item.subcode_) %></td>
                 <td align="right"><%= number_with_precision(item.quantity_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.price_, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.amount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.tax_type_tax, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.tax_type_tax_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.discount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.discount_pct_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.total_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
@@ -68,7 +69,7 @@
             <tr class="subtotal <%= 'text-error' if unpaid %> fields">
               <td colspan="7" class="no-boder"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
-              <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
             <% InvoiceTax.by_invoice_id(invoice.invoice_id_).each do |tax| %>
               <tr class="<%= 'text-error' if unpaid %> fields">

@@ -34,6 +34,7 @@ class InvoiceItem < ActiveRecord::Base
     joins(:tax_type)
     .where("invoice_items.invoice_id IN (#{i})")
     .select("invoice_items.invoice_id invoice_id_, invoice_items.id invoice_item_id_,
+             invoice_items.code code_, invoice_items.subcode subcode_, invoice_items.description description_,
              invoice_items.quantity quantity_, invoice_items.price price_,
              tax_types.tax tax_type_tax_, invoice_items.discount discount_, invoice_items.discount_pct discount_pct_,
              (invoice_items.price - invoice_items.discount) net_price_,
@@ -48,6 +49,7 @@ class InvoiceItem < ActiveRecord::Base
     joins(:tax_type)
     .where("invoice_items.invoice_id = #{i}")
     .select("invoice_items.invoice_id invoice_id_, invoice_items.id invoice_item_id_,
+             invoice_items.code code_, invoice_items.subcode subcode_, invoice_items.description description_,
              invoice_items.quantity quantity_, invoice_items.price price_,
              tax_types.tax tax_type_tax_, invoice_items.discount discount_, invoice_items.discount_pct discount_pct_,
              (invoice_items.price - invoice_items.discount) net_price_,
@@ -125,6 +127,7 @@ class InvoiceItem < ActiveRecord::Base
     net + tax
   end
 
+  # Methods
   def tariff_starting_at
     formatted_date(tariff.starting_at) rescue ''
   end
@@ -135,6 +138,37 @@ class InvoiceItem < ActiveRecord::Base
 
   def regulation
     tariff.billable_item.regulation_id
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.subcode_names(subcode)
+    _subcode = " "
+      if subcode == "CF"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.cf")
+      elsif subcode == "CV"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.cv")
+      elsif subcode == "VP"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.vp")
+      elsif subcode == "BL1"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl1")
+      elsif subcode == "BL2"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl2")
+      elsif subcode == "BL3"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl3")
+      elsif subcode == "BL4"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl4")
+      elsif subcode == "BL5"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl5")
+      elsif subcode == "BL6"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl6")
+      elsif subcode == "BL7"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl7")
+      elsif subcode == "BL8"
+        _subcode = I18n.t("activerecord.attributes.invoice_item.bl8")
+      end
+      _subcode
   end
 
   private
