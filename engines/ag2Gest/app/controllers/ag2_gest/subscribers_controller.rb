@@ -805,6 +805,7 @@ module Ag2Gest
       # @subscriber_invoice_items = []
       # @subscriber_invoices = []
       @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @subscriber_bills_total = Bill.by_subscriber_total(@subscriber.id, invoice_status).first.bills_total
       # @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
       # if !@subscriber_bills.empty?
       #   @subscriber_invoices = Invoice.by_bill_ids(@subscriber_bills.map(&:bill_id_).join(','))

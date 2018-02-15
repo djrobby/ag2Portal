@@ -45,7 +45,7 @@
 </div>
 
 <!-- Total bills/invoices -->
-<div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= number_with_precision(@subscriber_bills.sum{|b| b.total}, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+<div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= number_with_precision(@subscriber_bills_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
 
 <div class="row">
   <div class="span1"><b>&nbsp;</b></div> <!-- Space for icon-plus -->
@@ -74,11 +74,11 @@
   </div>
 </div>
 <% @subscriber_bills.each do |bill| %>
-  <% if !bill.water_supply_contract.nil? %>
-    <!-- RENDER1 RECIBO DE CONTRATACIÓN-->
+  <% if WaterSupplyContract.billed(bill.bill_id_).nil? %>
+    <!-- Contract Bill -->
     <%= render 'bill_contracting_request', :bill => bill %>
   <% else %>
-    <!-- RENDER2 FACTURA DE SUMINISTRO-->
+    <!-- Service Bill -->
     <%= render 'bill_reading', :bill => bill %>
   <% end %>
 <% end %>

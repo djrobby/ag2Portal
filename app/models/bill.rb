@@ -87,6 +87,11 @@ class Bill < ActiveRecord::Base
              CASE WHEN (MIN(invoices.invoice_operation_id)=1 OR MIN(invoices.invoice_operation_id)=3) AND MIN(invoices.invoice_type_id)=#{InvoiceType::WATER} THEN readings.bill_id = bills.id ELSE TRUE END nullable_")
      .group('bills.id').order('bills.id DESC')
   }
+  scope :by_subscriber_total, -> s, t {
+    joins("LEFT JOIN invoices ON bills.id=invoices.bill_id")
+    .where("bills.subscriber_id = #{s} AND bills.invoice_status_id IN (#{t}) AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
+    .select("SUM(invoices.totals) bills_total")
+  }
 
   #
   # Methods

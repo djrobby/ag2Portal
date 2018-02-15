@@ -32,7 +32,7 @@ class WaterSupplyContract < ActiveRecord::Base
     # Contract no (Project Id & Request type Id & year & sequential number) => PPPPPP-TT-YYYY-NNNNNN
     contract_no.blank? ? "" : contract_no[0..5] + '-' + contract_no[6..7] + '-' + contract_no[8..11] + '-' + contract_no[12..17]
   end
-  
+
   def request_no
     contracting_request.request_no unless contracting_request.blank?
   end
@@ -307,6 +307,13 @@ class WaterSupplyContract < ActiveRecord::Base
     else
       return nil
     end
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.billed(bill_id)
+    find_by_bill_id(bill_id)
   end
 
   private
