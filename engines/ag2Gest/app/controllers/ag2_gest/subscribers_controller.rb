@@ -787,7 +787,7 @@ module Ag2Gest
       @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
       @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
       @subscriber_accounts = @subscriber_accounts
-                            .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+                            .paginate(:page => params[:page] || 1, :per_page => 10)
       # @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
 
       #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
@@ -796,7 +796,7 @@ module Ag2Gest
       #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
 
       ### Readings ###
-      @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => 10)
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       # search_readings = Reading.search do
       #   with :subscriber_id, params[:id]
@@ -815,7 +815,7 @@ module Ag2Gest
       end
       # @subscriber_invoice_items = []
       # @subscriber_invoices = []
-      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
+      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
       @subscriber_bills_total = Bill.by_subscriber_total(@subscriber.id, invoice_status).first.bills_total
       # @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
       # if !@subscriber_bills.empty?
