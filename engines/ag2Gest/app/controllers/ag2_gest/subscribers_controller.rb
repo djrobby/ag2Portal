@@ -35,8 +35,14 @@ module Ag2Gest
 
    # update subscriber estimation
    def reset_estimation
-     @subscriber = Subscriber.find(params[:id])
-     @subscriber.current_estimation.update_attributes(estimation_reset_at: Time.now)
+    @subscriber = Subscriber.find(params[:id])
+    @subscriber.current_estimation.update_attributes(estimation_reset_at: Time.now)
+    @json_data = { "id" => @subscriber.id }
+
+    respond_to do |format|
+      format.html # update_province_textfield.html.erb does not exist! JSON only
+      format.json { render json: @json_data }
+    end
    end
 
     # update true subscriber non-billable
@@ -44,6 +50,12 @@ module Ag2Gest
       @subscriber = Subscriber.find(params[:id])
       if @subscriber.non_billable == false
         @subscriber.update_attributes(non_billable: true)
+      end
+      @json_data = { "non_billable" => @subscriber.non_billable }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
       end
     end
 
@@ -53,14 +65,26 @@ module Ag2Gest
       if @subscriber.non_billable == true
         @subscriber.update_attributes(non_billable: false)
       end
+      @json_data = { "billable" => @subscriber.non_billable }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
+      end
     end
 
     # disable client bank account
     def disable_bank_account
       @subscriber = Subscriber.find(params[:id])
       # @client_bank_account = ClientBankAccount.find(params[:cba_id])
-      _bank_account = @subscriber.client_bank_accounts.where(id: params[:cba_id])
-      _bank_account.update_all(ending_at: Date.today)
+      _bank_account = @subscriber.client_bank_accounts.where(id: params[:cba_id]).first
+      _bank_account.update_attributes(ending_at: Date.today)
+      @json_data = { "today" => Date.today }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
+      end
     end
 
     # Update country text field at view from region select

@@ -94,7 +94,7 @@ jQuery(function($) {
     // when #input_add_meter changes
     $("#input_water_supply_add_meter").change(function() {
       // make a POST call and replace the content
-      var meter = $('#input_add_meter').val();
+      var meter = $('#input_water_supply_add_meter').val();
       if (meter == "")
         meter = "$";
       jQuery.getJSON('cr_find_meter/' + meter, function(data) {

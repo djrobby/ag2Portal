@@ -11,7 +11,12 @@
       $('.date_picker').datepicker('hide');
     });
     $("#reset_estimation").click(function(){
-      window.location.reload();
+      var subscriber_id = "<%= @subscriber.id %>"
+      jQuery.getJSON(subscriber_id + '/reset_estimation', function(data) {
+        $("#reset_estimation").addClass("hide");
+        $("#span_reset_estimation").addClass("hide");
+      });
+      return false;
     });
   });
 </script>
@@ -27,9 +32,9 @@
     <% end %>
   </div>
   <div align="right" class="span7">
-    <a href="<%= params[:id] %>/reset_estimation" data-remote="true" id="reset_estimation" role="button" class="btn btn-mini btn-primary  <%= 'hide' if @subscriber.current_estimation.nil? %>" data-confirm="<%= t("activerecord.attributes.subscriber.alert_reset_estimation")%>" ><%= t('activerecord.attributes.subscriber.reset_estimation') %></a>
+    <a data-remote="true" id="reset_estimation" role="button" class="btn btn-mini btn-primary  <%= 'hide' if @subscriber.current_estimation.nil? %>" data-confirm="<%= t("activerecord.attributes.subscriber.alert_reset_estimation")%>" ><%= t('activerecord.attributes.subscriber.reset_estimation') %></a>
     &nbsp;
-    <span class="<%= 'hide' if @subscriber.current_estimation.nil? %>"><b><%= I18n.t('activerecord.attributes.subscriber.total_estimations') %>:</b> <%= @subscriber.current_estimation_balance %></span>
+    <span id="span_reset_estimation" class="<%= 'hide' if @subscriber.current_estimation.nil? %>"><b><%= I18n.t('activerecord.attributes.subscriber.total_estimations') %>:</b> <%= @subscriber.current_estimation_balance %></span>
     &nbsp;
     <!--<span><b><%#= I18n.t("activerecord.attributes.reading.con") %>:</b> <%#= @subscriber_readings.first.consumption_previous_readings(@subscriber_readings.last.reading_date, @subscriber_readings.first.reading_date) %></span>-->
     <span><b><%= I18n.t("activerecord.attributes.reading.con") %>:</b> <%= (@subscriber_readings.sum(&:consumption) / @subscriber_readings.size).round %></span>
