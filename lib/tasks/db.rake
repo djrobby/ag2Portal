@@ -1,10 +1,23 @@
 namespace :db do
   desc "Reset counter_caches"
   task :reset_counters => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    puts "\tOffer"
     Offer.find_each { |p| Offer.reset_counters(p.id, :purchase_orders) }
+    puts "\tSaleOffer"
     SaleOffer.find_each { |p| SaleOffer.reset_counters(p.id, :invoices) }
+    puts "\tDebtClaim"
     DebtClaim.find_each { |p| DebtClaim.reset_counters(p.id, :debt_claim_items) }
-    Client.find_each { |p| Client.reset_counters(p.id, :subscribers) }
+    puts "\tClient"
+    Client.find_each do |p|
+      Client.reset_counters p.id, :subscribers
+      Client.reset_counters p.id, :client_bank_accounts
+    end
+    puts "\tSubscriber"
+    Subscriber.find_each { |p| Subscriber.reset_counters(p.id, :client_bank_accounts) }
+
+    puts "Task finished at " + Time.now.to_s + "."
   end
 
   desc "Reset totals (should stop server before!)"
