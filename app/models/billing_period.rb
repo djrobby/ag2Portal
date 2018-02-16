@@ -38,9 +38,11 @@ class BillingPeriod < ActiveRecord::Base
     where('billing_periods.billing_frequency_id = ?', f).order('billing_periods.period DESC')
   }
   scope :readings_unbilled_by_subscriber, -> s {
-    joins(:readings)
+    joins(:billing_frequency, :readings)
     .where('readings.bill_id IS NULL AND readings.subscriber_id = ? AND readings.reading_type_id IN (?)', s, ReadingType.without_control)
-    .select('billing_periods.*').by_period_desc
+    .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_")
+    .by_period_desc
   }
 
   def period_to_date

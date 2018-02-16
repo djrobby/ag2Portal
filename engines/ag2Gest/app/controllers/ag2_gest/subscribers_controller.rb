@@ -748,7 +748,7 @@ module Ag2Gest
       @reading_incidence = ReadingIncidenceType.all
       # @billing_period = BillingPeriod.order('period DESC').all
       @reading_type = ReadingType.single_manual_reading
-      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber)
+      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber.id)
       # @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
       @current_debt = @subscriber.total_existing_debt
 
