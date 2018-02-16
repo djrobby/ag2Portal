@@ -44,7 +44,7 @@ jQuery(function($) {
 
       <%= f.input :q_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker', :id => 'input_q_reading_date'}, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :q_billing_period_id, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_q_billing_period'}, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.input :q_billing_period_id, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_q_billing_period'}, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -67,7 +67,7 @@ jQuery(function($) {
 
       <%= f.input :a_reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'mid-text-field date_picker', :id => 'input_a_reading_date'}, :label_html => { :class => 'form-label' } %>
 
-      <%= f.input :a_billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_a_billing_period' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.input :a_billing_period, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => 'input_a_billing_period' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">

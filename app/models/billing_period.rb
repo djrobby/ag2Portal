@@ -22,20 +22,31 @@ class BillingPeriod < ActiveRecord::Base
   validates :billing_frequency, :presence => true
 
   # Scopes
-  scope :by_period, -> { order(:period) }
-  scope :by_period_desc, -> { order('period DESC') }
+  scope :by_period, -> { order('billing_periods.period') }
+  scope :by_period_desc, -> { order('billing_periods.period DESC') }
   #
   scope :belongs_to_project, -> project { where(project_id: project).by_period }
   scope :belongs_to_projects, -> projects { where(project_id: projects).by_period }
   scope :belongs_to_office_and_frequency, -> o, f {
-    joins(:project)
-    .where('projects.office_id = ? AND billing_periods.billing_frequency_id = ?', o, f).order('billing_periods.period DESC')
+    joins(:billing_frequency, :project)
+    .where('projects.office_id = ? AND billing_periods.billing_frequency_id = ?', o, f)
+    .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_")
+    .by_period_desc
   }
   scope :belongs_to_office, -> o {
-    joins(:project).where('projects.office_id = ?', o).order('billing_periods.period DESC')
+    joins(:billing_frequency, :project)
+    .where('projects.office_id = ?', o)
+    .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_")
+    .by_period_desc
   }
   scope :belongs_to_frequency, -> f {
-    where('billing_periods.billing_frequency_id = ?', f).order('billing_periods.period DESC')
+    joins(:billing_frequency)
+    .where('billing_periods.billing_frequency_id = ?', f)
+    .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_")
+    .by_period_desc
   }
   scope :readings_unbilled_by_subscriber, -> s {
     joins(:billing_frequency, :readings)

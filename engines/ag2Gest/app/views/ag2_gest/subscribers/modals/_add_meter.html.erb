@@ -126,7 +126,7 @@
 
       <%= f.input :reading_date, :as => :hidden, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', id: 'input_add_reading_date' }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.association :billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :billing_period, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
