@@ -100,7 +100,7 @@
         <div id="collapseQuitMeter" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <% ReadingIncidenceType.all.each do |incidence_type| %>
+              <% @reading_incidence.each do |incidence_type| %>
                 <li style="width:50%;float:left;">
                   <label class="checkbox">
                     <%= check_box_tag 'incidence_type_ids[]', incidence_type.id %>
@@ -123,7 +123,7 @@
 </div>
 <script>
   jQuery(function($) {
-    $("#submit_quit").click(function () { 
+    $("#submit_quit").click(function () {
       var reading_index = $("#input_quit_reading_index").val();
       var reading_date = $("#input_quit_reading_date").val();
       var billing_period= $("#input_quit_billing_period").val();

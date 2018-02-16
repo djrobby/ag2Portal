@@ -1,6 +1,6 @@
 <script>
-  var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
-  var tryAgain = '<%= t("should_try_again") %>';
+var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
+var tryAgain = '<%= t("should_try_again") %>';
 
 $(document).ready(function() {
   // Select2
@@ -58,10 +58,7 @@ jQuery(function($) {
     return false;
   });
 });
-
 </script>
-
-
 
 <div id="newAccountModal" class="modal fade" style="display: none;">
   <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'modal-footer-right form-inline' } do |f| %>
@@ -77,7 +74,7 @@ jQuery(function($) {
       <%= f.input :subscriber_id, :as => :hidden, :input_html => { id: 'fnt_id', :value => @subscriber.id } %>
 
 
-      <%= f.association :bank_account_class, required: true, collection: BankAccountClass.all(order: 'name'), input_html: { class: 'x-large-text-field' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :bank_account_class, required: true, collection: @bank_account_classes, label_method: :full_name, value_method: :id, input_html: { class: 'x-large-text-field', :id => 'fnt_bank_account_class' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <%= f.input :country_id, :required => true, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2", :id => 'fnt_bank_country' }, :label_html => { :class => 'form-label' } %>
 
@@ -105,7 +102,3 @@ jQuery(function($) {
     </div>
   <% end %>
 </div>
-
-
-
-

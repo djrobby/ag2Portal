@@ -17,7 +17,10 @@ class StreetType < ActiveRecord::Base
   validates :street_type_code,        :presence => true,
                                       :length => { :minimum => 2 },
                                       :uniqueness => true
+  # Scopes
+  scope :by_code, -> { order(:street_type_code) }
 
+  # Callbacks
   before_validation :street_type_code_to_uppercase
   before_destroy :check_for_dependent_records
 

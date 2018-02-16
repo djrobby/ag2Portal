@@ -16,7 +16,7 @@
   });
 
   jQuery(function($) {
-    
+
     // when the #fnt_town field changes
     $("#fnt_town").change(function() {
       // make a POST call and replace the content
@@ -89,9 +89,9 @@
     <%= f.input :phone, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone', :value => !@subscriber.phone.blank? ? @subscriber.phone : @subscriber.try(:client).try(:phone) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular', :value => !@subscriber.cellular.blank? ? @subscriber.cellular : @subscriber.try(:client).try(:cellular) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email', :value => !@subscriber.email.blank? ? @subscriber.email : @subscriber.try(:client).try(:email) }, :label_html => { :class => 'form-label' } %>
-    
-    <%= f.association :postal_street_type, collection: StreetType.all(order: 'street_type_code'), selected: !@subscriber.postal_street_type_id.blank? ? @subscriber.postal_street_type_id : @subscriber.try(:client).try(:street_type_id), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
-    
+
+    <%= f.association :postal_street_type, collection: @street_types, :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
+
     <%= f.input :postal_street_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_street_name', :value => !@subscriber.postal_street_name.blank? ? @subscriber.postal_street_name : @subscriber.try(:client).try(:street_name) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :postal_street_number, required: true, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number', :value => !@subscriber.postal_street_number.blank? ? @subscriber.postal_street_number : @subscriber.try(:client).try(:street_number) }, :label_html => { :class => 'form-label' } %>
     <%= f.input :postal_building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building', :value => !@subscriber.postal_building.blank? ? @subscriber.postal_building : @subscriber.try(:client).try(:building) }, :label_html => { :class => 'form-label' } %>

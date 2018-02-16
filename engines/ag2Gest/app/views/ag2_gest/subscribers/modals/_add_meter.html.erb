@@ -80,7 +80,7 @@
       //$('#collapseAddMeter').collapse('hide');
 
     });
-    
+
     // when #input_add_meter changes
     $("#input_add_meter").change(function() {
       // make a POST call and replace the content
@@ -120,7 +120,7 @@
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' } %>
       <%#= f.association :meter, required: true, collection: Meter.from_office(session[:office]).availables, input_html: { class: 'x-large-text-field sel2', id: 'sel2_association' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.contracting_request.meter') %>
 
-      <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2', id: 'input_add_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
+      <%= f.input :meter_location_id, required: true, collection: @meter_location, input_html: { class: 'x-large-text-field sel2', id: 'input_add_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
       <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', id: 'input_add_reading_index', min: '0', step: 'any' }, :label_html => { :class => 'form-label' } %>
 
@@ -135,7 +135,7 @@
         <div id="collapseAddMeter" class="accordion-body collapse">
           <div class="accordion-inner">
             <ul class="unstyled">
-              <% ReadingIncidenceType.all.each do |incidence_type| %>
+              <% @reading_incidence.each do |incidence_type| %>
                 <li style="width:50%;float:left;">
                   <label class="checkbox">
                     <%= check_box_tag 'incidence_type_ids[]', incidence_type.id %>
@@ -158,7 +158,7 @@
 </div>
 <script>
   jQuery(function($) {
-    $("#submit_add").click(function () { 
+    $("#submit_add").click(function () {
       var meter = $("#input_add_meter").val();
       var meter_location = $("#input_add_meter_location").val();
       var reading_index = $("#input_add_reading_index").val();

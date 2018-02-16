@@ -390,164 +390,200 @@
 
     $("#sub_load_postal_button").click(function(){
       var subscriber_id = $("#fnt_id").val();
-      if (subscriber_id == "")
-        subscriber_id = "0";
-        jQuery.getJSON('sub_load_postal/' + subscriber_id, function(data) {
-          var z = data.zipcodes;
-          var t = data.towns;
-          var p = data.provinces;
-          var r = data.regions;
-          var c = data.countries;
-          var z_id = data.zipcode_id;
-          var t_id = data.town_id;
-          var p_id = data.province_id;
-          var r_id = data.region_id;
-          var c_id = data.country_id;
+      if (subscriber_id == "") subscriber_id = "0";
+      jQuery.getJSON('sub_load_postal/' + subscriber_id, function(data) {
+        var z = data.zipcodes;
+        var t = data.towns;
+        var p = data.provinces;
+        var r = data.regions;
+        var c = data.countries;
+        var s = data.street_types;
+        var z_id = data.zipcode_id;
+        var t_id = data.town_id;
+        var p_id = data.province_id;
+        var r_id = data.region_id;
+        var c_id = data.country_id;
+        var s_id = data.street_type_id;
 
-          // zipcodes
-          $("#fnt_zipcode").html("");
-          $("#fnt_zipcode").val("val", "");
-          $("#fnt_zipcode").append($('<option></option>').val("").html(""));
-          if (!z.length) {
-            $.each(data, function(id, option) {
-              if (id == 'zipcodes' && option != "") {
-                $("#fnt_zipcode").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(z, function(id, option) {
-                $("#fnt_zipcode").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (z_id != 0) $("#fnt_zipcode").val(z_id);
-          // towns
-          $("#fnt_town").html("");
-          $("#fnt_town").val("val", "");
-          $("#fnt_town").append($('<option></option>').val("").html(""));
-          if (!t.length) {
-            $.each(data, function(id, option) {
-              if (id == 'towns' && option != "") {
-                $("#fnt_town").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(t, function(id, option) {
-                $("#fnt_town").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (t_id != 0) $("#fnt_town").val(t_id);
-          // provinces
-          $("#fnt_province").html("");
-          $("#fnt_province").val("val", "");
-          $("#fnt_province").append($('<option></option>').val("").html(""));
-          if (!p.length) {
-            $.each(data, function(id, option) {
-              if (id == 'provinces' && option != "") {
-                $("#fnt_province").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(p, function(id, option) {
-                $("#fnt_province").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (p_id != 0) $("#fnt_province").val(p_id);
-          // regions
-          $("#fnt_region").html("");
-          $("#fnt_region").val("val", "");
-          $("#fnt_region").append($('<option></option>').val("").html(""));
-          if (!r.length) {
-            $.each(data, function(id, option) {
-              if (id == 'regions' && option != "") {
-                $("#fnt_region").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(r, function(id, option) {
-                $("#fnt_region").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (r_id != 0) $("#fnt_region").val(r_id);
-          // countries
-          $("#fnt_country").html("");
-          $("#fnt_country").val("val", "");
-          $("#fnt_country").append($('<option></option>').val("").html(""));
-          if (!c.length) {
-            $.each(data, function(id, option) {
-              if (id == 'countries' && option != "") {
-                $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(c, function(id, option) {
-                $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (c_id != 0) $("#fnt_country").val(c_id);
+        // zipcodes
+        $("#fnt_zipcode").html("");
+        $("#fnt_zipcode").val("val", "");
+        $("#fnt_zipcode").append($('<option></option>').val("").html(""));
+        if (!z.length) {
+          $.each(data, function(id, option) {
+            if (id == 'zipcodes' && option != "") {
+              $("#fnt_zipcode").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(z, function(id, option) {
+              $("#fnt_zipcode").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (z_id != 0) $("#fnt_zipcode").val(z_id);
+        // towns
+        $("#fnt_town").html("");
+        $("#fnt_town").val("val", "");
+        $("#fnt_town").append($('<option></option>').val("").html(""));
+        if (!t.length) {
+          $.each(data, function(id, option) {
+            if (id == 'towns' && option != "") {
+              $("#fnt_town").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(t, function(id, option) {
+              $("#fnt_town").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (t_id != 0) $("#fnt_town").val(t_id);
+        // provinces
+        $("#fnt_province").html("");
+        $("#fnt_province").val("val", "");
+        $("#fnt_province").append($('<option></option>').val("").html(""));
+        if (!p.length) {
+          $.each(data, function(id, option) {
+            if (id == 'provinces' && option != "") {
+              $("#fnt_province").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(p, function(id, option) {
+              $("#fnt_province").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (p_id != 0) $("#fnt_province").val(p_id);
+        // regions
+        $("#fnt_region").html("");
+        $("#fnt_region").val("val", "");
+        $("#fnt_region").append($('<option></option>').val("").html(""));
+        if (!r.length) {
+          $.each(data, function(id, option) {
+            if (id == 'regions' && option != "") {
+              $("#fnt_region").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(r, function(id, option) {
+              $("#fnt_region").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (r_id != 0) $("#fnt_region").val(r_id);
+        // countries
+        $("#fnt_country").html("");
+        $("#fnt_country").val("val", "");
+        $("#fnt_country").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'countries' && option != "") {
+              $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+              $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (c_id != 0) $("#fnt_country").val(c_id);
+        // street types
+        $("#fnt_street_type").html("");
+        $("#fnt_street_type").val("val", "");
+        $("#fnt_street_type").append($('<option></option>').val("").html(""));
+        if (!s.length) {
+          $.each(data, function(id, option) {
+            if (id == 'street_types' && option != "") {
+              $("#fnt_street_type").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+            $("#fnt_street_type").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (s_id != 0) $("#fnt_street_type").val(s_id);
+
         return false;
       });
     });
 
     $("#sub_load_bank_button").click(function(){
       var subscriber_id = $("#fnt_id").val();
-      if (subscriber_id == "")
-        subscriber_id = "0";
-        jQuery.getJSON('sub_load_bank/' + subscriber_id, function(data) {
-          var b = data.banks;
-          var bo = data.bank_offices;
-          var c = data.countries;
-          var b_id = data.bank_id;
-          var bo_id = data.bank_office_id;
-          var c_id = data.country_id;
+      if (subscriber_id == "") subscriber_id = "0";
+      jQuery.getJSON('sub_load_bank/' + subscriber_id, function(data) {
+        var b = data.banks;
+        var bo = data.bank_offices;
+        var bac = data.bank_account_classes;
+        var c = data.countries;
+        var b_id = data.bank_id;
+        var bo_id = data.bank_office_id;
+        var bac_id = data.bank_account_class_id;
+        var c_id = data.country_id;
 
-          // zipcodes
-          $("#fnt_bank").html("");
-          $("#fnt_bank").val("val", "");
-          $("#fnt_bank").append($('<option></option>').val("").html(""));
-          if (!b.length) {
-            $.each(data, function(id, option) {
-              if (id == 'banks' && option != "") {
-                $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(b, function(id, option) {
-                $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (b_id != 0) $("#fnt_bank").val(z_id);
-          // towns
-          $("#fnt_bank_office").html("");
-          $("#fnt_bank_office").val("val", "");
-          $("#fnt_bank_office").append($('<option></option>').val("").html(""));
-          if (!bo.length) {
-            $.each(data, function(id, option) {
-              if (id == 'bank_offices' && option != "") {
-                $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(bo, function(id, option) {
-                $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (bo_id != 0) $("#fnt_bank_office").val(t_id);
-          // countries
-          $("#fnt_bank_country").html("");
-          $("#fnt_bank_country").val("val", "");
-          $("#fnt_bank_country").append($('<option></option>').val("").html(""));
-          if (!c.length) {
-            $.each(data, function(id, option) {
-              if (id == 'countries' && option != "") {
-                $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
-              }
-            });
-          } else {
-            $.each(c, function(id, option) {
-                $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
-            });
-          }
-          if (c_id != 0) $("#fnt_bank_country").val(c_id);
+        // banks
+        $("#fnt_bank").html("");
+        $("#fnt_bank").val("val", "");
+        $("#fnt_bank").append($('<option></option>').val("").html(""));
+        if (!b.length) {
+          $.each(data, function(id, option) {
+            if (id == 'banks' && option != "") {
+              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(b, function(id, option) {
+              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (b_id != 0) $("#fnt_bank").val(b_id);
+        // bank offices
+        $("#fnt_bank_office").html("");
+        $("#fnt_bank_office").val("val", "");
+        $("#fnt_bank_office").append($('<option></option>').val("").html(""));
+        if (!bo.length) {
+          $.each(data, function(id, option) {
+            if (id == 'bank_offices' && option != "") {
+              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(bo, function(id, option) {
+              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (bo_id != 0) $("#fnt_bank_office").val(bo_id);
+        // bank account classes
+        $("#fnt_bank_account_class").html("");
+        $("#fnt_bank_account_class").val("val", "");
+        $("#fnt_bank_account_class").append($('<option></option>').val("").html(""));
+        if (!bac.length) {
+          $.each(data, function(id, option) {
+            if (id == 'bank_account_classes' && option != "") {
+              $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(bac, function(id, option) {
+              $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (bac_id != 0) $("#fnt_bank_account_class").val(bac_id);
+        // countries
+        $("#fnt_bank_country").html("");
+        $("#fnt_bank_country").val("val", "");
+        $("#fnt_bank_country").append($('<option></option>').val("").html(""));
+        if (!c.length) {
+          $.each(data, function(id, option) {
+            if (id == 'countries' && option != "") {
+              $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(c, function(id, option) {
+              $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        if (c_id != 0) $("#fnt_bank_country").val(c_id);
+
         return false;
       });
     });
@@ -637,6 +673,4 @@
   $("#submit-simple-bill").click(function () {
     $("form.simple_bill").submit();
   });
-
-
 </script>

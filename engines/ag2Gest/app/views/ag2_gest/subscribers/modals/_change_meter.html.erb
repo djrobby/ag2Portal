@@ -37,7 +37,7 @@ jQuery(function($) {
   </div>
   <%= simple_form_for :reading, url: { action: :change_meter, controller: 'subscribers'}, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_change_meter' } do |f| %>
     <div class="modal-body">
- 
+
       <h4><%= t('activerecord.attributes.subscriber.quit_meter') %></h4>
 
       <%= f.input :q_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', :id => 'input_q_reading_index', min: '0', step: 'any'  }, :label_html => { :class => 'form-label' } %>
@@ -52,7 +52,7 @@ jQuery(function($) {
         </div>
         <div id="collapseChangeMeterQ" class="accordion-body collapse">
           <div class="accordion-inner">
-            <%= f.input :q_reading_incidence_type_ids, collection: ReadingIncidenceType.all, as: :check_boxes, label: false, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' }, include_blank: true %>
+            <%= f.input :q_reading_incidence_type_ids, collection: @reading_incidence, as: :check_boxes, label: false, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' }, include_blank: true %>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@ jQuery(function($) {
       <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_c_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association_change' } %>
 
-      <%= f.input :meter_location_id, required: true, collection: MeterLocation.all, input_html: { class: 'x-large-text-field sel2', id: 'input_c_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
+      <%= f.input :meter_location_id, required: true, collection: @meter_location, input_html: { class: 'x-large-text-field sel2', id: 'input_c_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
       <%= f.input :a_reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field', :id => 'input_a_reading_index', min: '0', step: 'any' }, :label_html => { :class => 'form-label' } %>
 
@@ -75,7 +75,7 @@ jQuery(function($) {
         </div>
         <div id="collapseChangeMeterA" class="accordion-body collapse">
           <div class="accordion-inner">
-            <%= f.input :a_reading_incidence_type_ids, collection: ReadingIncidenceType.all, as: :check_boxes, label: false, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' }, include_blank: true %>
+            <%= f.input :a_reading_incidence_type_ids, collection: @reading_incidence, as: :check_boxes, label: false, input_html: { class: 'x-large-text-field sel2'}, label_html: { class: 'form-label' }, include_blank: true %>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ jQuery(function($) {
 </div>
 <script>
   jQuery(function($) {
-    $("#submit_change_meter").click(function () { 
+    $("#submit_change_meter").click(function () {
       var q_reading_index = $("#input_q_reading_index").val();
       var q_reading_date = $("#input_q_reading_date").val();
       var q_billing_period = $("#input_q_billing_period").val();
@@ -110,4 +110,3 @@ jQuery(function($) {
     });
   });
 </script>
-

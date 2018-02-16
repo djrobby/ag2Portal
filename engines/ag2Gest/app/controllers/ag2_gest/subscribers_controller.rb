@@ -687,19 +687,23 @@ module Ag2Gest
 
     def sub_load_postal
       subscriber = Subscriber.find(params[:subscriber_id])
+      street_type_id = 0
       zipcode_id = 0
       town_id = 0
       province_id = 0
       region_id = 0
       country_id = 0
+
+      street_type_id = !subscriber.postal_street_type_id.blank? ? subscriber.postal_street_type_id : subscriber.client.street_type_id
       zipcode_id = !subscriber.postal_zipcode_id.blank? ? subscriber.postal_zipcode_id : subscriber.client.zipcode_id
       town_id = !subscriber.postal_town_id.blank? ? subscriber.postal_town_id : subscriber.client.town_id
       province_id = !subscriber.postal_province_id.blank? ? subscriber.postal_province_id : subscriber.client.province_id
       region_id = !subscriber.postal_region_id.blank? ? subscriber.postal_region_id : subscriber.client.region_id
       country_id = !subscriber.postal_country_id.blank? ? subscriber.postal_country_id : subscriber.client.country_id
-      @json_data = { "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array, "regions" => regions_array,
-                      "countries" => country_array, "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
-                      "region_id" => region_id, "country_id" => country_id }
+      @json_data = { "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
+                     "regions" => regions_array, "countries" => country_array, "street_types" => street_types_array,
+                      "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
+                      "region_id" => region_id, "country_id" => country_id, "street_type_id" => street_type_id }
       render json: @json_data
     end
 
@@ -707,9 +711,12 @@ module Ag2Gest
       # subscriber = Subscriber.find(params[:subscriber_id])
       bank_id = 0
       bank_office_id = 0
+      bank_account_class_id = 0
       country_id = 0
-      @json_data = { "banks" => banks_array, "bank_offices" => bank_offices_array, "countries" => country_array,
-                     "bank_id" => bank_id, "bank_office_id" => bank_office_id, "country_id" => country_id }
+      @json_data = { "banks" => banks_array, "bank_offices" => bank_offices_array,
+                     "bank_account_classes" => bank_account_classes_array, "countries" => country_array,
+                     "bank_id" => bank_id, "bank_office_id" => bank_office_id,
+                     "bank_account_class_id" => bank_account_class_id, "country_id" => country_id }
       render json: @json_data
     end
 
@@ -724,7 +731,8 @@ module Ag2Gest
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil
       @reading = Reading.new
-      @street_types = StreetType.order(:street_type_code)
+      # @street_types = StreetType.order(:street_type_code)
+      @street_types = []
       @towns = []
       @provinces = []
       @zipcodes = []
@@ -732,9 +740,12 @@ module Ag2Gest
       @countries = []
       @bank = []
       @bank_offices = []
+      @bank_account_classes = []
       @client = Client.find(@subscriber.client_id)
       @client_bank_account = ClientBankAccount.new
       @billing_period = billing_periods_dropdown(@subscriber.office_id, @subscriber.billing_frequency_id)
+      @meter_location = MeterLocation.all
+      @reading_incidence = ReadingIncidenceType.all
       # @billing_period = BillingPeriod.order('period DESC').all
       @reading_type = ReadingType.single_manual_reading
       @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber)
@@ -1306,36 +1317,48 @@ module Ag2Gest
     private
 
     def towns_dropdown
-      Town.order(:name).includes(:province).select("towns.id, towns.name, towns.province_id")
-      # Town.order(:name).includes(:province)
+      Town.order('towns.name').joins(:province) \
+          .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
     end
 
     def provinces_dropdown
-      Province.order(:name).includes(:region).select("provinces.id, provinces.name, provinces.region_id")
-      # Province.order(:name).includes(:region)
+      Province.order('provinces.name').joins(:region)
+              .select("provinces.id, CONCAT(provinces.name, ' (', regions.name, ')') to_label_")
     end
 
     def zipcodes_dropdown
-      Zipcode.order(:zipcode).includes(:town, :province).select("zipcodes.id, zipcodes.zipcode, zipcodes.town_id, zipcodes.province_id")
-      # Zipcode.order(:zipcode).includes(:town,:province)
+      Zipcode.order(:zipcode).joins(:town, :province) \
+             .select("zipcodes.id, CONCAT(zipcodes.zipcode, ' - ', towns.name, ' (', provinces.name, ')') to_label_")
     end
 
     def regions_dropdown
-      Region.order(:name).includes(:country).select("regions.id, regions.name, regions.country_id")
+      Region.order('regions.name').joins(:country) \
+            .select("regions.id, CONCAT(regions.name, ' (', countries.name, ')') to_label_")
     end
 
     def countries_dropdown
-      Country.order(:name).select("id, code, name")
+      Country.order(:name) \
+             .select("id, CONCAT(code, ' ', name) to_label_")
+    end
+
+    def street_types_dropdown
+      StreetType.order(:street_type_code) \
+                .select("id, CONCAT(street_type_code, ' (', street_type_description, ')') to_label_")
     end
 
     def banks_dropdown
-      Bank.order(:code).select("id, code, name")
-      # Bank.order(:code)
+      Bank.order(:code) \
+          .select("id, CONCAT(code, ' ', name) to_label_")
     end
 
     def bank_offices_dropdown
-      BankOffice.order(:bank_id, :code).includes(:bank, :country).select("bank_offices.id, bank_offices.code, bank_offices.name, bank_offices.bank_id, bank_offices.country_id ")
-      # BankOffice.order(:bank_id, :code).includes(:bank,:country)
+      BankOffice.order('bank_offices.bank_id, bank_offices.code').joins(:bank)
+                .select("bank_offices.id, CONCAT(bank_offices.code, ' ', bank_offices.name, ' (', banks.code, ')') to_label_")
+    end
+
+    def bank_account_classes_dropdown
+      BankAccountClass.order(:name) \
+                      .select("id, name to_label_")
     end
 
     def billing_periods_dropdown(o, f)
@@ -1386,7 +1409,7 @@ module Ag2Gest
       _banks = banks_dropdown
       _array = []
       _banks.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -1395,16 +1418,16 @@ module Ag2Gest
       _bank_offices = bank_offices_dropdown
       _array = []
       _bank_offices.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
 
-    def zipcodes_array
-      _zipcodes = zipcodes_dropdown
+    def bank_account_classes_array
+      _bac = bank_account_classes_dropdown
       _array = []
-      _zipcodes.each do |i|
-        _array = _array << [i.id, i.to_label]
+      _bac.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -1413,7 +1436,7 @@ module Ag2Gest
       _towns = towns_dropdown
       _array = []
       _towns.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -1422,7 +1445,16 @@ module Ag2Gest
       _provinces = provinces_dropdown
       _array = []
       _provinces.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def zipcodes_array
+      _zipcodes = zipcodes_dropdown
+      _array = []
+      _zipcodes.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -1431,7 +1463,7 @@ module Ag2Gest
       _regions = regions_dropdown
       _array = []
       _regions.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -1440,7 +1472,16 @@ module Ag2Gest
       _country = countries_dropdown
       _array = []
       _country.each do |i|
-        _array = _array << [i.id, i.full_name]
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def street_types_array
+      _street_types = street_types_dropdown
+      _array = []
+      _street_types.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
