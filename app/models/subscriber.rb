@@ -99,7 +99,7 @@ class Subscriber < ActiveRecord::Base
   scope :availables, -> { where("ending_at IS NULL OR ending_at >= ?", Date.today)}
   scope :unavailables, -> { where("NOT ending_at IS NULL OR active = false") }
   scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today) }
-  scope :inactivated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = false AND meter_id IS NULL", Date.today) }
+  scope :deactivated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = false AND meter_id IS NULL", Date.today) }
   scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
   # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
@@ -113,6 +113,11 @@ class Subscriber < ActiveRecord::Base
   }
   scope :activated_by_centers_and_routes_with_meter, -> c, r {
     activated_with_meter.where("center_id IN (?) AND reading_route_id IN (?)", c, r).by_reading_sequence
+  }
+  # *** As a replacement for the .find(params[:id]), with joins  ***
+  scope :find_with_joins, -> i {
+    joins(:client)
+    .find(i)
   }
 
   # Callbacks
@@ -200,6 +205,9 @@ class Subscriber < ActiveRecord::Base
 
   def activated?
     (ending_at.nil? || ending_at >= Date.today) && active
+  end
+  def deactivated?
+    (ending_at.nil? || ending_at >= Date.today) && !active
   end
 
   #
@@ -616,6 +624,10 @@ class Subscriber < ActiveRecord::Base
     end
     integer :caliber_id do
       meter_caliber
+    end
+    boolean :active
+    boolean :activated do
+      activated?
     end
     string :sort_no do
       subscriber_code

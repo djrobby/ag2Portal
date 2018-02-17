@@ -264,7 +264,7 @@ module Ag2Gest
       @service_point = ServicePoint.find(params[:id])
       @billing_period = BillingPeriod.find(params[:reading][:billing_period_id])
       @meter = Meter.find params[:reading][:meter_id] rescue nil
-      @subscriber = @service_point.subscribers.inactivated
+      @subscriber = @service_point.subscribers.deactivated
       project = params[:reading][:project_id] || @billing_period.project_id
       save_all_ok = false
 
