@@ -16,6 +16,11 @@ es:
         tariff_type: "Tipo de tarifa"
         label_others: "Otros"
         add_tariff: "Modificar tarifas"
+        active_only: "Activos"
+        inactive_only: "Inactivos"
+        subscribed_only: "Alta"
+        unsubscribed_only: "Baja"
+        all: "Todos"
       show:
         title: "Abonado"
         btn_edit: "Editar Abonado"

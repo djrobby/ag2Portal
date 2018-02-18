@@ -133,6 +133,12 @@
           <!-- Remove filter -->
           <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <!-- Active subscriber filters -->
+        <%= link_to t('ag2_gest.subscribers.index.all'), controller: "subscribers", action: "index", ifilter: "all", :remote => true %> |
+        <%= link_to t('ag2_gest.subscribers.index.active_only'), controller: "subscribers", action: "index", ifilter: "active", :remote => true %> |
+        <%= link_to t('ag2_gest.subscribers.index.inactive_only'), controller: "subscribers", action: "index", ifilter: "inactive", :remote => true %> |
+        <%= link_to t('ag2_gest.subscribers.index.subscribed_only'), controller: "subscribers", action: "index", ifilter: "subscribed", :remote => true %> |
+        <%= link_to t('ag2_gest.subscribers.index.unsubscribed_only'), controller: "subscribers", action: "index", ifilter: "unsubscribed", :remote => true %>
         <!-- Report -->
         <%= label_tag I18n.t("ag2_gest.subscribers.report.report"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field shrinked sel3' %>
@@ -151,5 +157,3 @@
 
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
-
-

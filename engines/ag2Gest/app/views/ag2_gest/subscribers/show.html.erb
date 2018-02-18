@@ -2,6 +2,16 @@
 <% session[:return_to_subscriber_url] = "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>
 
 <style>
+  .tr-no-top-border td {
+    border-top: none !important;
+  }
+  .td-no-top-border {
+    border-top: none !important;
+  }
+  td[no-top-border] {
+    border-top: none !important;
+  }
+
   a.pull-right {
     margin-bottom: 20px;
   }
@@ -156,7 +166,7 @@
   <div class="tab-pane fade active in" id="details">
     <table class="table">
       <tbody>
-        <tr>
+        <tr class="tr-no-top-border">
           <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
           <td><%= link_to @subscriber.water_supply_contract.contracting_request.try(:full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) unless @subscriber.try(:water_supply_contract).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
@@ -211,22 +221,22 @@
   </div>
 
   <!-- TARIFFS -->
-  <div class="tab-pane fade active" id="tariffs">
+  <div class="tab-pane fade" id="tariffs">
     <%= render 'show_tab_tariffs' %>
   </div>
 
   <!-- READINGS -->
-  <div class="tab-pane fade active" id="readings">
+  <div class="tab-pane fade" id="readings">
     <%= render 'show_tab_readings' %>
   </div>
 
   <!-- INVOICES / Link to CHARGEINVOICE-->
-  <div class="tab-pane fade active" id="bills">
+  <div class="tab-pane fade" id="bills">
     <%= render 'show_tab_bills' %>
   </div>
 
   <!-- POSTAL ADDRESS (CLIENT) -->
-  <div class="tab-pane fade active" id="direction">
+  <div class="tab-pane fade" id="direction">
     <a id="sub_load_postal_button" href="#changeDataSupply" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_data_supply') %></a>
     <table class="table table-striped shrinked">
     <!-- <table class="table"> -->
@@ -275,7 +285,7 @@
   </div>
 
   <!-- ClientBankAccount -->
-  <div class="tab-pane fade active" id="debits">
+  <div class="tab-pane fade" id="debits">
     <div class="row-fluid">
       <div class="span12">
         <a id="sub_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
@@ -317,7 +327,7 @@
   </div>
 
   <!-- Notes(Está en blanco) -->
-  <div class="tab-pane fade active" id="notes">
+  <div class="tab-pane fade" id="notes">
   </div>
 
 </div>
@@ -379,8 +389,13 @@
     }
   }
 
-  $(document).ready(function () {
+  // When DOM is fully loaded
+  $(window).load(function() {
+    // Charge aux dropdowns
+  }
 
+  // When DOM is loaded
+  $(document).ready(function () {
     $("#billable_button").click(function(){
       var subscriber_id = "<%= @subscriber.id %>"
       var result = confirm("<%= t('activerecord.attributes.subscriber.alert_billable')%>");

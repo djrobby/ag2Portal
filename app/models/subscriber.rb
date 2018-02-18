@@ -203,11 +203,22 @@ class Subscriber < ActiveRecord::Base
     subscriber_code.blank? ? "" : subscriber_code[0..3] + '-' + subscriber_code[4..10]
   end
 
+  # Subscribed (suscripto, de alta) & active
   def activated?
-    (ending_at.nil? || ending_at >= Date.today) && active
+    subscribed? && active
   end
+  # Subscribed (suscripto, de alta) & inactive
   def deactivated?
-    (ending_at.nil? || ending_at >= Date.today) && !active
+    subscribed? && !active
+  end
+
+  # Subscribed (suscripto, de alta)
+  def subscribed?
+    (ending_at.nil? || ending_at >= Date.today)
+  end
+  # Unsubscribed (anulado, de baja)
+  def unsubscribed?
+    !ending_at.nil?
   end
 
   #
@@ -628,6 +639,15 @@ class Subscriber < ActiveRecord::Base
     boolean :active
     boolean :activated do
       activated?
+    end
+    boolean :deactivated do
+      deactivated?
+    end
+    boolean :subscribed do
+      subscribed?
+    end
+    boolean :unsubscribed do
+      unsubscribed?
     end
     string :sort_no do
       subscriber_code

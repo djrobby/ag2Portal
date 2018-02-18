@@ -16,6 +16,11 @@ en:
         tariff_type: "Tariff type"
         label_others: "Otros"
         add_tariff: "Edit Tariff"
+        active_only: "Active"
+        inactive_only: "Inactive"
+        subscribed_only: "Subscribed"
+        unsubscribed_only: "Unsubscribed"
+        all: "All"
       show:
         title: "Subscriber"
         btn_edit: "Editar Subscriber"

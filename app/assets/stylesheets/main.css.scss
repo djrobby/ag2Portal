@@ -9,8 +9,6 @@
 /*
  * Globals
  */
-body {
-}
 #main {
   padding-bottom: 56px;
 }
@@ -104,17 +102,17 @@ th .current {
   padding-right: 12px;
   background-repeat: no-repeat;
   background-position: right center;
-  color: #333333;  
+  color: #333333;
 }
-th .asc { 
+th .asc {
   background-image: image-url("icon/glyph/black/halflings/up_arrow.gif");
 }
-th .desc { 
+th .desc {
   background-image: image-url("icon/glyph/black/halflings/down_arrow.gif");
 }
 th .current:hover,
 th .current:focus {
-  color: #a67326;  
+  color: #a67326;
 }
 
 /*
@@ -206,7 +204,7 @@ th .current:focus {
 }
 .import-caution {
   font-weight: bold;
-  color: #da4f49;  
+  color: #da4f49;
 }
 
 /*
@@ -237,7 +235,7 @@ th .current:focus {
 }
 .track-caution {
   font-weight: bold;
-  color: #da4f49;  
+  color: #da4f49;
 }
 .light-box {
   padding: 20px 20px 0 20px;
@@ -521,7 +519,7 @@ span.column-tab {
 .blue-band {
   background-color: #0066b2;
   color: white;
-  padding: 5px 4px 5px 4px; 
+  padding: 5px 4px 5px 4px;
   margin: 0;
 }
 .blue-band a {
@@ -536,8 +534,8 @@ span.column-tab {
 }
 .yellow-band {
   background-color: #f8960c;
-  color: white;   
-  padding: 3px 4px 3px 4px; 
+  color: white;
+  padding: 3px 4px 3px 4px;
   margin: 0;
 }
 .yellow-band a {
@@ -548,7 +546,7 @@ span.column-tab {
 }
 .yellow-separator {
   background-color: #f8960c;
-  color: #f8960c;   
+  color: #f8960c;
 }
 .title-band-with-search {
   background-color: inherit;
@@ -656,7 +654,7 @@ table.fixed-wrapped {
   table-layout: fixed;
 }
 table.fixed-wrapped td {
-  word-wrap: break-word;  
+  word-wrap: break-word;
 }
 table.fixed {
   table-layout: fixed;
@@ -676,7 +674,7 @@ table.fixed td {
 }
 .yellow-row {
   background-color: #f8960c;
-  color: white;   
+  color: white;
   margin: 0;
   font-size: 14px;
   font-family: inherit;
@@ -685,10 +683,10 @@ table.fixed td {
   text-rendering: optimizelegibility;
 }
 .blue-row .blue-padded {
-  padding: 5px 4px 5px 4px;   
+  padding: 5px 4px 5px 4px;
 }
 .yellow-row .yellow-padded {
-  padding: 3px 4px 3px 4px; 
+  padding: 3px 4px 3px 4px;
 }
 .inactive-row {
   color: #777777;
@@ -772,16 +770,16 @@ tfoot {
   font-weight: bold;
   /*line-height: 20px;*/
   color: inherit;
-  text-rendering: optimizelegibility;  
+  text-rendering: optimizelegibility;
 }
 /*
  * Show Tables (odd & even columns) blue background
  */
 .TFtableCol {
-  width:100%; 
-  border-collapse:collapse; 
+  width:100%;
+  border-collapse:collapse;
 }
-.TFtableCol td { 
+.TFtableCol td {
   padding:7px;
   border:#4e95f4 1px solid;
 }
@@ -790,7 +788,7 @@ tfoot {
   background: #b8d1f3;
 }
 /*  Define the background color for all the ODD table columns  */
-.TFtableCol tr td:nth-child(odd) { 
+.TFtableCol tr td:nth-child(odd) {
   background: #b8d1f3;
 }
 /*  Define the background color for all the EVEN table columns  */
@@ -801,9 +799,9 @@ tfoot {
  * Show Tables (odd & even columns) bold titles
  */
 .odd_even_table {
-  width:100%; 
+  width:100%;
 }
-.odd_even_table td { 
+.odd_even_table td {
 }
 /* improve visual readability for IE8 and below */
 .odd_even_table tr {
