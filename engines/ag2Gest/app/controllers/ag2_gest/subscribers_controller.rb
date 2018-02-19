@@ -748,7 +748,7 @@ module Ag2Gest
           end
         end
         data_accessor_for(Subscriber).include = [:street_directory, :meter]
-        order_by :sort_no, :asc
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscribers = @search.results
@@ -1409,7 +1409,7 @@ module Ag2Gest
       elsif (!o.blank? && f.blank?)
         billing_periods_by_office(o)
       elsif (o.blank? && !f.blank?)
-        billing_periods_by_frequenct(f)
+        billing_periods_by_frequency(f)
       else
         BillingPeriod.by_period_desc
       end

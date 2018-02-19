@@ -820,7 +820,9 @@ module Ag2Gest
       no = params[:No]
       project = params[:Project]
       period = params[:Period]
+      client_code = params[:ClientCode]
       client = params[:Client]
+      subscriber_code = params[:SubscriberCode]
       subscriber = params[:Subscriber]
       street_name = params[:StreetName]
       bank_account = params[:BankAccount] == t(:yes_on) ? true : false

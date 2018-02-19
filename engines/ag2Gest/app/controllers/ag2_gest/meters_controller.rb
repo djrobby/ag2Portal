@@ -137,6 +137,11 @@ module Ag2Gest
       @details = @meter.meter_details.paginate(:page => params[:page], :per_page => per_page).by_dates
       @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
       @child_meters = @meter.child_meters.paginate(:page => params[:page], :per_page => per_page).by_code
+      @reading = Reading.new
+      @billing_period = billing_periods_dropdown(@meter.office_id)
+      @reading_incidence = ReadingIncidenceType.all
+      @reading_type = ReadingType.single_manual_reading
+      @project_dropdown = projects_dropdown
 
       respond_to do |format|
         format.html # show.html.erb
@@ -341,6 +346,16 @@ module Ag2Gest
       end
     end
 
+    def projects_dropdown
+      if session[:office] != '0'
+        Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
+      elsif session[:company] != '0'
+        Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
+      else
+        session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
+      end
+    end
+
     def companies_dropdown
       if session[:company] != '0'
         _companies = Company.where(id: session[:company].to_i)
@@ -379,6 +394,18 @@ module Ag2Gest
 
     def offices_by_company(_company)
       Office.where(company_id: _company).order(:name)
+    end
+
+    def billing_periods_dropdown(o)
+      if !o.blank?
+        billing_periods_by_office(o)
+      else
+        BillingPeriod.by_period_desc
+      end
+    end
+
+    def billing_periods_by_office(o)
+      BillingPeriod.belongs_to_office(o)
     end
 
     # Keeps filter state

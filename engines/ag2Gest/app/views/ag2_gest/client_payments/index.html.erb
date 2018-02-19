@@ -426,7 +426,10 @@
           <!-- Period -->
           <%= label_tag "label_period", I18n.t("ag2_gest.invoices.index.label_period"), :class => 'form-label-under-sel2' %>
           <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-          <!-- Client -->
+          <!-- Client Code -->
+          <%= label_tag "label_client_code", I18n.t("ag2_gest.subscribers.index.subscriber_code"), :class => 'form-label' %>
+          <%= text_field_tag "ClientCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Client Name -->
           <%= label_tag "label_client", I18n.t("ag2_gest.invoices.index.label_client"), :class => 'form-label-under-sel2' %>
           <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
           <!-- Subscriber Code -->

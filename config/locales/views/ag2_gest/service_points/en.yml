@@ -2,21 +2,21 @@ en:
   ag2_gest:
     service_points:
       index:
-        title: "Meter"
-        btn_new: "New Metercontracting request type"
+        title: "Supply points"
+        btn_new: "New Supply point"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Service Points"
       show:
-        title: "Billable item"
-        btn_edit: "Edit Billable item"
-        btn_delete: "Delete Billable item"
-        return_to: "Back to Billable item"
+        title: "Supply point"
+        btn_edit: "Edit Supply point"
+        btn_delete: "Delete Supply point"
+        return_to: "Back to Supply point"
       edit:
-        title: "Edit Billable item"
-        btn_show: "Show Billable item"
+        title: "Edit Supply point"
+        btn_show: "Show Supply point"
       new:
-        title: "New Billable item"
-      back_to_main_page: "Back to Billable items"
+        title: "New Supply point"
+      back_to_main_page: "Back to Supply points"
       # generate_code_btn: "billable_item Code"
       # personal_info: "billable_item Info"
       # commercial_info: "Accounting & Commercial Info"

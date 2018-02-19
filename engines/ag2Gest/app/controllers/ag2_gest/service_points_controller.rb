@@ -656,8 +656,9 @@ module Ag2Gest
       @readings = @service_point.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
       @meter = @service_point.meter rescue nil
       @reading = Reading.new
-      @billing_period = BillingPeriod.order('period DESC').all
+      @billing_period = billing_periods_dropdown(@service_point.office_id)
       @reading_type = ReadingType.single_manual_reading
+      @reading_incidence = ReadingIncidenceType.all
       @project_dropdown = projects_dropdown
       @subscriber = @service_point.subscribers.activated.size > 1 ? nil : @service_point.subscribers.activated.first
       respond_to do |format|
@@ -828,6 +829,18 @@ module Ag2Gest
       else
         ReadingRoute.by_code
       end
+    end
+
+    def billing_periods_dropdown(o)
+      if !o.blank?
+        billing_periods_by_office(o)
+      else
+        BillingPeriod.by_period_desc
+      end
+    end
+
+    def billing_periods_by_office(o)
+      BillingPeriod.belongs_to_office(o)
     end
 
     def sort_column
