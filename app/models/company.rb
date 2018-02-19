@@ -15,7 +15,7 @@ class Company < ActiveRecord::Base
                   :created_by, :updated_by, :organization_id, :hd_email, :website,
                   :max_order_total, :max_order_price, :overtime_pct, :commercial_bill_code,
                   :void_invoice_code, :void_commercial_bill_code, :ledger_account_app_code,
-                  :r_last_name, :r_first_name, :r_fiscal_id,
+                  :r_last_name, :r_first_name, :r_fiscal_id, :ebill_code, :void_ebill_code,
                   :water_supply_contract_template_id, :water_connection_contract_template_id
   has_attached_file :logo, :styles => { :original => "160x160>", :medium => "120x120>", :small => "80x80>" }, :default_url => "/images/missing/:style/company.png"
   attr_accessor :logo_cache
@@ -82,7 +82,15 @@ class Company < ActiveRecord::Base
   validates :invoice_code,          :presence => true,
                                     :length => { :minimum => 2, :maximum => 3 },
                                     :uniqueness => { :scope => :organization_id }
+  validates :void_invoice_code,     :length => { :minimum => 2, :maximum => 3 }, :if => "!void_invoice_code.blank?",
+                                    :uniqueness => { :scope => :organization_id }
   validates :commercial_bill_code,  :length => { :minimum => 2, :maximum => 3 }, :if => "!commercial_bill_code.blank?",
+                                    :uniqueness => { :scope => :organization_id }
+  validates :void_commercial_bill_code, :length => { :minimum => 2, :maximum => 3 }, :if => "!void_commercial_bill_code.blank?",
+                                    :uniqueness => { :scope => :organization_id }
+  validates :ebill_code,            :length => { :minimum => 2, :maximum => 3 }, :if => "!ebill_code.blank?",
+                                    :uniqueness => { :scope => :organization_id }
+  validates :void_ebill_code,       :length => { :minimum => 2, :maximum => 3 }, :if => "!void_ebill_code.blank?",
                                     :uniqueness => { :scope => :organization_id }
   validates :organization,          :presence => true
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180214103717) do
+ActiveRecord::Schema.define(:version => 20180219070859) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -895,9 +895,12 @@ ActiveRecord::Schema.define(:version => 20180214103717) do
     t.string   "r_fiscal_id"
     t.integer  "water_supply_contract_template_id"
     t.integer  "water_connection_contract_template_id"
+    t.string   "ebill_code"
+    t.string   "void_ebill_code"
   end
 
   add_index "companies", ["commercial_bill_code"], :name => "index_companies_on_commercial_bill_code"
+  add_index "companies", ["ebill_code"], :name => "index_companies_on_ebill_code"
   add_index "companies", ["fiscal_id"], :name => "index_companies_on_fiscal_id"
   add_index "companies", ["invoice_code"], :name => "index_companies_on_invoice_code"
   add_index "companies", ["ledger_account_app_code"], :name => "index_companies_on_ledger_account_app_code"
@@ -907,6 +910,7 @@ ActiveRecord::Schema.define(:version => 20180214103717) do
   add_index "companies", ["street_type_id"], :name => "index_companies_on_street_type_id"
   add_index "companies", ["town_id"], :name => "index_companies_on_town_id"
   add_index "companies", ["void_commercial_bill_code"], :name => "index_companies_on_void_commercial_bill_code"
+  add_index "companies", ["void_ebill_code"], :name => "index_companies_on_void_ebill_code"
   add_index "companies", ["void_invoice_code"], :name => "index_companies_on_void_invoice_code"
   add_index "companies", ["water_connection_contract_template_id"], :name => "index_companies_on_water_connection_contract_template_id"
   add_index "companies", ["water_supply_contract_template_id"], :name => "index_companies_on_water_supply_contract_template_id"
