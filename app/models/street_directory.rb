@@ -2,7 +2,7 @@ class StreetDirectory < ActiveRecord::Base
   belongs_to :town
   belongs_to :street_type
   belongs_to :zipcode
-  attr_accessible :street_name, :town_id, :street_type_id, :zipcode_id
+  attr_accessible :street_name, :town_id, :street_type_id, :zipcode_id, :alt_code
 
   has_many :service_points
   has_many :subscribers
@@ -22,11 +22,19 @@ class StreetDirectory < ActiveRecord::Base
   scope :by_towns, ->(town_ids) { where(town_id: town_ids).by_name_type }
 
   def to_label
-    "#{street_type.street_type_code} #{street_name}"
+    if alt_code.blank?
+      "#{street_type.street_type_code} #{street_name}"
+    else
+      "#{alt_code} - #{street_type.street_type_code} #{street_name}"
+    end
   end
 
   def to_full_label
-    "#{street_type.street_type_code} #{street_name} (#{town.name})"
+    if alt_code.blank?
+      "#{street_type.street_type_code} #{street_name} (#{town.name})"
+    else
+      "#{alt_code} - #{street_type.street_type_code} #{street_name} (#{town.name})"
+    end
   end
 
   def town_name

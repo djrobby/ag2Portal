@@ -78,7 +78,10 @@ jQuery(function($) {
     
     <%= f.input :m2, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:m2) }, label_html: { class: 'form-label' } %>
     <%= f.input :equiv_dwelling, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:equiv_dwelling) }, label_html: { class: 'form-label' } %>
-    
+    <%= f.input :sub_use, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:sub_use) }, label_html: { class: 'form-label' } %>
+    <%= f.input :pub_entity, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:pub_entity) }, label_html: { class: 'form-label' } %>
+    <%= f.input :landlord_tenant, :collection => Subscriber::LANDLORD_TENANT, input_html: { class: 'x-large-text-field', value: @contracting_request.try(:old_subscriber).try(:landlord_tenant) }, label_html: { class: 'form-label' }, include_blank: false, label: t('activerecord.attributes.subscriber.landlord_tenant')  %>
+
     <%#= f.input :active, :as => :hidden, :input_html => { :value => "true" } %>
     <%#= f.input :building, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_building } %>
     <%#= f.input :center_id, :as => :hidden, :input_html => { :value => @contracting_request.subscriber_center_id, } %>

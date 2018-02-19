@@ -31,7 +31,9 @@ module Ag2Gest
                                                 :non_billable_button,
                                                 :reset_estimation,
                                                 :billable_button,
-                                                :disable_bank_account]
+                                                :disable_bank_account,
+                                                :disable_tariff_button]
+
 
    # update subscriber estimation
    def reset_estimation
@@ -79,6 +81,20 @@ module Ag2Gest
       # @client_bank_account = ClientBankAccount.find(params[:cba_id])
       _bank_account = @subscriber.client_bank_accounts.where(id: params[:cba_id]).first
       _bank_account.update_attributes(ending_at: Date.today)
+      @json_data = { "today" => Date.today }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
+      end
+    end
+
+    # disable tariff
+    def disable_tariff_button
+      @subscriber = Subscriber.find(params[:id])
+      # @client_bank_account = ClientBankAccount.find(params[:cba_id])
+      _tariff = SubscriberTariff.where('id = ? and subscriber_id = ?',params[:st_id], params[:id])
+      _tariff.update_all(ending_at: Date.today)
       @json_data = { "today" => Date.today }
 
       respond_to do |format|
@@ -196,7 +212,7 @@ module Ag2Gest
       else
         @bill_voided = @bill
       end
-      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, @bill_voided.try(:invoices).try(:first).try(:payday_limit), @bill_voided.try(:invoices).try(:first).try(:invoice_date))
+      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, nil, Date.today)
       # @reading.generate_pre_bill(nil,nil,3)
       Sunspot.index! [@bill] unless @bill.blank?
       @search_bills = Bill.search do
@@ -962,7 +978,7 @@ module Ag2Gest
           service_point_id: @contracting_request.service_point_id,
           contracting_request_id: @contracting_request.id,
           use_id: @contracting_request.water_supply_contract.use_id,
-          deposit: @contracting_request.water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").first.total,
+          deposit: @contracting_request.water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").blank? ? 0 : @contracting_request.water_supply_contract.bill.invoices.first.invoice_items.where(subcode: "FIA").first.total,
           phone: @contracting_request.client_phone,
           cellular: @contracting_request.client_cellular,
           email: @contracting_request.client_email,
@@ -1032,7 +1048,7 @@ module Ag2Gest
             created_by: (current_user.id if !current_user.nil?)
           )
           #<-- NEW MJ <--> SI A LA LECTURA LE GUARDA EL BILL_ID PORQUE NO GUARDAR EL READING_ID EN LA BILL
-          @contracting_request.water_supply_contract.bill.update_attributes(reading_2: @reading.id)
+          @contracting_request.water_supply_contract.bill.update_attributes(reading_2_id: @reading.id)
           #NEW -->
 
           # CHANGE_OWNERS
@@ -1538,11 +1554,14 @@ module Ag2Gest
 
     def void_bill(bill)
       bill_cancel = bill.dup
+      bill_cancel.bill_date = Date.today
       bill_cancel.bill_no = bill_next_no(bill.project_id)
       if bill_cancel.save
         bill.invoices.each do |invoice|
           new_invoice = invoice.dup
-          new_invoice.invoice_no = invoice_next_no(bill.project.company_id, bill.project.office_id)
+          new_invoice.invoice_date = Date.today
+          new_invoice.payday_limit = nil
+          new_invoice.invoice_no = void_invoice_next_no(invoice.biller_id, bill.project.office_id)
           new_invoice.bill_id = bill_cancel.id
           new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
           new_invoice.original_invoice_id = invoice.id

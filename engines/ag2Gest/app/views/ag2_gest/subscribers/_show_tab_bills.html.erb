@@ -70,7 +70,7 @@
   </div>
 </div>
 <% @subscriber_bills.each do |bill| %>
-  <% if WaterSupplyContract.billed(bill.bill_id_).nil? %>
+  <% if !WaterSupplyContract.billed(bill.bill_id_).nil? %>
     <!-- Contract Bill -->
     <%= render 'bill_contracting_request', :bill => bill %>
   <% else %>

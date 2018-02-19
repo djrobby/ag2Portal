@@ -12,5 +12,6 @@ es:
         street_name: "Nombre de la vía"
         street_type: "Tipo de vía"
         town: "Población"
+        alt_code: "Código"
         successfully: "Callejero se ha actualizado correctamente."
         create: "Callejero se ha creado correctamente."

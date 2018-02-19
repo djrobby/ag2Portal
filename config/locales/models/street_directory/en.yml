@@ -1,7 +1,17 @@
 en:
   activerecord:
+    models:
+      street_directory:
+        zero:  Street Directory
+        one:   Street
+        few:   Street Directory
+        other: Street Directory
     attributes:
       street_directory:
+        id: "Id"
         street_name: "Name"
         street_type: "Type"
         town: "Town"
+        alt_code: "Code"
+        successfully: "Callejero se ha actualizado correctamente."
+        create: "Callejero se ha creado correctamente."

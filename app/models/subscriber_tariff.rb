@@ -24,7 +24,7 @@ class SubscriberTariff < ActiveRecord::Base
     .where("subscriber_tariffs.subscriber_id = ? AND (subscriber_tariffs.ending_at IS NULL OR subscriber_tariffs.ending_at > ?)", s, Date.today)
     .select("billable_concepts.name billable_concept_name, tariff_types.name tariff_type_name,
              CONCAT(billing_frequencies.name, ' - ', CASE billing_frequencies.days WHEN 0 THEN CONCAT(CAST(billing_frequencies.months AS CHAR),' mes/es') ELSE CONCAT(CAST(billing_frequencies.days AS CHAR),' día/s') END) billing_frequency_label,
-             subscriber_tariffs.starting_at starting_at, subscriber_tariffs.ending_at ending_at, subscriber_tariffs.tariff_id tariff_id")
+             subscriber_tariffs.starting_at starting_at, subscriber_tariffs.ending_at ending_at, subscriber_tariffs.tariff_id tariff_id, subscriber_tariffs.id")
     .by_starting_at_and_billable_item
   }
 

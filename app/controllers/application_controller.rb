@@ -809,6 +809,31 @@ end
     code
   end
 
+  # Void Invoice no
+  def void_invoice_next_no(company, office = nil)
+    year = Time.new.year
+    code = ''
+    serial = ''
+    office_code = office.nil? ? '00' : office.to_s.rjust(2, '0')
+    # Builds code, if possible
+    company_code = Company.find(company).void_invoice_code rescue '$'
+    if company_code == '$'
+      code = '$err'
+    else
+      serial = company_code.rjust(3, '0') + office_code
+      year = year.to_s if year.is_a? Fixnum
+      year = year.rjust(4, '0')
+      last_no = Invoice.where("invoice_no LIKE ?", "#{serial}#{year}%").order(:invoice_no).maximum(:invoice_no)
+      if last_no.nil?
+        code = serial + year + '0000001'
+      else
+        last_no = last_no[9..15].to_i + 1
+        code = serial + year + last_no.to_s.rjust(7, '0')
+      end
+    end
+    code
+  end
+
   # Commercial bill no
   # serial length must be 5 and code must returns 15 chars
   def commercial_bill_next_no(company, office = nil)
@@ -971,7 +996,7 @@ end
     r = nil
     previous_year_period_id = BillingPeriod.find_by_period_and_billing_frequency_id(billing_period.year_period,billing_period.billing_frequency_id).try(:id)
     if !previous_year_period_id.blank?
-      r = Reading.where(meter_id: meter.id, reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::INSTALACION,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: pervious_year_id, subscriber_id: subscriber.id).order(:reading_date).last
+      r = Reading.where(meter_id: meter.id, reading_type_id: [ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::INSTALACION,ReadingType::RETIRADA,ReadingType::AUTO], billing_period_id: previous_year_period_id, subscriber_id: subscriber.nil? ? nil : subscriber.id).order(:reading_date).last
     end
     r
   end

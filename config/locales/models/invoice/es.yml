@@ -64,3 +64,4 @@ es:
         debt: "Deuda"
         codes: "T E O"
         remarks: "Observaciones"
+        invoice_cancellation: "Factura Rectificativa"

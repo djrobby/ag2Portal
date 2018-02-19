@@ -140,6 +140,7 @@ module Ag2Gest
       @project_dropdown = projects_dropdown
       @subscriber = @meter.subscribers.activated.size > 1 ? nil : @meter.subscribers.activated.first
       @service_point = @meter.service_points.size > 1 ? nil : @meter.service_points.first
+      @reading_incidence = ReadingIncidenceType.all
       @details = @meter.meter_details.paginate(:page => params[:page], :per_page => per_page).by_dates
       @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
       @child_meters = @meter.child_meters.paginate(:page => params[:page], :per_page => per_page).by_code

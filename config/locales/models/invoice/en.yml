@@ -64,3 +64,5 @@ en:
         debt: "Debt"
         codes: "T S O"
         remarks: "Remarks"
+        invoice_cancellation: "Rectifying Invoice"
+

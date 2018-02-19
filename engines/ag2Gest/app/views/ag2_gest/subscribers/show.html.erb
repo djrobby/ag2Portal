@@ -77,7 +77,9 @@
       <td><b><%= t('activerecord.attributes.subscriber.subscriber_code') %>:</b></td>
       <td class="highlighted bolded"><%= @subscriber.try(:full_code) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.client_id') %>:</b></td>
-      <td colspan="3"><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) unless @subscriber.try(:client).blank? %></td>
+      <td><%= link_to @subscriber.try(:client).try(:full_code), ag2_gest.client_path(@subscriber.client_id) unless @subscriber.try(:client).blank? %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.pub_entity') %>:</b></td>
+      <td><%= @subscriber.try(:pub_entity) %></td>
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
@@ -119,33 +121,33 @@
       <td><%= @subscriber.try(:zipcode).try(:zipcode) %></td>
     </tr>
     <tr>
-      <td><b><%= t('activerecord.attributes.subscriber.office_id') %>:</b></td>
-      <td><%= @subscriber.try(:office).try(:name) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.alt_code') %>:</b></td>
+      <td><%= @subscriber.try(:street_directory).try(:alt_code) %></td>
+      <td><b><%= t('activerecord.attributes.subscriber.center_id') %>:</b></td>
+      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) unless @subscriber.try(:center).blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.town_id') %>:</b></td>
       <td><%= @subscriber.try(:center).try(:town).try(:name) %></td>
-      <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
-      <td><%= @subscriber.try(:center).try(:town).try(:province).try(:name) %></td>
     </tr>
     <tr>
+      <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
+      <td><%= @subscriber.try(:center).try(:town).try(:province).try(:name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.region_id') %>:</b></td>
       <td><%= @subscriber.try(:center).try(:town).try(:province).try(:region).try(:name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.country_id') %>:</b></td>
       <td><%= @subscriber.try(:center).try(:town).try(:province).try(:region).try(:country).try(:name) %></td>
-      <td><b><%= t('activerecord.attributes.subscriber.center_id') %>:</b></td>
-      <td><%= link_to @subscriber.try(:center).try(:name), ag2_gest.center_path(@subscriber.center_id) unless @subscriber.try(:center).blank? %></td>
     </tr>
   </tbody>
 </table>
 
-<% if !session[:return_to_reading].nil? %>
-  <%= link_to session[:return_to_reading], session[:return_to_reading_url] %> |
-<% end %>
-<% if !session[:return_to_client].nil? %>
-  <%= link_to session[:return_to_client], session[:return_to_client_url] %> |
-<% end %>
-<% if !session[:return_to].nil? %>
-  <%= link_to session[:return_to], session[:return_to_url] %> |
-<% end %>
+<!-- <%# if !session[:return_to_reading].nil? %> -->
+  <!-- <%#= link_to session[:return_to_reading], session[:return_to_reading_url] %> | -->
+<!-- <%# end %> -->
+<!-- <%# if !session[:return_to_client].nil? %> -->
+  <!-- <%#= link_to session[:return_to_client], session[:return_to_client_url] %> | -->
+<!-- <%# end %> -->
+<!-- <%# if !session[:return_to].nil? %> -->
+  <!-- <%#= link_to session[:return_to], session[:return_to_url] %> | -->
+<!-- <%# end %> -->
 <%= link_to t("ag2_gest.subscribers.back_to_main_page"), subscribers_path %>
 <br/>
 <br/>
@@ -178,7 +180,9 @@
           <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
           <td><%= link_to @subscriber.try(:billing_frequency).try(:name), billing_frequency_path(@subscriber.billing_frequency_id) unless @subscriber.try(:billing_frequency).blank? %></td>
           <td><b><%= t('activerecord.attributes.subscriber.use') %>:</b></td>
-          <td colspan="3"><%= @subscriber.try(:use).try(:name)%></td>
+          <td><%= @subscriber.try(:use).try(:name)%></td>
+          <td><b><%= t('activerecord.attributes.subscriber.sub_use') %>:</b></td>
+          <td><%= @subscriber.try(:sub_use)%></td>
         </tr>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
@@ -204,14 +208,17 @@
           <td><b><%= t('activerecord.attributes.subscriber.endowments') %>:</b></td>
           <td><%= @subscriber.try(:endowments) %></td>
         </tr>
+        <tr>
           <td><b><%= t('activerecord.attributes.subscriber.inhabitants') %>:</b></td>
           <td><%= @subscriber.try(:inhabitants) %></td>
           <td><b><%= t('activerecord.attributes.subscriber.equiv_dwelling') %>:</b></td>
           <td><%= number_with_precision(@subscriber.try(:equiv_dwelling), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <td><b><%= t('activerecord.attributes.subscriber.m2') %>:</b></td>
           <td><%= number_with_precision(@subscriber.try(:m2), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
-
         </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.landlord_tenant') %>:</b></td>
+          <td colspan="6"> <% if @subscriber.landlord_tenant == 0 %> <%= t('activerecord.attributes.subscriber.landlord') %> <% else %> <%= t('activerecord.attributes.subscriber.tenant') %> <% end %> </td>
         <tr>
           <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
           <td colspan="6"><%= @subscriber.try(:remarks) %></td>
@@ -442,7 +449,7 @@
           if(mm<10) {
               mm = '0'+mm
           }
-          today = mm + '/' + dd + '/' + yyyy;
+          today = dd + '/' + mm + '/' + yyyy;
           $("#ending_at").text(today);
           $("#disable_bank_account_button").addClass("hide");
         });

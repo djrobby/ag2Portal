@@ -10,6 +10,7 @@
 <table class="table table-condensed table-striped">
   <thead>
     <tr>
+      <th><%= sortable "alt_code", t('activerecord.attributes.street_directory.alt_code') %></th>
       <th><%= sortable "street_type_id", t('activerecord.attributes.street_directory.street_type') %></th>
       <th><%= sortable "street_name", t('activerecord.attributes.street_directory.street_name') %></th>
       <th><%= sortable "town_id", t('activerecord.attributes.street_directory.town') %></th>
@@ -19,6 +20,7 @@
   <tbody>
     <% @street_directories.each do |street| %>
       <tr>
+        <td><%= street.try(:alt_code) %></td>
         <td><%= street.try(:street_type).try(:street_type_code) %></td>
         <td><%= street.try(:street_name) %></td>
         <td><%= street.try(:town).try(:to_label) %></td>

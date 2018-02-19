@@ -78,7 +78,7 @@
       <td align="right"><%= reading.consumption unless reading.consumption.blank? %></td>
       <td>&nbsp;
       <%= link_to reading_path(reading.reading_id), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
-      <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading.reading_id) } if reading.is_billable %>
+      <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading.reading_id) } if reading.is_billable == 1 %>
       <%#= render :partial => '/layouts/crud/delete', :locals => { :model => Reading, :path => reading, :msg => t("activerecord.models.reading.one"), :txt => reading.id } %>
       </td>
     </tr>

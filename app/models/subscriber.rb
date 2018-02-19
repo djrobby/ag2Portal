@@ -3,6 +3,7 @@ class Subscriber < ActiveRecord::Base
   # landlord_tenant:
   LANDLORD = 0
   TENANT = 1
+  LANDLORD_TENANT = { I18n.t('activerecord.attributes.subscriber.landlord') => 0, I18n.t('activerecord.attributes.subscriber.tenant') => 1}
 
   belongs_to :client, :counter_cache => true
   belongs_to :office

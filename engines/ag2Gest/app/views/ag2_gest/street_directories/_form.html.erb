@@ -12,8 +12,10 @@
 	<%= f.error_notification %>
 	<%= display_base_errors resource %>
 
-	<%= f.input :street_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-
+	<div class="row-fluid">
+	<%= f.input :alt_code, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
+	<%= f.input :street_name, :required => true, :autofocus => true, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span8"} %>
+	</div> 
 	<div class="row-fluid">
 	  <%= f.association :street_type, collection: StreetType.all(order: 'street_type_description'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span4"} %>
 	  <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: {class: "span8"} %>

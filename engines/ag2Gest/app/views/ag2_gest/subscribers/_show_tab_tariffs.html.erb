@@ -9,6 +9,35 @@
   margin-left: 7px;
 }
 </style>
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $("#disable_tariff_button").click(function(){
+      var subscriber_id = "<%= @subscriber.id %>"
+      var st_id = $("#st_id").text();
+      var result = confirm("<%= t('activerecord.attributes.subscriber.alert_disable_tariff')%>");
+      if (result) {
+        jQuery.getJSON(subscriber_id + '/disable_tariff_button/' + st_id, function(data) {
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1; //January is 0!
+          var yyyy = today.getFullYear();
+          if(dd<10) {
+              dd = '0'+dd
+          }
+          if(mm<10) {
+              mm = '0'+mm
+          }
+          today = dd + '/' + mm + '/' + yyyy;
+          $("#tariff_ending_at").text(today);
+          $("#disable_tariff_button").addClass("hide");
+        });
+        return false;
+      }
+    });
+  });
+</script>
+
 <!-- Button to trigger modal -->
 <a href="#add_tariff" role="button" class="btn btn-warning btn-mini" data-toggle="modal"><%=t "ag2_gest.subscribers.index.add_tariff" %></a>
 
@@ -49,8 +78,12 @@
             <td class="tariff_type"><%= t.tariff_type_name unless t.tariff_type_name.blank? %></td>
             <td class="billing_frequency"><%= t.billing_frequency_label unless t.billing_frequency_label.blank? %></td>
             <td class="starting_at"><%= formatted_date(t.starting_at) unless t.starting_at.blank? %></td>
-            <td class="ending_at"><%= formatted_date(t.ending_at) unless t.ending_at.blank? %></td>
-            <td><%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff_id) } %></td>
+            <td class="ending_at" id="tariff_ending_at"><%= formatted_date(t.ending_at) unless t.ending_at.blank? %></td>
+            <td class="hide" id="st_id"><%= t.id %></td>
+            <td>
+              <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff_id) } %>
+              <a id='disable_tariff_button' class="btn btn-mini" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
+            </td>
           </tr>
         <% end %>
       </tbody>

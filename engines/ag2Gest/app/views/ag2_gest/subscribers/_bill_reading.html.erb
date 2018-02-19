@@ -31,7 +31,7 @@
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(bill.bill_id_, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Abonar" if nullable  %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Abonar" if bill.nullable_  %>
         <%= link_to "<i class='icon-plus icon-white'></i>".html_safe, rebilling_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", remote: true, data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_rebill") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Refacturar" %>
       </div>
     </div>
@@ -40,7 +40,15 @@
         <% Invoice.by_bill_id(bill.bill_id_).each do |invoice| %>
           <% unpaid = invoice.unpaid_ != 0 ? true : false %>
           <table class="table">
-            <div class="<%= 'text-error' if unpaid %> fields"><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.invoice_no_ %></small></div>
+            <% if !invoice.original_invoice_no_.nil? %>
+              <% if invoice.invoice_operation_id_ == InvoiceOperation::CANCELATION %>
+                <div class="<%= 'text-error' if unpaid %> fields"><small><%= I18n.t("activerecord.attributes.invoice.invoice_cancellation") + " " + I18n.t("activerecord.attributes.bill.bill_no") + ": " + invoice.invoice_no_ + "  (" + invoice.original_invoice_no_ + ")" %></small></div>
+              <% else %>
+                <div class="<%= 'text-error' if unpaid %> fields"><small><%= I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no") + ": " + invoice.invoice_no_ + "  (" + invoice.original_invoice_no_ + ")" %></small></div>
+              <% end %>
+            <% else %>
+              <div class="<%= 'text-error' if unpaid %> fields"><small><%= I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no") %>: <%= invoice.invoice_no_ %></small></div>
+            <% end %>
             <div class="<%= 'text-error' if unpaid %> fields"><small><%= invoice.biller_name_ %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.biller_fiscal_id_ %></small></div>
             <tr class="<%= 'text-error' if unpaid %> fields">
               <th><%= t("activerecord.attributes.contracting_request.code") %></th>
