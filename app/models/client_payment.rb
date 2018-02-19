@@ -27,6 +27,7 @@ class ClientPayment < ActiveRecord::Base
   validates :bill,              :presence => true
   validates :invoice,           :presence => true
   validates :payment_method,    :presence => true
+  validates :client,            :presence => true
 
   # Callbacks
   after_save :reindex_instalment
@@ -137,11 +138,13 @@ class ClientPayment < ActiveRecord::Base
     string :invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
       invoice.invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
     end
-    integer :client_id do
-      bill.client_id unless (bill.blank? || bill.client_id.blank?)
+    integer :client_id
+    integer :subscriber_id
+    integer :client_ids, :multiple => true do
+      client_id
     end
-    integer :subscriber_id do
-      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
+    integer :subscriber_ids, :multiple => true do
+      subscriber_id unless subscriber_id.blank?
     end
     integer :project_id, :multiple => true do
       bill.project_id unless (bill.blank? || bill.project_id.blank?)

@@ -444,6 +444,12 @@ class Bill < ActiveRecord::Base
     integer :project_id, :multiple => true
     integer :client_id
     integer :subscriber_id
+    integer :client_ids, :multiple => true do
+      client_id
+    end
+    integer :subscriber_ids, :multiple => true do
+      subscriber_id unless subscriber_id.blank?
+    end
     boolean :bank_account do
       client.active_bank_accounts? unless client.blank?
     end

@@ -39,6 +39,9 @@ module Ag2Gest
       session[:ClientInfo] = nil
       session[:ServicePoint] = nil
       session[:SubscriberCode] = nil
+      session[:ClientCode] = nil
+      session[:SubscriberFiscal] = nil
+      session[:ClientFiscal] = nil
       session[:StreetName] = nil
       session[:StreetNameB] = nil
       session[:BankAccount] = nil

@@ -218,7 +218,11 @@
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%#= params[:Project] %>");
     $("#Client").val("<%= params[:Client] %>");
+    $("#ClientCode").val("<%= params[:ClientCode] %>");
+    $("#ClientFiscal").val("<%= params[:ClientFiscal] %>");
     $("#Subscriber").val("<%= params[:Subscriber] %>");
+    $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
+    $("#SubscriberFiscal").val("<%= params[:SubscriberFiscal] %>");
     $("#StreetName").val("<%= params[:StreetName] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
     $("#BankOrder").val("<%= params[:BankOrder] %>");
@@ -271,7 +275,11 @@
       $("#Project").select2("val", "");
       $("#Period").select2("val", "");
       $("#Client").val("");
+      $("#ClientCode").val("");
+      $("#ClientFiscal").val("");
       $("#Subscriber").val("");
+      $("#SubscriberCode").val("");
+      $("#SubscriberFiscal").val("");
       $("#StreetName").val("");
       $("#BankAccount").val("");
       $("#BankOrder").val("");
@@ -418,37 +426,43 @@
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
           <!-- No -->
-          <%= label_tag "label_no", I18n.t("activerecord.attributes.bill.bill_no_c"), :class => 'form-label' %>
+          <%= label_tag "label_no", I18n.t("ag2_gest.client_payments.index.label_no"), :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Project -->
-          <%= label_tag "label_project", I18n.t("ag2_gest.invoices.index.label_project"), :class => 'form-label' %>
+          <%= label_tag "label_project", I18n.t("ag2_gest.client_payments.index.label_project"), :class => 'form-label' %>
           <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Period -->
-          <%= label_tag "label_period", I18n.t("ag2_gest.invoices.index.label_period"), :class => 'form-label-under-sel2' %>
+          <%= label_tag "label_period", I18n.t("ag2_gest.client_payments.index.label_period"), :class => 'form-label-under-sel2' %>
           <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Client Code -->
-          <%= label_tag "label_client_code", I18n.t("ag2_gest.subscribers.index.subscriber_code"), :class => 'form-label' %>
-          <%= text_field_tag "ClientCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <%= label_tag "label_client_code", I18n.t("ag2_gest.client_payments.index.label_client_code"), :class => 'form-label-under-sel2' %>
+          <%= text_field_tag "ClientCode", params[:ClientCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Client Fiscal Id -->
+          <%= label_tag "label_client_fiscal", I18n.t("ag2_gest.client_payments.index.label_client_fiscal"), :class => 'form-label' %>
+          <%= text_field_tag "ClientFiscal", params[:ClientFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
           <!-- Client Name -->
-          <%= label_tag "label_client", I18n.t("ag2_gest.invoices.index.label_client"), :class => 'form-label-under-sel2' %>
+          <%= label_tag "label_client", I18n.t("ag2_gest.client_payments.index.label_client"), :class => 'form-label' %>
           <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
           <!-- Subscriber Code -->
-          <%= label_tag "label_subscriber_code", I18n.t("ag2_gest.subscribers.index.subscriber_code"), :class => 'form-label' %>
+          <%= label_tag "label_subscriber_code", I18n.t("ag2_gest.client_payments.index.label_subscriber_code"), :class => 'form-label' %>
           <%= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Subscriber Fiscal Id -->
+          <%= label_tag "label_subscriber_fiscal", I18n.t("ag2_gest.client_payments.index.label_subscriber_fiscal"), :class => 'form-label' %>
+          <%= text_field_tag "SubscriberFiscal", params[:SubscriberFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
           <!-- Subscriber Name -->
-          <%= label_tag "label_subscriber", I18n.t("ag2_gest.invoices.index.label_subscriber"), :class => 'form-label' %>
+          <%= label_tag "label_subscriber", I18n.t("ag2_gest.client_payments.index.label_subscriber"), :class => 'form-label' %>
           <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
           <!-- Supply address (street name) -->
-          <%= label_tag "label_street", I18n.t("ag2_gest.subscribers.index.supply_address"), :class => 'form-label' %>
+          <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label' %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Have BankAccount? -->
           <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
           <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
           <!-- Bank -->
-          <%= label_tag "label_bank", I18n.t("activerecord.attributes.client_bank_account.bank"), :class => 'form-label' %>
+          <%= label_tag "label_bank", I18n.t("ag2_gest.client_payments.index.label_bank"), :class => 'form-label' %>
           <%= text_field_tag "Bank", params[:Bank], :class => 'x-large-text-field shrinked' %>
           <!-- Bank Order -->
-          <%= label_tag "label_bank_order", I18n.t("activerecord.attributes.client_payment.bank_order_no"), :class => 'form-label' %>
+          <%= label_tag "label_bank_order", I18n.t("ag2_gest.client_payments.index.label_bank_order"), :class => 'form-label' %>
           <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
           <!-- User -->
           <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label' %>
@@ -861,6 +875,8 @@
   });
 
   $("#close-cash").click(function(){
+    $("#cash-checkbox-master").trigger("click");
+
     var cp_ids = [];
     var cp_amount = 0.0;
     var initial = 0.0;

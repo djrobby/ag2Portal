@@ -35,6 +35,12 @@ class InstalmentInvoice < ActiveRecord::Base
     integer :subscriber_id do
       bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
     end
+    integer :client_ids, :multiple => true do
+      bill.client_id unless (bill.blank? || bill.client_id.blank?)
+    end
+    integer :subscriber_ids, :multiple => true do
+      bill.subscriber_id unless (bill.blank? || bill.subscriber_id.blank?)
+    end
     boolean :bank_account do
       bill.client.active_bank_accounts? unless (bill.blank? || bill.client.blank?)
     end
