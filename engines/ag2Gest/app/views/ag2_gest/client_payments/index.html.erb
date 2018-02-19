@@ -55,8 +55,8 @@
 
   function setupAllSelect2(p, r, u) {
     projectsSelect2(p);
-    periodsSelect2(r);    
-    usersSelect2(u);    
+    periodsSelect2(r);
+    usersSelect2(u);
   }
 
   function projectsSelect2(intialValue) {
@@ -78,7 +78,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -105,7 +105,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -132,7 +132,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -245,7 +245,7 @@
       invoices_id = [];
       $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
       $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
-      $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+      $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
       $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
       $("#initial-cash").val("<%= @opening_balance %>");
     });
@@ -429,10 +429,13 @@
           <!-- Client -->
           <%= label_tag "label_client", I18n.t("ag2_gest.invoices.index.label_client"), :class => 'form-label-under-sel2' %>
           <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
-          <!-- Subscriber -->
+          <!-- Subscriber Code -->
+          <%= label_tag "label_subscriber_code", I18n.t("ag2_gest.subscribers.index.subscriber_code"), :class => 'form-label' %>
+          <%= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Subscriber Name -->
           <%= label_tag "label_subscriber", I18n.t("ag2_gest.invoices.index.label_subscriber"), :class => 'form-label' %>
           <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
-          <!-- Street name -->
+          <!-- Supply address (street name) -->
           <%= label_tag "label_street", I18n.t("ag2_gest.subscribers.index.supply_address"), :class => 'form-label' %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Have BankAccount? -->
@@ -752,8 +755,8 @@
     $('input:checkbox').removeAttr('checked');
     $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
     $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
-    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
-    $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));    
+    $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+    $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
     $("#client_payment_amount").val('')
     $(this).tab('show');
     if (_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") {
@@ -763,7 +766,7 @@
       _cashier_shown = false;
     }
     enable_client_payment_amount(true);
-  });  
+  });
 
   // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
   $(".btn-payment").click(function(){
@@ -1395,7 +1398,7 @@
       } else {
         cash_return = 0;
       }
-    }  
+    }
     $(".cash-return-cashier").text(cash_return.format(2, 3, _delimiter, _separator));
   });
 
