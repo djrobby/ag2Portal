@@ -43,6 +43,22 @@ class Subscriber < ActiveRecord::Base
 
   attr_accessor :reading_index_add, :reading_date_add
 
+  delegate :full_code, :to => :client, :allow_nil => true, :prefix => true
+  delegate :to_full_label, :to => :service_point, :allow_nil => true, :prefix => true
+  delegate :zipcode, :to => :zipcode, :allow_nil => true, :prefix => true
+  delegate :alt_code, :to => :street_directory, :allow_nil => true, :prefix => true
+  delegate :name, :to => :center, :allow_nil => true, :prefix => true
+  delegate :full_no, :to => :water_supply_contract, :allow_nil => true, :prefix => true
+  delegate :name, :to => :tariff_scheme, :allow_nil => true, :prefix => true
+  delegate :name, :to => :billing_frequency, :allow_nil => true, :prefix => true
+  delegate :name, :to => :use, :allow_nil => true, :prefix => true
+  delegate :meter_code, :to => :meter, :allow_nil => true, :prefix => true
+  delegate :model_full_name, :to => :meter, :allow_nil => true, :prefix => true
+  delegate :meter_model_id, :to => :meter, :allow_nil => true, :prefix => true
+  delegate :caliber_caliber, :to => :meter, :allow_nil => true, :prefix => true
+  delegate :caliber_id, :to => :meter, :allow_nil => true, :prefix => true
+  delegate :to_label, :to => :reading_route, :allow_nil => true, :prefix => true
+
   has_many :client_bank_accounts, dependent: :destroy
   has_many :work_orders
   has_many :meter_details

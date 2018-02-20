@@ -784,30 +784,44 @@ module Ag2Gest
       filter = params[:ifilter]
 
       @breadcrumb = 'read'
-      @subscriber = Subscriber.find(params[:id])
+      # @subscriber = Subscriber.find(params[:id])
+      @subscriber = Subscriber.includes(:client, :service_point, :street_directory, :zipcode,
+                                        :water_supply_contract, :tariff_scheme,
+                                        center: [town: [province: [region: :country]]])
+                              .find(params[:id])
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil
-      @reading = Reading.new
+      @meter_is_shared = @subscriber.meter.is_shared? rescue false
       # @street_types = StreetType.order(:street_type_code)
+      @client = Client.find(@subscriber.client_id)
+      # @client_bank_account = ClientBankAccount.new
+      @current_debt = @subscriber.total_existing_debt
+
+      #*** For modal dropdowns ***
+      # _add_meter, _new_reading
+      @reading = Reading.new
+      # _add_meter, _change_meter, _quit_meter, _new_reading
+      @meter_location = []
+      @billing_period = []
+      @reading_incidence = []
+      # _new_reading
+      # _projects, _oco = projects_dropdown
+      @project_dropdown = []
+      @reading_type = []
+      # _change_data_supply
       @street_types = []
       @towns = []
       @provinces = []
       @zipcodes = []
       @regions = []
+      # _change_data_supply, _new_client_bank_account
       @countries = []
+      # _new_client_bank_account
       @bank = []
       @bank_offices = []
       @bank_account_classes = []
-      @client = Client.find(@subscriber.client_id)
-      @client_bank_account = ClientBankAccount.new
-      @billing_period = billing_periods_dropdown(@subscriber.office_id, @subscriber.billing_frequency_id)
-      @meter_location = MeterLocation.all
-      @reading_incidence = ReadingIncidenceType.all
-      # @billing_period = BillingPeriod.order('period DESC').all
-      @reading_type = ReadingType.single_manual_reading
-      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(@subscriber.id)
-      # @billing_periods_reading = @subscriber.readings.order("billing_period_id DESC").select{|r| [ReadingType::INSTALACION, ReadingType::NORMAL, ReadingType::OCTAVILLA, ReadingType::RETIRADA, ReadingType::AUTO].include? r.reading_type_id and r.billable?}.map(&:billing_period).uniq
-      @current_debt = @subscriber.total_existing_debt
+      # modals in show
+      @billing_periods_reading = []
 
       _tariff_type = []
       _tariff_type_ids = []
@@ -822,35 +836,14 @@ module Ag2Gest
       end
       @tariff_type = _tariff_type.join(", ")
       @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
-      # @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice(_tariff_type_ids)
-      # @tariffs_dropdown = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", _tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
 
       @subscriber_tariffs = SubscriberTariff.availables_to_subscriber_full(@subscriber.id)
-      #@subscriberreadings = Reading.where(:subscriber_id => @subscriber.id).paginate(:page => 10, :per_page => per_page)
-      # @reading_types = ReadingType.all
-      # @client_bank_account = ClientBankAccount.where(client_id: @subscriber.client_id).active.first
-      #Select Option BillingPeriod Associated
-      # billing_periods_ids = @subscriber.readings.map(&:billing_period_id).uniq #Ids BillingPeriods associated
-      # @billing_periods = BillingPeriod.where(id: billing_periods_ids) #BillingPeriods associated
-      #
-      # #Select Option ReadingTypes Associated
-      # reading_types_ids = @subscriber.readings.map(&:reading_type_id).uniq
-      # @reading_types = ReadingType.where(id: reading_types_ids) #ReadingTypes associated
-
-      _projects, _oco = projects_dropdown
-      @project_dropdown = !_oco ? Project.active_only : _projects
 
       ### Bank accounts ###
       @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
       @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
       @subscriber_accounts = @subscriber_accounts
                             .paginate(:page => params[:page] || 1, :per_page => 10)
-      # @subscriber_accounts = @subscriber.client.client_bank_accounts.order("ending_at").paginate(:page => params[:page], :per_page => per_page || 10)
-
-      #@alliance_towns = @alliance.players.towns.order("rank ASC").paginate(:page => params[:page], :per_page => 1)
-      #@bills = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 1) #.where('subscriber.bill = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
-      #@subscribers = Subscriber.joins(:bill).where('bills.subscriber_id = ?', params[:id]).paginate(:page => params[:page], :per_page => 1)
-      #@subscribers = Bill.joins(:subscriber).paginate(:page => params[:page], :per_page => 5)
 
       ### Readings ###
       @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => 10)
@@ -882,8 +875,6 @@ module Ag2Gest
       #     @subscriber_invoice_items = InvoiceItem.by_invoice_ids(@subscriber_invoices.map(&:invoice_id_).join(','))
       #   end
       # end
-      # @subscriber_bills = @subscriber_bills.paginate(:page => params[:page] || 1, :per_page => per_page || 10)
-      # @subscriber_bills = @subscriber.bills.order("created_at DESC").paginate(:page => params[:page], :per_page => 5)
       # search_bills = Bill.search do
       #   if filter == "pending" or filter == "unpaid"
       #     with(:invoice_status_id, 0..98)
@@ -902,6 +893,34 @@ module Ag2Gest
        format.json { render json: @subscriber_bills }
        format.js
       end
+    end
+
+    def show_dropdowns(subscriber)
+      #*** For modal dropdowns ***
+      # _add_meter, _new_reading
+      @reading = Reading.new
+      # _add_meter, _change_meter, _quit_meter, _new_reading
+      @meter_location = MeterLocation.all
+      @billing_period = billing_periods_dropdown(subscriber.office_id, subscriber.billing_frequency_id)
+      @reading_incidence = ReadingIncidenceType.all
+      # _new_reading
+      _projects, _oco = projects_dropdown
+      @project_dropdown = !_oco ? Project.active_only : _projects
+      @reading_type = ReadingType.single_manual_reading
+      # _change_data_supply
+      @street_types = []
+      @towns = []
+      @provinces = []
+      @zipcodes = []
+      @regions = []
+      # _change_data_supply, _new_client_bank_account
+      @countries = []
+      # _new_client_bank_account
+      @bank = []
+      @bank_offices = []
+      @bank_account_classes = []
+      # modals in show
+      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(subscriber.id)
     end
 
     def show_test

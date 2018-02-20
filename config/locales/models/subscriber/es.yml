@@ -96,7 +96,7 @@ es:
         pub_entity: "Sujeto Pasivo Municipal"
         landlord: "Propietario"
         tenant: "Inquilino"
-        landlord_tenant: "Relación de titularidad"
+        landlord_tenant: "Titularidad"
         alt_code: "Código Callejero"
         deposit: "Fianza"
         direction: "Dirección"

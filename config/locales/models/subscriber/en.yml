@@ -95,7 +95,7 @@ en:
         pub_entity: "Municipal passive entity"
         landlord: "Landlord"
         tenant: "Tenant"
-        landlord_tenant: "Ownership relationship"
+        landlord_tenant: "Ownership"
         alt_code: "Street Code"
         deposit: "Deposit"
         direction: "Direction"

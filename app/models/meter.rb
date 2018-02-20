@@ -12,6 +12,8 @@ class Meter < ActiveRecord::Base
                   :meter_model_id, :caliber_id, :meter_owner_id, :organization_id, :company_id, :office_id,
                   :created_by, :updated_by, :master_meter_id
 
+  delegate :caliber, :to => :caliber, :allow_nil => true, :prefix => true
+
   has_many :meter_details, dependent: :destroy
   has_many :work_orders
   has_many :readings
@@ -259,6 +261,14 @@ class Meter < ActiveRecord::Base
     else
       subscribers.first.reading_sequence
     end
+  end
+
+  def model_full_name
+    full_name = ""
+    if !self.meter_model.blank?
+      full_name += " " + self.meter_model.full_name
+    end
+    full_name
   end
 
   def model_brand_caliber

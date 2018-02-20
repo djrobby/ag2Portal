@@ -1,6 +1,7 @@
 class Center < ActiveRecord::Base
   belongs_to :town
   attr_accessible :active, :name, :town_id, :code
+  delegate :name, :to => :town, :allow_nil => true, :prefix => true
 
   has_many :subscribers
   has_many :service_points

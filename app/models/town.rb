@@ -1,6 +1,7 @@
 class Town < ActiveRecord::Base
   belongs_to :province
   attr_accessible :ine_cmun, :ine_dc, :name, :province_id
+  delegate :name, :to => :province, :allow_nil => true, :prefix => true
 
   has_many :zipcodes
   has_many :companies

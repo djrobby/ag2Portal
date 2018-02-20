@@ -2,6 +2,7 @@ class Region < ActiveRecord::Base
   belongs_to :country
   attr_accessible :country_id, :name,
                   :created_by, :updated_by
+  delegate :name, :to => :country, :allow_nil => true, :prefix => true
 
   has_many :provinces
   has_many :shared_contacts
