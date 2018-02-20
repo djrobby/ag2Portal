@@ -27,6 +27,7 @@ module Ag2Gest
                                                 :update_province_textfield_from_zipcode,
                                                 :sub_load_postal,
                                                 :sub_load_bank,
+                                                :sub_load_dropdowns,
                                                 :sub_sepa_pdf,
                                                 :non_billable_button,
                                                 :reset_estimation,
@@ -679,6 +680,32 @@ module Ag2Gest
       render json: @json_data
     end
 
+    def sub_load_dropdowns
+      subscriber = Subscriber.find(params[:subscriber_id])
+
+      street_type_id = 0
+      zipcode_id = 0
+      town_id = 0
+      province_id = 0
+      region_id = 0
+      country_id = 0
+
+      street_type_id = !subscriber.postal_street_type_id.blank? ? subscriber.postal_street_type_id : subscriber.client.street_type_id
+      zipcode_id = !subscriber.postal_zipcode_id.blank? ? subscriber.postal_zipcode_id : subscriber.client.zipcode_id
+      town_id = !subscriber.postal_town_id.blank? ? subscriber.postal_town_id : subscriber.client.town_id
+      province_id = !subscriber.postal_province_id.blank? ? subscriber.postal_province_id : subscriber.client.province_id
+      region_id = !subscriber.postal_region_id.blank? ? subscriber.postal_region_id : subscriber.client.region_id
+      country_id = !subscriber.postal_country_id.blank? ? subscriber.postal_country_id : subscriber.client.country_id
+
+      @json_data = { "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
+                     "regions" => regions_array, "countries" => country_array, "street_types" => street_types_array,
+                      "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
+                      "region_id" => region_id, "country_id" => country_id, "street_type_id" => street_type_id,
+                      "banks" => banks_array, "bank_offices" => bank_offices_array,
+                      "bank_account_classes" => bank_account_classes_array }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #
@@ -784,11 +811,7 @@ module Ag2Gest
       filter = params[:ifilter]
 
       @breadcrumb = 'read'
-      # @subscriber = Subscriber.find(params[:id])
-      @subscriber = Subscriber.includes(:client, :service_point, :street_directory, :zipcode,
-                                        :water_supply_contract, :tariff_scheme,
-                                        center: [town: [province: [region: :country]]])
-                              .find(params[:id])
+      @subscriber = Subscriber.find(params[:id])
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil
       @meter_is_shared = @subscriber.meter.is_shared? rescue false
@@ -823,18 +846,13 @@ module Ag2Gest
       # modals in show
       @billing_periods_reading = []
 
-      _tariff_type = []
       _tariff_type_ids = []
       _tariffs = !@subscriber.water_supply_contract.blank? ? @subscriber.contracted_tariffs : @subscriber.subscriber_tariffs
       _tariffs.each do |tt|
-        if !_tariff_type.include? tt.tariff.tariff_type.name
-          _tariff_type << tt.tariff.tariff_type.name
-        end
         if !_tariff_type_ids.include? tt.tariff.tariff_type.id
           _tariff_type_ids << tt.tariff.tariff_type.id
         end
       end
-      @tariff_type = _tariff_type.join(", ")
       @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
 
       @subscriber_tariffs = SubscriberTariff.availables_to_subscriber_full(@subscriber.id)

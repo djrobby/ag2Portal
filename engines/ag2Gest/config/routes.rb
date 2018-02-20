@@ -318,6 +318,9 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
     match 'sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
     match 'subscribers/:id/sub_load_bank/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_bank'
+    match 'subscribers/sub_load_dropdowns/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_dropdowns'
+    match 'sub_load_dropdowns/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_dropdowns'
+    match 'subscribers/:id/sub_load_dropdowns/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_dropdowns'
     #
     # Commercial billing
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'

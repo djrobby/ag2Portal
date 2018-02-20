@@ -50,7 +50,6 @@
   </div>
   <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :html => { class: 'modal-footer-right' } do |f| %>
     <div class="modal-body">
-        <%#= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :to_label, :item_wrapper_class => 'checkbox_container') %>
         <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :tariff_label, :item_wrapper_class => 'checkbox_container') %>
     </div>
     <div class="modal-footer">
