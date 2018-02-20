@@ -680,15 +680,9 @@ module Ag2Gest
       render json: @json_data
     end
 
+    #*** Charge modal dropdowns async ***
     def sub_load_dropdowns
       subscriber = Subscriber.find(params[:subscriber_id])
-
-      street_type_id = 0
-      zipcode_id = 0
-      town_id = 0
-      province_id = 0
-      region_id = 0
-      country_id = 0
 
       street_type_id = !subscriber.postal_street_type_id.blank? ? subscriber.postal_street_type_id : subscriber.client.street_type_id
       zipcode_id = !subscriber.postal_zipcode_id.blank? ? subscriber.postal_zipcode_id : subscriber.client.zipcode_id
@@ -702,7 +696,9 @@ module Ag2Gest
                       "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
                       "region_id" => region_id, "country_id" => country_id, "street_type_id" => street_type_id,
                       "banks" => banks_array, "bank_offices" => bank_offices_array,
-                      "bank_account_classes" => bank_account_classes_array }
+                      "bank_account_classes" => bank_account_classes_array, "meter_location" => meter_locations_array,
+                      "billing_period" => billing_periods_array(subscriber), "projects" => projects_array,
+                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber) }
       render json: @json_data
     end
 
@@ -815,9 +811,7 @@ module Ag2Gest
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil
       @meter_is_shared = @subscriber.meter.is_shared? rescue false
-      # @street_types = StreetType.order(:street_type_code)
       @client = Client.find(@subscriber.client_id)
-      # @client_bank_account = ClientBankAccount.new
       @current_debt = @subscriber.total_existing_debt
 
       #*** For modal dropdowns ***
@@ -826,9 +820,8 @@ module Ag2Gest
       # _add_meter, _change_meter, _quit_meter, _new_reading
       @meter_location = []
       @billing_period = []
-      @reading_incidence = []
+      @reading_incidence = ReadingIncidenceType.all
       # _new_reading
-      # _projects, _oco = projects_dropdown
       @project_dropdown = []
       @reading_type = []
       # _change_data_supply
@@ -939,10 +932,6 @@ module Ag2Gest
       @bank_account_classes = []
       # modals in show
       @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(subscriber.id)
-    end
-
-    def show_test
-      @breadcrumb = 'read'
     end
 
     # GET /subscribers/new
@@ -1603,28 +1592,10 @@ module Ag2Gest
           new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
           new_invoice.original_invoice_id = invoice.id
           new_invoice.save
-          # invoice_cancel = Invoice.create(
-          #   bill_id: bill_cancel.id,
-          #   invoice_no: invoice.invoice_no,
-          #   invoice_date: Date.today,
-          #   invoice_status_id: invoice.invoice_status_id,
-          #   invoice_type_id: invoice.invoice_type_id,
-          #   tariff_scheme_id: invoice.tariff_scheme_id,
-          #   biller_id: invoice.biller_id
-          # )
           invoice.invoice_items.each do |item|
             new_item = item.dup
             new_item.invoice_id = new_invoice.id
             new_item.price = new_item.price * -1
-            # InvoiceItem.create(
-            #   invoice_id: invoice_cancel.id,
-            #   code: item.code,
-            #   description: item.description,
-            #   quantity: item.quantity,
-            #   price: item.price * -1,
-            #   tax_type_id: item.tax_type_id,
-            #   discount_pct: item.discount_pct,
-            #   tariff_id: item.tariff_id)
             new_item.save
           end
           _i = Invoice.find(new_invoice.id)
@@ -1689,6 +1660,61 @@ module Ag2Gest
       else
         Meter.order(:meter_code)
       end
+    end
+
+    def meter_locations_array
+      _d = MeterLocation.all
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.name]
+      end
+      _array
+    end
+
+    def billing_periods_array(subscriber)
+      _d = billing_periods_dropdown(subscriber.office_id, subscriber.billing_frequency_id)
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def billing_period_readings_array(subscriber)
+      _d = BillingPeriod.readings_unbilled_by_subscriber(subscriber.id)
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def reading_incidences_array
+      _d = ReadingIncidenceType.all
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def reading_types_array
+      _d = ReadingType.single_manual_reading
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def projects_array
+      _projects, _oco = projects_dropdown
+      _d = !_oco ? Project.active_only : _projects
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
     end
 
     def manage_filter_state_show

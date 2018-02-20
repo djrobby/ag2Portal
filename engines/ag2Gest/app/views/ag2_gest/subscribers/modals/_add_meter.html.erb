@@ -117,13 +117,13 @@
       <%= f.input :meter, required: true, input_html: { class: 'mid-text-field', maxlength: 20, id: 'input_add_meter' }, label_html: { class: 'form-label' }, label: t('activerecord.attributes.meter.meter_code_f') %>
       <%= f.input :meter_id, as: :hidden, input_html: { id: 'sel2_association' } %>
 
-      <%= f.input :meter_location_id, required: true, collection: @meter_location, input_html: { class: 'x-large-text-field sel2', id: 'input_add_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
+      <%= f.input :meter_location_id, required: true, collection: @meter_location, input_html: { class: 'x-large-text-field', id: 'input_add_meter_location' }, label_html: { class: 'form-label' }, include_blank: true, label: t('activerecord.attributes.meter_detail.meter_location') %>
 
       <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', id: 'input_add_reading_index', min: '0', step: 'any' }, :label_html => { :class => 'form-label' } %>
 
       <%= f.input :reading_date, :as => :hidden, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', id: 'input_add_reading_date' }, :label_html => { :class => 'form-label' } %>
 
-      <%= f.association :billing_period, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :billing_period, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field', :id => "input_add_billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
