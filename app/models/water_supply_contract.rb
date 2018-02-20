@@ -52,6 +52,7 @@ class WaterSupplyContract < ActiveRecord::Base
     integer :tariff_scheme_id
     integer :caliber_id
     date :contract_date
+    string :contract_no
     string :request_no do
       request_no
     end

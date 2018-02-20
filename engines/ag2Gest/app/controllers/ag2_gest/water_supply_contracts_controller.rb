@@ -34,7 +34,7 @@ module Ag2Gest
         end
         fulltext params[:search]
         if !no.blank?
-          with(:request_no).starting_with(no)
+          with(:contract_no).starting_with(no)
         end
         if !subscriber.blank?
           fulltext subscriber

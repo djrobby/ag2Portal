@@ -1,8 +1,8 @@
 <div class="row-fluid">
   <b>
   <div class="span4"><h5><%= I18n.t("ag2_gest.client_payments.index.count_instalments") %>: <%= @plans_totals.plans %></h5></div>
-  <div class="span4" align="center"><h5><%= I18n.t("activerecord.attributes.instalment_plan.instalments_qty") %>: <%= @instalments_totals.payments %></h5></div>
-  <div class="span4" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@instalments_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  <div class="span4" align="center"><h5><%= I18n.t("activerecord.attributes.instalment_plan.instalments_qty") %>: <%= @instalments_totals.payments unless @instalments_totals.blank? %></h5></div>
+  <div class="span4" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_payments") %>: <%= number_with_precision(@instalments_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @instalments_totals.blank? %></h5></div>
   </b>
 </div>
 

@@ -10,7 +10,7 @@
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
-      <th><%= t 'activerecord.attributes.water_supply_contract.code' %></th>
+      <th><%= t 'activerecord.attributes.subscriber.contract' %></th>
       <th><%= t 'activerecord.attributes.water_supply_contract.subscriber_id' %></th>
       <th align="center"><%= t 'activerecord.attributes.water_supply_contract.contract_date' %></th>
       <th><%= t 'activerecord.attributes.water_supply_contract.meters' %></th>
@@ -21,13 +21,13 @@
   <tbody>
     <% @water_supply_contracts.each do |water_supply_contract| %>
     <tr>
-      <td><%= link_to water_supply_contract.contracting_request.to_label, water_supply_contract %>
-      <td><%= water_supply_contract.subscriber.try(:to_label) %></td>
+      <td><%= water_supply_contract.full_no %>
+      <td><%= water_supply_contract.subscriber.try(:full_code) %></td>
       <td align="center"><%= formatted_date(water_supply_contract.contract_date) if water_supply_contract.contract_date %></td>
-      <td><%= water_supply_contract.meter.try(:to_label) %></td>
+      <td><%= water_supply_contract.meter.try(:meter_code) %></td>
       <td><%= water_supply_contract.tariff_scheme.try(:to_label) %></td>
       <td>
-        <a data-toggle="modal" href="#notfound" class="btn btn-mini"><i class="icon-edit"></i></a>
+        <%= link_to water_supply_contract_path(water_supply_contract.id), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
         <%#= render :partial => '/layouts/crud/edit', :locals => { :model => WaterSupplyContract, :path => edit_water_supply_contract_path(water_supply_contract) } %>
         <%#= render :partial => '/layouts/crud/delete', :locals => { :model => WaterSupplyContract, :path => water_supply_contract, :msg => t("activerecord.models.water_supply_contract.one"), :txt => water_supply_contract.subscriber.to_label } %>
       </td>

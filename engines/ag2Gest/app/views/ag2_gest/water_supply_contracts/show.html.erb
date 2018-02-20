@@ -18,11 +18,19 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td colspan="3"><%= @water_supply_contract.id %></td>
+      <td><%= @water_supply_contract.id %></td>
+      <td><%=t 'activerecord.attributes.subscriber.contract'%>:</td>
+      <td class="highlighted bolded"><%= @water_supply_contract.full_no %></td>
     </tr>
     <tr>
-      <td><%=t 'activerecord.attributes.water_supply_contract.contracting_request_id' %>:</td>
-      <td><%= @water_supply_contract.contracting_request.try(:to_label) %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
+      <td><%= formatted_date(@water_supply_contract.contract_date) if @water_supply_contract.contract_date %></td>
+      <td><%=t 'activerecord.attributes.water_supply_contract.contract_term' %>:</td>
+      <td><%= @water_supply_contract.contract_term %></td>
+    </tr>
+    <tr>
+      <td><%=t 'activerecord.models.contracting_request.one' %>:</td>
+      <td><%= @water_supply_contract.contracting_request.try(:full_no) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.client_id' %>:</td>
       <td><%= @water_supply_contract.client.try(:to_label) %></td>
     </tr>
@@ -34,7 +42,7 @@
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.work_order_id' %>:</td>
-      <td><%= @water_supply_contract.work_order.try(:to_label) %></td>
+      <td><%= @water_supply_contract.work_order.try(:full_no) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.meter_id' %>:</td>
       <td><%= @water_supply_contract.meter.try(:to_label) %></td>
     </tr>
@@ -55,12 +63,6 @@
       <td><%= @water_supply_contract.caliber.try(:to_label) %></td>
       <td><%=t 'activerecord.attributes.water_supply_contract.reading_sequence' %>:</td>
       <td><%= @water_supply_contract.reading_sequence %></td>
-    </tr>
-    <tr>
-      <td><%=t 'activerecord.attributes.water_supply_contract.contract_date' %>:</td>
-      <td><%= formatted_date(@water_supply_contract.contract_date) if @water_supply_contract.contract_date %></td>
-      <td><%=t 'activerecord.attributes.water_supply_contract.contract_term' %>:</td>
-      <td><%= @water_supply_contract.contract_term %></td>
     </tr>
     <tr>
       <td><%=t 'activerecord.attributes.water_supply_contract.cadastral_reference' %>:</td>
