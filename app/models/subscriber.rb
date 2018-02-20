@@ -135,6 +135,11 @@ class Subscriber < ActiveRecord::Base
   scope :find_with_joins, -> i {
     joins(:client)
     .find(i)
+    .select("subscribers.id id_,
+             subscribers.company full_name_,
+             subscribers.fiscal_id fiscal_id_,
+             subscribers.subscriber_code full_code_,
+             clients.client_code client_full_code_")
   }
 
   # Callbacks
