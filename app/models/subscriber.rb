@@ -133,7 +133,22 @@ class Subscriber < ActiveRecord::Base
   }
   # *** As a replacement for the .find(params[:id]), with joins  ***
   scope :find_with_joins, -> i {
-    joins(:client)
+    joins("INNER JOIN clients on subscribers.client_id=clients.id")
+    .joins("INNER JOIN street_directories sub_sd on subscribers.street_directory_id=sub_sd.id")
+    .joins("INNER JOIN street_types sub_st on sub_sd.street_type_id=sub_st.id")
+    .joins("INNER JOIN towns sub_tn on sub_sd.town_id=sub_tn.id")
+    .joins("INNER JOIN zipcodes on subscribers.zipcode_id=zipcodes.id")
+    .joins("INNER JOIN centers on subscribers.center_id=centers.id")
+    .joins("INNER JOIN towns cn_tn on centers.town_id=cn_tn.id")
+    .joins("INNER JOIN provinces cn_pr on cn_tn.province_id=cn_pr.id")
+    .joins("INNER JOIN regions cn_rn on cn_pr.region_id=cn_rn.id")
+    .joins("INNER JOIN countries cn_co on cn_rn.country_id=cn_co.id")
+    .joins("LEFT JOIN water_supply_contracts wsc on subscribers.id=wsc.subscriber_id")
+    .joins("LEFT JOIN tariff_schemes on subscribers.tariff_scheme_id=tariff_schemes.id")
+    .joins("LEFT JOIN service_points on subscribers.service_point_id=service_points.id")
+    .joins("INNER JOIN street_directories sp_sd on service_points.street_directory_id=sp_sd.id")
+    .joins("INNER JOIN street_types sp_st on sp_sd.street_type_id=sp_st.id")
+    .joins("INNER JOIN towns sp_tn on sp_sd.town_id=sp_tn.id")
     .where(id: i)
     .select("subscribers.id id_,
              CASE WHEN ISNULL(subscribers.company) THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
@@ -143,7 +158,22 @@ class Subscriber < ActiveRecord::Base
              subscribers.pub_entity pub_entity_,
              subscribers.starting_at starting_at_,
              subscribers.ending_at ending_at_,
-             subscribers.active active_")
+             subscribers.active active_,
+             subscribers.non_billable non_billable_,
+             subscribers.deposit deposit_,
+             CONCAT(sp_st.street_type_code, ' ', sp_sd.street_name, ' ', service_points.street_number, ' (', sp_tn.name, ')') service_point_to_full_label_,
+             subscribers.cadastral_reference cadastral_reference_,
+             subscribers.pub_record pub_record_,
+             CONCAT(sub_st.street_type_code, ' ', sub_sd.street_name, ' ', subscribers.street_number, (CASE WHEN NOT ISNULL(subscribers.building) AND subscribers.building<>'' THEN CONCAT(', ', subscribers.building) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor) AND subscribers.floor<>'' THEN CONCAT(', ', subscribers.floor) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor_office) AND subscribers.floor_office<>'' THEN CONCAT(' ', subscribers.floor_office) ELSE '' END)) address_1_,
+             zipcodes.zipcode zipcode_,
+             sub_sd.alt_code street_directory_alt_code_,
+             centers.name center_name_,
+             cn_tn.name town_name_,
+             cn_pr.name province_name_,
+             cn_rn.name region_name_,
+             cn_co.name country_name_,
+             CASE WHEN NOT ISNULL(wsc.contract_no) THEN CONCAT(SUBSTR(wsc.contract_no,1,6), '-', SUBSTR(wsc.contract_no,7,2), '-', SUBSTR(wsc.contract_no,9,4), '-', SUBSTR(wsc.contract_no,13,6)) ELSE '' END water_supply_contract_full_no_,
+             tariff_schemes.name tariff_scheme_name_")
   }
 
   # Callbacks

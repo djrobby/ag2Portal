@@ -99,7 +99,7 @@
       <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
       <td class="highlighted bolded"><%= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
-      <td  colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
+      <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
   </tbody>
 </table>
