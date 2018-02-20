@@ -65,4 +65,6 @@ en:
         codes: "T S O"
         remarks: "Remarks"
         invoice_cancellation: "Rectifying Invoice"
+        invoice_cancellation_id: "Rectifying Inv."
+        invoice_cancellation_text: "This invoice rectifies the Invoice no %{invoice_n}"
 

@@ -28,7 +28,7 @@ report.page.values(company_name: @biller_printer.project.company.name,
            )
 report.page.values(company_data: (@biller_printer.project.company.invoice_footer_complete + "/r90"))
 #
-# Remarks
+# Remarks and note
 
 report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
            remark: "* " + I18n.t("activerecord.attributes.bill.payment_note"))
@@ -38,8 +38,22 @@ report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
 var_bill_date = @biller_printer.bill_date.strftime(_format) unless @biller_printer.bill_date.blank?
 var_payday_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
 #
-report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
-           data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
+
+if !@biller_printer.invoices.first.original_invoice.nil?
+  if @biller_printer.invoices.first.invoice_operation_id == InvoiceOperation::CANCELATION
+    report.page.values(bill_c: I18n.t("activerecord.attributes.invoice.invoice_cancellation_id"),
+                       note: I18n.t("activerecord.attributes.invoice.invoice_cancellation_text", invoice_n: @biller_printer.invoices.first.try(:original_invoice).try(:full_no))
+                        )
+  else
+    report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
+                       note: I18n.t("activerecord.attributes.invoice.invoice_cancellation_text", invoice_n: @biller_printer.invoices.first.try(:original_invoice).try(:full_no))
+                        )
+  end
+else
+  report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"))
+end
+
+report.page.values(data_client_c: I18n.t("activerecord.attributes.contracting_request.data_client"),
            bill_n_c:  I18n.t("activerecord.attributes.bill.bill_no"),
            bill_n: @biller_printer.real_no,
            bill_date_c: I18n.t("activerecord.attributes.bill.bill_date"),
@@ -113,8 +127,18 @@ end
 #
 report.page.list(:default).header do |header|
   header.item(:title2).value I18n.t("activerecord.models.invoice.one") + " de " + @biller_printer.invoices.first.try(:invoice_type).try(:name)
-  header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
-  header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no)
+  if !@biller_printer.invoices.first.original_invoice.nil?
+    if @biller_printer.invoices.first.invoice_operation_id == InvoiceOperation::CANCELATION
+      header.item(:bill_no_c).value I18n.t("activerecord.attributes.invoice.invoice_cancellation_id") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+      header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no) + " (" + @biller_printer.invoices.first.try(:original_invoice).try(:full_no) + ")"
+    else
+      header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+      header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no) + " (" + @biller_printer.invoices.first.try(:original_invoice).try(:full_no) + ")"
+    end
+  else
+    header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+    header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no)
+  end
   header.item(:bill_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
   header.item(:bill_date).value var_bill_date
 end
@@ -253,8 +277,18 @@ var_invoice_limit = @biller_printer.invoices.second.payday_limit.strftime(_forma
   end
   report.page.list(:other_invoice).header do |header|
     header.item(:title2).value I18n.t("activerecord.models.invoice.one") + " de " + @biller_printer.invoices.second.try(:invoice_items).first.try(:description).capitalize
-    header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
-    header.item(:bill_no).value @biller_printer.invoices.second.try(:full_no)
+    if !@biller_printer.invoices.second.original_invoice.nil?
+      if @biller_printer.invoices.second.invoice_operation_id == InvoiceOperation::CANCELATION
+        header.item(:bill_no_c).value I18n.t("activerecord.attributes.invoice.invoice_cancellation_id") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+        header.item(:bill_no).value @biller_printer.invoices.second.try(:full_no) + " (" + @biller_printer.invoices.second.try(:original_invoice).try(:full_no) + ")"
+      else
+        header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+        header.item(:bill_no).value @biller_printer.invoices.second.try(:full_no) + " (" + @biller_printer.invoices.second.try(:original_invoice).try(:full_no) + ")"
+      end
+    else
+      header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+      header.item(:bill_no).value @biller_printer.invoices.second.try(:full_no)
+    end
     header.item(:bill_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
     header.item(:bill_date).value var_invoice_date
     header.item(:payday_limit_c).value I18n.t("ag2_gest.bills.index.payday_limit")

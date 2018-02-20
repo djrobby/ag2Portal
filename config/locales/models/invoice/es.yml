@@ -65,3 +65,5 @@ es:
         codes: "T E O"
         remarks: "Observaciones"
         invoice_cancellation: "Factura Rectificativa"
+        invoice_cancellation_id: "Fra.Rectificativa"
+        invoice_cancellation_text: "Esta factura rectifica a la Factura Nº %{invoice_n}"

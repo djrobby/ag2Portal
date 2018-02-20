@@ -14,9 +14,10 @@
       <th><%= sortable "code", t('activerecord.attributes.service_point.code') %></th>
       <th><%= sortable "street_type_id", t('activerecord.attributes.service_point.direction') %></th>
       <th><%= sortable "name", t('activerecord.attributes.service_point.service_point_location_id') %></th>
-      <th><%= sortable "diameter", t('activerecord.attributes.service_point.diameter') %></th>
+      <!-- <th><%#= sortable "diameter", t('activerecord.attributes.service_point.diameter') %></th> -->
       <th><%= sortable "reading_variant", t('activerecord.attributes.service_point.reading_route_c') %></th>
       <th><%= sortable "cadastral_reference", t('activerecord.attributes.service_point.cadastral_reference') %></th>
+      <th><%= sortable "meter", t('activerecord.attributes.service_point.meter') %></th>
       <th align="center"><%= t('activerecord.attributes.service_point.available_for_contract') %></th>
       <th align="center"><%= t('activerecord.attributes.service_point.assigned_to_subscriber_c') %></th>
       <th></th>
@@ -28,9 +29,10 @@
         <td><%= link_to service_point.try(:full_code), service_point_path(service_point) %></td>
         <td><%= service_point.try(:address_1)%></td>
         <td><%= service_point.try(:service_point_location).try(:name) %></td>
-        <td><%= service_point.try(:diameter) %></td>
+        <!-- <td><%#= service_point.try(:diameter) %></td> -->
         <td><%= service_point.try(:reading_route).try(:routing_code) %></td>
         <td><%= service_point.try(:cadastral_reference) %></td>
+        <td><%= service_point.try(:meter).try(:meter_code) %></td>
         <td align="center"><% if service_point.try(:available_for_contract) %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></td>
         <td align="center"><% if service_point.try(:assigned_to_subscriber?) %><i class="icon-thumbs-up"></i><% else %><i class="icon-thumbs-down"></i><% end %></td>
         <td> <%= render :partial => '/layouts/crud/edit', :locals => { :model => ServicePoint, :path =>  edit_service_point_path(service_point) } %>

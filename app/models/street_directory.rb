@@ -42,11 +42,12 @@ class StreetDirectory < ActiveRecord::Base
   end
 
   searchable do
-    text :street_name, :town_name
+    text :street_name, :town_name, :alt_code
     string :street_name
     integer :town_id
     integer :street_type_id
     integer :zipcode_id
+    string :alt_code
   end
 
   private
