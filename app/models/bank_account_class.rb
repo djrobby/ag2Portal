@@ -11,6 +11,7 @@ class BankAccountClass < ActiveRecord::Base
   attr_accessible :name
 
   has_many :supplier_bank_accounts
+  has_many :client_bank_accounts
 
   has_paper_trail
 

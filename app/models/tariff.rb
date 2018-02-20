@@ -48,7 +48,6 @@ class Tariff < ActiveRecord::Base
   validates :tariff_type,       :presence => true
   validates :caliber,           :presence => true, :if => :concept_is_sum?
   validates :billing_frequency, :presence => true
-  validates :billing_frequency, :presence => true
   validates :starting_at,       :presence => true,
                                 :uniqueness => { :scope => [:billable_item_id, :tariff_type_id, :caliber_id, :billing_frequency_id] }
   validates :tax_type_b,        :presence => true, :if => "!block1_fee.blank?"

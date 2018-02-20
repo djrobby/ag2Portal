@@ -11,6 +11,7 @@ class BankOffice < ActiveRecord::Base
                   :region_id, :country_id, :swift
 
   has_many :supplier_bank_accounts
+  has_many :client_bank_accounts
 
   has_paper_trail
 
@@ -56,7 +57,7 @@ class BankOffice < ActiveRecord::Base
     if !self.code.blank?
       _ret += " " + self.code
     end
-    _ret    
+    _ret
   end
 
   def full_address
@@ -75,7 +76,7 @@ class BankOffice < ActiveRecord::Base
     end
     if !town.blank?
       _ret += town.name
-    end    
+    end
   end
 
   def address_1

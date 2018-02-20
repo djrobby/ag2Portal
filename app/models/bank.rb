@@ -2,6 +2,7 @@ class Bank < ActiveRecord::Base
   attr_accessible :code, :name, :swift
 
   has_many :supplier_bank_accounts
+  has_many :client_bank_accounts
   has_many :bank_offices
 
   has_paper_trail

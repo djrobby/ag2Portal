@@ -3,6 +3,7 @@ class Center < ActiveRecord::Base
   attr_accessible :active, :name, :town_id, :code
 
   has_many :subscribers
+  has_many :service_points
 
   has_paper_trail
 
