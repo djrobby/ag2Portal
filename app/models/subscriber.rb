@@ -134,12 +134,16 @@ class Subscriber < ActiveRecord::Base
   # *** As a replacement for the .find(params[:id]), with joins  ***
   scope :find_with_joins, -> i {
     joins(:client)
-    .find(i)
+    .where(id: i)
     .select("subscribers.id id_,
-             subscribers.company full_name_,
+             CASE WHEN ISNULL(subscribers.company) THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
              subscribers.fiscal_id fiscal_id_,
-             subscribers.subscriber_code full_code_,
-             clients.client_code client_full_code_")
+             CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
+             CASE WHEN ISNULL(clients.client_code) THEN '' ELSE CONCAT(SUBSTR(clients.client_code,1,4), '-', SUBSTR(clients.client_code,5,7)) END client_full_code_,
+             subscribers.pub_entity pub_entity_,
+             subscribers.starting_at starting_at_,
+             subscribers.ending_at ending_at_,
+             subscribers.active active_")
   }
 
   # Callbacks

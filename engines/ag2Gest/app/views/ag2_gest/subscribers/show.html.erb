@@ -63,6 +63,7 @@
 <%= render '/layouts/ag2_gest/subscribersbreadcrumb' %>
 
 <h3><%= t('.title') %></h3>
+<%# active = @subscriber.active_ != 0 ? true : false %>
 <table class="table">
   <tbody>
     <tr>
@@ -83,9 +84,9 @@
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
-      <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.try(:starting_at).blank? %></td>
+      <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.:starting_at.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.ending_at') %>:</b></td>
-      <td><%= I18n.localize(@subscriber.try(:ending_at)) unless @subscriber.try(:ending_at).blank? %></td>
+      <td><%= I18n.localize(@subscriber.try(:ending_at)) unless @subscriber.:ending_at.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
       <td> <% if @subscriber.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>

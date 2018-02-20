@@ -808,7 +808,7 @@ module Ag2Gest
 
       @breadcrumb = 'read'
       @subscriber = Subscriber.find(params[:id])
-      # @subscriber = Subscriber.find_with_joins(params[:id])
+      # @subscriber = Subscriber.find_with_joins(params[:id]).first
 
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil
