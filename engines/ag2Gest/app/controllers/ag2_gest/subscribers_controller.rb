@@ -683,6 +683,9 @@ module Ag2Gest
     #*** Charge modal dropdowns async ***
     def sub_load_dropdowns
       subscriber = Subscriber.find(params[:subscriber_id])
+      # current_debt = subscriber.total_existing_debt
+      current_debt = number_with_precision(subscriber.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      current_debt_label = I18n.t('activerecord.attributes.subscriber.debt') + ':'
 
       street_type_id = !subscriber.postal_street_type_id.blank? ? subscriber.postal_street_type_id : subscriber.client.street_type_id
       zipcode_id = !subscriber.postal_zipcode_id.blank? ? subscriber.postal_zipcode_id : subscriber.client.zipcode_id
@@ -698,7 +701,8 @@ module Ag2Gest
                       "banks" => banks_array, "bank_offices" => bank_offices_array,
                       "bank_account_classes" => bank_account_classes_array, "meter_location" => meter_locations_array,
                       "billing_period" => billing_periods_array(subscriber), "projects" => projects_array,
-                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber) }
+                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber),
+                      "current_debt" => current_debt, "current_debt_label" => current_debt_label }
       render json: @json_data
     end
 

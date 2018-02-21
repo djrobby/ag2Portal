@@ -34,6 +34,7 @@ es:
         are_you_sure_to_rebill: "¿Estás seguro/a de refacturar este "
         total_consumptions: "Consumo total"
         total_bills: "Importe total"
+        debt_message: "Espera, calculando..."
       edit:
         title: "Editar Abonado"
         btn_show: "Ver Abonado"

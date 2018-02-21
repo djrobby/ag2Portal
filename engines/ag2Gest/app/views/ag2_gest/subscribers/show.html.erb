@@ -96,8 +96,8 @@
         <i id="icon_down" class="icon-thumbs-down <%= 'hide' unless @subscriber.non_billable %>"></i> &nbsp; <a id='billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless @subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.billable_button') %></a>
         <i id="icon_up" class="icon-thumbs-up <%= 'hide' unless !@subscriber.non_billable %>"></i> &nbsp; <a id='non_billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless !@subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       </td>
-      <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
-      <td class="highlighted bolded"><%#= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
+      <td class="bolded" id="show_current_debt_label"><%= t('ag2_gest.subscribers.subscriber.debt') %></td>
+      <td class="highlighted bolded" id="show_current_debt"><%= t('.debt_message') %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
@@ -412,6 +412,12 @@
         var pj = data.projects;
         var rt = data.reading_type;
         var bpr = data.billing_periods_reading;
+        var cd = data.current_debt;
+        var cdl = data.current_debt_label;
+
+        // current debt
+        $("#show_current_debt").text(cd);
+        $("#show_current_debt_label").text(cdl);
 
         // meter locations
         $("#input_add_meter_location").html("");
