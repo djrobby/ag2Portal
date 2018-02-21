@@ -84,9 +84,9 @@
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.starting_at') %>:</b></td>
-      <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.:starting_at.blank? %></td>
+      <td><%= I18n.localize(@subscriber.try(:starting_at)) unless @subscriber.starting_at.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.ending_at') %>:</b></td>
-      <td><%= I18n.localize(@subscriber.try(:ending_at)) unless @subscriber.:ending_at.blank? %></td>
+      <td><%= I18n.localize(@subscriber.try(:ending_at)) unless @subscriber.ending_at.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.active') %>:</b></td>
       <td> <% if @subscriber.active %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>
     </tr>
@@ -97,7 +97,7 @@
         <i id="icon_up" class="icon-thumbs-up <%= 'hide' unless !@subscriber.non_billable %>"></i> &nbsp; <a id='non_billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless !@subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       </td>
       <td><b><%= t('activerecord.attributes.subscriber.debt') %>:</b></td>
-      <td class="highlighted bolded"><%= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
+      <td class="highlighted bolded"><%#= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
