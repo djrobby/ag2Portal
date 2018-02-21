@@ -9,7 +9,7 @@ class Invoice < ActiveRecord::Base
   @@block_codes = ["BL1", "BL2", "BL3", "BL4", "BL5", "BL6", "BL7", "BL8"]
   @@no_block_codes = ["CF", "CV", "VP"]
 
-  belongs_to :bill
+  belongs_to :bill, :counter_cache => true
   belongs_to :invoice_status
   belongs_to :invoice_type
   belongs_to :invoice_operation
@@ -485,6 +485,14 @@ class Invoice < ActiveRecord::Base
 
   def debt
     receivables - collected
+  end
+
+  def current_debt
+    invoice_current_debt.debt rescue 0
+  end
+
+  def current_collected
+    invoice_current_debt.paid rescue 0
   end
 
   def quantity

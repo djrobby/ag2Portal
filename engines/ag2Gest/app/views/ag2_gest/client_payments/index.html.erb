@@ -429,7 +429,7 @@
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
           <!-- Active Tab -->
-          <%= text_field_tag "active_tab", params[:active_tab], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "active_tab", params[:active_tab], :class => 'x-large-text-field shrinked' %>
           <!-- No -->
           <%= label_tag "label_no", I18n.t("ag2_gest.client_payments.index.label_no"), :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>

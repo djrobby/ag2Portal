@@ -874,36 +874,11 @@ module Ag2Gest
       subscriber_name = !subscriber_name.blank? ? inverse_subscriber_name_search(subscriber_name) : []
       s = (subscriber_code + subscriber_fiscal + subscriber_name).uniq
 
-      # Setup Sunspot searches
-      # case active_tab
-      # when 'pendings-tab'
-      #   search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-      # when 'charged-tab'
-      #   search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      # when 'cash-tab'
-      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      # when 'banks-tab'
-      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-      # when 'others-tab'
-      #   search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      # when 'fractionated-tab'
-      #   search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      # else
-      #   search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-      #   search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      #   search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-      # end
-
       # Initialize datasets
       if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
          street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
          client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
-        # No query received: Return no results, except cash & bank
+        # No query received, or filters has been removed: Return no results, except cash & bank
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
@@ -918,17 +893,21 @@ module Ag2Gest
         case active_tab
         when 'pendings-tab'
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
         when 'charged-tab'
           search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'cash-tab'
+          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'banks-tab'
+          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
         when 'others-tab'
           search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'fractionated-tab'
           search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-        else
+        else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
@@ -1065,7 +1044,7 @@ module Ag2Gest
         if !user.blank?
           with :created_by, user
         end
-        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, :invoice_current_debt, {invoice_items: :tax_type}]}, :instalments]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => 10
       end

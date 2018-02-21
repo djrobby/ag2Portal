@@ -192,6 +192,10 @@ class Bill < ActiveRecord::Base
     invoices.first.invoice_type.id rescue 0
   end
 
+  def bill_type_code
+    invoices.first.invoice_type.code rescue ''
+  end
+
   def company_
     project.company unless (project.blank? || project.company.blank?)
   end
@@ -383,6 +387,10 @@ class Bill < ActiveRecord::Base
 
   def debt
     invoices.reject(&:marked_for_destruction?).sum(&:debt)
+  end
+
+  def current_debt
+    invoice_current_debts.sum(:debt) rescue 0
   end
 
   def subtotal

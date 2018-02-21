@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180219070859) do
+ActiveRecord::Schema.define(:version => 20180221161302) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -344,8 +344,8 @@ ActiveRecord::Schema.define(:version => 20180219070859) do
     t.integer  "province_id"
     t.integer  "region_id"
     t.integer  "country_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
     t.integer  "reading_1_id"
@@ -354,6 +354,7 @@ ActiveRecord::Schema.define(:version => 20180219070859) do
     t.integer  "organization_id"
     t.integer  "payment_method_id"
     t.string   "old_no"
+    t.integer  "invoices_count",    :default => 0
   end
 
   add_index "bills", ["client_id"], :name => "index_bills_on_client_id"
