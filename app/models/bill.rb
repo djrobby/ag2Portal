@@ -31,6 +31,7 @@ class Bill < ActiveRecord::Base
   has_many :cancelled_invoices
   has_many :active_invoices
   has_many :active_supply_invoices
+  has_many :invoice_debts
   has_many :invoice_current_debts
   # Contract bill for: New contracting or change of holder (to NEW subscriber)
   has_one :water_supply_contract
@@ -390,7 +391,11 @@ class Bill < ActiveRecord::Base
   end
 
   def current_debt
-    invoice_current_debts.sum(:debt) rescue 0
+    invoice_debts.sum(:debt) rescue 0
+  end
+
+  def current_collected
+    invoice_debt.sum(:paid) rescue 0
   end
 
   def subtotal

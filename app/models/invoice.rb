@@ -488,11 +488,11 @@ class Invoice < ActiveRecord::Base
   end
 
   def current_debt
-    invoice_current_debt.debt rescue 0
+    invoice_debt.debt rescue 0
   end
 
   def current_collected
-    invoice_current_debt.paid rescue 0
+    invoice_debt.paid rescue 0
   end
 
   def quantity
