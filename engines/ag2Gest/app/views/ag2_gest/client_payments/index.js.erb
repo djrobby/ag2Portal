@@ -16,6 +16,8 @@ $('#cash').html("<%= escape_javascript(render('payments_cash')) %>");
 $('#banks').html("<%= escape_javascript(render('payments_bank')) %>");
 $('#others').html("<%= escape_javascript(render('payments_other')) %>");
 $('#fractionated').html("<%= escape_javascript(render('instalments')) %>");
+$("#active_tab").val("<%= params[:active_tab] %>");
+
 
 if (_active_tab == "pendings-tab") {
   <% if !@bills_pending.blank? %>

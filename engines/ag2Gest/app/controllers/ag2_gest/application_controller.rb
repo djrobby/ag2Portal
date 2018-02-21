@@ -7,6 +7,7 @@ module Ag2Gest
     def reset_session_variables_for_filters
       session[:search] = nil
       session[:letter] = nil
+      session[:active_tab] = nil
       session[:No] = nil
       session[:name] = nil
       session[:Type] = nil

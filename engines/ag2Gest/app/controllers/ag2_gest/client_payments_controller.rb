@@ -817,6 +817,14 @@ module Ag2Gest
     # GET /client_payments.json
     def index
       manage_filter_state
+
+      # Set active_tab to use in searches
+      # if params[:active_tab] content finished with !, remove filter
+      active_tab = ''
+      if params[:active_tab]
+        active_tab = params[:active_tab]
+      end
+
       no = params[:No]
       project = params[:Project]
       period = params[:Period]
@@ -866,384 +874,78 @@ module Ag2Gest
       subscriber_name = !subscriber_name.blank? ? inverse_subscriber_name_search(subscriber_name) : []
       s = (subscriber_code + subscriber_fiscal + subscriber_name).uniq
 
-      search_pending = Bill.search do
-        with(:invoice_status_id, 0..98)
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
-
-      search_charged = Bill.search do
-        with :invoice_status_id, InvoiceStatus::CHARGED
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
-
-      search_cash = ClientPayment.search do
-        with :payment_type, ClientPayment::CASH
-        with :confirmation_date, nil
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
-
-      search_bank = ClientPayment.search do
-        with :payment_type, ClientPayment::BANK
-        with :confirmation_date, nil
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !bank_order.blank?
-          with :receipt_no, bank_order
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
-
-      search_others = ClientPayment.search do
-        # with(:invoice_status_id, 0..98)
-        with :payment_type, ClientPayment::OTHERS
-        with :confirmation_date, nil
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
-
-      search_instalment = InstalmentInvoice.search do
-        with :client_payment, nil
-        if !current_projects.blank?
-          with :project_id, current_projects
-        end
-        if !no.blank?
-          if no.class == Array
-            with :bill_no, no
-          else
-            with(:bill_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        # Client
-        # if !client.blank?
-        #   if client.class == Array
-        #     with :client_code_name_fiscal, client
-        #   else
-        #     with(:client_code_name_fiscal).starting_with(client)
-        #   end
-        # end
-        if !c.empty?
-          with :client_ids, c
-        end
-        # Subscriber
-        # if !subscriber.blank?
-        #   if subscriber.class == Array
-        #     with :subscriber_code_name_fiscal, subscriber
-        #   else
-        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
-        #   end
-        # end
-        if !s.empty?
-          with :subscriber_ids, s
-        end
-        # Supply address
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !period.blank?
-          with :billing_period_id, period
-        end
-        if !user.blank?
-          with :created_by, user
-        end
-        data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
-      end
+      # Setup Sunspot searches
+      # case active_tab
+      # when 'pendings-tab'
+      #   search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+      # when 'charged-tab'
+      #   search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      # when 'cash-tab'
+      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      # when 'banks-tab'
+      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+      # when 'others-tab'
+      #   search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      # when 'fractionated-tab'
+      #   search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      # else
+      #   search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+      #   search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      #   search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      # end
 
       # Initialize datasets
       if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
          street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
          client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
-        # Return no results
+        # No query received: Return no results, except cash & bank
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
         @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
+        search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+        @client_payments_cash = search_cash.results
+        @client_payments_bank = search_bank.results
       else
-        @bills_pending = search_pending.results
-        @bills_charged = search_charged.results
-        @client_payments_others = search_others.results
-        @instalment_invoices = search_instalment.results
+        # Valid query received: Return found results
+        # Setup Sunspot searches
+        case active_tab
+        when 'pendings-tab'
+          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        when 'charged-tab'
+          search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        when 'cash-tab'
+          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        when 'banks-tab'
+          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+        when 'others-tab'
+          search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        when 'fractionated-tab'
+          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        else
+          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+          search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+        end
+        @bills_pending = search_pending.results rescue Bill.search { with :invoice_status_id, -1 }.results
+        @bills_charged = search_charged.results rescue Bill.search { with :invoice_status_id, -1 }.results
+        @client_payments_others = search_others.results rescue ClientPayment.search { with :payment_type, -1 }.results
+        @instalment_invoices = search_instalment.results rescue InstalmentInvoice.search { with :client_id, -1 }.results
+        @client_payments_cash = search_cash.results rescue ClientPayment.search { with :payment_type, -1 }.results
+        @client_payments_bank = search_bank.results rescue ClientPayment.search { with :payment_type, -1 }.results
       end
-      @client_payments_cash = search_cash.results
-      @client_payments_bank = search_bank.results
+
+      # Set active_tab to use in view filters
+      params[:active_tab] = active_tab.blank? ? 'pendings-tab' : active_tab.chomp('!')
 
       # Initialize totals
       bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
@@ -1305,260 +1007,384 @@ module Ag2Gest
       end
     end
 
-    # # bill report
-    # def bill_report
-    #   manage_filter_state
-    #   bill_no = params[:bill_no]
-    #   client = params[:client]
-    #   subscriber = params[:subscriber]
-    #   entity = params[:entity]
-    #   project = params[:project]
-    #   bank_account = params[:bank_account] == "SI" ? true : false
-    #   billing_period = params[:billing_period]
-    #   reading_routes = params[:reading_routes]
+    ##################################
+    # Begin Region: Sunspot searches #
+    ##################################
+    def pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      Bill.search do
+        with(:invoice_status_id, 0..98)
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}, :instalments]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
 
-    #   # OCO
-    #   init_oco if !session[:organization]
+    def charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      Bill.search do
+        with :invoice_status_id, InvoiceStatus::CHARGED
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :invoice_status, :payment_method, :invoices, {invoice_items: :tax_type}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
 
-    #   # If inverse no search is required
-    #   bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+    def cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      ClientPayment.search do
+        with :payment_type, ClientPayment::CASH
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
 
-    #   @search = Bill.search do
-    #     if !current_projects_ids.blank?
-    #       with :project_id, current_projects_ids
-    #     end
-    #     if !bill_no.blank?
-    #       if bill_no.class == Array
-    #         with :bill_no, bill_no
-    #       else
-    #         with(:bill_no).starting_with(bill_no)
-    #       end
-    #     end
-    #     if !client.blank?
-    #       with :client_id, client
-    #     end
-    #     if !subscriber.blank?
-    #       with :subscriber_id, subscriber
-    #     end
-    #     if !entity.blank?
-    #       with :entity_id, entity
-    #     end
-    #     if !bank_account.blank?
-    #       with :bank_account, bank_account
-    #     end
-    #     if !reading_routes.blank?
-    #       with :reading_route_id, reading_routes
-    #     end
-    #     order_by :sort_no, :asc
-    #     paginate :page => params[:page] || 1, :per_page => Bill.count
-    #   end
+    def bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+      ClientPayment.search do
+        with :payment_type, ClientPayment::BANK
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !bank_order.blank?
+          with :receipt_no, bank_order
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
 
-    #   @bill_report = @search.results
+    def others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      ClientPayment.search do
+        # with(:invoice_status_id, 0..98)
+        with :payment_type, ClientPayment::OTHERS
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
 
-    #   if !@bill_report.blank?
-    #     title = t("activerecord.models.bill.few")
-    #     @to = formatted_date(@bill_report.first.created_at)
-    #     @from = formatted_date(@bill_report.last.created_at)
-    #     respond_to do |format|
-    #       # Render PDF
-    #       format.pdf { send_data render_to_string,
-    #                    filename: "#{title}_#{@from}-#{@to}.pdf",
-    #                    type: 'application/pdf',
-    #                    disposition: 'inline' }
-    #     end
-    #   end
-    # end
-    # # bill pending report
-    # def bill_pending_report
-    #   manage_filter_state
-    #   bill_no = params[:bill_no]
-    #   client = params[:client]
-    #   subscriber = params[:subscriber]
-    #   entity = params[:entity]
-    #   project = params[:project]
-    #   bank_account = params[:bank_account] == "SI" ? true : false
-    #   billing_period = params[:billing_period]
-    #   reading_routes = params[:reading_routes]
-
-    #   # OCO
-    #   init_oco if !session[:organization]
-
-    #   # If inverse no search is required
-    #   bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
-
-    #   @search = Bill.search do
-    #     with(:invoice_status_id, 0..98)
-    #     if !current_projects_ids.blank?
-    #       with :project_id, current_projects_ids
-    #     end
-    #     if !bill_no.blank?
-    #       if bill_no.class == Array
-    #         with :bill_no, bill_no
-    #       else
-    #         with(:bill_no).starting_with(bill_no)
-    #       end
-    #     end
-    #     if !client.blank?
-    #       with :client_id, client
-    #     end
-    #     if !subscriber.blank?
-    #       with :subscriber_id, subscriber
-    #     end
-    #     if !entity.blank?
-    #       with :entity_id, entity
-    #     end
-    #     if !bank_account.blank?
-    #       with :bank_account, bank_account
-    #     end
-    #     if !reading_routes.blank?
-    #       with :reading_route_id, reading_routes
-    #     end
-    #     order_by :sort_no, :asc
-    #     paginate :page => params[:page] || 1, :per_page => Bill.count
-    #   end
-
-    #   @bill_pending_report = @search.results
-    #   if !@bill_pending_report.blank?
-    #     title = t("activerecord.models.bill.few")
-    #     @to = formatted_date(@bill_pending_report.first.created_at)
-    #     @from = formatted_date(@bill_pending_report.last.created_at)
-    #     respond_to do |format|
-    #       # Render PDF
-    #       format.pdf { send_data render_to_string,
-    #                    filename: "#{title}_#{@from}-#{@to}.pdf",
-    #                    type: 'application/pdf',
-    #                    disposition: 'inline' }
-    #     end
-    #   end
-    # end
-    # # bill unpaid report
-    # def bill_unpaid_report
-    #   manage_filter_state
-    #   bill_no = params[:bill_no]
-    #   client = params[:client]
-    #   subscriber = params[:subscriber]
-    #   entity = params[:entity]
-    #   project = params[:project]
-    #   bank_account = params[:bank_account] == "SI" ? true : false
-    #   billing_period = params[:billing_period]
-    #   reading_routes = params[:reading_routes]
-
-    #   # OCO
-    #   init_oco if !session[:organization]
-
-    #   # If inverse no search is required
-    #   bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
-
-    #   @search = Bill.search do
-    #     with(:invoice_status_id, 0..98)
-    #     #with :payday_limit, unpaid?
-    #     if !current_projects_ids.blank?
-    #       with :project_id, current_projects_ids
-    #     end
-    #     if !bill_no.blank?
-    #       if bill_no.class == Array
-    #         with :bill_no, bill_no
-    #       else
-    #         with(:bill_no).starting_with(bill_no)
-    #       end
-    #     end
-    #     if !client.blank?
-    #       with :client_id, client
-    #     end
-    #     if !subscriber.blank?
-    #       with :subscriber_id, subscriber
-    #     end
-    #     if !entity.blank?
-    #       with :entity_id, entity
-    #     end
-    #     if !bank_account.blank?
-    #       with :bank_account, bank_account
-    #     end
-    #     if !reading_routes.blank?
-    #       with :reading_route_id, reading_routes
-    #     end
-    #     order_by :sort_no, :asc
-    #     paginate :page => params[:page] || 1, :per_page => Bill.count
-    #   end
-
-    #   @bill_unpaid_report = @search.results
-
-    #   if !@bill_unpaid_report.blank?
-    #     title = t("activerecord.models.bill.few")
-    #     @to = formatted_date(@bill_unpaid_report.first.created_at)
-    #     @from = formatted_date(@bill_unpaid_report.last.created_at)
-    #     respond_to do |format|
-    #       # Render PDF
-    #       format.pdf { send_data render_to_string,
-    #                    filename: "#{title}_#{@from}-#{@to}.pdf",
-    #                    type: 'application/pdf',
-    #                    disposition: 'inline' }
-    #     end
-    #   end
-    # end
-    # # bill charged report
-    # def bill_charged_report
-    #   manage_filter_state
-    #   bill_no = params[:bill_no]
-    #   client = params[:client]
-    #   subscriber = params[:subscriber]
-    #   entity = params[:entity]
-    #   project = params[:project]
-    #   bank_account = params[:bank_account] == "SI" ? true : false
-    #   billing_period = params[:billing_period]
-    #   reading_routes = params[:reading_routes]
-
-    #   # OCO
-    #   init_oco if !session[:organization]
-
-    #   # If inverse no search is required
-    #   bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
-
-    #   @search = Bill.search do
-    #     with :invoice_status_id, 99
-    #     if !current_projects_ids.blank?
-    #       with :project_id, current_projects_ids
-    #     end
-    #     if !bill_no.blank?
-    #       if bill_no.class == Array
-    #         with :bill_no, bill_no
-    #       else
-    #         with(:bill_no).starting_with(bill_no)
-    #       end
-    #     end
-    #     if !client.blank?
-    #       with :client_id, client
-    #     end
-    #     if !subscriber.blank?
-    #       with :subscriber_id, subscriber
-    #     end
-    #     if !entity.blank?
-    #       with :entity_id, entity
-    #     end
-    #     if !bank_account.blank?
-    #       with :bank_account, bank_account
-    #     end
-    #     if !reading_routes.blank?
-    #       with :reading_route_id, reading_routes
-    #     end
-    #     order_by :sort_no, :asc
-    #     paginate :page => params[:page] || 1, :per_page => Bill.count
-    #   end
-
-    #   @bill_charged_report = @search.results
-    #   if !@bill_charged_report.blank?
-    #     title = t("activerecord.models.bill.few")
-    #     @to = formatted_date(@bill_charged_report.first.created_at)
-    #     @from = formatted_date(@bill_charged_report.last.created_at)
-    #     respond_to do |format|
-    #       # Render PDF
-    #       format.pdf { send_data render_to_string,
-    #                    filename: "#{title}_#{@from}-#{@to}.pdf",
-    #                    type: 'application/pdf',
-    #                    disposition: 'inline' }
-    #     end
-    #   end
-    # end
+    def instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+      InstalmentInvoice.search do
+        with :client_payment, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+        if !no.blank?
+          if no.class == Array
+            with :bill_no, no
+          else
+            with(:bill_no).starting_with(no)
+          end
+        end
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !c.empty?
+          with :client_ids, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !s.empty?
+          with :subscriber_ids, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        if !bank_account.blank?
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !user.blank?
+          with :created_by, user
+        end
+        data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => 10
+      end
+    end
+    ################################
+    # End Region: Sunspot searches #
+    ################################
 
     def payment_receipt
       @payment = ClientPayment.find(params[:id])
@@ -1804,6 +1630,12 @@ module Ag2Gest
 
     # Keeps filter state
     def manage_filter_state
+      # active tab
+      if params[:active_tab]
+        session[:active_tab] = params[:active_tab]
+      elsif session[:active_tab]
+        params[:active_tab] = session[:active_tab]
+      end
       # no
       if params[:No]
         session[:No] = params[:No]

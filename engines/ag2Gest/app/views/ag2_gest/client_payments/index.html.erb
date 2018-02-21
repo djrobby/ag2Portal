@@ -215,6 +215,7 @@
 
   $(window).bind("load", function() {
     a = "<%= cp_restore_filters %>";
+    $("#active_tab").val("<%= params[:active_tab] %>");
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%#= params[:Project] %>");
     $("#Client").val("<%= params[:Client] %>");
@@ -287,6 +288,8 @@
       a = "<%= cp_remove_filters %>";
       setupAllSelect2(a, a, a);
       show_cashier();
+      remove_tab_indicator = $('#active_tab').val() + '!';
+      $('#active_tab').val(remove_tab_indicator);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -425,6 +428,8 @@
         <%= link_to ag2_gest.client_payments_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %><i class="icon-refresh"></i><% end %>
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
+          <!-- Active Tab -->
+          <%= text_field_tag "active_tab", params[:active_tab], :class => 'x-large-text-field shrinked' %>
           <!-- No -->
           <%= label_tag "label_no", I18n.t("ag2_gest.client_payments.index.label_no"), :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
@@ -1446,5 +1451,25 @@
     $("#sum-instruments").text(sum_instruments.format(2, 3, _delimiter, _separator));
     $('.fnt-currency-quantity').val(0);
     return false;
+  });
+
+  // Tab navigation
+  $("#pendings-tab").click(function() {
+    $('#active_tab').val('pendings-tab');
+  });
+  $("#charged-tab").click(function() {
+    $('#active_tab').val('charged-tab');
+  });
+  $("#others-tab").click(function() {
+    $('#active_tab').val('others-tab');
+  });
+  $("#fractionated-tab").click(function() {
+    $('#active_tab').val('fractionated-tab');
+  });
+  $("#banks-tab").click(function() {
+    $('#active_tab').val('banks-tab');
+  });
+  $("#cash-tab").click(function() {
+    $('#active_tab').val('cash-tab');
   });
 </script>

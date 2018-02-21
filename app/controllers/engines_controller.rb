@@ -11,6 +11,7 @@ class EnginesController < ApplicationController
     session[:sort] = nil
     session[:direction] = nil
     session[:ifilter] = nil
+    session[:active_tab] = nil
     session[:From] = nil
     session[:To] = nil
     session[:Type] = nil
