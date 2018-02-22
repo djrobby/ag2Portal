@@ -1044,7 +1044,7 @@ module Ag2Gest
         if !user.blank?
           with :created_by, user
         end
-        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, :invoice_debt, {invoice_items: :tax_type}]}, :instalments]
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}, :instalments]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => 10
       end
@@ -1105,7 +1105,7 @@ module Ag2Gest
         if !user.blank?
           with :created_by, user
         end
-        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, :invoice_debt, {invoice_items: :tax_type}]}]
+        data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => 10
       end
