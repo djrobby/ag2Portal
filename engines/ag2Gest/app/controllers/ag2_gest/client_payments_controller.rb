@@ -927,34 +927,51 @@ module Ag2Gest
       params[:active_tab] = active_tab.blank? ? 'pendings-tab' : active_tab.chomp('!')
 
       # Initialize totals
-      bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
-      pending_bills_select = 'count(bills.id) as bills, coalesce(sum(invoice_current_debts.debt),0) as debts'
-      collections_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
-      plans_select = 'count(id) as plans'
-      payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
-      others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
+      @pending_totals = { bills: @bills_pending.size, debts: @bills_pending.sum(&:debt) }
+      @charged_totals = { bills: @bills_charged.size, totals: @bills_charged.sum(&:total) }
+      @cash_totals = { payments: @client_payments_cash.size, totals: @client_payments_cash.sum(&:amount) }
+      @bank_totals = { payments: @client_payments_bank.size, totals: @client_payments_bank.sum(&:amount) }
+      @others_totals = { payments: @client_payments_others.size, totals: @client_payments_others.sum(&:amount) }
+      @instalment_invoices_totals = { payments: @instalment_invoices.size, totals: @instalment_invoices.sum(&:amount) }
 
-      pending_ids = @bills_pending.map(&:id)
-      charged_ids = @bills_charged.map(&:id)
-      cash_ids = @client_payments_cash.map(&:id)
-      bank_ids = @client_payments_bank.map(&:id)
-      others_ids = @client_payments_others.map(&:id)
-      instalment_invoices_ids = @instalment_invoices.map(&:id)
+      # Instalments
       instalment_ids = @instalment_invoices.map(&:instalment_id).uniq
-
-      @pending_totals = Bill.select(pending_bills_select).joins(:invoice_current_debts).where(id: pending_ids).first
-      @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
-      @cash_totals = ClientPayment.select(collections_select).where(id: cash_ids).first
-      @bank_totals = ClientPayment.select(collections_select).where(id: bank_ids).first
-      @others_totals = ClientPayment.select(collections_select).where(id: others_ids).first
-      @instalment_invoices_totals = InstalmentInvoice.select(collections_select).where(id: instalment_invoices_ids).first
-
-      @instalments = Instalment.with_these_ids(instalment_ids).paginate(:page => params[:page], :per_page => per_page || 10)
-      @instalments_totals = @instalments.select(collections_select).first
+      @instalments = Instalment.with_these_ids(instalment_ids)
+      @instalments_totals = { payments: @instalments.size, totals: @instalments.sum(&:amount) }
+      plans_select = 'count(id) as plans'
       plan_ids = @instalments.map(&:instalment_plan_id).uniq
       @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
+      @instalments = @instalments.paginate(:page => params[:page], :per_page => per_page || 10)
+
+      # bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
+      # pending_bills_select = 'count(bills.id) as bills, coalesce(sum(invoice_current_debts.debt),0) as debts'
+      # collections_select = 'count(id) as payments, coalesce(sum(amount),0) as totals'
+      # plans_select = 'count(id) as plans'
+      # payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
+      # others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
+
+      # pending_ids = @bills_pending.map(&:id)
+      # charged_ids = @bills_charged.map(&:id)
+      # cash_ids = @client_payments_cash.map(&:id)
+      # bank_ids = @client_payments_bank.map(&:id)
+      # others_ids = @client_payments_others.map(&:id)
+      # instalment_invoices_ids = @instalment_invoices.map(&:id)
+      # instalment_ids = @instalment_invoices.map(&:instalment_id).uniq
+
+      # @pending_totals = Bill.select(pending_bills_select).joins(:invoice_current_debts).where(id: pending_ids).first
+      # @charged_totals = Bill.select(bills_select).joins(:invoices).where(id: charged_ids).first
+      # @cash_totals = ClientPayment.select(collections_select).where(id: cash_ids).first
+      # @bank_totals = ClientPayment.select(collections_select).where(id: bank_ids).first
+      # @others_totals = ClientPayment.select(collections_select).where(id: others_ids).first
+      # @instalment_invoices_totals = InstalmentInvoice.select(collections_select).where(id: instalment_invoices_ids).first
+
+      # @instalments = Instalment.with_these_ids(instalment_ids).paginate(:page => params[:page], :per_page => per_page || 10)
+      # @instalments_totals = @instalments.select(collections_select).first
+      # plan_ids = @instalments.map(&:instalment_plan_id).uniq
+      # @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
 
       # Supplier payments
+      payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
       w = ''
       w = "supplier_payments.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
       w = "supplier_invoices.company_id = #{session[:company]} AND " if session[:company] != '0'
@@ -963,6 +980,7 @@ module Ag2Gest
       @supplier_payments = SupplierPayment.no_cash_desk_closing_yet(w).select(payments_select).first
 
       # Other cash movements
+      others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
       w = ''
       w = "cash_movements.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
       w = "cash_movements.company_id = #{session[:company]} AND " if session[:company] != '0'
@@ -973,7 +991,7 @@ module Ag2Gest
       # Open last cash desk closing
       @last_cash_desk_closing = open_cash
       @opening_balance = @last_cash_desk_closing.closing_balance rescue 0
-      @closing_balance = @opening_balance + @cash_totals.totals + @supplier_payments.totals + @other_cash.totals
+      @closing_balance = @opening_balance + @cash_totals[:totals] + @supplier_payments.totals + @other_cash.totals
 
       # Currencies & instruments
       @currency = Currency.find_by_alphabetic_code('EUR')

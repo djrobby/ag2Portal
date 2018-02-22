@@ -639,13 +639,13 @@
           <div class="control-group string required">
             <label class="string control-label">Recibos seleccionados</label>
             <div class="controls highlighted bolded">
-              <span id="bills-cash-to-pending"><%= @cash_totals.payments %></span>
+              <span id="bills-cash-to-pending"><%= @cash_totals[:payments] %></span>
             </div>
           </div>
           <div class="control-group string required">
             <label class="string control-label">Total a devolver</label>
             <div class="controls highlighted bolded">
-              <span id="total-cash-to-pending"><%= number_with_precision(@cash_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+              <span id="total-cash-to-pending"><%= number_with_precision(@cash_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
         </div>
@@ -668,14 +668,14 @@
           <div class="control-group string required">
             <label class="string control-label">Recibos seleccionados</label>
             <div class="controls highlighted bolded">
-              <span id="bank-bills-selected"><%= @bank_totals.payments %></span>
+              <span id="bank-bills-selected"><%= @bank_totals[:payments] %></span>
             </div>
           </div>
 
           <div class="control-group string required">
             <label class="string control-label">Total cobrado</label>
             <div class="controls highlighted bolded">
-              <span id="bank-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+              <span id="bank-total-selected"><%= number_with_precision(@bank_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
         </div>
@@ -698,13 +698,13 @@
           <div class="control-group string required">
             <label class="string control-label">Recibos seleccionados</label>
             <div class="controls highlighted bolded">
-              <span id="bank-to-pending-bills-selected"><%= @bank_totals.payments %></span>
+              <span id="bank-to-pending-bills-selected"><%= @bank_totals[:payments] %></span>
             </div>
           </div>
           <div class="control-group string required">
             <label class="string control-label">Total a devolver</label>
             <div class="controls highlighted bolded">
-              <span id="bank-to-pending-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+              <span id="bank-to-pending-total-selected"><%= number_with_precision(@bank_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
         </div>
@@ -727,13 +727,13 @@
           <div class="control-group string required">
             <label class="string control-label">Recibos seleccionados</label>
             <div class="controls highlighted bolded">
-              <span id="bank-to-order-bills-selected"><%= @bank_totals.payments %></span>
+              <span id="bank-to-order-bills-selected"><%= @bank_totals[:payments] %></span>
             </div>
           </div>
           <div class="control-group string required">
             <label class="string control-label">Total a remesar</label>
             <div class="controls highlighted bolded">
-              <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+              <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
           <%= f.input :bank_account_id, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_account_id"), collection: @bank_accounts, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>

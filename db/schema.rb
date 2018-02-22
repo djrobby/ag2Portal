@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180222104528) do
+ActiveRecord::Schema.define(:version => 20180222120419) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1881,7 +1881,7 @@ ActiveRecord::Schema.define(:version => 20180222104528) do
   end
 
   create_table "invoice_current_debts", :id => false, :force => true do |t|
-    t.integer "invoice_id",                                           :default => 0,   :null => false
+    t.integer "invoice_id",                                          :default => 0,   :null => false
     t.integer "organization_id"
     t.integer "bill_id"
     t.integer "invoice_status_id"
@@ -1894,15 +1894,15 @@ ActiveRecord::Schema.define(:version => 20180222104528) do
     t.string  "invoice_no"
     t.date    "invoice_date"
     t.date    "payday_limit"
-    t.decimal "subtotal",             :precision => 47, :scale => 10
-    t.decimal "taxes",                :precision => 65, :scale => 22
-    t.decimal "bonus",                :precision => 57, :scale => 16
-    t.decimal "taxable",              :precision => 58, :scale => 16
-    t.decimal "total",                :precision => 65, :scale => 22
+    t.decimal "subtotal",             :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "taxes",                :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "bonus",                :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "taxable",              :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "total",                :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal "paid",                 :precision => 34, :scale => 4
-    t.decimal "calc_debt",            :precision => 65, :scale => 22
-    t.decimal "totals",               :precision => 13, :scale => 4,  :default => 0.0, :null => false
-    t.decimal "receivables",          :precision => 13, :scale => 4,  :default => 0.0, :null => false
+    t.decimal "calc_debt",            :precision => 35, :scale => 4
+    t.decimal "totals",               :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "receivables",          :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.decimal "debt",                 :precision => 35, :scale => 4
   end
 

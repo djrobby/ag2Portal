@@ -1,7 +1,7 @@
 <div class="row-fluid">
   <b>
-  <div class="span6"><h5><%= I18n.t("activerecord.models.bill.few") %>: <%= @pending_totals.bills  %></h5></div>
-  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>: <%= number_with_precision(@pending_totals.debts, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
+  <div class="span6"><h5><%= I18n.t("activerecord.models.bill.few") %>: <%= @pending_totals[:bills]  %></h5></div>
+  <div class="span6" align="right"><h5><%= I18n.t("ag2_gest.client_payments.index.total_bills") %>: <%= number_with_precision(@pending_totals[:debts], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
   </b>
 </div>
 
@@ -52,7 +52,7 @@
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
             <% end %>
             <td align="right"><%= bill.billing_period_code %></td>
-            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.invoice_status.name unless bill.invoice_status.blank? %></td>
           </tbody>
         </table>

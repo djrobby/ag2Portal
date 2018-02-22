@@ -10,13 +10,13 @@
       <div class="control-group string required">
         <label class="string control-label">Recibos seleccionados</label>
         <div class="controls highlighted bolded">
-          <span id="others-to-pending-bills-selected"><%= @others_totals.payments %></span>
+          <span id="others-to-pending-bills-selected"><%= @others_totals[:payments] %></span>
         </div>
       </div>
       <div class="control-group string required">
         <label class="string control-label">Total a devolver</label>
         <div class="controls highlighted bolded">
-          <span id="others-to-pending-total-selected"><%= number_with_precision(@others_totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+          <span id="others-to-pending-total-selected"><%= number_with_precision(@others_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
         </div>
       </div>
     </div>
