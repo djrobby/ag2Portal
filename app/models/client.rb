@@ -254,6 +254,14 @@ class Client < ActiveRecord::Base
     invoice_debts.existing_debt.sum(:debt)
   end
 
+  def total_debt
+    invoices.sum(&:debt)
+  end
+
+  def current_debt
+    invoices.sum(&:current_debt)
+  end
+
   def active_yes_no
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end

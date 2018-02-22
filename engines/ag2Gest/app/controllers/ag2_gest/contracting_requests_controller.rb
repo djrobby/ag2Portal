@@ -17,7 +17,7 @@ module Ag2Gest
                                                 :update_tariff_schemes_from_use,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
-                                                :et_validate_fiscal_id_textfield,
+                                                #:et_validate_fiscal_id_textfield,
                                                 :cr_generate_no,
                                                 :show_test,
                                                 :next_status,
@@ -421,7 +421,7 @@ module Ag2Gest
     def sepa_pdf
       @contracting_request = ContractingRequest.find(params[:id])
       @subscriber = @contracting_request.subscriber
-      
+
       title = t("activerecord.attributes.water_supply_contract.pay_sepa_order_c")
       respond_to do |format|
         format.pdf {
@@ -993,8 +993,8 @@ module Ag2Gest
           response_hash = { contracting_request: @contracting_request }
           response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
           response_hash[:bill] = @contracting_request.water_connection_contract.bill
-          response_hash[:invoice] = @contracting_request.water_connection_contract.bill.invoices.first   
-          response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status       
+          response_hash[:invoice] = @contracting_request.water_connection_contract.bill.invoices.first
+          response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status
           respond_to do |format|
             format.json { render json: response_hash }
           end
@@ -1025,8 +1025,8 @@ module Ag2Gest
         if @contracting_request.save
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bill] = @contracting_request.water_supply_contract.bill
-          response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first   
-          response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status       
+          response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first
+          response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status
           response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
           response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
           # response_hash[:work_order] = @work_order
@@ -1196,7 +1196,7 @@ module Ag2Gest
                       country_id: @street_directory.town.province.region.country_id,
                     }
       respond_to do |format|
-        format.html 
+        format.html
         format.json { render json: @json_data }
       end
       rescue ActiveRecord::RecordNotFound
@@ -1365,7 +1365,7 @@ module Ag2Gest
       fax = ''
       cellular = ''
       email = ''
-      # organization_id = ''
+      client = 0
 
       if params[:id] == '0'
         id = '$err'
@@ -1376,12 +1376,11 @@ module Ag2Gest
         else
           @entity = Entity.find_by_fiscal_id(params[:id])
         end
-        st_directory = StreetDirectory.find_by_street_type_id_and_street_name(1,"La Luz")
         if @entity.nil?
           id = '$err'
           fiscal_id = '$err'
-          @client_debt = '0'
-          @project_debt = '0'
+          client_debt = '0'
+          project_debt = '0'
         else
           id = @entity.id
           fiscal_id = @entity.fiscal_id
@@ -1405,24 +1404,22 @@ module Ag2Gest
           fax = @entity.fax
           cellular = @entity.cellular
           email = @entity.email
-          # organization_id = @entity.organization_id
+          client = @entity.client
           street_directory = StreetDirectory.find_by_town_id_and_street_type_id_and_street_name(@entity.town_id,@entity.street_type_id,@entity.street_name.try(:upcase))
-          service_point = ServicePoint.where( street_directory_id: street_directory.try(:id),street_number: @entity.street_number ,building: @entity.building ,floor: @entity.floor ,floor_office: @entity.floor_office)
-          if !@entity.client.blank? and !@entity.client.invoice_debts.unpaid.blank?
-            @client_debt = number_with_precision(@entity.client.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-          else
-            @client_debt = '0'
-          end
-          @project_d = ""
-          if !@entity.client.blank? and !@entity.client.invoice_debts.unpaid.blank?
-            @project_group = @entity.client.invoice_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
-            @project_group.each do |pd|
+          service_point = ServicePoint.where(street_directory_id: street_directory.try(:id), street_number: @entity.street_number, building: @entity.building, floor: @entity.floor, floor_office: @entity.floor_office)
+
+          client_debt = '0'
+          project_debt = '0'
+          project_d = ""
+          if !client.blank? and !client.invoice_current_debts.unpaid.blank?
+            # client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            client_debt = number_with_precision(client.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+            project_group.each do |pd|
               _pd_project = Project.find(pd.project).name
-              @project_d = @project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+              project_d = project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
             end
-            @project_debt = @project_d[0..-4]
-          else
-            @project_debt = '0'
+            project_debt = project_d[0..-4]
           end
         end
       end
@@ -1447,9 +1444,8 @@ module Ag2Gest
                       "email" => email,
                       "street_directory_id" => street_directory.try(:id),
                       "service_point" => service_point.try(:first).try(:id),
-                      "client_debt" => @client_debt,
-                      "project_debt" => @project_debt
-                      # "organization_id" => organization_id
+                      "client_debt" => client_debt,
+                      "project_debt" => project_debt
                     }
 
       respond_to do |format|
@@ -1498,32 +1494,32 @@ module Ag2Gest
     end
 
     # Validate entity fiscal id (modal)
-    def et_validate_fiscal_id_textfield
-      fiscal_id = params[:id]
-      dc = ''
-      f_id = 'OK'
-      f_name = ''
+    # def et_validate_fiscal_id_textfield
+    #   fiscal_id = params[:id]
+    #   dc = ''
+    #   f_id = 'OK'
+    #   f_name = ''
 
-      if fiscal_id == '0'
-        f_id = '$err'
-      else
-        dc = fiscal_id_dc(fiscal_id)
-        if dc == '$par' || dc == '$err'
-          f_id = '$err'
-        else
-          if dc == '$uni'
-            f_id = '??'
-          end
-          f_name = fiscal_id_description(fiscal_id[0])
-          if f_name == '$err'
-            f_name = I18n.t("ag2_admin.entities.fiscal_name")
-          end
-        end
-      end
+    #   if fiscal_id == '0'
+    #     f_id = '$err'
+    #   else
+    #     dc = fiscal_id_dc(fiscal_id)
+    #     if dc == '$par' || dc == '$err'
+    #       f_id = '$err'
+    #     else
+    #       if dc == '$uni'
+    #         f_id = '??'
+    #       end
+    #       f_name = fiscal_id_description(fiscal_id[0])
+    #       if f_name == '$err'
+    #         f_name = I18n.t("ag2_admin.entities.fiscal_name")
+    #       end
+    #     end
+    #   end
 
-      @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
-      render json: @json_data
-    end
+    #   @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
+    #   render json: @json_data
+    # end
 
     #
     # Look for meter
@@ -1713,7 +1709,7 @@ module Ag2Gest
       @breadcrumb = 'read'
       @contracting_request = ContractingRequest.find(params[:id])
       @water_supply_contract = @contracting_request.water_supply_contract || WaterSupplyContract.new
-      @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new      
+      @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
       @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
       @projects = projects_dropdown
@@ -1956,7 +1952,7 @@ module Ag2Gest
             @bank_offices = bank_offices_dropdown
             format.html { render action: "new_connection" }
             format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
-          else          
+          else
             @towns = towns_dropdown
             @provinces = provinces_dropdown
             @zipcodes = zipcodes_dropdown
