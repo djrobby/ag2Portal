@@ -107,8 +107,12 @@ report.page.values(supply_data_c: I18n.t("activerecord.attributes.contracting_re
            fac_c: I18n.t("activerecord.attributes.reading.fac") + ": ",
            fac: @biller_printer.try(:reading).try(:consumption_total_period_to_invoice),
            con_c: I18n.t("activerecord.attributes.reading.con") + ": ",
-           con: @biller_printer.try(:invoices).try(:first).try(:average_billed_consumption)[1]
+           # con: @biller_printer.try(:invoices).try(:first).try(:average_billed_consumption)[1]
+           con: @average
            )
+#
+# Consumption graph
+report.page.item(:bar_chart).src('bar_chart.png')
 #
 # tariff
 report.page.values(tariff_data_c: I18n.t("activerecord.models.tariff.zero"))
@@ -445,3 +449,10 @@ end
     end
 #
 #
+
+report.page.item(:pie_chart).src('pie_chart.png')
+
+
+
+
+

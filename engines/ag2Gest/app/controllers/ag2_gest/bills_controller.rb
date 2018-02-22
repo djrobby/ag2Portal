@@ -1,5 +1,8 @@
+# encoding: utf-8
+
 require_dependency "ag2_gest/application_controller"
 require 'will_paginate/array'
+require 'open-uri'
 require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
@@ -88,6 +91,91 @@ module Ag2Gest
 
     def biller_pdf
       @biller_printer = Bill.find(params[:id])
+
+      _r1 = Reading.find(@biller_printer.reading_1_id) rescue nil
+      _b1 = Bill.find(_r1.bill_id) rescue nil
+
+      _r2 = Reading.find(_b1.reading_1_id) rescue nil
+      _b2 = Bill.find(_r2.bill_id) rescue nil
+
+      _r3 = Reading.find(_b2.reading_1_id) rescue nil
+      _b3 = Bill.find(_r3.bill_id) rescue nil
+
+      #consumo medio
+      _con1 = @biller_printer.try(:reading).try(:consumption_total_period_to_invoice).to_i
+      _con2 = !_r1.blank? && !_r1.billable? ? _r1.try(:consumption_total_period_to_invoice).to_i : 0
+      _con3 = !_r2.blank? && !_r2.billable? ? _r2.try(:consumption_total_period_to_invoice).to_i : 0
+      _con4 = !_r3.blank? && !_r3.billable? ? _r3.try(:consumption_total_period_to_invoice).to_i : 0
+
+      _period1 = @biller_printer.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
+      _period2 = _b1.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
+      _period3 = _b2.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
+      _period4 = _b3.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
+
+      _array = [_con1,_con2,_con3,_con4].sort
+
+      _type_chart = 'cht=bvs'
+      _size = 'chs=218x88'
+      _color = 'chco=908f8f'
+      _background = 'chf=bg,s,00000000'
+      _bar = 'chxt=x,y'
+      _data_bar = 'chm=N,000000,0,-1,11'
+      _t1 = _period4.nil? ? "|" : _period4 + "|"
+      _t2 = _period3.nil? ? "|" : _period3 + "|"
+      _t3 = _period2.nil? ? "|" : _period2 + "|"
+      _t4 = _period1.nil? ? "" : _period1
+      _t5 = "|1:|0|" + (_array.max + 10).round.to_s
+      _title = 'chxl=0:|' + _t1 + _t2 + _t3 + _t4 + _t5
+      _data = 'chd=t:' + _con4.to_s + "," + _con3.to_s + "," + _con2.to_s + "," + _con1.to_s
+      _to = 'chds=0,' + (_array.max + 10).to_s
+      _with = 'chbh=r,0.5,1.5'
+
+      bar_uri = _type_chart + "&" + _size + "&" + _color + "&" + _background + "&" + _bar + "&" + _data_bar + "&" + _title + "&" + _data + "&" + _to + "&" + _with
+
+      bar_encoded_url = URI.encode('http://chart.apis.google.com/chart?' + bar_uri)
+
+      File.open('bar_chart.png', 'wb') do |fo|
+        fo.write open(URI.parse(bar_encoded_url)).read
+      end
+
+      #Desgloce factura --> conceptos facturables
+
+      value = ''
+      leyend = ''
+      label = ''
+      t1 = formatted_number_without_delimiter(@biller_printer.invoices.first.subtotal, 2)
+      t2 = formatted_number_without_delimiter(@biller_printer.invoices.second.subtotal, 2)
+      total = t1 + t2
+      @biller_printer.invoices.each do |invoice|
+        invoice.invoiced_subtotals_by_concept.each do |sub_concept|
+          a = formatted_number_without_delimiter(sub_concept[2], 2)
+          b = (a * 100)
+          c = a.to_d / total.to_d
+          c = formatted_number_without_delimiter(c, 2)
+          value += c.gsub(',','.') + ","
+          label += a.gsub(',','.') + "|"
+          leyend += t("activerecord.attributes.contracting_request.amount_title") + sub_concept[1][0,13] + "|"
+        end
+      end
+
+      _title = 'chtt=' + t("activerecord.attributes.report.billable_concept")
+      _type_chart = 'cht=p'
+      _size = 'chs=477x210'
+      _color = 'chco=908f8f'
+      _value = 'chd=t:' + value[0..-2]
+      _label = 'chl=' + label[0..-2]
+      _leyend = 'chdl=' + leyend[0..-2]
+
+      uri = _title + "&" + _type_chart + "&" + _size + "&" + _color + "&" + _value + "&" + _label + "&" + _leyend
+
+      encoded_url = URI.encode('http://chart.apis.google.com/chart?' + uri)
+
+      File.open('pie_chart.png', 'wb') do |fo|
+        fo.write open(URI.parse(encoded_url)).read
+      end
+
+      @average = ((_con1 + _con2 + _con3 + _con4) / 4).round rescue 0
+
       title = t("activerecord.models.bill.few")
       respond_to do |format|
         format.pdf {
