@@ -30,7 +30,7 @@
         <td class="cpb-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
         <td class="cpb-id hidden-text-field"><%= client_payment.id %></td>
         <td><%= client_payment.receipt_no %></td>
-        <td><%= link_to client_payment.bill.try(:full_no), bill_path(client_payment.bill) %></td>
+        <td><%= link_to client_payment.bill.try(:invoice_based_old_no_real_no), bill_path(client_payment.bill) %></td>
         <td><%= client_payment.instalment.partial_instalment_no unless client_payment.instalment_id.blank? %></td>
         <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
         <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>

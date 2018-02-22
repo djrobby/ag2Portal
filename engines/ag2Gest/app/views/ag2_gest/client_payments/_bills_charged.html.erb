@@ -28,9 +28,9 @@
           <tbody>
             <td><a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a></td>
             <% if bill.bill_type_id == InvoiceType::COMMERCIAL %>
-            <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), commercial_billing_path(bill) %></td>
+            <td><%= bill.bill_type_id %> <%= link_to bill.try(:invoice_based_old_no_real_no), commercial_billing_path(bill) %></td>
             <% else %>
-            <td><%= bill.bill_type_id %> <%= link_to bill.try(:full_no), bill_path(bill) %></td>
+            <td><%= bill.bill_type_id %> <%= link_to bill.try(:invoice_based_old_no_real_no), bill_path(bill) %></td>
             <% end %>
             <% if bill.bill_type_id == InvoiceType::WATER %>
             <td><%= link_to bill.subscriber.to_label, subscriber_path(bill.subscriber) if bill.subscriber %></td>
@@ -38,7 +38,7 @@
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
             <% end %>
             <td align="right"><%= bill.billing_period_code %></td>
-            <td align="right" title="<%= bill.invoices.count.to_s %>"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.payment_date %></td>
             <td align="right" title="<%= bill.real_payment_method_name %>"><%= bill.real_payment_method_code %></td>
           </tbody>
@@ -64,9 +64,9 @@
                   <td><%= i.full_no %></td>
                   <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
                   <td><%= i.payment_date %></td>
-                  <td align="right"><%= number_with_precision(i.receivable, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                  <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(i.receivables, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(i.current_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(i.current_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 </tr>
               <% end %>
             </tbody>

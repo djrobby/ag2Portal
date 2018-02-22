@@ -84,6 +84,7 @@ class Bill < ActiveRecord::Base
              bills.client_id client_id_, bills.subscriber_id subscriber_id_,
              bills.bill_date bill_date_, MIN(invoices.payday_limit) bill_payday_limit_, SUM(invoices.totals) bill_total_,
              CASE WHEN ISNULL(bills.old_no) THEN CONCAT(SUBSTR(bills.bill_no,1,12),'-',SUBSTR(bills.bill_no,13,4),'-',SUBSTR(bills.bill_no,17,7)) ELSE bills.old_no END bill_right_no_,
+             CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_based_old_no_real_no_,
              CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
              CASE WHEN (MIN(invoices.invoice_operation_id)=1 OR MIN(invoices.invoice_operation_id)=3) AND MIN(invoices.invoice_type_id)=#{InvoiceType::WATER} THEN readings.bill_id = bills.id ELSE NULL END nullable_")
      .group('bills.id').order('bills.id DESC')
