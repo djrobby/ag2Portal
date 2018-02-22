@@ -396,7 +396,7 @@ class Bill < ActiveRecord::Base
   end
 
   def current_collected
-    invoice_debt.sum(:paid) rescue 0
+    invoice_debts.sum(:paid) rescue 0
   end
 
   def subtotal

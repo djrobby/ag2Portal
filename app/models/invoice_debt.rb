@@ -14,9 +14,12 @@ class InvoiceDebt < ActiveRecord::Base
   belongs_to :invoice_status
   belongs_to :invoice_type
   belongs_to :invoice_operation
-  attr_accessible :invoice_id, :organization_id, :client_id, :subscriber_id, :bill_id, :project_id, :office_id,
-                  :invoice_status_id, :invoice_type_id, :invoice_operation_id, :invoice_no, :invoice_date, :payday_limit,
-                  :subtotal, :taxes, :bonus, :taxable, :total, :paid, :calc_debt, :totals, :receivables, :debt
+  attr_accessible :invoice_id, :organization_id, :bill_id,
+                  :invoice_status_id, :invoice_type_id, :invoice_operation_id,
+                  :client_id, :subscriber_id, :project_id, :office_id,
+                  :invoice_no, :invoice_date, :payday_limit,
+                  :subtotal, :taxes, :bonus, :taxable, :total, :paid, :calc_debt,
+                  :totals, :receivables, :debt
   delegate :id, :to => :invoice, :allow_nil => true
   delegate :billing_period_id, :to => :invoice, :allow_nil => true
   delegate :biller_name, :to => :invoice, :allow_nil => true

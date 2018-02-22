@@ -29,7 +29,7 @@ class Invoice < ActiveRecord::Base
                   :biller_id, :original_invoice_id, :billing_period_id, :charge_account_id,
                   :created_by, :updated_by, :reading_1_date, :reading_2_date, :reading_1_index, :reading_2_index,
                   :remarks, :organization_id, :payment_method_id, :sale_offer_id, :old_no,
-                  :totals, :receivables, :total_taxes
+                  :totals, :receivables, :total_taxes, :subtotals, :bonuses
   attr_accessible :invoice_items_attributes
 
   has_many :invoice_items, dependent: :destroy
@@ -568,6 +568,8 @@ class Invoice < ActiveRecord::Base
     self.totals = total
     self.receivables = receivable
     self.total_taxes = taxes
+    self.subtotals = subtotal
+    self.bonuses = bonus
   end
 
   def item_repeat

@@ -99,6 +99,9 @@ namespace :db do
       p.update_column(:totals, p.total)
       p.update_column(:receivables, p.receivable)
       p.update_column(:total_taxes, p.taxes)
+      p.update_column(:subtotals, p.subtotal)
+      p.update_column(:bonuses, p.bonus)
+      p.update_column(:taxables, p.taxable)
     end
 
     puts "Task finished at " + Time.now.to_s + "."
