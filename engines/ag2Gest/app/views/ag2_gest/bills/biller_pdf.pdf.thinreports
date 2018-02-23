@@ -221,16 +221,16 @@ _number2 = " "
 #
 var_invoice_first_date = @biller_printer.invoices.first.invoice_date.strftime(_format) unless @biller_printer.invoices.first.invoice_date.blank?
 var_invoice_first_limit = @biller_printer.invoices.first.payday_limit.strftime(_format) unless @biller_printer.invoices.first.payday_limit.blank?
-if @biller_printer.project.company.company_bank_accounts.first.blank?
-  var_issuer = @biller_printer.project.company.fiscal_id[1..9]
-else
-  var_issuer = @biller_printer.project.company.fiscal_id[1..9] + @biller_printer.project.company.company_bank_accounts.first.bank_suffix
-end
-if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
-  var_ident = @biller_printer.subscriber.subscriber_code[5..10]
-else
-  var_ident = @biller_printer.invoices.first.payday_limit.strftime("%d%m%y") unless @biller_printer.invoices.first.payday_limit.blank?
-end
+# if @biller_printer.project.company.company_bank_accounts.first.blank?
+#   var_issuer = @biller_printer.project.company.fiscal_id[1..9]
+# else
+#   var_issuer = @biller_printer.project.company.fiscal_id[1..9] + @biller_printer.project.company.company_bank_accounts.first.bank_suffix
+# end
+# if !@biller_printer.project.company.company_bank_accounts.first.blank? && @biller_printer.project.company.company_bank_accounts.first.bank_suffix < "500"
+#   var_ident = @biller_printer.subscriber.subscriber_code[5..10]
+# else
+#   var_ident = @biller_printer.invoices.first.payday_limit.strftime("%d%m%y") unless @biller_printer.invoices.first.payday_limit.blank?
+# end
 # payment_data
 var_client_bank = ClientBankAccount.where(subscriber_id: @biller_printer.subscriber_id,ending_at: nil)
 var_client_bank_full = var_client_bank.first.p_format_hidden_account unless var_client_bank.blank?
@@ -249,11 +249,11 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
            pay_bank_c: I18n.t("activerecord.models.client_bank_account.one") + ": ",
            pay_bank: var_client_bank_full,
            pay_emi_c: I18n.t("activerecord.attributes.bill.issuer").upcase,
-           pay_emi: var_issuer,
+           pay_emi: @biller_printer.issuer,
            pay_ref_c: I18n.t("activerecord.attributes.work_order_item.code").upcase,
-           pay_ref: @biller_printer.invoices.first.invoice_no[3..15],
+           pay_ref: @biller_printer.reference,
            pay_ident_c: I18n.t("activerecord.attributes.bill.ident").upcase,
-           pay_ident: var_ident,
+           pay_ident: @biller_printer.ident,
            pay_sum_c: I18n.t("activerecord.attributes.billable_concept.supply").upcase,
            pay_sum: @biller_printer.subscriber.subscriber_code[3..10],
            pay_date_limit_c: I18n.t("ag2_gest.bills.index.payday_limit").upcase,
@@ -451,8 +451,3 @@ end
 #
 
 report.page.item(:pie_chart).src('pie_chart.png')
-
-
-
-
-

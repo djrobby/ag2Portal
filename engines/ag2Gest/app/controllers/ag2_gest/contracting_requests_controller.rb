@@ -1414,9 +1414,9 @@ module Ag2Gest
           if !client.blank? and !client.invoice_current_debts.unpaid.blank?
             # client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             client_debt = number_with_precision(client.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS project,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+            project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS prj,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
             project_group.each do |pd|
-              _pd_project = Project.find(pd.project).name
+              _pd_project = Project.find(pd.prj).name
               project_d = project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
             end
             project_debt = project_d[0..-4]

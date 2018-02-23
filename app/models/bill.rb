@@ -139,6 +139,12 @@ class Bill < ActiveRecord::Base
   def old_no_based_real_no
     old_no.blank? ? real_no : old_no
   end
+  def raw_invoice_based_no
+    _i = invoices.first
+    _old = _i.old_no
+    _cur = _i.invoice_no
+    _old.blank? ? _cur : _old
+  end
 
   # Short No
   def short_no
@@ -243,19 +249,68 @@ class Bill < ActiveRecord::Base
   end
 
   def issuer
-    project.company.numeric_fiscal_id + project.company.first_active_bank_suffix
-  end
-
-  def reference
-    invoices.first.invoice_no[3..15] rescue ''
+    company_numeric_fiscal_id + company_suffix
   end
 
   def ident
-    if project.company.first_active_bank_suffix < '500'
+    if company_suffix < '500'
       subscriber.subscriber_code[5..10]
     else
-      invoices.first.payday_limit.strftime("%d%m%y") rescue subscriber.subscriber_code[5..10]
+      payday_limit.strftime("%d%m%y") rescue subscriber.subscriber_code[5..10]
     end
+  end
+  def ident_to_use_as_reference
+    ident.to_d
+  end
+
+  def total_to_use_as_reference
+    total.round(2) * 100
+  end
+
+  def reference
+    no_to_use_as_reference + cc_reference
+  end
+
+  def cc_reference
+    _s = (company_fiscal_id_to_use_as_reference +
+          company_suffix_to_use_as_reference +
+          no_to_use_as_reference.to_d +
+          ident_to_use_as_reference +
+          total_to_use_as_reference) / 97
+    _s = (((_s - _s.to_i) * 100).to_i).to_s.rjust(2, '0')
+  end
+
+  def company_numeric_fiscal_id
+    project.company.numeric_fiscal_id
+  end
+  def company_fiscal_id_to_use_as_reference
+    company_numeric_fiscal_id.to_d
+  end
+
+  def company_suffix
+    project.company.first_active_bank_suffix
+  end
+  def company_suffix_to_use_as_reference
+    company_suffix.to_d
+  end
+
+  # 11 characters formatted invoice number, to use as reference
+  def no_to_use_as_reference
+    _i = invoices.first
+    _old = _i.old_no
+    _cur = _i.invoice_no
+    if _old.blank?
+      # Returns current invoice no formatted for reference
+      cur_no_to_use_as_reference(_cur)
+    else
+      # Returns SS + NNNNNNNNN from SERIAL (2) & NFACT (8)
+      _old[0..1] + '0' + _old[2..9] rescue cur_no_to_use_as_reference(_cur)
+    end
+  end
+
+  def cur_no_to_use_as_reference(_cur)
+    # Returns OO + YY + NNNNNNN from OFFICE (2) & YEAR (2) & NO (7)
+    _cur[3..4] + _cur[7..8] + _cur[9..15] rescue ''
   end
 
   def consumption
