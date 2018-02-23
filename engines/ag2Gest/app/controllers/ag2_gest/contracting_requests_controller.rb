@@ -4,6 +4,7 @@ require 'will_paginate/array'
 module Ag2Gest
   class ContractingRequestsController < ApplicationController
     before_filter :authenticate_user!
+    before_filter :set_defaults_for_new_and_edit, only: [:new, :edit, :new_connection, :edit_connection]
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :update_tariff_type_select_from_billing_concept,
                                                 :update_province_textfield_from_town,
@@ -17,7 +18,7 @@ module Ag2Gest
                                                 :update_tariff_schemes_from_use,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
-                                                #:et_validate_fiscal_id_textfield,
+                                                :et_validate_fiscal_id_textfield,
                                                 :cr_generate_no,
                                                 :show_test,
                                                 :next_status,
@@ -181,7 +182,6 @@ module Ag2Gest
         return false
       end
     end
-
 
     # Generate new invoice from sale offer
     def cr_generate_invoice_from_offer
@@ -1494,32 +1494,32 @@ module Ag2Gest
     end
 
     # Validate entity fiscal id (modal)
-    # def et_validate_fiscal_id_textfield
-    #   fiscal_id = params[:id]
-    #   dc = ''
-    #   f_id = 'OK'
-    #   f_name = ''
+    def et_validate_fiscal_id_textfield
+      fiscal_id = params[:id]
+      dc = ''
+      f_id = 'OK'
+      f_name = ''
 
-    #   if fiscal_id == '0'
-    #     f_id = '$err'
-    #   else
-    #     dc = fiscal_id_dc(fiscal_id)
-    #     if dc == '$par' || dc == '$err'
-    #       f_id = '$err'
-    #     else
-    #       if dc == '$uni'
-    #         f_id = '??'
-    #       end
-    #       f_name = fiscal_id_description(fiscal_id[0])
-    #       if f_name == '$err'
-    #         f_name = I18n.t("ag2_admin.entities.fiscal_name")
-    #       end
-    #     end
-    #   end
+      if fiscal_id == '0'
+        f_id = '$err'
+      else
+        dc = fiscal_id_dc(fiscal_id)
+        if dc == '$par' || dc == '$err'
+          f_id = '$err'
+        else
+          if dc == '$uni'
+            f_id = '??'
+          end
+          f_name = fiscal_id_description(fiscal_id[0])
+          if f_name == '$err'
+            f_name = I18n.t("ag2_admin.entities.fiscal_name")
+          end
+        end
+      end
 
-    #   @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
-    #   render json: @json_data
-    # end
+      @json_data = { "fiscal_id" => f_id, "fiscal_name" => f_name }
+      render json: @json_data
+    end
 
     #
     # Look for meter
@@ -1780,26 +1780,17 @@ module Ag2Gest
       @breadcrumb = 'read'
     end
 
-    # GET /contracting_requests/new
-    # GET /contracting_requests/new.json
-    def new_connection
-      @breadcrumb = 'create'
-      @contracting_request = ContractingRequest.new
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
-      # _subscribers = Subscriber.where(office_id: current_offices_ids)
-      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
+    #*** Charge modal dropdowns async ***
+    def sub_load_dropdowns
       @subscribers = []
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
       @service_points = []
+      @service_point_types = []
+      @service_point_locations = []
+      @service_point_purposes = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
-      if session[:office] != '0'
-        @office_center = Office.find(session[:office])
-        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
-      else
-        @centers = Center.all(order: 'name')
-      end
-      @street_types = StreetType.order(:street_type_code)
+      @centers = session[:office] != '0' ? Center.where(town_id: Office.find(session[:office].to_i).town_id).by_town : Center.by_town
+      @street_types = StreetType.by_code
+      @street_directories = []
       @towns = towns_dropdown
       @provinces = provinces_dropdown
       @zipcodes = zipcodes_dropdown
@@ -1807,38 +1798,24 @@ module Ag2Gest
       @countries = Country.order(:name)
       @bank = banks_dropdown
       @bank_offices = bank_offices_dropdown
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @contracting_request }
-      end
 
+      @json_data = { "subscribers" => towns_array, "service_points" => provinces_array,
+                     "service_point_types" => zipcodes_array, "service_point_locations" => zipcodes_array,
+                     "service_point_purposes" => zipcodes_array, "offices" => zipcodes_array,
+                     "centers" => towns_array, "street_types" => provinces_array, "street_directories" => zipcodes_array,
+                     "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
+                     "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
+                     "regions" => regions_array, "countries" => country_array,
+                      "banks" => banks_array, "bank_offices" => bank_offices_array }
+      render json: @json_data
     end
 
+    # GET /contracting_requests/new
+    # GET /contracting_requests/new.json
     def new
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.new
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
-      # _subscribers = Subscriber.where(office_id: current_offices_ids)
-      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @subscribers = []
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @service_points = []
-      @offices = current_offices.group(:town_id).pluck('offices.town_id')
-      if session[:office] != '0'
-        @office_center = Office.find(session[:office])
-        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
-      else
-        @centers = Center.all(order: 'name')
-      end
-      @street_types = StreetType.order(:street_type_code)
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
+
       respond_to do |format|
         format.html # new.html.erb
         format.json { render json: @contracting_request }
@@ -1846,95 +1823,40 @@ module Ag2Gest
 
     end
 
-    # GET /contracting_requests/1/edit
-    def edit_connection
-      @breadcrumb = 'update'
-      @contracting_request = ContractingRequest.find(params[:id])
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
-      # _subscribers = Subscriber.where(office_id: current_offices_ids)
-      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @subscribers = []
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @service_points = []
-      @offices = current_offices.group(:town_id).pluck(:town_id)
-      if session[:office] != '0'
-        @office_center = Office.find(session[:office])
-        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
-      else
-        @centers = Center.all(order: 'name')
+    # GET /contracting_requests/new_connection
+    # GET /contracting_requests/new_connection.json
+    def new_connection
+      @breadcrumb = 'create'
+      @contracting_request = ContractingRequest.new
+
+      respond_to do |format|
+        format.html # new_connection.html.erb
+        format.json { render json: @contracting_request }
       end
-      @street_types = StreetType.order(:street_type_code)
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
     end
 
+    # GET /contracting_requests/1/edit
     def edit
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:id])
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
-      # _subscribers = Subscriber.where(office_id: current_offices_ids)
-      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      @subscribers = []
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @service_points = [@contracting_request.service_point]
-      @offices = current_offices.group(:town_id).pluck(:town_id)
-      if session[:office] != '0'
-        @office_center = Office.find(session[:office])
-        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
-      else
-        @centers = Center.all(order: 'name')
-      end
-      @street_types = StreetType.order(:street_type_code)
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
+    end
+
+    # GET /contracting_requests/1/edit_connection
+    def edit_connection
+      @breadcrumb = 'update'
+      @contracting_request = ContractingRequest.find(params[:id])
     end
 
     # POST /requests
     # POST /requests.json
     def create
       @breadcrumb = 'create'
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
-      @subscribers = []
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      @service_points = []
-      @offices = current_offices.group(:town_id).pluck(:town_id)
-      if session[:office] != '0'
-        @office_center = Office.find(session[:office])
-        @centers = Center.where(town_id: @office_center.town_id.to_i).order('name')
-      else
-        @centers = Center.all(order: 'name')
-      end
-      @street_types = StreetType.order(:street_type_code)
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
-      # _subscribers = Subscriber.where(office_id: current_offices_ids)
-      # @subscribers = Subscriber.where(office_id: current_offices_ids).availables if !_subscribers.empty?
-      # @service_points = ServicePoint.where(office_id: current_offices_ids, available_for_contract: true).select{|s| s.subscribers.empty?}
-      # @offices = current_offices
       @contracting_request = ContractingRequest.new(params[:contracting_request])
       @account_no = @contracting_request.account_no
-      # @contracting_request.ccc_dc = @account_no[0..1] unless @account_no.blank?
       @contracting_request.account_no = @account_no unless @account_no.blank?
       @contracting_request.contracting_request_status_id = 1
       @contracting_request.created_by = current_user.id if !current_user.nil?
+
       respond_to do |format|
         if @contracting_request.save
           @contracting_request.to_change_ownership if @contracting_request.contracting_request_type_id == ContractingRequestType::CHANGE_OWNERSHIP
@@ -1944,23 +1866,13 @@ module Ag2Gest
           format.html { redirect_to @contracting_request, notice: t('activerecord.attributes.contracting_request.create')}
           format.json { render json: @contracting_request, status: :created, location: @contracting_request }
         else
+          set_defaults_for_new_and_edit
           if @contracting_request.contracting_request_type_id == ContractingRequestType::CONNECTION
-            @towns = towns_dropdown
-            @provinces = provinces_dropdown
-            @zipcodes = zipcodes_dropdown
-            @bank = banks_dropdown
-            @bank_offices = bank_offices_dropdown
             format.html { render action: "new_connection" }
-            format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
           else
-            @towns = towns_dropdown
-            @provinces = provinces_dropdown
-            @zipcodes = zipcodes_dropdown
-            @bank = banks_dropdown
-            @bank_offices = bank_offices_dropdown
             format.html { render action: "new" }
-            format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
           end
+          format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
         end
       end
     end
@@ -2003,11 +1915,7 @@ module Ag2Gest
                         notice: (crud_notice('updated', @contracting_request) + "#{undo_link(@contracting_request)}").html_safe }
           format.json { head :no_content }
         else
-          @towns = towns_dropdown
-          @provinces = provinces_dropdown
-          @zipcodes = zipcodes_dropdown
-          @bank = banks_dropdown
-          @bank_offices = bank_offices_dropdown
+          set_defaults_for_new_and_edit
           format.html { render action: "edit" }
           format.json { render json: @contracting_request.errors, status: :unprocessable_entity }
         end
@@ -2249,6 +2157,48 @@ module Ag2Gest
     end
 
     private
+
+    def set_defaults_for_new_and_edit
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
+      @subscribers = []
+      @service_points = []
+      @service_point_types = []
+      @service_point_locations = []
+      @service_point_purposes = []
+      @offices = []
+      @centers = []
+      @street_types = []
+      @street_directories = []
+      @towns = []
+      @provinces = []
+      @zipcodes = []
+      @regions = []
+      @countries = []
+      @bank = []
+      @bank_offices = []
+    end
+
+    def set_defaults_for_create_and_update
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
+      @subscribers = []
+      @service_points = []
+      @service_point_types = []
+      @service_point_locations = []
+      @service_point_purposes = []
+      @offices = current_offices.group(:town_id).pluck('offices.town_id')
+      @centers = session[:office] != '0' ? Center.where(town_id: Office.find(session[:office].to_i).town_id).by_town : Center.by_town
+      @street_types = StreetType.by_code
+      @street_directories = []
+      @towns = towns_dropdown
+      @provinces = provinces_dropdown
+      @zipcodes = zipcodes_dropdown
+      @regions = Region.order(:name)
+      @countries = Country.order(:name)
+      @bank = banks_dropdown
+      @bank_offices = bank_offices_dropdown
+    end
 
     def banks_dropdown
       Bank.order(:code)
