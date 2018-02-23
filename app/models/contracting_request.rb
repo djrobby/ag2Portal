@@ -160,7 +160,7 @@ class ContractingRequest < ActiveRecord::Base
     end
   end
 
-  # Preformated information
+  # Preformatted information
   def client_info
     "#{client.to_name} #{client.fiscal_id}" if client
   end
@@ -177,7 +177,7 @@ class ContractingRequest < ActiveRecord::Base
     subscriber_street_directory.blank? ? a1 + b + c + d : a + b + c + d
   end
 
-    def subscriber_address_2
+  def subscriber_address_2
     _ret = ""
     if !subscriber_zipcode.blank?
       _ret += subscriber_zipcode.zipcode + " "

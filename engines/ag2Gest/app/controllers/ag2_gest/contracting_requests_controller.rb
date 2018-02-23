@@ -1641,19 +1641,19 @@ module Ag2Gest
     # GET /requests.json
     def index
       manage_filter_state
-      request_type = params[:RequestType]
-      no = params[:No]
-      project = params[:Project]
-      request_status = params[:RequestStatus]
-      client_info = params[:ClientInfo]
       sort = params[:sort]
       direction = params[:direction]
+      no = params[:No]
+      client_info = params[:ClientInfo]
+      project = params[:Project]
+      request_status = params[:RequestStatus]
+      request_type = params[:RequestType]
       from = params[:From]
       to = params[:To]
 
-      @projects = projects_dropdown if @project.nil?
-      @request_statuses = request_statuses_dropdown if @request_status.nil?
-      @request_types = request_types_dropdown if @request_type.nil?
+      @projects = projects_dropdown if @projects.nil?
+      @request_statuses = request_statuses_dropdown if @request_statuses.nil?
+      @request_types = request_types_dropdown if @request_types.nil?
 
       # Arrays for search
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
@@ -1668,6 +1668,9 @@ module Ag2Gest
         end
         if !no.blank?
           with :request_no, no
+        end
+        if !project.blank?
+          with :project_id, project
         end
         if !request_status.blank?
           with :contracting_request_status_id, request_status
