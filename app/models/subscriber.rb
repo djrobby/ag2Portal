@@ -107,7 +107,7 @@ class Subscriber < ActiveRecord::Base
   validates :last_name,         :presence => true, :if => "company.blank?"
 
   # Scopes
-  scope :by_code, -> { order(:subscriber_code) }
+  scope :by_code, -> { order('subscribers.subscriber_code') }
   scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :subscriber_code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
@@ -174,6 +174,15 @@ class Subscriber < ActiveRecord::Base
              cn_co.name country_name_,
              CASE WHEN NOT ISNULL(wsc.contract_no) THEN CONCAT(SUBSTR(wsc.contract_no,1,6), '-', SUBSTR(wsc.contract_no,7,2), '-', SUBSTR(wsc.contract_no,9,4), '-', SUBSTR(wsc.contract_no,13,6)) ELSE '' END water_supply_contract_full_no_,
              tariff_schemes.name tariff_scheme_name_")
+  }
+  scope :subscribers_dropdown, -> {
+    joins("INNER JOIN street_directories on subscribers.street_directory_id=street_directories.id")
+    .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
+    .select("subscribers.id,
+             CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7), ' ',
+                    CASE WHEN ISNULL(subscribers.company) THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END, ' - ',
+                    CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', subscribers.street_number, (CASE WHEN NOT ISNULL(subscribers.building) AND subscribers.building<>'' THEN CONCAT(', ', subscribers.building) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor) AND subscribers.floor<>'' THEN CONCAT(', ', subscribers.floor) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor_office) AND subscribers.floor_office<>'' THEN CONCAT(' ', subscribers.floor_office) ELSE '' END))) to_label_")
+    .by_code
   }
 
   # Callbacks

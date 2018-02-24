@@ -1785,30 +1785,19 @@ module Ag2Gest
 
     #*** Charge modal dropdowns async ***
     def sub_load_dropdowns
-      @subscribers = []
-      @service_points = []
       @service_point_types = []
       @service_point_locations = []
       @service_point_purposes = []
       @offices = current_offices.group(:town_id).pluck('offices.town_id')
       @centers = session[:office] != '0' ? Center.where(town_id: Office.find(session[:office].to_i).town_id).by_town : Center.by_town
-      @street_types = StreetType.by_code
       @street_directories = []
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
 
-      @json_data = { "subscribers" => towns_array, "service_points" => provinces_array,
+      @json_data = { "subscribers" => subscribers_raw_array, "service_points" => service_points_raw_array,
                      "service_point_types" => zipcodes_array, "service_point_locations" => zipcodes_array,
                      "service_point_purposes" => zipcodes_array, "offices" => zipcodes_array,
-                     "centers" => towns_array, "street_types" => provinces_array, "street_directories" => zipcodes_array,
+                     "centers" => towns_array, "street_directories" => zipcodes_array,
                      "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
-                     "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
-                     "regions" => regions_array, "countries" => country_array,
+                     "regions" => regions_array, "countries" => country_array, "street_types" => street_types_array,
                       "banks" => banks_array, "bank_offices" => bank_offices_array }
       render json: @json_data
     end
@@ -2203,24 +2192,57 @@ module Ag2Gest
       @bank_offices = bank_offices_dropdown
     end
 
-    def banks_dropdown
-      Bank.order(:code)
+    def subscribers_dropdown
+      Subscriber.subscribers_dropdown
     end
 
-    def bank_offices_dropdown
-      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+    def service_points_dropdown
+      ServicePoint.service_points_dropdown
     end
 
     def towns_dropdown
-      Town.order(:name).includes(:province)
+      Town.order('towns.name').joins(:province) \
+          .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
     end
 
     def provinces_dropdown
-      Province.order(:name).includes(:region)
+      Province.order('provinces.name').joins(:region)
+              .select("provinces.id, CONCAT(provinces.name, ' (', regions.name, ')') to_label_")
     end
 
     def zipcodes_dropdown
-      Zipcode.order(:zipcode).includes(:town,:province)
+      Zipcode.order(:zipcode).joins(:town, :province) \
+             .select("zipcodes.id, CONCAT(zipcodes.zipcode, ' - ', towns.name, ' (', provinces.name, ')') to_label_")
+    end
+
+    def regions_dropdown
+      Region.order('regions.name').joins(:country) \
+            .select("regions.id, CONCAT(regions.name, ' (', countries.name, ')') to_label_")
+    end
+
+    def countries_dropdown
+      Country.order(:name) \
+             .select("id, CONCAT(code, ' ', name) to_label_")
+    end
+
+    def street_types_dropdown
+      StreetType.order(:street_type_code) \
+                .select("id, CONCAT(street_type_code, ' (', street_type_description, ')') to_label_")
+    end
+
+    def banks_dropdown
+      Bank.order(:code) \
+          .select("id, CONCAT(code, ' ', name) to_label_")
+    end
+
+    def bank_offices_dropdown
+      BankOffice.order('bank_offices.bank_id, bank_offices.code').joins(:bank)
+                .select("bank_offices.id, CONCAT(bank_offices.code, ' ', bank_offices.name, ' (', banks.code, ')') to_label_")
+    end
+
+    def bank_account_classes_dropdown
+      BankAccountClass.order(:name) \
+                      .select("id, name to_label_")
     end
 
     def available_meters_for_contract(_request)
@@ -2243,35 +2265,12 @@ module Ag2Gest
       end
     end
 
-    def reports_array()
-      _array = []
-      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_report")
-      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_complete_report")
-      _array
-    end
-
     def current_projects_for_index(_projects)
       _current_projects = []
       _projects.each do |i|
         _current_projects = _current_projects << i.id
       end
       _current_projects
-    end
-
-    def subscribers_array(_m)
-      _array = []
-      _m.each do |i|
-        _array = _array << [i.id, i.code_full_name_or_company_address]
-      end
-      _array
-    end
-
-    def service_points_array(_m)
-      _array = []
-      _m.each do |i|
-        _array = _array << [i.id, i.to_label_and_assigned]
-      end
-      _array
     end
 
     def projects_dropdown
@@ -2318,6 +2317,13 @@ module Ag2Gest
       ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
     end
 
+    def reports_array()
+      _array = []
+      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_report")
+      _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_complete_report")
+      _array
+    end
+
     def tariff_type_array(_tariff_type)
       _array = []
       _tariff_type.each do |i|
@@ -2326,18 +2332,125 @@ module Ag2Gest
       _array
     end
 
-    def bank_offices_array(_offices)
-      _array = []
-      _offices.each do |i|
-        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
-      end
-      _array
-    end
-
     def tariff_schemes_array(_tariff_schemes)
       _array = []
       _tariff_schemes.each do |i|
         _array = _array << [i.id, i.to_label]
+      end
+      _array
+    end
+
+    def subscribers_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.code_full_name_or_company_address]
+      end
+      _array
+    end
+
+    def subscribers_raw_array
+      _s = Subscriber.subscribers_dropdown
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def service_points_array(_m)
+      _array = []
+      _m.each do |i|
+        _array = _array << [i.id, i.to_label_and_assigned]
+      end
+      _array
+    end
+
+    def service_points_raw_array
+      _s = ServicePoint.service_points_dropdown
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def towns_array
+      _towns = towns_dropdown
+      _array = []
+      _towns.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def provinces_array
+      _provinces = provinces_dropdown
+      _array = []
+      _provinces.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def zipcodes_array
+      _zipcodes = zipcodes_dropdown
+      _array = []
+      _zipcodes.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def regions_array
+      _regions = regions_dropdown
+      _array = []
+      _regions.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def country_array
+      _country = countries_dropdown
+      _array = []
+      _country.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def street_types_array
+      _street_types = street_types_dropdown
+      _array = []
+      _street_types.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def banks_array
+      _banks = banks_dropdown
+      _array = []
+      _banks.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def bank_offices_array
+      _bank_offices = bank_offices_dropdown
+      _array = []
+      _bank_offices.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def bank_account_classes_array
+      _bac = bank_account_classes_dropdown
+      _array = []
+      _bac.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end

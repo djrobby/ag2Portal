@@ -36,7 +36,7 @@ class ServicePoint < ActiveRecord::Base
   validates :street_directory,        :presence => true
 
   # Scopes
-  scope :by_code, -> { order(:code) }
+  scope :by_code, -> { order('service_points.code') }
   scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
@@ -48,6 +48,16 @@ class ServicePoint < ActiveRecord::Base
   scope :belongs_to_centers_with_meter, -> c { belongs_to_centers(c).with_meter.by_reading_sequence }
   scope :belongs_to_centers_and_routes_with_meter, -> c, r {
     belongs_to_centers(c).belongs_to_routes(r).with_meter.by_reading_sequence
+  }
+  scope :service_points_dropdown, -> {
+    joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
+    .joins("INNER JOIN street_directories on service_points.street_directory_id=street_directories.id")
+    .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
+    .select("service_points.id,
+             CONCAT(service_points.code, ' ',
+                    CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', service_points.street_number, (CASE WHEN NOT ISNULL(service_points.building) AND service_points.building<>'' THEN CONCAT(', ', service_points.building) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor) AND service_points.floor<>'' THEN CONCAT(', ', service_points.floor) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor_office) AND service_points.floor_office<>'' THEN CONCAT(' ', service_points.floor_office) ELSE '' END)),
+                    (CASE WHEN COUNT(subscribers.id) > 0 THEN '*' ELSE '' END)) to_label_")
+     .group('service_points.id').by_code
   }
 
   def to_label
