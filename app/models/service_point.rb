@@ -49,12 +49,23 @@ class ServicePoint < ActiveRecord::Base
   scope :belongs_to_centers_and_routes_with_meter, -> c, r {
     belongs_to_centers(c).belongs_to_routes(r).with_meter.by_reading_sequence
   }
-  scope :service_points_dropdown, -> {
+  scope :for_dropdown_by_office, -> office {
     joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
     .joins("INNER JOIN street_directories on service_points.street_directory_id=street_directories.id")
     .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
     .select("service_points.id,
-             CONCAT(service_points.code, ' ',
+             CONCAT(SUBSTR(service_points.code,1,4), '-', SUBSTR(service_points.code,5,7), ' ',
+                    CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', service_points.street_number, (CASE WHEN NOT ISNULL(service_points.building) AND service_points.building<>'' THEN CONCAT(', ', service_points.building) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor) AND service_points.floor<>'' THEN CONCAT(', ', service_points.floor) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor_office) AND service_points.floor_office<>'' THEN CONCAT(' ', service_points.floor_office) ELSE '' END)),
+                    (CASE WHEN COUNT(subscribers.id) > 0 THEN '*' ELSE '' END)) to_label_")
+    .group('service_points.id').by_code
+    .where(office_id: office)
+  }
+  scope :for_dropdown, -> {
+    joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
+    .joins("INNER JOIN street_directories on service_points.street_directory_id=street_directories.id")
+    .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
+    .select("service_points.id,
+             CONCAT(SUBSTR(service_points.code,1,4), '-', SUBSTR(service_points.code,5,7), ' ',
                     CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', service_points.street_number, (CASE WHEN NOT ISNULL(service_points.building) AND service_points.building<>'' THEN CONCAT(', ', service_points.building) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor) AND service_points.floor<>'' THEN CONCAT(', ', service_points.floor) ELSE '' END), (CASE WHEN NOT ISNULL(service_points.floor_office) AND service_points.floor_office<>'' THEN CONCAT(' ', service_points.floor_office) ELSE '' END)),
                     (CASE WHEN COUNT(subscribers.id) > 0 THEN '*' ELSE '' END)) to_label_")
      .group('service_points.id').by_code
@@ -79,8 +90,8 @@ class ServicePoint < ActiveRecord::Base
   end
 
   def full_code
-    # Subscriber code (Office id & sequential number) => OOOO-NNNNNNN
-    code.blank? ? "" : code.length <= 3 ? code[0..3] : code[0..3] + '-' + code[4..10]
+    # Service point code (Office id & sequential number) => OOOO-NNNNNNN
+    code.blank? ? "" : code.length <= 3 ? code : code[0..3] + '-' + code[4..10]
   end
 
   def full_address
@@ -144,6 +155,17 @@ class ServicePoint < ActiveRecord::Base
 
   def to_label_and_assigned
     to_label + (assigned_to_subscriber? ? '*' : '')
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.dropdown(office=nil)
+    if office.present?
+      self.for_dropdown_by_office(office)
+    else
+      self.for_dropdown
+    end
   end
 
   # Searchable attributes

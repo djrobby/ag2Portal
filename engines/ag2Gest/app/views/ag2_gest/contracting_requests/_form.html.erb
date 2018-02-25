@@ -13,6 +13,7 @@
     margin-left: 10px;
   }
 </style>
+
 <script type="text/javascript">
   var invalidIBAN = '<%= t("activerecord.errors.models.supplier_bank_account.iban_invalid") %>';
   var tryAgain = '<%= t("should_try_again") %>';
@@ -144,14 +145,14 @@
             $("#contracting_request_service_point_id").select2("val", data.service_point);
           }else if(cr_type != "<%= ContractingRequestType::CANCELLATION %>"){
             $('.client-field').attr('readonly', false);
-          }else{  
+          }else{
             // Disable fields
             $(".entity-field").attr('readonly', true);
             $(".client-field").attr('readonly', true);
             $('.center-field').attr('readonly', true);
             $(".subscriber-field").attr('readonly', true);
           };
-          
+
           // if($('.contracting_request_type_id').select2("val") == "<%= ContractingRequestType::SUBROGATION %>"){
           //   $("#subrogation-form input, #subrogation-form select").prop("disabled", false);
           //   $(".subrogation_full_name").prop("disabled", true);
@@ -584,7 +585,7 @@
       })
       return false;
     });
-    
+
     // when #Subscriber changes
     $("#Subscriber").change(function() {
       // make a POST call and replace the content
@@ -616,7 +617,7 @@
       });
       return false;
     });
-    
+
     // when #ServicePoint changes
     $("#ServicePoint").change(function() {
       // make a POST call and replace the content
@@ -863,8 +864,8 @@
       <%= label_tag I18n.t("ag2_gest.contracting_requests.label_service_point_search"), nil, :class => 'form-label' %>
       <%= text_field_tag "ServicePoint", nil, :class => 'cancellation-field x-large-text-field shrinked' %>
     </label>
-    <label class="multi-field-label-two"> 
-    <%= f.input :service_point_id, :required => true, collection: @service_points, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> 
+    <label class="multi-field-label-two">
+    <%= f.input :service_point_id, :required => true, collection: @service_points, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :service_point_id, as: :hidden, disabled: true, input_html: { id: 'service_point_hide'} %>
     </label>
   </div>
@@ -943,7 +944,7 @@
     <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->
     <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
-    <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>          
+    <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>
   </div>
 </div>
 
@@ -1049,8 +1050,33 @@
 
 <% end %>
 
-
 <!-- Modal for new Entity -->
 <%= render '/ag2_admin/entities/new_entity' %>
 <!-- Modal for new Service Point -->
 <%= render '/ag2_gest/service_points/new_service_point' %>
+
+<script type="text/javascript">
+  // When DOM is fully loaded
+  $(window).load(function() {
+    // Charge aux dropdowns
+    jQuery.getJSON('cr_load_dropdowns', function(data) {
+      var su = data.subscribers;
+      var sp = data.service_points;
+      var spt = data.service_point_types;
+      var spl = data.service_point_locations;
+      var spp = data.service_point_purposes;
+      var ce = data.centers;
+      var to = data.towns_by_offce;
+      var of = data.offices;
+      var sd = data.street_directories;
+      var st = data.street_types;
+      var t = data.towns;
+      var p = data.provinces;
+      var z = data.zipcodes;
+      var r = data.regions;
+      var c = data.countries;
+      var b = data.banks;
+      var bo = data.bank_offices;
+    });
+  });
+</script>

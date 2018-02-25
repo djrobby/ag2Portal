@@ -6,4 +6,7 @@ class ServicePointPurpose < ActiveRecord::Base
   has_paper_trail
 
   validates :name,  :presence => true
+
+  # Scopes
+  scope :by_name, -> { order(:name) }
 end

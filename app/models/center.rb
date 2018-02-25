@@ -16,8 +16,21 @@ class Center < ActiveRecord::Base
                           :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid }
 
   # Scopes
-  scope :by_town, -> { order(:town_id, :name) }
+  scope :by_town, -> { order('centers.town_id, centers.name') }
+  #
+  scope :for_dropdown_by_town, -> town {
+    joins(:town)
+    .select("centers.id, CONCAT(centers.code, ' (', towns.name, ')') to_label_")
+    .where(town_id: town)
+    .by_town
+  }
+  scope :for_dropdown, -> {
+    joins(:town)
+    .select("centers.id, CONCAT(centers.code, ' (', towns.name, ')') to_label_")
+    .by_town
+  }
 
+  # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
 
@@ -28,6 +41,17 @@ class Center < ActiveRecord::Base
   def fields_to_uppercase
     if !self.code.blank?
       self[:code].upcase!
+    end
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.dropdown(town=nil)
+    if town.present?
+      self.for_dropdown_by_town(town)
+    else
+      self.for_dropdown
     end
   end
 

@@ -46,7 +46,7 @@ Ag2Gest::Engine.routes.draw do
     match 'update_reading_route_from_period/:id', :controller => 'pre_readings', :action => 'update_reading_route_from_period'
     match 'pre_readings/:id/update_reading_route_from_period/:id', :controller => 'pre_readings', :action => 'update_reading_route_from_period'
     #
-    # Contract_Templates
+    # Contract templates
     match 'contract_templates/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
     match 'contract_templates/:id/update_province_textfield_from_town/:id', :controller => 'contract_templates', :action => 'update_province_textfield_from_town'
     match 'contract_templates/update_country_textfield_from_region/:id', :controller => 'contract_templates', :action => 'update_country_textfield_from_region'
@@ -102,7 +102,7 @@ Ag2Gest::Engine.routes.draw do
     match "complaint_management", controller: "home", action: 'complaint_management'
     match "sale_offer_management", controller: "home", action: 'sale_offer_management'
     #
-    # Contracting request
+    # Contracting requests
     match 'contracting_requests/update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
     match 'update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
     match 'contracting_requests/:id/update_bank_offices_from_bank/:id', :controller => 'contracting_requests', :action => 'update_bank_offices_from_bank'
@@ -174,7 +174,6 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
     match 'cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
     match 'contracting_requests/:id/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
-
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -195,6 +194,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
     match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'contracting_requests'
     match 'contracting_requests/:id/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
+    match 'contracting_requests/cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
+    match 'cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
+    match 'contracting_requests/:id/cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
     #
     # Readings
     match 'readings/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'

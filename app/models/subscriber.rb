@@ -175,7 +175,17 @@ class Subscriber < ActiveRecord::Base
              CASE WHEN NOT ISNULL(wsc.contract_no) THEN CONCAT(SUBSTR(wsc.contract_no,1,6), '-', SUBSTR(wsc.contract_no,7,2), '-', SUBSTR(wsc.contract_no,9,4), '-', SUBSTR(wsc.contract_no,13,6)) ELSE '' END water_supply_contract_full_no_,
              tariff_schemes.name tariff_scheme_name_")
   }
-  scope :subscribers_dropdown, -> {
+  scope :for_dropdown_by_office, -> office {
+    joins("INNER JOIN street_directories on subscribers.street_directory_id=street_directories.id")
+    .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
+    .select("subscribers.id,
+             CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7), ' ',
+                    CASE WHEN ISNULL(subscribers.company) THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END, ' - ',
+                    CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', subscribers.street_number, (CASE WHEN NOT ISNULL(subscribers.building) AND subscribers.building<>'' THEN CONCAT(', ', subscribers.building) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor) AND subscribers.floor<>'' THEN CONCAT(', ', subscribers.floor) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor_office) AND subscribers.floor_office<>'' THEN CONCAT(' ', subscribers.floor_office) ELSE '' END))) to_label_")
+    .by_code
+    .where(office_id: office)
+  }
+  scope :for_dropdown, -> {
     joins("INNER JOIN street_directories on subscribers.street_directory_id=street_directories.id")
     .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")
     .select("subscribers.id,
@@ -665,6 +675,14 @@ class Subscriber < ActiveRecord::Base
   def self.find_by_office(_office, _organization)
     joins(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _office, _organization).by_code
     #includes(:office => :company).where("office_id = ? OR (office_id IS NULL AND companies.organization_id = ?)", _company, _organization).by_code
+  end
+
+  def self.dropdown(office=nil)
+    if office.present?
+      self.for_dropdown_by_office(office)
+    else
+      self.for_dropdown
+    end
   end
 
   #
