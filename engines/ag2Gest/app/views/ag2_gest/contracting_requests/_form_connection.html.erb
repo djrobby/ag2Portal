@@ -19,7 +19,7 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
-    
+
     $('select.custom-sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true,
@@ -625,7 +625,7 @@
     <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->
     <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
-    <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>          
+    <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>
   </div>
 </div>
 
@@ -658,3 +658,29 @@
 
 <!-- Modal for new Entity -->
 <%= render '/ag2_admin/entities/new_entity' %>
+
+<script type="text/javascript">
+  // When DOM is fully loaded
+  $(window).load(function() {
+    // Charge aux dropdowns
+    jQuery.getJSON('cr_load_form_dropdowns', function(data) {
+      var su = data.subscribers;
+      var sp = data.service_points;
+      var spt = data.service_point_types;
+      var spl = data.service_point_locations;
+      var spp = data.service_point_purposes;
+      var ce = data.centers;
+      var to = data.towns_by_offce;
+      var of = data.offices;
+      var sd = data.street_directories;
+      var st = data.street_types;
+      var t = data.towns;
+      var p = data.provinces;
+      var z = data.zipcodes;
+      var r = data.regions;
+      var c = data.countries;
+      var b = data.banks;
+      var bo = data.bank_offices;
+    });
+  });
+</script>

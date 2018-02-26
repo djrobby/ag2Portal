@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td><%= t("activerecord.attributes.contracting_request.id") %>:</td>
-      <td><%= @contracting_request.try(:id) %></td>
+      <td id="fnt_id"><%= @contracting_request.try(:id) %></td>
       <td><%= t "activerecord.attributes.contracting_request.request_no" %>:</td>
       <td><b><%= @contracting_request.try(:full_no) %></b></td>
       <td><%= t "activerecord.attributes.contracting_request.request_date" %>:</td>
@@ -163,6 +163,32 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
 
 </div>
 <script type="text/javascript">
+  // When DOM is fully loaded
+  $(window).load(function() {
+    // Charge aux dropdowns
+    var crid = $("#fnt_id").text();
+    if (crid == "") crid = "0";
+    jQuery.getJSON('cr_load_show_dropdowns/' + crid, function(data) {
+      var su = data.subscribers;
+      var sp = data.service_points;
+      var spt = data.service_point_types;
+      var spl = data.service_point_locations;
+      var spp = data.service_point_purposes;
+      var ce = data.centers;
+      var to = data.towns_by_offce;
+      var of = data.offices;
+      var sd = data.street_directories;
+      var st = data.street_types;
+      var t = data.towns;
+      var p = data.provinces;
+      var z = data.zipcodes;
+      var r = data.regions;
+      var c = data.countries;
+      var b = data.banks;
+      var bo = data.bank_offices;
+    });
+  });
+
   $(document).ready(function() {
     $('#myTab').on('click', 'a', function (e) {
       e.preventDefault();
@@ -170,7 +196,7 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
       window.location.hash = $(this).attr('href');
       $(this).tab('show');
     })
-    
+
     if (location.hash !== '') $('#myTab a[href="' + location.hash + '"]').tab('show');
       return $('#myTab a[data-toggle="tab"]').on('shown', function(e) {
        return location.hash = $(e.target).attr('href').substr(1);

@@ -5,6 +5,7 @@ module Ag2Gest
   class ContractingRequestsController < ApplicationController
     before_filter :authenticate_user!
     before_filter :set_defaults_for_new_and_edit, only: [:new, :edit, :new_connection, :edit_connection]
+    before_filter :set_defaults_for_show, only: :show
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :update_tariff_type_select_from_billing_concept,
                                                 :update_province_textfield_from_town,
@@ -70,7 +71,8 @@ module Ag2Gest
                                                 :new_connection,
                                                 :edit_connection,
                                                 :cr_check_iban,
-                                                :cr_load_dropdowns]
+                                                :cr_load_form_dropdowns,
+                                                :cr_load_show_dropdowns]
     # Helper methods for
     helper_method :sort_column
     # => search available meters
@@ -1636,16 +1638,34 @@ module Ag2Gest
     end
 
     #*** Charge modal dropdowns async ***
-    def cr_load_dropdowns
+    def cr_load_form_dropdowns
       # OCO
       init_oco if !session[:organization]
       _o = session[:office] != '0' ? session[:office].to_i : nil
-      towns_by_offce = current_offices.group(:town_id).pluck('offices.town_id')
+      towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
 
       @json_data = { "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
                      "service_point_types" => service_point_types_array, "service_point_locations" => service_point_locations_array,
                      "service_point_purposes" => service_point_purposes_array, "centers" => centers_array(_o),
-                     "towns_by_offce" => towns_by_offce, "offices" => offices_array,
+                     "towns_by_offce" => towns_by_office, "offices" => offices_array,
+                     "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
+                     "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
+                     "regions" => regions_array, "countries" => country_array,
+                     "banks" => banks_array, "bank_offices" => bank_offices_array }
+      render json: @json_data
+    end
+
+    def cr_load_show_dropdowns
+      contracting_request = ContractingRequest.find(params[:crid])
+      # OCO
+      init_oco if !session[:organization]
+      _o = session[:office] != '0' ? session[:office].to_i : nil
+      towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
+
+      @json_data = { "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
+                     "service_point_types" => service_point_types_array, "service_point_locations" => service_point_locations_array,
+                     "service_point_purposes" => service_point_purposes_array, "centers" => centers_array(_o),
+                     "towns_by_offce" => towns_by_office, "offices" => offices_array,
                      "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
                      "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
                      "regions" => regions_array, "countries" => country_array,
@@ -1732,14 +1752,13 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @contracting_request = ContractingRequest.find(params[:id])
+
       @water_supply_contract = @contracting_request.water_supply_contract || WaterSupplyContract.new
       @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new
+      @subscriber = @contracting_request.subscriber || Subscriber.new
+
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
-      @subscriber = @contracting_request.try(:subscriber) || Subscriber.new
-      @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id).order("billable_items.billable_concept_id")
-      #@billable_concept_availables = BillableConcept.where(billable_document: 1).belongs_to_project(@contracting_request.project_id)
       @billable_concept_availables = BillableItem.joins(:billable_concept,:regulation).where('(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND billable_concepts.billable_document = 1 AND billable_items.project_id = ?', Date.today,@contracting_request.project_id).order("billable_concepts.id")
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
@@ -1789,7 +1808,7 @@ module Ag2Gest
         end
         biller
       end
-      @tariff_type_dropdown =  @grouped_options
+      @tariff_type_dropdown = @grouped_options
 
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
@@ -2152,6 +2171,7 @@ module Ag2Gest
 
     private
 
+    # Filters
     def set_defaults_for_new_and_edit
       @projects = projects_dropdown
       @projects_ids = projects_dropdown_ids
@@ -2194,6 +2214,16 @@ module Ag2Gest
       @bank_offices = bank_offices_dropdown
     end
 
+    def set_defaults_for_show
+      @projects = projects_dropdown
+      @projects_ids = projects_dropdown_ids
+      @tariff_types_availables = []
+      @billable_concept_availables = []
+      @calibers = []
+      @billing_periods = []
+    end
+
+    # Dropdowns
     def subscribers_dropdown
       Subscriber.dropdown
     end
@@ -2334,10 +2364,7 @@ module Ag2Gest
       WorkOrder.order(:order_no)
     end
 
-    def sort_column
-      ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
-    end
-
+    # Dropdown arrays
     def reports_array()
       _array = []
       _array = _array << t("ag2_gest.contracting_requests.report.contracting_request_report")
@@ -2530,6 +2557,12 @@ module Ag2Gest
       _array
     end
 
+    # Index sort by column name
+    def sort_column
+      ContractingRequest.column_names.include?(params[:sort]) ? params[:sort] : "request_no"
+    end
+
+    # Filter params status
     def manage_filter_state
       # search
       if params[:search]

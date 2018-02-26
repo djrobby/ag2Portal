@@ -194,9 +194,12 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
     match 'serpoint_generate_no/:id', :controller => 'service_points', :action => 'contracting_requests'
     match 'contracting_requests/:id/serpoint_generate_no/:id', :controller => 'contracting_requests', :action => 'serpoint_generate_no'
-    match 'contracting_requests/cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
-    match 'cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
-    match 'contracting_requests/:id/cr_load_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_dropdowns'
+    match 'contracting_requests/cr_load_form_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_form_dropdowns'
+    match 'cr_load_form_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_form_dropdowns'
+    match 'contracting_requests/:id/cr_load_form_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_form_dropdowns'
+    match 'contracting_requests/cr_load_show_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_show_dropdowns'
+    match 'cr_load_show_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_show_dropdowns'
+    match 'contracting_requests/:id/cr_load_show_dropdowns', :controller => 'contracting_requests', :action => 'cr_load_show_dropdowns'
     #
     # Readings
     match 'readings/r_reading_date/:billing_period/:reading_date', :controller => 'readings', :action => 'r_reading_date'
