@@ -66,6 +66,7 @@ es:
   dd_images_message: "Deja las imágenes aquí"
   dd_file_message: "Deja el archivo aquí"
   dd_files_message: "Deja los archivos aquí"
+  debt_message: "Espera, calculando..."
   approve: "Aprobar"
   disapprove: "Desaprobar"
   confirm: "Confirmar"

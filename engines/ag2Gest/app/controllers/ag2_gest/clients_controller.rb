@@ -253,6 +253,16 @@ module Ag2Gest
       render json: @json_data
     end
 
+    #*** Charge modal dropdowns async ***
+    def cl_load_dropdowns
+      client = Client.find(params[:client_id])
+      current_debt = number_with_precision(client.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      current_debt_label = I18n.t('activerecord.attributes.client.debt') + ':'
+
+      @json_data = { "current_debt" => current_debt, "current_debt_label" => current_debt_label }
+      render json: @json_data
+    end
+
     #
     # Default Methods
     #

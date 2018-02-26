@@ -83,6 +83,9 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
     match 'cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
     match 'clients/:id/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
+    match 'clients/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
+    match 'cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
+    match 'clients/:id/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
     #
     # Payment methods
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'
@@ -212,7 +215,7 @@ Ag2Gest::Engine.routes.draw do
     match 'readings/:id/r_find_subscriber/:subscriber', :controller => 'readings', :action => 'r_find_subscriber'
     match 'r_find_subscriber/:subscriber', :controller => 'readings', :action => 'r_find_subscriber'
     #
-    # Meter
+    # Meters
     match 'meters/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
     match 'meters/:id/me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
     match 'me_find_meter/:meter', :controller => 'meters', :action => 'me_find_meter'
@@ -223,7 +226,7 @@ Ag2Gest::Engine.routes.draw do
     match 'me_update_company_select_from_organization/:meter', :controller => 'meters', :action => 'me_update_company_select_from_organization'
     match 'meters/:id/me_update_company_select_from_organization/:meter', :controller => 'meters', :action => 'me_update_company_select_from_organization'
     #
-    # Tariff
+    # Tariffs
     match 'tariffs/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     match 'tariffs/:id/update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
     match 'update_billable_concept_select_from_project/:project_ids', :controller => 'tariffs', :action => 'update_billable_concept_select_from_project'
@@ -262,7 +265,7 @@ Ag2Gest::Engine.routes.draw do
     match "billable_concepts/show_test", controller: "billable_concepts", action: 'show_test'
     match "contracting_requests/show_test", controller: "contracting_requests", action: 'show_test'
     #
-    # Service point
+    # Service points
     match 'service_points/update_offices_textfield_from_company/:id', :controller => 'service_points', :action => 'update_offices_textfield_from_company'
     match 'service_points/:id/update_offices_textfield_from_company/:id', :controller => 'service_points', :action => 'update_offices_textfield_from_company'
     match 'service_points/update_province_textfield_from_town/:id', :controller => 'service_points', :action => 'update_province_textfield_from_town'
@@ -288,7 +291,7 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/change_meter/:id', :controller => 'service_points', :action => 'change_meter', :via => [:post]
     match 'service_points/:id/change_meter/:id', :controller => 'service_points', :action => 'change_meter', :via => [:post]
     #
-    # Subscriber
+    # Subscribers
     match 'subscribers/:id/reset_estimation', :controller => 'subscribers', :action => 'reset_estimation'
     match 'subscribers/:id/non_billable_button', :controller => 'subscribers', :action => 'non_billable_button'
     match 'subscribers/:id/billable_button', :controller => 'subscribers', :action => 'billable_button'
@@ -327,7 +330,7 @@ Ag2Gest::Engine.routes.draw do
     match 'sub_load_dropdowns/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_dropdowns'
     match 'subscribers/:id/sub_load_dropdowns/:subscriber_id', :controller => 'subscribers', :action => 'sub_load_dropdowns'
     #
-    # Commercial billing
+    # Commercial billings
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
     match 'ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'
     match 'commercial_billings/:id/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'

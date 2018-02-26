@@ -7,7 +7,7 @@
   <tbody>
     <tr>
       <td>Id:</td>
-      <td><%= @client.id %></td>
+      <td id="fnt_clid"><%= @client.id %></td>
       <td><%= t 'activerecord.attributes.client.client_code' %>:</td>
       <td class="highlighted bolded"><%= @client.full_code %></td>
     </tr>
@@ -96,8 +96,8 @@
 <table class="table">
   <tbody>
     <tr>
-      <td style="width: 12%"><%= t :"activerecord.attributes.client.debt" %>:</td>
-      <td class="highlighted bolded" style="width: 88%"><%= number_with_precision(@current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
+      <td style="width: 12%" class="bolded" id="show_current_debt_label"><%= t("activerecord.attributes.client.debt") %>:</td>
+      <td style="width: 88%" class="highlighted bolded" id="show_current_debt"><%= t(:debt_message) %></td>
     </tr>
   </tbody>
 </table>
@@ -251,6 +251,23 @@ new_path: new_client_path, new_txt: t('ag2_gest.clients.index.btn_new') } %>
 <%= link_to t('ag2_gest.clients.back_to_main_page'), clients_path %>
 
 <script type="text/javascript">
+  // When DOM is fully loaded
+  $(window).load(function() {
+    // Charge aux dropdowns and textboxes
+    var client_id = $("#fnt_clid").text();
+    if (client_id == "") client_id = "0";
+    jQuery.getJSON('cl_load_dropdowns/' + client_id, function(data) {
+        var cd = data.current_debt;
+        var cdl = data.current_debt_label;
+
+        // current debt
+        $("#show_current_debt").text(cd);
+
+        return false;
+    });
+  });
+
+  // When DOM is loaded
   $(document).ready(function() {
     $('#myTab').on('click', 'a', function (e) {
       e.preventDefault();

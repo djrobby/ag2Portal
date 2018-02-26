@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td><%= t("activerecord.attributes.contracting_request.id") %>:</td>
-      <td id="fnt_id"><%= @contracting_request.try(:id) %></td>
+      <td id="fnt_crid"><%= @contracting_request.try(:id) %></td>
       <td><%= t "activerecord.attributes.contracting_request.request_no" %>:</td>
       <td><b><%= @contracting_request.try(:full_no) %></b></td>
       <td><%= t "activerecord.attributes.contracting_request.request_date" %>:</td>
@@ -166,7 +166,7 @@ new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
   // When DOM is fully loaded
   $(window).load(function() {
     // Charge aux dropdowns
-    var crid = $("#fnt_id").text();
+    var crid = $("#fnt_crid").text();
     if (crid == "") crid = "0";
     jQuery.getJSON('cr_load_show_dropdowns/' + crid, function(data) {
       var su = data.subscribers;

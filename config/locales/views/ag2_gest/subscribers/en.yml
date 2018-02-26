@@ -34,7 +34,6 @@ en:
         are_you_sure_to_rebill: "Are you sure to rebill this "
         total_consumptions: "Consumption"
         total_bills: "Total"
-        debt_message: "Wait, calculating..."
       edit:
         title: "Editar Subscriber"
         btn_show: "Ver Subscriber"

@@ -97,7 +97,7 @@
         <i id="icon_up" class="icon-thumbs-up <%= 'hide' unless !@subscriber.non_billable %>"></i> &nbsp; <a id='non_billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless !@subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       </td>
       <td class="bolded" id="show_current_debt_label"><%= t('activerecord.attributes.subscriber.debt') %>:</td>
-      <td class="highlighted bolded" id="show_current_debt"><%= t('.debt_message') %></td>
+      <td class="highlighted bolded" id="show_current_debt"><%= t(:debt_message) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
