@@ -1217,11 +1217,11 @@ module Ag2Gest
       service_point_code = ''
       @street_directory = @subscriber.street_directory
       service_point = @subscriber.service_point rescue nil
-      if !@subscriber.blank? and !@subscriber.invoice_debts.unpaid.blank?
-        @subscriber_debt = number_with_precision(@subscriber.invoice_debts.unpaid.sum(:debt), precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-      else
-        @subscriber_debt = '0'
+
+      if !@subscriber.blank? and !@subscriber.invoice_current_debts.unpaid.blank?
+        @subscriber_debt = number_with_precision(@subscriber.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
       end
+
       if !service_point.nil?
         service_point_code = service_point.code
         search = ServicePoint.search do
@@ -1641,14 +1641,18 @@ module Ag2Gest
     def cr_load_form_dropdowns
       # OCO
       init_oco if !session[:organization]
-      _o = session[:office] != '0' ? session[:office].to_i : nil
+      # _o = session[:office] != '0' ? session[:office].to_i : nil
+      _o = current_offices_ids
       towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
+      empty_array = []
 
-      @json_data = { "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
+      @json_data = { "subscribers" => empty_array, "service_points" => empty_array,
+                    #  "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
                      "service_point_types" => service_point_types_array, "service_point_locations" => service_point_locations_array,
-                     "service_point_purposes" => service_point_purposes_array, "centers" => centers_array(_o),
-                     "towns_by_offce" => towns_by_office, "offices" => offices_array,
-                     "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
+                     "service_point_purposes" => service_point_purposes_array, "centers" => centers_by_town_array(towns_by_office),
+                     "street_types" => street_types_array, "street_directories_by_town" => street_directories_by_town_array(towns_by_office),
+                    #  "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
+                     "towns_by_office" => towns_by_office_array(towns_by_office), "reading_routes" => reading_routes_raw_array(_o),
                      "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
                      "regions" => regions_array, "countries" => country_array,
                      "banks" => banks_array, "bank_offices" => bank_offices_array }
@@ -1665,7 +1669,7 @@ module Ag2Gest
       @json_data = { "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
                      "service_point_types" => service_point_types_array, "service_point_locations" => service_point_locations_array,
                      "service_point_purposes" => service_point_purposes_array, "centers" => centers_array(_o),
-                     "towns_by_offce" => towns_by_office, "offices" => offices_array,
+                     "towns_by_office" => towns_by_office, "offices" => offices_array,
                      "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
                      "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
                      "regions" => regions_array, "countries" => country_array,
@@ -2174,7 +2178,7 @@ module Ag2Gest
     # Filters
     def set_defaults_for_new_and_edit
       @projects = projects_dropdown
-      @projects_ids = projects_dropdown_ids
+      @projects_ids = @projects.pluck(:id)
       @subscribers = []
       @service_points = []
       @service_point_types = []
@@ -2191,6 +2195,7 @@ module Ag2Gest
       @countries = []
       @bank = []
       @bank_offices = []
+      @reading_routes = []
     end
 
     def set_defaults_for_create_and_update
@@ -2251,9 +2256,9 @@ module Ag2Gest
     def street_directories_dropdown
       StreetDirectory.dropdown
     end
+
     def towns_dropdown
-      Town.order('towns.name').joins(:province) \
-          .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
+      Town.dropdown
     end
 
     def provinces_dropdown
@@ -2326,11 +2331,11 @@ module Ag2Gest
 
     def projects_dropdown
       if session[:office] != '0'
-        _projects = Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
+        Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
       elsif session[:company] != '0'
-        _projects = Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
+        Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
       else
-        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
+        session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
       end
     end
 
@@ -2422,6 +2427,15 @@ module Ag2Gest
       _array
     end
 
+    def reading_routes_raw_array(_o=nil)
+      _s = ReadingRoute.dropdown(_o)
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
     def service_point_types_array
       _s = service_point_types_dropdown
       _array = []
@@ -2445,6 +2459,15 @@ module Ag2Gest
       _array = []
       _s.each do |i|
         _array = _array << [i.id, i.name]
+      end
+      _array
+    end
+
+    def towns_by_office_array(_t)
+      _towns = Town.dropdown(_t)
+      _array = []
+      _towns.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -2530,7 +2553,16 @@ module Ag2Gest
       _array
     end
 
-    def centers_array(_o=nil)
+    def centers_by_town_array(_t)
+      _s = Center.dropdown(_t)
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def centers_by_office_array(_o=nil)
       _s = _o.nil? ? Center.dropdown : Center.dropdown(Office.find(_o).town_id)
       _array = []
       _s.each do |i|
@@ -2541,6 +2573,15 @@ module Ag2Gest
 
     def street_directories_array(_o=nil)
       _s = _o.nil? ? StreetDirectory.dropdown : StreetDirectory.dropdown(Office.find(_o).town_id)
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def street_directories_by_town_array(_t)
+      _s = StreetDirectory.dropdown(_t)
       _array = []
       _s.each do |i|
         _array = _array << [i.id, i.to_label_]

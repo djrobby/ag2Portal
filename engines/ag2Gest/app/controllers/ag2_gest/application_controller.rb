@@ -68,7 +68,7 @@ module Ag2Gest
 
     def current_offices_ids
       if session[:office] != '0'
-        _offices =  [session[:office]]
+        _offices = [session[:office]]
       elsif session[:company] != '0'
         _offices = Company.find(session[:company]).offices.pluck('offices.town_id')
       else
@@ -78,7 +78,7 @@ module Ag2Gest
 
     def current_offices
       if session[:office] != '0'
-        _offices =  Office.where(id: session[:office])
+        _offices = Office.where(id: session[:office])
       elsif session[:company] != '0'
         _offices = Company.find(session[:company]).offices
       else

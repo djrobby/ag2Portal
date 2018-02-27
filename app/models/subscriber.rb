@@ -352,6 +352,10 @@ class Subscriber < ActiveRecord::Base
     invoice_debts.existing_debt.sum(:debt)
   end
 
+  def total_debt
+    invoices.sum(&:debt)
+  end
+
   # Historical estimation (based on all invoices)
   def total_consumption_estimated
     invoices.reject(&:marked_for_destruction?).sum(:consumption_estimated)

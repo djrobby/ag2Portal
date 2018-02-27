@@ -24,13 +24,36 @@ class Town < ActiveRecord::Base
 
   # Scopes
   scope :by_ine, -> { order(:ine_cmun, :ine_dc) }
-  scope :by_name, -> { order(:name) }
+  scope :by_name, -> { order('towns.name') }
+  #
+  scope :for_dropdown_by_town, -> town {
+    joins(:province)
+    .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
+    .where("towns.id IN (?)", town)
+    .by_name
+  }
+  scope :for_dropdown, -> {
+    joins(:province)
+    .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
+    .by_name
+  }
 
   # Callbacks
   before_destroy :check_for_dependent_records
 
   def to_label
     "#{name} (#{province.name})"
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.dropdown(town=nil)
+    if town.present?
+      self.for_dropdown_by_town(town)
+    else
+      self.for_dropdown
+    end
   end
 
   private

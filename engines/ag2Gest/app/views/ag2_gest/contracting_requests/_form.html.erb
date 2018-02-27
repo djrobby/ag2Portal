@@ -129,7 +129,7 @@
           if(cr_type == "<%= ContractingRequestType::SUPPLY %>"){
             $('.client-field').attr('readonly', false);
             $('.center-field').attr('readonly', false);
-            $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
+            $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
             $("#contracting_request_subscriber_street_name").val(data.street_name);
             $("#s2id_contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
             // $("#contracting_request_service_point_id").select2("val", data.street_directory_id);
@@ -186,7 +186,7 @@
             $("#contracting_request_entity_id").val(data.id);
             $(".contracting_request_full_name").val(data.name);
             $("#contracting_request_entity_street_directory_id").val($("#street_directory").val());
-            $("#contracting_request_entity_street_type_id").select2("val", data.street_type_id);
+            $("#contracting_request_entity_street_type_id").val(data.street_type_id);
             $("#contracting_request_entity_street_name").val(data.street_name);
             $("#contracting_request_entity_street_number").val(data.street_number);
             $("#contracting_request_entity_building").val(data.building);
@@ -197,7 +197,7 @@
             $("#contracting_request_entity_province_id").val(data.province_id);
             $("#contracting_request_entity_region_id").val(data.region_id);
             $("#contracting_request_entity_country_id").val(data.country_id);
-            $("#contracting_request_client_street_type_id").select2("val", data.street_type_id);
+            $("#contracting_request_client_street_type_id").val(data.street_type_id);
             $("#contracting_request_client_street_name").val(data.street_name);
             $("#contracting_request_client_street_directory").select2("val", data.street_directory_id);
             $("#contracting_request_client_street_number").val(data.street_number);
@@ -304,7 +304,7 @@
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_subscriber_from_service_point/' + contact, function(data) {
-        $("#contracting_request_subscriber_street_type_id").select2("val", data.street_type_id);
+        $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
         $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory_id);
         $("#contracting_request_subscriber_street_number").val(data.street_number);
         $("#contracting_request_subscriber_building").val(data.building);
@@ -315,7 +315,7 @@
         $("#contracting_request_subscriber_province_id").val(data.province_id);
         $("#contracting_request_subscriber_region_id").val(data.region_id);
         $("#contracting_request_subscriber_country_id").val(data.country_id);
-        $("#contracting_request_subscriber_center_id").select2("val",data.center_id);
+        $("#contracting_request_subscriber_center_id").val(data.center_id);
       });
       return false;
     });
@@ -405,7 +405,7 @@
         $("#contracting_request_entity_fiscal_id").removeAttr("required", "required");
         $("#contracting_request_subscriber_id").select2("val", "");
         $("#contracting_request_subscriber_id").removeAttr("required", "required");
-        $("#contracting_request_subscriber_street_type_id").select2("val", "");
+        $("#contracting_request_subscriber_street_type_id").val("");
         $("#contracting_request_subscriber_street_directory_id").select2("val","");
         $("#contracting_request_subscriber_street_name").val("");
         $("#contracting_request_subscriber_street_number").val("");
@@ -417,7 +417,7 @@
         $("#contracting_request_subscriber_province_id").val("");
         $("#contracting_request_subscriber_region_id").val("");
         $("#contracting_request_subscriber_country_id").val("");
-        $("#contracting_request_subscriber_center_id").select2("val", "");
+        $("#contracting_request_subscriber_center_id").val("");
         $("#contracting_request_service_point_id").select2("val", "");
       };
     });
@@ -469,7 +469,7 @@
             $(".client-field").attr('readonly', false);
             $(".subscriber-field").attr('readonly', true);
           }
-          $("#contracting_request_subscriber_street_type_id").select2("val", data.street_directory.street_type_id);
+          $("#contracting_request_subscriber_street_type_id").val(data.street_directory.street_type_id);
           $("#contracting_request_subscriber_street_directory").select2("val",data.street_directory.id);
           $("#contracting_request_subscriber_street_number").val(data.subscriber.street_number);
           $("#contracting_request_subscriber_building").val(data.subscriber.building);
@@ -480,7 +480,7 @@
           $("#contracting_request_subscriber_province_id").val(data.province.id);
           $("#contracting_request_subscriber_region_id").val(data.region.id);
           $("#contracting_request_subscriber_country_id").val(data.country.id);
-          $("#contracting_request_subscriber_center_id").select2("val", data.subscriber.center_id);
+          $("#contracting_request_subscriber_center_id").val(data.subscriber.center_id);
           $("#service_point_hide").val(data.subscriber.service_point_id);
           $("#ServicePoint").val(data.ServicePoint);
           var w = data.service_point;
@@ -671,15 +671,16 @@
 
   <!-- PROJECT -->
   <label class="multi-field-label-four field-project">
-    <% if !@projects.empty? %>
-      <%= f.association :project, collection: @projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% elsif session[:organization] != '0' %>
-      <%= f.association :project, collection: Project.where("organization_id = ?", "#{session[:organization]}").ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% elsif current_user.projects.count > 0 %>
-      <%= f.association :project, collection: current_user.projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <% else %>
-      <%= f.association :project, collection: Project.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-    <% end %>
+    <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%# if !@projects.empty? %>
+      <%#= f.association :project, collection: @projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%# elsif session[:organization] != '0' %>
+      <%#= f.association :project, collection: Project.where("organization_id = ?", "#{session[:organization]}").ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%# elsif current_user.projects.count > 0 %>
+      <%#= f.association :project, collection: current_user.projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%# else %>
+      <%#= f.association :project, collection: Project.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
+    <%# end %>
   </label>
 
   <!-- REQUEST_TYPE -->
@@ -739,7 +740,7 @@
 
     <div class="row-fluid">
       <!-- ENTITY STREET TYPE -->
-      <%= f.association :entity_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+      <%= f.association :entity_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
       <!-- ENTITY STREET NAME -->
       <%= f.input :entity_street_name, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
       <!-- ENTITY STREET NUMBER -->
@@ -808,7 +809,7 @@
 
   <div class="row-fluid">
     <!-- CLIENT STREET TYPE -->
-    <%= f.association :client_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'client-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :client_street_type, collection: @street_types, :readonly => true, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- CLIENT STREET NAME -->
     <%= f.input :client_street_name, :input_html => { :class => 'client-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- CLIENT STREET NUMBER -->
@@ -893,9 +894,10 @@
 
   <div class="row-fluid">
     <!-- SUBSCRIBER STREET TYPE -->
-    <%= f.association :subscriber_street_type, :readonly => true, collection: @street_types, :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%= f.association :subscriber_street_type, :readonly => true, collection: @street_types, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- SUBSCRIBER STREET DIRECTORY -->
-    <%= f.association :subscriber_street_directory, :readonly => true, collection: StreetDirectory.by_towns(@offices).order(:street_name), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'subscriber-field x-large-text-field sel2', id: "contracting_request_subscriber_street_directory" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
+    <%#= f.association :subscriber_street_directory, :readonly => true, collection: StreetDirectory.by_towns(@offices).order(:street_name), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'subscriber-field x-large-text-field sel2', id: "contracting_request_subscriber_street_directory" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
+    <%= f.association :subscriber_street_directory, :readonly => true, collection: @offices, :input_html => { :class => 'subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
     <!-- SUBSCRIBER STREET NUMBER -->
     <%= f.input :subscriber_street_number, :input_html => { :class => 'subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
   </div>
@@ -922,7 +924,7 @@
     <%= f.association :subscriber_region, collection: @regions, :readonly => true, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
     <!-- SUBSCRIBER country -->
     <%= f.association :subscriber_country, collection: @countries, :readonly => true, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
-    <%= f.association :subscriber_center, :readonly => true, collection: @centers, :input_html => { :class => 'center-field subscriber-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
+    <%= f.association :subscriber_center, :readonly => true, collection: @centers, :input_html => { :class => 'center-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>
 
@@ -973,7 +975,7 @@
   </tbody>
 </table>
 
-<% end %>
+<% end %> <!-- simple_form_for @contracting_request -->
 
 <%= simple_form_for :subrogation, url: subrogation_contracting_requests_path, :html => {id: "subrogation-form", :class => 'form-vertical well hide' } do |f| %>
   <%= f.input :entity_id, as: :hidden %>
@@ -994,7 +996,7 @@
 
     <div class="row-fluid">
       <!-- CLIENT STREET TYPE -->
-      <%= f.input :client_street_type_id, label: t('activerecord.attributes.contracting_request.client_street_type'), collection: @street_types, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+      <%= f.input :client_street_type_id, label: t('activerecord.attributes.contracting_request.client_street_type'), collection: @street_types, :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
       <!-- CLIENT STREET NAME -->
       <%= f.input :client_street_name, label: t('activerecord.attributes.contracting_request.client_street_name'), :input_html => { :class => 'entity-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span8" } %>
       <!-- CLIENT STREET NUMBER -->
@@ -1048,7 +1050,7 @@
     </tbody>
   </table>
 
-<% end %>
+<% end %> <!-- simple_form_for :subrogation -->
 
 <!-- Modal for new Entity -->
 <%= render '/ag2_admin/entities/new_entity' %>
@@ -1067,9 +1069,10 @@
       var spp = data.service_point_purposes;
       var ce = data.centers;
       var to = data.towns_by_offce;
-      var of = data.offices;
-      var sd = data.street_directories;
       var st = data.street_types;
+      var sdt = data.street_directories_by_town;
+      // var sd = data.street_directories;
+      var tbo = data.towns_by_offce;
       var t = data.towns;
       var p = data.provinces;
       var z = data.zipcodes;
@@ -1077,6 +1080,362 @@
       var c = data.countries;
       var b = data.banks;
       var bo = data.bank_offices;
+      var rr = data.reading_routes;
+
+      // subscribers
+      $("#contracting_request_subscriber_id").html("");
+      $("#contracting_request_subscriber_id").select2("val", "");
+      // $("#contracting_request_subscriber_id").val("val", "");
+      $("#contracting_request_subscriber_id").append($('<option></option>').val("").html(""));
+      if (!su.length) {
+        $.each(data, function(id, option) {
+          if (id == 'subscribers' && option != "") {
+            $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(su, function(id, option) {
+          $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // service_points
+      $("#contracting_request_service_point_id").html("");
+      $("#contracting_request_service_point_id").select2("val", "");
+      // $("#contracting_request_service_point_id").val("val", "");
+      $("#contracting_request_service_point_id").append($('<option></option>').val("").html(""));
+      if (!sp.length) {
+        $.each(data, function(id, option) {
+          if (id == 'service_points' && option != "") {
+            $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(sp, function(id, option) {
+          $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // service_point_types
+      $("#form_new_service_point_service_point_type_id").html("");
+      $("#form_new_service_point_service_point_type_id").select2("val", "");
+      $("#form_new_service_point_service_point_type_id").append($('<option></option>').val("").html(""));
+      if (!spt.length) {
+        $.each(data, function(id, option) {
+          if (id == 'service_point_types' && option != "") {
+            $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(spt, function(id, option) {
+          $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // service_point_locations
+      $("#form_new_service_point_service_point_location_id").html("");
+      $("#form_new_service_point_service_point_location_id").select2("val", "");
+      $("#form_new_service_point_service_point_location_id").append($('<option></option>').val("").html(""));
+      if (!spt.length) {
+        $.each(data, function(id, option) {
+          if (id == 'service_point_locations' && option != "") {
+            $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(spt, function(id, option) {
+          $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // service_point_purposes
+      $("#form_new_service_point_service_point_purpose_id").html("");
+      $("#form_new_service_point_service_point_purpose_id").select2("val", "");
+      $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val("").html(""));
+      if (!spt.length) {
+        $.each(data, function(id, option) {
+          if (id == 'service_point_purposes' && option != "") {
+            $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(spt, function(id, option) {
+          $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // reading_routes
+      $("#form_new_service_point_reading_route_id").html("");
+      $("#form_new_service_point_reading_route_id").select2("val", "");
+      $("#form_new_service_point_reading_route_id").append($('<option></option>').val("").html(""));
+      if (!rr.length) {
+        $.each(data, function(id, option) {
+          if (id == 'reading_routes' && option != "") {
+            $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(rr, function(id, option) {
+          $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+
+      // centers
+      $("#contracting_request_subscriber_center_id").html("");
+      $("#contracting_request_subscriber_center_id").val("");
+      // $("#contracting_request_subscriber_center_id").val("val", "");
+      $("#contracting_request_subscriber_center_id").append($('<option></option>').val("").html(""));
+      $("#form_new_service_point_center_id").html("");
+      $("#form_new_service_point_center_id").val("");
+      $("#form_new_service_point_center_id").append($('<option></option>').val("").html(""));
+      if (!ce.length) {
+        $.each(data, function(id, option) {
+          if (id == 'centers' && option != "") {
+            $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(ce, function(id, option) {
+          $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // street_directories_by_town
+      $("#contracting_request_subscriber_street_directory").html("");
+      $("#contracting_request_subscriber_street_directory").select2("val", "");
+      $("#contracting_request_subscriber_street_directory").append($('<option></option>').val("").html(""));
+      $("#form_new_service_point_street_directory_id").html("");
+      $("#form_new_service_point_street_directory_id").select2("val", "");
+      $("#form_new_service_point_street_directory_id").append($('<option></option>').val("").html(""));
+      if (!sdt.length) {
+        $.each(data, function(id, option) {
+          if (id == 'street_directories_by_town' && option != "") {
+            $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(sdt, function(id, option) {
+          $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // street_types
+      $("#contracting_request_entity_street_type_id").html("");
+      $("#contracting_request_entity_street_type_id").val("");
+      $("#contracting_request_entity_street_type_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_street_type_id").html("");
+      $("#contracting_request_client_street_type_id").val("");
+      $("#contracting_request_client_street_type_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_street_type_id").html("");
+      $("#contracting_request_subscriber_street_type_id").val("");
+      $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_street_type_id").html("");
+      $("#subrogation_client_street_type_id").val("");
+      $("#subrogation_client_street_type_id").append($('<option></option>').val("").html(""));
+      if (!st.length) {
+        $.each(data, function(id, option) {
+          if (id == 'street_types' && option != "") {
+            $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(st, function(id, option) {
+          $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // towns
+      $("#contracting_request_entity_town_id").html("");
+      $("#contracting_request_entity_town_id").select2("val", "");
+      $("#contracting_request_entity_town_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_town_id").html("");
+      $("#contracting_request_client_town_id").select2("val", "");
+      $("#contracting_request_client_town_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_town_id").html("");
+      $("#contracting_request_subscriber_town_id").select2("val", "");
+      $("#contracting_request_subscriber_town_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_town_id").html("");
+      $("#subrogation_client_town_id").select2("val", "");
+      $("#subrogation_client_town_id").append($('<option></option>').val("").html(""));
+      if (!t.length) {
+        $.each(data, function(id, option) {
+          if (id == 'towns' && option != "") {
+            $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(t, function(id, option) {
+          $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // provinces
+      $("#contracting_request_entity_province_id").html("");
+      $("#contracting_request_entity_province_id").select2("val", "");
+      $("#contracting_request_entity_province_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_province_id").html("");
+      $("#contracting_request_client_province_id").select2("val", "");
+      $("#contracting_request_client_province_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_province_id").html("");
+      $("#contracting_request_subscriber_province_id").select2("val", "");
+      $("#contracting_request_subscriber_province_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_province_id").html("");
+      $("#subrogation_client_province_id").select2("val", "");
+      $("#subrogation_client_province_id").append($('<option></option>').val("").html(""));
+      if (!p.length) {
+        $.each(data, function(id, option) {
+          if (id == 'provinces' && option != "") {
+            $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(p, function(id, option) {
+          $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // zipcodes
+      $("#contracting_request_entity_zipcode_id").html("");
+      $("#contracting_request_entity_zipcode_id").select2("val", "");
+      $("#contracting_request_entity_zipcode_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_zipcode_id").html("");
+      $("#contracting_request_client_zipcode_id").select2("val", "");
+      $("#contracting_request_client_zipcode_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_zipcode_id").html("");
+      $("#contracting_request_subscriber_zipcode_id").select2("val", "");
+      $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_zipcode_id").html("");
+      $("#subrogation_client_zipcode_id").select2("val", "");
+      $("#subrogation_client_zipcode_id").append($('<option></option>').val("").html(""));
+      $("#form_new_service_point_zipcode_id").html("");
+      $("#form_new_service_point_zipcode_id").select2("val", "");
+      $("#form_new_service_point_zipcode_id").append($('<option></option>').val("").html(""));
+      if (!z.length) {
+        $.each(data, function(id, option) {
+          if (id == 'zipcodes' && option != "") {
+            $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(z, function(id, option) {
+          $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // regions
+      $("#contracting_request_entity_region_id").html("");
+      $("#contracting_request_entity_region_id").select2("val", "");
+      $("#contracting_request_entity_region_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_region_id").html("");
+      $("#contracting_request_client_region_id").select2("val", "");
+      $("#contracting_request_client_region_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_region_id").html("");
+      $("#contracting_request_subscriber_region_id").select2("val", "");
+      $("#contracting_request_subscriber_region_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_region_id").html("");
+      $("#subrogation_client_region_id").select2("val", "");
+      $("#subrogation_client_region_id").append($('<option></option>').val("").html(""));
+      if (!r.length) {
+        $.each(data, function(id, option) {
+          if (id == 'regions' && option != "") {
+            $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(r, function(id, option) {
+          $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // countries
+      $("#contracting_request_entity_country_id").html("");
+      $("#contracting_request_entity_country_id").select2("val", "");
+      $("#contracting_request_entity_country_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_client_country_id").html("");
+      $("#contracting_request_client_country_id").select2("val", "");
+      $("#contracting_request_client_country_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_subscriber_country_id").html("");
+      $("#contracting_request_subscriber_country_id").select2("val", "");
+      $("#contracting_request_subscriber_country_id").append($('<option></option>').val("").html(""));
+      $("#contracting_request_country_id").html("");
+      $("#contracting_request_country_id").select2("val", "");
+      $("#contracting_request_country_id").append($('<option></option>').val("").html(""));
+      $("#subrogation_client_country_id").html("");
+      $("#subrogation_client_country_id").select2("val", "");
+      $("#subrogation_client_country_id").append($('<option></option>').val("").html(""));
+      if (!c.length) {
+        $.each(data, function(id, option) {
+          if (id == 'countries' && option != "") {
+            $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+            $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(c, function(id, option) {
+          $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+          $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // banks
+      $("#contracting_request_bank_id").html("");
+      $("#contracting_request_bank_id").val("val", "");
+      $("#contracting_request_bank_id").append($('<option></option>').val("").html(""));
+      if (!b.length) {
+        $.each(data, function(id, option) {
+          if (id == 'banks' && option != "") {
+            $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(b, function(id, option) {
+            $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
+      // bank offices
+      $("#contracting_request_bank_office_id").html("");
+      $("#contracting_request_bank_office_id").val("val", "");
+      $("#contracting_request_bank_office_id").append($('<option></option>').val("").html(""));
+      if (!bo.length) {
+        $.each(data, function(id, option) {
+          if (id == 'bank_offices' && option != "") {
+            $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+          }
+        });
+      } else {
+        $.each(bo, function(id, option) {
+            $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+        });
+      }
     });
   });
 </script>
