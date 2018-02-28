@@ -4,6 +4,7 @@ module Ag2Gest
   class SubscribersController < ApplicationController
     #include ActionView::Helpers::NumberHelper
     helper_method :sort_column
+    @@subscribers = nil
 
     before_filter :authenticate_user!
     load_and_authorize_resource
@@ -680,12 +681,20 @@ module Ag2Gest
       render json: @json_data
     end
 
+    def sub_load_debt
+      subscriber = Subscriber.find(params[:subscriber_id])
+      current_debt = number_with_precision(subscriber.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      current_debt_label = I18n.t('activerecord.attributes.subscriber.debt') + ':'
+      @json_data = { "current_debt" => current_debt, "current_debt_label" => current_debt_label }
+      render json: @json_data
+    end
+
     #*** Charge modal dropdowns async ***
     def sub_load_dropdowns
       subscriber = Subscriber.find(params[:subscriber_id])
-      # current_debt = subscriber.total_existing_debt
-      current_debt = number_with_precision(subscriber.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-      current_debt_label = I18n.t('activerecord.attributes.subscriber.debt') + ':'
+
+      # current_debt = number_with_precision(subscriber.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      # current_debt_label = I18n.t('activerecord.attributes.subscriber.debt') + ':'
 
       street_type_id = !subscriber.postal_street_type_id.blank? ? subscriber.postal_street_type_id : subscriber.client.street_type_id
       zipcode_id = !subscriber.postal_zipcode_id.blank? ? subscriber.postal_zipcode_id : subscriber.client.zipcode_id
@@ -701,8 +710,8 @@ module Ag2Gest
                       "banks" => banks_array, "bank_offices" => bank_offices_array,
                       "bank_account_classes" => bank_account_classes_array, "meter_location" => meter_locations_array,
                       "billing_period" => billing_periods_array(subscriber), "projects" => projects_array,
-                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber),
-                      "current_debt" => current_debt, "current_debt_label" => current_debt_label }
+                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber) }
+                      # "current_debt" => current_debt, "current_debt_label" => current_debt_label }
       render json: @json_data
     end
 
@@ -795,6 +804,7 @@ module Ag2Gest
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @subscribers = @search.results
+      @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
       @reports = reports_array
 
       respond_to do |format|
@@ -811,7 +821,14 @@ module Ag2Gest
       filter = params[:ifilter]
 
       @breadcrumb = 'read'
-      @subscriber = Subscriber.find(params[:id])
+      if !@@subscribers.nil?
+        @subscriber = @@subscribers.find(params[:id])
+        @nav = @@subscribers
+      else
+        @subscriber = Subscriber.find(params[:id])
+        @nav = Subscriber
+      end
+      # @subscriber = Subscriber.find(params[:id])
       # @subscriber = Subscriber.find_with_joins(params[:id]).first
 
       @service_point = @subscriber.service_point rescue nil

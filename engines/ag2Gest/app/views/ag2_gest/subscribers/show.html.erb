@@ -97,7 +97,11 @@
         <i id="icon_up" class="icon-thumbs-up <%= 'hide' unless !@subscriber.non_billable %>"></i> &nbsp; <a id='non_billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless !@subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       </td>
       <td class="bolded" id="show_current_debt_label"><%= t('activerecord.attributes.subscriber.debt') %>:</td>
-      <td class="highlighted bolded" id="show_current_debt"><%= t(:debt_message) %></td>
+      <td>
+        <a id='sub_load_debt_button' class="btn btn-primary btn-mini nextBtn"><%= t(:view) %></a>
+        <span class="highlighted bolded" id="show_current_debt"><%= t(:debt_message) %></span>
+      </td>
+      <!--<td class="highlighted bolded" id="show_current_debt"><%#= t(:debt_message) %></td>-->
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
@@ -674,6 +678,9 @@
 
   // When DOM is loaded
   $(document).ready(function () {
+    $("#show_current_debt").hide();
+    $("#sub_load_debt_button").show();
+
     $("#billable_button").click(function(){
       var subscriber_id = "<%= @subscriber.id %>"
       var result = confirm("<%= t('activerecord.attributes.subscriber.alert_billable')%>");
@@ -924,6 +931,20 @@
         }
         if (c_id != 0) $("#fnt_bank_country").val(c_id);
 
+        return false;
+      });
+    });
+
+    $("#sub_load_debt_button").click(function(){
+      var subscriber_id = $("#fnt_id").val();
+      if (subscriber_id == "") subscriber_id = "0";
+      $("#sub_load_debt_button").hide();
+      $("#show_current_debt").show();
+      jQuery.getJSON('sub_load_debt/' + subscriber_id, function(data) {
+        var cd = data.current_debt;
+        var cdl = data.current_debt_label;
+        // current debt
+        $("#show_current_debt").text(cd);
         return false;
       });
     });

@@ -108,6 +108,7 @@ class Subscriber < ActiveRecord::Base
 
   # Scopes
   scope :by_code, -> { order('subscribers.subscriber_code') }
+  scope :by_code_desc, -> { order('subscribers.subscriber_code desc') }
   scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :subscriber_code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
@@ -692,20 +693,32 @@ class Subscriber < ActiveRecord::Base
   #
   # Records navigator
   #
+  # Using self.class
   def to_first
     Subscriber.order("subscriber_code").first
   end
-
   def to_prev
     Subscriber.where("subscriber_code < ?", subscriber_code).order("subscriber_code").last
   end
-
   def to_next
     Subscriber.where("subscriber_code > ?", subscriber_code).order("subscriber_code").first
   end
-
   def to_last
     Subscriber.order("subscriber_code").last
+  end
+
+  # Using received dataset
+  def goto_first(dataset=self.class)
+    dataset.by_code_desc.first
+  end
+  def goto_prev(dataset=self.class)
+    dataset.where("subscriber_code > ?", subscriber_code).by_code_desc.last
+  end
+  def goto_next(dataset=self.class)
+    dataset.where("subscriber_code < ?", subscriber_code).by_code_desc.first
+  end
+  def goto_last(dataset=self.class)
+    dataset.by_code_desc.last
   end
 
   searchable do
