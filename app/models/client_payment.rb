@@ -166,7 +166,7 @@ class ClientPayment < ActiveRecord::Base
   # Can't collect more than the current debt
   def check_debt
     invoice_debt = invoice.debt
-    if invoice_debt > 0 && amount > invoice_debt
+    if invoice_debt >= 0 && amount > invoice_debt
       errors.add(:base, I18n.t('activerecord.models.client_payment.check_debt'))
       return false
     end
