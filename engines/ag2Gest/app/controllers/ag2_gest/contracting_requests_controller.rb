@@ -2606,6 +2606,14 @@ module Ag2Gest
       _array
     end
 
+    def bank_offices_array_select(_offices)
+      _array = []
+      _offices.each do |i|
+        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      end
+      _array
+    end
+
     def bank_account_classes_array
       _bac = bank_account_classes_dropdown
       _array = []
