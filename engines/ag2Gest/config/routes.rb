@@ -86,6 +86,9 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
     match 'cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
     match 'clients/:id/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
+    match 'clients/cl_load_debt/:client_id', :controller => 'clients', :action => 'cl_load_debt'
+    match 'cl_load_debt/:client_id', :controller => 'clients', :action => 'cl_load_debt'
+    match 'clients/:id/cl_load_debt/:client_id', :controller => 'clients', :action => 'cl_load_debt'
     #
     # Payment methods
     match 'payment_methods/pm_format_numbers/:num', :controller => 'payment_methods', :action => 'pm_format_numbers'

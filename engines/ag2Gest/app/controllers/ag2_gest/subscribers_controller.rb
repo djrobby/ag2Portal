@@ -29,6 +29,7 @@ module Ag2Gest
                                                 :sub_load_postal,
                                                 :sub_load_bank,
                                                 :sub_load_dropdowns,
+                                                :sub_load_debt,
                                                 :sub_sepa_pdf,
                                                 :non_billable_button,
                                                 :reset_estimation,

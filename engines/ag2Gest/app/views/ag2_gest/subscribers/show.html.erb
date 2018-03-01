@@ -68,7 +68,7 @@
   <tbody>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.id') %>:</b></td>
-      <td><%= @subscriber.try(:id) %></td>
+      <td id="fnt_subid"><%= @subscriber.id %></td>
       <td><b><%= t('activerecord.attributes.subscriber.full_name') %>:</b></td>
       <td><%= @subscriber.try(:full_name) %></td>
       <td><b><%= t('activerecord.attributes.subscriber.fiscal_id_c') %>:</b></td>
@@ -416,11 +416,11 @@
         var pj = data.projects;
         var rt = data.reading_type;
         var bpr = data.billing_periods_reading;
-        var cd = data.current_debt;
-        var cdl = data.current_debt_label;
+        // var cd = data.current_debt;
+        // var cdl = data.current_debt_label;
 
         // current debt
-        $("#show_current_debt").text(cd);
+        // $("#show_current_debt").text(cd);
         //$("#show_current_debt_label").text(cdl);
 
         // meter locations
@@ -936,17 +936,18 @@
     });
 
     $("#sub_load_debt_button").click(function(){
-      var subscriber_id = $("#fnt_id").val();
-      if (subscriber_id == "") subscriber_id = "0";
-      $("#sub_load_debt_button").hide();
-      $("#show_current_debt").show();
-      jQuery.getJSON('sub_load_debt/' + subscriber_id, function(data) {
-        var cd = data.current_debt;
-        var cdl = data.current_debt_label;
-        // current debt
-        $("#show_current_debt").text(cd);
-        return false;
-      });
+      var subscriber_id = $("#fnt_subid").text();
+      if (subscriber_id != "" && subscriber_id != "0") {
+        $("#sub_load_debt_button").hide();
+        $("#show_current_debt").show();
+        jQuery.getJSON('sub_load_debt/' + subscriber_id, function(data) {
+          var cd = data.current_debt;
+          var cdl = data.current_debt_label;
+          // current debt
+          $("#show_current_debt").text(cd);
+          return false;
+        });
+      }
     });
 
     $(".icon-chevron-right").click(function(){
@@ -960,7 +961,6 @@
     $('#myTab a').click(function (e) {
       e.preventDefault();
       e.stopPropagation();
-      // $(this).tab('show');
 
       $('#myTab li').removeClass('active');
       $(this).parent().addClass('active');

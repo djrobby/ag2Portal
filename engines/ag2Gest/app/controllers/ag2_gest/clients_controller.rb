@@ -14,6 +14,8 @@ module Ag2Gest
                                                :cl_validate_fiscal_id_textfield,
                                                :cl_update_office_select_from_bank,
                                                :cl_check_iban,
+                                               :cl_load_dropdowns,
+                                               :cl_load_debt,
                                                :check_client_depent_subscribers]
     # Update office select at view from bank select
     def cl_update_office_select_from_bank
@@ -259,6 +261,14 @@ module Ag2Gest
       current_debt = number_with_precision(client.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
       current_debt_label = I18n.t('activerecord.attributes.client.debt') + ':'
 
+      @json_data = { "current_debt" => current_debt, "current_debt_label" => current_debt_label }
+      render json: @json_data
+    end
+
+    def cl_load_debt
+      client = Client.find(params[:client_id])
+      current_debt = number_with_precision(client.total_existing_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      current_debt_label = I18n.t('activerecord.attributes.client.debt') + ':'
       @json_data = { "current_debt" => current_debt, "current_debt_label" => current_debt_label }
       render json: @json_data
     end

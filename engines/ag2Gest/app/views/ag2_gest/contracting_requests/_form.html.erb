@@ -935,7 +935,7 @@
   <h4><%=t 'ag2_gest.contracting_requests.new.iban' %></h4>
   <div class="row-fluid">
     <!-- COUNTRY CODE -->
-    <%= f.input :country_id, collection: @countries, label_method: :full_name, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%= f.input :country_id, collection: @countries, label_method: :to_label_, value_method: :id, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- IBAN DC -->
     <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- BANK -->
