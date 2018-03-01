@@ -30,6 +30,7 @@ class ClientPayment < ActiveRecord::Base
   validates :client,            :presence => true
 
   # Callbacks
+  before_save :check_debt
   after_save :reindex_instalment
   after_destroy :reindex_instalment
 
@@ -161,6 +162,15 @@ class ClientPayment < ActiveRecord::Base
   end
 
   private
+
+  # Can't collect more than the current debt
+  def check_debt
+    invoice_debt = invoice.debt
+    if invoice_debt > 0 && amount > invoice_debt
+      errors.add(:base, I18n.t('activerecord.models.client_payment.check_debt'))
+      return false
+    end
+  end
 
   def reindex_instalment
     Sunspot.index(instalment_invoices) if instalment
