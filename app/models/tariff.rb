@@ -116,7 +116,8 @@ class Tariff < ActiveRecord::Base
 
   # USE THIS METHOD TO CHECK IF IT'S ACTIVE
   def active?
-    ending_at.blank?
+    ending_at.blank? || ending_at < Date.today
+    # ending_at.blank?
   end
 
   def get_code_formula

@@ -1124,10 +1124,11 @@ module Ag2Gest
             created_by: (current_user.id if !current_user.nil?)
           )
           @contracting_request.water_supply_contract.update_attributes(meter_id: @subscriber.meter_id)
-          if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id.nil? and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
+          _client_bank_account = @contracting_request.client.client_bank_accounts.order(:starting_at)
+          if !_client_bank_account.blank? and _client_bank_account.last.subscriber_id.nil? and _client_bank_account.last.ending_at.nil?
             @contracting_request.client.client_bank_accounts.where(ending_at: nil,subscriber_id: nil).last.update_attributes(subscriber_id: @subscriber.id)
           end
-          if !@contracting_request.client.client_bank_accounts.blank? and @contracting_request.client.client_bank_accounts.last.subscriber_id == @subscriber.id and @contracting_request.client.client_bank_accounts.last.ending_at.nil?
+          if !_client_bank_account.blank? and _client_bank_account.last.subscriber_id == @subscriber.id and _client_bank_account.last.ending_at.nil?
             @contracting_request.client.client_bank_accounts.where(subscriber_id: @subscriber.id, ending_at: nil).last.update_attributes(ending_at: Date.today, updated_by: @contracting_request.created_by )
           end
           if @meter_details.save

@@ -51,6 +51,20 @@
 
   jQuery(function($) {
 
+    $("#tariff_scheme_id").change(function() {
+      // make a POST call and replace the content
+      var tariff_scheme_ids = $('select#tariff_scheme_id :selected').val();
+      if (tariff_scheme_ids == "")
+        tariff_scheme_ids = "0";
+      jQuery.getJSON('cr_tariff_scheme_validate/' + tariff_scheme_ids, function(data) {
+        if (data.code == "$err") {
+          alert('<%= I18n.t("activerecord.attributes.tariff_scheme.alert_without_tariff") %>');
+          $("#tariff_scheme_id").select2("val", "");
+        }
+      });
+      return false;
+    });
+
     $(".icon-trash").click(function() {
       remove_fields(this);
     });

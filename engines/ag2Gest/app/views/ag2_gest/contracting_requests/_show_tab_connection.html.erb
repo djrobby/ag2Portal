@@ -368,7 +368,7 @@
     <div class="setup-content" id="step-1">
       <a id="modal-data" href="#new-water-connection-contract" data-toggle="modal" role="button" class="btn btn-primary"><%= t('activerecord.attributes.contracting_request.connection_data') %></a>
 
-      <a id="connection-billing" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_connection_contract.nil? or @contracting_request.water_connection_contract.tariff_scheme.blank? %>" href="<%= params[:id] %>/connection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
+      <a id="connection-billing" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-primary nextBtn <%= 'disabled' if @contracting_request.water_connection_contract.nil? or @contracting_request.water_connection_contract.tariff_scheme.blank? or @contracting_request.water_connection_contract.tariff_scheme.tariffs.blank? %>" href="<%= params[:id] %>/connection_billing" data-remote="true" ><%= t('activerecord.attributes.contracting_request.invoice_create') %></a>
     </div>
 
     <!-- step 3 -->

@@ -13,11 +13,6 @@ var content = '';
     content += `<table class="table table<%= index %>">`;
     content += `<tbody>`;
 
-    //form.append('<h5><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.try(:invoice_no) %></h5>');
-    //form.append('<h5><%= invoice.try(:company).try(:name) %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.try(:company).try(:fiscal_id) %></h5>');
-    //form.append('<h5><%= t("activerecord.attributes.contracting_request.payment_method") %> </h5>');
-
-    /*form.append('<h3><%= invoice.company.name %></h3>');*/
     content+= '<tr><th><%= t("activerecord.attributes.contracting_request.code") %></th><th><%= t("activerecord.attributes.contracting_request.quantity") %></th><th><%= t("activerecord.attributes.contracting_request.price") %></th><th><%= t("activerecord.attributes.contracting_request.amount") %></th><th><%= t("activerecord.attributes.contracting_request.tax") %></th><th><%= t("activerecord.attributes.contracting_request.discount") %></th><th><%= t("activerecord.attributes.contracting_request.discount_pct") %></th><th><%= t("activerecord.attributes.contracting_request.total") %></th></tr>';
 
     <% invoice.invoice_items.each_with_index do |item, index| %>

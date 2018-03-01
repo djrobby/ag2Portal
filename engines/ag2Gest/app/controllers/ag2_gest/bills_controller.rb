@@ -143,9 +143,11 @@ module Ag2Gest
       value = ''
       leyend = ''
       label = ''
-      t1 = formatted_number_without_delimiter(@biller_printer.invoices.first.subtotal, 2)
-      t2 = formatted_number_without_delimiter(@biller_printer.invoices.second.subtotal, 2)
-      total = t1 + t2
+      total = 0
+      @biller_printer.invoices.each do |total_invoice|
+        total += total_invoice.subtotal
+      end
+      total = formatted_number_without_delimiter(total, 2)
       @biller_printer.invoices.each do |invoice|
         invoice.invoiced_subtotals_by_concept.each do |sub_concept|
           a = formatted_number_without_delimiter(sub_concept[2], 2)
@@ -472,6 +474,8 @@ module Ag2Gest
                                      .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
                                      .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:bills]) \
                                      .group('invoices.biller_id')
+        @billing_starting_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_starting_date)) rescue ""
+        @billing_ending_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date)) rescue ""
         respond_to do |format|
           format.html # index.html.erb
           format.json { render json: @bills }

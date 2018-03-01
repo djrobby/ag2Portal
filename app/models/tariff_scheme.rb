@@ -89,12 +89,21 @@ class TariffScheme < ActiveRecord::Base
 
   def tariffs_contract(caliber_id)
     unless tariffs.blank?
-      tariffs.select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
+      tariffs.select{|t| (t.caliber_id.nil? || t.caliber.try(:id) == caliber_id) && (t.ending_at.blank? || t.ending_at < Date.today)}
       .group_by{|t| t.try(:billable_item).try(:biller_id)}
     else
       []
     end
   end
+
+  # def tariffs_contract(caliber_id)
+  #   unless tariffs.blank?
+  #     tariffs.select{|t| t.caliber_id.nil? || t.caliber.try(:id) == caliber_id}
+  #     .group_by{|t| t.try(:billable_item).try(:biller_id)}
+  #   else
+  #     []
+  #   end
+  # end
 
   def tariffs_supply(caliber_id)
     unless tariffs.blank?

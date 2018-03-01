@@ -1061,381 +1061,381 @@
   // When DOM is fully loaded
   $(window).load(function() {
     // Charge aux dropdowns
-    jQuery.getJSON('cr_load_form_dropdowns', function(data) {
-      var su = data.subscribers;
-      var sp = data.service_points;
-      var spt = data.service_point_types;
-      var spl = data.service_point_locations;
-      var spp = data.service_point_purposes;
-      var ce = data.centers;
-      var to = data.towns_by_offce;
-      var st = data.street_types;
-      var sdt = data.street_directories_by_town;
-      // var sd = data.street_directories;
-      var tbo = data.towns_by_offce;
-      var t = data.towns;
-      var p = data.provinces;
-      var z = data.zipcodes;
-      var r = data.regions;
-      var c = data.countries;
-      var b = data.banks;
-      var bo = data.bank_offices;
-      var rr = data.reading_routes;
+    // jQuery.getJSON('cr_load_form_dropdowns', function(data) {
+    //   var su = data.subscribers;
+    //   var sp = data.service_points;
+    //   var spt = data.service_point_types;
+    //   var spl = data.service_point_locations;
+    //   var spp = data.service_point_purposes;
+    //   var ce = data.centers;
+    //   var to = data.towns_by_offce;
+    //   var st = data.street_types;
+    //   var sdt = data.street_directories_by_town;
+    //   // var sd = data.street_directories;
+    //   var tbo = data.towns_by_offce;
+    //   var t = data.towns;
+    //   var p = data.provinces;
+    //   var z = data.zipcodes;
+    //   var r = data.regions;
+    //   var c = data.countries;
+    //   var b = data.banks;
+    //   var bo = data.bank_offices;
+    //   var rr = data.reading_routes;
 
-      // subscribers
-      $("#contracting_request_subscriber_id").html("");
-      $("#contracting_request_subscriber_id").select2("val", "");
-      // $("#contracting_request_subscriber_id").val("val", "");
-      $("#contracting_request_subscriber_id").append($('<option></option>').val("").html(""));
-      if (!su.length) {
-        $.each(data, function(id, option) {
-          if (id == 'subscribers' && option != "") {
-            $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(su, function(id, option) {
-          $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // service_points
-      $("#contracting_request_service_point_id").html("");
-      $("#contracting_request_service_point_id").select2("val", "");
-      // $("#contracting_request_service_point_id").val("val", "");
-      $("#contracting_request_service_point_id").append($('<option></option>').val("").html(""));
-      if (!sp.length) {
-        $.each(data, function(id, option) {
-          if (id == 'service_points' && option != "") {
-            $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(sp, function(id, option) {
-          $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // service_point_types
-      $("#form_new_service_point_service_point_type_id").html("");
-      $("#form_new_service_point_service_point_type_id").select2("val", "");
-      $("#form_new_service_point_service_point_type_id").append($('<option></option>').val("").html(""));
-      if (!spt.length) {
-        $.each(data, function(id, option) {
-          if (id == 'service_point_types' && option != "") {
-            $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(spt, function(id, option) {
-          $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // service_point_locations
-      $("#form_new_service_point_service_point_location_id").html("");
-      $("#form_new_service_point_service_point_location_id").select2("val", "");
-      $("#form_new_service_point_service_point_location_id").append($('<option></option>').val("").html(""));
-      if (!spt.length) {
-        $.each(data, function(id, option) {
-          if (id == 'service_point_locations' && option != "") {
-            $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(spt, function(id, option) {
-          $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // service_point_purposes
-      $("#form_new_service_point_service_point_purpose_id").html("");
-      $("#form_new_service_point_service_point_purpose_id").select2("val", "");
-      $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val("").html(""));
-      if (!spt.length) {
-        $.each(data, function(id, option) {
-          if (id == 'service_point_purposes' && option != "") {
-            $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(spt, function(id, option) {
-          $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // reading_routes
-      $("#form_new_service_point_reading_route_id").html("");
-      $("#form_new_service_point_reading_route_id").select2("val", "");
-      $("#form_new_service_point_reading_route_id").append($('<option></option>').val("").html(""));
-      if (!rr.length) {
-        $.each(data, function(id, option) {
-          if (id == 'reading_routes' && option != "") {
-            $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(rr, function(id, option) {
-          $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
+    //   // subscribers
+    //   $("#contracting_request_subscriber_id").html("");
+    //   $("#contracting_request_subscriber_id").select2("val", "");
+    //   // $("#contracting_request_subscriber_id").val("val", "");
+    //   $("#contracting_request_subscriber_id").append($('<option></option>').val("").html(""));
+    //   if (!su.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'subscribers' && option != "") {
+    //         $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(su, function(id, option) {
+    //       $("#contracting_request_subscriber_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // service_points
+    //   $("#contracting_request_service_point_id").html("");
+    //   $("#contracting_request_service_point_id").select2("val", "");
+    //   // $("#contracting_request_service_point_id").val("val", "");
+    //   $("#contracting_request_service_point_id").append($('<option></option>').val("").html(""));
+    //   if (!sp.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'service_points' && option != "") {
+    //         $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(sp, function(id, option) {
+    //       $("#contracting_request_service_point_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // service_point_types
+    //   $("#form_new_service_point_service_point_type_id").html("");
+    //   $("#form_new_service_point_service_point_type_id").select2("val", "");
+    //   $("#form_new_service_point_service_point_type_id").append($('<option></option>').val("").html(""));
+    //   if (!spt.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'service_point_types' && option != "") {
+    //         $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(spt, function(id, option) {
+    //       $("#form_new_service_point_service_point_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // service_point_locations
+    //   $("#form_new_service_point_service_point_location_id").html("");
+    //   $("#form_new_service_point_service_point_location_id").select2("val", "");
+    //   $("#form_new_service_point_service_point_location_id").append($('<option></option>').val("").html(""));
+    //   if (!spt.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'service_point_locations' && option != "") {
+    //         $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(spt, function(id, option) {
+    //       $("#form_new_service_point_service_point_location_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // service_point_purposes
+    //   $("#form_new_service_point_service_point_purpose_id").html("");
+    //   $("#form_new_service_point_service_point_purpose_id").select2("val", "");
+    //   $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val("").html(""));
+    //   if (!spt.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'service_point_purposes' && option != "") {
+    //         $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(spt, function(id, option) {
+    //       $("#form_new_service_point_service_point_purpose_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // reading_routes
+    //   $("#form_new_service_point_reading_route_id").html("");
+    //   $("#form_new_service_point_reading_route_id").select2("val", "");
+    //   $("#form_new_service_point_reading_route_id").append($('<option></option>').val("").html(""));
+    //   if (!rr.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'reading_routes' && option != "") {
+    //         $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(rr, function(id, option) {
+    //       $("#form_new_service_point_reading_route_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
 
-      // centers
-      $("#contracting_request_subscriber_center_id").html("");
-      $("#contracting_request_subscriber_center_id").val("");
-      // $("#contracting_request_subscriber_center_id").val("val", "");
-      $("#contracting_request_subscriber_center_id").append($('<option></option>').val("").html(""));
-      $("#form_new_service_point_center_id").html("");
-      $("#form_new_service_point_center_id").val("");
-      $("#form_new_service_point_center_id").append($('<option></option>').val("").html(""));
-      if (!ce.length) {
-        $.each(data, function(id, option) {
-          if (id == 'centers' && option != "") {
-            $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(ce, function(id, option) {
-          $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // street_directories_by_town
-      $("#contracting_request_subscriber_street_directory").html("");
-      $("#contracting_request_subscriber_street_directory").select2("val", "");
-      $("#contracting_request_subscriber_street_directory").append($('<option></option>').val("").html(""));
-      $("#form_new_service_point_street_directory_id").html("");
-      $("#form_new_service_point_street_directory_id").select2("val", "");
-      $("#form_new_service_point_street_directory_id").append($('<option></option>').val("").html(""));
-      if (!sdt.length) {
-        $.each(data, function(id, option) {
-          if (id == 'street_directories_by_town' && option != "") {
-            $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(sdt, function(id, option) {
-          $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // street_types
-      $("#contracting_request_entity_street_type_id").html("");
-      $("#contracting_request_entity_street_type_id").val("");
-      $("#contracting_request_entity_street_type_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_street_type_id").html("");
-      $("#contracting_request_client_street_type_id").val("");
-      $("#contracting_request_client_street_type_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_street_type_id").html("");
-      $("#contracting_request_subscriber_street_type_id").val("");
-      $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_street_type_id").html("");
-      $("#subrogation_client_street_type_id").val("");
-      $("#subrogation_client_street_type_id").append($('<option></option>').val("").html(""));
-      if (!st.length) {
-        $.each(data, function(id, option) {
-          if (id == 'street_types' && option != "") {
-            $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(st, function(id, option) {
-          $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // towns
-      $("#contracting_request_entity_town_id").html("");
-      $("#contracting_request_entity_town_id").select2("val", "");
-      $("#contracting_request_entity_town_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_town_id").html("");
-      $("#contracting_request_client_town_id").select2("val", "");
-      $("#contracting_request_client_town_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_town_id").html("");
-      $("#contracting_request_subscriber_town_id").select2("val", "");
-      $("#contracting_request_subscriber_town_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_town_id").html("");
-      $("#subrogation_client_town_id").select2("val", "");
-      $("#subrogation_client_town_id").append($('<option></option>').val("").html(""));
-      if (!t.length) {
-        $.each(data, function(id, option) {
-          if (id == 'towns' && option != "") {
-            $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(t, function(id, option) {
-          $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // provinces
-      $("#contracting_request_entity_province_id").html("");
-      $("#contracting_request_entity_province_id").select2("val", "");
-      $("#contracting_request_entity_province_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_province_id").html("");
-      $("#contracting_request_client_province_id").select2("val", "");
-      $("#contracting_request_client_province_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_province_id").html("");
-      $("#contracting_request_subscriber_province_id").select2("val", "");
-      $("#contracting_request_subscriber_province_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_province_id").html("");
-      $("#subrogation_client_province_id").select2("val", "");
-      $("#subrogation_client_province_id").append($('<option></option>').val("").html(""));
-      if (!p.length) {
-        $.each(data, function(id, option) {
-          if (id == 'provinces' && option != "") {
-            $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(p, function(id, option) {
-          $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // zipcodes
-      $("#contracting_request_entity_zipcode_id").html("");
-      $("#contracting_request_entity_zipcode_id").select2("val", "");
-      $("#contracting_request_entity_zipcode_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_zipcode_id").html("");
-      $("#contracting_request_client_zipcode_id").select2("val", "");
-      $("#contracting_request_client_zipcode_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_zipcode_id").html("");
-      $("#contracting_request_subscriber_zipcode_id").select2("val", "");
-      $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_zipcode_id").html("");
-      $("#subrogation_client_zipcode_id").select2("val", "");
-      $("#subrogation_client_zipcode_id").append($('<option></option>').val("").html(""));
-      $("#form_new_service_point_zipcode_id").html("");
-      $("#form_new_service_point_zipcode_id").select2("val", "");
-      $("#form_new_service_point_zipcode_id").append($('<option></option>').val("").html(""));
-      if (!z.length) {
-        $.each(data, function(id, option) {
-          if (id == 'zipcodes' && option != "") {
-            $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(z, function(id, option) {
-          $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // regions
-      $("#contracting_request_entity_region_id").html("");
-      $("#contracting_request_entity_region_id").select2("val", "");
-      $("#contracting_request_entity_region_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_region_id").html("");
-      $("#contracting_request_client_region_id").select2("val", "");
-      $("#contracting_request_client_region_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_region_id").html("");
-      $("#contracting_request_subscriber_region_id").select2("val", "");
-      $("#contracting_request_subscriber_region_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_region_id").html("");
-      $("#subrogation_client_region_id").select2("val", "");
-      $("#subrogation_client_region_id").append($('<option></option>').val("").html(""));
-      if (!r.length) {
-        $.each(data, function(id, option) {
-          if (id == 'regions' && option != "") {
-            $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(r, function(id, option) {
-          $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // countries
-      $("#contracting_request_entity_country_id").html("");
-      $("#contracting_request_entity_country_id").select2("val", "");
-      $("#contracting_request_entity_country_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_client_country_id").html("");
-      $("#contracting_request_client_country_id").select2("val", "");
-      $("#contracting_request_client_country_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_subscriber_country_id").html("");
-      $("#contracting_request_subscriber_country_id").select2("val", "");
-      $("#contracting_request_subscriber_country_id").append($('<option></option>').val("").html(""));
-      $("#contracting_request_country_id").html("");
-      $("#contracting_request_country_id").select2("val", "");
-      $("#contracting_request_country_id").append($('<option></option>').val("").html(""));
-      $("#subrogation_client_country_id").html("");
-      $("#subrogation_client_country_id").select2("val", "");
-      $("#subrogation_client_country_id").append($('<option></option>').val("").html(""));
-      if (!c.length) {
-        $.each(data, function(id, option) {
-          if (id == 'countries' && option != "") {
-            $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(c, function(id, option) {
-          $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-          $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // banks
-      $("#contracting_request_bank_id").html("");
-      $("#contracting_request_bank_id").val("val", "");
-      $("#contracting_request_bank_id").append($('<option></option>').val("").html(""));
-      if (!b.length) {
-        $.each(data, function(id, option) {
-          if (id == 'banks' && option != "") {
-            $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(b, function(id, option) {
-            $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-      // bank offices
-      $("#contracting_request_bank_office_id").html("");
-      $("#contracting_request_bank_office_id").val("val", "");
-      $("#contracting_request_bank_office_id").append($('<option></option>').val("").html(""));
-      if (!bo.length) {
-        $.each(data, function(id, option) {
-          if (id == 'bank_offices' && option != "") {
-            $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
-          }
-        });
-      } else {
-        $.each(bo, function(id, option) {
-            $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
-        });
-      }
-    });
+    //   // centers
+    //   $("#contracting_request_subscriber_center_id").html("");
+    //   $("#contracting_request_subscriber_center_id").val("");
+    //   // $("#contracting_request_subscriber_center_id").val("val", "");
+    //   $("#contracting_request_subscriber_center_id").append($('<option></option>').val("").html(""));
+    //   $("#form_new_service_point_center_id").html("");
+    //   $("#form_new_service_point_center_id").val("");
+    //   $("#form_new_service_point_center_id").append($('<option></option>').val("").html(""));
+    //   if (!ce.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'centers' && option != "") {
+    //         $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(ce, function(id, option) {
+    //       $("#contracting_request_subscriber_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#form_new_service_point_center_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // street_directories_by_town
+    //   $("#contracting_request_subscriber_street_directory").html("");
+    //   $("#contracting_request_subscriber_street_directory").select2("val", "");
+    //   $("#contracting_request_subscriber_street_directory").append($('<option></option>').val("").html(""));
+    //   $("#form_new_service_point_street_directory_id").html("");
+    //   $("#form_new_service_point_street_directory_id").select2("val", "");
+    //   $("#form_new_service_point_street_directory_id").append($('<option></option>').val("").html(""));
+    //   if (!sdt.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'street_directories_by_town' && option != "") {
+    //         $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(sdt, function(id, option) {
+    //       $("#contracting_request_subscriber_street_directory").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#form_new_service_point_street_directory_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // street_types
+    //   $("#contracting_request_entity_street_type_id").html("");
+    //   $("#contracting_request_entity_street_type_id").val("");
+    //   $("#contracting_request_entity_street_type_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_street_type_id").html("");
+    //   $("#contracting_request_client_street_type_id").val("");
+    //   $("#contracting_request_client_street_type_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_street_type_id").html("");
+    //   $("#contracting_request_subscriber_street_type_id").val("");
+    //   $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_street_type_id").html("");
+    //   $("#subrogation_client_street_type_id").val("");
+    //   $("#subrogation_client_street_type_id").append($('<option></option>').val("").html(""));
+    //   if (!st.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'street_types' && option != "") {
+    //         $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(st, function(id, option) {
+    //       $("#contracting_request_entity_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_street_type_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // towns
+    //   $("#contracting_request_entity_town_id").html("");
+    //   $("#contracting_request_entity_town_id").select2("val", "");
+    //   $("#contracting_request_entity_town_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_town_id").html("");
+    //   $("#contracting_request_client_town_id").select2("val", "");
+    //   $("#contracting_request_client_town_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_town_id").html("");
+    //   $("#contracting_request_subscriber_town_id").select2("val", "");
+    //   $("#contracting_request_subscriber_town_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_town_id").html("");
+    //   $("#subrogation_client_town_id").select2("val", "");
+    //   $("#subrogation_client_town_id").append($('<option></option>').val("").html(""));
+    //   if (!t.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'towns' && option != "") {
+    //         $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(t, function(id, option) {
+    //       $("#contracting_request_entity_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_town_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // provinces
+    //   $("#contracting_request_entity_province_id").html("");
+    //   $("#contracting_request_entity_province_id").select2("val", "");
+    //   $("#contracting_request_entity_province_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_province_id").html("");
+    //   $("#contracting_request_client_province_id").select2("val", "");
+    //   $("#contracting_request_client_province_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_province_id").html("");
+    //   $("#contracting_request_subscriber_province_id").select2("val", "");
+    //   $("#contracting_request_subscriber_province_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_province_id").html("");
+    //   $("#subrogation_client_province_id").select2("val", "");
+    //   $("#subrogation_client_province_id").append($('<option></option>').val("").html(""));
+    //   if (!p.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'provinces' && option != "") {
+    //         $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(p, function(id, option) {
+    //       $("#contracting_request_entity_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_province_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // zipcodes
+    //   $("#contracting_request_entity_zipcode_id").html("");
+    //   $("#contracting_request_entity_zipcode_id").select2("val", "");
+    //   $("#contracting_request_entity_zipcode_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_zipcode_id").html("");
+    //   $("#contracting_request_client_zipcode_id").select2("val", "");
+    //   $("#contracting_request_client_zipcode_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_zipcode_id").html("");
+    //   $("#contracting_request_subscriber_zipcode_id").select2("val", "");
+    //   $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_zipcode_id").html("");
+    //   $("#subrogation_client_zipcode_id").select2("val", "");
+    //   $("#subrogation_client_zipcode_id").append($('<option></option>').val("").html(""));
+    //   $("#form_new_service_point_zipcode_id").html("");
+    //   $("#form_new_service_point_zipcode_id").select2("val", "");
+    //   $("#form_new_service_point_zipcode_id").append($('<option></option>').val("").html(""));
+    //   if (!z.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'zipcodes' && option != "") {
+    //         $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(z, function(id, option) {
+    //       $("#contracting_request_entity_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#form_new_service_point_zipcode_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // regions
+    //   $("#contracting_request_entity_region_id").html("");
+    //   $("#contracting_request_entity_region_id").select2("val", "");
+    //   $("#contracting_request_entity_region_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_region_id").html("");
+    //   $("#contracting_request_client_region_id").select2("val", "");
+    //   $("#contracting_request_client_region_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_region_id").html("");
+    //   $("#contracting_request_subscriber_region_id").select2("val", "");
+    //   $("#contracting_request_subscriber_region_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_region_id").html("");
+    //   $("#subrogation_client_region_id").select2("val", "");
+    //   $("#subrogation_client_region_id").append($('<option></option>').val("").html(""));
+    //   if (!r.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'regions' && option != "") {
+    //         $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(r, function(id, option) {
+    //       $("#contracting_request_entity_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_region_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // countries
+    //   $("#contracting_request_entity_country_id").html("");
+    //   $("#contracting_request_entity_country_id").select2("val", "");
+    //   $("#contracting_request_entity_country_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_client_country_id").html("");
+    //   $("#contracting_request_client_country_id").select2("val", "");
+    //   $("#contracting_request_client_country_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_subscriber_country_id").html("");
+    //   $("#contracting_request_subscriber_country_id").select2("val", "");
+    //   $("#contracting_request_subscriber_country_id").append($('<option></option>').val("").html(""));
+    //   $("#contracting_request_country_id").html("");
+    //   $("#contracting_request_country_id").select2("val", "");
+    //   $("#contracting_request_country_id").append($('<option></option>').val("").html(""));
+    //   $("#subrogation_client_country_id").html("");
+    //   $("#subrogation_client_country_id").select2("val", "");
+    //   $("#subrogation_client_country_id").append($('<option></option>').val("").html(""));
+    //   if (!c.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'countries' && option != "") {
+    //         $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //         $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(c, function(id, option) {
+    //       $("#contracting_request_entity_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_subscriber_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#contracting_request_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       $("#subrogation_client_country_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // banks
+    //   $("#contracting_request_bank_id").html("");
+    //   $("#contracting_request_bank_id").val("val", "");
+    //   $("#contracting_request_bank_id").append($('<option></option>').val("").html(""));
+    //   if (!b.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'banks' && option != "") {
+    //         $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(b, function(id, option) {
+    //         $("#contracting_request_bank_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    //   // bank offices
+    //   $("#contracting_request_bank_office_id").html("");
+    //   $("#contracting_request_bank_office_id").val("val", "");
+    //   $("#contracting_request_bank_office_id").append($('<option></option>').val("").html(""));
+    //   if (!bo.length) {
+    //     $.each(data, function(id, option) {
+    //       if (id == 'bank_offices' && option != "") {
+    //         $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //       }
+    //     });
+    //   } else {
+    //     $.each(bo, function(id, option) {
+    //         $("#contracting_request_bank_office_id").append($('<option></option>').val(option[0]).html(option[1]));
+    //     });
+    //   }
+    // });
   });
 </script>

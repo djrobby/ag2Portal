@@ -79,3 +79,4 @@ es:
         p: "P."
 
         tariff_association: "Tarifas asociadas (contratación)"
+        alert_without_tariff: "Este Esquema de contratación no tiene Tarifas asociadas"

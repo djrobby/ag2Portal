@@ -364,7 +364,8 @@ class ContractingRequest < ActiveRecord::Base
   # Assign right request no (if current one is empty or already exists)
   def assign_right_no
     no = self.request_no
-    if no.blank? || ContractingRequest.exists?(request_no: no)
+    id = self.id rescue nil
+    if ((no.blank? || ContractingRequest.exists?(request_no: no)) && id.nil?)
       no = cr_next_no(self.project_id)
       if no == '$err'
         no = self.request_no

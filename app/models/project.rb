@@ -123,28 +123,86 @@ class Project < ActiveRecord::Base
     where("closed_at IS NULL OR closed_at >= ?", Date.today).order(:project_code)
   end
 
-  def self.to_csv(array)
-    attributes = [  array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
-                    array[0].sanitize(I18n.t("activerecord.models.company.one")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.office")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.opened_at")),
-                    array[0].sanitize(I18n.t("activerecord.attributes.project.closed_at"))]
+  def self.to_csv(array,project,office)
+    attributes = [ array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                   array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.office")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.work_orders")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.receipt_notes")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.delivery_notes")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.supplier_invoice_items")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.invoice_items")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.opened_at")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.closed_at")) ]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
-        i002 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+        i001 = i.wo_total(project,office).blank? ? "0,00" : i.raw_number(i.wo_total(project,office), 2)
+        i002 = i.rni_total(project,office).blank? ? "0,00" : i.raw_number(i.rni_total(project,office).first.rni_t, 2)
+        i003 = i.dni_total(project,office).blank? ? "0,00" : i.raw_number(i.dni_total(project,office).first.dni_t, 2)
+        i004 = i.sii_total(project,office).blank? ? "0,00" : i.raw_number(i.sii_total(project,office).first.sii_t, 2)
+        i005 = i.ii_total(project,office).blank? ? "0,00" : i.raw_number(i.ii_total(project,office).first.ii_t, 2)
+        i006 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+        i007 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+        csv << [ i.try(:office).try(:company).try(:id),
+                 i.try(:office).try(:company).try(:name),
+                 i.try(:office).try(:office_code),
+                 i.try(:office).try(:name),
+                 i.full_code,
+                 i.name,
+                 i001,
+                 i002,
+                 i003,
+                 i004,
+                 i005,
+                 i006,
+                 i007 ]
+      end
+    end
+  end
 
-        csv << [  i.try(:company).try(:id),
-                  i.try(:company).try(:name),
-                  i.full_code,
-                  i.name,
-                  i.try(:office).try(:name),
-                  i001,
-                  i002]
+  def self.to_date_csv(array,project,from,to,office)
+    attributes = [ array[0].sanitize("Id" + " " + I18n.t("activerecord.models.company.one")),
+                   array[0].sanitize(I18n.t("activerecord.models.company.one")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.office")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.project_code")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.project.name")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.work_orders")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.receipt_notes")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.delivery_notes")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.supplier_invoice_items")),
+                   array[0].sanitize(I18n.t("ag2_tech.ag2_tech_track.every_report.invoice_items")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.opened_at")),
+                   array[0].sanitize(I18n.t("activerecord.attributes.charge_account.closed_at")) ]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |i|
+        i001 = i.wo_total_date(project,from,to,office).blank? ? "0,00" : i.raw_number(i.wo_total_date(project,from,to,office), 2)
+        i002 = i.rni_total_date(project,from,to,office).blank? ? "0,00" : i.raw_number(i.rni_total_date(project,from,to,office).first.rni_t, 2)
+        i003 = i.dni_total_date(project,from,to,office).blank? ? "0,00" : i.raw_number(i.dni_total_date(project,from,to,office).first.dni_t, 2)
+        i004 = i.sii_total_date(project,from,to,office).blank? ? "0,00" : i.raw_number(i.sii_total_date(project,from,to,office).first.sii_t, 2)
+        i005 = i.ii_total_date(project,from,to,office).blank? ? "0,00" : i.raw_number(i.ii_total_date(project,from,to,office).first.ii_t, 2)
+        i006 = i.opened_at.strftime("%d/%m/%Y") unless i.opened_at.blank?
+        i007 = i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
+        csv << [ i.try(:office).try(:company).try(:id),
+                 i.try(:office).try(:company).try(:name),
+                 i.try(:office).try(:office_code),
+                 i.try(:office).try(:name),
+                 i.full_code,
+                 i.name,
+                 i001,
+                 i002,
+                 i003,
+                 i004,
+                 i005,
+                 i006,
+                 i007 ]
       end
     end
   end

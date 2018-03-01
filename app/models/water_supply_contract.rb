@@ -69,6 +69,10 @@ class WaterSupplyContract < ActiveRecord::Base
   # end
 
   def generate_bill
+    if tariff_scheme.tariffs_contract(caliber_id).blank?
+      return nil
+    end
+
     bill = Bill.create( bill_no: bill_next_no(contracting_request.project),
                         project_id: contracting_request.project_id,
                         invoice_status_id: InvoiceStatus::PENDING,
@@ -141,6 +145,10 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation
+    if tariff_scheme.tariffs_contract(caliber_id).blank?
+      return nil
+    end
+
     old_subscriber = contracting_request.old_subscriber
     old_contract = old_subscriber.water_supply_contract ? WaterSupplyContract.where(subscriber_id: old_subscriber).last : nil
 

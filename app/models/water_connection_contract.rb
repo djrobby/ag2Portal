@@ -39,7 +39,7 @@ class WaterConnectionContract < ActiveRecord::Base
   def to_sale_offer
     sale_offer = SaleOffer.create(
       organization_id: contracting_request.project.organization.id,
-      project_id: contracting_request.project_id,         
+      project_id: contracting_request.project_id,
       offer_no: sale_offer_next_no(contracting_request.project),
       offer_date: contracting_request.request_date,
       sale_offer_status_id: 1,
@@ -49,7 +49,7 @@ class WaterConnectionContract < ActiveRecord::Base
       charge_account_id: water_connection_type_id == WaterConnectionType::SUM ? 10763 : water_connection_type_id == WaterConnectionType::SAN ? 10764 : ""
     )
   end
-  
+
   def full_no
     # Contract no (Project Id & Request type Id & year & sequential number) => PPPPPP-TT-YYYY-NNNNNN
     contract_no.blank? ? "" : contract_no[0..5] + '-' + contract_no[6..7] + '-' + contract_no[8..11] + '-' + contract_no[12..17]
@@ -81,6 +81,10 @@ class WaterConnectionContract < ActiveRecord::Base
   end
 
   def generate_bill
+    if tariff_scheme.tariffs_contract(caliber_id).blank?
+      return nil
+    end
+
     bill = Bill.create( bill_no: bill_next_no(contracting_request.project),
                         project_id: contracting_request.project_id,
                         invoice_status_id: InvoiceStatus::PENDING,

@@ -77,4 +77,5 @@ en:
         v: "V."
         p: "P."
 
-        tariff_association: "Tarifas asociadas"
+        tariff_association: "Associated tariff"
+        alert_without_tariff: "This contracting scheme does not have associated fees"

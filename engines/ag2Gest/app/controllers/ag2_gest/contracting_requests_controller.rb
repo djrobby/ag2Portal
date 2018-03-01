@@ -17,6 +17,7 @@ module Ag2Gest
                                                 :update_connection_from_street_directory,
                                                 :update_bank_offices_from_bank,
                                                 :update_tariff_schemes_from_use,
+                                                :cr_tariff_scheme_validate,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
                                                 :et_validate_fiscal_id_textfield,
@@ -1138,14 +1139,14 @@ module Ag2Gest
         @offices = BankOffice.order(:bank_id, :code)
       end
       # Offers array
-      @offices_dropdown = bank_offices_array(@offices)
+      @offices_dropdown = bank_offices_array_select(@offices)
       # Setup JSON
       @json_data = { "office" => @offices_dropdown }
       render json: @json_data
     end
 
     def update_tariff_schemes_from_use
-      use = params[:id]
+      use = params[:use_ids]
       @projects_ids = current_projects_ids
 
       if use != '0'
@@ -1158,6 +1159,19 @@ module Ag2Gest
       @tariff_schemes_dropdown = tariff_schemes_array(@tariff_schemes)
       # Setup JSON
       @json_data = { "tariff_scheme" => @tariff_schemes_dropdown }
+      render json: @json_data
+    end
+
+    def cr_tariff_scheme_validate
+      tariff_scheme = TariffScheme.find(params[:tariff_scheme_ids])
+      code = ''
+
+      if tariff_scheme.tariffs.blank?
+        code = '$err'
+      end
+
+      # Setup JSON
+      @json_data = { "code" => code}
       render json: @json_data
     end
 
@@ -2176,7 +2190,7 @@ module Ag2Gest
     private
 
     # Filters
-    def set_defaults_for_new_and_edit
+    def set_empty_defaults_for_new_and_edit
       @projects = projects_dropdown
       @projects_ids = @projects.pluck(:id)
       @subscribers = []
@@ -2198,7 +2212,55 @@ module Ag2Gest
       @reading_routes = []
     end
 
-    def set_defaults_for_create_and_update
+    def set_defaults_for_new_and_edit
+      offices = current_offices_ids
+      towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
+      @projects = projects_dropdown
+      @projects_ids = @projects.pluck(:id)
+      @subscribers = []
+      @service_points = []
+      @service_point_types = service_point_types_array
+      @service_point_locations = service_point_locations_array
+      @service_point_purposes = service_point_purposes_array
+      @offices = towns_by_office_array(towns_by_office)
+      @centers = centers_by_town_array(towns_by_office)
+      @street_types = street_types_array
+      @street_directories = street_directories_by_town_array(towns_by_office)
+      @towns = towns_array
+      @provinces = provinces_array
+      @zipcodes = zipcodes_array
+      @regions = regions_array
+      @countries = country_array
+      @bank = banks_array
+      @bank_offices = bank_offices_array
+      @reading_routes = reading_routes_raw_array(offices)
+    end
+
+    # def set_defaults_for_create_and_update
+    #   offices = current_offices_ids
+    #   towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
+    #   @projects = projects_dropdown
+    #   @projects_ids = projects_dropdown_ids
+    #   @subscribers = []
+    #   @service_points = []
+    #   @service_point_types = service_point_types_array
+    #   @service_point_locations = service_point_locations_array
+    #   @service_point_purposes = service_point_purposes_array
+    #   @offices = towns_by_office_array(towns_by_office)
+    #   @centers = centers_by_town_array(towns_by_office)
+    #   @street_types = street_types_array
+    #   @street_directories = street_directories_by_town_array(towns_by_office)
+    #   @towns = towns_array
+    #   @provinces = provinces_array
+    #   @zipcodes = zipcodes_array
+    #   @regions = regions_array
+    #   @countries = country_array
+    #   @bank = banks_array
+    #   @bank_offices = bank_offices_array
+    #   @reading_routes = reading_routes_raw_array(offices)
+    # end
+
+    def set_old_defaults_for_create_and_update
       @projects = projects_dropdown
       @projects_ids = projects_dropdown_ids
       @subscribers = []
