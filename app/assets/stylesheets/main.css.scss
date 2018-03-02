@@ -274,9 +274,11 @@ th .current:focus {
 .number-text-field {
   text-align: right;
 }
+/*
 .hidden-text-field {
   display: none;
 }
+*/
 /* Multi-field form text fields (inside label tag) */
 .multi-field-label-two {
   display: inline-block;
@@ -320,6 +322,14 @@ label.required_:before {
 .modal-footer-right {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
+}
+.hidden-div {
+  display: none;
+  visibility: hidden;
+}
+.visible-div {
+  display: block;
+  visibility: visible;
 }
 
 /* Sub-Form (items) text fields */
@@ -572,7 +582,7 @@ h4 span {
   margin: 0;
   padding: 0 0 2px 0;
   list-style-type: none;
-  align: center;
+  /*align: center;*/
   text-align: center;
   border-bottom-width: 1px;
   border-bottom-style: solid;
@@ -586,7 +596,7 @@ h4 span {
   margin: 0;
   padding: 2px 0 0 0;
   list-style-type: none;
-  align: center;
+  /*align: center;*/
   text-align: center;
   border-top-width: 1px;
   border-top-style: solid;
@@ -596,7 +606,7 @@ h4 span {
   margin: 0;
   padding: 2px 0 0 0;
   list-style-type: none;
-  align: center;
+  /*align: center;*/
   text-align: center;
 }
 #pages .current {
@@ -626,8 +636,10 @@ h4 span {
 #pages .page_info {
   padding: 0 0 2px 0;
 }
+/*
 #pages .page_info b {
 }
+*/
 /* Records navigator */
 #records-navigator {
   margin: 0;
@@ -801,8 +813,10 @@ tfoot {
 .odd_even_table {
   width:100%;
 }
+/*
 .odd_even_table td {
 }
+*/
 /* improve visual readability for IE8 and below */
 .odd_even_table tr {
   background: #ffffff;

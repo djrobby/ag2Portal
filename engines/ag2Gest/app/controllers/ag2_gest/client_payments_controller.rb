@@ -44,7 +44,9 @@ module Ag2Gest
                                                :fractionate,
                                                :bank_to_order,
                                                :bank_from_return,
-                                               :bank_from_counter]
+                                               :bank_from_counter,
+                                               :payment_receipt,
+                                               :client_payment_report]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
