@@ -274,11 +274,9 @@ th .current:focus {
 .number-text-field {
   text-align: right;
 }
-/*
 .hidden-text-field {
   display: none;
 }
-*/
 /* Multi-field form text fields (inside label tag) */
 .multi-field-label-two {
   display: inline-block;
@@ -323,9 +321,10 @@ label.required_:before {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
 }
+/* div */
 .hidden-div {
-  display: none;
-  visibility: hidden;
+  display: none !important;
+  visibility: hidden !important;
 }
 .visible-div {
   display: block;
