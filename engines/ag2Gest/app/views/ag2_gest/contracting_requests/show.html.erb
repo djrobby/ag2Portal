@@ -79,12 +79,13 @@
 delete_path: @contracting_request, delete_txt: t('.btn_delete'), msg: t("activerecord.models.contracting_request.one"), txt: @contracting_request.full_name,
 new_path: new_contracting_request_path, new_txt: t('.btn_new') } %> -->
 
-<% if !session[:return_to].nil? %>
-<%= link_to session[:return_to], session[:return_to_url] %> |
-<% end %>
-<% if !session[:return_to_cr].nil? %>
-<%= link_to session[:return_to_cr], session[:return_to_url] %> |
-<% end %>
+
+<!-- <%# if !session[:return_to].nil? %>
+<%#= link_to session[:return_to], session[:return_to_url] %> |
+<%# end %>
+<%# if !session[:return_to_cr].nil? %>
+<%#= link_to session[:return_to_cr], session[:return_to_url] %> |
+<%# end %> -->
 <%= link_to t("ag2_gest.contracting_requests.back_to_main_page"), contracting_requests_path %>
 
 <hr>

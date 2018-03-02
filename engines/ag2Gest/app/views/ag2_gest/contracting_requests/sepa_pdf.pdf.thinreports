@@ -79,6 +79,10 @@ report.page.values company_logo: "public/" + @subscriber.office.company.logo.url
 
 var_client_bank = ClientBankAccount.where(subscriber_id: @subscriber.id).active.first
 
+if var_client_bank.blank?
+  var_client_bank = ClientBankAccount.where(client_id: @subscriber.client_id).active.first
+end
+
 # Page header: Creditor
 report.page.values(refere: var_client_bank.try(:refere),
            company_name: @subscriber.office.company.name,

@@ -71,8 +71,8 @@ class ContractingRequest < ActiveRecord::Base
   validates_associated :contracting_request_documents
   validates :request_no,                  :presence => true,
                                           :length => { :is => 22 },
-                                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid },
-                                          :uniqueness => { :scope => :project_id }
+                                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :code_invalid }
+                                          # ,:uniqueness => { :scope => :project_id }
   validates :project,                     :presence => true
   validates :request_date,                :presence => true
   validates :contracting_request_type,    :presence => true

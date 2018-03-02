@@ -17,6 +17,7 @@ module Ag2Gest
                                                 :update_connection_from_street_directory,
                                                 :update_bank_offices_from_bank,
                                                 :update_tariff_schemes_from_use,
+                                                :update_request_no,
                                                 :cr_tariff_scheme_validate,
                                                 :validate_fiscal_id_textfield,
                                                 :validate_r_fiscal_id_textfield,
@@ -101,6 +102,7 @@ module Ag2Gest
       response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
       response_hash[:invoice_status_cancellation] = @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
       response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+      response_hash[:bill_no] = @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
       response_hash[:caliber] = @contracting_request.work_order.caliber if @contracting_request.work_order and @contracting_request.work_order.caliber
       response_hash[:meter_code] = @contracting_request.work_order.meter_code if @contracting_request.work_order and @contracting_request.work_order.caliber
       response_hash[:meter_installation] = @contracting_request.water_supply_contract.work_order.meter if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
@@ -127,6 +129,7 @@ module Ag2Gest
       response_hash[:work_order_status_installation] = @contracting_request.water_connection_contract.work_order.work_order_status if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.work_order
       response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.bill
       response_hash[:bill] = @contracting_request.water_connection_contract.bill if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.bill
+      response_hash[:bill_no] = @contracting_request.water_connection_contract.bill.invoice_based_old_no_real_no if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.bill
       response_hash[:caliber] = @contracting_request.work_order.caliber if @contracting_request.work_order and @contracting_request.work_order.caliber
       response_hash[:sale_offer] = @contracting_request.water_connection_contract.sale_offer if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.sale_offer
       response_hash[:sale_offer_status] = @contracting_request.water_connection_contract.sale_offer.sale_offer_status if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.sale_offer
@@ -997,6 +1000,7 @@ module Ag2Gest
           response_hash = { contracting_request: @contracting_request }
           response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
           response_hash[:bill] = @contracting_request.water_connection_contract.bill
+          response_hash[:bill_no] = @contracting_request.water_connection_contract.bill.invoice_based_old_no_real_no
           response_hash[:invoice] = @contracting_request.water_connection_contract.bill.invoices.first
           response_hash[:invoice_status] = @contracting_request.water_connection_contract.bill.invoices.first.invoice_status
           respond_to do |format|
@@ -1029,6 +1033,7 @@ module Ag2Gest
         if @contracting_request.save
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bill] = @contracting_request.water_supply_contract.bill
+          response_hash[:bill_no] = @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no
           response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first
           response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status
           response_hash[:work_order_status] = @contracting_request.work_order.work_order_status
@@ -1063,6 +1068,9 @@ module Ag2Gest
           response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash[:bill] = @contracting_request.water_supply_contract.bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+          response_hash[:bailback_bill_no] = @water_supply_contract.bailback_bill.invoice_based_old_no_real_no  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+          response_hash[:unsubscribe_bill_no] = @water_supply_contract.unsubscribe_bill.invoice_based_old_no_real_no if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+          response_hash[:bill_no] = @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:invoice] = @contracting_request.water_supply_contract.bill.invoices.first if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:invoice_status] = @contracting_request.water_supply_contract.bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
           response_hash[:invoice_status_cancellation] = @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
@@ -1161,6 +1169,16 @@ module Ag2Gest
       @json_data = { "tariff_scheme" => @tariff_schemes_dropdown }
       render json: @json_data
     end
+
+    def update_request_no
+      project = params[:project_ids]
+
+      @request_no = cr_next_no(project)
+      # Setup JSON
+      @json_data = { "request_no" => @request_no }
+      render json: @json_data
+    end
+
 
     def cr_tariff_scheme_validate
       tariff_scheme = TariffScheme.find(params[:tariff_scheme_ids])
@@ -1700,7 +1718,7 @@ module Ag2Gest
       manage_filter_state
       sort = params[:sort]
       direction = params[:direction]
-      no = params[:No]
+      no = params[:NoCR]
       client_info = params[:ClientInfo]
       project = params[:Project]
       request_status = params[:RequestStatus]
@@ -2045,7 +2063,7 @@ module Ag2Gest
     def contracting_request_report
       manage_filter_state
 
-      no = params[:No]
+      no = params[:NoCR]
       client_info = params[:ClientInfo]
       project = params[:Project]
       request_status = params[:RequestStatus]
@@ -2118,7 +2136,7 @@ module Ag2Gest
     def contracting_request_complete_report
       manage_filter_state
 
-      no = params[:No]
+      no = params[:NoCR]
       client_info = params[:ClientInfo]
       project = params[:Project]
       request_status = params[:RequestStatus]
@@ -2189,6 +2207,15 @@ module Ag2Gest
 
     private
 
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      ContractingRequest.where('request_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.request_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
     # Filters
     def set_empty_defaults_for_new_and_edit
       @projects = projects_dropdown
@@ -2217,8 +2244,14 @@ module Ag2Gest
       towns_by_office = current_offices.group(:town_id).pluck('offices.town_id')
       @projects = projects_dropdown
       @projects_ids = @projects.pluck(:id)
+      @request_no = cr_next_no(@projects.first)
       @subscribers = []
-      @service_points = []
+      if params[:action] == "new" || params[:action] == "new_connection"
+        @service_points = []
+      elsif params[:action] == "edit" || params[:action] == "edit_connection"
+        @contracting_request = ContractingRequest.find(params[:id])
+        @service_points = [@contracting_request.service_point]
+      end
       @service_point_types = service_point_types_array
       @service_point_locations = service_point_locations_array
       @service_point_purposes = service_point_purposes_array
@@ -2682,10 +2715,10 @@ module Ag2Gest
         params[:search] = session[:search]
       end
       # no
-      if params[:No]
-        session[:No] = params[:No]
-      elsif session[:No]
-        params[:No] = session[:No]
+      if params[:NoCR]
+        session[:NoCR] = params[:NoCR]
+      elsif session[:NoCR]
+        params[:NoCR] = session[:NoCR]
       end
       # client
       if params[:ClientInfo]

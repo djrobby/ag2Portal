@@ -9,6 +9,7 @@ module Ag2Gest
       session[:letter] = nil
       session[:active_tab] = nil
       session[:No] = nil
+      session[:NoCR] = nil
       session[:name] = nil
       session[:Type] = nil
       session[:Status] = nil

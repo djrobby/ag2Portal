@@ -217,7 +217,7 @@
       if (data.invoice_from_offer[0]) {
         $("#link-bill-commercial").removeClass("hide");
         $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
-        $("#link-bill-commercial").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+        $("#link-bill-commercial").text(data.bill_no);
       };
 
       if (data.invoice_status) {
@@ -274,7 +274,7 @@
       $("#debt").text(data.client_debt);
       $("#link-bill").removeClass("hide");
       $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
-      $("#link-bill").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+      $("#link-bill").text(data.bill_no);
       $("#bill-doc").removeClass("hide");
       $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_connection_contract_pdf.pdf");
       // if (data.work_order_status.id == '1' || data.work_order_status.id == '2'){
@@ -297,7 +297,7 @@
       $("#new-invoice-from-offer").modal('hide');
       $("#link-bill-commercial").removeClass("hide");
       $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
-      $("#link-bill-commercial").text(data.bill.bill_no.substr(0, 12) + "-" + data.bill.bill_no.substr(12, 4) + "-" +  data.bill.bill_no.substr(16, 7));
+      $("#link-bill-commercial").text(data.bill_no);
       $("#contract_pdf").removeClass("hide");
       $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");
       $("#contract").text(data.water_connection_contract.contract_no.substr(0, 5) + '-' + data.water_connection_contract.contract_no.substr(6, 7) + '-' + data.water_connection_contract.contract_no.substr(8, 11) + '-' + data.water_connection_contract.contract_no.substr(12, 17));
@@ -624,13 +624,13 @@
           <td>
             <% if @contracting_request.try(:water_connection_contract).try(:bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
               <% if @contracting_request.try(:water_connection_contract).try(:bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
-                <%= link_to @contracting_request.water_connection_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), target: :_blank, id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.blank? %></span>
+                <%= link_to @contracting_request.water_connection_contract.bill.invoice_based_old_no_real_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), target: :_blank, id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_connection_contract.bill.invoices.first.invoice_status.blank? %></span>
                 &nbsp;
                 <!-- solo se abonan facturas de contratacion si la oferta aun no esta aprobada y no ha generado ni orden de trabajo ni factura commercial -->
                 <a id="void-bill-connection" title="Abonar" data-disable-with="<%= t("activerecord.attributes.pre_reading.loading")%>" class="btn btn-warning btn-mini <%= 'disabled' if @contracting_request.water_connection_contract.blank? or @contracting_request.water_connection_contract.bill.blank? or @contracting_request.water_connection_contract.sale_offer.blank? or @contracting_request.water_connection_contract.sale_offer.sale_offer_status_id == SaleOfferStatus::APPROVED or !@contracting_request.water_connection_contract.work_order.blank? %>" href="<%= params[:id] %>/void_bill_connection" data-remote="true" ><i class='icon-remove icon-white'></i></a>
 
               <% else %>
-                <%= link_to @contracting_request.water_connection_contract.bill.full_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), target: :_blank, id: "link-bill" %></span>
+                <%= link_to @contracting_request.water_connection_contract.bill.invoice_based_old_no_real_no, client_payment_url(:id => "",:No => @contracting_request.water_connection_contract.bill.bill_no), target: :_blank, id: "link-bill" %></span>
 
                 &nbsp;
                 <!-- solo se abonan facturas de contratacion si la oferta aun no esta aprobada y no ha generado ni orden de trabajo ni factura commercial -->
@@ -647,7 +647,7 @@
           <td><b><%= t('activerecord.attributes.contracting_request.invoice_comercial_c') %></b></td>
           <td>
             <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.sale_offer && @contracting_request.water_connection_contract.sale_offer.invoices_count != 0 %>
-              <%= link_to @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.full_no, client_payment_path(:id => "",:No => @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.bill_no), :remote => true  %>
+              <%= link_to @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.invoice_based_old_no_real_no, client_payment_path(:id => "",:No => @contracting_request.water_connection_contract.sale_offer.invoices.first.bill.bill_no)  %>
             <% else %>
               <a id="link-bill-commercial" href="#"></a>
             <% end %>
