@@ -198,6 +198,19 @@ class EnginesController < ApplicationController
     render json: @subscribers
   end
 
+  # Subsribed subscribers
+  def search_subscribed_subscribers
+    @subscribers = []
+    w = ''
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(subscriber_code LIKE '%#{@q}%' OR last_name LIKE '%#{@q}%' OR first_name LIKE '%#{@q}%' OR company LIKE '%#{@q}%' OR fiscal_id LIKE '%#{@q}%')"
+      @subscribers = serialized(Subscriber.availables.where(w).by_code,
+                            Api::V1::SubscribersSerializer)
+    end
+    render json: @subscribers
+  end
+
   # Client Subscribers
   def search_client_subscribers
     client = params[:client]

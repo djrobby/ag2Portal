@@ -1256,6 +1256,7 @@ module Ag2Gest
 
       if !service_point.nil?
         service_point_code = service_point.code
+        service_point_label = service_point.to_label
         search = ServicePoint.search do
           fulltext service_point_code
           with :office_id, current_offices_ids
@@ -1277,6 +1278,7 @@ module Ag2Gest
                      "region" => @street_directory.town.province.region,
                      "country" => @street_directory.town.province.region.country,
                      "ServicePoint" => service_point_code,
+                     "ServicePointLabel" => service_point_label,
                      "subscriber_debt" => @subscriber_debt,
                      "service_point" => search_array
                     }
