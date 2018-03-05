@@ -119,6 +119,23 @@ class Subscriber < ActiveRecord::Base
   scope :activated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = true", Date.today) }
   scope :deactivated, -> { where("(ending_at IS NULL OR ending_at >= ?) AND active = false AND meter_id IS NULL", Date.today) }
   scope :activated_by_office, -> office { where("((ending_at IS NULL OR ending_at >= ?) AND active = true) AND office_id = ?", Date.today, office).by_code }
+  scope :availables_by_office, -> office { where("(ending_at IS NULL OR ending_at >= ?) AND office_id = ?", Date.today, office).by_code }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    select("id, active, fiscal_id, subscriber_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
+    .where(w).by_code
+  }
+  scope :g_where_h, -> h {
+    select("id, active, fiscal_id, subscriber_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
+    .availables.by_code.having(h)
+  }
+  scope :g_where_oh, -> o, h {
+    select("id, active, fiscal_id, subscriber_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
+    .availables_by_office(o).having(h)
+  }
   # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
   scope :activated_with_meter, -> { activated.with_meter.by_reading_sequence }
@@ -152,7 +169,7 @@ class Subscriber < ActiveRecord::Base
     .joins("INNER JOIN towns sp_tn on sp_sd.town_id=sp_tn.id")
     .where(id: i)
     .select("subscribers.id id_,
-             CASE WHEN ISNULL(subscribers.company) THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
+             CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
              subscribers.fiscal_id fiscal_id_,
              CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
              CASE WHEN ISNULL(clients.client_code) THEN '' ELSE CONCAT(SUBSTR(clients.client_code,1,4), '-', SUBSTR(clients.client_code,5,7)) END client_full_code_,
@@ -176,6 +193,7 @@ class Subscriber < ActiveRecord::Base
              CASE WHEN NOT ISNULL(wsc.contract_no) THEN CONCAT(SUBSTR(wsc.contract_no,1,6), '-', SUBSTR(wsc.contract_no,7,2), '-', SUBSTR(wsc.contract_no,9,4), '-', SUBSTR(wsc.contract_no,13,6)) ELSE '' END water_supply_contract_full_no_,
              tariff_schemes.name tariff_scheme_name_")
   }
+  # *** For dropdowns ***
   scope :for_dropdown_by_office, -> office {
     joins("INNER JOIN street_directories on subscribers.street_directory_id=street_directories.id")
     .joins("INNER JOIN street_types on street_directories.street_type_id=street_types.id")

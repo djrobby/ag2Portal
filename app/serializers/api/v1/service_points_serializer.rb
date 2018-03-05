@@ -5,11 +5,11 @@ class Api::V1::ServicePointsSerializer < ::Api::V1::BaseSerializer
                   :street_directory_id, :zipcode_id, :reading_route_id, :reading_sequence, :reading_variant,
                   :text
 
-  has_one :organization
-  has_one :company
-  has_one :office
-  has_one :center
   has_one :street_directory
+  # has_one :organization
+  # has_one :company
+  # has_one :office
+  # has_one :center
   # has_one :zipcode
   # has_one :reading_route
   # has_many :subscribers

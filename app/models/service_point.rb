@@ -48,7 +48,7 @@ class ServicePoint < ActiveRecord::Base
     .where(w)
     .group('service_points.id').by_code.having("COUNT(subscribers.id) < 1")
   }
-# *** For readings ***
+  # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
   scope :belongs_to_routes, -> r { where("reading_route_id IN (?)", r).by_reading_sequence }
   scope :belongs_to_routes_with_meter, -> r { belongs_to_routes(r).with_meter.by_reading_sequence }
