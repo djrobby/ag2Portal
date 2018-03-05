@@ -69,7 +69,7 @@ class WaterSupplyContract < ActiveRecord::Base
   # end
 
   def generate_bill
-    if tariff_scheme.tariffs_contract(caliber_id).blank?
+    if tariff_scheme.tariffs_contract(caliber_id).blank? || !self.bill_id.blank?
       return nil
     end
 
@@ -145,7 +145,7 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation
-    if tariff_scheme.tariffs_contract(caliber_id).blank?
+    if tariff_scheme.tariffs_contract(caliber_id).blank? || !self.bailback_bill_id.blank?
       return nil
     end
 
@@ -304,6 +304,9 @@ class WaterSupplyContract < ActiveRecord::Base
   end
 
   def generate_bill_cancellation_service
+    if !self.unsubscribe_bill_id.blank?
+      return nil
+    end
     @subscriber = contracting_request.old_subscriber
     @reading = @subscriber.readings.where(billing_period_id: contracting_request.old_subscriber.readings.last.billing_period_id, reading_type_id: [ReadingType::RETIRADA], bill_id: nil).order(:reading_date).last
     payday_limit = !@reading.billing_period.billing_starting_date.blank? ? @reading.billing_period.billing_starting_date : Date.today

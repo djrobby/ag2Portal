@@ -81,7 +81,7 @@ class WaterConnectionContract < ActiveRecord::Base
   end
 
   def generate_bill
-    if tariff_scheme.tariffs_contract(caliber_id).blank?
+    if tariff_scheme.tariffs_contract(caliber_id).blank? || !self.bill_id.blank?
       return nil
     end
 
