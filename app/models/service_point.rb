@@ -40,7 +40,15 @@ class ServicePoint < ActiveRecord::Base
   scope :by_reading_sequence, -> { order(:reading_route_id, :reading_sequence, :reading_variant, :code) }
   #
   scope :belongs_to_office, -> office { where("office_id = ?", office).by_code }
-  # *** For readings ***
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where, -> w {
+    joins([street_directory: :street_type], :zipcode)
+    .joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
+    .where("service_points.available_for_contract <> ?", 0)
+    .where(w)
+    .group('service_points.id').by_code.having("COUNT(subscribers.id) < 1")
+  }
+# *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
   scope :belongs_to_routes, -> r { where("reading_route_id IN (?)", r).by_reading_sequence }
   scope :belongs_to_routes_with_meter, -> r { belongs_to_routes(r).with_meter.by_reading_sequence }
@@ -49,6 +57,7 @@ class ServicePoint < ActiveRecord::Base
   scope :belongs_to_centers_and_routes_with_meter, -> c, r {
     belongs_to_centers(c).belongs_to_routes(r).with_meter.by_reading_sequence
   }
+  # *** For dropdowns ***
   scope :for_dropdown_by_office, -> office {
     joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
     .joins("INNER JOIN street_directories on service_points.street_directory_id=street_directories.id")

@@ -40,6 +40,7 @@ module Ag2Gest
       session[:RequestStatus] = nil
       session[:ClientInfo] = nil
       session[:ServicePoint] = nil
+      session[:ServicePointB] = nil
       session[:SubscriberCode] = nil
       session[:ClientCode] = nil
       session[:SubscriberFiscal] = nil

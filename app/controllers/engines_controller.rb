@@ -49,6 +49,7 @@ class EnginesController < ApplicationController
     session[:Biller] = nil
     session[:BillerB] = nil
     session[:ServicePoint] = nil
+    session[:ServicePointB] = nil
     session[:SubscriberCode] = nil
     session[:ClientCode] = nil
     session[:SubscriberFiscal] = nil
@@ -414,7 +415,7 @@ class EnginesController < ApplicationController
     render json: @stores
   end
 
-  # Stores
+  # Reading routes
   def search_reading_routes
     @routes = []
     w = ''
@@ -425,6 +426,21 @@ class EnginesController < ApplicationController
                              Api::V1::ReadingRoutesSerializer)
     end
     render json: @routes
+  end
+
+  # Service points
+  def search_service_points
+    @service_points = []
+    w = ''
+    w = "organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(service_points.code LIKE '%#{@q}%' OR service_points.name LIKE '%#{@q}%' OR street_types.street_type_code LIKE '%#{@q}%' OR street_directories.street_name LIKE '%#{@q}%' OR service_points.street_number LIKE '%#{@q}%' OR service_points.building LIKE '%#{@q}%' OR zipcodes.zipcode LIKE '%#{@q}%')"
+      @service_points = serialized(ServicePoint.g_where(w),
+                            Api::V1::ServicePointsSerializer)
+    end
+    render json: @service_points
   end
 
   # Returns JSON list of data

@@ -1700,7 +1700,7 @@ module Ag2Gest
 
       @json_data = { "subscribers" => subscribers_raw_array(_o), "service_points" => service_points_raw_array(_o),
                      "service_point_types" => service_point_types_array, "service_point_locations" => service_point_locations_array,
-                     "service_point_purposes" => service_point_purposes_array, "centers" => centers_array(_o),
+                     "service_point_purposes" => service_point_purposes_array, "centers" => centers_by_town_array(towns_by_office),
                      "towns_by_office" => towns_by_office, "offices" => offices_array,
                      "street_directories" => street_directories_array(_o), "street_types" => street_types_array,
                      "towns" => towns_array, "provinces" => provinces_array, "zipcodes" => zipcodes_array,
@@ -1905,6 +1905,8 @@ module Ag2Gest
       @contracting_request.account_no = @account_no unless @account_no.blank?
       @contracting_request.contracting_request_status_id = 1
       @contracting_request.created_by = current_user.id if !current_user.nil?
+      # @contracting_request.subscriber_id = params[:SubscriberB].to_i unless params[:SubscriberB].blank?
+      # @contracting_request.service_point_id = params[:ServicePointB].to_i unless params[:ServicePointB].blank?
 
       respond_to do |format|
         if @contracting_request.save
@@ -1931,6 +1933,9 @@ module Ag2Gest
     def update
       @breadcrumb = 'update'
       @contracting_request = ContractingRequest.find(params[:id])
+      @contracting_request.updated_by = current_user.id if !current_user.nil?
+      # @contracting_request.subscriber_id = params[:SubscriberB].to_i unless params[:SubscriberB].blank?
+      # @contracting_request.service_point_id = params[:ServicePointB].to_i unless params[:ServicePointB].blank?
 
       respond_to do |format|
         if @contracting_request.update_attributes(params[:contracting_request])
@@ -2267,6 +2272,9 @@ module Ag2Gest
       @bank = banks_array
       @bank_offices = bank_offices_array
       @reading_routes = reading_routes_raw_array(offices)
+      # special select2 dropdowns
+      @subscriber = " "
+      @service_point = " "
     end
 
     # def set_defaults_for_create_and_update

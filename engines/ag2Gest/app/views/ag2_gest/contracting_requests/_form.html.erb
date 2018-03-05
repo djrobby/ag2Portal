@@ -21,6 +21,67 @@
   var old_value = '';
   var old_code = '';
 
+  function setupAllSelect2(s, m) {
+    subscribersSelect2ForNew(s);
+    servicePointsSelect2ForNew(m, 0);
+  }
+
+  function subscribersSelect2ForNew(intialValue) {
+    var target_url = "/search_subscribers";
+    $('#Subscriber2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: target_url,
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function servicePointsSelect2ForNew(intialValue) {
+    var target_url = "/search_service_points";
+    $('#ServicePoint2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: target_url,
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     // Select2
     $('select.sel2').select2({
@@ -43,6 +104,9 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
+
+    // Setup special search (select2)
+    setupAllSelect2("<%= @subscriber %>", "<%= @service_point %>");
 
     // Disable fields if Fiscal Id blank
     var contact = $('#contracting_request_entity_fiscal_id').val();
@@ -113,7 +177,6 @@
             $("#contracting_request_subscriber_street_type_id").val(data.street_type_id);
             $("#contracting_request_subscriber_street_name").val(data.street_name);
             $("#s2id_contracting_request_subscriber_street_directory").select2("val", data.street_directory_id);
-            // $("#contracting_request_service_point_id").select2("val", data.street_directory_id);
             $("#contracting_request_subscriber_street_number").val(data.street_number);
             $("#contracting_request_subscriber_building").val(data.building);
             $("#contracting_request_subscriber_floor").val(data.floor);
@@ -248,6 +311,20 @@
   });
 
   jQuery(function($) {
+    // when the #Subscriber2 field changes
+    $("#Subscriber2").change(function() {
+      if ($("#Subscriber2").val() != "") {
+        $('#subscriber_hide').val($("#Subscriber2").val());
+      }
+    });
+
+    // when the #ServicePoint2 field changes
+    $("#ServicePoint2").change(function() {
+      if ($("#ServicePoint2").val() != "") {
+        $('#service_point_hide').val($("#ServicePoint2").val());
+      }
+    });
+
     // when the #contracting_request_service_point_id field changes
     $("#contracting_request_service_point_id").change(function() {
       // make a POST call and replace the content
@@ -459,35 +536,10 @@
 
     // when the #contracting_request_project_id field changes
     $("#contracting_request_project_id").change(function() {
-
       var project_ids = $('#contracting_request_project_id').val();
       jQuery.getJSON('update_request_no/' + project_ids, function(data) {
         $("#contracting_request_request_no").val(data.request_no);
       })
-
-      // make a POST call and replace the content
-      // var order = $('select#contracting_request_project_id :selected').val();
-      // if (order == "")
-      //   order = "0";
-      // // Disable generate_code_btn if contracting_request_project_id blank
-      // if (order == "0") {
-      //   // Empty organization:: Hide
-      //   $('#generate_code_btn').hide();
-      // } else {
-      //   // Organization OK: Show (if not updating)
-      //   if ('<%#= @breadcrumb == 'update' %>') {
-      //     if (old_value == $('#contracting_request_project_id').val()) {
-      //       $('#contracting_request_request_no').val(old_code);
-      //       $("#contracting_request_request_no").css('color', text_field_color);
-      //       $('#generate_code_btn').hide();
-      //     } else {
-      //       $('#generate_code_btn').show();
-      //     }
-      //   } else {
-      //     // $('#generate_code_btn').show();
-      //   }
-      // }
-      // return false;
     });
 
     // when the #client_town_id field changes
@@ -506,7 +558,6 @@
 
     // when the #contracting_request_client_province_id field changes
     $('#contracting_request_client_province_id').change(function() {
-    // $("#contracting_request_client_province_id").change(function() {
       // make a POST call and replace the content
       var contact = $('select#contracting_request_client_province_id :selected').val();
       if (contact == "")
@@ -600,7 +651,7 @@
       });
       return false;
     });
-    
+
     // when #check_iban_btn is clicked
     $(".check_iban_btn").click(function() {
       var country = $("#contracting_request_country_id").val();
@@ -636,15 +687,6 @@
   <!-- PROJECT -->
   <label class="multi-field-label-three field-project">
     <%= f.association :project, collection: @projects, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <%# if !@projects.empty? %>
-      <%#= f.association :project, collection: @projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <%# elsif session[:organization] != '0' %>
-      <%#= f.association :project, collection: Project.where("organization_id = ?", "#{session[:organization]}").ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <%# elsif current_user.projects.count > 0 %>
-      <%#= f.association :project, collection: current_user.projects.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: false %>
-    <%# else %>
-      <%#= f.association :project, collection: Project.ser_or_tca_order_type, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
-    <%# end %>
   </label>
 
   <!-- REQUEST_TYPE -->
@@ -669,10 +711,13 @@
 <div class="row-fluid" id="row-old-subscriber">
   <label class="multi-field-label-two">
   <!-- Subscriber search -->
-    <%= label_tag I18n.t("ag2_gest.contracting_requests.label_subscriber_search"), nil, :class => 'form-label' %>
-    <%= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
+    <%= label_tag "label_subscriber", I18n.t("ag2_gest.contracting_requests.label_subscriber_search"), :class => 'form-label' %>
+    <%= text_field_tag "Subscriber2", params[:SubscriberB], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
+    <%#= label_tag I18n.t("ag2_gest.contracting_requests.label_subscriber_search"), nil, :class => 'form-label' %>
+    <%#= text_field_tag "Subscriber", nil, :class => 'x-large-text-field shrinked' %>
+    <%= f.input :subscriber_id, as: :hidden, disabled: true, input_html: { id: 'subscriber_hide'} %>
   </label>
- <label class="multi-field-label-two"> <%= f.input :subscriber_id, collection: @subscribers, :input_html => { :class => 'x-large-text-field sel2', id: 'old-subscriber' }, :label_html => { :class => 'form-label' }, label: I18n.t("activerecord.attributes.contracting_request.subscriber_id") %> </label>
+ <!--<label class="multi-field-label-two"> <%#= f.input :subscriber_id, collection: @subscribers, :input_html => { :class => 'x-large-text-field sel2', id: 'old-subscriber' }, :label_html => { :class => 'form-label' }, label: I18n.t("activerecord.attributes.contracting_request.subscriber_id") %> </label>-->
 </div>
 
 <!-- 2º ROW -->
@@ -697,11 +742,6 @@
         </div> -->
       </div>
     </div>
-
-    <!-- <div class="row-fluid"> -->
-      <!-- ENTITY STREET DIRECTORY -->
-      <%#= f.association :entity_street_directory, collection: StreetDirectory.all(order: 'street_type_id'), label_method: lambda { |s| s.to_full_label }, value_method: :id, :input_html => { :class => 'entity-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span12" } %>
-    <!-- </div> -->
 
     <div class="row-fluid">
       <!-- ENTITY STREET TYPE -->
@@ -827,13 +867,16 @@
   <div class="row-fluid" id="row-service-point">
     <label class="multi-field-label-two">
     <!-- Service point search -->
-      <%= label_tag I18n.t("ag2_gest.contracting_requests.label_service_point_search"), nil, :class => 'form-label' %>
-      <%= text_field_tag "ServicePoint", nil, :class => 'cancellation-field x-large-text-field shrinked' %>
-    </label>
-    <label class="multi-field-label-two">
-    <%= f.input :service_point_id, :required => true, collection: @service_points, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
+    <%= label_tag "label_service_point", I18n.t("ag2_gest.contracting_requests.label_service_point_search"), :class => 'form-label' %>
+    <%= text_field_tag "ServicePoint2", params[:ServicePointB], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
     <%= f.input :service_point_id, as: :hidden, disabled: true, input_html: { id: 'service_point_hide'} %>
-    </label>
+      <%#= label_tag I18n.t("ag2_gest.contracting_requests.label_service_point_search"), nil, :class => 'form-label' %>
+      <%#= text_field_tag "ServicePoint", nil, :class => 'cancellation-field x-large-text-field shrinked' %>
+    <!--</label>
+    <label class="multi-field-label-two">
+    <%#= f.input :service_point_id, :required => true, collection: @service_points, label: I18n.t("activerecord.attributes.contracting_request.service_point_id"), :input_html => { :class => 'cancellation-field x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %>
+    <%#= f.input :service_point_id, as: :hidden, disabled: true, input_html: { id: 'service_point_hide'} %>
+    </label>-->
   </div>
   <div class="row-fluid">
     <div class="span12">
@@ -866,7 +909,6 @@
     <!-- SUBSCRIBER STREET NUMBER -->
     <%= f.input :subscriber_street_number, :input_html => { :class => 'subscriber-field x-large-text-field number-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
   </div>
-
   <div class="row-fluid">
     <!-- SUBSCRIBER building -->
     <%= f.input :subscriber_building, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
@@ -883,7 +925,6 @@
     <!-- SUBSCRIBER province -->
     <%= f.association :subscriber_province, collection: @provinces, label_method: :second, value_method: :first, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span6" } %>
   </div>
-
   <div class="row-fluid">
     <!-- SUBSCRIBER region -->
     <%= f.association :subscriber_region, collection: @regions, label_method: :second, value_method: :first, :input_html => { :class => 'subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
@@ -892,7 +933,6 @@
     <%= f.association :subscriber_center, collection: @centers, label_method: :second, value_method: :first, :input_html => { :class => 'center-field subscriber-field x-large-text-field' }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span4" } %>
   </div>
 </div>
-
 
 <!-- 5º ROW -->
 <div class="row-fluid row-bank-account">
