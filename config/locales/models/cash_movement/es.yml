@@ -25,6 +25,7 @@ es:
         payment_method_id: "Forma de pago"
         movement_date: "Fecha"
         amount: "Importe"
+        remarks: "Comentarios"
         cash_movement_type_full_name: "Descripción Tipo"
         cash_movement_type_code: "Código Tipo"
         cash_movement_type_full_type_label: "Tipo usado para"

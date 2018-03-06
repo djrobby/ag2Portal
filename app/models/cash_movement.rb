@@ -9,7 +9,8 @@ class CashMovement < ActiveRecord::Base
   belongs_to :project
   belongs_to :charge_account
   attr_accessible :amount, :movement_date, :cash_movement_type_id, :payment_method_id,
-                  :organization_id, :company_id, :office_id, :project_id, :charge_account_id
+                  :organization_id, :company_id, :office_id, :project_id, :charge_account_id,
+                  :remarks
 
   has_many :cash_desk_closing_items
 

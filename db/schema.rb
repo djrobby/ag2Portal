@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180222120419) do
+ActiveRecord::Schema.define(:version => 20180306091842) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -601,6 +601,7 @@ ActiveRecord::Schema.define(:version => 20180222120419) do
     t.datetime "updated_at",                                                            :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "remarks"
   end
 
   add_index "cash_movements", ["cash_movement_type_id"], :name => "index_cash_movements_on_cash_movement_type_id"

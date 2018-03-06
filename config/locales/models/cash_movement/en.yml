@@ -25,6 +25,7 @@ en:
         payment_method_id: "Payment method"
         movement_date: "Date"
         amount: "Amount"
+        remarks: "Remarks"
         cash_movement_type_full_name: "Type description"
         cash_movement_type_code: "Type code"
         cash_movement_type_full_type_label: "Type used for"

@@ -22,6 +22,10 @@
       <td class="highlighted bolded"><%= @cash_movement.formatted_amount %></td>
     </tr>
     <tr>
+      <td><%= t('activerecord.attributes.cash_movement.remarks') %>:</td>
+      <td colspan="3"><%= @cash_movement.remarks unless @cash_movement.remarks.blank? %></td>
+    </tr>
+    <tr>
       <td><%= t('activerecord.attributes.cash_movement.project') %>:</td>
       <td><%= @cash_movement.project_description unless @cash_movement.project_id.blank? %></td>
       <td><%= t('activerecord.attributes.cash_movement.office') %>:</td>
