@@ -38,7 +38,6 @@ module Ag2Tech
                                                :work_order_form_empty,
                                                :work_order_form_empty_sm,
                                                :work_order_report,
-                                               :export_work_order_csv,
                                                :wo_update_costs_from_cost_or_enforcement_pct]
     # Helper methods for
     # => allow edit (hide buttons)
@@ -1217,75 +1216,6 @@ module Ag2Tech
       end
     end
 
-    # work order report csv
-    def export_work_order_csv
-      manage_filter_state
-      no = params[:No]
-      project = params[:Project]
-      area = params[:Area]
-      type = params[:Type]
-      labor = params[:Labor]
-      status = params[:Status]
-      # OCO
-      init_oco if !session[:organization]
-      projects = projects_dropdown
-
-      # Arrays for search
-      current_projects = projects.blank? ? [0] : current_projects_for_index(projects)
-      # If inverse no search is required
-      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-
-      @search = WorkOrder.search do
-        with :project_id, current_projects
-        fulltext params[:search]
-        if session[:organization] != '0'
-          with :organization_id, session[:organization]
-        end
-        if !no.blank?
-          if no.class == Array
-            with :order_no, no
-          else
-            with(:order_no).starting_with(no)
-          end
-        end
-        if !project.blank?
-          with :project_id, project
-        end
-        if !area.blank?
-          with :work_order_area_id, area
-        end
-        if !type.blank?
-          with :work_order_type_id, type
-        end
-        if !labor.blank?
-          with :work_order_labor_id, labor
-        end
-        if !status.blank?
-          with :work_order_status_id, status
-        end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => WorkOrder.count
-      end
-
-      @work_order_report = @search.results
-
-      title = t("activerecord.models.work_order.few")
-      @from = formatted_date(@work_order_report.first.created_at)
-      @to = formatted_date(@work_order_report.last.created_at)
-      respond_to do |format|
-        # format.html # index.html.erb
-        if !@work_order_report.blank?
-          format.csv { send_data WorkOrder.to_csv(@work_order_report),
-                       filename: "#{title}_#{@from}-#{@to}.csv",
-                       type: 'application/csv',
-                       disposition: 'inline' }
-          format.js
-        else
-          format.csv { redirect_to work_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
-        end
-      end
-    end
-
     # work order report
     def work_order_report
       manage_filter_state
@@ -1345,16 +1275,22 @@ module Ag2Tech
       @work_order_report = @search.results
 
       title = t("activerecord.models.work_order.few")
-      from = Date.today.to_s
+      @from = formatted_date(@work_order_report.first.started_at)
+      @to = formatted_date(@work_order_report.last.completed_at)
 
       respond_to do |format|
-        # Render PDF
+      # Render PDF
         if !@work_order_report.blank?
           format.pdf { send_data render_to_string,
-                       filename: "#{title}_#{@from}.pdf",
-                       type: 'application/pdf',
-                       disposition: 'inline' }
+                      filename: "#{title}_#{@from}-#{@to}.pdf",
+                      type: 'application/pdf',
+                      disposition: 'inline' }
+          format.csv { send_data WorkOrder.to_csv(@work_order_report),
+                      filename: "#{title}_#{@from}-#{@to}.csv",
+                      type: 'application/csv',
+                      disposition: 'inline' }
         else
+          format.csv { redirect_to work_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
           format.pdf { redirect_to work_orders_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end

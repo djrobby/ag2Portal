@@ -132,3 +132,4 @@ es:
         master: "Maestra"
         master_c: "M"
         area_type: "OT Area-Tipo"
+        with_suborder_cost_c: "Costos SubOr."

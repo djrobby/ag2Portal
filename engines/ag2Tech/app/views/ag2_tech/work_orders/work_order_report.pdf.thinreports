@@ -1,44 +1,28 @@
 if @work_order_report.blank?
-	return
+  return
 end
 
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/work_order_view_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/work_order_report_new', layout_options: { default: true }
 
 #
 # Report events
 #
 # On page create
 report.events.on :page_create do |e|
-	# Set page-number
-	e.page.item(:page_no).value(e.page.no)
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+  e.page.item(:currency_note).value("* " + I18n.t("every_report.currency_note"))
+
 end
 # On report generate
 report.events.on :generate do |e|
-	e.pages.each do |page|
-		# Set total-page-number
-		page.item(:page_count).value(e.report.page_count)
-	end
-end
-
-#
-# List configuration (stores & events)
-#
-report.layout.config.list(:default) do |c|
-	# Define the variables used in list
-	c.use_stores page_rows: 0, p_total: 0
-
-	# On list page footer insertion
-	c.events.on :page_footer_insert do |e|
-		# Display page sutotals
-		e.section.item(:sum_rows_title).value(I18n.t("activerecord.attributes.work_order.total")+": ")
-		e.section.item(:sum_rows).value(e.store.page_rows)
-		e.section.item(:full_total).value(number_with_precision(e.store.p_total, precision: 2))
-		# Initialize subtotals to 0
-		#e.store.page_rows = 0
-	end
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
 end
 
 # New page & start
@@ -46,72 +30,150 @@ report.start_new_page
 
 # Page header
 report.page.values report_title: I18n.t("ag2_tech.ag2_tech_track.work_report.report_title")
+report.page.values order_no_c: I18n.t("activerecord.attributes.work_order.order_no")
+report.page.values description_c: I18n.t("activerecord.attributes.work_order.description")
+report.page.values area_type_c: I18n.t("activerecord.attributes.work_order.area_type")
+report.page.values status_code_c: I18n.t("activerecord.attributes.work_order.work_order_status_code")
+report.page.values started_at_report_c: I18n.t("activerecord.attributes.work_order.started_at_report")
+report.page.values completed_at_report_c: I18n.t("activerecord.attributes.work_order.completed_at_report")
+report.page.values totals_c: I18n.t("activerecord.attributes.work_order.total")
+report.page.values this_cost_c: I18n.t("activerecord.attributes.work_order.costs_c")
+report.page.values with_suborder_cost_c: I18n.t("activerecord.attributes.work_order.with_suborder_cost_c")
 
 # Page footer
 report.page.values(printed_at: formatted_timestamp(Time.now),
-				   pt: I18n.t("every_report.pt"),
-				   pd: I18n.t("every_report.pd"))
-
-
-# List header
-report.page.list(:default).header do |header|
-  header.item(:order_no_c).value I18n.t("activerecord.attributes.work_order.order_no")
-  header.item(:description_c).value I18n.t("activerecord.attributes.work_order.description")
-  header.item(:petitioner_c).value I18n.t("activerecord.attributes.work_order.petitioner")
-  header.item(:status_c).value I18n.t("activerecord.attributes.work_order.work_order_status")
-  header.item(:account_c).value I18n.t("activerecord.attributes.work_order.charge_account_report")
-  header.item(:area_c).value I18n.t("activerecord.attributes.work_order.area")
-  header.item(:atl_ot_c).value I18n.t("activerecord.attributes.work_order.work_order_area") + " - " + I18n.t("activerecord.attributes.work_order.work_order_type") + " - " + I18n.t("activerecord.attributes.work_order.work_order_labor")
-  header.item(:location_c).value I18n.t("activerecord.attributes.work_order.location")
-  header.item(:created_at_c).value I18n.t("activerecord.attributes.work_order.created_at")
-  header.item(:close_at_c).value I18n.t("activerecord.attributes.work_order.closed_at")
-  header.item(:total_c).value I18n.t("activerecord.attributes.work_order.total_costs")
-end
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"))
 
 
 # Page Title list
-project_id = @work_order_report.first.project_id
+project_id = ""
+project_name = ""
+page_rows = 0
+p_totals = 0
+p_this_cost = 0
+p_with_suborder_cost = 0
+page_rows_ct = 0
+p_totals_ct = 0
+p_this_cost_ct = 0
+p_with_suborder_cost_ct = 0
+last_id = @work_order_report.last.id
 
 # List detail
 @work_order_report.each do |i|
-	if !i.project_id.blank? && (i.project_id != project_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|
-			list.store.page_rows = 0
-			list.store.p_total = 0
-		end
-		project_id = i.project_id
-	end
+  report.page.item(:from_title).hide
+  report.page.item(:to_title).hide
+  report.page.item(:from).hide
+  report.page.item(:to).hide
+  report.page.item(:l13).hide
 
-	report.page.list(:default).add_row do |row|
-    report.page.values project_c: I18n.t("activerecord.attributes.work_order.project")+": "
-    report.page.values project: i.project.name
-    row.item(:order_no).value i.full_no
-    row.item(:description).value i.summary
-    row.item(:petitioner).value i.petitioner unless i.petitioner.blank? 
-    row.item(:status).value i.work_order_status.name unless i.work_order_status.blank?
-    row.item(:account).value i.charge_account.full_code unless i.charge_account.blank?
-    row.item(:area).value i.area.name unless i.area.blank?
-    atl = ""
-    if !i.work_order_area.blank?
-      atl += i.work_order_area.short_name
-    end
-    if !i.work_order_type.blank?
-      atl += atl.blank? ? i.work_order_type.short_name : " - " + i.work_order_type.short_name
-    end
-    if !i.work_order_labor.blank?
-      atl += atl.blank? ? i.work_order_labor.short_name : " - " + i.work_order_labor.short_name
-    end
-    row.item(:atl_ot).value atl
-    row.item(:location).value i.location unless i.location.blank?    
-    row.item(:created_at).value i.created_at.strftime("%d/%m/%Y") unless i.created_at.blank?
-    row.item(:close_at).value i.closed_at.strftime("%d/%m/%Y") unless i.closed_at.blank?
-    row.item(:total).value number_with_precision(i.total_costs, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_costs.blank?
-	end
+  if !i.project_id.blank? && (i.project_id != project_id)
+    if page_rows != 0
 
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-		list.store.p_total += i.total_costs.round(2)
-	end
+      report.page.list(:default).add_row do |row1|
+        row1.item(:project_no).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: project_name)
+        row1.item(:sum_rows).value page_rows
+        row1.item(:totals).value number_with_precision(p_totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:this_cost).value number_with_precision(p_this_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:with_suborder_cost).value number_with_precision(p_with_suborder_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:l11).hide
+        # row1.item(:l12).hide
+        row1.item(:l13).hide
+        row1.item(:l14).hide
+        # row1.item(:l15).hide
+      end
+
+      report.page.list(:default).add_row do |row1111|
+        row1111.item(:l11).hide
+        # row1111.item(:l12).hide
+        row1111.item(:l13).hide
+        row1111.item(:l14).hide
+        row1111.item(:l15).hide
+      end
+    end
+
+    page_rows = 0
+    p_totals = 0
+    p_this_cost = 0
+    p_with_suborder_cost = 0
+
+    report.page.list(:default) do |first|
+      first.add_row do |row3|
+          row3.item(:project_no).value i.project.full_name unless i.project.blank?
+          # row3.item(:l11).hide
+          row3.item(:l12).hide
+          row3.item(:l13).hide
+          row3.item(:l14).hide
+          row3.item(:l15).hide
+      end
+
+    end
+
+    project_id = i.project_id
+    project_name = i.project.full_name
+  end
+
+  report.page.list(:default).add_row do |row|
+    row.item(:l11).hide
+    row.item(:l12).hide
+    row.item(:l13).hide
+    row.item(:l14).hide
+    row.item(:l15).hide
+    row.item(:order_no).value i.full_name
+    row.item(:description).value i.summary[0,20]
+    row.item(:area_type).value i.area_type
+    row.item(:status_code).value i.work_order_status.code unless i.work_order_status.blank?
+    row.item(:started_at_report).value i.started_at.strftime("%d/%m/%Y") unless i.started_at.blank?
+    row.item(:completed_at_report).value i.completed_at.strftime("%d/%m/%Y") unless i.completed_at.blank?
+    row.item(:totals).value number_with_precision(i.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.totals.blank?
+    row.item(:this_cost).value number_with_precision(i.this_costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.this_costs.blank?
+    row.item(:with_suborder_cost).value number_with_precision(i.with_suborder_costs, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.with_suborder_costs.blank?
+  end
+
+  # Store page subtotals
+  page_rows += 1
+  p_totals += i.totals.round(2) unless i.totals.blank?
+  p_this_cost += i.this_costs.round(2) unless i.this_costs.blank?
+  p_with_suborder_cost += i.with_suborder_costs.round(2) unless i.with_suborder_costs.blank?
+  #cumulative total
+  page_rows_ct += 1
+  p_totals_ct += i.totals.round(2) unless i.totals.blank?
+  p_this_cost_ct += i.this_costs.round(2) unless i.this_costs.blank?
+  p_with_suborder_cost_ct += i.with_suborder_costs.round(2) unless i.with_suborder_costs.blank?
+
+  # Ultima linea con totales acumulados
+  if page_rows != 0 && (i.id == last_id)
+
+    report.page.list(:default).add_row do |row1|
+      row1.item(:project_no).value I18n.t("ag2_tech.ag2_tech_track.every_report.full_total", text: project_name)
+      row1.item(:sum_rows).value page_rows
+      row1.item(:totals).value number_with_precision(p_totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1.item(:this_cost).value number_with_precision(p_this_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1.item(:with_suborder_cost).value number_with_precision(p_with_suborder_cost, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1.item(:l11).hide
+      # row1.item(:l12).hide
+      row1.item(:l13).hide
+      row1.item(:l14).hide
+      # row1.item(:l15).hide
+    end
+    report.page.list(:default).add_row do |row11|
+      row11.item(:l11).hide
+      # row11.item(:l12).hide
+      row11.item(:l13).hide
+      row11.item(:l14).hide
+      row11.item(:l15).hide
+    end
+    report.page.list(:default).add_row do |row1111|
+      row1111.item(:project_no).value I18n.t("ag2_tech.ag2_tech_track.every_report.cumulative_total")
+      row1111.item(:sum_rows).value page_rows_ct
+      row1111.item(:totals).value number_with_precision(p_totals_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1111.item(:this_cost).value number_with_precision(p_this_cost_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1111.item(:with_suborder_cost).value number_with_precision(p_with_suborder_cost_ct, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row1111.item(:l11).hide
+      # row111.item(:l12).hide
+      row1111.item(:l13).hide
+      row1111.item(:l14).hide
+      row1111.item(:l15).hide
+    end
+  end
 end

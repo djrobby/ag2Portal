@@ -149,7 +149,6 @@ Ag2Tech::Engine.routes.draw do
     match 'wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
     match 'work_orders/:id/wo_update_meter_textfields_from_subscriber/:subscriber', :controller => 'work_orders', :action => 'wo_update_meter_textfields_from_subscriber'
     match 'work_order_report', :controller => 'work_orders', :action => 'work_order_report'
-    match 'export_work_order_csv', :controller => 'work_orders', :action => 'export_work_order_csv'
     #
     # Work order types
     match 'work_order_types/wot_update_account_select_from_project/:project/:tbl', :controller => 'work_order_types', :action => 'wot_update_account_select_from_project'
@@ -241,7 +240,6 @@ Ag2Tech::Engine.routes.draw do
       get 'work_order_form_empty', on: :collection
       get 'work_order_form_sm', on: :collection
       get 'work_order_form_empty_sm', on: :collection
-      get 'export_work_order_csv', on: :collection
     end
     resources :work_order_areas
     resources :work_order_labors

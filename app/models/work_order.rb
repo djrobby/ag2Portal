@@ -228,17 +228,22 @@ class WorkOrder < ActiveRecord::Base
                   array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_type")),
                   array[0].sanitize(I18n.t("activerecord.attributes.work_order.work_order_labor")),
                   array[0].sanitize(I18n.t("activerecord.attributes.work_order.location")),
-                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.created_at")),
-                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.closed_at")),
-                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.total_costs")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.started_at_report")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.completed_at_report")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.total")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.costs_c")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.work_order.with_suborder_cost_c")),
                   array[0].sanitize(I18n.t("activerecord.attributes.work_order.project"))]
+
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |i|
-        i001 = i.formatted_date(i.created_at) unless i.created_at.blank?
-        i002 = i.formatted_date(i.closed_at) unless i.closed_at.blank?
-        i003 = i.raw_number(i.total_costs, 4) unless i.total_costs.blank?
+        i001 = i.formatted_date(i.started_at) unless i.started_at.blank?
+        i002 = i.formatted_date(i.completed_at) unless i.completed_at.blank?
+        i003 = i.raw_number(i.totals, 4) unless i.total_costs.blank?
+        i004 = i.raw_number(i.this_costs, 4) unless i.total_costs.blank?
+        i005 = i.raw_number(i.with_suborder_costs, 4) unless i.total_costs.blank?
         csv << [  i.full_no,
                   i.summary,
                   i.petitioner,
@@ -252,6 +257,8 @@ class WorkOrder < ActiveRecord::Base
                   i001,
                   i002,
                   i003,
+                  i004,
+                  i005,
                   i.project.name]
       end
     end
