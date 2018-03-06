@@ -880,8 +880,9 @@
   });
 
   $("#close-cash").click(function(){
-    $("#cash-checkbox-master").trigger("click");
-
+    if ($("#cash-checkbox-master").prop('checked') != true) {
+      $("#cash-checkbox-master").trigger("click");
+    }
     var cp_ids = [];
     var cp_amount = 0.0;
     var initial = 0.0;
@@ -1179,6 +1180,10 @@
     }
   });
   /*** End forms submit ***/
+
+  $("#btn-close-modal-cash-close").click(function() {
+    $("#cash-checkbox-master").trigger("click");
+  });
 
   /***
   /* Manage checkboxes

@@ -88,7 +88,7 @@
     </div>
     <div class="modal-footer">
       <%= f.button :submit, t(:confirm), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', id: 'btn-submit-modal-cash-close' %>
-      <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
+      <button class="btn btn-primary" id="btn-close-modal-cash-close" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
     </div>
   <% end %>
 </div><!-- Close Cash -->
