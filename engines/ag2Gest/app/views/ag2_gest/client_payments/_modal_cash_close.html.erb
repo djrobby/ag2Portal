@@ -57,6 +57,7 @@
                 <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'large-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
                 <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
                 <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
+                <%= f.input :type_i, as: :hidden, input_html: { name: 'currency_instrument[types][]', value: i.type_i }, label_html: { class: 'form-label' } %>
               </td>
               <% if j.even? # Even number: Close row %>
                 </tr>

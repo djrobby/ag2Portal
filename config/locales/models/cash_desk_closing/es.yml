@@ -36,6 +36,7 @@ es:
         selected_receipts: "Recibos seleccionados"
         sum_instruments: "Suma de instrumentos"
         instruments_neq_closing: "¡Suma de instrumentos es diferente al Saldo de cierre!"
+        instruments_neq_closing_question: "¡Suma de instrumentos es diferente al Saldo de cierre!: ¿Estás seguro/a de continuar?"
         amount: "Importe"
         closing_balance_c: "Cierre"
         opening_balance_c: "Apertura"

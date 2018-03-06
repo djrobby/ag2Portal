@@ -9,7 +9,7 @@ class CashDeskClosing < ActiveRecord::Base
                   :amount_paid, :invoices_paid,
                   :amount_others, :quantity_others,
                   :organization_id, :company_id, :office_id, :project_id,
-                  :created_by, :updated_by
+                  :created_by, :updated_by, :instruments_difference
 
   has_many :cash_desk_closing_items
   has_many :cash_desk_closing_instruments

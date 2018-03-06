@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180306091842) do
+ActiveRecord::Schema.define(:version => 20180306121843) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -548,19 +548,20 @@ ActiveRecord::Schema.define(:version => 20180306091842) do
     t.integer  "company_id"
     t.integer  "office_id"
     t.integer  "project_id"
-    t.decimal  "opening_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "closing_balance",    :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "amount_collected",   :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.integer  "invoices_collected",                                :default => 0,   :null => false
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
+    t.decimal  "opening_balance",        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "closing_balance",        :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal  "amount_collected",       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "invoices_collected",                                    :default => 0,   :null => false
+    t.datetime "created_at",                                                             :null => false
+    t.datetime "updated_at",                                                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.decimal  "amount_paid",        :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.integer  "invoices_paid",                                     :default => 0,   :null => false
+    t.decimal  "amount_paid",            :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "invoices_paid",                                         :default => 0,   :null => false
     t.integer  "last_closing_id"
-    t.decimal  "amount_others",      :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.integer  "quantity_others",                                   :default => 0,   :null => false
+    t.decimal  "amount_others",          :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.integer  "quantity_others",                                       :default => 0,   :null => false
+    t.decimal  "instruments_difference", :precision => 13, :scale => 4, :default => 0.0, :null => false
   end
 
   add_index "cash_desk_closings", ["company_id"], :name => "index_cash_desk_closings_on_company_id"

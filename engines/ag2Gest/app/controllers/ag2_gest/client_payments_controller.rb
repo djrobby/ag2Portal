@@ -225,6 +225,7 @@ module Ag2Gest
       currency_instrument_quantities = params[:currency_instrument][:quantities]
       currency_instrument_ids = params[:currency_instrument][:ids]
       currency_instrument_values = params[:currency_instrument][:values]
+      currency_instrument_types = params[:currency_instrument][:types]
       # Last cash desk closing
       last_cash_desk_closing = open_cash
       last_closing = last_cash_desk_closing.id rescue nil
@@ -236,18 +237,23 @@ module Ag2Gest
       invoices_paid = 0
       amount_others = 0
       quantity_others = 0
+      instruments_difference = 0
       created_by = current_user.id if !current_user.nil?
       # SELECT for payment & other totals
       payments_select = 'count(supplier_payments.id) as payments, coalesce(sum(supplier_payments.amount),0)*(-1) as totals'
       others_select = 'count(cash_movements.id) as movements, coalesce(sum(cash_movements.amount),0) as totals'
       # Data to process
       # Client payments
+      project = nil
+      company = nil
+      office = nil
       client_payments = ClientPayment.where(id: client_payments_ids)
       first_payment = client_payments.first
       organization = first_payment.bill.organization_id rescue nil
-      project = first_payment.bill.project_id rescue nil
-      company = project.company_id rescue nil
-      office = project.office_id rescue nil
+      prj = first_payment.bill.project rescue nil
+      project = prj.id rescue nil
+      company = prj.company_id rescue nil
+      office = prj.office_id rescue nil
       # Supplier payments
       w = ''
       w = "supplier_payments.organization_id = #{organization} AND " if !organization.nil?
@@ -291,7 +297,7 @@ module Ag2Gest
                                                   amount_collected: amount_collected, invoices_collected: invoices_collected,
                                                   amount_paid: amount_paid, invoices_paid: invoices_paid,
                                                   amount_others: amount_others, quantity_others: quantity_others,
-                                                  created_by: created_by)
+                                                  instruments_difference: instruments_difference, created_by: created_by)
           if cash_desk_closing.save
             #
             # Items
@@ -301,6 +307,9 @@ module Ag2Gest
               item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type_i: 'C', payment_method_id: cp.payment_method_id)
               if !item.save
                 break
+              else
+                # cp.update_attributes(confirmation_date: Time.now)
+                # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
               end
             end # client_payments.each
             # Supplier payments
@@ -323,12 +332,19 @@ module Ag2Gest
             currency_instrument_ids.each_with_index do |id, i|
               quantity = currency_instrument_quantities[i].to_i
               value = currency_instrument_values[i].to_d
+              if currency_instrument_types[i].to_i > 2
+                quantity = currency_instrument_values[i].to_i
+                value = currency_instrument_quantities[i].to_d
+              end
               amount = quantity * value
+              instruments_difference += amount
               instrument = CashDeskClosingInstrument.new(cash_desk_closing_id: cash_desk_closing.id, currency_instrument_id: id.to_i, amount: amount, quantity: quantity)
               if !instrument.save
                 break
               end
             end # currency_instrument_ids.each_with_index
+            # Update CashDeskClosing.instruments_difference
+            cash_desk_closing.update_column(:instruments_difference, instruments_difference)
           end
         end # ActiveRecord::Base.transaction
         redirect_to client_payments_path, notice: (I18n.t('ag2_gest.cash_desk_closings.index.closing_ok') + " #{view_context.link_to I18n.t('ag2_gest.cash_desk_closings.index.click_to_print_closing'), close_cash_form_cash_desk_closing_path(cash_desk_closing, :format => :pdf), target: '_blank'}").html_safe

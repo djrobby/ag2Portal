@@ -1171,12 +1171,17 @@
     $input.val(instalments_ids);
   });
 
-  $("form.close-cash-form").submit(function(){
+  $("form.close-cash-form").submit(function() {
     var sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
     var ending_cash = parseFloat($("#ending-cash").text().replace(",", ".")) || 0;
+    var instruments_difference = ending_cash - sum_instruments;
     if (sum_instruments != ending_cash) {
-      alert("<%= I18n.t('activerecord.attributes.cash_desk_closing.instruments_neq_closing') %>");
-      return false;
+      var result = confirm("<%= t('activerecord.attributes.cash_desk_closing.instruments_neq_closing_question') %>");
+      if (!result) {
+        return false;
+      }
+      // alert("<%= I18n.t('activerecord.attributes.cash_desk_closing.instruments_neq_closing') %>");
+      // return false;
     }
   });
   /*** End forms submit ***/
