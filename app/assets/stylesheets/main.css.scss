@@ -705,6 +705,25 @@ table.fixed td {
 .attention-row {
   color: #0066b2;
 }
+/* Row without top border */
+.tr-no-top-padding td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.tr-no-top-padding {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+/* Row without top border */
+.tr-no-top-border td {
+  border-top: none !important;
+}
+.td-no-top-border {
+  border-top: none !important;
+}
+td[no-top-border] {
+  border-top: none !important;
+}
 /* General */
 .underlined-tr {
   border-bottom-width: 1px;

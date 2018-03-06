@@ -45,18 +45,45 @@
       <% if !@currency_instruments.blank? %>
       <hr />
       <div class="control-group">
+        <% j = 1 %>
         <h4><%= t "activerecord.models.currency_instrument.few" %></h4>
-        <% @currency_instruments.each do |i| %>
-        <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
-        <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
-        <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
-        <% end %>
+        <table class="table table-condensed">
+          <tbody>
+            <% @currency_instruments.each do |i| %>
+              <% if j.odd? # Odd number: New row %>
+                <tr class="tr-no-top-border tr-no-top-padding">
+              <% end %>
+              <td>
+                <%= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'large-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
+                <%= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
+                <%= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
+              </td>
+              <% if j.even? # Even number: Close row %>
+                </tr>
+              <% end %>
+              <% j = j + 1 %>
+            <% end %>
+          </tbody>
+        </table>
         <p class="control-group">
           <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.sum_instruments') %>:</span>
           <span id="sum-instruments" class="controls highlighted bolded"><%= number_with_precision(0, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
           <span><button id="btn-currency-reset" class="btn btn-primary" aria-hidden="true"><%= t :reset_button %></button></span>
         </p>
       </div>
+      <!-- <div class="control-group">
+        <h4><%#= t "activerecord.models.currency_instrument.few" %></h4>
+        <%# @currency_instruments.each do |i| %>
+        <%#= f.input :quantity, required: true, label: i.short_label, as: :integer, inline_label: "Yes", input_html: { name: 'currency_instrument[quantities][]', value: '0', class: 'mid-text-field number-text-field fnt-currency-quantity', data: { ival: i.value_i }, onfocus: "this.oldvalue = this.value;" }, label_html: { class: 'form-label' } %>
+        <%#= f.input :id, as: :hidden, input_html: { name: 'currency_instrument[ids][]', value: i.id }, label_html: { class: 'form-label' } %>
+        <%#= f.input :value_i, as: :hidden, input_html: { name: 'currency_instrument[values][]', value: i.value_i }, label_html: { class: 'form-label fnt-currency-value' } %>
+        <%# end %>
+        <p class="control-group">
+          <span class="tabulated form-label"><%= t('activerecord.attributes.cash_desk_closing.sum_instruments') %>:</span>
+          <span id="sum-instruments" class="controls highlighted bolded"><%= number_with_precision(0, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
+          <span><button id="btn-currency-reset" class="btn btn-primary" aria-hidden="true"><%= t :reset_button %></button></span>
+        </p>
+      </div> -->
       <% end %>
     </div>
     <div class="modal-footer">
