@@ -17,7 +17,8 @@
 </div>
 <%= f.input :type_i,
   collection: [[1, t('activerecord.attributes.currency_instrument.type_1')],
-               [2, t('activerecord.attributes.currency_instrument.type_2')]],
+               [2, t('activerecord.attributes.currency_instrument.type_2')],
+               [3, t('activerecord.attributes.currency_instrument.type_3')],],
                as: :radio_buttons, label_method: :last, value_method: :first, label_html: { class: 'form-label' }, item_wrapper_class: 'inline' %>
 <br />
 <%= f.button :submit, :class => 'btn-primary', :id => 'submit-instrument' %>

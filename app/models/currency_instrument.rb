@@ -11,7 +11,7 @@ class CurrencyInstrument < ActiveRecord::Base
   validates :currency,  :presence => true
   validates :type_i,    :presence => true,
                         :length => { :is => 1 },
-                        :numericality => { :only_integer => true, :greater_than => 0, :less_than => 3 }
+                        :numericality => { :only_integer => true, :greater_than => 0, :less_than => 4 }
   validates :value_i,   :presence => true,
                         :numericality => { :greater_than_or_equal_to => 0 },
                         :uniqueness => { :scope => [:currency_id, :type_i] }
@@ -45,6 +45,7 @@ class CurrencyInstrument < ActiveRecord::Base
     case type_i
       when 1 then I18n.t('activerecord.attributes.currency_instrument.type_1')
       when 2 then I18n.t('activerecord.attributes.currency_instrument.type_2')
+      when 3 then I18n.t('activerecord.attributes.currency_instrument.type_3')
       else 'N/A'
     end
   end

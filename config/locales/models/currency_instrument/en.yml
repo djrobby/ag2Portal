@@ -15,3 +15,4 @@ en:
         value_i: "Value"
         type_1: "Bill"
         type_2: "Coin"
+        type_3: "Other"

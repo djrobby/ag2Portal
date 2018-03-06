@@ -266,11 +266,51 @@ class Client < ActiveRecord::Base
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
 
+  def ine_town_code
+    town.ine_cmun + town.ine_dc
+  end
+
+  # Obtaining ledger account
+  def ledger_account_id_by_company_id(company_id=nil)
+    if company_id.nil?
+      ledger_account_id
+    else
+      client_ledger_accounts.where(company_id: company_id).first.ledger_account_id rescue nil
+    end
+  end
+  def ledger_account_code(company_id=nil)
+    LedgerAccount.find(ledger_account_id_by_company_id(company_id)).code rescue nil
+  end
+
+  # Obtaining active bank account
   def active_bank_accounts?
     (client_bank_accounts_count > 0) && (!client_bank_accounts.where(ending_at: nil).blank?)
   end
   def active_bank_account
     client_bank_accounts.where(ending_at: nil).order(:starting_at).last
+  end
+  def active_bank_account_bank_code
+    active_bank_account.bank.code rescue nil
+  end
+  def active_bank_account_office_code
+    active_bank_account.bank_office.code rescue nil
+  end
+  def active_bank_account_ccc_dc
+    active_bank_account.ccc_dc rescue nil
+  end
+  def active_bank_account_ccc_account_no
+    active_bank_account.ccc_account_no rescue nil
+  end
+  def active_bank_account_iban_no
+    active_bank_account.e_format rescue nil
+  end
+
+  # Obtaining entity type
+  def entity_type
+    entity.entity_type.id rescue 1
+  end
+  def entity_type_letter
+    entity_type == 1 ? 'F' : 'J'
   end
 
   #
@@ -292,21 +332,40 @@ class Client < ActiveRecord::Base
     Client.order("client_code").last
   end
 
-  searchable do
-    text :client_code, :full_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
-    string :address, :multiple => true do
-      address_1 unless address_1.blank?
-    end
-    string :client_code, :multiple => true
-    string :company
-    string :full_name
-    string :fiscal_id
-    integer :organization_id
-    string :sort_no do
-      client_code
-    end
+  # For CSV
+  def european_fiscal_id
+    country.code + fiscal_id
   end
 
+  def name40
+    !self.name.blank? ? sanitize_string(self.name[0,40].strip, true, true, true, false) : ''
+  end
+  def name35
+    !self.name.blank? ? sanitize_string(self.name[0,35].strip, true, true, true, false) : ''
+  end
+
+  def sanitize_street_name
+    !self.street_name.blank? ? sanitize_string(self.street_name.strip, true, true, true, false) : ''
+  end
+  def sanitize_address_1
+    !self.address_1.blank? ? sanitize_string(self.address_1.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_town_name
+    !self.town.name.blank? ? sanitize_string(self.town.name.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_province_name
+    !self.province.name.blank? ? sanitize_string(self.province.name.strip, true, true, true, false) : ''
+  end
+
+  def sanitize_country_name
+    !self.country.name.blank? ? sanitize_string(self.country.name.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
   # Client code
   def self.cl_next_code(organization)
     code = ''
@@ -320,6 +379,174 @@ class Client < ActiveRecord::Base
       code = organization + last_code.to_s.rjust(7, '0')
     end
     code
+  end
+
+  def self.to_csv(array, company_id=nil)
+    column_names = [I18n.t('activerecord.csv_sage200.supplier.c001'),
+                    I18n.t('activerecord.csv_sage200.supplier.c002'),
+                    I18n.t('activerecord.csv_sage200.supplier.c003'),
+                    I18n.t('activerecord.csv_sage200.supplier.c004'),
+                    I18n.t('activerecord.csv_sage200.supplier.c005'),
+                    I18n.t('activerecord.csv_sage200.supplier.c006'),
+                    I18n.t('activerecord.csv_sage200.supplier.c007'),
+                    I18n.t('activerecord.csv_sage200.supplier.c008'),
+                    I18n.t('activerecord.csv_sage200.supplier.c009'),
+                    I18n.t('activerecord.csv_sage200.supplier.c010'),
+                    I18n.t('activerecord.csv_sage200.supplier.c011'),
+                    I18n.t('activerecord.csv_sage200.supplier.c012'),
+                    I18n.t('activerecord.csv_sage200.supplier.c013'),
+                    I18n.t('activerecord.csv_sage200.supplier.c014'),
+                    I18n.t('activerecord.csv_sage200.supplier.c015'),
+                    I18n.t('activerecord.csv_sage200.supplier.c016'),
+                    I18n.t('activerecord.csv_sage200.supplier.c017'),
+                    I18n.t('activerecord.csv_sage200.supplier.c018'),
+                    I18n.t('activerecord.csv_sage200.supplier.c019'),
+                    I18n.t('activerecord.csv_sage200.supplier.c020'),
+                    I18n.t('activerecord.csv_sage200.supplier.c021'),
+                    I18n.t('activerecord.csv_sage200.supplier.c022'),
+                    I18n.t('activerecord.csv_sage200.supplier.c023'),
+                    I18n.t('activerecord.csv_sage200.supplier.c024'),
+                    I18n.t('activerecord.csv_sage200.supplier.c025'),
+                    I18n.t('activerecord.csv_sage200.supplier.c026'),
+                    I18n.t('activerecord.csv_sage200.supplier.c027'),
+                    I18n.t('activerecord.csv_sage200.supplier.c028'),
+                    I18n.t('activerecord.csv_sage200.supplier.c029'),
+                    I18n.t('activerecord.csv_sage200.supplier.c030'),
+                    I18n.t('activerecord.csv_sage200.supplier.c031'),
+                    I18n.t('activerecord.csv_sage200.supplier.c032'),
+                    I18n.t('activerecord.csv_sage200.supplier.c033'),
+                    I18n.t('activerecord.csv_sage200.supplier.c034'),
+                    I18n.t('activerecord.csv_sage200.supplier.c035'),
+                    I18n.t('activerecord.csv_sage200.supplier.c036'),
+                    I18n.t('activerecord.csv_sage200.supplier.c037'),
+                    I18n.t('activerecord.csv_sage200.supplier.c038'),
+                    I18n.t('activerecord.csv_sage200.supplier.c039'),
+                    I18n.t('activerecord.csv_sage200.supplier.c040'),
+                    I18n.t('activerecord.csv_sage200.supplier.c041'),
+                    I18n.t('activerecord.csv_sage200.supplier.c042'),
+                    I18n.t('activerecord.csv_sage200.supplier.c043'),
+                    I18n.t('activerecord.csv_sage200.supplier.c044'),
+                    I18n.t('activerecord.csv_sage200.supplier.c045'),
+                    I18n.t('activerecord.csv_sage200.supplier.c046'),
+                    I18n.t('activerecord.csv_sage200.supplier.c047'),
+                    I18n.t('activerecord.csv_sage200.supplier.c048'),
+                    I18n.t('activerecord.csv_sage200.supplier.c049'),
+                    I18n.t('activerecord.csv_sage200.supplier.c050'),
+                    I18n.t('activerecord.csv_sage200.supplier.c051'),
+                    I18n.t('activerecord.csv_sage200.supplier.c052'),
+                    I18n.t('activerecord.csv_sage200.supplier.c053'),
+                    I18n.t('activerecord.csv_sage200.supplier.c054'),
+                    I18n.t('activerecord.csv_sage200.supplier.c055'),
+                    I18n.t('activerecord.csv_sage200.supplier.c056'),
+                    I18n.t('activerecord.csv_sage200.supplier.c057'),
+                    I18n.t('activerecord.csv_sage200.supplier.c058'),
+                    I18n.t('activerecord.csv_sage200.supplier.c059'),
+                    I18n.t('activerecord.csv_sage200.supplier.c060'),
+                    I18n.t('activerecord.csv_sage200.supplier.c061'),
+                    I18n.t('activerecord.csv_sage200.supplier.c062'),
+                    I18n.t('activerecord.csv_sage200.supplier.c063'),
+                    I18n.t('activerecord.csv_sage200.supplier.c064'),
+                    I18n.t('activerecord.csv_sage200.supplier.c065'),
+                    I18n.t('activerecord.csv_sage200.supplier.c066'),
+                    I18n.t('activerecord.csv_sage200.supplier.c067'),
+                    I18n.t('activerecord.csv_sage200.supplier.c068'),
+                    I18n.t('activerecord.csv_sage200.supplier.c069'),
+                    I18n.t('activerecord.csv_sage200.supplier.c070')]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << column_names
+      lac = nil
+      array.each do |i|
+        lac = i.ledger_account_code(company_id)
+        if !lac.nil?
+          csv << [i.ledger_account_company_code(company_id),  # 001
+                  'P',                                    # 002
+                  i.client_code,                          # 003
+                  lac,                                    # 004
+                  nil,  # 005
+                  nil,  # 006
+                  nil,  # 007
+                  i.country.code,                         # 008
+                  i.fiscal_id,                            # 009
+                  i.european_fiscal_id,                   # 010
+                  i.name40,                               # 011
+                  nil,  # 012
+                  nil,  # 013
+                  nil,  # 014
+                  nil,  # 015
+                  nil,  # 016
+                  i.name35,                               # 017
+                  i.street_type.street_type_code,         # 018
+                  i.sanitize_street_name,                 # 019
+                  i.street_number,                        # 020
+                  nil,  # 021
+                  i.building,                             # 022
+                  i.floor,                                # 023
+                  i.floor_office,                         # 024
+                  nil,  # 025
+                  i.sanitize_address_1,                   # 026
+                  i.zipcode.zipcode,                      # 027
+                  i.ine_town_code,                        # 028
+                  i.sanitize_town_name,                   # 029
+                  i.province.ine_cpro,                    # 030
+                  i.sanitize_province_name,               # 031
+                  nil,  # 032
+                  i.sanitize_country_name,                # 033
+                  nil,  # 034
+                  nil,  # 035
+                  nil,  # 036
+                  nil,  # 037
+                  nil,  # 038
+                  nil,  # 039
+                  i.active_bank_account_bank_code,        # 040
+                  i.active_bank_account_office_code,      # 041
+                  i.active_bank_account_ccc_dc,           # 042
+                  i.active_bank_account_ccc_account_no,   # 043
+                  i.active_bank_account_iban_no,          # 044
+                  nil,  # 045
+                  nil,  # 046
+                  nil,  # 047
+                  nil,  # 048
+                  nil,  # 049
+                  nil,  # 050
+                  nil,  # 051
+                  nil,  # 052
+                  nil,  # 053
+                  nil,  # 054
+                  nil,  # 055
+                  nil,  # 056
+                  nil,  # 057
+                  nil,  # 058
+                  i.province.territory_code,              # 059
+                  nil,  # 060
+                  '1',                                    # 061
+                  nil,  # 062
+                  nil,  # 063
+                  nil,  # 064
+                  i.entity_type_letter,                   # 065
+                  nil,  # 066
+                  nil,  # 067
+                  nil,  # 068
+                  nil,  # 069
+                  nil]  # 070
+        end # !lac.nil?
+      end # array.each
+    end # CSV.generate
+  end
+
+  searchable do
+    text :client_code, :full_name, :company, :fiscal_id, :street_name, :phone, :cellular, :email
+    string :address, :multiple => true do
+      address_1 unless address_1.blank?
+    end
+    string :client_code, :multiple => true
+    string :company
+    string :full_name
+    string :fiscal_id
+    integer :organization_id
+    string :sort_no do
+      client_code
+    end
   end
 
   private

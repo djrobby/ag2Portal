@@ -15,3 +15,4 @@ es:
         value_i: "Valor"
         type_1: "Billete"
         type_2: "Moneda"
+        type_3: "Otro"
