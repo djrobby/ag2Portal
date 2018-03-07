@@ -30,7 +30,7 @@ class ClientPayment < ActiveRecord::Base
   validates :client,            :presence => true
 
   # Callbacks
-  before_save :check_debt
+  # before_save :check_debt
   after_save :reindex_instalment
   after_destroy :reindex_instalment
 

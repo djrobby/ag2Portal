@@ -307,9 +307,6 @@ module Ag2Gest
               item = CashDeskClosingItem.new(cash_desk_closing_id: cash_desk_closing.id, client_payment_id: cp.id, amount: cp.amount, type_i: 'C', payment_method_id: cp.payment_method_id)
               if !item.save
                 break
-              else
-                cp.update_column(confirmation_date: Time.now)
-                cp.invoice.update_column(invoice_status_id: InvoiceStatus::CHARGED)
               end
             end # client_payments.each
             # Supplier payments

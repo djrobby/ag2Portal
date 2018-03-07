@@ -1172,9 +1172,13 @@
   });
 
   $("form.close-cash-form").submit(function() {
-    var sum_instruments = parseFloat($("#sum-instruments").text().replace(",", ".")) || 0;
-    var ending_cash = parseFloat($("#ending-cash").text().replace(",", ".")) || 0;
-    var instruments_difference = ending_cash - sum_instruments;
+    sum_instruments = parseFloat($("#sum-instruments").text()) || 0;
+    ending_cash = parseFloat($("#ending-cash").text()) || 0;
+    if (_delimiter == '.') {  // es
+      sum_instruments = parseFloat($("#sum-instruments").text().replace(".", "").replace(",", ".")) || 0;
+      ending_cash = parseFloat($("#ending-cash").text().replace(".", "").replace(",", ".")) || 0;
+    }
+    instruments_difference = ending_cash - sum_instruments;
     if (sum_instruments != ending_cash) {
       var result = confirm("<%= t('activerecord.attributes.cash_desk_closing.instruments_neq_closing_question') %>");
       if (!result) {
