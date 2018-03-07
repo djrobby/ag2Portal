@@ -185,6 +185,10 @@ class Ability
     # ag2Gest
     if user.has_role? :ag2Gest_User
       can :crud, Client
+      can :crud, CashDeskClosing
+      can :crud, CashDeskClosingItem
+      can :crud, CashDeskClosingInstrument
+      can :crud, CashMovement
       can :crud, PaymentMethod
       can :crud, SaleOffer
       can :crud, SaleOfferItem
@@ -262,6 +266,10 @@ class Ability
       can :crud, ContractedTariff
     elsif user.has_role? :ag2Gest_Guest
       can :read, Client
+      can :read, CashDeskClosing
+      can :read, CashDeskClosingItem
+      can :read, CashDeskClosingInstrument
+      can :read, CashMovement
       can :read, PaymentMethod
       can :read, SaleOffer
       can :read, SaleOfferItem
@@ -339,6 +347,10 @@ class Ability
       can :read, ContractedTariff
     elsif user.has_role? :ag2Gest_Banned
       cannot :manage, Client
+      cannot :manage, CashDeskClosing
+      cannot :manage, CashDeskClosingItem
+      cannot :manage, CashDeskClosingInstrument
+      cannot :manage, CashMovement
       cannot :manage, PaymentMethod
       cannot :manage, Client
       cannot :manage, PaymentMethod

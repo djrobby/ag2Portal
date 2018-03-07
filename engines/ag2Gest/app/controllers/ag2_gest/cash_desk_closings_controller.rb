@@ -4,80 +4,14 @@ module Ag2Gest
   class CashDeskClosingsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:close_cash_form,
+                                               :close_cash_report]
     helper_method :sort_column
-
-    # GET /cash_desk_closings
-    # GET /cash_desk_closings.json
-    def index
-      manage_filter_state
-
-      project = params[:Project]
-      office = params[:Office]
-      company = params[:Company]
-      from = params[:From]
-      to = params[:To]
-      # OCO
-      init_oco if !session[:organization]
-      # Initialize select_tags
-      @projects = current_projects if @projects.nil?
-      @project_ids = current_projects_ids
-      @offices = current_offices if @offices.nil?
-      @companies = companies_dropdown if @companies.nil?
-
-      @search = CashDeskClosing.search do
-        with :project_id, @project_ids unless @project_ids.blank?
-        if !project.blank?
-          with :project_id, project
-        end
-        if !office.blank?
-          with :office_id, office
-        end
-        if !company.blank?
-          with :company_id, company
-        end
-        if !from.blank?
-          any_of do
-            with(:created_at).greater_than(from)
-            with :created_at, from
-          end
-        end
-        if !to.blank?
-          any_of do
-            with(:created_at).less_than(to)
-            with :created_at, to
-          end
-        end
-        order_by sort_column, "desc"
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-
-      @cash_desk_closings = @search.results
-
-      respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: @cash_desk_closings }
-        format.js
-      end
-    end
-
-    # GET /cash_desk_closings/1
-    # GET /cash_desk_closings/1.json
-    def show
-      @breadcrumb = 'read'
-      @cash_desk_closing = CashDeskClosing.find(params[:id])
-      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
-      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
-
-      respond_to do |format|
-        format.html # show.html.erb
-        format.json { render json: @cash_desk_closing }
-      end
-    end
 
     def close_cash_form
       # Right data to use:
       @close_cash = CashDeskClosing.find(params[:id])
-      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id, cash_desk_closing_items.id')
+      @cash_desk_closing_items = @close_cash.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id, cash_desk_closing_items.id')
       @instrument = @close_cash.cash_desk_closing_instruments.by_cu_value_id
 
       # This data is not neccesary & shouldn't be used
@@ -154,6 +88,77 @@ module Ag2Gest
                        type: 'application/pdf',
                        disposition: 'inline' }
         end
+      end
+    end
+
+    #
+    # Default Methods
+    #
+    # GET /cash_desk_closings
+    # GET /cash_desk_closings.json
+    def index
+      manage_filter_state
+
+      project = params[:Project]
+      office = params[:Office]
+      company = params[:Company]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = current_projects if @projects.nil?
+      @project_ids = current_projects_ids
+      @offices = current_offices if @offices.nil?
+      @companies = companies_dropdown if @companies.nil?
+
+      @search = CashDeskClosing.search do
+        with :project_id, @project_ids unless @project_ids.blank?
+        if !project.blank?
+          with :project_id, project
+        end
+        if !office.blank?
+          with :office_id, office
+        end
+        if !company.blank?
+          with :company_id, company
+        end
+        if !from.blank?
+          any_of do
+            with(:created_at).greater_than(from)
+            with :created_at, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:created_at).less_than(to)
+            with :created_at, to
+          end
+        end
+        order_by sort_column, "desc"
+        paginate :page => params[:page] || 1, :per_page => per_page || 10
+      end
+
+      @cash_desk_closings = @search.results
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @cash_desk_closings }
+        format.js
+      end
+    end
+
+    # GET /cash_desk_closings/1
+    # GET /cash_desk_closings/1.json
+    def show
+      @breadcrumb = 'read'
+      @cash_desk_closing = CashDeskClosing.find(params[:id])
+      @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
+      @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
+
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @cash_desk_closing }
       end
     end
 

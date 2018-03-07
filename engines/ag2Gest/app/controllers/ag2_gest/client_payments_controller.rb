@@ -308,8 +308,8 @@ module Ag2Gest
               if !item.save
                 break
               else
-                # cp.update_attributes(confirmation_date: Time.now)
-                # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+                cp.update_column(confirmation_date: Time.now)
+                cp.invoice.update_column(invoice_status_id: InvoiceStatus::CHARGED)
               end
             end # client_payments.each
             # Supplier payments
@@ -344,6 +344,7 @@ module Ag2Gest
               end
             end # currency_instrument_ids.each_with_index
             # Update CashDeskClosing.instruments_difference
+            instruments_difference = closing_balance - instruments_difference
             cash_desk_closing.update_column(:instruments_difference, instruments_difference)
           end
         end # ActiveRecord::Base.transaction
@@ -913,17 +914,25 @@ module Ag2Gest
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'charged-tab'
           search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'cash-tab'
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'banks-tab'
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'others-tab'
           search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         when 'fractionated-tab'
+          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
           search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
         else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)

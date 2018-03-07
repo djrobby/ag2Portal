@@ -1447,7 +1447,10 @@
   });
 
   $(".fnt-currency-quantity").change(function() {
-    sum_instruments = parseFloat($("#sum-instruments").text().replace(".", "").replace(",", ".")) || 0;
+    sum_instruments = parseFloat($("#sum-instruments").text()) || 0;
+    if (_delimiter == '.') {  // es
+      sum_instruments = parseFloat($("#sum-instruments").text().replace(".", "").replace(",", ".")) || 0;
+    }
     ival = parseFloat($(this).attr("data-ival")) || 0;
     old_qty = parseFloat(this.oldvalue) || 0;
     sum_instruments = sum_instruments - (old_qty * ival);

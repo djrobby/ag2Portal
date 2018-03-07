@@ -839,8 +839,13 @@ module Ag2Gest
 
       @breadcrumb = 'read'
       if !@@subscribers.nil?
-        @subscriber = @@subscribers.find(params[:id])
-        @nav = @@subscribers
+        begin
+          @subscriber = @@subscribers.find(params[:id])
+          @nav = @@subscribers
+        rescue
+          @subscriber = Subscriber.find(params[:id])
+          @nav = Subscriber
+        end
       else
         @subscriber = Subscriber.find(params[:id])
         @nav = Subscriber

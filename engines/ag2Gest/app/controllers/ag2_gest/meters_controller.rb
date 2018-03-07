@@ -6,7 +6,8 @@ module Ag2Gest
     load_and_authorize_resource
     helper_method :sort_column
     skip_load_and_authorize_resource :only => [ :me_update_office_select_from_company,
-                                                :me_update_company_select_from_organization]
+                                                :me_update_company_select_from_organization,
+                                                :meter_view_report]
 
     # Update office select at view from company select
     def me_update_office_select_from_company
@@ -33,6 +34,77 @@ module Ag2Gest
       end
       @json_data = { "companies" => @companies, "offices" => @offices }
       render json: @json_data
+    end
+
+     # meter report
+    def meter_view_report
+      manage_filter_state
+
+      code = params[:Code]
+      model = params[:Model]
+      brand = params[:Brand]
+      caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+
+
+      # If inverse no search is required
+      meter_code = !meter_code.blank? && meter_code[0] == '%' ? inverse_no_search(meter_code) : meter_code
+
+      @search = Meter.search do
+        if session[:office] != '0'
+          with :office_id, session[:office]
+        elsif session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !code.blank?
+          if code.class == Array
+            with :meter_code, code
+          else
+            with(:meter_code).starting_with(code)
+          end
+        end
+        if !model.blank?
+          with :meter_model_id, model
+        end
+        if !brand.blank?
+          with :meter_brand_id, brand
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:purchase_date).greater_than(from)
+            with :purchase_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:purchase_date).less_than(to)
+            with :purchase_date, to
+          end
+        end
+          #order_by :order_route, :desc
+          paginate :page => params[:page] || 1, :per_page => Meter.count
+      end
+
+      @meter_report = @search.results.sort_by{ |t| [t.order_route, t.order_sequence] }
+
+      if !@meter_report.blank?
+        title = t("activerecord.models.meter.few")
+        @from = formatted_date(@meter_report.first.created_at)
+        @to = formatted_date(@meter_report.last.created_at)
+        respond_to do |format|
+          # Render PDF
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}_#{@from}-#{@to}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+        end
+      end
     end
 
     # def me_find_meter
@@ -142,6 +214,8 @@ module Ag2Gest
       @reading_incidence = ReadingIncidenceType.all
       @reading_type = ReadingType.single_manual_reading
       @project_dropdown = projects_dropdown
+      @subscriber = @meter.subscribers.activated.size > 1 ? nil : @meter.subscribers.activated.first
+      @service_point = @meter.service_points.size > 1 ? nil : @meter.service_points.first
 
       respond_to do |format|
         format.html # show.html.erb
@@ -238,77 +312,6 @@ module Ag2Gest
       end
     end
 
-     # meter report
-    def meter_view_report
-      manage_filter_state
-
-      code = params[:Code]
-      model = params[:Model]
-      brand = params[:Brand]
-      caliber = params[:Caliber]
-      from = params[:From]
-      to = params[:To]
-      # OCO
-      init_oco if !session[:organization]
-
-
-      # If inverse no search is required
-      meter_code = !meter_code.blank? && meter_code[0] == '%' ? inverse_no_search(meter_code) : meter_code
-
-      @search = Meter.search do
-        if session[:office] != '0'
-          with :office_id, session[:office]
-        elsif session[:organization] != '0'
-          with :organization_id, session[:organization]
-        end
-        if !code.blank?
-          if code.class == Array
-            with :meter_code, code
-          else
-            with(:meter_code).starting_with(code)
-          end
-        end
-        if !model.blank?
-          with :meter_model_id, model
-        end
-        if !brand.blank?
-          with :meter_brand_id, brand
-        end
-        if !caliber.blank?
-          with :caliber_id, caliber
-        end
-        if !from.blank?
-          any_of do
-            with(:purchase_date).greater_than(from)
-            with :purchase_date, from
-          end
-        end
-        if !to.blank?
-          any_of do
-            with(:purchase_date).less_than(to)
-            with :purchase_date, to
-          end
-        end
-          #order_by :order_route, :desc
-          paginate :page => params[:page] || 1, :per_page => Meter.count
-      end
-
-      @meter_report = @search.results.sort_by{ |t| [t.order_route, t.order_sequence] }
-
-      if !@meter_report.blank?
-        title = t("activerecord.models.meter.few")
-        @from = formatted_date(@meter_report.first.created_at)
-        @to = formatted_date(@meter_report.last.created_at)
-        respond_to do |format|
-          # Render PDF
-          format.pdf { send_data render_to_string,
-                       filename: "#{title}_#{@from}-#{@to}.pdf",
-                       type: 'application/pdf',
-                       disposition: 'inline' }
-        end
-      end
-    end
-
     private
 
     def sort_column
@@ -348,13 +351,18 @@ module Ag2Gest
 
     def projects_dropdown
       if session[:office] != '0'
-        Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
+        _projects = Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
       elsif session[:company] != '0'
-        Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
+        _projects = Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
       else
-        session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
+        _projects = session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
       end
     end
+
+    def projects_dropdown_ids
+      projects_dropdown.pluck(:id)
+    end
+
 
     def companies_dropdown
       if session[:company] != '0'

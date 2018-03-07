@@ -1223,7 +1223,7 @@ class Reading < ActiveRecord::Base
     string :by_period_date do
       billing_period_id
       reading_date
-      id
+      sort_id
     end
     integer :sort_id do
       sort_id
