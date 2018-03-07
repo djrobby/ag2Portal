@@ -7,6 +7,27 @@ require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
   class BillsController < ApplicationController
+
+    before_filter :authenticate_user!
+    # load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [ :check_invoice_date,
+                                                :bill_supply_pdf,
+                                                :biller_contract_pdf,
+                                                :biller_connection_contract_pdf,
+                                                :biller_pdf,
+                                                :bills_with_this_attributes,
+                                                :get_subscribers,
+                                                :subscribers_with_readings,
+                                                :subscribers_only,
+                                                :show_consumptions,
+                                                :show_pre_bills,
+                                                :bills_summary,
+                                                :status_prebills,
+                                                :status_confirm,
+                                                :confirm,
+                                                :pre_index
+                                              ]
+
     @@subscribers = nil
     @@period = nil
     @@readings = nil
@@ -26,6 +47,18 @@ module Ag2Gest
     #   @bill = @reading.generate_pre_bill
     #   redirect_to subscriber_path(@subscriber, bill: @bill.id)
     # end
+
+    def check_invoice_date
+      code = ''
+      project = Project.find(params[:project_id])
+      new_bill_date = params[:invoice_date]
+      new_bill_date = (new_bill_date[0..3] + '-' + new_bill_date[4..5] + '-' + new_bill_date[6..7]).to_date
+
+      if !Bill.is_new_bill_date_valid?(new_bill_date, project.company_id, project.office_id)
+        code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
+      end
+      render json: { "code" => code }
+    end
 
     def bill_supply_pdf
       @bill = Bill.find(params[:id])
@@ -450,7 +483,7 @@ module Ag2Gest
     end
 
     def bills_summary
-      @bills = PreBill.where(pre_group_no: params[:id])
+      @bills = PreBill.where('pre_group_no = ? AND bill_id IS NOT NULL',params[:id])
       @invoices_by_biller = PreBill.select('companies.name as company,min(invoices.invoice_no) as from_no,max(invoices.invoice_no) as to_no,sum(invoices.totals) as invoiced_total') \
                                      .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
                                      .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:id]) \

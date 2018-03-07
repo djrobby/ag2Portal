@@ -87,7 +87,7 @@ class Bill < ActiveRecord::Base
              CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_based_old_no_real_no_,
              CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
              CASE WHEN (MIN(invoices.invoice_operation_id)=1 OR MIN(invoices.invoice_operation_id)=3) AND MIN(invoices.invoice_type_id)=#{InvoiceType::WATER} THEN readings.bill_id = bills.id ELSE NULL END nullable_")
-     .group('bills.id').order('bills.id DESC')
+     .group('bills.id').order('invoices.billing_period_id DESC,bills.bill_date DESC,bills.id DESC')
   }
   scope :by_subscriber_total, -> s, t {
     joins("LEFT JOIN invoices ON bills.id=invoices.bill_id")
@@ -489,6 +489,17 @@ class Bill < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+  def self.last_billed_date(company, office)
+    joins(:project)
+    .where('projects.company_id = ? AND projects.office_id = ?',company,office)
+    .select('max(bill_date) max_bill_date_').first.max_bill_date_
+  end
+
+  def self.is_new_bill_date_valid?(new_bill_date, company, office)
+    a = last_billed_date(company, office)
+    a.nil? ? true : new_bill_date >= a
+  end
+
   def self.without_invoices
     joins('LEFT JOIN invoices ON bills.id=invoices.bill_id').where('invoices.bill_id IS NULL')
   end

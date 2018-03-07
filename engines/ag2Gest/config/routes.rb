@@ -304,6 +304,9 @@ Ag2Gest::Engine.routes.draw do
     match 'service_points/:id/change_meter/:id', :controller => 'service_points', :action => 'change_meter', :via => [:post]
     #
     # Subscribers
+    match 'subscribers/su_check_invoice_date/:office_id/:invoice_date', :controller => 'subscribers', :action => 'su_check_invoice_date'
+    match 'su_check_invoice_date/:office_id/:invoice_date', :controller => 'subscribers', :action => 'su_check_invoice_date'
+    match 'subscribers/:id/su_check_invoice_date/:office_id/:invoice_date', :controller => 'subscribers', :action => 'su_check_invoice_date'
     match 'subscribers/:id/reset_estimation', :controller => 'subscribers', :action => 'reset_estimation'
     match 'subscribers/:id/non_billable_button', :controller => 'subscribers', :action => 'non_billable_button'
     match 'subscribers/:id/billable_button', :controller => 'subscribers', :action => 'billable_button'
@@ -469,7 +472,12 @@ Ag2Gest::Engine.routes.draw do
     match 'cash_movements/cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
     match 'cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
     match 'cash_movements/:id/cm_format_number/:num/:typ', :controller => 'cash_movements', :action => 'cm_format_number'
-
+    #
+    # Bills
+    match 'bills/check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
+    match 'check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
+    match 'bills/:id/check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
+    #
     # Resources
     resources :clients
     resources :subscribers do

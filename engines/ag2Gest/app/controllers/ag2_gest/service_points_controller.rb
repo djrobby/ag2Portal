@@ -653,7 +653,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @service_point = ServicePoint.find(params[:id])
-      @readings = @service_point.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
+      @readings = @service_point.readings.paginate(:page => params[:page], :per_page => per_page).by_period_date
       @meter = @service_point.meter rescue nil
       @reading = Reading.new
       @billing_period = billing_periods_dropdown(@service_point.office_id)

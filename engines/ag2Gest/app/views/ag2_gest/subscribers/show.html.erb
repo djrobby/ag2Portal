@@ -353,9 +353,9 @@
   <div class="modal-body">
     <%= simple_form_for :bills, url: simple_bill_subscriber_path(@subscriber), remote: true do |f| %>
       <%= f.input :billing_period_id, label: I18n.t("ag2_gest.bills.index.billing_period_id"), collection: @billing_periods_reading, label_method: :to_label_, value_method: :id, input_html: { class: "large-text-field", id: "billing_period_reading" }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
+      <%= f.input :invoice_date, required: true, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", id: "invoice_date"} %>
       <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
-      <%= f.submit "Crear factura", disable_with: t("activerecord.attributes.pre_reading.loading"), class: "btn btn-primary" %>
+      <%= f.submit "Crear factura", disable_with: t("activerecord.attributes.pre_reading.loading"), class: "btn btn-primary", id: "submit_bills" %>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
     <% end %>
   </div>
@@ -1033,5 +1033,35 @@
   });
   $("#submit-simple-bill").click(function () {
     $("form.simple_bill").submit();
+  });
+
+  jQuery(function($) {
+    $("#invoice_date").on('changeDate', function() {
+      // preserve the current object
+      var invoice_date = $("#invoice_date").val();
+      var office_id = "<%= @subscriber.office_id %>";
+      if (invoice_date == "") {
+        return false;
+      }
+      // Right formatted date
+      invoice_date = right_date(invoice_date,"<%= I18n.locale %>");
+      // make the POST call
+      jQuery.getJSON('su_check_invoice_date/' + office_id  + '/' + invoice_date, function(data) {
+        if (data.code != "") {
+          $("#invoice_date").val("");
+          alert(data.code);
+        }
+      });
+      return false;
+    });
+
+    $("#submit_bills").click(function () { 
+      var invoice_date = $("#invoice_date").val();
+      var billing_period_reading = $("#billing_period_reading").val();
+      if (invoice_date == "" || billing_period_reading == "" ) {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      }
+    });
   });
 </script>

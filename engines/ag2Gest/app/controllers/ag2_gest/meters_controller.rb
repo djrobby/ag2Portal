@@ -135,7 +135,7 @@ module Ag2Gest
       @breadcrumb = 'read'
       @meter = Meter.find(params[:id])
       @details = @meter.meter_details.paginate(:page => params[:page], :per_page => per_page).by_dates
-      @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_id_desc
+      @readings = @meter.readings.paginate(:page => params[:page], :per_page => per_page).by_period_date
       @child_meters = @meter.child_meters.paginate(:page => params[:page], :per_page => per_page).by_code
       @reading = Reading.new
       @billing_period = billing_periods_dropdown(@meter.office_id)

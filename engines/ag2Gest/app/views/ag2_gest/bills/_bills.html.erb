@@ -19,6 +19,26 @@
       }
     });
   });
+  jQuery(function($) {
+    $("#invoice_date").on('changeDate', function() {
+      // preserve the current object
+      var invoice_date = $("#invoice_date").val();
+      var project_id = "<%= @bills.first.project_id %>";
+      if (invoice_date == "") {
+        return false;
+      }
+      // Right formatted date
+      invoice_date = right_date(invoice_date,"<%= I18n.locale %>");
+      // make the POST call
+      jQuery.getJSON('check_invoice_date/' + project_id  + '/' + invoice_date, function(data) {
+        if (data.code != "") {
+          $("#invoice_date").val("");
+          alert(data.code);
+        }
+      });
+      return false;
+    });
+  });
 </script>
 
 <div class="row-fluid grey-frame">
@@ -172,13 +192,26 @@
       <h4>Confirmar facturas</h4>
     </div>
     <div class="modal-body">      
-      <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker", value: formatted_date(Date.today)} %>
-      <%= f.input :invoice_date, required: false, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @billing_starting_date} %>
+      <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker", value: formatted_date(Date.today), id: "confirmation_date"} %>
+      <%= f.input :invoice_date, required: true, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @billing_starting_date, id: "invoice_date"} %>
       <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @billing_ending_date} %>
     </div>
     <div class="modal-footer">
-      <%= f.button :submit, "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <%= f.button :submit, "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', :id => "submit_pre_bill" %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
 </div>
+
+<script>
+  jQuery(function($) {
+    $("#submit_pre_bill").click(function () { 
+      var confirmation_date = $("#confirmation_date").val();
+      var invoice_date = $("#invoice_date").val();
+      if (confirmation_date == "" || invoice_date == "" ) {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      }
+    });
+  });
+</script>

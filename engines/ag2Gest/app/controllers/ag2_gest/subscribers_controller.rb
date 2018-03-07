@@ -35,8 +35,20 @@ module Ag2Gest
                                                 :reset_estimation,
                                                 :billable_button,
                                                 :disable_bank_account,
-                                                :disable_tariff_button]
+                                                :disable_tariff_button,
+                                                :su_check_invoice_date]
 
+  def su_check_invoice_date
+    code = ''
+    office = Office.find(params[:office_id])
+    new_bill_date = params[:invoice_date]
+    new_bill_date = (new_bill_date[0..3] + '-' + new_bill_date[4..5] + '-' + new_bill_date[6..7]).to_date
+
+    if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
+      code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
+    end
+    render json: { "code" => code }
+  end
 
    # update subscriber estimation
    def reset_estimation
@@ -218,22 +230,26 @@ module Ag2Gest
       @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, nil, Date.today)
       # @reading.generate_pre_bill(nil,nil,3)
       Sunspot.index! [@bill] unless @bill.blank?
-      @search_bills = Bill.search do
-        with :subscriber_id, params[:id]
-        order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-      @search_readings = Reading.search do
-        with :subscriber_id, params[:id]
-        # order_by :billing_period_id, :desc
-        # order_by :reading_date, :desc
-        # order_by :reading_index
-        order_by :sort_id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
+      # @search_bills = Bill.search do
+      #   with :subscriber_id, params[:id]
+      #   order_by :created_at, :asc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @search_readings = Reading.search do
+      #   with :subscriber_id, params[:id]
+      #   # order_by :billing_period_id, :desc
+      #   # order_by :reading_date, :desc
+      #   # order_by :reading_index
+      #   order_by :sort_id, :desc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @subscriber_readings = @search_readings.results
+      # @subscriber_bills = @search_bills.results
 
-      @subscriber_readings = @search_readings.results
-      @subscriber_bills = @search_bills.results
+      @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
+      invoice_status = (0..99).to_a.join(',')
+      @subscriber_bills = Bill.by_subscriber_full(params[:id], invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
+
       respond_to do |format|
         format.js { render "simple_bill" }
       end
@@ -1213,23 +1229,28 @@ module Ag2Gest
       invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
       @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)
       Sunspot.index! [@bill] unless @bill.blank?
-      @search_bills = Bill.search do
-        with :subscriber_id, params[:id]
-        order_by :created_at, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-      @subscriber_bills = @search_bills.results
-      @search_readings = Reading.search do
-        with :subscriber_id, params[:id]
-        # order_by :billing_period_id, :desc
-        # order_by :reading_date, :desc
-        # order_by :reading_index
-        order_by :sort_id, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
+      # @search_bills = Bill.search do
+      #   with :subscriber_id, params[:id]
+      #   order_by :created_at, :asc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @subscriber_bills = @search_bills.results
+      # @search_readings = Reading.search do
+      #   with :subscriber_id, params[:id]
+      #   # order_by :billing_period_id, :desc
+      #   # order_by :reading_date, :desc
+      #   # order_by :reading_index
+      #   order_by :sort_id, :desc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
 
-      @subscriber_readings = @search_readings.results
-      # @subscriber_bills = Bill.where(subscriber_id: params[:id])
+      # @subscriber_readings = @search_readings.results
+      # # @subscriber_bills = Bill.where(subscriber_id: params[:id])
+
+      @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
+      invoice_status = (0..99).to_a.join(',')
+      @subscriber_bills = Bill.by_subscriber_full(params[:id], invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
+
       respond_to do |format|
         format.json { render json: @subscriber_bills }
         format.js { }

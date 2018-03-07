@@ -80,6 +80,7 @@ es:
         debt_c: "Su total pendiente asciende a"
         title_summary: "Resumen Facturado, Grupo Nº: "
         summary: "Resumen Facturado"
+        alert_invoice_date: "La Fecha de factura introducida es menor que la ultima fecha de factura existente."
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

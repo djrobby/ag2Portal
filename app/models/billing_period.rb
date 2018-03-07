@@ -52,7 +52,7 @@ class BillingPeriod < ActiveRecord::Base
     joins(:billing_frequency, :readings)
     .where('readings.bill_id IS NULL AND readings.subscriber_id = ? AND readings.reading_type_id IN (?)', s, ReadingType.without_control)
     .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
-             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_")
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_").group('billing_periods.id')
     .by_period_desc
   }
 

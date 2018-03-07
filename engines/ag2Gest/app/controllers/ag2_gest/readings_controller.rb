@@ -145,7 +145,7 @@ module Ag2Gest
         if !route.blank?
           with :reading_route_id, route
         end
-        order_by :reading_date, :desc
+        order_by :by_period_date, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
       end
       @readings = @search.results

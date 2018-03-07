@@ -341,7 +341,11 @@
 <% end %>
 <div>
   <%= f.input :id, :as => :hidden%>
-  <label class="multi-field-label-two"><%= f.input :fiscal_id, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <% if @client.subscribers.size > 0 && @breadcrumb == 'update' %>
+    <label class="multi-field-label-two"><%= f.input :fiscal_id, disabled: true, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field' }, label_html: { class: 'form-label' } %> </label>
+  <% else %>
+    <label class="multi-field-label-two"><%= f.input :fiscal_id, required: true, input_html: { onkeyup: "caps(this)", class: 'large-text-field iconify' }, label_html: { class: 'form-label' } %> </label>
+  <% end %>
   <label class="multi-field-label-two"> <%= f.input :client_code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'large-text-field geniconify', maxlength: 11 }, label_html: { class: 'form-label' } %> </label>
 </div>
 <%= f.input :company, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>

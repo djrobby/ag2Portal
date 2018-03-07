@@ -74,6 +74,7 @@ en:
         debt_c: "Your current pending debt is"
         title_summary: "Billed Summary, Group Nº: "
         summary: "Billed Summary"
+        alert_invoice_date: "This invoice date is less than the last existing invoice date."
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"
