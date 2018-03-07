@@ -3,3 +3,8 @@
   <td></td>
   <td align="right"><%= number_with_precision(cash_desk_closing.total_instruments, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cash_desk_closing.total_instruments.blank? %></td>
 <tr>
+<tr class="tr-no-top-border tr-no-top-padding">
+  <td></td>
+  <td align="right"><%= t('activerecord.attributes.cash_desk_closing.instruments_difference') %></td>
+  <td align="right"><%= number_with_precision(cash_desk_closing.instruments_difference, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cash_desk_closing.total_instruments.blank? %></td>
+<tr>
