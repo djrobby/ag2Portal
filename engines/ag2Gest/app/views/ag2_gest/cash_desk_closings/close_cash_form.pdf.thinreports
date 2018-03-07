@@ -50,13 +50,15 @@ report.layout.config.list(:instrument) do |c|
   c.events.on :page_footer_insert do |e|
     # Display page sutotals
     e.section.item(:total_full_c).value I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total")
-    e.section.item(:total_amount).value number_with_precision(p_total_amount, precision: @instrument.first.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:total_amount).value number_with_precision(@close_cash.total_instruments, precision: @instrument.first.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:instrument_diference_c).value I18n.t("activerecord.attributes.cash_desk_closing.instruments_difference") + ":"
+    e.section.item(:instrument_diference).value number_with_precision(@close_cash.instruments_difference, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
   end
   c.events.on :footer_insert do |e|
     # Display page sutotals
     e.section.item(:detail).value I18n.t("ag2_gest.bills.index.totals")
     e.section.item(:cash_movement_c).value I18n.t("activerecord.attributes.cash_desk_closing.cash_movement") + ":"
-    e.section.item(:cash_movement).value number_with_precision(@close_cash.total_cash_movement, precision: 2, delimiter: I18n.locale == :es ? "." : ",")    
+    e.section.item(:cash_movement).value number_with_precision(@close_cash.total_cash_movement, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
     e.section.item(:closing_balance_c).value I18n.t("activerecord.attributes.cash_desk_closing.closing_balance") + ":"
     e.section.item(:closing_balance).value number_with_precision(@close_cash.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
     e.section.item(:opening_balance_c).value  I18n.t("activerecord.attributes.cash_desk_closing.opening_balance") + ":"
@@ -142,13 +144,20 @@ report.page.values(printed_at: Time.now,
 report.page.list(:instrument).header do |header|
 	header.item(:instrument_title).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.currency_instruments")
 	header.item(:currency_c).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.currency")
-	header.item(:quantity_c).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.quantity")
+	header.item(:quantity_c).value I18n.t("activerecord.attributes.cash_desk_closing_instrument.amount")
 end
 
 @instrument.each do |i|
 	report.page.list(:instrument).add_row do |row|
-		row.item(:currency).value i.currency_instrument.type_label + " " + number_with_precision(i.currency_instrument.value_i, precision: i.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",") unless i.currency_instrument.value_i.blank?
-		row.item(:quantity).value i.quantity unless i.quantity.blank?
+    _currency = i.currency_instrument.type_label
+    if i.currency_instrument.type_i < 3
+      _currency = _currency + " " + number_with_precision(i.currency_instrument.value_i, precision: i.currency_instrument.currency.minor_unit, delimiter: I18n.locale == :es ? "." : ",")
+    end
+    if !i.quantity.blank? && !i.quantity.zero? && i.currency_instrument.type_i < 3
+      _currency = _currency + " x " + i.quantity.to_s
+    end
+    row.item(:currency).value _currency unless i.currency_instrument.value_i.blank?
+		row.item(:quantity).value i.amount unless i.amount.blank?
 	end
 	report.page.list(:instrument) do |list|
 		p_total_amount += i.amount unless i.amount.blank?
