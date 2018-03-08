@@ -708,6 +708,22 @@ class Subscriber < ActiveRecord::Base
     end
   end
 
+  def self.current_debt(i)
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i}
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        WHERE client_payments.subscriber_id = #{i}
+        ) a"
+    ).first["debt"]
+  end
+
   #
   # Records navigator
   #

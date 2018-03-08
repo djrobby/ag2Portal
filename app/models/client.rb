@@ -381,6 +381,22 @@ class Client < ActiveRecord::Base
     code
   end
 
+  def self.current_debt(i)
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.client_id = #{i}
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        WHERE client_payments.client_id = #{i}
+        ) a"
+    ).first["debt"]
+  end
+
   def self.to_csv(array, company_id=nil)
     column_names = [I18n.t('activerecord.csv_sage200.supplier.c001'),
                     I18n.t('activerecord.csv_sage200.supplier.c002'),
