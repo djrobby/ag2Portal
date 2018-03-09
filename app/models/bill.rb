@@ -304,7 +304,7 @@ class Bill < ActiveRecord::Base
       cur_no_to_use_as_reference(_cur)
     else
       # Returns SS + NNNNNNNNN from SERIAL (2) & NFACT (8)
-      _old[0..1] + '0' + _old[2..9] rescue cur_no_to_use_as_reference(_cur)
+      _old[0..1] + '00' + _old[3..9] rescue cur_no_to_use_as_reference(_cur)
     end
   end
 
