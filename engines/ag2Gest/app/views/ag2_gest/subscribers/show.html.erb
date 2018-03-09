@@ -97,11 +97,11 @@
         <i id="icon_up" class="icon-thumbs-up <%= 'hide' unless !@subscriber.non_billable %>"></i> &nbsp; <a id='non_billable_button' class="btn btn-primary btn-mini nextBtn <%= 'hide' unless !@subscriber.non_billable %>"><%= t('activerecord.attributes.subscriber.non_billable_button') %></a>
       </td>
       <td class="bolded" id="show_current_debt_label"><%= t('activerecord.attributes.subscriber.debt') %>:</td>
-      <td>
-        <a id='sub_load_debt_button' class="btn btn-primary btn-mini nextBtn"><%= t(:view) %></a>
-        <span class="highlighted bolded" id="show_current_debt"><%= t(:debt_message) %></span>
-      </td>
-      <!--<td class="highlighted bolded" id="show_current_debt"><%#= t(:debt_message) %></td>-->
+      <!--<td>
+        <a id='sub_load_debt_button' class="btn btn-primary btn-mini nextBtn"><%#= t(:view) %></a>
+        <span class="highlighted bolded" id="show_current_debt"><%#= t(:debt_message) %></span>
+      </td>-->
+      <td class="highlighted bolded" id="show_current_debt"><%= number_with_precision(@current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.deposit') %>:</b></td>
       <td colspan="2" class="highlighted bolded"><%= number_with_precision(@subscriber.deposit, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @subscriber.deposit.blank? %></td>
     </tr>
@@ -678,8 +678,8 @@
 
   // When DOM is loaded
   $(document).ready(function () {
-    $("#show_current_debt").hide();
-    $("#sub_load_debt_button").show();
+    // $("#show_current_debt").hide();
+    // $("#sub_load_debt_button").show();
 
     $("#billable_button").click(function(){
       var subscriber_id = "<%= @subscriber.id %>"
@@ -1055,7 +1055,7 @@
       return false;
     });
 
-    $("#submit_bills").click(function () { 
+    $("#submit_bills").click(function () {
       var invoice_date = $("#invoice_date").val();
       var billing_period_reading = $("#billing_period_reading").val();
       if (invoice_date == "" || billing_period_reading == "" ) {

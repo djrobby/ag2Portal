@@ -375,6 +375,10 @@ class Subscriber < ActiveRecord::Base
     invoices.sum(&:debt)
   end
 
+  def current_debt
+    Subscriber.current_debt_calc(self.id)
+  end
+
   # Historical estimation (based on all invoices)
   def total_consumption_estimated
     invoices.reject(&:marked_for_destruction?).sum(:consumption_estimated)
@@ -708,7 +712,10 @@ class Subscriber < ActiveRecord::Base
     end
   end
 
-  def self.current_debt(i)
+  def self.current_debt_calc(i=nil)
+    if i.nil?
+      i = self.id
+    end
     ActiveRecord::Base.connection.exec_query(
       "SELECT SUM(total)-SUM(collected) as debt FROM
         (

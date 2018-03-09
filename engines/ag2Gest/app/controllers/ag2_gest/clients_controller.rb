@@ -322,7 +322,7 @@ module Ag2Gest
               .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       @accounts = ClientBankAccount.by_client_full(@client.id)
                   .paginate(:page => params[:page] || 1, :per_page => per_page || 10)
-      @current_debt = @client.total_existing_debt
+      @current_debt = @client.current_debt
       @payment_methods = []
       @ledger_accounts = []
       @classes = []

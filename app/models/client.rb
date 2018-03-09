@@ -259,7 +259,8 @@ class Client < ActiveRecord::Base
   end
 
   def current_debt
-    invoices.sum(&:current_debt)
+    Client.current_debt_calc(self.id)
+    # invoices.sum(&:current_debt)
   end
 
   def active_yes_no
@@ -381,7 +382,10 @@ class Client < ActiveRecord::Base
     code
   end
 
-  def self.current_debt(i)
+  def self.current_debt_calc(i=nil)
+    if i.nil?
+      i = self.id
+    end
     ActiveRecord::Base.connection.exec_query(
       "SELECT SUM(total)-SUM(collected) as debt FROM
         (

@@ -857,7 +857,7 @@ module Ag2Gest
       @meter = @subscriber.meter rescue nil
       @meter_is_shared = @subscriber.meter.is_shared? rescue false
       @client = Client.find(@subscriber.client_id)
-      # @current_debt = @subscriber.total_existing_debt
+      @current_debt = @subscriber.current_debt
 
       #*** For modal dropdowns ***
       # _add_meter, _new_reading
