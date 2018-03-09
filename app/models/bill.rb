@@ -78,11 +78,14 @@ class Bill < ActiveRecord::Base
     joins("LEFT JOIN invoices ON bills.id=invoices.bill_id")
     .joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id")
     .joins("LEFT JOIN readings ON bills.reading_2_id=readings.id")
+    .joins("LEFT JOIN client_payments ON bills.id=client_payments.bill_id")
     .where("bills.subscriber_id = #{s} AND bills.invoice_status_id IN (#{t}) AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
     .select("bills.id bill_id_, bills.bill_no bill_no_, bills.old_no old_no_, bills.invoice_status_id bill_status_id_,
              MIN(invoices.invoice_type_id) bill_type_id_, MIN(invoices.invoice_operation_id) bill_operation_id_,
              bills.client_id client_id_, bills.subscriber_id subscriber_id_,
              bills.bill_date bill_date_, MIN(invoices.payday_limit) bill_payday_limit_, SUM(invoices.totals) bill_total_,
+             (SUM(invoices.receivables) - CASE WHEN ISNULL(client_payments.amount) THEN 0 ELSE SUM(client_payments.amount) END) bill_debt_,
+             CASE WHEN ISNULL(client_payments.amount) THEN 0 ELSE SUM(client_payments.amount) END bill_charged_,
              CASE WHEN ISNULL(bills.old_no) THEN CONCAT(SUBSTR(bills.bill_no,1,12),'-',SUBSTR(bills.bill_no,13,4),'-',SUBSTR(bills.bill_no,17,7)) ELSE bills.old_no END bill_right_no_,
              CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_based_old_no_real_no_,
              CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
