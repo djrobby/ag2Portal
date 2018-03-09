@@ -303,14 +303,24 @@ class Bill < ActiveRecord::Base
       # Returns current invoice no formatted for reference
       cur_no_to_use_as_reference(_cur)
     else
-      # Returns SS + NNNNNNNNN from SERIAL (2) & NFACT (8)
-      _old[0..1] + '00' + _old[3..9] rescue cur_no_to_use_as_reference(_cur)
+      # Returns old invoice no formatted for reference
+      old_no_to_use_as_reference(_old, _cur)
     end
   end
 
   def cur_no_to_use_as_reference(_cur)
-    # Returns OO + YY + NNNNNNN from OFFICE (2) & YEAR (2) & NO (7)
+    # Returns 11 digits: OO + YY + NNNNNNN from OFFICE (2) & YEAR (2) & NO (7)
     _cur[3..4] + _cur[7..8] + _cur[9..15] rescue ''
+  end
+
+  def old_no_to_use_as_reference(_old, _cur)
+    # Returns 11 digits: SS + 0 + NNNNNNNN from SERIAL (2) & NFACT (8)
+    _a = _old.split('/')
+    if _a[0].first == 'A'
+      _a[0][1..2].rjust(2, '0') + '0' + a[1][0..-1].rjust(8, '0') rescue cur_no_to_use_as_reference(_cur)
+    else
+      _a[0][0..1].rjust(2, '0') + '0' + a[1][0..-1].rjust(8, '0') rescue cur_no_to_use_as_reference(_cur)
+    end
   end
 
   def consumption
