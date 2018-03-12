@@ -1,5 +1,5 @@
 /*
- * Methods to add 'fields' to the Company Bank accounts table 
+ * Methods to add 'fields' to the Company Bank accounts table
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
  *  1. Modal window must be named (ie, 'new-item-fields')
@@ -22,18 +22,18 @@ var co_accountFieldsUI = {
                 e.stopPropagation();
                 return false;
             }
-            co_formHandler.appendFields(sel2NoMatches);
-            co_formHandler.hideForm();
+            co_account_formHandler.appendFields(sel2NoMatches);
+            co_account_formHandler.hideForm();
         });
 
         $('#cancelAccountButton').on('click', function(e) {
-          co_formHandler.removeFields();
-          co_formHandler.hideForm();
+          co_account_formHandler.removeFields();
+          co_account_formHandler.hideForm();
         });
     }
 };
 
-var co_cfg = {
+var co_account_cfg = {
     formId: '#new-account-fields',
     tableId: '#accounts-table',
     inputFieldClassSelector: '.field',
@@ -42,16 +42,16 @@ var co_cfg = {
     }
 };
 
-var co_formHandler = {
+var co_account_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
 		    // the DOM (we'll attach them later).
-        var inputFields = $(co_cfg.formId + ' ' + co_cfg.inputFieldClassSelector);
+        var inputFields = $(co_account_cfg.formId + ' ' + co_account_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
-        co_rowBuilder.addRow(co_cfg.getTBodySelector(), inputFields);
+        co_rowBuilder.addRow(co_account_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
         $('select.wsel2').select2('destroy');
@@ -67,7 +67,7 @@ var co_formHandler = {
     removeFields: function () {
         // Get a handle on all the input fields in the form and detach them from
         // the DOM (we'll attach them later).
-        var inputFields = $(co_cfg.formId + ' ' + co_cfg.inputFieldClassSelector);
+        var inputFields = $(co_account_cfg.formId + ' ' + co_account_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Change value of _destroy field
@@ -83,11 +83,11 @@ var co_formHandler = {
         // Update and display totals NOT HERE!
         //$('#accounts-table').trigger('totals');
         // Hide modal
-        $(co_cfg.formId).modal('hide');
+        $(co_account_cfg.formId).modal('hide');
     }
 };
 
-var co_rowBuilder = function() {
+var co_account_rowBuilder = function() {
     // Private property that define the default <TR> element text.
     var row = $('<tr>', { class: 'fields' });
 

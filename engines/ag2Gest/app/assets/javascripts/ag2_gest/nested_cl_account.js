@@ -1,5 +1,5 @@
 /*
- * Methods to add 'fields' to the Supplier Bank accounts table
+ * Methods to add 'fields' to the Client Bank accounts table
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
  *  1. Modal window must be named (ie, 'new-item-fields')
@@ -9,31 +9,31 @@
  * >> This global methods are in main nested.js!!
  */
 
-var su_accountFieldsUI = {
+var cl_accountFieldsUI = {
     init: function(sel2NoMatches, invalidIBAN, tryAgain) {
         var validationSettings = {
             errorMessagePosition : 'element'
         };
 
         $('#addAccountButton').on('click', function(e) {
-            var isValidIBAN = validate_iban(invalidIBAN, tryAgain, $('#fnt-country').val(), $('#fnt-iban-dc').val(), $('#fnt-bank').val(), $('#fnt-office').val(), $('#fnt-account').val(), 'su_check_iban');
+            var isValidIBAN = validate_iban(invalidIBAN, tryAgain, $('#fnt-country').val(), $('#fnt-iban-dc').val(), $('#fnt-bank').val(), $('#fnt-office').val(), $('#fnt-account').val(), 'cl_check_iban');
             var isValid = $('#new-account-fields').validate(false, validationSettings);
             if (!isValid || !isValidIBAN) {
                 e.stopPropagation();
                 return false;
             }
-            su_account_formHandler.appendFields(sel2NoMatches);
-            su_account_formHandler.hideForm();
+            cl_account_formHandler.appendFields(sel2NoMatches);
+            cl_account_formHandler.hideForm();
         });
 
         $('#cancelAccountButton').on('click', function(e) {
-          su_account_formHandler.removeFields();
-          su_account_formHandler.hideForm();
+          cl_account_formHandler.removeFields();
+          cl_account_formHandler.hideForm();
         });
     }
 };
 
-var su_account_cfg = {
+var cl_account_cfg = {
     formId: '#new-account-fields',
     tableId: '#accounts-table',
     inputFieldClassSelector: '.field',
@@ -42,16 +42,16 @@ var su_account_cfg = {
     }
 };
 
-var su_account_formHandler = {
+var cl_account_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
 		    // the DOM (we'll attach them later).
-        var inputFields = $(su_account_cfg.formId + ' ' + su_account_cfg.inputFieldClassSelector);
+        var inputFields = $(cl_account_cfg.formId + ' ' + cl_account_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
-        su_account_rowBuilder.addRow(su_account_cfg.getTBodySelector(), inputFields);
+        cl_account_rowBuilder.addRow(cl_account_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
         $('select.wsel2').select2('destroy');
@@ -67,7 +67,7 @@ var su_account_formHandler = {
     removeFields: function () {
         // Get a handle on all the input fields in the form and detach them from
         // the DOM (we'll attach them later).
-        var inputFields = $(su_account_cfg.formId + ' ' + su_account_cfg.inputFieldClassSelector);
+        var inputFields = $(cl_account_cfg.formId + ' ' + cl_account_cfg.inputFieldClassSelector);
         inputFields.detach();
 
         // Change value of _destroy field
@@ -83,11 +83,11 @@ var su_account_formHandler = {
         // Update and display totals NOT HERE!
         //$('#accounts-table').trigger('totals');
         // Hide modal
-        $(su_account_cfg.formId).modal('hide');
+        $(cl_account_cfg.formId).modal('hide');
     }
 };
 
-var su_account_rowBuilder = function() {
+var cl_account_rowBuilder = function() {
     // Private property that define the default <TR> element text.
     var row = $('<tr>', { class: 'fields' });
 
