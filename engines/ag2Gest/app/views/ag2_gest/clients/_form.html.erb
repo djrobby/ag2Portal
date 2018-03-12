@@ -62,7 +62,7 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#client_client_code').prop('readonly', true);
@@ -70,7 +70,7 @@
       $('#client_client_code').prop('readonly', false);
     }
   });
-  
+
   jQuery(function($) {
     // not desactive client if client.subscribers.count > 0
     $("#client_active").change(function() {
@@ -201,7 +201,7 @@
       })
       return false;
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
@@ -253,7 +253,7 @@
       }
     });
   });
-  
+
   // Code to validate Fiscal Id
   function cl_validate_fiscal_id() {
     // make a POST call and replace the content
@@ -270,7 +270,7 @@
         if ($('#client_fiscal_id').val() != "$err") {
           $('#fnt_fiscal_id').val($('#client_fiscal_id').val());
         } else {
-          $('#fnt_fiscal_id').val('');            
+          $('#fnt_fiscal_id').val('');
         }
         $("#new-entity").modal('show');
         $('#new-entity').on('hidden', function() {
@@ -367,7 +367,7 @@
   <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.association :street_type, collection: @street_types, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three-wider"> <%= f.input :street_name, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three-thinner"> <%= f.input :street_number, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
@@ -377,13 +377,13 @@
   <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :zipcode, collection: @zipcodes, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.association :region, collection: @regions, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-two"> <%= f.association :country, collection: @countries, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :region, collection: @regions, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-two"> <%= f.association :country, collection: @countries, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <%= f.input :remarks, :as => :text, :input_html => { :class => 'x-large-text-field', :rows => 2 }, :label_html => { :class => 'form-label' } %>
 <%= f.input :entity_id, :as => :hidden %>

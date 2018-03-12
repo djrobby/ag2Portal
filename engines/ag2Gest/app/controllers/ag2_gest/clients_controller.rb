@@ -3,6 +3,7 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class ClientsController < ApplicationController
     before_filter :authenticate_user!
+    before_filter :set_defaults_for_new_and_edit, only: [:new, :edit]
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:cl_update_textfields_from_organization,
                                                :update_province_textfield_from_town,
@@ -22,14 +23,12 @@ module Ag2Gest
       bank = params[:bank]
       if bank != '0'
         @bank = Bank.find(bank)
-        @offices = @bank.blank? ? BankOffice.order(:bank_id, :code) : @bank.bank_offices.order(:bank_id, :code)
+        @offices = @bank.blank? ? bank_offices_array : bank_offices_array(@bank)
       else
-        @offices = BankOffice.order(:bank_id, :code)
+        @offices = bank_offices_array
       end
-      # Offers array
-      @offices_dropdown = bank_offices_array(@offices)
       # Setup JSON
-      @json_data = { "office" => @offices_dropdown }
+      @json_data = { "office" => @offices }
       render json: @json_data
     end
 
@@ -46,7 +45,7 @@ module Ag2Gest
       client_id = params[:id]
       @client = Client.find(client_id)
       @subscriber = @client.subscribers.activated.count
-      @json_data = { "subscriber_count" => @subscriber}
+      @json_data = { "subscriber_count" => @subscriber }
 
       respond_to do |format|
         format.html #
@@ -110,7 +109,7 @@ module Ag2Gest
       end
     end
 
-    # Update town, province, region and country text fields at view from zip code select
+    # Update town, province, region and country text fields at view from zipcode select
     def update_province_textfield_from_zipcode
       @zipcode = Zipcode.find(params[:id])
       @town = Town.find(@zipcode.town)
@@ -346,15 +345,6 @@ module Ag2Gest
       @breadcrumb = 'create'
       @client = Client.new
       @payment_methods = payment_methods_dropdown
-      @ledger_accounts = ledger_accounts_dropdown
-      @classes = bank_account_classes_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = countries_dropdown
 
       respond_to do |format|
         format.html # new.html.erb
@@ -367,15 +357,6 @@ module Ag2Gest
       @breadcrumb = 'update'
       @client = Client.find(params[:id])
       @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
-      @ledger_accounts = ledger_accounts_dropdown
-      @classes = bank_account_classes_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
-      @towns = towns_dropdown
-      @provinces = provinces_dropdown
-      @zipcodes = zipcodes_dropdown
-      @regions = Region.order(:name)
-      @countries = countries_dropdown
     end
 
     # POST /clients
@@ -390,15 +371,8 @@ module Ag2Gest
           format.html { redirect_to @client, notice: crud_notice('created', @client) }
           format.json { render json: @client, status: :created, location: @client }
         else
-          @classes = bank_account_classes_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          set_defaults_for_new_and_edit()
           @payment_methods = payment_methods_dropdown
-          @ledger_accounts = ledger_accounts_dropdown
-          @towns = towns_dropdown
-          @provinces = provinces_dropdown
-          @zipcodes = zipcodes_dropdown
-          @countries = countries_dropdown
           format.html { render action: "new" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -418,15 +392,8 @@ module Ag2Gest
                         notice: (crud_notice('updated', @client) + "#{undo_link(@client)}").html_safe }
           format.json { head :no_content }
         else
-          @classes = bank_account_classes_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          set_defaults_for_new_and_edit()
           @payment_methods = @client.organization.blank? ? payment_methods_dropdown : payment_payment_methods(@client.organization_id)
-          @ledger_accounts = ledger_accounts_dropdown
-          @towns = towns_dropdown
-          @provinces = provinces_dropdown
-          @zipcodes = zipcodes_dropdown
-          @countries = countries_dropdown
           format.html { render action: "edit" }
           format.json { render json: @client.errors, status: :unprocessable_entity }
         end
@@ -452,56 +419,123 @@ module Ag2Gest
 
     private
 
+    # Filters
+    def set_empty_defaults_for_new_and_edit
+      @street_types = []
+      @ledger_accounts = []
+      @towns = []
+      @provinces = []
+      @zipcodes = []
+      @regions = []
+      @countries = []
+      @banks = []
+      @offices = []
+      @classes = []
+    end
+
+    def set_defaults_for_new_and_edit
+      @street_types = street_types_array
+      @ledger_accounts = ledger_accounts_dropdown
+      @towns = towns_array
+      @provinces = provinces_array
+      @zipcodes = zipcodes_array
+      @regions = regions_array
+      @countries = country_array
+      @banks = banks_array
+      @offices = bank_offices_array
+      @classes = bank_account_classes_array
+    end
+
+    def street_types_dropdown
+      StreetType.order(:street_type_code) \
+                .select("id, CONCAT(street_type_code, ' (', street_type_description, ')') to_label_")
+    end
+
     def bank_account_classes_dropdown
-      BankAccountClass.all(order: 'name')
+      BankAccountClass.order(:name) \
+                      .select("id, name to_label_")
+      # BankAccountClass.all(order: 'name')
     end
 
     def banks_dropdown
-      Bank.order(:code)
+      Bank.order(:code) \
+          .select("id, CONCAT(code, ' ', name) to_label_")
+      # Bank.order(:code)
     end
 
-    def bank_offices_dropdown
-      BankOffice.order(:bank_id, :code).includes(:bank,:country)
+    def bank_offices_dropdown(_bank=nil)
+      if _bank.nil?
+        BankOffice.order('bank_offices.bank_id, bank_offices.code').joins(:bank)
+                  .select("bank_offices.id, CONCAT(bank_offices.code, ' ', bank_offices.name, ' (', banks.code, ')') to_label_")
+      else
+        BankOffice.order('bank_offices.bank_id, bank_offices.code').joins(:bank)
+                  .select("bank_offices.id, CONCAT(bank_offices.code, ' ', bank_offices.name, ' (', banks.code, ')') to_label_")
+                  .where("bank_office.bank_id = ?", _bank)
+      end
+      # BankOffice.order(:bank_id, :code).includes(:bank,:country)
     end
 
     def towns_dropdown
-      Town.order(:name).includes(:province)
+      Town.order('towns.name').joins(:province) \
+          .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
+      # Town.order(:name).includes(:province)
     end
 
     def provinces_dropdown
-      Province.order(:name).includes(:region)
+      Province.order('provinces.name').joins(:region)
+              .select("provinces.id, CONCAT(provinces.name, ' (', regions.name, ')') to_label_")
+      # Province.order(:name).includes(:region)
     end
 
     def zipcodes_dropdown
-      Zipcode.order(:zipcode).includes(:town,:province)
+      Zipcode.order(:zipcode).joins(:town, :province) \
+             .select("zipcodes.id, CONCAT(zipcodes.zipcode, ' - ', towns.name, ' (', provinces.name, ')') to_label_")
+      # Zipcode.order(:zipcode).includes(:town,:province)
+    end
+
+    def regions_dropdown
+      Region.order('regions.name').joins(:country) \
+            .select("regions.id, CONCAT(regions.name, ' (', countries.name, ')') to_label_")
     end
 
     def countries_dropdown
-      Country.order(:code)
+      Country.order(:name) \
+             .select("id, CONCAT(code, ' ', name) to_label_")
+      # Country.order(:code)
+    end
+
+    def street_types_array
+      _street_types = street_types_dropdown
+      _array = []
+      _street_types.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
     end
 
     def banks_array
       _banks = banks_dropdown
       _array = []
       _banks.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
 
-    def bank_offices_array(_offices)
+    def bank_offices_array(_bank=nil)
+      _bank_offices = bank_offices_dropdown(_bank)
       _array = []
-      _offices.each do |i|
-        _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
+      _bank_offices.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
 
-    def zipcodes_array
-      _zipcodes = zipcodes_dropdown
+    def bank_account_classes_array
+      _bac = bank_account_classes_dropdown
       _array = []
-      _zipcodes.each do |i|
-        _array = _array << [i.id, i.to_label]
+      _bac.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -510,7 +544,7 @@ module Ag2Gest
       _towns = towns_dropdown
       _array = []
       _towns.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -519,7 +553,16 @@ module Ag2Gest
       _provinces = provinces_dropdown
       _array = []
       _provinces.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def zipcodes_array
+      _zipcodes = zipcodes_dropdown
+      _array = []
+      _zipcodes.each do |i|
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -528,7 +571,7 @@ module Ag2Gest
       _regions = regions_dropdown
       _array = []
       _regions.each do |i|
-        _array = _array << [i.id, i.to_label]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
@@ -537,42 +580,10 @@ module Ag2Gest
       _country = countries_dropdown
       _array = []
       _country.each do |i|
-        _array = _array << [i.id, i.full_name]
+        _array = _array << [i.id, i.to_label_]
       end
       _array
     end
-
-    # def banks_dropdown
-    #   Bank.order(:code)
-    # end
-
-    # def bank_offices_dropdown
-    #   BankOffice.order(:bank_id, :code)
-    # end
-
-    # def bank_offices_array(_offices)
-    #   _array = []
-    #   _offices.each do |i|
-    #     _array = _array << [i.id, i.code, i.name, "(" + i.bank.code + ")"]
-    #   end
-    #   _array
-    # end
-
-    # def countries_dropdown
-    #   Country.order(:code)
-    # end
-
-    # def towns_dropdown
-    #   Town.order(:name).includes(:province)
-    # end
-
-    # def provinces_dropdown
-    #   Province.order(:name).includes(:region)
-    # end
-
-    # def zipcodes_dropdown
-    #   Zipcode.order(:zipcode).includes(:town,:province)
-    # end
 
     # Ledger accounts belonging to projects
     def projects_ledger_accounts(_projects)
@@ -624,13 +635,12 @@ module Ag2Gest
       session[:organization] != '0' ? payment_payment_methods(session[:organization].to_i) : payment_payment_methods(0)
     end
 
-    def payment_payment_methods(_organization)
+    def payment_payment_methods(_organization=0)
       if _organization != 0
-        _methods = PaymentMethod.where("(flow = 3 OR flow = 1) AND organization_id = ?", _organization).order(:description)
+        PaymentMethod.collections_belong_to_organization(_organization).select("id, description")
       else
-        _methods = PaymentMethod.where("flow = 3 OR flow = 1").order(:description)
+        PaymentMethod.collections.select("id, description")
       end
-      _methods
     end
 
     def ledger_accounts_dropdown
