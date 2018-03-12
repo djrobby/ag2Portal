@@ -396,7 +396,7 @@ class Client < ActiveRecord::Base
         UNION
         SELECT 0 as total, SUM(amount) as collected
         FROM client_payments
-        WHERE client_payments.client_id = #{i}
+        WHERE client_payments.client_id = #{i} AND NOT ISNULL(client_payments.confirmation_date)
         ) a"
     ).first["debt"]
   end
