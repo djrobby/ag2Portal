@@ -212,13 +212,14 @@ var text_field_color;
   <% end %>
 </div>
 <div>
-  <label class="multi-field-label-two"> <%= f.input :street_number, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
-  <label class="multi-field-label-two"> <%= f.input :cadastral_reference, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-wider"> <%= f.input :street_number, :input_html => { :class => 'mid-text-field number-text-field' }, :label_html => { :class => 'form-label-under-sel2' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-three-wider"> <%= f.input :building, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three-thinner"> <%= f.input :floor, :input_html => { :class => 'large-text-field number-text-field' }, :label_html => { :class => 'form-label' } %> </label>
-  <label class="multi-field-label-three-thinner"> <%= f.input :floor_office, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :cadastral_reference, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+  <label class="multi-field-label-three-thinner"> <%= f.input :pub_record, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.association :zipcode, collection: @zipcodes, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' }%> </label>

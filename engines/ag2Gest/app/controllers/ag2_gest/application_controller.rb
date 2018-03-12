@@ -18,6 +18,7 @@ module Ag2Gest
       session[:sort] = nil
       session[:direction] = nil
       session[:ifilter] = nil
+      session[:ifilter_show] = nil
       session[:Period] = nil
       session[:PeriodB] = nil
       session[:Group] = nil

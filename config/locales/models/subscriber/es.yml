@@ -64,6 +64,7 @@ es:
         meter: "Contador"
         meter_id: "Medidor/Contador"
         debt: "Deuda"
+        charged_c: "Cobrado"
         data_contract: "Datos de contrato"
 
         subscriber_code0: "Código"

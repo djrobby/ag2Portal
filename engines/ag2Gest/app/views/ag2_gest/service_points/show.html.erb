@@ -14,12 +14,6 @@
     <tr>
       <td><%= t('activerecord.attributes.service_point.name') %>:</td>
       <td><%= @service_point.try(:name) %></td>
-      <td><%= t('activerecord.attributes.service_point.gis_id') %>:</td>
-      <td><%= @service_point.try(:gis_id) %></td>
-    </tr>
-    <tr>
-      <td><%= t('activerecord.attributes.service_point.cadastral_reference') %>:</td>
-      <td><%= @service_point.try(:cadastral_reference) %></td>
       <td><%= t('activerecord.attributes.service_point.service_point_type_id') %>:</td>
       <td><%= @service_point.try(:service_point_type).try(:name) %></td>
     </tr>
@@ -49,19 +43,29 @@
     </tr>
     <tr> 
       <td><%= t('activerecord.attributes.service_point.street_directory_id') %>:</td>
-      <td><%= @service_point.try(:street_directory).try(:to_full_label) %></td>
+      <td colspan="3"><%= @service_point.try(:street_directory).try(:to_full_label) %></td>
+    </tr>
+    <tr> 
       <td><%= t('activerecord.attributes.service_point.street_number') %>:</td>
       <td><%= @service_point.try(:street_number) %></td>
-     </tr>
-    <tr> 
-      <td><%= t('activerecord.attributes.service_point.building') %>:</td>
-      <td><%= @service_point.try(:building) %></td>
       <td><%= t('activerecord.attributes.service_point.floor') %>:</td>
       <td><%= @service_point.try(:floor) %></td>
     </tr>
-    <tr>
+    <tr> 
       <td><%= t('activerecord.attributes.service_point.floor_office') %>:</td>
       <td><%= @service_point.try(:floor_office) %></td>
+      <td><%= t('activerecord.attributes.service_point.building') %>:</td>
+      <td><%= @service_point.try(:building) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.service_point.cadastral_reference') %>:</td>
+      <td><%= @service_point.try(:cadastral_reference) %></td>
+      <td><%= t('activerecord.attributes.service_point.pub_record') %>:</td>
+      <td><%= @service_point.try(:pub_record) %></td>
+    </tr>
+    <tr>
+      <td><%= t('activerecord.attributes.service_point.gis_id') %>:</td>
+      <td><%= @service_point.try(:gis_id) %></td>
       <td><%= t('activerecord.attributes.service_point.zipcode_id') %>:</td>
       <td><%= @service_point.try(:zipcode).try(:to_label) %></td>
     </tr>

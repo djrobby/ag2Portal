@@ -16,7 +16,7 @@ class ServicePoint < ActiveRecord::Base
                   :service_point_type_id, :service_point_location_id, :service_point_purpose_id,
                   :water_connection_id, :organization_id, :company_id, :office_id, :center_id,
                   :street_directory_id, :zipcode_id, :km,
-                  :meter_id, :reading_route_id, :reading_sequence, :reading_variant
+                  :meter_id, :reading_route_id, :reading_sequence, :reading_variant, :pub_record
 
   attr_accessor :meter_code_input
 

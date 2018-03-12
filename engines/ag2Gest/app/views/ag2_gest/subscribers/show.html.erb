@@ -115,9 +115,9 @@
       <td><b><%= t('activerecord.attributes.subscriber.service_point_id') %>:</b></td>
       <td><%= link_to @subscriber.try(:service_point_to_full_label), service_point_path(@subscriber.service_point) unless @subscriber.service_point.blank? %></td>
       <td><b><%= t('activerecord.attributes.subscriber.cadastral_reference') %>:</b></td>
-      <td><%= @subscriber.try(:cadastral_reference) %></td>
+      <td><%= !@subscriber.cadastral_reference.blank? ? @subscriber.try(:cadastral_reference) : @subscriber.try(:service_point).try(:cadastral_reference)%></td>
       <td><b><%= t('activerecord.attributes.subscriber.pub_record') %>:</b></td>
-      <td><%= @subscriber.try(:pub_record) %></td>
+      <td><%= !@subscriber.pub_record.blank? ? @subscriber.try(:pub_record) : @subscriber.try(:service_point).try(:pub_record) %></td>
     </tr>
     <tr>
       <td><b><%= t('activerecord.attributes.subscriber.direction') %>:</b></td>

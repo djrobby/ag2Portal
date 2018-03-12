@@ -65,3 +65,4 @@ es:
         model: "Modelo/Marca"
         caliber: "Calibre"
         model_brand_caliber: "Modelo/Marca/Calibre"
+        pub_record: "Registro OP"

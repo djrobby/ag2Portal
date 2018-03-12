@@ -65,6 +65,7 @@ class EnginesController < ApplicationController
     session[:PeriodB] = nil
     session[:ProjectB] = nil
     session[:ClientB] = nil
+    session[:ifilter_show] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:OfficeT] = nil

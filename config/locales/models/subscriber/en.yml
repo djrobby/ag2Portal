@@ -64,6 +64,7 @@ en:
         meter: "Meter"
         meter_id: "Meter/Counter"
         debt: "Debt"
+        charged_c: "Charged"
         data_contract: "Contract data"
 
         subscriber_code0: "Code"

@@ -194,6 +194,7 @@ var text_field_color;
     <%= f.input :code, required: true, input_html: { onkeydown: "only_digit(event)", class: 'x-medium-text-field geniconify_serpoint', maxlength: 11 }, label_html: { class: 'form-label' } %>
     <%= f.input :gis_id, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :cadastral_reference, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :pub_record, :input_html => { :class => 'x-medium-text-field' }, :label_html => { :class => 'form-label' } %>
     <%#= f.association :service_point_type, :required => true, label: t('activerecord.attributes.service_point.service_point_type_id'), collection: ServicePointType.all(), :input_html => { :class => 'sel2 x-large-text-field' }, label_method: lambda { |st| st.name }, value_method: :id, :label_html => { :class => 'form-label' }%>
     <%= f.association :service_point_type, :required => true, label: t('activerecord.attributes.service_point.service_point_type_id'), collection: @service_point_types, label_method: :second, value_method: :first, :input_html => { :class => 'sel2 x-large-text-field' }, :label_html => { :class => 'form-label' }%>
     <%# if session[:organization] != '0' %>

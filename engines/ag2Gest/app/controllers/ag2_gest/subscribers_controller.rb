@@ -835,7 +835,7 @@ module Ag2Gest
     # GET /subscribers/1.json
     def show
       manage_filter_state_show
-      filter = params[:ifilter]
+      filter = params[:ifilter_show] || "pending"
 
       @breadcrumb = 'read'
       if !@@subscribers.nil?
@@ -1159,8 +1159,12 @@ module Ag2Gest
               @old_subscriber = @contracting_request.old_subscriber
               @contracting_request.water_supply_contract.update_attributes(subscriber_id: @subscriber.id, contract_date: @subscriber.starting_at) if @contracting_request.water_supply_contract
               @contracting_request.water_supply_contract.bill.update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
+              ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bill).update_attributes(subscriber_id: @subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bill
               @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+              ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bailback_bill).update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
               @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+              ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.unsubscribe_bill).update_attributes(subscriber_id: @old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+
               response_hash = { subscriber: @subscriber }
               response_hash[:bill] = @contracting_request.water_supply_contract.bill
               response_hash[:contracting_request] = @contracting_request
@@ -1769,15 +1773,21 @@ module Ag2Gest
     end
 
     def manage_filter_state_show
-      if params[:ifilter]
-        session[:ifilter] = params[:ifilter]
-      elsif session[:ifilter]
-        params[:ifilter] = session[:ifilter]
+      if params[:ifilter_show]
+        session[:ifilter_show] = params[:ifilter_show]
+      elsif session[:ifilter_show]
+        params[:ifilter_show] = session[:ifilter_show]
       end
     end
 
     # Keeps filter state
     def manage_filter_state
+      # ifilter
+      if params[:ifilter]
+        session[:ifilter] = params[:ifilter]
+      elsif session[:ifilter]
+        params[:ifilter] = session[:ifilter]
+      end
       # search
       if params[:search]
         session[:search] = params[:search]

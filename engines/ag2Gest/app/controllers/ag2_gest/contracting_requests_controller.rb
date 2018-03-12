@@ -1063,7 +1063,9 @@ module Ag2Gest
         if @contracting_request.save
           # @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bailback_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.unsubscribe_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill

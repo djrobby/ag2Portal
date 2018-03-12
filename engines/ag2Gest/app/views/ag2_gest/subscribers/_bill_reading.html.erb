@@ -3,10 +3,10 @@
 <div class="accordion">
   <div class="accordion-group">
     <div class="accordion-heading row">
-      <div class="span1">
+      <div class="myspan">
         <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.bill_id_ %>"><i class='icon-plus'></i></a>
       </div>
-      <div class="span3 soft-padding">
+      <div class="span2 soft-padding">
         <%= bill.invoice_based_old_no_real_no_ %>
       </div>
       <div class="span1 soft-padding">
@@ -28,6 +28,12 @@
       </div> -->
       <div align="right" class="span1 soft-padding">
         <%= number_with_precision(bill.bill_total_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
+      </div>
+      <div align="right" class="span1 soft-padding">
+        <%= number_with_precision(bill.bill_charged_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
+      </div>
+      <div align="right" class="span1 soft-padding">
+        <%= number_with_precision(bill.bill_debt_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_pdf_bill_path(bill.bill_id_, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir" %>
