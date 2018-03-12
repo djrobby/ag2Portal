@@ -30,7 +30,7 @@
       if (bank == "") bank = "0";
       jQuery.getJSON('su_update_office_select_from_bank/' + bank, function(data) {
         var o = data.office;
-        $(_this).closest('tr').find('.fnt-office').html("");
+        $(_this).closest('tr').find('.fnt-office').select2("html", "");
         $(_this).closest('tr').find('.fnt-office').select2("val", "");
         $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val("").html(""));
         if (!o.length) {
