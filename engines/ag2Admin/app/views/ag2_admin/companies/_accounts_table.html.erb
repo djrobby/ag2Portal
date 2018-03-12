@@ -18,7 +18,7 @@
     });
     // Retrieves parent values
     _f = $(".fnt-class").closest('form')[0];
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-bank field changes
@@ -118,7 +118,7 @@
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td>
         <%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %>
-        <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>          
+        <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>
       </td>
       <% end %>
     </tr>

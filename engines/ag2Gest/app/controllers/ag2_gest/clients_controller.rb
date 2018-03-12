@@ -470,7 +470,7 @@ module Ag2Gest
       else
         BankOffice.order('bank_offices.bank_id, bank_offices.code').joins(:bank)
                   .select("bank_offices.id, CONCAT(bank_offices.code, ' ', bank_offices.name, ' (', banks.code, ')') to_label_")
-                  .where("bank_office.bank_id = ?", _bank)
+                  .where("bank_offices.bank_id = ?", _bank)
       end
       # BankOffice.order(:bank_id, :code).includes(:bank,:country)
     end
