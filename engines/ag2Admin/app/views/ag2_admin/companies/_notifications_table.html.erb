@@ -2,7 +2,7 @@
   var _f = '';
 
   $(document).ready(function() {
-    $('.wsel2').select2({
+    $('.wsel2n').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
@@ -10,7 +10,7 @@
     });
     // Retrieves parent values
     _f = $(".fnt-notification").closest('form')[0];
-  }); 
+  });
 
   jQuery(function($) {
     /*
@@ -41,13 +41,13 @@
   <tbody>
     <%= f.simple_fields_for :company_notifications, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
-      <td><%= i.association :notification, label: false, wrapper: false, collection: @notifications, input_html: { class: 'wsel2 fnt-notification' } %></td>
-      <td><%= i.association :user, label: false, wrapper: false, collection: @users, input_html: { class: 'wsel2 fnt-user' } %></td>
+      <td><%= i.association :notification, label: false, wrapper: false, collection: @notifications, input_html: { class: 'wsel2n fnt-notification' } %></td>
+      <td><%= i.association :user, label: false, wrapper: false, collection: @users, input_html: { class: 'wsel2n fnt-user' } %></td>
       <td><%= i.input :role, label: false, wrapper: false,
         collection: [[1, t('activerecord.attributes.office_notification.role_1')],
                      [2, t('activerecord.attributes.office_notification.role_2')]],
                      as: :select, label_method: :last, value_method: :first,
-                     input_html: { class: 'wsel2 fnt-role' } %></td>
+                     input_html: { class: 'wsel2n fnt-role' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>
       <td><%= link_to_remove_fields('<i class="icon-trash"></i>'.html_safe, i) %></td>
       <% end %>

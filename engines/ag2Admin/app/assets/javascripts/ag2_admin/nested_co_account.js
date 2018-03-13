@@ -51,7 +51,7 @@ var co_account_formHandler = {
         inputFields.detach();
 
         // Build the row and add it to the end of the table.
-        co_rowBuilder.addRow(co_account_cfg.getTBodySelector(), inputFields);
+        co_account_rowBuilder.addRow(co_account_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
         $('select.wsel2').select2('destroy');

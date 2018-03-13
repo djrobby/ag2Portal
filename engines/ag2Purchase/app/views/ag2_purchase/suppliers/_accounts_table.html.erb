@@ -30,8 +30,9 @@
       if (bank == "") bank = "0";
       jQuery.getJSON('su_update_office_select_from_bank/' + bank, function(data) {
         var o = data.office;
-        $(_this).closest('tr').find('.fnt-office').select2("html", "");
-        $(_this).closest('tr').find('.fnt-office').select2("val", "");
+        $(_this).closest('tr').find('.fnt-office').removeClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2('destroy');
+        $(_this).closest('tr').find('.fnt-office').html("");
         $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
@@ -44,6 +45,13 @@
             $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
+        $(_this).closest('tr').find('.fnt-office').addClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2({
+          formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+          dropdownCssClass: 'shrinked',
+          dropdownAutoWidth: true,
+          containerCssClass: 'sub-select2-field'
+        });
       });
       return false;
     });
@@ -109,7 +117,7 @@
       <td><%= i.association :bank, label: false, wrapper: false, collection: @banks, input_html: { class: 'wsel2 fnt-bank', maxlength: 4 } %></td>
       <td><%= i.association :bank_office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office', maxlength: 4 } %></td>
       <!--<td><%#= i.input :ccc_dc, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-ccc-dc', maxlength: 2 } %></td>-->
-      <td><%= i.input :account_no, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>
+      <td><%= i.input :account_no, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>
       <td><%= i.input :holder_name, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-name', maxlength: 40 } %></td>
       <td><%= i.input :holder_fiscal_id, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-fiscal-id' } %></td>
       <td><%= i.input :starting_at, label: false, wrapper: false, start_year: Time.now.year - 100, end_year: Time.now.year + 100, as: :string, input_html: { value: (i.object.starting_at.strftime("%d/%m/%Y") if i.object.starting_at), class: 'sub-alfanumeric-text-field idatepicker fnt-starting-at' } %></td>

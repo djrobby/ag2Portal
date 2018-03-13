@@ -1,5 +1,5 @@
 /*
- * Methods to add 'fields' to the Company Notifications table 
+ * Methods to add 'fields' to the Company Notifications table
  * Very important!!:
  *  1. remove_fields() & add_fields() are in main nested.js!!
  *  1. Modal window must be named (ie, 'new-Notification-fields')
@@ -53,8 +53,8 @@ var co_n_formHandler = {
         co_n_rowBuilder.addRow(co_n_cfg.getTBodySelector(), inputFields);
 
         // Apply select2 to added row selects
-        $('select.wsel2').select2('destroy');
-        $('select.wsel2').select2({
+        $('select.wsel2n').select2('destroy');
+        $('select.wsel2n').select2({
           formatNoMatches: function(m) { return sel2NoMatches; },
           dropdownCssClass: 'shrinked',
           dropdownAutoWidth: true,
@@ -108,11 +108,11 @@ var co_n_rowBuilder = function() {
             if (this.id.indexOf("s2") == -1) {
               // Apply CSS
               css = this.id;
-              if ($(this).hasClass('fsel2')) css = css + ' select wsel2';
+              if ($(this).hasClass('fsel2')) css = css + ' select wsel2n';
               if ($(this).hasClass('number-text-field')) css = css + ' sub-number-text-field';
               if ($(this).hasClass('sub-disabled-field')) css = css + ' sub-disabled-field';
               if (css === this.id) css = css + ' sub-alfanumeric-text-field';
-              if (css.indexOf("wsel2") == -1) css = css + ' sub-bordered-input';
+              if (css.indexOf("wsel2n") == -1) css = css + ' sub-bordered-input';
               css = css + ' string';
               $(this).removeAttr('class');
               $(this).addClass(css);

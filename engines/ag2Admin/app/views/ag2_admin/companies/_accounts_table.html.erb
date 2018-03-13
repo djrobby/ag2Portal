@@ -27,12 +27,12 @@
       var _this = (this);
       // make a POST call and replace the content
       var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
-      if (bank == "")
-        bank = "0";
+      if (bank == "") bank = "0";
       jQuery.getJSON('co_update_office_select_from_bank/' + bank, function(data) {
         var o = data.office;
-        $(_this).closest('tr').find('.fnt-office').select2("html", "");
-        $(_this).closest('tr').find('.fnt-office').select2("val", "");
+        $(_this).closest('tr').find('.fnt-office').removeClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2('destroy');
+        $(_this).closest('tr').find('.fnt-office').html("");
         $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
@@ -45,6 +45,13 @@
             $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val(option[0]).html(option[1] + " " + option[2] + " " + option[3]));
           });
         }
+        $(_this).closest('tr').find('.fnt-office').addClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2({
+          formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+          dropdownCssClass: 'shrinked',
+          dropdownAutoWidth: true,
+          containerCssClass: 'sub-select2-field'
+        });
       });
       return false;
     });
@@ -109,7 +116,7 @@
       <td><%= i.input :iban_dc, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-iban-dc', maxlength: 2 } %></td>
       <td><%= i.association :bank, label: false, wrapper: false, collection: @banks, input_html: { class: 'wsel2 fnt-bank', maxlength: 4 } %></td>
       <td><%= i.association :bank_office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office', maxlength: 4 } %></td>
-      <td><%= i.input :account_no, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>
+      <td><%= i.input :account_no, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>
       <td><%= i.input :holder_name, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-name', maxlength: 40 } %></td>
       <td><%= i.input :holder_fiscal_id, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-fiscal-id' } %></td>
       <td><%= i.input :bank_suffix, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-suffix', maxlength: 3 } %></td>

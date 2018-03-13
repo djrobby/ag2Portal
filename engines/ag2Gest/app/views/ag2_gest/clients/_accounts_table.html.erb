@@ -30,9 +30,11 @@
       if (bank == "") bank = "0";
       jQuery.getJSON('cl_update_office_select_from_bank/' + bank, function(data) {
         var o = data.office;
-        alert(o.length);
-        $(_this).closest('tr').find('.fnt-office').select2("html", "");
-        $(_this).closest('tr').find('.fnt-office').select2("val", "");
+        $(_this).closest('tr').find('.fnt-office').removeClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2('destroy');
+        // $(_this).closest('tr').find('.fnt-office').hide();
+        $(_this).closest('tr').find('.fnt-office').html("");
+        // $(_this).closest('tr').find('.fnt-office').select2("val", "");
         $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function(id, option) {
@@ -45,6 +47,14 @@
             $(_this).closest('tr').find('.fnt-office').append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
+        $(_this).closest('tr').find('.fnt-office').addClass('wsel2');
+        $(_this).closest('tr').find('.fnt-office').select2({
+          formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+          dropdownCssClass: 'shrinked',
+          dropdownAutoWidth: true,
+          containerCssClass: 'sub-select2-field'
+        });
+        // $(_this).closest('tr').find('.fnt-office').show();
       });
       return false;
     });
