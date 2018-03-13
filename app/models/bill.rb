@@ -532,7 +532,10 @@ class Bill < ActiveRecord::Base
     string :supply_address, :multiple => true do
       subscriber.subscriber_supply_address.supply_address unless (subscriber.blank? || subscriber.subscriber_supply_address.blank? || subscriber.subscriber_supply_address.supply_address.blank?)
     end
-    string :bill_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    string :bill_no, :multiple => true        # Multiple search values accepted in one search (inverse_no_search)
+    string :invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
+      raw_invoice_based_no
+    end
     integer :invoice_status_id
     integer :project_id, :multiple => true
     integer :client_id

@@ -1039,9 +1039,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1100,9 +1100,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1162,9 +1162,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1224,9 +1224,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1290,9 +1290,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1351,9 +1351,9 @@ module Ag2Gest
         end
         if !no.blank?
           if no.class == Array
-            with :bill_no, no
+            with :invoice_no, no
           else
-            with(:bill_no).starting_with(no)
+            with(:invoice_no).starting_with(no)
           end
         end
         if !project.blank?
@@ -1502,8 +1502,8 @@ module Ag2Gest
     def inverse_no_search(no)
       _numbers = []
       # Add numbers found
-      Bill.where('bill_no LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.bill_no
+      Invoice.where('invoice_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.invoice_no
       end
       _numbers = _numbers.blank? ? no : _numbers
     end

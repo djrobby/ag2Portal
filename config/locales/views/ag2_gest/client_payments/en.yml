@@ -42,7 +42,7 @@ en:
         cash_error: "Error!: Bills/Invoices can't be cashed."
         click_to_print_receipt: "Click here to print Receipt"
         cash_instalments_ok: "Instalments cashed. "
-        label_no: "Bill No."
+        label_no: "Invoice No."
         label_project: "Project"
         label_period: "Period"
         label_client_code: "Client Code"
