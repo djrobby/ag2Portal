@@ -836,6 +836,7 @@ module Ag2Gest
     def show
       manage_filter_state_show
       filter = params[:ifilter_show] || "pending"
+      @active_ifilter = filter
 
       @breadcrumb = 'read'
       if !@@subscribers.nil?
