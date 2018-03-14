@@ -66,6 +66,7 @@ class EnginesController < ApplicationController
     session[:ProjectB] = nil
     session[:ClientB] = nil
     session[:ifilter_show] = nil
+    session[:ifilter_show_tariff] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:OfficeT] = nil
@@ -211,6 +212,19 @@ class EnginesController < ApplicationController
                             Api::V1::SubscribersSerializer)
     end
     render json: @subscribers
+  end
+
+  # Supply addresses
+  def search_supply_addresses
+    @supply_addresses = []
+    w = nil
+    w = "subscribers.office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      w += "(subscriber_supply_addresses.supply_address LIKE '%#{@q}%')"
+      @supply_addresses = serialized(SubscriberSupplyAddress.g_where(w).limit(30),
+                                     Api::V1::SubscriberSupplyAddressesSerializer)
+    end
+    render json: @supply_addresses
   end
 
   # Client Subscribers

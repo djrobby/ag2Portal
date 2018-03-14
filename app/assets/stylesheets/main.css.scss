@@ -594,7 +594,7 @@ h4 span {
 #letters li {
   display: inline;
 }
-/* Paginator */
+/* Pages */
 #pages {
   margin: 0;
   padding: 2px 0 0 0;
@@ -643,6 +643,51 @@ h4 span {
 #pages .page_info b {
 }
 */
+/* Paginator */
+.paginator {
+  margin: 0;
+  padding: 2px 0 0 0;
+  list-style-type: none;
+  /*align: center;*/
+  text-align: center;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: #e3e3e3;
+}
+.paginator_unbordered {
+  margin: 0;
+  padding: 2px 0 0 0;
+  list-style-type: none;
+  /*align: center;*/
+  text-align: center;
+}
+.paginator .current {
+  font-style: normal;
+  font-weight: bold;
+  background: #2e6ab1;
+  color: white;
+  border: 1px solid #2e6ab1;
+}
+.paginator a {
+  text-decoration: none;
+  color: #105cb6;
+  border: 1px solid #9aafe5;
+}
+.paginator a:hover, .paginator a:focus {
+  color: #0066b2;
+  border-color: #0066b2;
+}
+.paginator a, .paginator span, .paginator em {
+  padding: 0.2em 0.5em;
+  margin-right: 1px;
+}
+.paginator .disabled {
+  color: #999999;
+  border: 1px solid #dddddd;
+}
+.paginator .page_info {
+  padding: 0 0 2px 0;
+}
 /* Records navigator */
 #records-navigator {
   margin: 0;
