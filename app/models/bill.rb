@@ -149,9 +149,13 @@ class Bill < ActiveRecord::Base
   end
   def raw_invoice_based_no
     _i = invoices.first
-    _old = _i.old_no
-    _cur = _i.invoice_no
-    _old.blank? ? _cur : _old
+    if _i.nil?
+      ""
+    else
+      _old = _i.old_no
+      _cur = _i.invoice_no
+      _old.blank? ? _cur : _old
+    end
   end
 
   # Short No
