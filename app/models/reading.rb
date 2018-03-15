@@ -279,7 +279,7 @@ class Reading < ActiveRecord::Base
 
         subscriber.current_tariffs(reading_date).each do |tariffs_biller|
           @invoice = Invoice.create!(
-            invoice_no: invoice_next_no(project.company_id, project.office_id),
+            invoice_no: invoice_next_no(tariffs_biller[0], project.office_id),
             bill_id: @bill.id,
             invoice_status_id: InvoiceStatus::PENDING,
             invoice_type_id: InvoiceType::WATER,

@@ -232,6 +232,10 @@ en:
         total_estimations: "Estimation balance"
         reset_estimation: "Reset estimation balance"
         alert_reset_estimation: "It will proceed to eliminate the estimate bag for this subscriber. Are you sure? "
+        alert_fact: "Original invoice will be generated"
+        alert_refact: "A rectification invoice will be generated"
+        alert_without_void: "Impossible to continue: You will have to pay the current invoice"
+        alert_without_original: "Impossible to continue: Rectifying invoices without original invoice"
 
     report:
       subscriber:

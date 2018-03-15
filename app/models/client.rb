@@ -72,11 +72,22 @@ class Client < ActiveRecord::Base
   validates :payment_method,:presence => true
 
   # Scopes
-  scope :by_code, -> { order(:client_code) }
+  scope :by_code, -> { order("subscribers.client_code") }
   #
   scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
   scope :actives, -> { where(active: true).by_code }
   scope :active_by_organization, -> o { where(active: true, organization_id: o).by_code }
+  # generic where (eg. for Select2 from engines_controller)
+  scope :g_where_all_h, -> h {
+    select("id, active, fiscal_id, client_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(clients.company) OR clients.company = '') THEN CONCAT(clients.last_name, ', ', clients.first_name) ELSE clients.company END full_name")
+    .by_code.having(h)
+  }
+  scope :g_where_all_oh, -> o, h {
+    select("id, active, fiscal_id, client_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(clients.company) OR clients.company = '') THEN CONCAT(clients.last_name, ', ', clients.first_name) ELSE clients.company END full_name")
+    .belongs_to_organization(o).having(h)
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase

@@ -63,6 +63,11 @@ class Bill < ActiveRecord::Base
     .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ?', InvoiceType::WATER, p, b)
     .by_no
   }
+  scope :service_by_project_period_subscriber, -> p, b, s {
+    joins(:invoices)
+    .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ? AND bills.subscriber_id = ?', InvoiceType::WATER, p, b, s)
+    .group('bills.id').by_no
+  }
   scope :service_by_project_period_no, -> p, b, f, t {
     joins(:invoices)
     .where('invoices.invoice_type_id = ? AND bills.project_id = ? AND invoices.billing_period_id = ? AND bills.bill_no BETWEEN ? AND ?', InvoiceType::WATER, p, b, f, t)

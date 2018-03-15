@@ -844,14 +844,14 @@ module Ag2Gest
       no = params[:No]
       project = params[:Project]
       period = params[:Period]
-      client_code = params[:ClientCode]
-      client_fiscal = params[:ClientFiscal]
-      client_name = params[:Client]
-      # client = params[:Client]
-      subscriber_code = params[:SubscriberCode]
-      subscriber_fiscal = params[:SubscriberFiscal]
-      subscriber_name = params[:Subscriber]
-      # subscriber = params[:Subscriber]
+      # client_code = params[:ClientCode]
+      # client_fiscal = params[:ClientFiscal]
+      # client_name = params[:Client]
+      client = params[:Client]
+      # subscriber_code = params[:SubscriberCode]
+      # subscriber_fiscal = params[:SubscriberFiscal]
+      # subscriber_name = params[:Subscriber]
+      subscriber = params[:Subscriber]
       street_name = params[:StreetName]
       bank_account = params[:BankAccount] == t(:yes_on) ? true : false
       bank = params[:Bank]
@@ -864,6 +864,9 @@ module Ag2Gest
       @project = !project.blank? ? Project.find(project).full_name : " "
       @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
       @user = !user.blank? ? User.find(user).to_label : " "
+      @client = !client.blank? ? Client.find(client).to_label : " "
+      @subscriber = !subscriber.blank? ? Subscriber.find(subscriber).to_label : " "
+      @address = !street_name.blank? ? SubscriberSupplyAddress.find(street_name).supply_address : " "
       @have_bank_account = have_bank_account_array
       @payment_methods = payment_methods_dropdown
       @cashier_payment_methods = cashier_payment_methods_dropdown

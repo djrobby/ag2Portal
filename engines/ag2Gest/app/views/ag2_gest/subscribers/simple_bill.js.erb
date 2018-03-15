@@ -39,7 +39,7 @@ var content = '';
     <% invoice.tax_breakdown.each do |tax| %>
       <% if tax[0] != TaxType.exempt.tax %>
         content+= '<tr class="breakdown">';
-        content+= '<td colspan="3" class="no-boder"></td>';
+        content+= '<td colspan="4" class="no-boder"></td>';
         content+= '<td class="no-boder" colspan="2"><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b> <%= tax[1] %></td>';
         content+= `<td class="no-boder"><%= "#{pluralize(tax[3], 'artículo')}"  %></td>`;
         content+= '<td><b>IVA (<%= tax[0] %>%)</b></td>';
@@ -76,8 +76,7 @@ $(document).ready(function() {
   })
   $("#readings").html("<%= escape_javascript(render('show_tab_readings')) %>");
 
-  $("#bill-suply-form input, #bill-suply-form select").change(function() {
-
+  $("form.simple_bill input, form.simple_bill select").change(function() {
 
     /*$('td select').get(0).value; option checkbox*/
     /*this - devuelve elemento atributo name invoice_item[47]quantity
@@ -230,7 +229,7 @@ $(document).ready(function() {
         array_taxes[taxes].tax = 0;
       }
 
-      $(invoice + " .subtotal" ).first().after(`<tr class="breakdown"><td colspan="3" class="no-boder"></td><td class="no-boder" colspan="2" ><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b>${array_taxes[taxes].base_imp}</td><td class="no-boder">${array_taxes[taxes].item.quantity} ${array_taxes[taxes].item.item}</td><td><b>IVA (${array_taxes[taxes].tax}%)</b></td><td>${array_taxes[taxes].percentage_total}</td></tr>` ); //Add tr element breakdown
+      $(invoice + " .subtotal" ).first().after(`<tr class="breakdown"><td colspan="4" class="no-boder"></td><td class="no-boder" colspan="2" ><b><%= t("activerecord.attributes.contracting_request.base_imp") %>: </b>${array_taxes[taxes].base_imp}</td><td class="no-boder">${array_taxes[taxes].item.quantity} ${array_taxes[taxes].item.item}</td><td><b>IVA (${array_taxes[taxes].tax}%)</b></td><td>${array_taxes[taxes].percentage_total}</td></tr>` ); //Add tr element breakdown
 
       invoice_total += parseFloat(array_taxes[taxes].percentage_total);
 
@@ -245,10 +244,11 @@ $(document).ready(function() {
   });
 
     // update fields new-bill modal form
-    $("#bills_billing_period_id").select2("val",null)
+    $("#billing_period_reading").select2("val",null)
+    $("#alert_bill").html("")
     $("#bills_invoice_date").val("")
     $("#bills_payday_limit").val("")
-    $("#bills_billing_period_id option[value='<%= @reading.billing_period_id %>']").remove()
+    $("#billing_period_reading option[value='<%= @reading.billing_period_id %>']").remove()
     $("#bill-supply-modal").on("hidden.bs.modal", function(){
     $("form.simple_bill").html("");
   });

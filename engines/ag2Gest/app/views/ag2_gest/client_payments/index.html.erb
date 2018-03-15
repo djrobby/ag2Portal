@@ -53,10 +53,13 @@
     }
   }
 
-  function setupAllSelect2(p, r, u) {
+  function setupAllSelect2(p, r, u, c, s, a) {
     projectsSelect2(p);
     periodsSelect2(r);
     usersSelect2(u);
+    clientsSelect2(c);
+    subscribersSelect2(s);
+    addressesSelect2(a);
   }
 
   function projectsSelect2(intialValue) {
@@ -141,6 +144,85 @@
     });
   }
 
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function subscribersSelect2(intialValue) {
+    $('#Subscriber').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_subscribers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function addressesSelect2(intialValue) {
+    $('#StreetName').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_supply_addresses",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -178,7 +260,7 @@
     }
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
 
     // Hide elements at init
     show_cashier();
@@ -218,13 +300,13 @@
     $("#active_tab").val("<%= params[:active_tab] %>");
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%#= params[:Project] %>");
-    $("#Client").val("<%= params[:Client] %>");
-    $("#ClientCode").val("<%= params[:ClientCode] %>");
-    $("#ClientFiscal").val("<%= params[:ClientFiscal] %>");
-    $("#Subscriber").val("<%= params[:Subscriber] %>");
-    $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
-    $("#SubscriberFiscal").val("<%= params[:SubscriberFiscal] %>");
-    $("#StreetName").val("<%= params[:StreetName] %>");
+    // $("#Client").val("<%= params[:Client] %>");
+    // $("#ClientCode").val("<%= params[:ClientCode] %>");
+    // $("#ClientFiscal").val("<%= params[:ClientFiscal] %>");
+    // $("#Subscriber").val("<%= params[:Subscriber] %>");
+    // $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
+    // $("#SubscriberFiscal").val("<%= params[:SubscriberFiscal] %>");
+    // $("#StreetName").val("<%= params[:StreetName] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
     $("#BankOrder").val("<%= params[:BankOrder] %>");
     // $("#Period").select2("val", "<%#= params[:billing_period] %>");
@@ -275,18 +357,18 @@
       $("#No").val("");
       $("#Project").select2("val", "");
       $("#Period").select2("val", "");
-      $("#Client").val("");
-      $("#ClientCode").val("");
-      $("#ClientFiscal").val("");
-      $("#Subscriber").val("");
-      $("#SubscriberCode").val("");
-      $("#SubscriberFiscal").val("");
-      $("#StreetName").val("");
+      $("#Client").select2("val", "");
+      // $("#ClientCode").val("");
+      // $("#ClientFiscal").val("");
+      $("#Subscriber").select2("val", "");
+      // $("#SubscriberCode").val("");
+      // $("#SubscriberFiscal").val("");
+      $("#StreetName").select2("val", "");
       $("#BankAccount").val("");
       $("#BankOrder").val("");
       $("#User").select2("val", "");
       a = "<%= cp_remove_filters %>";
-      setupAllSelect2(a, a, a);
+      setupAllSelect2(a, a, a, a, a, a);
       show_cashier();
       remove_tab_indicator = $('#active_tab').val() + '!';
       $('#active_tab').val(remove_tab_indicator);
@@ -440,26 +522,29 @@
           <%= label_tag "label_period", I18n.t("ag2_gest.client_payments.index.label_period"), :class => 'form-label-under-sel2' %>
           <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <!-- Client Code -->
-          <%= label_tag "label_client_code", I18n.t("ag2_gest.client_payments.index.label_client_code"), :class => 'form-label-under-sel2' %>
-          <%= text_field_tag "ClientCode", params[:ClientCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <%#= label_tag "label_client_code", I18n.t("ag2_gest.client_payments.index.label_client_code"), :class => 'form-label-under-sel2' %>
+          <%#= text_field_tag "ClientCode", params[:ClientCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Client Fiscal Id -->
-          <%= label_tag "label_client_fiscal", I18n.t("ag2_gest.client_payments.index.label_client_fiscal"), :class => 'form-label' %>
-          <%= text_field_tag "ClientFiscal", params[:ClientFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
-          <!-- Client Name -->
+          <%#= label_tag "label_client_fiscal", I18n.t("ag2_gest.client_payments.index.label_client_fiscal"), :class => 'form-label' %>
+          <%#= text_field_tag "ClientFiscal", params[:ClientFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
+          <!-- Client (name) -->
           <%= label_tag "label_client", I18n.t("ag2_gest.client_payments.index.label_client"), :class => 'form-label' %>
-          <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <%#= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
           <!-- Subscriber Code -->
-          <%= label_tag "label_subscriber_code", I18n.t("ag2_gest.client_payments.index.label_subscriber_code"), :class => 'form-label' %>
-          <%= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <%#= label_tag "label_subscriber_code", I18n.t("ag2_gest.client_payments.index.label_subscriber_code"), :class => 'form-label' %>
+          <%#= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Subscriber Fiscal Id -->
-          <%= label_tag "label_subscriber_fiscal", I18n.t("ag2_gest.client_payments.index.label_subscriber_fiscal"), :class => 'form-label' %>
-          <%= text_field_tag "SubscriberFiscal", params[:SubscriberFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
-          <!-- Subscriber Name -->
+          <%#= label_tag "label_subscriber_fiscal", I18n.t("ag2_gest.client_payments.index.label_subscriber_fiscal"), :class => 'form-label' %>
+          <%#= text_field_tag "SubscriberFiscal", params[:SubscriberFiscal], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
+          <!-- Subscriber (name) -->
           <%= label_tag "label_subscriber", I18n.t("ag2_gest.client_payments.index.label_subscriber"), :class => 'form-label' %>
-          <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <%#= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
           <!-- Supply address (street name) -->
           <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label' %>
-          <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <%#= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Have BankAccount? -->
           <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
           <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>

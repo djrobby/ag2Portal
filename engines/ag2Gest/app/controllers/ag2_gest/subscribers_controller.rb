@@ -14,7 +14,9 @@ module Ag2Gest
                                                 :quit_meter,
                                                 :change_meter,
                                                 :su_find_meter,
+                                                :su_find_invoice_to_period,
                                                 :simple_bill,
+                                                :update_simple,
                                                 :void,
                                                 :subscriber_report,
                                                 :subscriber_tec_report,
@@ -205,8 +207,11 @@ module Ag2Gest
     def update_simple
       @subscriber = Subscriber.find params[:id]
       params[:invoice_item].each do |obj_inv|
-        pre_invoice_item = InvoiceItem.find(obj_inv[0])
-        pre_invoice_item.update_attributes(obj_inv[1])
+        invoice_item = InvoiceItem.find_by_id(obj_inv[0])
+        _i = Invoice.find(invoice_item.invoice_id) if invoice_item
+        _i.totals = _i.total if invoice_item
+        _i.save if invoice_item
+        invoice_item.update_attributes(obj_inv[1]) if invoice_item
       end
       redirect_to subscriber_path(@subscriber), notice: "Factura actualizada correctamente"
     end
@@ -641,6 +646,46 @@ module Ag2Gest
       end
       # Setup JSON
       @json_data = { "code" => code, "alert" => alert, "meter_id" => meter_id.to_s }
+      render json: @json_data
+    end
+
+    def su_find_invoice_to_period
+      subscriber = Subscriber.find(params[:subscriber_id])
+      period = BillingPeriod.find(params[:period])
+      alert_bill = ""
+      code_bill = ''
+      bill_original = ''
+      bill_void = ''
+
+      bills = Bill.service_by_project_period_subscriber(period.project_id, period.id, subscriber.id)
+      bills.each do |b|
+        if b.bill_operation == 1
+          bill_original = 1
+        end
+        if b.bill_operation == 2
+          bill_void = 2
+        end
+      end
+
+      if bill_original == '' && bill_void == ''
+        alert_bill = I18n.t("activerecord.attributes.subscriber.alert_fact")
+        code_bill = '$fact'
+      end
+      if bill_original == 1 && bill_void == 2
+        alert_bill = I18n.t("activerecord.attributes.subscriber.alert_refact")
+        code_bill = '$refact'
+      end
+      if bill_original == 1 && bill_void == ''
+        alert_bill = I18n.t("activerecord.attributes.subscriber.alert_without_void")
+        code_bill = '$err'
+      end
+      if bill_original == '' && bill_void == 2
+        alert_bill = I18n.t("activerecord.attributes.subscriber.alert_without_original")
+        code_bill = '$err'
+      end
+
+      # Setup JSON
+      @json_data = { "code_bill" => code_bill, "alert_bill" => alert_bill }
       render json: @json_data
     end
 
@@ -1234,28 +1279,37 @@ module Ag2Gest
 
     def simple_bill
       @subscriber = Subscriber.find params[:id]
+      period = BillingPeriod.find(params[:bills][:billing_period_id])
+      bill_original = ''
+      bill_void = ''
       @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::INSTALACION, ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
-      payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
-      invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
-      @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)
-      Sunspot.index! [@bill] unless @bill.blank?
-      # @search_bills = Bill.search do
-      #   with :subscriber_id, params[:id]
-      #   order_by :created_at, :asc
-      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
-      # end
-      # @subscriber_bills = @search_bills.results
-      # @search_readings = Reading.search do
-      #   with :subscriber_id, params[:id]
-      #   # order_by :billing_period_id, :desc
-      #   # order_by :reading_date, :desc
-      #   # order_by :reading_index
-      #   order_by :sort_id, :desc
-      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
-      # end
+      # payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
+      # invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
+      invoice_date = Date.today
+      payday_limit = Date.today + 60
+      if !@reading.billing_period.billing_ending_date.blank? || !@reading.billing_period.billing_starting_date.blank?
+        payday_limit = @reading.billing_period.billing_ending_date >= invoice_date ? @reading.billing_period.billing_ending_date : invoice_date + (@reading.billing_period.billing_ending_date - @reading.billing_period.billing_starting_date).days
+      end
 
-      # @subscriber_readings = @search_readings.results
-      # # @subscriber_bills = Bill.where(subscriber_id: params[:id])
+      bills = Bill.service_by_project_period_subscriber(period.project_id, period.id, @subscriber.id)
+      bills.each do |b|
+        if b.bill_operation == 1
+          bill_original = 1
+        end
+        if b.bill_operation == 2
+          bill_void = 2
+        end
+      end
+      if bill_original == '' && bill_void == ''
+        @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),1,payday_limit,invoice_date)
+      end
+      if bill_original == 1 && bill_void == 2
+        @bill = @reading.generate_bill(bill_next_no(@reading.project),current_user.try(:id),3,payday_limit,invoice_date)
+      end
+      if (bill_original == 1 && bill_void == '') || (bill_original == '' && bill_void == 2)
+        return false
+      end
+      Sunspot.index! [@bill] unless @bill.blank?
 
       @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
       invoice_status = (0..99).to_a.join(',')

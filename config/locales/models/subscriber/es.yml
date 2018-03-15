@@ -232,6 +232,10 @@ es:
         total_estimations: "Bolsa estimados"
         reset_estimation: "Vaciar bolsa estimados"
         alert_reset_estimation: "Se procedera a eliminar la bolsa de estimado para este abonado. ¿Estás seguro? "
+        alert_fact: "Se generará factura original"
+        alert_refact: "Se generará factura rectificativa"
+        alert_without_void: "Imposible continuar: Tendrá que abonar la factura vigente"
+        alert_without_original: "Imposible continuar: Facturas rectificativas sin factura original"
 
     report:
       subscriber:

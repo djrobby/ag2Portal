@@ -136,6 +136,16 @@ class Subscriber < ActiveRecord::Base
             CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
     .availables_by_office(o).having(h)
   }
+  scope :g_where_all_h, -> h {
+    select("id, active, fiscal_id, subscriber_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
+    .by_code.having(h)
+  }
+  scope :g_where_all_oh, -> o, h {
+    select("id, active, fiscal_id, subscriber_code, first_name, last_name, company,
+            CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name")
+    .belongs_to_office(o).having(h)
+  }
   # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
   scope :activated_with_meter, -> { activated.with_meter.by_reading_sequence }
