@@ -72,7 +72,7 @@ class Client < ActiveRecord::Base
   validates :payment_method,:presence => true
 
   # Scopes
-  scope :by_code, -> { order("subscribers.client_code") }
+  scope :by_code, -> { order("clients.client_code") }
   #
   scope :belongs_to_organization, -> organization { where("organization_id = ?", organization).by_code }
   scope :actives, -> { where(active: true).by_code }

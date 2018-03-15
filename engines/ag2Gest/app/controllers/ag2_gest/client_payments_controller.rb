@@ -876,34 +876,36 @@ module Ag2Gest
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
       current_projects = current_projects_ids
 
       # Setup Client for search
       # client = !client.blank? ? inverse_client_search(client) : client
-      client_code = !client_code.blank? ? inverse_client_code_search(client_code) : []
-      client_fiscal = !client_fiscal.blank? ? inverse_client_fiscal_search(client_fiscal) : []
-      client_name = !client_name.blank? ? inverse_client_name_search(client_name) : []
-      c = (client_code + client_fiscal + client_name).uniq
+      # client_code = !client_code.blank? ? inverse_client_code_search(client_code) : []
+      # client_fiscal = !client_fiscal.blank? ? inverse_client_fiscal_search(client_fiscal) : []
+      # client_name = !client_name.blank? ? inverse_client_name_search(client_name) : []
+      # c = (client_code + client_fiscal + client_name).uniq
 
       # Setup Subscriber for search
       # subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
-      subscriber_code = !subscriber_code.blank? ? inverse_subscriber_code_search(subscriber_code) : []
-      subscriber_fiscal = !subscriber_fiscal.blank? ? inverse_subscriber_fiscal_search(subscriber_fiscal) : []
-      subscriber_name = !subscriber_name.blank? ? inverse_subscriber_name_search(subscriber_name) : []
-      s = (subscriber_code + subscriber_fiscal + subscriber_name).uniq
+      # subscriber_code = !subscriber_code.blank? ? inverse_subscriber_code_search(subscriber_code) : []
+      # subscriber_fiscal = !subscriber_fiscal.blank? ? inverse_subscriber_fiscal_search(subscriber_fiscal) : []
+      # subscriber_name = !subscriber_name.blank? ? inverse_subscriber_name_search(subscriber_name) : []
+      # s = (subscriber_code + subscriber_fiscal + subscriber_name).uniq
 
       # Initialize datasets
-      if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
-         street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
-         client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
+      # if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
+      #    street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
+      #    client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
+      if no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
+         street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank?
         # No query received, or filters has been removed: Return no results, except cash & bank
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
         @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
-        search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-        search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+        search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
         @client_payments_cash = search_cash.results
         @client_payments_bank = search_bank.results
       else
@@ -911,36 +913,36 @@ module Ag2Gest
         # Setup Sunspot searches
         case active_tab
         when 'pendings-tab'
-          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'charged-tab'
-          search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'cash-tab'
-          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'banks-tab'
-          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'others-tab'
-          search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'fractionated-tab'
-          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         else  # No active tab, or remove filters button has been clicked
-          search_pending = pendings_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_charged = charged_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
-          search_others = others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
-          search_instalment = instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         end
         @bills_pending = search_pending.results rescue Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = search_charged.results rescue Bill.search { with :invoice_status_id, -1 }.results
@@ -1058,8 +1060,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1069,23 +1074,32 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
+        # Billing period
         if !period.blank?
           with :billing_period_id, period
         end
+        # Created by (user)
         if !user.blank?
           with :created_by, user
         end
@@ -1119,8 +1133,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1130,17 +1147,24 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -1181,8 +1205,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1192,17 +1219,24 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -1243,8 +1277,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1254,17 +1291,24 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -1309,8 +1353,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1320,17 +1367,24 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
@@ -1370,8 +1424,11 @@ module Ag2Gest
         #     with(:client_code_name_fiscal).starting_with(client)
         #   end
         # end
-        if !c.empty?
-          with :client_ids, c
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
         end
         # Subscriber
         # if !subscriber.blank?
@@ -1381,17 +1438,24 @@ module Ag2Gest
         #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
         #   end
         # end
-        if !s.empty?
-          with :subscriber_ids, s
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :supply_address, street_name
         end
+        # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
         end
