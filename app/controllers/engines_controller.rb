@@ -61,6 +61,7 @@ class EnginesController < ApplicationController
     session[:BankAccount] = nil
     session[:BankOrder] = nil
     session[:Use] = nil
+    session[:TariffType] = nil
     session[:Phase] = nil
     session[:PeriodB] = nil
     session[:ProjectB] = nil

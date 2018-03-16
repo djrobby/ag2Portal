@@ -3,12 +3,13 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class SubscribersController < ApplicationController
     #include ActionView::Helpers::NumberHelper
-    helper_method :sort_column
     @@subscribers = nil
 
     before_filter :authenticate_user!
     load_and_authorize_resource
-    skip_load_and_authorize_resource :only => [ :subscriber_pdf,
+    skip_load_and_authorize_resource :only => [ :su_remove_filters,
+                                                :su_restore_filters,
+                                                :subscriber_pdf,
                                                 :create,
                                                 :add_meter,
                                                 :quit_meter,
@@ -41,31 +42,31 @@ module Ag2Gest
                                                 :billable_button,
                                                 :disable_bank_account,
                                                 :disable_tariff_button,
-                                                :su_check_invoice_date]
+                                                :su_check_invoice_date ]
+    # Helper methods for
+    helper_method :sort_column
+    # => index filters
+    helper_method :su_remove_filters, :su_restore_filters
 
-  def su_check_invoice_date
-    code = ''
-    office = Office.find(params[:office_id])
-    new_bill_date = params[:invoice_date]
-    new_bill_date = (new_bill_date[0..3] + '-' + new_bill_date[4..5] + '-' + new_bill_date[6..7]).to_date
+    def su_check_invoice_date
+      code = ''
+      office = Office.find(params[:office_id])
+      new_bill_date = params[:invoice_date]
+      new_bill_date = (new_bill_date[0..3] + '-' + new_bill_date[4..5] + '-' + new_bill_date[6..7]).to_date
 
-    if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
-      code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
+      if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
+        code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
+      end
+      render json: { "code" => code }
     end
-    render json: { "code" => code }
-  end
 
-   # update subscriber estimation
-   def reset_estimation
-    @subscriber = Subscriber.find(params[:id])
-    @subscriber.current_estimation.update_attributes(estimation_reset_at: Time.now)
-    @json_data = { "id" => @subscriber.id }
-
-    respond_to do |format|
-      format.html # update_province_textfield.html.erb does not exist! JSON only
-      format.json { render json: @json_data }
+    # update subscriber estimation
+    def reset_estimation
+      @subscriber = Subscriber.find(params[:id])
+      @subscriber.current_estimation.update_attributes(estimation_reset_at: Time.now)
+      @json_data = { "id" => @subscriber.id }
+      render json: @json_data
     end
-   end
 
     # update true subscriber non-billable
     def non_billable_button
@@ -74,11 +75,7 @@ module Ag2Gest
         @subscriber.update_attributes(non_billable: true)
       end
       @json_data = { "non_billable" => @subscriber.non_billable }
-
-      respond_to do |format|
-        format.html
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # update false subscriber non-billable
@@ -88,11 +85,7 @@ module Ag2Gest
         @subscriber.update_attributes(non_billable: false)
       end
       @json_data = { "billable" => @subscriber.non_billable }
-
-      respond_to do |format|
-        format.html
-        format.json { render json: @json_data }
-      end
+      render json: @json_data
     end
 
     # disable client bank account
@@ -783,6 +776,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
+      @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
       @calibers = Caliber.by_caliber if @calibers.nil?
       @uses = Use.by_code if @uses.nil?
       @tariff_types = TariffType.by_code if @tariff_types.nil?
@@ -792,7 +786,7 @@ module Ag2Gest
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
-      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -809,12 +803,15 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :subscriber_id, street_name
         end
         if !meter.blank?
           if meter.class == Array
@@ -1889,19 +1886,19 @@ module Ag2Gest
       elsif session[:Meter]
         params[:Meter] = session[:Meter]
       end
-      # billing_frequency
-      if params[:BillingFrequency]
-        session[:BillingFrequency] = params[:BillingFrequency]
-      elsif session[:BillingFrequency]
-        params[:BillingFrequency] = session[:BillingFrequency]
+      # caliber
+      if params[:Caliber]
+        session[:Caliber] = params[:Caliber]
+      elsif session[:Caliber]
+        params[:Caliber] = session[:Caliber]
       end
-      # manufacturer
-      if params[:Manufacturer]
-        session[:Manufacturer] = params[:Manufacturer]
-      elsif session[:Manufacturer]
-        params[:Manufacturer] = session[:Manufacturer]
+      # use
+      if params[:Use]
+        session[:Use] = params[:Use]
+      elsif session[:Use]
+        params[:Use] = session[:Use]
       end
-      # tax
+      # tariff_type
       if params[:TariffType]
         session[:TariffType] = params[:TariffType]
       elsif session[:TariffType]
@@ -1918,6 +1915,27 @@ module Ag2Gest
       elsif session[:letter]
         params[:letter] = session[:letter]
       end
+    end
+
+    def su_remove_filters
+      params[:search] = ""
+      params[:SubscriberCode] = ""
+      params[:StreetName] = ""
+      params[:Meter] = ""
+      params[:Caliber] = ""
+      params[:Use] = ""
+      params[:TariffType] = ""
+      return " "
+    end
+
+    def su_restore_filters
+      params[:search] = session[:search]
+      params[:SubscriberCode] = session[:SubscriberCode]
+      params[:StreetName] = session[:StreetName]
+      params[:Meter] = session[:Meter]
+      params[:Caliber] = session[:Caliber]
+      params[:Use] = session[:Use]
+      params[:TariffType] = session[:TariffType]
     end
   end
 end

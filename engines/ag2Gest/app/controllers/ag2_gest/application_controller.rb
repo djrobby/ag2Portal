@@ -53,6 +53,7 @@ module Ag2Gest
       session[:BankAccount] = nil
       session[:BankOrder] = nil
       session[:Use] = nil
+      session[:TariffType] = nil
       session[:Phase] = nil
       session[:User] = nil
     end

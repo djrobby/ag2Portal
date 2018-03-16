@@ -700,6 +700,10 @@ class Subscriber < ActiveRecord::Base
     meter.users + 1
   end
 
+  def subscriber_id
+    self.id
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -799,6 +803,9 @@ class Subscriber < ActiveRecord::Base
     integer :office_id, :multiple => true
     time :starting_at
     time :ending_at
+    integer :subscriber_id do
+      subscriber_id
+    end
     integer :tariff_type_id do
       tariffs.first.tariff_type_id unless (tariffs.blank? || tariffs.first.tariff_type_id.blank?)
     end
