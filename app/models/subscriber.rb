@@ -606,6 +606,10 @@ class Subscriber < ActiveRecord::Base
   #
   # Supply address
   #
+  def supply_address
+    subscriber_supply_address.supply_address unless (subscriber_supply_address.blank? || subscriber_supply_address.supply_address.blank?)
+  end
+
   def address_1
     _ret = ""
     if !street_directory.blank?
