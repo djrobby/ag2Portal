@@ -97,8 +97,8 @@ jQuery(function($) {
       var use_ids = $('select#use_id :selected').val();
       if (use_ids == "")
         use_ids = "0";
-      var billable_concept_ids = $('#BillableConcept_').val();
-      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      var billable_concept_ids = $('#concept_BillableConcept_').val();
+      if (billable_concept_ids == null) $("#concept_TariffType_").addClass("disabled");
       if (billable_concept_ids == null) billable_concept_ids = null;
       jQuery.getJSON('update_tariff_schemes_from_use/' + use_ids, function(data) {
         var o = data.tariff_scheme;
@@ -120,10 +120,10 @@ jQuery(function($) {
       jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids + '/' + use_ids, function(data) {
         var o = data;
 
-        var product = $('#TariffType_');
-        $("#TariffType_").html("");
-        $("#TariffType_").select2("val", "");
-        $("#TariffType_").append($('<option></option>').val("").html(""));
+        var product = $('#concept_TariffType_');
+        $("#concept_TariffType_").html("");
+        $("#concept_TariffType_").select2("val", "");
+        $("#concept_TariffType_").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function (key, cat) {
               var group = $('<optgroup>',{label:key});
@@ -145,19 +145,19 @@ jQuery(function($) {
       return false;
     });
 
-    $("#BillableConcept_").change(function() {
+    $("#concept_BillableConcept_").change(function() {
       // make a POST call and replace the content
-      $("#TariffType_").removeClass("disabled");
-      var billable_concept_ids = $('#BillableConcept_').val();
-      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      $("#concept_TariffType_").removeClass("disabled");
+      var billable_concept_ids = $('#concept_BillableConcept_').val();
+      if (billable_concept_ids == null) $("#concept_TariffType_").addClass("disabled");
       if (billable_concept_ids == null) billable_concept_ids = null;
       jQuery.getJSON('update_tariff_type_select_from_billing_concept/' + billable_concept_ids, function(data) {
         var o = data;
 
-        var product = $('#TariffType_');
-        $("#TariffType_").html("");
-        $("#TariffType_").select2("val", "");
-        $("#TariffType_").append($('<option></option>').val("").html(""));
+        var product = $('#concept_TariffType_');
+        $("#concept_TariffType_").html("");
+        $("#concept_TariffType_").select2("val", "");
+        $("#concept_TariffType_").append($('<option></option>').val("").html(""));
         if (!o.length) {
           $.each(data, function (key, cat) {
               var group = $('<optgroup>',{label:key});
@@ -204,13 +204,13 @@ jQuery(function($) {
       <%= f.association :tariff_scheme, required: true, :disabled => true, collection: TariffScheme.where(project_id: @contracting_request.project_id), input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" }  %>
 
       <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
-      <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+      <%= select_tag "concept_BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
       
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
 
 <!--       <#%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->
 
-      <%= select_tag "TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
+      <%= select_tag "concept_TariffType_", grouped_options_for_select(@tariff_type_dropdown,@tariff_type_select), :prompt => "", :class => 'x-large-text-field sel3', multiple: true %>
 
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label-under-sel2' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>

@@ -164,7 +164,7 @@ module Ag2Gest
       if bill_cancel.save
         bill.invoices.each do |invoice|
           new_invoice = invoice.dup
-          new_invoice.invoice_no = invoice_next_no(bill.project.company_id, bill.project.office_id)
+          new_invoice.invoice_no = invoice_next_no(invoice.biller_id, bill.project.office_id)
           new_invoice.bill_id = bill_cancel.id
           new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
           new_invoice.original_invoice_id = invoice.id
@@ -343,14 +343,19 @@ module Ag2Gest
 
       @grouped_options = @billable_concept_ids.inject({}) do |biller, bc|
         if @use == '0'
-          _tariff_type_ids = BillableItem.find(bc).tariff_types.group(:tariff_type_id)
+          _tariff_type_ids = BillableItem.joins(:tariffs, :tariff_types).where('(tariffs.ending_at >= ? OR tariffs.ending_at IS NULL) AND billable_items.id in (?)', Date.today, bc).select("tariff_types.id id_, CONCAT(tariff_types.name, ' (', tariff_types.code, ')') to_label_").group('tariff_types.id')
         else
-          _tariff_type_ids = BillableItem.find(bc).tariff_types.where("use_id =? OR use_id IS NULL",@use.id).group(:tariff_type_id)
+          _tariff_type_ids = BillableItem.joins(:tariffs, :tariff_types).where("(tariffs.ending_at >= ? OR tariffs.ending_at IS NULL) AND (tariff_types.use_id =? OR tariff_types.use_id IS NULL) AND billable_items.id in (?)", Date.today, @use.id, bc).select("tariff_types.id id_, CONCAT(tariff_types.name, ' (', tariff_types.code, ')') to_label_").group('tariff_types.id')
         end
+        # if @use == '0'
+        #   _tariff_type_ids = BillableItem.find(bc).tariff_types.group(:tariff_type_id)
+        # else
+        #   _tariff_type_ids = BillableItem.find(bc).tariff_types.where("use_id =? OR use_id IS NULL",@use.id).group(:tariff_type_id)
+        # end
         _tariff_type_ids.each do |ttt|
           @tariffs = ttt
           _label_biller = BillableItem.find(bc).to_label_biller
-          (biller[_label_biller] ||= []) << {:name => @tariffs.to_label, :id => @tariffs.id}
+          (biller[_label_biller] ||= []) << {:name => @tariffs.to_label_, :id => @tariffs.id_}
         end
         biller
       end
@@ -1187,7 +1192,7 @@ module Ag2Gest
       code = ''
 
       if tariff_scheme.tariffs.blank?
-        code = '$err'
+        code = "$err"
       end
 
       # Setup JSON
@@ -1796,6 +1801,7 @@ module Ag2Gest
       @water_supply_contract = @contracting_request.water_supply_contract || WaterSupplyContract.new
       @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new
       @subscriber = @contracting_request.subscriber || Subscriber.new
+      @old_subscriber = @contracting_request.old_subscriber
 
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id).order("billable_items.billable_concept_id")
@@ -1803,27 +1809,24 @@ module Ag2Gest
       @calibers = Caliber.with_tariff.order(:caliber)
       @billing_periods = BillingPeriod.order("period DESC").includes(:billing_frequency).find_all_by_project_id(@projects_ids)
       _tariff_type = []
-      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
+      tariff_type_select = []
+      _billable_concept = []
+
+      @old_subscriber.blank? ? _tariff_availables = @water_supply_contract.contracted_tariffs : _tariff_availables = @old_subscriber.subscriber_tariffs.availables
+      _tariff_availables.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !_tariff_type.include? tt.tariff.tariff_type.name
             _tariff_type = _tariff_type << tt.tariff.tariff_type.name
           end
-      end
-      @tariff_type = _tariff_type.join(", ")
-
-      tariff_type_select = []
-      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !tariff_type_select.include? tt.tariff.tariff_type.id
             tariff_type_select = tariff_type_select << tt.tariff.tariff_type.id
           end
-      end
-      @tariff_type_select = tariff_type_select
-
-      _billable_concept = []
-      @water_supply_contract.contracted_tariffs.includes(tariff: {billable_item: :billable_concept}).order("billable_items.billable_concept_id").each do |tt|
           if !_billable_concept.include? tt.tariff.billable_item.id
             _billable_concept = _billable_concept << tt.tariff.billable_item.id
           end
       end
+      @tariff_type = _tariff_type.join(", ")
+      @tariff_type_select = tariff_type_select
+
       if _billable_concept == []
         @billable_concept_availables.each do |tt|
             if !_billable_concept.include? tt.id
@@ -1841,10 +1844,12 @@ module Ag2Gest
       # @tariff_type_dropdown = _tariff_type_ids
 
       @grouped_options = @billable_concept_select.inject({}) do |biller, bc|
-        _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+        # _tariff_type_ids = BillableItem.find(bc).grouped_tariff_types
+        _tariff_type_ids = BillableItem.joins(:tariffs, :tariff_types).where('(tariffs.ending_at >= ? OR tariffs.ending_at IS NULL) AND billable_items.billable_concept_id in (?)', Date.today, bc).select("tariff_types.id id_, CONCAT(tariff_types.name, ' (', tariff_types.code, ')') to_label_").group('tariff_types.id')
+
         _tariff_type_ids.each do |ttt|
           @tariffs = ttt
-          (biller[BillableItem.find(bc).to_label_biller] ||= []) << [@tariffs.to_label,@tariffs.id]
+          (biller[BillableItem.find(bc).to_label_biller] ||= []) << [@tariffs.to_label_,@tariffs.id_]
         end
         biller
       end

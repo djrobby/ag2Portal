@@ -25,7 +25,10 @@ class BillableItem < ActiveRecord::Base
   #
   scope :belongs_to_project, -> p { where(project_id: p).by_code_id }
   scope :availables, -> { includes(:regulation).where("regulations.ending_at IS NULL OR ending_at >= ?", Date.today)}
-
+  scope :with_tariff, -> p, bc { joins(:tariffs, :billable_concept, :regulation, :project, :biller)
+                            .where("(regulations.ending_at >= ? OR regulations.ending_at IS NULL) AND (tariffs.ending_at >= ? OR tariffs.ending_at IS NULL) AND billable_concepts.billable_document = 1 AND billable_items.project_id = ? AND billable_concepts.id NOT IN (?)", Date.today, Date.today, p, bc)
+                            .order("billable_concepts.id")
+                            .group("billable_items.id")}
 
   before_save :check_sum
   before_destroy :check_for_dependent_records

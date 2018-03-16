@@ -17,6 +17,7 @@ module Ag2Gest
                                                 :su_find_invoice_to_period,
                                                 :simple_bill,
                                                 :update_simple,
+                                                :update_tariffs,
                                                 :void,
                                                 :subscriber_report,
                                                 :subscriber_tec_report,
@@ -31,6 +32,8 @@ module Ag2Gest
                                                 :sub_load_postal,
                                                 :sub_load_bank,
                                                 :sub_load_dropdowns,
+                                                :add_tariff_new,
+                                                :add_bill_new,
                                                 :sub_load_debt,
                                                 :sub_sepa_pdf,
                                                 :non_billable_button,
@@ -98,12 +101,7 @@ module Ag2Gest
       # @client_bank_account = ClientBankAccount.find(params[:cba_id])
       _bank_account = @subscriber.client_bank_accounts.where(id: params[:cba_id]).first
       _bank_account.update_attributes(ending_at: Date.today)
-      @json_data = { "today" => Date.today }
-
-      respond_to do |format|
-        format.html
-        format.json { render json: @json_data }
-      end
+      redirect_to subscriber_path(@subscriber) + "#debits"
     end
 
     # disable tariff
@@ -112,12 +110,7 @@ module Ag2Gest
       # @client_bank_account = ClientBankAccount.find(params[:cba_id])
       _tariff = SubscriberTariff.where('id = ? and subscriber_id = ?',params[:st_id], params[:id])
       _tariff.update_all(ending_at: Date.today)
-      @json_data = { "today" => Date.today }
-
-      respond_to do |format|
-        format.html
-        format.json { render json: @json_data }
-      end
+      redirect_to subscriber_path(@subscriber) + "#tariffs"
     end
 
     # Update country text field at view from region select
@@ -185,23 +178,26 @@ module Ag2Gest
     end
 
     def update_tariffs
-      @subscriber = Subscriber.find params[:id]
-      # tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id = ?", @subscriber.water_supply_contract.try(:tariff_type_id)).select{|t| t.billable_item.billable_concept.billable_document == "1"}
-      _tariff_type_ids = []
-      SubscriberTariff.availables_to_subscriber(@subscriber.id).each do |tt|
-        if !_tariff_type_ids.include? tt.tariff.tariff_type.id
-          _tariff_type_ids << tt.tariff.tariff_type.id
-        end
-      end
-      @tariff_type_ids = _tariff_type_ids
-      tariffs_delete = Tariff.where("ending_at IS NULL AND tariff_type_id in (?)", @tariff_type_ids).select{|t| t.billable_item.billable_concept.billable_document == "1"}
+      @subscriber = Subscriber.find(params[:id])
+      @caliber = @subscriber.meter.caliber_id
+      _tariff_type_ids = params[:TariffType_]
+      _billable_item_ids = params[:BillableConcept_]
+      _new_ids = []
+      tariffs = Tariff.availables_to_project_types_items_document_caliber(_billable_item_ids, @subscriber.tariffs.first.billable_item.project_id, _tariff_type_ids, 1, @caliber)
 
-      @subscriber.tariffs.delete(tariffs_delete)
-      params[:subscriber][:tariff_ids].reject { |c| c.empty? }.each do |t|
-         s = SubscriberTariff.new(subscriber_id: @subscriber.id, tariff_id: t)
-         s.save
-       end
-      redirect_to subscriber_path(@subscriber), notice: "Tarifas actualizada correctamente"
+      tariffs.each do |a|
+        @subscriber.tariffs << a
+        _new_ids = _new_ids << @subscriber.subscriber_tariffs.last.id
+      end
+
+      _new_tariff = SubscriberTariff.where('id in (?)',_new_ids)
+      _new_tariff.update_all(starting_at: Date.today)
+
+      if tariffs.blank?
+        redirect_to subscriber_path(@subscriber) + "#tariffs", alert: "No existen tarifas"
+      else
+        redirect_to subscriber_path(@subscriber) + "#tariffs", notice: "Tarifas actualizada correctamente"
+      end
     end
 
     def update_simple
@@ -232,24 +228,11 @@ module Ag2Gest
       else
         @bill_voided = @bill
       end
-      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, nil, Date.today)
+      invoice_date = Date.today
+      payday_limit = invoice_date + @subscriber.office.days_for_invoice_due_date
+      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, payday_limit, invoice_date)
       # @reading.generate_pre_bill(nil,nil,3)
       Sunspot.index! [@bill] unless @bill.blank?
-      # @search_bills = Bill.search do
-      #   with :subscriber_id, params[:id]
-      #   order_by :created_at, :asc
-      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
-      # end
-      # @search_readings = Reading.search do
-      #   with :subscriber_id, params[:id]
-      #   # order_by :billing_period_id, :desc
-      #   # order_by :reading_date, :desc
-      #   # order_by :reading_index
-      #   order_by :sort_id, :desc
-      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
-      # end
-      # @subscriber_readings = @search_readings.results
-      # @subscriber_bills = @search_bills.results
 
       @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
       invoice_status = (0..99).to_a.join(',')
@@ -294,17 +277,10 @@ module Ag2Gest
                               holder_fiscal_id: params[:client_bank_account][:holder_fiscal_id],
                               holder_name: params[:client_bank_account][:holder_name]
                             )
-      respond_to do |format|
-        if @client_bank_account.save
-          format.html { redirect_to @subscriber, notice: t('ag2_gest.subscribers.client_bank_account.successful') }
-          format.json { render json: @client_bank_account, status: :created, location: @client_bank_account }
-        else
-          @countries = Country.order(:name)
-          @bank = banks_dropdown
-          @bank_offices = bank_offices_dropdown
-          format.html { redirect_to @subscriber, alert: t('ag2_gest.subscribers.client_bank_account.failure') }
-          format.json { render json: @client_bank_account.errors, status: :unprocessable_entity }
-        end
+      if @client_bank_account.save
+        redirect_to subscriber_path(@subscriber) + "#debits", notice: t('ag2_gest.subscribers.client_bank_account.successful')
+      else
+        redirect_to subscriber_path(@subscriber) + "#debits", alert: t('ag2_gest.subscribers.client_bank_account.failure')
       end
     end
 
@@ -652,6 +628,8 @@ module Ag2Gest
     def su_find_invoice_to_period
       subscriber = Subscriber.find(params[:subscriber_id])
       period = BillingPeriod.find(params[:period])
+      bill_last_date = formatted_date(Bill.last_billed_date(period.project.company_id, period.project.office_id)) rescue "N/A"
+      alert_date = I18n.t("activerecord.attributes.bill.alert_invoice_date_bills") + " " + bill_last_date
       alert_bill = ""
       code_bill = ''
       bill_original = ''
@@ -675,17 +653,13 @@ module Ag2Gest
         alert_bill = I18n.t("activerecord.attributes.subscriber.alert_refact")
         code_bill = '$refact'
       end
-      if bill_original == 1 && bill_void == ''
-        alert_bill = I18n.t("activerecord.attributes.subscriber.alert_without_void")
-        code_bill = '$err'
-      end
-      if bill_original == '' && bill_void == 2
+      if (bill_original == 1 && bill_void == '') || (bill_original == '' && bill_void == 2)
         alert_bill = I18n.t("activerecord.attributes.subscriber.alert_without_original")
         code_bill = '$err'
       end
 
       # Setup JSON
-      @json_data = { "code_bill" => code_bill, "alert_bill" => alert_bill }
+      @json_data = { "code_bill" => code_bill, "alert_bill" => alert_bill, "alert_date" => alert_date }
       render json: @json_data
     end
 
@@ -772,8 +746,22 @@ module Ag2Gest
                       "banks" => banks_array, "bank_offices" => bank_offices_array,
                       "bank_account_classes" => bank_account_classes_array, "meter_location" => meter_locations_array,
                       "billing_period" => billing_periods_array(subscriber), "projects" => projects_array,
-                      "reading_type" => reading_types_array, "billing_periods_reading" => billing_period_readings_array(subscriber) }
-                      # "current_debt" => current_debt, "current_debt_label" => current_debt_label }
+                      "reading_type" => reading_types_array }
+                      # "billing_periods_reading" => billing_period_readings_array(subscriber)
+                      # "billable_concept_availables" => billable_concepts_available_array(subscriber)
+                      # "current_debt" => current_debt, "current_debt_label" => current_debt_label
+      render json: @json_data
+    end
+
+    def add_tariff_new
+      subscriber = Subscriber.find(params[:subscriber_id])
+      @json_data = { "billable_concept_availables" => billable_concepts_available_array(subscriber)}
+      render json: @json_data
+    end
+
+    def add_bill_new
+      subscriber = Subscriber.find(params[:subscriber_id])
+      @json_data = { "billing_periods_reading" => billing_period_readings_array(subscriber)}
       render json: @json_data
     end
 
@@ -882,6 +870,10 @@ module Ag2Gest
       manage_filter_state_show
       filter = params[:ifilter_show] || "pending"
       @active_ifilter = filter
+      filter_tariff = params[:ifilter_show_tariff] || "active"
+      @active_ifilter_tariff = filter_tariff
+      filter_account = params[:ifilter_show_account] || "active"
+      @active_ifilter_account = filter_account
 
       @breadcrumb = 'read'
       if !@@subscribers.nil?
@@ -929,26 +921,37 @@ module Ag2Gest
       @bank_account_classes = []
       # modals in show
       @billing_periods_reading = []
+      # modals show_tab_tariffs
+      @billable_concept_availables = []
 
-      _tariff_type_ids = []
-      _tariffs = !@subscriber.water_supply_contract.blank? ? @subscriber.contracted_tariffs : @subscriber.subscriber_tariffs
-      _tariffs.each do |tt|
-        if !_tariff_type_ids.include? tt.tariff.tariff_type.id
-          _tariff_type_ids << tt.tariff.tariff_type.id
-        end
+      # _tariff_type_ids = []
+      # _tariffs = !@subscriber.water_supply_contract.blank? ? @subscriber.contracted_tariffs : @subscriber.subscriber_tariffs
+      # _tariffs.each do |tt|
+      #   if !_tariff_type_ids.include? tt.tariff.tariff_type.id
+      #     _tariff_type_ids << tt.tariff.tariff_type.id
+      #   end
+      # end
+      # @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
+      # modals show_tab_tariffs
+
+      if filter_tariff == "all"
+        @subscriber_tariffs = SubscriberTariff.to_subscriber_full(@subscriber.id).paginate(:page => params[:tariff_page] || 1, :per_page => 10)
+      else
+        @subscriber_tariffs = SubscriberTariff.availables_to_subscriber_full(@subscriber.id).paginate(:page => params[:tariff_page] || 1, :per_page => 10)
       end
-      @tariffs_dropdown = Tariff.current_by_type_and_use_in_service_invoice_full(_tariff_type_ids)
-
-      @subscriber_tariffs = SubscriberTariff.availables_to_subscriber_full(@subscriber.id)
 
       ### Bank accounts ###
-      @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
-      @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
-      @subscriber_accounts = @subscriber_accounts
-                            .paginate(:page => params[:page] || 1, :per_page => 10)
+      if filter_account == "all"
+        @subscriber_accounts = ClientBankAccount.by_subscriber_full(@subscriber.id)
+        @subscriber_accounts = ClientBankAccount.by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
+      else
+        @subscriber_accounts = ClientBankAccount.active_by_subscriber_full(@subscriber.id)
+        @subscriber_accounts = ClientBankAccount.active_by_client_full(@subscriber.client_id) if @subscriber_accounts.blank?
+      end
+      @subscriber_accounts = @subscriber_accounts.paginate(:page => params[:account_page] || 1, :per_page => 10)
 
       ### Readings ###
-      @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:page] || 1, :per_page => 10)
+      @subscriber_readings = Reading.by_subscriber_full(@subscriber.id).paginate(:page => params[:reading_page] || 1, :per_page => 10)
       @subscriber_readings_average = (@subscriber_readings.sum(&:consumption) / @subscriber_readings.size).round rescue 0
       # @subscriber_readings = @subscriber.readings.paginate(:page => params[:page], :per_page => 5)
       # search_readings = Reading.search do
@@ -968,7 +971,7 @@ module Ag2Gest
       end
       # @subscriber_invoice_items = []
       # @subscriber_invoices = []
-      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
+      @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status).paginate(:page => params[:bill_page] || 1, :per_page => 10)
       @subscriber_bills_total = Bill.by_subscriber_total(@subscriber.id, invoice_status).first.bills_total
       # @subscriber_bills = Bill.by_subscriber_full(@subscriber.id, invoice_status)
       # if !@subscriber_bills.empty?
@@ -1286,10 +1289,10 @@ module Ag2Gest
       # payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
       # invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
       invoice_date = Date.today
-      payday_limit = Date.today + 60
-      if !@reading.billing_period.billing_ending_date.blank? || !@reading.billing_period.billing_starting_date.blank?
-        payday_limit = @reading.billing_period.billing_ending_date >= invoice_date ? @reading.billing_period.billing_ending_date : invoice_date + (@reading.billing_period.billing_ending_date - @reading.billing_period.billing_starting_date).days
-      end
+      payday_limit = invoice_date + @subscriber.office.days_for_invoice_due_date
+      # if !@reading.billing_period.billing_ending_date.blank? && !@reading.billing_period.billing_starting_date.blank?
+      #   payday_limit = @reading.billing_period.billing_ending_date >= invoice_date ? @reading.billing_period.billing_ending_date : invoice_date + (@reading.billing_period.billing_ending_date - @reading.billing_period.billing_starting_date).days
+      # end
 
       bills = Bill.service_by_project_period_subscriber(period.project_id, period.id, @subscriber.id)
       bills.each do |b|
@@ -1827,11 +1830,30 @@ module Ag2Gest
       _array
     end
 
+    def billable_concepts_available_array(s)
+      _bc = []
+      a = SubscriberTariff.availables_to_subscriber(s)
+      a.each do |sta|
+         _bc = _bc << sta.tariff.billable_item.billable_concept_id
+      end
+      _d = BillableItem.with_tariff(s.tariffs.first.billable_item.project_id, _bc.blank? ? "" : _bc)
+      _array = []
+      _d.each do |i|
+        _array = _array << [i.id, i.to_label_biller]
+      end
+      _array
+    end
+
     def manage_filter_state_show
       if params[:ifilter_show]
         session[:ifilter_show] = params[:ifilter_show]
       elsif session[:ifilter_show]
         params[:ifilter_show] = session[:ifilter_show]
+      end
+      if params[:ifilter_show_tariff]
+        session[:ifilter_show_tariff] = params[:ifilter_show_tariff]
+      elsif session[:ifilter_show_tariff]
+        params[:ifilter_show_tariff] = session[:ifilter_show_tariff]
       end
     end
 

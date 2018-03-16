@@ -1,4 +1,41 @@
 <script>
+  var text_field_color;
+  var old_payday_limit;
+
+  function addDays(theDate, days) {
+      return new Date(theDate.getTime() + days*24*60*60*1000);
+  }
+
+  function set_date_bills() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd = '0'+dd
+    }
+    if(mm<10) {
+        mm = '0'+mm
+    }
+    today = dd + '/' + mm + '/' + yyyy;
+    $("#invoice_date").val(today);
+    
+    var limit_days = "<%= @bills.first.project.office.days_for_invoice_due_date %>";
+    var currentDate = addDays(new Date(), limit_days);
+    var dd = currentDate.getDate();
+    var mm = currentDate.getMonth()+1; //January is 0!
+    var yyyy = currentDate.getFullYear();
+    if(dd<10) {
+        dd = '0'+dd
+    }
+    if(mm<10) {
+        mm = '0'+mm
+    }
+    payday_limit = dd + '/' + mm + '/' + yyyy;
+    $("#payday_limit").val(payday_limit);
+    old_payday_limit = payday_limit;
+  };
+
   $(document).ready(function() {
     $('.date_picker').datepicker({
       format : 'dd/mm/yyyy',
@@ -19,9 +56,31 @@
       }
     });
   });
+
   jQuery(function($) {
+    $("#btn_confirm_bills").click(function () {
+      set_date_bills();
+    });
+
+    $("#payday_limit").on('changeDate', function() {
+      // preserve the current object
+      var invoice_date = $("#invoice_date").val();
+      var payday_limit = $("#payday_limit").val();
+      if (payday_limit < invoice_date) {
+        $("#payday_limit").val(old_payday_limit);
+        // // Right formatted date
+        // invoice_date = right_date(invoice_date,"<%= I18n.locale %>");
+        // // make the POST call
+        // jQuery.getJSON('check_invoice_date/' + project_id  + '/' + invoice_date, function(data) {
+        //   $("#payday_limit").val(old_payday_limit);
+        // });
+      }
+      return false;
+    });
+
     $("#invoice_date").on('changeDate', function() {
       // preserve the current object
+      $("#submit_pre_bill").removeClass('hide');
       var invoice_date = $("#invoice_date").val();
       var project_id = "<%= @bills.first.project_id %>";
       if (invoice_date == "") {
@@ -31,13 +90,19 @@
       invoice_date = right_date(invoice_date,"<%= I18n.locale %>");
       // make the POST call
       jQuery.getJSON('check_invoice_date/' + project_id  + '/' + invoice_date, function(data) {
+        $("#payday_limit").val(data.payday_limit);
+        old_payday_limit = data.payday_limit;
         if (data.code != "") {
           $("#invoice_date").val("");
+          $("#payday_limit").val("");
+          // $("#submit_pre_bill").addClass('hide');
+          set_date_bills();
           alert(data.code);
         }
       });
       return false;
     });
+    
   });
 </script>
 
@@ -173,7 +238,7 @@
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills } %>
 
 <% if @bills and @bills.first.bill_id.nil? %>
-  <a href="#confirm-bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
+  <a href="#confirm-bills" id="btn_confirm_bills" role="button" class="btn btn-primary" data-toggle="modal">Confirmar facturas</a>
 <% else %>
 <%= link_to "<i class='icon-print icon-white'></i> #{t 'activerecord.attributes.bill.summary'}".html_safe, bills_summary_bill_path(@bills.first.pre_group_no, :format => :pdf), target: "_blank", class: "btn btn-warning", title: I18n.t("activerecord.attributes.bill.summary") %>
 <% end %>
@@ -186,18 +251,19 @@
 
 <!-- Modal -->
 <div id="confirm-bills" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmarBills" aria-hidden="true">
-  <%= simple_form_for :pre_bill, url: confirm_bills_path, method: :get, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline'} do |f| %>
+  <%= simple_form_for :pre_bill, url: confirm_bills_path, method: :get, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline form_confirm_bills'} do |f| %>
     <%= f.input :ids, :as => :hidden, :input_html => { :value =>  params[:bills] } %>
     <div class="modal-header">
       <h4>Confirmar facturas</h4>
     </div>
     <div class="modal-body">      
       <%= f.input :confirmation_date, required: true, label: I18n.t("ag2_gest.bills.index.confirmation_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "string required mid-text-field date_picker", value: formatted_date(Date.today), id: "confirmation_date"} %>
-      <%= f.input :invoice_date, required: true, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @billing_starting_date, id: "invoice_date"} %>
-      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: @billing_ending_date} %>
+      <%= f.input :invoice_date, required: true, label: I18n.t("ag2_gest.bills.index.invoice_date"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: formatted_date(Date.today), id: "invoice_date"} %>
+      <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: formatted_date(Date.today + @bills.first.project.office.days_for_invoice_due_date), id: "payday_limit"} %>
     </div>
     <div class="modal-footer">
-      <%= f.button :submit, "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', :id => "submit_pre_bill" %>
+      <span class="left-floated shrinked" style="vertical-align: bottom"><%= I18n.t("activerecord.attributes.bill.alert_invoice_date_bills") + " " + @bill_last_date %></span>
+      <%= f.submit "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary hide', :id => "submit_pre_bill" %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>
@@ -208,7 +274,7 @@
     $("#submit_pre_bill").click(function () { 
       var confirmation_date = $("#confirmation_date").val();
       var invoice_date = $("#invoice_date").val();
-      if (confirmation_date == "" || invoice_date == "" ) {
+      if (confirmation_date == "" || invoice_date == "") {
         alert("<%= I18n.t(:mandatory_subtitle) %>");
         return false;
       }

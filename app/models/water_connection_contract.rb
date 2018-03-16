@@ -108,7 +108,7 @@ class WaterConnectionContract < ActiveRecord::Base
                         organization_id: contracting_request.project.organization_id,
                         created_by: contracting_request.try(:created_by) )
       tariff_scheme.tariffs_contract(caliber_id).each do |tariffs_biller|
-        invoice = Invoice.create( invoice_no: invoice_next_no(contracting_request.try(:project).try(:company_id), contracting_request.try(:project).try(:office_id)),
+        invoice = Invoice.create( invoice_no: invoice_next_no(tariffs_biller[0], contracting_request.try(:project).try(:office_id)),
                                 bill_id: bill.id,
                                 invoice_status_id: InvoiceStatus::PENDING,
                                 invoice_type_id: InvoiceType::CONTRACT,

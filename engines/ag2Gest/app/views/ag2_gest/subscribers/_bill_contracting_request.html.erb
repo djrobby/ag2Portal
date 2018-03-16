@@ -36,7 +36,7 @@
       </div>
       <div class="span2 soft-padding pull-right">
         <%= link_to "<i class='icon-print icon-white'></i>".html_safe, biller_contract_pdf_bill_path(bill.bill_id_, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: "Imprimir"  %>
-        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill.bill_id_) , class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Abonar"  %>
+        <%= link_to "<i class='icon-remove icon-white'></i>".html_safe, void_subscriber_bill_path(@subscriber,bill.bill_id_), :remote => true, class: "btn btn-warning btn-mini", data: {confirm: I18n.t("ag2_gest.subscribers.show.are_you_sure_to_void") + "#{t("activerecord.models.bill.one")}? (#{bill.bill_right_no_})"}, title: "Abonar"  %>
         <%#= link_to "<i class='icon-plus icon-white'></i>".html_safe, bill_path(bill) , class: "btn btn-warning btn-mini" %>
       </div>
     </div>

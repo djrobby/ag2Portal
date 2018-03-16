@@ -1,0 +1,105 @@
+<script type="text/javascript">
+  $(document).ready(function() {
+    var active_account = true;
+    var active_ifilter_account = "<%= @active_ifilter_account %>";
+
+    $('.account-all').removeClass('highlighted')
+    $('.account-active').removeClass('highlighted')
+    if (active_ifilter_account == "all") {
+      $('.account-all').addClass('highlighted')
+      $('#sepa_pdf').addClass('hide')
+    } else if (active_ifilter_account == "active") {
+      $('.account-active').addClass('highlighted')
+    }
+
+    $("#pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+
+    // $("#disable_bank_account_button").click(function(){
+    //   var subscriber_id = "<%= @subscriber.id %>"
+    //   var cba_id = $("#cba_id").text();
+    //   var result = confirm("<%= t('activerecord.attributes.subscriber.alert_disable_bank_account')%>");
+    //   if (result) {
+    //     jQuery.getJSON(subscriber_id + '/disable_bank_account/' + cba_id, function(data) {
+    //       var today = new Date();
+    //       var dd = today.getDate();
+    //       var mm = today.getMonth()+1; //January is 0!
+    //       var yyyy = today.getFullYear();
+    //       if(dd<10) {
+    //           dd = '0'+dd
+    //       }
+    //       if(mm<10) {
+    //           mm = '0'+mm
+    //       }
+    //       today = dd + '/' + mm + '/' + yyyy;
+    //       $("#ending_at").text(today);
+    //       $("#disable_bank_account_button").addClass("hide");
+    //     });
+    //     return false;
+    //   }
+    // });
+    $("#btn_disable_bank_account").click(function(){
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; //January is 0!
+      var yyyy = today.getFullYear();
+      if(dd<10) {
+          dd = '0'+dd
+      }
+      if(mm<10) {
+          mm = '0'+mm
+      }
+      today = dd + '/' + mm + '/' + yyyy;
+      $("#ending_at").text(today);
+      $("#btn_disable_bank_account").addClass("hide");
+    });
+  });
+</script>
+<div class="row-fluid">
+  <!-- Button to trigger modal -->
+  <div class="row-fluid">
+    <div class="span3">
+      <a id="su_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber_accounts.blank?  %>
+    </div>
+    <div class="span5" align="center">
+      <%= link_to t('ag2_gest.subscribers.show.active_only'), {controller: "subscribers", action: "show", ifilter_show_account: "active", :remote => true}, class: "account-active" %> |
+      <%= link_to t('ag2_gest.subscribers.show.all'), {controller: "subscribers", action: "show", ifilter_show_account: "all", :remote => true}, class: "account-all" %>
+    </div>
+    <div class="span3" align="right">
+    </div>
+  </div>
+  <table class="table table-condensed table-striped shrinked stu">
+    <thead>
+      <tr>
+        <th><%= t "activerecord.attributes.supplier_bank_account.bank_account_class" %></th>
+        <th><%= t "activerecord.attributes.supplier_bank_account.e_format" %></th>
+        <th><%= t "activerecord.attributes.supplier_bank_account.holder_name" %></th>
+        <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
+        <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
+        <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @subscriber_accounts.each do |client_bank_account| %>
+        <tr>
+          <td><%= client_bank_account.bank_account_class_name unless client_bank_account.bank_account_class_name.blank? %></td>
+          <td><%= client_bank_account.iban_with_spaces unless client_bank_account.iban_with_spaces.blank? %></td>
+          <td><%= client_bank_account.holder_name unless client_bank_account.holder_name.blank? %></td>
+          <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
+          <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>
+          <td align="center" id="ending_at"><%= formatted_date(client_bank_account.ending_at) unless client_bank_account.ending_at.blank? %></td>
+          <td class="hide"><%= client_bank_account.id %></td>
+          <td>
+            <a href="<%= @subscriber.id %>/disable_bank_account/<%= client_bank_account.id %>" id="btn_disable_bank_account" data-confirm="<%= t('activerecord.attributes.subscriber.alert_disable_bank_account')%>" data-remote="true" class="btn btn-mini <%= 'hide' unless client_bank_account.is_active != 0 %>" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
+          </td>
+        </tr>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%#= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_accounts } %>
+  <%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @subscriber_accounts, :pvar => "account_page"} %>

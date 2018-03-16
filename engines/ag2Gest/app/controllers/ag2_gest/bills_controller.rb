@@ -57,7 +57,8 @@ module Ag2Gest
       if !Bill.is_new_bill_date_valid?(new_bill_date, project.company_id, project.office_id)
         code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
       end
-      render json: { "code" => code }
+      payday_limit = new_bill_date + project.office.days_for_invoice_due_date
+      render json: { "code" => code, "payday_limit" => formatted_date(payday_limit)}
     end
 
     def bill_supply_pdf
@@ -206,8 +207,10 @@ module Ag2Gest
       end
 
       _title = 'chtt=' + t("activerecord.attributes.report.billable_concept")
-      _type_chart = 'cht=p'
-      _size = 'chs=477x210'
+      # _type_chart = 'cht=p'
+      # _size = 'chs=477x210'
+      _type_chart = 'cht=p3'
+      _size = 'chs=470x190'
       _color = 'chco=908f8f'
       _value = 'chd=t:' + value[0..-2]
       _label = 'chl=' + label[0..-2]
@@ -519,8 +522,9 @@ module Ag2Gest
                                      .joins('INNER JOIN (bills INNER JOIN (invoices LEFT JOIN companies ON invoices.biller_id=companies.id) ON bills.id=invoices.bill_id) ON pre_bills.bill_id=bills.id') \
                                      .where('pre_bills.pre_group_no = ? AND pre_bills.bill_id IS NOT NULL', params[:bills]) \
                                      .group('invoices.biller_id')
-        @billing_starting_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_starting_date)) rescue ""
-        @billing_ending_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date)) rescue ""
+        @bill_last_date = formatted_date(Bill.last_billed_date(@bills.first.project.company_id, @bills.first.project.office_id)) rescue "N/A"
+        # @billing_starting_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_starting_date)) rescue ""
+        # @billing_ending_date = formatted_date(@bills.first.pre_invoices.first.try(:billing_period).try(:billing_ending_date)) rescue ""
         respond_to do |format|
           format.html # index.html.erb
           format.json { render json: @bills }

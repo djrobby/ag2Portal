@@ -19,6 +19,10 @@ $(document).ready(function() {
   }).on('changeDate', function(e){
     $('.date_picker').datepicker('hide');
   });
+
+  $('#submit_client_bank_btn').click(function(){
+    $("#newAccountModal").modal('hide');
+  });
 });
 
 jQuery(function($) {
@@ -61,7 +65,7 @@ jQuery(function($) {
 </script>
 
 <div id="newAccountModal" class="modal fade" style="display: none;">
-  <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber) , :html => { "data-type" => :json, :class => 'modal-footer-right form-inline' } do |f| %>
+  <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right form-inline', :id => 'form_new_client_bank' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
     <div class="modal-header">
@@ -97,7 +101,8 @@ jQuery(function($) {
     </div>
     <div class="modal-footer">
       <a class="btn btn-primary check_iban_btn" href="#"><%=t('validate') %></a>
-      <%= f.submit t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
+      <%= f.button :submit, t("activerecord.attributes.contracting_request.accept"), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary', :id => 'submit_client_bank_btn' %>
+
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>

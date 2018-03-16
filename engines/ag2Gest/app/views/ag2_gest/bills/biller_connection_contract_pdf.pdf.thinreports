@@ -86,7 +86,7 @@ report.page.values(bill_c: I18n.t("activerecord.models.invoice.one"),
 					   caliber_c: I18n.t("activerecord.attributes.subscriber.caliber") + ": ",
 					   caliber: @water_supply_contract.try(:caliber).try(:caliber),
 					   cadastral_reference_c: I18n.t("activerecord.attributes.water_supply_contract.cadastral_reference") + ": ",
-					   cadastral_reference: @water_supply_contract.try(:cadastral_reference),	   				   
+					   cadastral_reference: @water_supply_contract.try(:cadastral_reference),
 					   paramA_c: I18n.t('activerecord.attributes.tariff.connection_fee_a') + ":",
 					   paramA: tariffs_contract_a,
 					   paramB_c: I18n.t('activerecord.attributes.tariff.connection_fee_b') + ":",
@@ -128,10 +128,10 @@ end
 #
 report.page.list(:default).header do |header|
 	header.item(:title2).value I18n.t("activerecord.models.invoice.one") + " de " + @biller_printer.invoices.first.try(:invoice_type).try(:name)
-	header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
-	header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no)
-	header.item(:bill_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
-	header.item(:bill_date).value var_bill_date
+	# header.item(:bill_no_c).value I18n.t("activerecord.models.invoice.one") + " " + I18n.t("activerecord.attributes.bill.bill_no")
+	# header.item(:bill_no).value @biller_printer.invoices.first.try(:full_no)
+	# header.item(:bill_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
+	# header.item(:bill_date).value var_bill_date
 end
 #
 # Factura

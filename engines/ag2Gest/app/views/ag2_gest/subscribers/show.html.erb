@@ -289,44 +289,7 @@
 
   <!-- ClientBankAccount -->
   <div class="tab-pane fade" id="debits">
-    <div class="row-fluid">
-      <div class="span12">
-        <a id="su_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
-
-        <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber_accounts.blank?  %>
-      </div>
-      <table class="table table-condensed table-striped shrinked stu">
-        <thead>
-          <tr>
-            <th><%= t "activerecord.attributes.supplier_bank_account.bank_account_class" %></th>
-            <th><%= t "activerecord.attributes.supplier_bank_account.e_format" %></th>
-            <th><%= t "activerecord.attributes.supplier_bank_account.holder_name" %></th>
-            <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
-            <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
-            <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @subscriber_accounts.each do |client_bank_account| %>
-            <tr>
-              <td><%= client_bank_account.bank_account_class_name unless client_bank_account.bank_account_class_name.blank? %></td>
-              <td><%= client_bank_account.iban_with_spaces unless client_bank_account.iban_with_spaces.blank? %></td>
-              <td><%= client_bank_account.holder_name unless client_bank_account.holder_name.blank? %></td>
-              <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
-              <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>
-              <td align="center" id="ending_at"><%= formatted_date(client_bank_account.ending_at) unless client_bank_account.ending_at.blank? %></td>
-              <td class="hide" id="cba_id"><%= client_bank_account.id %></td>
-              <td>
-                <a id='disable_bank_account_button' class="btn btn-mini <%= 'hide' unless client_bank_account.is_active != 0 %>" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
-              </td>
-            </tr>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_accounts } %>
-    </div>
+    <%= render 'show_tab_debits' %>
   </div>
 
   <!-- Notes(Está en blanco) -->
@@ -357,6 +320,7 @@
       <%#= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker"} %>
     </div>
     <div class="modal-footer">
+      <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_date"></span><br>
       <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_bill"></span>
       <%= f.submit "Crear factura", disable_with: t("activerecord.attributes.pre_reading.loading"), class: "btn btn-primary", id: "submit_bills" %>
       <button id="btn" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :close_button %></button>
@@ -420,7 +384,8 @@
         var bp = data.billing_period;
         var pj = data.projects;
         var rt = data.reading_type;
-        var bpr = data.billing_periods_reading;
+        // var bpr = data.billing_periods_reading;
+        // var bca = data.billable_concept_availables;
         // var cd = data.current_debt;
         // var cdl = data.current_debt_label;
 
@@ -428,6 +393,21 @@
         // $("#show_current_debt").text(cd);
         //$("#show_current_debt_label").text(cdl);
 
+        // billable concept
+        // $("#BillableConcept_").html("");
+        // $("#BillableConcept_").val("val", "");
+        // $("#BillableConcept_").append($('<option></option>').val("").html(""));
+        // if (!bca.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'billable_concept_availables' && option != "") {
+        //       $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(bca, function(id, option) {
+        //       $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
         // meter locations
         $("#input_add_meter_location").html("");
         $("#input_add_meter_location").val("val", "");
@@ -484,20 +464,20 @@
           });
         }
         // reading periods not billed
-        $("#billing_period_reading").html("");
-        $("#billing_period_reading").val("val", "");
-        $("#billing_period_reading").append($('<option></option>').val("").html(""));
-        if (!bpr.length) {
-          $.each(data, function(id, option) {
-            if (id == 'billing_periods_reading' && option != "") {
-              $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(bpr, function(id, option) {
-              $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
+        // $("#billing_period_reading").html("");
+        // $("#billing_period_reading").val("val", "");
+        // $("#billing_period_reading").append($('<option></option>').val("").html(""));
+        // if (!bpr.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'billing_periods_reading' && option != "") {
+        //       $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(bpr, function(id, option) {
+        //       $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
         // projects
         $("#project").html("");
         $("#project").val("val", "");
@@ -713,30 +693,6 @@
           $("#icon_down").removeClass("hide");
           $("#billable_button").removeClass("hide");
           $("#new_bill").addClass("hide");
-        });
-        return false;
-      }
-    });
-
-    $("#disable_bank_account_button").click(function(){
-      var subscriber_id = "<%= @subscriber.id %>"
-      var cba_id = $("#cba_id").text();
-      var result = confirm("<%= t('activerecord.attributes.subscriber.alert_disable_bank_account')%>");
-      if (result) {
-        jQuery.getJSON(subscriber_id + '/disable_bank_account/' + cba_id, function(data) {
-          var today = new Date();
-          var dd = today.getDate();
-          var mm = today.getMonth()+1; //January is 0!
-          var yyyy = today.getFullYear();
-          if(dd<10) {
-              dd = '0'+dd
-          }
-          if(mm<10) {
-              mm = '0'+mm
-          }
-          today = dd + '/' + mm + '/' + yyyy;
-          $("#ending_at").text(today);
-          $("#disable_bank_account_button").addClass("hide");
         });
         return false;
       }
@@ -1064,11 +1020,27 @@
 
     $("#billing_period_reading").change(function() {
       // make a POST call and replace the content
+      $("#submit_bills").show();
       var period = $('#billing_period_reading').val();
-      var subscriber_id = "<%= @subscriber.id %>"
+      var subscriber_id = "<%= @subscriber.id %>";
+      var office_id = "<%= @subscriber.office_id %>";
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; //January is 0!
+      var yyyy = today.getFullYear();
+      if(dd<10) {
+          dd = '0'+dd
+      }
+      if(mm<10) {
+          mm = '0'+mm
+      }
+      today = dd + '/' + mm + '/' + yyyy;
+      var invoice_date = right_date(today,"<%= I18n.locale %>");
       if (period == "")
         period = "$";
       jQuery.getJSON('su_find_invoice_to_period/' + period + '/' + subscriber_id, function(data) {
+        $("#alert_date").html(data.alert_date);
+        $("#alert_date").css('color', text_field_color);
         if (data.code_bill == "$fact") {
           $("#alert_bill").html(data.alert_bill);
           $("#alert_bill").css('color', text_field_color);
@@ -1079,6 +1051,12 @@
           $("#alert_bill").html(data.alert_bill);
           $("#alert_bill").css('color', 'red');
           $("#submit_bills").hide();
+        }
+      });
+      jQuery.getJSON('su_check_invoice_date/' + office_id  + '/' + invoice_date, function(data) {
+        if (data.code != "") {
+          $("#submit_bills").hide();
+          alert(data.code);
         }
       });
       return false;

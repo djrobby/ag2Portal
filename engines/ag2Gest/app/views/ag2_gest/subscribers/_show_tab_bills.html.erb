@@ -41,22 +41,73 @@
       }
     });
   });
+
+  jQuery(function($) {
+    // $(".btn_void_rebilling").click(function() {
+    //   // make a POST call and replace the content
+    //   var subscriber_id = "<%= @subscriber.id %>";
+    //   var office_id = "<%= @subscriber.office_id %>";
+    //   var today = new Date();
+    //   var dd = today.getDate();
+    //   var mm = today.getMonth()+1; //January is 0!
+    //   var yyyy = today.getFullYear();
+    //   if(dd<10) {
+    //       dd = '0'+dd
+    //   }
+    //   if(mm<10) {
+    //       mm = '0'+mm
+    //   }
+    //   today = dd + '/' + mm + '/' + yyyy;
+    //   var invoice_date = right_date(today,"<%= I18n.locale %>");
+    //   jQuery.getJSON('su_check_invoice_date/' + office_id  + '/' + invoice_date, function(data) {
+    //     if (data.code != "") {
+    //       alert(data.code);
+    //       return false;
+    //     }
+    //   });
+    // });
+    
+    $('#new_bill').click(function(){
+      var subscriber_id = $("#fnt_id").val();
+      if (subscriber_id == "") subscriber_id = "0";
+      jQuery.getJSON('add_bill_new/' + subscriber_id, function(data) {
+        var bpr = data.billing_periods_reading;
+        // reading periods not billed
+        $("#billing_period_reading").html("");
+        $("#billing_period_reading").val("val", "");
+        $("#billing_period_reading").append($('<option></option>').val("").html(""));
+        if (!bpr.length) {
+          $.each(data, function(id, option) {
+            if (id == 'billing_periods_reading' && option != "") {
+              $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(bpr, function(id, option) {
+              $("#billing_period_reading").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+    });
+  });
 </script>
-<div class="row">
-  <div class="span12">
+<div class="row-fluid">
+  <div class="span3">
+    <a href="#new-bill" role="button" id="new_bill" class="btn btn-mini btn-primary <%= 'hide' unless !@subscriber.non_billable %>" data-toggle="modal">Nueva factura</a>
+    <button id="collapse-init" class="btn btn-mini btn-primary"><%= "Ver todos" %></button>
+  </div>
+  <div class="span5" align="center">
     <%= link_to t('ag2_gest.subscribers.show.pendig_only'), {controller: "subscribers", action: "show", ifilter_show: "pending", :remote => true}, class: "bill-pending" %> |
     <%= link_to t('ag2_gest.subscribers.show.charged_only'), {controller: "subscribers", action: "show", ifilter_show: "charged", :remote => true}, class: "bill-charged" %> |
     <%= link_to t('ag2_gest.subscribers.show.all'), {controller: "subscribers", action: "show", ifilter_show: "all", :remote => true}, class: "bill-all" %>
     <!-- <%#= link_to t('ag2_gest.subscribers.show.unpaid_only'), controller: "subscribers", action: "show", ifilter: "unpaid", :remote => true %> | -->
-    <button id="collapse-init" class="btn btn-mini btn-primary pull-right" style="margin-left:5px;"><%= "Ver todos" %></button>
-    <a href="#new-bill" role="button" id="new_bill" class="btn btn-mini btn-primary pull-right <%= 'hide' unless !@subscriber.non_billable %>" style="margin-left:5px;" data-toggle="modal">Nueva factura</a>
-    </ul>
+  </div>
+  <div class="span3" align="right">
+    <b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= number_with_precision(@subscriber_bills_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
   </div>
 </div>
 
 <!-- Total bills/invoices -->
-<div align="right" class="span11"><h5><b><%= I18n.t("ag2_gest.subscribers.show.total_bills") %>:</b> <%= number_with_precision(@subscriber_bills_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
-<br></br>
 <div class="row">
   <div class="myspan"><b>&nbsp;</b></div> <!-- Space for icon-plus -->
   <div class="span2 soft-padding">
@@ -97,4 +148,6 @@
     <%= render 'bill_reading', :bill => bill %>
   <% end %>
 <% end %>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_bills } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @subscriber_bills, :pvar => "bill_page"} %>
+

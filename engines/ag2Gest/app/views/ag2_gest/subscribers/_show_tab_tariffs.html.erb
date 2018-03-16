@@ -10,80 +10,186 @@
 }
 </style>
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function () {
+    var active_tariff = true;
+    var active_ifilter_tariff = "<%= @active_ifilter_tariff %>";
 
-    $("#disable_tariff_button").click(function(){
-      var subscriber_id = "<%= @subscriber.id %>"
-      var st_id = $("#st_id").text();
-      var result = confirm("<%= t('activerecord.attributes.subscriber.alert_disable_tariff')%>");
-      if (result) {
-        jQuery.getJSON(subscriber_id + '/disable_tariff_button/' + st_id, function(data) {
-          var today = new Date();
-          var dd = today.getDate();
-          var mm = today.getMonth()+1; //January is 0!
-          var yyyy = today.getFullYear();
-          if(dd<10) {
-              dd = '0'+dd
-          }
-          if(mm<10) {
-              mm = '0'+mm
-          }
-          today = dd + '/' + mm + '/' + yyyy;
-          $("#tariff_ending_at").text(today);
-          $("#disable_tariff_button").addClass("hide");
-        });
-        return false;
-      }
+    $('.tariff-all').removeClass('highlighted')
+    $('.tariff-active').removeClass('highlighted')
+    if (active_ifilter_tariff == "all") {
+      $('.tariff-all').addClass('highlighted')
+    } else if (active_ifilter_tariff == "active") {
+      $('.tariff-active').addClass('highlighted')
+    }
+
+    $("#pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+
+    $('select.sel2').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      allowClear: true
+    });
+
+    $('#submit_tariff_btn').click(function(){
+      $("#add_tariff").modal('hide');
+    });
+  });
+
+  jQuery(function($) {
+    $('#add-tariff-new').click(function(){
+      var subscriber_id = $("#fnt_id").val();
+      if (subscriber_id == "") subscriber_id = "0";
+      jQuery.getJSON('add_tariff_new/' + subscriber_id, function(data) {
+        var bca = data.billable_concept_availables;
+        // billable concept
+        $("#BillableConcept_").html("");
+        $("#BillableConcept_").val("val", "");
+        $("#BillableConcept_").append($('<option></option>').val("").html(""));
+        if (!bca.length) {
+          $.each(data, function(id, option) {
+            if (id == 'billable_concept_availables' && option != "") {
+              $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(bca, function(id, option) {
+              $("#BillableConcept_").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      });
+    });
+
+    // $(".btn_disable_tariff_button").click(function(){
+    //   var subscriber_id = "<%= @subscriber.id %>"
+    //   var st_id = $("#st_id").text();
+    //   var result = confirm("<%= t('activerecord.attributes.subscriber.alert_disable_tariff')%>");
+    //   if (!result) {
+    //     return false;
+    //   } else {
+    //     jQuery.getJSON(subscriber_id + '/disable_tariff_button/' + st_id, function(data) {
+    //       var today = new Date();
+    //       var dd = today.getDate();
+    //       var mm = today.getMonth()+1; //January is 0!
+    //       var yyyy = today.getFullYear();
+    //       if(dd<10) {
+    //           dd = '0'+dd
+    //       }
+    //       if(mm<10) {
+    //           mm = '0'+mm
+    //       }
+    //       today = dd + '/' + mm + '/' + yyyy;
+    //       $("#tariff_ending_at").text(today);
+    //       $(".btn_disable_tariff_button").addClass("hide");
+    //     });
+    //   }
+    // });
+
+    $("#BillableConcept_").change(function() {
+      // make a POST call and replace the content
+      $("#TariffType_").removeClass("disabled");
+      var billable_concept_ids = $('#BillableConcept_').val();
+      var use_ids = $('#use_id_').val();
+      if (billable_concept_ids == null) $("#TariffType_").addClass("disabled");
+      if (billable_concept_ids == null) billable_concept_ids = null;
+      jQuery.getJSON('/ag2_gest/contracting_requests/update_tariff_type_select_from_billing_concept/' + billable_concept_ids + '/' + use_ids, function(data) {
+        var o = data;
+
+        var product = $('#TariffType_');
+        $("#TariffType_").html("");
+        $("#TariffType_").select2("val", "");
+        $("#TariffType_").append($('<option></option>').val("").html(""));
+        if (!o.length) {
+          $.each(data, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        } else {
+          $.each(o, function (key, cat) {
+              var group = $('<optgroup>',{label:key});
+              $.each(cat,function(i,item) {
+                  $("<option/>",{value:item.id,text:item.name}).appendTo(group);
+              });
+              group.appendTo( product );
+          });
+        }
+      });
+      return false;
     });
   });
 </script>
 
 <!-- Button to trigger modal -->
-<a href="#add_tariff" role="button" class="btn btn-warning btn-mini" data-toggle="modal"><%=t "ag2_gest.subscribers.index.add_tariff" %></a>
+<div class="row-fluid">
+  <div class="span3">
+    <a href="#add_tariff" id="add-tariff-new" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%=t "ag2_gest.subscribers.index.add_tariff" %></a>
+  </div>
+  <div class="span5" align="center">
+    <%= link_to t('ag2_gest.subscribers.show.active_only'), {controller: "subscribers", action: "show", ifilter_show_tariff: "active", :remote => true}, class: "tariff-active" %> |
+    <%= link_to t('ag2_gest.subscribers.show.all'), {controller: "subscribers", action: "show", ifilter_show_tariff: "all", :remote => true}, class: "tariff-all" %>
+  </div>
+  <div class="span3" align="right">
+  </div>
+</div>
+
+<!-- Body -->
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
+      <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
+      <th><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</th>
+      <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
+      <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @subscriber_tariffs.each do |t| %>
+      <tr>
+        <td class="billable_concept"><%= t.billable_concept_name unless t.billable_concept_name.blank? %></td>
+        <td class="tariff_type"><%= t.tariff_type_name unless t.tariff_type_name.blank? %></td>
+        <td class="billing_frequency"><%= t.billing_frequency_label unless t.billing_frequency_label.blank? %></td>
+        <td class="starting_at"><%= formatted_date(t.starting_at) unless t.starting_at.blank? %></td>
+        <td class="ending_at" id="tariff_ending_at"><%= formatted_date(t.ending_at) unless t.ending_at.blank? %></td>
+        <td class="hide" id="st_id"><%= t.id %></td>
+        <td>
+          <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff_id) } %>
+          <a href="<%= @subscriber.id %>/disable_tariff_button/<%= t.id %>" data-confirm="<%= t('activerecord.attributes.subscriber.alert_disable_tariff')%>" data-remote="true" class="btn btn-mini <%= t.ending_at.blank? || t.ending_at >= Date.today ? '' : 'hide' %>" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @subscriber_tariffs } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @subscriber_tariffs, :pvar => "tariff_page"} %>
 
 <!-- Modal -->
-<div id="add_tariff" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel"><%=t "ag2_gest.subscribers.index.add_tariff" %></h3>
-  </div>
-  <%= form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :html => { class: 'modal-footer-right' } do |f| %>
+<div id="add_tariff" class="modal fade" style="display: none;">
+  <%= simple_form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right' , :id => 'form_new_tariff'} do |f| %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%=t "ag2_gest.subscribers.index.add_tariff" %></h3>
+      <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+    </div>
     <div class="modal-body">
-        <%= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :tariff_label, :item_wrapper_class => 'checkbox_container') %>
+        <%= f.input :use_id, :as => :hidden, :input_html => { :value => @subscriber.use_id, :id => "use_id_"} %>
+        
+        <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
+        <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller"), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
+
+        <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
+        <%= select_tag "TariffType_", nil, :prompt => "", :class => 'x-large-text-field sel2 disabled', multiple: true %>
+        
+        <%#= f.collection_check_boxes(:tariff_ids, @tariffs_dropdown, :id, :tariff_label, :item_wrapper_class => 'checkbox_container') %>
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-      <input type="submit" class="btn btn-primary" value='<%=t "ag2_gest.subscribers.index.add_tariff" %>'>
+      <%= f.button :submit, t("ag2_gest.subscribers.index.add_tariff"), :class => 'btn btn-primary', :id => 'submit_tariff_btn' %>
     </div>
   <% end %>
-
 </div>
-   <table class="table table-condensed table-striped">
-      <thead>
-        <tr>
-          <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
-          <th><%= t('activerecord.attributes.tariff_scheme.tariff_type_id') %></th>
-          <th><%= t('activerecord.attributes.tariff.billing_frequency_id') %>:</th>
-          <th><%= t('activerecord.attributes.tariff.starting_at') %></th>
-          <th><%= t('activerecord.attributes.tariff.ending_at') %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @subscriber_tariffs.each do |t| %>
-          <tr>
-            <td class="billable_concept"><%= t.billable_concept_name unless t.billable_concept_name.blank? %></td>
-            <td class="tariff_type"><%= t.tariff_type_name unless t.tariff_type_name.blank? %></td>
-            <td class="billing_frequency"><%= t.billing_frequency_label unless t.billing_frequency_label.blank? %></td>
-            <td class="starting_at"><%= formatted_date(t.starting_at) unless t.starting_at.blank? %></td>
-            <td class="ending_at" id="tariff_ending_at"><%= formatted_date(t.ending_at) unless t.ending_at.blank? %></td>
-            <td class="hide" id="st_id"><%= t.id %></td>
-            <td>
-              <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(t.tariff_id) } %>
-              <a id='disable_tariff_button' class="btn btn-mini" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>

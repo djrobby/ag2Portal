@@ -17,9 +17,18 @@ class BillingPeriod < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :period,            :presence => true,
-                                :numericality => true
-  validates :billing_frequency, :presence => true
+  validates :period,                    :presence => true,
+                                        :numericality => true
+  validates :billing_frequency,         :presence => true
+  validates :billing_starting_date,     :presence => true
+  validates :billing_ending_date,       :presence => true
+  validates :charging_starting_date,    :presence => true
+  validates :charging_ending_date,      :presence => true
+  validates :prebilling_starting_date,  :presence => true
+  validates :prebilling_ending_date,    :presence => true
+  validates :reading_starting_date,     :presence => true
+  validates :reading_ending_date,       :presence => true
+
 
   # Scopes
   scope :by_period, -> { order('billing_periods.period') }

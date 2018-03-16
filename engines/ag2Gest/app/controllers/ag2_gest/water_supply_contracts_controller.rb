@@ -108,8 +108,8 @@ module Ag2Gest
       @breadcrumb = 'create'
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
-      _tariff_type_ids = params[:TariffType_]
-      _billable_items = params[:BillableConcept_]
+      _tariff_type_ids = params[:TariffType_] || params[:concept_TariffType_] || params[:cancellation_TariffType_]
+      _billable_items = params[:BillableConcept_] || params[:concept_BillableConcept_] || params[:cancellation_BillableConcept_]
       #@meter = Meter.find params[:water_supply_contract][:meter_id]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
@@ -176,8 +176,8 @@ module Ag2Gest
       @water_supply_contract = WaterSupplyContract.find(params[:id])
       @contracting_request = ContractingRequest.find(params[:water_supply_contract][:contracting_request_id])
       @tariff_scheme = TariffScheme.find(params[:water_supply_contract][:tariff_scheme_id])
-      _tariff_type_ids = params[:TariffType_]
-      _billable_items = params[:BillableConcept_]
+      _tariff_type_ids = params[:TariffType_] || params[:concept_TariffType_] || params[:cancellation_TariffType_]
+      _billable_items = params[:BillableConcept_] || params[:concept_BillableConcept_] || params[:cancellation_BillableConcept_]
       @meter = Meter.where(id: params[:water_supply_contract][:meter_id]).first
       @meter_model = @meter.try(:meter_model)
       @meter_brand = @meter_model.meter_brand unless @meter_model.blank?
@@ -239,7 +239,8 @@ module Ag2Gest
               reading_2: rdg_2
               )
           end
-        else
+        end
+        if !_tariff_type_ids.blank?
           @water_supply_contract.contracted_tariffs.destroy_all
 
           _tariff_type_ids.each do |r|

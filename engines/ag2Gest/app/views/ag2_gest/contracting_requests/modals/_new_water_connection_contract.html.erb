@@ -51,15 +51,15 @@
 
   jQuery(function($) {
 
-    $("#tariff_scheme_id").change(function() {
+    $("#connection_tariff_scheme_id").change(function() {
       // make a POST call and replace the content
-      var tariff_scheme_ids = $('select#tariff_scheme_id :selected').val();
+      var tariff_scheme_ids = $('select#connection_tariff_scheme_id :selected').val();
       if (tariff_scheme_ids == "")
         tariff_scheme_ids = "0";
       jQuery.getJSON('cr_tariff_scheme_validate/' + tariff_scheme_ids, function(data) {
         if (data.code == "$err") {
           alert('<%= I18n.t("activerecord.attributes.tariff_scheme.alert_without_tariff") %>');
-          $("#tariff_scheme_id").select2("val", "");
+          $("#connection_tariff_scheme_id").select2("val", "");
         }
       });
       return false;
@@ -82,7 +82,7 @@
       <%= f.input :contracting_request_id, :as => :hidden, :input_html => { :value => @contracting_request.id } %>
       <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
 
-      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
+      <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'connection_tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <%= f.association :water_connection_type, required: true, collection: WaterConnectionType.all, input_html: { :id => 'water_connection_type_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label-under-sel2' }, include_blank: true %>
 
