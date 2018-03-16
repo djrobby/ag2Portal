@@ -508,6 +508,26 @@ class Bill < ActiveRecord::Base
     self.id
   end
 
+  # Barcode generator
+  def barcode_total
+    total = self.total.round(2)
+    ti = total.to_i
+    tr = (total - ti).to_s
+    trl = tr.length
+    trr = tr[2..trl]
+    (ti.to_s + trr).rjust(10,"0")
+  end
+  def barcode
+    ai = "90"
+    cabecera = "507"
+    issuer = self.issuer.to_s
+    reference = self.reference.to_s
+    ident = self.ident.to_s
+    total = self.barcode_total
+    pie = "0"
+    ai + cabecera + issuer + reference + ident + total + pie
+  end
+
   #
   # Class (self) user defined methods
   #
