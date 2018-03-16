@@ -81,6 +81,7 @@ GEM
       multi_json (~> 1.0)
     afm (0.2.0)
     arel (3.0.2)
+    barby (0.6.5)
     bcrypt-ruby (3.0.1)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
@@ -325,6 +326,7 @@ DEPENDENCIES
   ag2_products!
   ag2_purchase!
   ag2_tech!
+  barby
   better_errors (~> 1.1.0)
   binding_of_caller
   bootstrap-sass
