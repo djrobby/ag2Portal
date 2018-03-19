@@ -197,7 +197,7 @@ class Reading < ActiveRecord::Base
       w += " AND readings.service_point_id = #{service_point}" if !service_point.nil?
     end
     Reading.where("readings.id<>? AND readings.reading_date<?", self.id, self.reading_date)
-           .where(w).order("readings.reading_date DESC").first
+           .where(w).by_period_date.first
   end
 
   def registered_consumption(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
