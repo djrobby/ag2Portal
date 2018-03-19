@@ -1022,7 +1022,7 @@ module Ag2Gest
       @bank_offices = []
       @bank_account_classes = []
       # modals in show
-      @billing_periods_reading = BillingPeriod.readings_unbilled_by_subscriber(subscriber.id)
+      @billing_periods_reading = BillingPeriod.billing_periods_unbilled_by_subscriber(subscriber.id)
     end
 
     # GET /subscribers/new
@@ -1791,7 +1791,7 @@ module Ag2Gest
     end
 
     def billing_period_readings_array(subscriber)
-      _d = BillingPeriod.readings_unbilled_by_subscriber(subscriber.id)
+      _d = BillingPeriod.billing_periods_unbilled_by_subscriber(subscriber.id)
       _array = []
       _d.each do |i|
         _array = _array << [i.id, i.to_label_]

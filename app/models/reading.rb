@@ -160,6 +160,10 @@ class Reading < ActiveRecord::Base
     coefficient > 1
   end
 
+  #
+  # Consumption bqsed on Previous period reading
+  # (billable consumption)
+  #
   def consumption
     unless reading_index_1.nil? or reading_index.nil?
       if reading_index_1 <= reading_index
@@ -175,9 +179,41 @@ class Reading < ActiveRecord::Base
     0
   end
 
+  #
+  # Consumption bqsed on Previous chronological reading
+  # (register consumption)
+  #
+  def previous_reading(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    w = ''
+    w = "readings.meter_id = #{meter}" if !meter.nil?
+    if w == ''
+      w = "readings.subscriber_id = #{subscriber}" if !subscriber.nil?
+    else
+      w += " AND readings.subscriber_id = #{subscriber}" if !subscriber.nil?
+    end
+    if w == ''
+      w = "readings.service_point_id = #{service_point}" if !service_point.nil?
+    else
+      w += " AND readings.service_point_id = #{service_point}" if !service_point.nil?
+    end
+    Reading.where("readings.id<>? AND readings.reading_date<?", self.id, self.reading_date)
+           .where(w).order("readings.reading_date DESC").first
+  end
+
+  def registered_consumption(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    previous = previous_reading(meter, subscriber, service_point)
+    if reading_index.nil? || previous.nil?
+      0
+    else
+      (reading_index - previous.reading_index) rescue 0
+    end
+  end
+
+  # Tariff total amount of current reading (blocks + fixed)
   def price(tariff)
     aux = 0
     total = 0
+    # Total by blocks
     (1..8).each do |i|
       # if limit nil (last block) or limit > consumption
       if tariff.instance_eval("block#{i}_limit").nil? || tariff.instance_eval("block#{i}_limit") > consumption
@@ -191,6 +227,7 @@ class Reading < ActiveRecord::Base
     return total + tariff.fixed_fee
   end
 
+  # Sort by Id for Sunspot
   def sort_id
     self.id
   end

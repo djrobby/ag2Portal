@@ -64,6 +64,20 @@ class BillingPeriod < ActiveRecord::Base
              CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_").group('billing_periods.id')
     .by_period_desc
   }
+  scope :billing_periods_unbilled_by_subscriber, -> s {
+    joins(:billing_frequency, :readings)
+    .where("readings.bill_id IS NULL AND readings.billing_period_id NOT IN (
+            SELECT readings.billing_period_id
+              FROM `readings`
+              WHERE (readings.bill_id IS NOT NULL
+              AND readings.subscriber_id = ?
+              AND readings.reading_type_id IN (?))
+              GROUP BY readings.billing_period_id)", s, ReadingType.without_control )
+    .where("readings.subscriber_id = ? AND readings.reading_type_id IN (?)", s, ReadingType.without_control)
+    .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
+             CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_").group('billing_periods.id')
+    .by_period_desc
+  }
 
   def period_to_date
     year = period.to_s[0..3].to_i
