@@ -183,7 +183,7 @@ class Reading < ActiveRecord::Base
   # Consumption bqsed on Previous chronological reading
   # (register consumption)
   #
-  def previous_reading(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+  def previous_readings(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
     w = ''
     w = "readings.meter_id = #{meter}" if !meter.nil?
     if w == ''
@@ -196,16 +196,33 @@ class Reading < ActiveRecord::Base
     else
       w += " AND readings.service_point_id = #{service_point}" if !service_point.nil?
     end
-    Reading.where("readings.id<>? AND readings.reading_date<?", self.id, self.reading_date)
-           .where(w).by_period_date.first
+    Reading.where("readings.id<>? AND readings.reading_date<=?", self.id, self.reading_date)
+           .where(w).by_period_date
+  end
+
+  def previous_reading(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    pr = nil
+    previous_readings = previous_readings(meter, subscriber, service_point)
+    if !previous_readings.blank?
+      # Are there readings with the same DATE and ID greater than the current one?
+      pr_same_date = previous_readings.where("readings.reading_date = ? AND readings.id > ?", self.reading_date, self.id)
+      if pr_same_date.blank?
+        # First previous reading found
+        pr = previous_readings.first
+      else
+        # Discard the same date readings found, and use the first valid one
+        pr = previous_readings.where("readings.id NOT IN (?)", pr_same_date.pluck(:id)).first
+      end
+    end
+    return pr
   end
 
   def registered_consumption(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
-    previous = previous_reading(meter, subscriber, service_point)
-    if reading_index.nil? || previous.nil?
+    previous_reading = previous_reading(meter, subscriber, service_point)
+    if reading_index.nil? || previous_reading.nil?
       0
     else
-      (reading_index - previous.reading_index) rescue 0
+      (reading_index - previous_reading.reading_index) rescue 0
     end
   end
 
