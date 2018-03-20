@@ -1,4 +1,11 @@
 <script>
+  function addDays(theDate, days) {
+      return new Date(theDate.getTime() + days*24*60*60*1000);
+  }
+  function quitDays(theDate, days) {
+      return new Date(theDate.getTime() - days*24*60*60*1000);
+  }
+
   $(document).ready(function () {
   $(".sel2").select2();
   // $('.date_picker').datepicker({
@@ -14,7 +21,7 @@
   });
   if ($('#pre_reading_reading_date').val() == "") {
     $('#pre_reading_reading_date').datepicker('setValue', es_date(new Date()));
-  }
+  };
 
   // propagate date
   $(".icon-calendar").click(function() {
@@ -32,9 +39,17 @@
 
       var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
       var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+      var from_more_day = quitDays(from, 30);  
+      var to_more_day   = addDays(to, 30); 
       var check = new Date(c[2], parseInt(c[1])-1, c[0]);
-      if (check < from || check > to){
-        alert("La lectura indicada está fuera de plazo")
+      if (check < from_more_day || check > to_more_day){
+        alert('<%= I18n.t("ag2_gest.readings.reading_date_error") %>');
+        // alert("Advertencia: Imposible utilizar la fecha indicada, está fuera de plazo")
+        row.find("input[type='text']").val("");
+        return false;
+      } else if (check < from || check > to){
+        alert('<%= I18n.t("ag2_gest.readings.reading_date_error_ok") %>');
+        // alert("La lectura indicada está fuera de plazo")
       };
     };
     $("tr.date-clicked").nextAll().find('input[type="text"]').val(date);
@@ -88,6 +103,8 @@
 
       var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
       var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+      var from_more_day = quitDays(from, 30);  
+      var to_more_day   = addDays(to, 30); 
       var check = new Date(c[2], parseInt(c[1])-1, c[0]);
     };
 
@@ -105,8 +122,9 @@
       if (index != "" ){
         row.find("td").addClass("row-green");
       }else{
+        row.find("td").removeClass("row-green");
         row.find("td").fadeOut(500).fadeIn(500);
-      }
+      };
     };
     
     cons_act = index - row.data("index-one");
@@ -116,158 +134,44 @@
     // if both inputs have values
     if (inputs.filter(function() { return this.value == '' }).length == 0){
       if (input_index.val() >= 0){
-      // if index last period exists
-      if (row.data("index-one") != "" && row.data("index-one") != 0){
-        alert_incidences = []
-        if (index < row.data("index-one")){
-          alert_incidences.push("El índice introducido es menor al anterior. ¿Desea continuar?" + '\r\n')
-        }
-        if (row.data("consumption-one") != 0 && cons_act > con_exc ){
-          alert_incidences.push("Consumo excesivo" + '\r\n')
-        }
-        if (row.data("consumption-one") != 0 && cons_act < con_baj ){
-          alert_incidences.push("Bajo consumo" + '\r\n')
-        }
-        if ( row.data("meters") > 1 ){
-          alert_incidences.push("Posible contador parado" + '\r\n')
-        }
-        if (reading_ending_date != 0 || reading_starting_date != 0 ){
-          if (check < from || check > to){
-            alert_incidences.push("Lectura fuera de plazo" + '\r\n')
-          }
-        }
+        // if index last period exists
+        if (row.data("index-one") != "" && row.data("index-one") != 0){
+          alert_incidences = []
+          if (index < row.data("index-one")){
+            alert_incidences.push("El índice introducido es menor al anterior. ¿Desea continuar?" + '\r\n')
+          };
+          if (row.data("consumption-one") != 0 && cons_act > con_exc ){
+            alert_incidences.push("Consumo excesivo" + '\r\n')
+          };
+          if (row.data("consumption-one") != 0 && cons_act < con_baj ){
+            alert_incidences.push("Bajo consumo" + '\r\n')
+          };
+          if ( row.data("meters") > 1 ){
+            alert_incidences.push("Posible contador parado" + '\r\n')
+          };
+          if (reading_ending_date != 0 || reading_starting_date != 0 ){
+            if (check < from_more_day || check > to_more_day) {
+              alert('<%= I18n.t("ag2_gest.readings.reading_date_error") %>');
+              // alert("Advertencia: Imposible utilizar la fecha indicada, está fuera de plazo")
+              input_date.val("");
+              input_index.val("");
+              row.find("td").removeClass("row-green");
+              return false;
+            } else if (check < from || check > to){
+              alert_incidences.push('<%= I18n.t("ag2_gest.readings.reading_date_error_ok") %>' + '\r\n')
+              // alert_incidences.push("Lectura fuera de plazo" + '\r\n')
+            };
+          };
 
-        if (alert_incidences.length > 0){
-          var lap_meter = confirm(alert_incidences.join(""));
-        }
-        // if index < index last period
-        if (index < row.data("index-one")){
-          // vuelta de contador
-          // var lap_meter = confirm("El índice introducido es menor al anterior. ¿Desea continuar?");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lap").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Consumo excesivo AND Contador Compartido
-        } else if (row.data("consumption-one") != 0 && cons_act > con_exc && row.data("meters") > 1){
-          // Consumo excesivo
-          // var lap_meter = confirm("Consumo excesivo y Contador Compartido. Incidencia Activada");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Consumo bajo AND Contador Compartido
-        } else if (row.data("consumption-one") != 0 && cons_act < con_baj && row.data("meters") > 1){
-          // Consumo excesivo
-          // var lap_meter = confirm("Bajo Consumo y Contador Compartido. Incidencia Activada");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconbaj").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Consumo excesivo
-        } else if (row.data("consumption-one") != 0 && cons_act > con_exc ){
-          // var lap_meter = confirm("Consumo excesivo. Incidencia Activada");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Consumo bajo
-        } else if (row.data("consumption-one") != 0 && cons_act < con_baj ){
-          // var lap_meter = confirm("Bajo Consumo. Incidencia Activada");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconbaj").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Contador Compartido
-        } else if ( row.data("meters") > 1 ){
-          // var lap_meter = confirm("Contador Compartido");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Contador parado
-        } else if (index == row.data("index-one") && index == row.data("index-two")){
-          // var lap_meter = confirm("Posible contador parado");
-          if (lap_meter == true) {
-            var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
-            form.append($(input));
-            check_consumption();
-            row.find(".wrench-column").show()
-            form.submit();
-          } else {
-            if (row.data("index") == "" ){
-              input_index.val("");
-              row.find("td").removeClass("row-green");
-            }else{
-              input_index.val(row.data("index"));
-            }
-          };
-        // Lectura fuera de plazo
-        } else if (reading_ending_date != 0 || reading_starting_date != 0 ) { 
-          if (check < from || check > to){
-            // var lap_meter = confirm("Lectura fuera de plazo");
+          if (alert_incidences.length > 0){
+            var lap_meter = confirm(alert_incidences.join(""));
+          }
+          // if index < index last period
+          if (index < row.data("index-one")){
+            // vuelta de contador
+            // var lap_meter = confirm("El índice introducido es menor al anterior. ¿Desea continuar?");
             if (lap_meter == true) {
-              var input = $("<input>").attr("type", "hidden").attr("name", "lapdate").val(true);
+              var input = $("<input>").attr("type", "hidden").attr("name", "lap").val(true);
               form.append($(input));
               check_consumption();
               row.find(".wrench-column").show()
@@ -278,21 +182,143 @@
                 row.find("td").removeClass("row-green");
               }else{
                 input_index.val(row.data("index"));
-              }
+              };
             };
+          // Consumo excesivo AND Contador Compartido
+          } else if (row.data("consumption-one") != 0 && cons_act > con_exc && row.data("meters") > 1){
+            // Consumo excesivo
+            // var lap_meter = confirm("Consumo excesivo y Contador Compartido. Incidencia Activada");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Consumo bajo AND Contador Compartido
+          } else if (row.data("consumption-one") != 0 && cons_act < con_baj && row.data("meters") > 1){
+            // Consumo excesivo
+            // var lap_meter = confirm("Bajo Consumo y Contador Compartido. Incidencia Activada");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconbaj").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Consumo excesivo
+          } else if (row.data("consumption-one") != 0 && cons_act > con_exc ){
+            // var lap_meter = confirm("Consumo excesivo. Incidencia Activada");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Consumo bajo
+          } else if (row.data("consumption-one") != 0 && cons_act < con_baj ){
+            // var lap_meter = confirm("Bajo Consumo. Incidencia Activada");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconbaj").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Contador Compartido
+          } else if ( row.data("meters") > 1 ){
+            // var lap_meter = confirm("Contador Compartido");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Contador parado
+          } else if (index == row.data("index-one") && index == row.data("index-two")){
+            // var lap_meter = confirm("Posible contador parado");
+            if (lap_meter == true) {
+              var input = $("<input>").attr("type", "hidden").attr("name", "lapconexs2").val(true);
+              form.append($(input));
+              check_consumption();
+              row.find(".wrench-column").show()
+              form.submit();
+            } else {
+              if (row.data("index") == "" ){
+                input_index.val("");
+                row.find("td").removeClass("row-green");
+              }else{
+                input_index.val(row.data("index"));
+              };
+            };
+          // Lectura fuera de plazo
+          } else if (reading_ending_date != 0 || reading_starting_date != 0 ) { 
+            if (check < from || check > to) {
+              // var lap_meter = confirm("Lectura fuera de plazo");
+              if (lap_meter == true) {
+                var input = $("<input>").attr("type", "hidden").attr("name", "lapdate").val(true);
+                form.append($(input));
+                check_consumption();
+                row.find(".wrench-column").show()
+                form.submit();
+              } else {
+                if (row.data("index") == "" ){
+                  input_index.val("");
+                  row.find("td").removeClass("row-green");
+                }else{
+                  input_index.val(row.data("index"));
+                };
+              };
+            };
+          } else {
+            check_consumption();
+            form.submit();
           };
-        } else {
-          check_consumption();
+        // index last period not exits NEVER SHOULD HAPPEN
+        }else{
           form.submit();
         };
-      // index last period not exits NEVER SHOULD HAPPEN
       }else{
-        form.submit();
+        input_index.val("");
+        row.find("td").removeClass("row-green");
       };
-    }else{
-      input_index.val("");
-      row.find("td").removeClass("row-green");
-    };
     };
     if (index != "" ){
       row.find("td").addClass("row-green");
@@ -304,7 +330,7 @@
       var input = $("<input>").attr("type", "hidden").attr("name", "lapnot").val(true);
       form.append($(input));
       form.submit();
-    }
+    };
   });
 
   // AJAX SUCCESS update prereading

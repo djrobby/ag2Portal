@@ -47,6 +47,9 @@
           <table class="table">
             <div class="<%= 'text-error' if unpaid %> fields"><small><%= t("activerecord.attributes.contracting_request.invoice_number") %>: <%= invoice.invoice_no_ %></small></div>
             <div class="<%= 'text-error' if unpaid %> fields"><small><%= invoice.biller_name_ %> | <%= t("activerecord.attributes.contracting_request.fiscal_id") %> <%= invoice.biller_fiscal_id_ %></small></div>
+            <% if !invoice.payment_date_.blank? && invoice.invoice_status_id_ == InvoiceStatus::CHARGED %>
+              <div class="<%= 'text-error' if unpaid %> fields"><small><%= t("activerecord.attributes.client_payment.charged") %> <%= PaymentType.code_with_param(invoice.payment_type_) %> | <%= invoice.payment_method_ %> | <%= I18n.l(invoice.payment_date_, format: :long_whit_day_and_hour)%></small></div>
+            <% end %>
             <tr class="<%= 'text-error' if unpaid %> fields">
               <th><%= t("activerecord.attributes.contracting_request.code") %></th>
               <th><%= t("activerecord.attributes.contracting_request.subcode") %></th>

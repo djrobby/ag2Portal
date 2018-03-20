@@ -24,6 +24,7 @@ class ClientPayment < ActiveRecord::Base
 
   has_paper_trail
 
+
   validates :bill,              :presence => true
   validates :invoice,           :presence => true
   validates :payment_method,    :presence => true
@@ -106,6 +107,23 @@ class ClientPayment < ActiveRecord::Base
 
   def client_bank_account_refere
     !self.client_bank_account.blank? ? self.client_bank_account.refere.to_s.strip : ''
+  end
+
+  #encrypted security code
+  def burst_security
+    fact = self.bill.raw_invoice_based_no
+    date = formatted_timestamp(self.bill.bill_date)
+    userid = self.created_by.to_s
+    collected = self.bill.collected.round(2)
+    ci = collected.to_i
+    cr = (collected - ci).to_s
+    crl = cr.length
+    crr = (cr[2..crl]).ljust(2,"0")
+    collected = ci.to_s + crr
+    security_no = fact + date + userid + collected
+
+    # hashed_password = BCrypt::Password.create("AES332017005242830/05/201700:00:00003300246623891")
+    aa = Digest::MD5.hexdigest(security_no)
   end
 
   # Payment method used in collection

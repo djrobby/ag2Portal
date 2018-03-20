@@ -31,5 +31,6 @@ es:
       new:
         title: "Nueva Lectura"
       back_to_main_page: "Volver a Lecturas"
-      reading_date_error: "Esta lectura se encuentra fuera del plazo establecido en el calendario de lectura. Incidencia activada."
+      reading_date_error_ok: "Esta lectura se encuentra fuera del plazo establecido en el calendario de lectura. Incidencia activada."
+      reading_date_error: "Imposible utilizar la fecha indicada, se encuentra fuera del plazo establecido en el calendario de lectura."
 

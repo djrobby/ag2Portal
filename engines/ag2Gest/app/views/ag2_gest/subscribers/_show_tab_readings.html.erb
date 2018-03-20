@@ -52,7 +52,8 @@
       <th align="right"><%= t('activerecord.attributes.reading.reading') %></th>
       <th></th>
       <th align="right"><%= t('activerecord.attributes.reading.reading_1_index_c') %></th>
-      <th align="right"><%= t('activerecord.attributes.reading.consumption') %></th>
+      <th align="right"><%= t('activerecord.attributes.reading.consumption_r_c') %></th>
+      <th align="right"><%= t('activerecord.attributes.reading.consumption_f_c') %></th>
       <th></th>
     </tr>
   </thead>
@@ -75,7 +76,8 @@
         <% end %>
       </td>
       <td align="right"><%= reading.reading_index_1 unless reading.reading_index_1.blank? %></td>
-      <td align="right"><%= reading.consumption unless reading.consumption.blank? %></td>
+      <td align="right"><%= reading.registered_consumption(nil,reading.subscriber_id,nil) %></td>
+      <td align="right"><%= reading.consumption_.to_i unless reading.consumption_.blank? %></td>
       <td>&nbsp;
       <%= link_to reading_path(reading.reading_id), class: "btn btn-mini" do %><i class="icon-eye-open"></i><% end %>
       <%= render :partial => '/layouts/crud/edit', :locals => { :model => Reading, :path => edit_reading_path(reading.reading_id) } if reading.is_billable == 1 %>

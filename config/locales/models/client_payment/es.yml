@@ -47,3 +47,8 @@ es:
         charge_account: "Cuenta analítica"
         charge_account_id: "Cuenta analítica"
         payment_method_c: "FP"
+        payment_type_code_1: "Caja"
+        payment_type_code_2: "Banco"
+        payment_type_code_3: "Aplazamiento"
+        payment_type_code_4: "Ventanilla Bancaria"
+        payment_type_code_5: "Otros"

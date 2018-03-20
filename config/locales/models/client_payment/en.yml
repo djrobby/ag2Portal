@@ -47,3 +47,8 @@ en:
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
         payment_method_c: "PM"
+        payment_type_code_1: "Cash"
+        payment_type_code_2: "Bank"
+        payment_type_code_3: "Fractionated"
+        payment_type_code_4: "Counter"
+        payment_type_code_5: "Others"

@@ -109,6 +109,8 @@ class Invoice < ActiveRecord::Base
   scope :by_bill_id, -> i {
     joins(:biller)
     .joins('LEFT JOIN invoices original_invoices ON original_invoices.id=invoices.original_invoice_id')
+    .joins("LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id")
+    .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
     .where("invoices.bill_id = #{i}")
     .select("invoices.bill_id bill_id_, invoices.id invoice_id_, invoices.invoice_status_id invoice_status_id_,
              invoices.invoice_type_id invoice_type_id_, invoices.invoice_operation_id invoice_operation_id_,
@@ -117,7 +119,7 @@ class Invoice < ActiveRecord::Base
              invoices.total_taxes total_taxes_, (invoices.totals-invoices.total_taxes) subtotal_,
              CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_no_,
              CASE WHEN ISNULL(original_invoices.old_no) THEN CONCAT(SUBSTR(original_invoices.invoice_no,1,5),'-',SUBSTR(original_invoices.invoice_no,6,4),'-',SUBSTR(original_invoices.invoice_no,10,7)) ELSE original_invoices.old_no END original_invoice_no_,
-             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_")
+             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_, client_payments.created_at payment_date_, payment_methods.description payment_method_, client_payments.payment_type payment_type_")
     .order('invoices.id')
   }
 

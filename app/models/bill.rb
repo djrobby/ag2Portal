@@ -514,7 +514,7 @@ class Bill < ActiveRecord::Base
     ti = total.to_i
     tr = (total - ti).to_s
     trl = tr.length
-    trr = tr[2..trl]
+    trr = (tr[2..trl]).ljust(2,"0")
     (ti.to_s + trr).rjust(10,"0")
   end
   def barcode

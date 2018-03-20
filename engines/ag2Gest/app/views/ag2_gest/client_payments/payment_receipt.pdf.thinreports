@@ -43,7 +43,9 @@ report.page.values(client2:  @payment.client.full_name.upcase,
 				   )
 #
 #
-payment_date = I18n.l(@payment.payment_date, format: :long_whit_day) unless @payment.payment_date.blank?
+# payment_date = I18n.l(@payment.payment_date, format: :long_whit_day) unless @payment.payment_date.blank?
+payment_date = I18n.l(@payment.created_at, format: :long_whit_day_and_hour) unless @payment.created_at.blank?
+
 payment_date_format = @payment.payment_date.strftime(_format) unless @payment.payment_date.blank?
 report.page.values(title: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
 				   payment_date: payment_date,
@@ -90,7 +92,7 @@ end
 if !@payment_receipt_bill.blank?
 	report.page.list(:default).add_row do |row1|
 		row1.item(:sup).show
-		row1.item(:receipt_no_c).value I18n.t("activerecord.models.bill.one")
+		row1.item(:receipt_no_c).value "Recibo/Factura"#I18n.t("activerecord.models.bill.one")
 		row1.item(:receipt_date_c).value I18n.t("activerecord.attributes.bill.bill_date")
 		row1.item(:total_c).value I18n.t("activerecord.attributes.bill.total")
 		row1.item(:amount_c).value I18n.t("ag2_gest.client_payments.report.amount_receipt")
@@ -109,21 +111,23 @@ end
 	if _debt == "0,0000"
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
-				row2.item(:receipt_no).value receipt.bill.try(:to_label)
+				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
+        row2.item(:cv).value "CV:" + receipt.burst_security.upcase
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				_bill += (receipt.bill.try(:to_label) + ", ")
+				_bill += (receipt.bill.try(:invoice_based_old_no_real_no) + ", ")
 			end
 	else
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
-				row2.item(:receipt_no).value receipt.bill.try(:to_label)
+				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
+        row2.item(:cv).value "CV:" + receipt.burst_security.upcase
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:debt).value _debt_total
-				_bill += (receipt.bill.try(:to_label) + ", ")
+				_bill += (receipt.bill.try(:invoice_based_old_no_real_no) + ", ")
 			end
 				receipt.bill.invoices.each do |invoices|
 					var_invoice_date = invoices.invoice_date.strftime(_format) unless invoices.invoice_date.blank?
@@ -178,7 +182,7 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
 				   request_date1: payment_date_format,
 				   r_total_c: I18n.t("ag2_gest.client_payments.report.total_receipt") + ":",
 				   r_total: number_with_precision(_amount, precision: 2, delimiter: I18n.locale == :es ? "." : ","),
-				   bill_c: I18n.t("ag2_gest.client_payments.report.total_bill_payment") + " :" ,
+				   bill_c: "Recibos/Facturas Cobradas", #I18n.t("ag2_gest.client_payments.report.total_bill_payment") + " :" ,
 				   bill: _bill[0..-3],
 				   client2_1:  @payment.client.full_name ,
 				   street2_1: @payment.try(:client).try(:address_1),

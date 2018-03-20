@@ -202,37 +202,59 @@ module Ag2Gest
         _i.save if invoice_item
         invoice_item.update_attributes(obj_inv[1]) if invoice_item
       end
-      redirect_to subscriber_path(@subscriber), notice: "Factura actualizada correctamente"
+      redirect_to subscriber_path(@subscriber) + "#bills", notice: "Factura actualizada correctamente"
     end
 
     def void
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
-      void_bill(@bill)
-      redirect_to subscriber_path(@subscriber), notice: "Factura anulada"
+      office = Office.find(@subscriber.office_id)
+      new_bill_date = Date.today
+
+      if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
+        redirect_to subscriber_path(@subscriber) + "#bills"#, alert: I18n.t("activerecord.attributes.bill.alert_invoice_date")
+      else
+        void_bill(@bill)
+        redirect_to subscriber_path(@subscriber) + "#bills"#, notice: "Factura anulada"
+      end
     end
 
     def rebilling
+      manage_filter_state_show
+      filter = params[:ifilter_show] || "pending"
+      @active_ifilter = filter
       @subscriber = Subscriber.find params[:id]
       @bill = Bill.find params[:bill_id]
       @reading = @bill.reading_2
-      if @bill.nullable?
-        @bill_voided = void_bill(@bill)
+      office = Office.find(@subscriber.office_id)
+      new_bill_date = Date.today
+
+      if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
+        redirect_to subscriber_path(@subscriber) + "#bills"#, alert: I18n.t("activerecord.attributes.bill.alert_invoice_date")
       else
-        @bill_voided = @bill
-      end
-      invoice_date = Date.today
-      payday_limit = invoice_date + @subscriber.office.days_for_invoice_due_date
-      @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, payday_limit, invoice_date)
-      # @reading.generate_pre_bill(nil,nil,3)
-      Sunspot.index! [@bill] unless @bill.blank?
+        if @bill.nullable?
+          @bill_voided = void_bill(@bill)
+        else
+          @bill_voided = @bill
+        end
+        invoice_date = Date.today
+        payday_limit = invoice_date + @subscriber.office.days_for_invoice_due_date
+        @bill = @reading.generate_bill(bill_next_no(@reading.project), current_user.try(:id), 3, payday_limit, invoice_date)
+        # @reading.generate_pre_bill(nil,nil,3)
+        Sunspot.index! [@bill] unless @bill.blank?
 
-      @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
-      invoice_status = (0..99).to_a.join(',')
-      @subscriber_bills = Bill.by_subscriber_full(params[:id], invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
+        @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
+        invoice_status = (0..99).to_a.join(',')
+        if filter == "pending" or filter == "unpaid"
+          invoice_status = (0..98).to_a.join(',')
+        elsif filter == "charged"
+          invoice_status = 99
+        end
+        @subscriber_bills = Bill.by_subscriber_full(params[:id], invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
 
-      respond_to do |format|
-        format.js { render "simple_bill" }
+        respond_to do |format|
+          format.js { render "simple_bill" }
+        end
       end
     end
 
@@ -1278,6 +1300,9 @@ module Ag2Gest
     end
 
     def simple_bill
+      manage_filter_state_show
+      filter = params[:ifilter_show] || "pending"
+      @active_ifilter = filter
       @subscriber = Subscriber.find params[:id]
       period = BillingPeriod.find(params[:bills][:billing_period_id])
       bill_original = ''
@@ -1313,6 +1338,11 @@ module Ag2Gest
 
       @subscriber_readings = Reading.by_subscriber_full(params[:id]).paginate(:page => params[:page] || 1, :per_page => 10)
       invoice_status = (0..99).to_a.join(',')
+      if filter == "pending" or filter == "unpaid"
+        invoice_status = (0..98).to_a.join(',')
+      elsif filter == "charged"
+        invoice_status = 99
+      end
       @subscriber_bills = Bill.by_subscriber_full(params[:id], invoice_status).paginate(:page => params[:page] || 1, :per_page => 10)
 
       respond_to do |format|

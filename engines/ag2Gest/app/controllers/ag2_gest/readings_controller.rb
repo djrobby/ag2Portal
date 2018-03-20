@@ -19,8 +19,10 @@ module Ag2Gest
       if !billing_period.reading_starting_date.blank? && !billing_period.reading_ending_date.blank?
         if reading_date.between?(billing_period.reading_starting_date, billing_period.reading_ending_date)
           code = '$ok'
-        else
+        elsif reading_date < (billing_period.reading_starting_date - 30)|| reading_date > (billing_period.reading_ending_date + 30)
           code = '$err'
+        else
+          code = '$err_ok'
         end
       end
       render json: { "code" => code }

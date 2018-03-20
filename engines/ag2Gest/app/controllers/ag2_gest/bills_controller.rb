@@ -3,6 +3,9 @@
 require_dependency "ag2_gest/application_controller"
 require 'will_paginate/array'
 require 'open-uri'
+require 'barby'
+require 'barby/barcode/code_128'
+require 'barby/outputter/png_outputter'
 require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
@@ -25,7 +28,8 @@ module Ag2Gest
                                                 :status_prebills,
                                                 :status_confirm,
                                                 :confirm,
-                                                :pre_index
+                                                :pre_index,
+                                                :barcode
                                               ]
 
     @@subscribers = nil
@@ -125,6 +129,16 @@ module Ag2Gest
 
     def biller_pdf
       @biller_printer = Bill.find(params[:id])
+
+      # barcode = "#{Barby::Code128::FNC1}" + @biller_printer.barcode
+      # barcode = Barby::Code128.new("#{Barby::Code128::FNC1}9050704241147500180000000032705031800000068220")
+
+      _barcode = Barby::Code128.new("#{Barby::Code128::FNC1}" + @biller_printer.barcode)
+      _blob = Barby::PngOutputter.new(_barcode).to_png(:width=> 100, :height => 40, :margin => 0)  #Raw PNG data
+
+      File.open('barcode.png', 'wb') do |fo|
+        fo.write _blob
+      end
 
       # _r1 = Reading.find(@biller_printer.reading_1_id) rescue nil
       # _b1 = Bill.find(_r1.bill_id) rescue nil
