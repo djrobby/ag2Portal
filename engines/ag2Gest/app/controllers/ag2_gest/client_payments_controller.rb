@@ -357,11 +357,17 @@ module Ag2Gest
       client_payments = ClientPayment.where(id: client_payments_ids)
       client_payments.each do |cp|
         cp_instalment = nil
+        invoice = cp.invoice
         if cp.instalment_id.blank?
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
         else
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          cp.invoice.update_column(:invoice_status_id, InvoiceStatus::FRACTIONATED)
           cp_instalment = cp.instalment
+        end
+        if invoice.bill.invoice_status_id > invoice.invoice_status_id
+          invoice.bill.update_column(:invoice_status_id, invoice.invoice_status_id)
         end
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
@@ -426,11 +432,17 @@ module Ag2Gest
       client_payments = ClientPayment.where(id: client_payments_ids)
       client_payments.each do |cp|
         cp_instalment = nil
+        invoice = cp.invoice
         if cp.instalment_id.blank?
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
         else
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          cp.invoice.update_column(:invoice_status_id, InvoiceStatus::FRACTIONATED)
           cp_instalment = cp.instalment
+        end
+        if invoice.bill.invoice_status_id > invoice.invoice_status_id
+          invoice.bill.update_column(:invoice_status_id, invoice.invoice_status_id)
         end
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
@@ -542,11 +554,17 @@ module Ag2Gest
       client_payments = ClientPayment.where(id: client_payments_ids)
       client_payments.each do |cp|
         cp_instalment = nil
+        invoice = cp.invoice
         if cp.instalment_id.blank?
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+          invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
         else
-          cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::FRACTIONATED)
+          cp.invoice.update_column(:invoice_status_id, InvoiceStatus::FRACTIONATED)
           cp_instalment = cp.instalment
+        end
+        if invoice.bill.invoice_status_id > invoice.invoice_status_id
+          invoice.bill.update_column(:invoice_status_id, invoice.invoice_status_id)
         end
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
