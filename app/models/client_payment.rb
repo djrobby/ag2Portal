@@ -121,9 +121,8 @@ class ClientPayment < ActiveRecord::Base
     crr = (cr[2..crl]).ljust(2,"0")
     collected = ci.to_s + crr
     security_no = fact + date + userid + collected
-
     # hashed_password = BCrypt::Password.create("AES332017005242830/05/201700:00:00003300246623891")
-    aa = Digest::MD5.hexdigest(security_no)
+    Digest::MD5.hexdigest(security_no)
   end
 
   # Payment method used in collection
