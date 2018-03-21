@@ -156,6 +156,11 @@ module Ag2Gest
       @cash_desk_closing_items = @cash_desk_closing.cash_desk_closing_items.order('cash_desk_closing_items.payment_method_id').paginate(:page => params[:page], :per_page => per_page).order('id')
       @cash_desk_closing_instruments = @cash_desk_closing.cash_desk_closing_instruments.paginate(:page => params[:page], :per_page => per_page).by_cu_value_id
 
+      @instruments_difference = @cash_desk_closing.instruments_difference
+      if (@instruments_difference < 0 && @instruments_difference < -0.00)
+        @instruments_difference = @instruments_difference * (-1)
+      end
+
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @cash_desk_closing }
