@@ -625,6 +625,7 @@ Ag2Gest::Engine.routes.draw do
       post 'bank_to_pending', on: :collection
       post 'bank_to_order', on: :collection
       post 'bank_from_return', on: :collection
+      post 'bank_from_counter', on: :collection
       post 'fractionate', on: :collection
       post 'charge_instalment', on: :collection
       post 'others', on: :collection

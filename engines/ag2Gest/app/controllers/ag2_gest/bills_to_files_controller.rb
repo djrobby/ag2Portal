@@ -172,7 +172,7 @@ module Ag2Gest
         end
         bills.each do |bill|
           xml.bill(description: invoice_d) do  # Eeach bill
-            xml.bill_no({ description: bill_no_d }, bill.real_no)
+            xml.bill_no({ description: bill_no_d }, bill.invoice_based_old_no_real_no)
             xml.bill_date({ description: bill_date_d }, formatted_date(bill.bill_date))
             xml.billing_period({ description: billing_period_d }, bill.billing_period)
             xml.payday_limit({ description: bill_payday_limit_d }, bill.formatted_payday_limit)
@@ -264,7 +264,7 @@ module Ag2Gest
                   invoice_type_d = invoice_type_name + ' ' + I18n.t("activerecord.models.invoice.one")
                 end
                 xml.invoice(description: invoice_type_d) do  # Each invoice
-                  xml.invoice_no({ description: invoice_no_d }, invoice.full_no)
+                  xml.invoice_no({ description: invoice_no_d }, invoice.old_no_based_real_no)
                   xml.invoice_date({ description: bill_date_d }, formatted_date(invoice.invoice_date))
                   xml.payday_limit({ description: invoice_payday_limit_d }, invoice.formatted_payday_limit)
                   # Biller

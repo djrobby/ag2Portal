@@ -44,6 +44,7 @@ en:
         presentation_date: "Presentation date"
         charge_date: "Charge date"
         return_file: "Unpaid/Rejected Receipts File"
+        counter_file: "Counter File"
         charge_account: "Analytical account"
         charge_account_id: "Analytical account"
         payment_method_c: "PM"

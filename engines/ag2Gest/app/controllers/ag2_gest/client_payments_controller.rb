@@ -692,6 +692,7 @@ module Ag2Gest
 
     # Import Counter text file (bank counter operations)
     def bank_from_counter
+      file_to_process = params[:bank_from_return][:file_to_process]
     end
 
     #

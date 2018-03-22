@@ -61,7 +61,7 @@
             <tbody>
               <% bill.invoices.order(:invoice_no).each do |i| %>
                 <tr>
-                  <td><%= i.full_no %></td>
+                  <td><%= i.old_no_based_real_no %></td>
                   <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
                   <td><%= i.payment_date %></td>
                   <td align="right"><%= number_with_precision(i.receivables, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>

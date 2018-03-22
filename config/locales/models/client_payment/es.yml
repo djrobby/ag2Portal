@@ -44,6 +44,7 @@ es:
         presentation_date: "Fecha de presentación"
         charge_date: "Fecha de cargo"
         return_file: "Archivo de Devoluciones/Rechazos"
+        counter_file: "Archivo de Cobros por Ventanilla"
         charge_account: "Cuenta analítica"
         charge_account_id: "Cuenta analítica"
         payment_method_c: "FP"
