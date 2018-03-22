@@ -173,48 +173,56 @@ module Ag2Gest
       @frequencies = billing_frequency_dropdown
 
       # @tariffs = ActiveTariff.belongs_to_project(current_projects_ids) if @tariffs.nil?
-      @search = Tariff.search do
-        with :project_id, current_projects_ids unless current_projects_ids.blank?
-        fulltext params[:search]
-        if !project.blank?
-          with :project_id, project
-        end
-        if !type.blank?
-          with :tariff_type_id, type
-        end
-        if !concept.blank?
-          with :billable_concept_code, concept
-        end
-        if !item.blank?
-          with :billable_item_id, item
-        end
-        if !caliber.blank?
-          with :caliber_id, caliber
-        end
-        if !frequency.blank?
-          with :billing_frequency_id, frequency
-        end
-        if !from.blank?
-          any_of do
-            with(:starting_at).greater_than(from)
-            with :starting_at, from
-          end
-        end
-        if !to.blank?
-          any_of do
-            with(:ending_at).less_than(to)
-            with :ending_at, to
-          end
-        end
-        order_by :tariff_type_id
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
+      # search = Tariff.group(:billable_item_id, :tariff_type_id, :billing_frequency_id, :starting_at, :ending_at).search do
+      #   # group :grouped_tariffs
+      #   # group :billable_item_id_str, :tariff_type_id_str, :billing_frequency_id_str, :starting_at_str, :ending_at_str
+      #   with :project_id, current_projects_ids unless current_projects_ids.blank?
+      #   fulltext params[:search]
+      #   if !project.blank?
+      #     with :project_id, project
+      #   end
+      #   if !type.blank?
+      #     with :tariff_type_id, type
+      #   end
+      #   if !concept.blank?
+      #     with :billable_concept_code, concept
+      #   end
+      #   if !item.blank?
+      #     with :billable_item_id, item
+      #   end
+      #   if !caliber.blank?
+      #     with :caliber_id, caliber
+      #   end
+      #   if !frequency.blank?
+      #     with :billing_frequency_id, frequency
+      #   end
+      #   if !from.blank?
+      #     any_of do
+      #       with(:starting_at).greater_than(from)
+      #       with :starting_at, from
+      #     end
+      #   end
+      #   if !to.blank?
+      #     any_of do
+      #       with(:ending_at).less_than(to)
+      #       with :ending_at, to
+      #     end
+      #   end
+      #   order_by :tariff_type_id
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @grouped_tariffs = search.results
+      # # @grouped_tariffs = search.group(:grouped_tariffs).groups.each do |g|
 
-      @tariffs = @search.results
+      # @grouped_tariffs = search.group(:grouped_tariffs).groups.each do |g|
+      #   g.results
+      # end
 
+      # @grouped_tariffs = Tariff.all_group_tariffs_without_caliber(current_projects_ids || project, type, concept, item, caliber, frequency, from, to).paginate :page => params[:page] || 1, :per_page => Tariff.count
+      @grouped_tariffs = Tariff.search_box(current_projects_ids.join(', ') || project, type, concept, item, caliber, frequency, from, to).to_a.paginate(:page => params[:page] || 1, :per_page => 15)
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @tariffs }
+        format.json { render json: @grouped_tariffs }
         format.js
       end
     end

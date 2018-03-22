@@ -95,6 +95,21 @@ class Tariff < ActiveRecord::Base
     .select("tariffs.id id,
              CONCAT(tariff_types.name, ' ', billable_concepts.name, CASE ISNULL(tariffs.caliber_id) WHEN TRUE THEN '' ELSE CONCAT(' - ',calibers.caliber) END, ' (', DATE_FORMAT(tariffs.starting_at,'%d/%m/%Y'),')') tariff_label")
   }
+  #mj
+  scope :all_group_tariffs_without_caliber, -> w {
+        joins(:tariff_type, :billing_frequency, [billable_item: :billable_concept])
+        .where(w).select("tariffs.id, tariffs.billable_item_id, tariffs.tariff_type_id, tariffs.billing_frequency_id, tariffs.starting_at, tariffs.ending_at, tariffs.caliber_id,
+        CONCAT(billable_concepts.name) billable_concept_label_, tariff_types.name tariff_type_label_,
+        CASE (billing_frequencies.days = 0) WHEN TRUE THEN CONCAT(billing_frequencies.name, ' ',billing_frequencies.months, ' mes/es') ELSE CONCAT(billing_frequencies.name, ' ',billing_frequencies.days, ' día/s') END billing_frequency_label_")
+        .group('tariffs.billable_item_id, tariffs.tariff_type_id, tariffs.billing_frequency_id, tariffs.starting_at, tariffs.ending_at')
+        .order('tariffs.tariff_type_id')
+  }
+  scope :all_tariffs_with_caliber, -> bi,tt,bf,sa,ea {
+    joins(:tariff_type, :billing_frequency, [billable_item: :billable_concept])
+    .joins('LEFT JOIN calibers ON tariffs.caliber_id=calibers.id')
+    .where('tariffs.billable_item_id = ? AND tariffs.tariff_type_id = ? AND tariffs.billing_frequency_id = ? AND tariffs.starting_at = ? AND (tariffs.ending_at = ? OR tariffs.ending_at IS NULL)',bi, tt, bf, sa, ea)
+    .select("tariffs.id id, CASE ISNULL(tariffs.caliber_id) WHEN TRUE THEN '' ELSE calibers.caliber END caliber_")
+  }
 
   # Callbacks
   before_destroy :check_for_dependent_records
@@ -102,7 +117,11 @@ class Tariff < ActiveRecord::Base
   after_destroy :reindex_tariff
 
   def to_label
-    "#{tariff_type.name} #{try(:billable_item).try(:billable_concept).try(:name)} - #{caliber.try(:caliber)} (#{I18n.l(starting_at)})"
+    "#{tariff_type.name} #{try(:billable_item).try(:billable_concept).try(:name)} - #{caliber.try(:caliber)} (#{I18n.l(starting_at) rescue nil})"
+  end
+
+  def full_name
+    "#{try(:billable_item).try(:billable_concept).try(:name)} #{tariff_type.name} (#{I18n.l(starting_at) rescue nil} - #{I18n.l(ending_at) rescue nil})"
   end
 
   # THIS METHOD IS CONCEPTUALLY WRONG!!
@@ -140,6 +159,45 @@ class Tariff < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+
+  def self.search_box(pr=nil,tt=nil,bc=nil,bi=nil,cc=nil,bf=nil,sa=nil,ea=nil)
+    #       .where('billable_items.project_id in (?) OR tariffs.tariff_type_id = ? OR billable_items.billable_concept_id = ? OR tariffs.billable_item_id = ? OR tariffs.caliber_id = ? OR tariffs.billing_frequency_id = ? OR tariffs.starting_at >= ? OR tariffs.ending_at <= ?', pr, tt, bc, bi, cc, bf, sa, ed )
+    # Builds WHERE
+    w = ''
+    if !pr.blank?
+      w += " AND " if w != ''
+      w += "billable_items.project_id IN (#{pr})"
+    end
+    if !tt.blank?
+      w += " AND " if w != ''
+      w += "tariffs.tariff_type_id = #{tt}"
+    end
+    if !bc.blank?
+      w += " AND " if w != ''
+      w += "billable_items.billable_concept_id = #{bc}"
+    end
+    if !bi.blank?
+      w += " AND " if w != ''
+      w += "tariffs.billable_item_id = #{bi}"
+    end
+    if !cc.blank?
+      w += " AND " if w != ''
+      w += "tariffs.caliber_id = #{cc}"
+    end
+    if !bf.blank?
+      w += " AND " if w != ''
+      w += "tariffs.billing_frequency_id = #{bf}"
+    end
+    if !sa.blank?
+      w += " AND " if w != ''
+      w += "tariffs.starting_at >= '#{sa.to_date}'"
+    end
+    if !ea.blank?
+      w += " AND " if w != ''
+      w += "tariffs.ending_at <= '#{ea.to_date}'"
+    end
+    Tariff.all_group_tariffs_without_caliber(w)
+  end
 
   #
   # Records navigator
