@@ -6,6 +6,12 @@ en:
         btn_new: "New Tariff Scheme"
         back_to_root: "Back to ag2Gest"
         back_to_management: "Back to Tariff Management"
+        label_description: "Description"
+        label_project: "Project"
+        label_office: "Office"
+        label_company: "Company"
+        label_from: "Effective since"
+        label_to: "Valid until"
       show:
         title: "Tariff Scheme"
         btn_edit: "Edit Tariff Scheme"

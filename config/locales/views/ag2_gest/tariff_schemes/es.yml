@@ -9,7 +9,7 @@ es:
         label_description: "Descripción"
         label_project: "Proyecto"
         label_office: "Oficina"
-        label_company: "Compañia"
+        label_company: "Empresa"
         label_from: "Vigente desde"
         label_to: "Vigente hasta"
       show:

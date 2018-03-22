@@ -48,7 +48,7 @@
         <div class="accordion-heading row">
           <div class="span1 ">
             <% if !tariff.caliber_id.blank? %>
-              <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= tariff.id %>"><i class='icon-plus'></i></a> 
+              <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= tariff.id %>"><i class='icon-plus'></i></a>
             <% else %>
               <b>&nbsp;</b>
             <% end %>
@@ -82,11 +82,11 @@
         <% if !tariff.caliber_id.blank? %>
           <div id="collapse-<%= tariff.id %>" class="accordion-body collapse">
             <div class="accordion-inner" align="center">
-              <table class="table table-condensed table-striped">
+              <table class="table table-condensed table-striped shrinked">
                 <tr>
                   <th align="right" class="span3"><%= t("activerecord.attributes.tariff.caliber_id") %></th>
                   <th class="span1"></th>
-                </tr> 
+                </tr>
                 <% Tariff.all_tariffs_with_caliber(tariff.billable_item_id, tariff.tariff_type_id, tariff.billing_frequency_id , tariff.starting_at , tariff.ending_at).each do |tariff_item| %>
                 <tr class="fields">
                   <td align="right" class="span3"><%= tariff_item.caliber_ %></td>
