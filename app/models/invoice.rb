@@ -127,7 +127,7 @@ class Invoice < ActiveRecord::Base
   before_save :calculate_and_store_totals
   before_validation :item_repeat, :on => :create
   before_create :assign_payday_limit
-  after_save :bill_status
+  after_save :bill_status, :update_invoice_taxes
 
   #
   # Methods
@@ -578,10 +578,15 @@ class Invoice < ActiveRecord::Base
     @errors.add(:base, "Invoice repeat") if !Invoice.where(bill_id: bill_id, invoice_type_id: invoice_type_id, invoice_operation_id: invoice_operation_id, billing_period_id: billing_period_id, biller_id: biller_id).blank?
   end
 
+  def assign_payday_limit
+    self.payday_limit = self.invoice_date if self.payday_limit.nil?
+    true
+  end
+
   def bill_status
     b = self.bill rescue nil
     b.update_attributes(invoice_status_id: b.invoices.select('min(invoice_status_id) as min_status').first.min_status) unless b.nil?
-    update_invoice_taxes
+    # update_invoice_taxes
   end
 
   def update_invoice_taxes
@@ -590,10 +595,5 @@ class Invoice < ActiveRecord::Base
       InvoiceTax.create(invoice_id: self.id, tax_type_id: tb[5], description: tb[4],
                         tax: tb[0], taxable: tb[1], tax_amount: tb[2], items_qty: tb[3])
     end
-  end
-
-  def assign_payday_limit
-    self.payday_limit = self.invoice_date if self.payday_limit.nil?
-    true
   end
 end
