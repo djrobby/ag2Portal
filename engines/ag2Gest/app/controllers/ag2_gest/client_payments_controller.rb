@@ -355,10 +355,11 @@ module Ag2Gest
           bills << bill
           # Sunspot.index! [invoice.bill]
         end
-        Sunspot.index! [bills, invoices]
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
       end
+      Sunspot.index [bills, invoices]
+      Sunspot.commit
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
@@ -417,9 +418,12 @@ module Ag2Gest
     def others_to_pending
       client_payments_ids = params[:others_to_pending][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payments_ids)
+      invoices = []
+      bills = []
       client_payments.each do |cp|
         # cp_instalment = nil
         invoice = cp.invoice
+        bill = cp.bill
         if cp.instalment_id.blank?
           # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
           invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
@@ -428,14 +432,18 @@ module Ag2Gest
           invoice.update_column(:invoice_status_id, InvoiceStatus::FRACTIONATED)
           # cp_instalment = cp.instalment
         end
-        Sunspot.index! [invoice]
-        if invoice.bill.invoice_status_id > invoice.invoice_status_id
-          invoice.bill.update_column(:invoice_status_id, invoice.invoice_status_id)
-          Sunspot.index! [invoice.bill]
+        invoices << invoice
+        # Sunspot.index! [invoice]
+        if bill.invoice_status_id > invoice.invoice_status_id
+          bill.update_column(:invoice_status_id, invoice.invoice_status_id)
+          bills << bill
+          # Sunspot.index! [invoice.bill]
         end
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
       end
+      Sunspot.index [bills, invoices]
+      Sunspot.commit
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
@@ -541,9 +549,12 @@ module Ag2Gest
     def bank_to_pending
       client_payments_ids = params[:bank_to_pending][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payments_ids)
+      invoices = []
+      bills = []
       client_payments.each do |cp|
         # cp_instalment = nil
         invoice = cp.invoice
+        bill = cp.bill
         if cp.instalment_id.blank?
           # cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
           invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
@@ -552,14 +563,18 @@ module Ag2Gest
           invoice.update_column(:invoice_status_id, InvoiceStatus::FRACTIONATED)
           # cp_instalment = cp.instalment
         end
-        Sunspot.index! [invoice]
-        if invoice.bill.invoice_status_id > invoice.invoice_status_id
-          invoice.bill.update_column(:invoice_status_id, invoice.invoice_status_id)
-          Sunspot.index! [invoice.bill]
+        invoices << invoice
+        # Sunspot.index! [invoice]
+        if bill.invoice_status_id > invoice.invoice_status_id
+          bill.update_column(:invoice_status_id, invoice.invoice_status_id)
+          bills << bill
+          # Sunspot.index! [invoice.bill]
         end
         cp.destroy
         # Sunspot.index! [cp_instalment.instalment_invoices] unless cp_instalment.nil?
       end
+      Sunspot.index [bills, invoices]
+      Sunspot.commit
       redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
       redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
