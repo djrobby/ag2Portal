@@ -644,7 +644,7 @@ module Ag2Gest
       subscriber = Subscriber.find(params[:subscriber_id])
       period = BillingPeriod.find(params[:period])
       bill_last_date = formatted_date(Bill.last_billed_date(period.project.company_id, period.project.office_id)) rescue "N/A"
-      alert_date = I18n.t("activerecord.attributes.bill.alert_invoice_date_bills") + " " + bill_last_date
+      alert_date = I18n.t("activerecord.attributes.bill.alert_invoice_date") + " " + bill_last_date
       alert_bill = ""
       code_bill = ''
       bill_original = ''

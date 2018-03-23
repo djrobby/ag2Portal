@@ -21,76 +21,60 @@
   });
 </script>
 
-<div class="row">
-  <div class="span1 soft-padding"><b>&nbsp;</b></div>
-  <div class="span2 soft-padding">
-    <b><%= t("activerecord.attributes.tariff.billable_concept") %></b>
-  </div>
-  <div class="span2 soft-padding">
-    <b><%= t("activerecord.attributes.tariff.tariff_type_id") %></b>
-  </div>
-  <div class="span2 soft-padding">
-    <b><%= t("activerecord.attributes.tariff.billing_frequency_id") %></b>
-  </div>
-  <div align="center" class="span2 soft-padding">
-    <b><%= t('activerecord.attributes.tariff.starting_at') %></b>
-  </div>
-  <div align="left" class="span2 soft-padding">
-    <b><%= t('activerecord.attributes.tariff.ending_at') %></b>
-  </div>
-  <div align="right" class="span1 soft-padding"><b>&nbsp;</b></div>
-</div>
-
-<% @grouped_tariffs.each do |tariff| %>
-  <%# v.results.each do |tariff| %>
-    <div class="accordion">
-      <div class="accordion-group">
-        <div class="accordion-heading row">
-          <div class="span1 ">
-            <% if !tariff.caliber_id.blank? %>
-              <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= tariff.id %>"><i class='icon-plus'></i></a>
-            <% else %>
-              <b>&nbsp;</b>
-            <% end %>
-          </div>
-          <div class="span2 ">
-            <%#= tariff.try(:billable_item).try(:billable_concept).try(:name) %>
-            <%= tariff.billable_concept_label_ %>
-          </div>
-          <div class="span2 ">
-            <%#= tariff.try(:tariff_type).try(:name) %>
-            <%= tariff.tariff_type_label_ %>
-          </div>
-          <div class="span2 ">
-            <%#= tariff.try(:billing_frequency).try(:to_label) %>
-            <%= tariff.billing_frequency_label_ %>
-          </div>
-          <div align="center" class="span2 ">
-            <%=l tariff.starting_at unless tariff.starting_at.blank? %>
-          </div>
-          <div align="center" class="span1 ">
-            <%=l tariff.ending_at unless tariff.ending_at.blank? %>
-          </div>
-          <% if tariff.caliber_id.blank? %>
-            <div align="right" class="span2 soft-padding">
-              <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff.id) } %>
-              <%= render :partial => '/layouts/crud/edit', :locals => { :model => Tariff, :path => edit_tariff_path(tariff.id) } %>
-              <%= render :partial => '/layouts/crud/delete', :locals => { :model => Tariff, :path => tariff, :msg => t("activerecord.models.tariff.one"), :txt => tariff.id } %>
-            </div>
+<table class="table table-condensed table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= t("activerecord.attributes.tariff.billable_concept") %></th>
+      <th><%= t("activerecord.attributes.tariff.tariff_type_id") %></th>
+      <th><%= t("activerecord.attributes.tariff.billing_frequency_id") %></th>
+      <th align="right"><%= t('activerecord.attributes.tariff.starting_at') %></th>
+      <th align="right"><%= t('activerecord.attributes.tariff.ending_at') %></th>
+      <th align="center"><%= t("activerecord.attributes.tariff.caliber_id") %></th>
+      <th align="right"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @grouped_tariffs.each do |tariff| %>
+      <tr>
+        <td>
+          <% if !tariff.caliber_id.blank? %>
+            <a class="accor accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= tariff.id %>"><i class='icon-plus'></i></a>
+          <% else %>
+            <b>&nbsp;</b>
           <% end %>
-        </div>
-        <% if !tariff.caliber_id.blank? %>
+        </td>
+        <td><%= tariff.billable_concept_label_ %></td>
+        <td><%= tariff.tariff_type_label_ %></td>
+        <td><%= tariff.billing_frequency_label_ %></td>
+        <td align="right"><%=l tariff.starting_at unless tariff.starting_at.blank? %></td>
+        <td align="right"><%=l tariff.ending_at unless tariff.ending_at.blank? %></td>
+        <td align="center"></td>
+        <td align="right">
+        <% if tariff.caliber_id.blank? %>
+            <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff.id) } %>
+            <%= render :partial => '/layouts/crud/edit', :locals => { :model => Tariff, :path => edit_tariff_path(tariff.id) } %>
+            <%= render :partial => '/layouts/crud/delete', :locals => { :model => Tariff, :path => tariff, :msg => t("activerecord.models.tariff.one"), :txt => tariff.id } %>
+          </td>
+        </tr>
+        <tr><td colspan="8"></td></tr>
+        <% else %>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="8">
           <div id="collapse-<%= tariff.id %>" class="accordion-body collapse">
-            <div class="accordion-inner" align="center">
-              <table class="table table-condensed table-striped shrinked">
-                <tr>
-                  <th align="right" class="span3"><%= t("activerecord.attributes.tariff.caliber_id") %></th>
-                  <th class="span1"></th>
-                </tr>
+              <table class="table table-condensed table-striped">
                 <% Tariff.all_tariffs_with_caliber(tariff.billable_item_id, tariff.tariff_type_id, tariff.billing_frequency_id , tariff.starting_at , tariff.ending_at).each do |tariff_item| %>
-                <tr class="fields">
-                  <td align="right" class="span3"><%= tariff_item.caliber_ %></td>
-                  <td align="right" class="span1">
+                <tr>
+                  <td class="span1"><b>&nbsp;</b></td>
+                  <td class="span1"><b>&nbsp;</b></td>
+                  <td class="span1"><b>&nbsp;</b></td>
+                  <td class="span1"><b>&nbsp;</b></td>
+                  <td class="span1" align="right"><b>&nbsp;</b></td>
+                  <td class="span1" align="right"><b>&nbsp;</b></td>
+                  <td class="span1" align="center"><%= tariff_item.caliber_ %></td>
+                  <td class="span1" align="right">
                     <%= render :partial => '/layouts/crud/read', :locals => { :model => Tariff, :path => tariff_path(tariff_item.id) } %>
                     <%= render :partial => '/layouts/crud/edit', :locals => { :model => Tariff, :path => edit_tariff_path(tariff_item.id) } %>
                     <%= render :partial => '/layouts/crud/delete', :locals => { :model => Tariff, :path => tariff_item, :msg => t("activerecord.models.tariff.one"), :txt => tariff_item.id } %>
@@ -98,12 +82,12 @@
                 </tr>
                 <% end %>
               </table>
-            </div>
           </div>
+        </td>
+        </tr>
         <% end %>
-      </div>
-    </div>
-  <%# end %>
-<% end %>
+    <% end %>
+  </tbody>
+</table>
 
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @grouped_tariffs } %>

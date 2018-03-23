@@ -44,8 +44,8 @@
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
-      <th><%= t('activerecord.attributes.pre_reading.service_point_id') %></th>
       <th><%= t('activerecord.attributes.reading.meter_id') %></th>
+      <th><%= t('activerecord.attributes.pre_reading.service_point_id_c') %></th>
       <th><%= t('activerecord.attributes.reading.billing_period_c') %></th>
       <th><%= t('activerecord.attributes.reading.reading_type_id') %></th>
       <th align="center"><%= t('activerecord.attributes.reading.reading_date') %></th>
@@ -64,8 +64,8 @@
     <% else %>
       <tr>
     <% end %>
-      <td><%= reading.service_point_full_code unless reading.service_point_full_code.blank? %></td>
       <td><%= reading.meter_code unless reading.meter_code.blank? %></td>
+      <td title="<%= reading.service_point.to_full_label %>"><%= reading.try(:service_point).try(:full_code) unless reading.service_point_full_code.blank? %></td>
       <td><%= reading.period unless reading.period.blank? %></td>
       <td><%= reading.reading_type_name unless reading.reading_type_name.blank? %></td>
       <td align="center"><%= formatted_date(reading.reading_date) unless reading.reading_date.blank? %></td>

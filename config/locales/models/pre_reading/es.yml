@@ -21,6 +21,7 @@ es:
         reading_type_id: "Tipo de lectura"
         subscriber_id: "Abonado"
         service_point_id : "Punto de Suministro"
+        service_point_id_c : "Pto.Sum"
         reading_variant: "Reading variant"
         reading_1_id: "reading_1_id"
         reading_2_id: "reading_2_id"

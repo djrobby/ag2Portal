@@ -21,6 +21,7 @@ en:
         reading_type_id: "Reading type"
         subscriber_id: "Subscriber"
         service_point_id : "Service Point"
+        service_point_id_c : "Service.Pt"
         reading_variant: "Reading variant"
         reading_1_id: "reading_1_id"
         reading_2_id: "reading_2_id"

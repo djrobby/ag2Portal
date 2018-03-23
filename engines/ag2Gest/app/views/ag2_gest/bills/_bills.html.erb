@@ -262,7 +262,7 @@
       <%= f.input :payday_limit, required: false, label: I18n.t("ag2_gest.bills.index.payday_limit"), :label_html => { :class => 'form-label' }, :input_html => {class: "mid-text-field date_picker", value: formatted_date(Date.today + @bills.first.project.office.days_for_invoice_due_date), id: "payday_limit"} %>
     </div>
     <div class="modal-footer">
-      <span class="left-floated shrinked" style="vertical-align: bottom"><%= I18n.t("activerecord.attributes.bill.alert_invoice_date_bills") + " " + @bill_last_date %></span>
+      <span class="left-floated shrinked" style="vertical-align: bottom"><%= I18n.t("activerecord.attributes.bill.alert_invoice_date") + " " + @bill_last_date %></span>
       <%= f.submit "Confirmar facturas", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary hide', :id => "submit_pre_bill" %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>

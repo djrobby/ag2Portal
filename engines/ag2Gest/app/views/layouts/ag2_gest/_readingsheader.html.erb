@@ -1,10 +1,10 @@
 <tr>
   <% if source == 'SP' %>
+  <th><%= t('activerecord.attributes.reading.meter_id') %></th>
     <th><%= t('activerecord.attributes.reading.subscriber_id') %></th>
-    <th><%= t('activerecord.attributes.reading.meter_id') %></th>
   <% end %>
   <% if source == 'M' %>
-    <th><%= t('activerecord.attributes.pre_reading.service_point_id') %></th>
+    <th><%= t('activerecord.attributes.pre_reading.service_point_id_c') %></th>
     <th><%= t('activerecord.attributes.reading.subscriber_id') %></th>
   <% end %>
   <th><%= t('activerecord.attributes.reading.billing_period_c') %></th>
