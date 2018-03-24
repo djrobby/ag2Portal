@@ -3,9 +3,9 @@
 require_dependency "ag2_gest/application_controller"
 require 'will_paginate/array'
 require 'open-uri'
-require 'barby'
-require 'barby/barcode/code_128'
-require 'barby/outputter/png_outputter'
+# require 'barby'
+# require 'barby/barcode/code_128'
+# require 'barby/outputter/png_outputter'
 require_relative 'thinreports-with-text-rotation'
 
 module Ag2Gest
