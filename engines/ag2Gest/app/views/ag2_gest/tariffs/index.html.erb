@@ -8,6 +8,19 @@
   var changing = false;
 
   $(document).ready(function() {
+    var active_ifilter_tariff_index = "<%= @active_ifilter_tariff_index %>";
+
+    $('.tariff-all').removeClass('highlighted')
+    $('.tariff-activated').removeClass('highlighted')
+    $('.tariff-deactivated').removeClass('highlighted')
+    if (active_ifilter_tariff_index == "all") {
+      $('.tariff-all').addClass('highlighted')
+    } else if (active_ifilter_tariff_index == "activated") {
+      $('.tariff-activated').addClass('highlighted')
+    } else if (active_ifilter_tariff_index == "deactivated") {
+      $('.tariff-deactivated').addClass('highlighted')
+    }
+
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
@@ -67,6 +80,25 @@
       $("#submit_btn").trigger("click");
     });
 
+    $(".tariff-all").click(function() {
+      $('.tariff-all').removeClass('highlighted')
+      $('.tariff-activated').removeClass('highlighted')
+      $('.tariff-deactivated').removeClass('highlighted')
+      $('.tariff-all').addClass('highlighted')
+    });
+    $(".tariff-activated").click(function() {
+      $('.tariff-all').removeClass('highlighted')
+      $('.tariff-activated').removeClass('highlighted')
+      $('.tariff-deactivated').removeClass('highlighted')
+      $('.tariff-activated').addClass('highlighted')
+    });
+    $(".tariff-deactivated").click(function() {
+      $('.tariff-all').removeClass('highlighted')
+      $('.tariff-activated').removeClass('highlighted')
+      $('.tariff-deactivated').removeClass('highlighted')
+      $('.tariff-deactivated').addClass('highlighted')
+    });
+    
   });
 
 </script>
@@ -113,6 +145,11 @@
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <!-- Active tariffs filters -->
+        <%= link_to t('ag2_gest.subscribers.show.all'), {controller: "tariffs", action: "index", ifilter_index_tariff: "all", :remote => true}, class: "tariff-all" %> |
+        <%= link_to t('activerecord.attributes.tariff.activated'), {controller: "tariffs", action: "index", ifilter_index_tariff: "activated", :remote => true}, class: "tariff-activated" %> |
+        <%= link_to t('activerecord.attributes.tariff.deactivated'), {controller: "tariffs", action: "index", ifilter_index_tariff: "deactivated", :remote => true}, class: "tariff-deactivated" %>
+        <br></br>
         <!-- Buttons -->
         <%= render :partial => '/layouts/crud/new', :locals => { :model => Tariff, :path => new_tariff_path, :txt => t("ag2_gest.tariffs.index.btn_new") } %>
         <a href="#new-tariff-pct" role="button" class="btn btn-warning" data-toggle="modal">Nuevas tarifas por tipo</a>

@@ -17,15 +17,31 @@ $(document).ready(function() {
 <%= display_base_errors resource %>
 
 <div class="row-fluid">
-  <div class="span6">
-    <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "mid-text-field"}, :label_html => { :class => 'form-label' } %>
+  <div class="span4">
+    <%= f.input :period, required: true, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "x-large-text-field", id: 'input_period'}, :label_html => { :class => 'form-label' } %>
   </div>
-  <div class="span6">
-    <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, input_html: {class: "sel2 mid-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+  <div class="span4">
+    <%= f.input :centers, required: true, label: t('activerecord.attributes.service_point.center_id'), collection: @centers, label_method: :second, value_method: :first, input_html: {class: "sel2 x-large-text-field multiple", multiple: "multiple", id: 'input_centers'}, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="span4">
+    <%= f.input :reading_routes, required: false, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, label_method: :second, value_method: :first, input_html: {class: "sel2 x-large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
   </div>
 </div>
 
-<%= f.button :submit, "Generar",:class => 'btn-primary' %>
+<%= f.submit "Generar", :class => 'btn btn-primary', :id => "submit_generate" %>
+
 <% end %>
 
 <%= link_to I18n.t('ag2_gest.pre_readings.back_to_main_page'), pre_readings_path %>
+<script>
+  jQuery(function($) {
+    $("#submit_generate").click(function () {
+      var period = $("#input_period").val();
+      var centers = $("#input_centers").select2("val",);
+      if (period == "" || centers == "" ) {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      }
+    });
+  });
+</script>

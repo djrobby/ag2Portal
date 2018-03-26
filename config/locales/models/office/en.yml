@@ -54,3 +54,5 @@ en:
         water_supply_contract_template_id: "Supply Contract Template"
         water_connection_contract_template: "Connection Contract Template"
         water_connection_contract_template_id: "Connection Contract Template"
+        days_for_invoice_due_date: "Days for invoice expiration"
+

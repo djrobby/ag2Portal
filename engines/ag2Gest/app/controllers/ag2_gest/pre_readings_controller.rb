@@ -9,7 +9,9 @@ module Ag2Gest
     skip_load_and_authorize_resource :only => [ :update,
                                                 :destroy,
                                                 :list,
+                                                :list_q,
                                                 :to_pdf,
+                                                :show_list,
                                                 :impute_readings,
                                                 :new_impute,
                                                 :to_reading,
@@ -18,7 +20,10 @@ module Ag2Gest
     def new_impute
       @breadcrumb = 'create'
       @billing_periods = billing_periods_dropdown.select{|b| !b.pre_readings.empty?}
-      @reading_routes = reading_routes_dropdown.select{|r| !r.pre_readings.empty?}
+      init_oco if !session[:organization]
+      _o = current_offices_ids
+      @centers = centers_by_office_array(_o)
+      @reading_routes = reading_routes_raw_array(_o).select{|r| !ReadingRoute.find(r[0]).pre_readings.empty?}
       #@pre_readings = 1
     end
 
@@ -52,12 +57,19 @@ module Ag2Gest
     end
 
     def show_list
-      @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } if params[:prereading][:reading_routes]
+      @centers = params[:prereading][:centers].reject { |c| c.empty? } unless params[:prereading][:centers].blank?
+      @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } unless params[:prereading][:reading_routes].blank?
       @period = params[:prereading][:period]
 
-      @pre_reading_report = PreReading.where(reading_route_id: @routes, billing_period_id: @period)
+      if @routes.blank?
+        @pre_reading_report = PreReading.where(billing_period_id: @period)
                                 .includes(:reading_route, :billing_period)
                                 .order(:reading_route_id, :reading_sequence)
+      else
+        @pre_reading_report = PreReading.where(reading_route_id: @routes, billing_period_id: @period)
+                                .includes(:reading_route, :billing_period)
+                                .order(:reading_route_id, :reading_sequence)
+      end
 
       title = t("activerecord.models.pre_reading.few")
       respond_to do |format|
@@ -73,7 +85,7 @@ module Ag2Gest
       # .select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
 
       @to_readings.each do |pre_reading|
-        redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil?
+        redirect_to impute_readings_pre_readings_path(prereading: {centers: @centers, reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil?
         # redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), alert: I18n.t("ag2_gest.pre_readings.generate_error_incidence") and return if pre_reading.reading_incidence_types.empty? and pre_reading.reading_index.nil? and pre_reading.reading_index_1.nil?
         if pre_reading.subscriber_id == nil
           if pre_reading.meter.is_shared?
@@ -191,7 +203,7 @@ module Ag2Gest
           end
         end
       end
-      redirect_to impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project })
+      redirect_to impute_readings_pre_readings_path(prereading: {centers: @centers, reading_routes: @routes, period: @period, project: @project })
     end
 
     def to_pdf
@@ -235,7 +247,11 @@ module Ag2Gest
     def new
       @breadcrumb = 'create'
       @billing_periods = billing_periods_dropdown
-      @reading_routes = reading_routes_dropdown
+      init_oco if !session[:organization]
+      _o = current_offices_ids
+      @centers = centers_by_office_array(_o)
+      @reading_routes = reading_routes_raw_array(_o)
+      # @reading_routes = reading_routes_dropdown
     end
 
     # GET /prereadings/1/edit
@@ -249,7 +265,11 @@ module Ag2Gest
       @breadcrumb = 'create'
       billing_period = BillingPeriod.find @period
       if billing_period #and @pre_readings.where(reading_type_id: 1).empty?
-        meters = Meter.readable_by_route(@routes).includes(:service_points, :subscribers)
+        if @routes.blank?
+          meters = Meter.readable_by_center(@centers).includes(:service_points, :subscribers)
+        else
+          meters = Meter.readable_by_route(@routes).includes(:service_points, :subscribers)
+        end
         meters.each do |m|
           reading1 = set_reading_1_to_reading(!m.subscribers.actives.blank? ? m.subscribers.actives.first : nil,m,billing_period)
 
@@ -314,7 +334,7 @@ module Ag2Gest
         #     end
         #   end
         # end
-        redirect_to list_pre_readings_path(prereading: { reading_routes: @routes, period: billing_period.id})
+        redirect_to list_pre_readings_path(prereading: { centers: @centers, reading_routes: @routes, period: billing_period.id})
         # redirect_to list_pre_readings_path(billing_period.id, @routes)
         # redirect_to impute_readings_pre_readings_path(prereading: { reading_routes: @routes, period: billing_period.id, project: [billing_period.project_id]})
       else
@@ -430,11 +450,19 @@ module Ag2Gest
     private
 
     def get_pre_readings
-      @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } if params[:prereading][:reading_routes]
+      @centers = params[:prereading][:centers].reject { |c| c.empty? } unless params[:prereading][:centers].blank?
+      @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } unless params[:prereading][:reading_routes].blank?
       @period = params[:prereading][:period]
-      @pre_readings = PreReading.where(reading_route_id: @routes, billing_period_id: @period)
-                                .includes(:reading_route, :billing_period)
-                                .order(:reading_route_id, :reading_sequence)
+      if @routes.blank?
+        @pre_readings = PreReading.where(billing_period_id: @period)
+                                  .includes(:reading_route, :billing_period)
+                                  .order(:reading_route_id, :reading_sequence)
+      else
+        @pre_readings = PreReading.where(reading_route_id: @routes, billing_period_id: @period)
+                                  .includes(:reading_route, :billing_period)
+                                  .order(:reading_route_id, :reading_sequence)
+      end
+
     end
 
     def billing_periods_dropdown
@@ -443,6 +471,25 @@ module Ag2Gest
 
     def reading_routes_dropdown
       ReadingRoute.where(project_id: current_projects_ids).order("name")
+    end
+
+    def reading_routes_raw_array(_o=nil)
+      _s = ReadingRoute.dropdown(_o)
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
+    end
+
+    def centers_by_office_array(_o=nil)
+      _o.nil? ? nil : _o.join(",")
+      _s = _o.nil? ? Center.dropdown : Center.dropdown(Office.where('id in (?)',_o).select('town_id'))
+      _array = []
+      _s.each do |i|
+        _array = _array << [i.id, i.to_label_]
+      end
+      _array
     end
 
   end

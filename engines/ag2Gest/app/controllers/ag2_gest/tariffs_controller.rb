@@ -152,6 +152,10 @@ module Ag2Gest
     # GET /tariffs
     # GET /tariffs.json
     def index
+      manage_filter_state_index
+      filter_tariff_index = params[:ifilter_index_tariff] || "all"
+      @active_ifilter_tariff_index = filter_tariff_index
+
       manage_filter_state
 
       project = params[:Project]
@@ -219,7 +223,15 @@ module Ag2Gest
       # end
 
       # @grouped_tariffs = Tariff.all_group_tariffs_without_caliber(current_projects_ids || project, type, concept, item, caliber, frequency, from, to).paginate :page => params[:page] || 1, :per_page => Tariff.count
-      @grouped_tariffs = Tariff.search_box(current_projects_ids.join(', ') || project, type, concept, item, caliber, frequency, from, to).to_a.paginate(:page => params[:page] || 1, :per_page => 15)
+
+      if filter_tariff_index == "all"
+        @grouped_tariffs = Tariff.search_box(current_projects_ids.join(', ') || project, type, concept, item, caliber, frequency, from, to).to_a.paginate(:page => params[:page] || 1, :per_page => 15)
+      elsif filter_tariff_index == "activated"
+        @grouped_tariffs = Tariff.current.search_box(current_projects_ids.join(', ') || project, type, concept, item, caliber, frequency, from, to).to_a.paginate(:page => params[:page] || 1, :per_page => 15)
+      elsif filter_tariff_index == "deactivated"
+        @grouped_tariffs = Tariff.not_current.search_box(current_projects_ids.join(', ') || project, type, concept, item, caliber, frequency, from, to).to_a.paginate(:page => params[:page] || 1, :per_page => 15)
+      end
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @grouped_tariffs }
@@ -406,6 +418,14 @@ module Ag2Gest
 
     def billing_frequency_dropdown
       BillingFrequency.all
+    end
+
+    def manage_filter_state_index
+      if params[:ifilter_index_tariff]
+        session[:ifilter_index_tariff] = params[:ifilter_index_tariff]
+      elsif session[:ifilter_index_tariff]
+        params[:ifilter_index_tariff] = session[:ifilter_index_tariff]
+      end
     end
 
     # Keeps filter state

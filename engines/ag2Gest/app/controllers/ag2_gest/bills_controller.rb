@@ -88,6 +88,19 @@ module Ag2Gest
     def biller_contract_pdf
       # Search invoice & items
       @biller_printer = Bill.find(params[:id])
+      # Generate barcode
+      _code = "code=EANUCC128"
+      _data = "data=" + @biller_printer.barcode
+      _format_image = "imagetype=Png"
+
+      _bar_code = _code + "&" + _data + "&" + _format_image
+
+      _blob = URI.encode('https://barcode.tec-it.com/barcode.ashx?' + _bar_code)
+
+      File.open('barcode.png', 'wb') do |fo|
+        fo.write open(URI.parse(_blob)).read
+      end
+
       @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
       @water_connection_contract = @biller_printer.water_connection_contract
 
@@ -109,6 +122,19 @@ module Ag2Gest
     def biller_connection_contract_pdf
       # Search invoice & items
       @biller_printer = Bill.find(params[:id])
+      # Generate barcode
+      _code = "code=EANUCC128"
+      _data = "data=" + @biller_printer.barcode
+      _format_image = "imagetype=Png"
+
+      _bar_code = _code + "&" + _data + "&" + _format_image
+
+      _blob = URI.encode('https://barcode.tec-it.com/barcode.ashx?' + _bar_code)
+
+      File.open('barcode.png', 'wb') do |fo|
+        fo.write open(URI.parse(_blob)).read
+      end
+
       @water_supply_contract = !@biller_printer.water_supply_contract.blank? ? @biller_printer.water_supply_contract : @biller_printer.bailback_water_supply_contract
       @water_connection_contract = @biller_printer.water_connection_contract
 
@@ -133,12 +159,26 @@ module Ag2Gest
       # barcode = "#{Barby::Code128::FNC1}" + @biller_printer.barcode
       # barcode = Barby::Code128.new("#{Barby::Code128::FNC1}9050704241147500180000000032705031800000068220")
 
-      _barcode = Barby::Code128.new("#{Barby::Code128::FNC1}" + @biller_printer.barcode)
-      _blob = Barby::PngOutputter.new(_barcode).to_png(:width=> 100, :height => 40, :margin => 0)  #Raw PNG data
+      # _barcode = Barby::Code128.new("#{Barby::Code128::FNC1}" + @biller_printer.barcode)
+      # _blob = Barby::PngOutputter.new(_barcode).to_png(:width=> 100, :height => 40, :margin => 0)  #Raw PNG data
+
+      # File.open('barcode.png', 'wb') do |fo|
+      #   fo.write _blob
+      # end
+
+      _code = "code=EANUCC128"
+      _data = "data=" + @biller_printer.barcode
+      _format_image = "imagetype=Png"
+
+      _bar_code = _code + "&" + _data + "&" + _format_image
+
+      _blob = URI.encode('https://barcode.tec-it.com/barcode.ashx?' + _bar_code)
 
       File.open('barcode.png', 'wb') do |fo|
-        fo.write _blob
+        fo.write open(URI.parse(_blob)).read
       end
+
+
 
       # _r1 = Reading.find(@biller_printer.reading_1_id) rescue nil
       # _b1 = Bill.find(_r1.bill_id) rescue nil

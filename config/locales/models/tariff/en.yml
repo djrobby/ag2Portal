@@ -86,3 +86,5 @@ en:
         FIXED: "Fixed"
         VARIABLE: "Variable"
         BOTH: "Both"
+        activated: "Current"
+        deactivated: "Not current"

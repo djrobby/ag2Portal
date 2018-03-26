@@ -238,8 +238,10 @@ report.page.values(loc_fiscal_c: I18n.t("activerecord.report.biller.loc_fiscal")
 				   pay_total_c: I18n.t("activerecord.attributes.bill.total").upcase,
 				   pay_total: number_with_precision(@biller_printer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				   )
-report.page.item(:barcode).src('barcode.png')
-report.page.item(:barcode_no).value @biller_printer.barcode
+if @biller_printer.invoices.first.invoice_operation_id != InvoiceOperation::CANCELATION
+  report.page.item(:barcode).src('barcode.png')
+end
+# report.page.item(:barcode_no).value @biller_printer.barcode
 
 
 

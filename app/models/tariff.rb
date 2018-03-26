@@ -82,6 +82,7 @@ class Tariff < ActiveRecord::Base
   scope :availables_to_project_type_document_caliber, -> b,p,t,d,c { joins(:billable_item).joins(:billable_concept).order("billable_items.billable_concept_id").where("billable_items.id = ? AND billable_items.project_id = ? AND tariffs.tariff_type_id = ? AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", b, p, t, d, c, Date.today)}
   scope :availables_to_project_types_items_document_caliber, -> b,p,t,d,c { joins(:billable_item).joins(:billable_concept).order("billable_items.billable_concept_id").where("billable_items.id in (?) AND billable_items.project_id = ? AND tariffs.tariff_type_id in (?) AND billable_concepts.billable_document = ? AND (tariffs.caliber_id IS NULL OR tariffs.caliber_id = ? ) AND (tariffs.ending_at IS NULL OR tariffs.ending_at >= ?)", b, p, t, d, c, Date.today)}
   scope :current, -> { where('tariffs.ending_at IS NULL OR tariffs.ending_at >= ?', Date.today) }
+  scope :not_current, -> { where('tariffs.ending_at IS NOT NULL OR tariffs.ending_at < ?', Date.today) }
   scope :current_by_type, -> t { current.where(tariff_type_id: t) }
   scope :current_by_type_and_use_in_service_invoice, -> t {
     joins(:tariff_type, :billing_frequency, [billable_item: :billable_concept])

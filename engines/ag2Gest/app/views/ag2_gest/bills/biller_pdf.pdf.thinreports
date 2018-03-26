@@ -234,9 +234,9 @@ var_invoice_first_limit = @biller_printer.invoices.first.payday_limit.strftime(_
 # payment_data
 var_client_bank = ClientBankAccount.where(subscriber_id: @biller_printer.subscriber_id,ending_at: nil)
 var_client_bank_full = var_client_bank.first.p_format_hidden_account unless var_client_bank.blank?
-if var_client_bank.blank?
+if var_client_bank.blank? && @biller_printer.invoices.first.invoice_operation_id != InvoiceOperation::CANCELATION
   report.page.item(:barcode).src('barcode.png')
-  report.page.item(:barcode_no).value @biller_printer.barcode
+  # report.page.item(:barcode_no).value @biller_printer.barcode
 else
   report.page.values(pay_client_c: I18n.t("activerecord.attributes.subscriber.titular") + ": ",
              pay_client: @biller_printer.full_name.upcase,

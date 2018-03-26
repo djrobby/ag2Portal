@@ -103,6 +103,12 @@
       <td><%= t :"activerecord.attributes.office.max_order_price" %>:</td>
       <td><%= number_with_precision(@office.max_order_price, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @office.max_order_price.blank? %></td>
     </tr>
+    <tr>
+      <td><%= t 'activerecord.attributes.office.days_for_invoice_due_date' %>:</td>
+      <td><%= @office.days_for_invoice_due_date unless @office.days_for_invoice_due_date.blank? %></td>
+      <td></td>
+      <td></td>      
+    </tr>
   </tbody>
 </table>
 

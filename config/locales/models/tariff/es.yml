@@ -86,3 +86,5 @@ es:
         FIXED: "Fija"
         VARIABLE: "Variable"
         BOTH: "Ambas"
+        activated: "Vigentes"
+        deactivated: "No vigentes"

@@ -142,7 +142,10 @@
   <label class="multi-field-label-three"> <%= f.association :town, collection: @towns, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
   <label class="multi-field-label-three"> <%= f.association :province, collection: @provinces, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %> </label>
 </div>
-<%= f.input :email, :input_html => { :class => 'large-text-field' }, :label_html => { :class => 'form-label' } %>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"> <%= f.input :days_for_invoice_due_date, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %></label>
+</div>
 <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
 <%= f.input :nomina_id, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
 <% end %>
