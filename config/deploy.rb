@@ -17,7 +17,7 @@ require 'capistrano/sidekiq'
 
 # be sure to change these
 set :user, 'administrador'
-set :domain, 'ag2front'
+set :domain, 'ag2frontclone'
 set :application, 'agestiona2'
 
 # file paths
