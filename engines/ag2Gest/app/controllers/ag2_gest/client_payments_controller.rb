@@ -15,6 +15,7 @@
 require_dependency "ag2_gest/application_controller"
 require_dependency "ag2_gest/sepa_order"
 require_dependency "ag2_gest/sepa_return"
+require_dependency "ag2_gest/sepa_counter"
 
 module Ag2Gest
   class ClientPaymentsController < ApplicationController
@@ -721,6 +722,14 @@ module Ag2Gest
     # pending
     def bank_from_counter
       file_to_process = params[:bank_from_return][:file_to_process]
+
+      # Instantiate class
+      sepa = Ag2Gest::SepaCounter.new(file_to_process)
+      # Read XML object
+      sepa.read_txt
+      # Loop thru counter items
+      sepa.lista_cobros.each do |i|
+      end
     end
 
     #

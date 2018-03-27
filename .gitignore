@@ -20,6 +20,9 @@
 # Ignore all icon folder files but images
 /app/assets/images/icon/.DS_Store
 
+# Ignore editor templates
+.vscode
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /log/*.lck
