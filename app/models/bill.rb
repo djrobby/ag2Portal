@@ -308,6 +308,9 @@ class Bill < ActiveRecord::Base
 
   # 11 characters formatted invoice number, to use as reference
   def no_to_use_as_reference
+    self.id.to_s.rjust(11, '0')
+  end
+  def old_fashioned_no_to_use_as_reference
     _i = invoices.first
     _old = _i.old_no
     _cur = _i.invoice_no
@@ -319,12 +322,10 @@ class Bill < ActiveRecord::Base
       old_no_to_use_as_reference(_old, _cur)
     end
   end
-
   def cur_no_to_use_as_reference(_cur)
     # Returns 11 digits: OO + YY + NNNNNNN from OFFICE (2) & YEAR (2) & NO (7)
     _cur[3..4] + _cur[7..8] + _cur[9..15] rescue ''
   end
-
   def old_no_to_use_as_reference(_old, _cur)
     # Returns 11 digits: SS + 0 + NNNNNNNN from SERIAL (2) & NFACT (8)
     _a = _old.split('/')

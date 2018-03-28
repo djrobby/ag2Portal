@@ -41,6 +41,7 @@ class CompanyBankAccount < ActiveRecord::Base
   scope :active_by_company, -> c { where("company_id = ? AND (ending_at IS NULL OR ending_at > ?)", c, Date.today) }
   scope :active_by_fiscal_id_and_suffix, -> f, s { where("holder_fiscal_id = ? AND bank_suffix = ? AND (ending_at IS NULL OR ending_at > ?)", f, s, Date.today) }
   scope :by_fiscal_id_and_suffix, -> f, s { where("holder_fiscal_id = ? AND bank_suffix = ?", f, s) }
+  scope :like_fiscal_id_and_suffix, -> f, s { where("holder_fiscal_id LIKE '%#{f}%' AND bank_suffix = ?", s) }
 
   before_validation :fields_to_uppercase
 

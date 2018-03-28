@@ -15,16 +15,12 @@ module Ag2Gest
 
     # Attributes
     attr_accessor :fichero
-    attr_accessor :OrgnlMsgId
-    attr_accessor :OrgnlPmtInfId
-    attr_accessor :fecha_hora_confeccion
-    attr_accessor :numero_total_adeudos
-    attr_accessor :importe_total
+    attr_accessor :process_date_time
     attr_accessor :sufijo
     attr_accessor :nif
-    attr_accessor :fecha_devolucion
+    attr_accessor :total_bills
+    attr_accessor :total_amount
     attr_accessor :lista_cobros
-    attr_accessor :remesa
 
     def initialize(file_to_process)
       # Set TXT file
@@ -48,22 +44,38 @@ module Ag2Gest
       f = File.open(self.fichero, "r")
       # Loop thru open file lines
       f.each_line do |line|
-        # *** Save in returns array ***
-        self.lista_cobros.push(referencia_adeudo: referencia_adeudo,
-                                     codigo_rechazo: codigo_rechazo,
-                                     importe_adeudo: importe_adeudo,
-                                     fecha_cobro: fecha_cobro,
-                                     referencia_mandato:referencia_mandato,
-                                     fecha_firma_mandato: fecha_firma_mandato,
-                                     concepto: concepto,
-                                     nombre_deudor: nombre_deudor,
-                                     cuenta_deudor: cuenta_deudor,
-                                     bill_id: id_bill,
-                                     client_payment_id: id_client_payment,
-                                     receipt_no: receipt_no,
-                                     client_id: id_client)
-      end
-      self.remesa = receipt_no
+        cod_reg = line[0,2]
+        if cod_reg == '80'
+          # Totals line
+          amount = line[36,12]
+          self.total_bills = line[22,6].to_i
+          self.total_amount = (amount[0,10] + '.' + amount[10,2]).to_d
+        elsif cod_reg == '02'
+          # Header line
+          self.nif = line[10,8]
+          self.sufijo = line[18,3]
+        else
+          # Invoice charged line: Save in array
+          amount = line[36,12]
+          self.lista_cobros.push(bill_id: line[76,11].to_i,
+                                 amount: (amount[0,10] + '.' + amount[10,2]).to_d,
+                                 date: line[30,6],
+                                 issuer: line[10,8],
+                                 suffix: line[18,3],
+                                 charge_code: line[21,1],
+                                 charge_bank: line[22,4],
+                                 charge_office: line[26,4],
+                                 charge_id: line[48,6],
+                                 ccc_bank: line[54,4],
+                                 ccc_office: line[58,4],
+                                 ccc_dc: line[62,2],
+                                 ccc_account_no: line[64,10],
+                                 debit_code: line[74,1],
+                                 cancel_code: line[75,1],
+                                 reference: line[76,13])
+        end
+      end # f.each_line
+      f.close
     end # read_txt
   end
 end

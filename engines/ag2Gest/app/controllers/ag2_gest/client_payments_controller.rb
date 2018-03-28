@@ -636,17 +636,15 @@ module Ag2Gest
     # Import SEPA XML file (return, rejections)
     def bank_from_return
       file_to_process = params[:bank_from_return][:file_to_process]
-
       # Instantiate class
       sepa = Ag2Gest::SepaReturn.new(file_to_process)
-
       # Read XML object
       sepa.read_xml
 
       # Check:
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
-      bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.suffix)
+      bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       if bank_account.nil?
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
@@ -669,7 +667,7 @@ module Ag2Gest
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
       end
-      created_by = current_user.id if !current_user.nil?
+      created_by = !current_user.nil? ? current_user.id : nil
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
@@ -679,29 +677,28 @@ module Ag2Gest
           # If original payment is not confirmed, set confirmation date
           original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
           # Add rejections to client payments
-          return_client_payment = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
-                                                    payment_type: ClientPayment::BANK,
-                                                    bill_id: original_client_payment.bill_id,
-                                                    invoice_id: original_client_payment.invoice_id,
-                                                    payment_method_id: payment_method_id,
-                                                    client_id: original_client_payment.client.id,
-                                                    subscriber_id: original_client_payment.subscriber.id,
-                                                    payment_date: sepa.fecha_devolucion,
-                                                    confirmation_date: Time.now,
-                                                    amount: i['importe_adeudo'],
-                                                    instalment_id: original_client_payment.instalment_id,
-                                                    client_bank_account_id: original_client_payment.client_bank_account_id,
-                                                    charge_account_id: original_client_payment.charge_account_id,
-                                                    created_by: created_by)
-          if return_client_payment.save
+          cp = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
+                                 payment_type: ClientPayment::BANK,
+                                 bill_id: original_client_payment.bill_id,
+                                 invoice_id: original_client_payment.invoice_id,
+                                 payment_method_id: payment_method_id,
+                                 client_id: original_client_payment.client_id,
+                                 subscriber_id: original_client_payment.subscriber_id,
+                                 payment_date: sepa.fecha_devolucion,
+                                 confirmation_date: Time.now,
+                                 amount: i['importe_adeudo'],
+                                 instalment_id: original_client_payment.instalment_id,
+                                 client_bank_account_id: original_client_payment.client_bank_account_id,
+                                 charge_account_id: original_client_payment.charge_account_id,
+                                 created_by: created_by)
+          if cp.save
             # Set related invoice status to pending
             original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
           end
         end
-      end
+      end # sepa.lista_devoluciones.each
 
       # Catalogs the processed file
-      created_by = !current_user.nil? ? current_user.id : nil
       processed_file = ProcessedFile.new(filename: file_to_process,
                                          processed_file_type_id: ProcessedFileType::BANK_RETURN,
                                          flow: ProcessedFile::INPUT,
@@ -711,7 +708,7 @@ module Ag2Gest
       end
 
       # Notify successful ending
-      notice = sepa.lista_devoluciones.size.to_s + "Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
+      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
       redirect_to client_payments_path, notice: notice
 
     rescue
@@ -721,15 +718,86 @@ module Ag2Gest
     # Import Counter text file (bank counter operations)
     # pending
     def bank_from_counter
-      file_to_process = params[:bank_from_return][:file_to_process]
+      file_to_process = params[:bank_from_counter][:file_to_process]
 
       # Instantiate class
       sepa = Ag2Gest::SepaCounter.new(file_to_process)
-      # Read XML object
+      # Read TXT object
       sepa.read_txt
-      # Loop thru counter items
-      sepa.lista_cobros.each do |i|
+
+      # Check:
+      # Has not been proccessed previously
+      # Belongs to current company & bank suffix
+      bank_account = CompanyBankAccount.like_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
+      if bank_account.nil?
+        # Can't go on if bank account doesn't exist
+        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
+      if session[:company] != '0' && bank_account.company_id != session[:company].to_i
+        # Can't go on if it's not the right bank account for current company
+        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
+      end
+      processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_COUNTER).first rescue nil
+      if !processed_file.blank?
+        # Can't go on because file has already been processed
+        created_at = formatted_timestamp(processed_file.created_at)
+        created_by = User.find(processed_file.created_by).email rescue 'N/A'
+        warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
+        redirect_to client_payments_path, alert: warning and return
+      end
+      # Search payment method for counter
+      organization_id = bank_account.company.organization_id
+      payment_method_id = PaymentType.find(ClientPayment::COUNTER).payment_method_id rescue collection_payment_methods(organization_id).first.id
+      if payment_method_id.nil?
+        payment_method_id = collection_payment_methods(organization_id).first.id
+      end
+      # Created by
+      created_by = !current_user.nil? ? current_user.id : nil
+
+      # Loop thru counter items
+      sepa.lista_cobros.each do |c|
+        # Search original bill
+        bill = Bill.find(c['bill_id'])
+        if !bill.nil?
+          # Add to client payments
+          bill.invoices.each do |i|
+            cp = ClientPayment.new(receipt_no: bill.receipt_no,
+                                   payment_type: ClientPayment::COUNTER,
+                                   bill_id: bill.id,
+                                   invoice_id: i.id,
+                                   payment_method_id: payment_method_id,
+                                   client_id: bill.client_id,
+                                   subscriber_id: bill.subscriber_id,
+                                   payment_date: c['date'],
+                                   confirmation_date: Time.now,
+                                   amount: c['amount'],
+                                   instalment_id: nil,
+                                   client_bank_account_id: nil,
+                                   charge_account_id: bill.charge_account_id,
+                                   created_by: created_by)
+            if cp.save
+              # Set related invoice status to charged
+              i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+            end
+          end # bill.invoices.each
+        end # !bill.nil?
+      end # sepa.lista_cobros.each
+
+      # Catalogs the processed file
+      processed_file = ProcessedFile.new(filename: file_to_process,
+                                         processed_file_type_id: ProcessedFileType::BANK_COUNTER,
+                                         flow: ProcessedFile::INPUT,
+                                         created_by: created_by)
+      if !processed_file.save
+        redirect_to client_payments_path, alert: "¡Advertencia!: Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
+      end
+
+      # Notify successful ending
+      notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2) + "."
+      redirect_to client_payments_path, notice: notice
+
+    rescue
+      redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla."
     end
 
     #
