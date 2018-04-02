@@ -36,6 +36,7 @@ module Ag2Gest
       $gamma = 'AEIOUUNCaeiouunc?!ao'
       $ucase = "\xC1\xC9\xCD\xD3\xDA\xDC\xD1\xC7".force_encoding('ISO-8859-1').encode('UTF-8')
       $lcase = "\xE1\xE9\xED\xF3\xFA\xFC\xF1\xE7".force_encoding('ISO-8859-1').encode('UTF-8')
+      file_name = ''
       incidents = false
       message = I18n.t("ag2_gest.bills_to_files.index.result_error_message_html")
       @json_data = { "DataExport" => message, "Result" => "ERROR" }
@@ -44,24 +45,33 @@ module Ag2Gest
       if @project_id == 0 || @period_id == 0
         render json: @json_data and return
       end
-      if (@from != 0 && @to != 0) && @from > @to
+      if (@from != '0' && @to != '0') && @from > @to
         render json: @json_data and return
       end
       # Search necessary data
       project = Project.find(@project_id) rescue nil
       period = BillingPeriod.find(@period_id) rescue nil
-      # company = Company.find(@biller_id) rescue nil
       if project.blank? || period.blank?
         render json: @json_data and return
       end
-
+      # Search aux data
+      # project_code = project.project_code
+      # year = period.period.to_s[0..3]
+      # File name
+      file_name = project.project_code + '_' + period.period.to_s + '_' + Time.now.strftime("%Y%m%d_%H%M%S") + '.xml'
       bills = nil
-      if @from > @to
-        project_code = project.project_code
-        year = period.period.to_s[0..3]
-        from = project_code + year + @from.to_s.rjust(7, '0')
-        to = project_code + year + @to.to_s.rjust(7, '0')
-        bills = Bill.service_by_project_period_no(project, period, from, to).
+      if (@from != '0' && @to != '0') && @from <= @to
+        # Bill numbers
+        # from = project_code + year + @from.to_s.rjust(7, '0')
+        # to = project_code + year + @to.to_s.rjust(7, '0')
+        # bills = Bill.service_by_project_period_no(project, period, from, to).
+        #              includes(:project, :reading_1, :reading_2, :client,
+        #              subscriber: [:use, meter: [:caliber]], invoices:
+        #              [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
+        # Invoice numbers
+        # from = serial + year + @from.to_s.rjust(7, '0')
+        # to = serial + year + @to.to_s.rjust(7, '0')
+        bills = Bill.service_by_project_period_invoice_no(project, period, @from, @to).
                      includes(:project, :reading_1, :reading_2, :client,
                      subscriber: [:use, meter: [:caliber]], invoices:
                      [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
@@ -72,21 +82,24 @@ module Ag2Gest
                      [:biller, :billing_period, invoice_items: [:tariff, :tax_type, :measure]])
       end
       if bills.blank?
-        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") + message
+        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") +
+                  I18n.t("ag2_gest.bills_to_files.index.result_error_no_bills")
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
         render json: @json_data and return
       end
 
-      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html")
-      link_message = I18n.t('ag2_purchase.purchase_to_files.index.go_to_target', var: 'some-file-name')
+      message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html") + ' (' + bills.size.to_s + ')'
+      link_message = I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name)
 
       xml = service_bills_to_xml(bills)
-      upload_xml_file("some-file-name.xml", xml)
+      upload_xml_file(file_name, xml)
+      file_name = "/uploads/" + file_name
       @json_data = { "DataExport" => message, "Result" => "OK",
-                     "File" => "/uploads/some-file-name.xml", "LinkMessage" => link_message }
+                     "File" => file_name, "LinkMessage" => link_message }
 
       if incidents
-        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") + message
+        message = I18n.t("ag2_gest.bills_to_files.index.result_ok_with_error_message_html") +
+                  I18n.t("ag2_gest.bills_to_files.index.result_incidence")
         @json_data = { "DataExport" => message, "Result" => "ERROR" }
       end
       render json: @json_data
@@ -196,8 +209,8 @@ module Ag2Gest
               xml.fiscal_id     bill.client.fiscal_id
             end
             xml.meter(description: meter_d) do
-              xml.code          bill.subscriber.meter.meter_code
-              xml.caliber       bill.subscriber.meter.caliber.caliber
+              xml.code          bill.subscriber.meter_code
+              xml.caliber       bill.subscriber.meter_caliber
             end
             xml.consumption(description: consumption_d) do
               xml.previous_reading(description: previous_reading_d) do
@@ -441,8 +454,8 @@ module Ag2Gest
       @project_id = @project_id.to_i
       @period_id = @period_id.to_i
       @biller_id = @biller_id.to_i
-      @from = @from.to_i
-      @to = @to.to_i
+      # @from = @from.to_i
+      # @to = @to.to_i
     end
 
     def set_defaults

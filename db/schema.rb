@@ -3805,7 +3805,7 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
   end
