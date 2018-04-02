@@ -227,7 +227,7 @@ module Ag2Gest
             # Total Bill & Pending debt
             xml.total({ description: total_bill_d }, number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             xml.receivable({ description: total_receivable_d }, number_with_precision(bill.receivable, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
-            xml.pending_debt({ description: pending_debt_d }, number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
+            xml.pending_debt({ description: pending_debt_d }, number_with_precision(bill.subscriber.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ","))
             # Notes
             xml.currency_note   currency_note_d
             xml.payment_note    payment_note_d
