@@ -112,7 +112,7 @@ module Ag2Gest
       invoice_concept_d = I18n.t("activerecord.attributes.contracting_request.amount_title")
       invoice_payday_limit_d = I18n.t("ag2_gest.bills.index.payday_limit")
 
-      bill_d = I18n.t("activerecord.models.bill.one")
+      # bill_d = I18n.t("activerecord.models.bill.one")
       bill_no_d = I18n.t("activerecord.attributes.bill.bill_no")
       bill_date_d = I18n.t("activerecord.attributes.bill.bill_date")
       billing_period_d = I18n.t("activerecord.attributes.report.billing_period")
