@@ -21,7 +21,7 @@
 /app/assets/images/icon/.DS_Store
 
 # Ignore editor templates
-.vscode
+/.vscode
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
