@@ -30,11 +30,24 @@ class ClientPayment < ActiveRecord::Base
   validates :payment_method,    :presence => true
   validates :client,            :presence => true
 
+  # Scopes
+  scope :by_no, -> { order(:receipt_no) }
+  #
+  scope :none, where("1 = 0")
+  scope :in_cash, -> { where(payment_type: CASH) }
+  scope :in_bank, -> { where(payment_type: BANK) }
+  scope :in_deferrals, -> { where(payment_type: FRACTIONATED) }
+  scope :in_counter, -> { where(payment_type: COUNTER) }
+  scope :in_others, -> { where(payment_type: OTHERS) }
+
   # Callbacks
   # before_save :check_debt
   after_save :reindex_instalment
   after_destroy :reindex_instalment
 
+  #
+  # Methods
+  #
   def full_no
     # Receipt no (Office & year & sequential number) => OOOO-YYYY-NNNNN
     receipt_no.blank? ? "" : receipt_no[0..3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]

@@ -53,6 +53,7 @@ en:
   validate: "Validate"
   generate: "Generate"
   refresh: "Refresh"
+  all: "All"
   generating: "Generating..."
   processing: "Processing..."
   approving: "Approving..."

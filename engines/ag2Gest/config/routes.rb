@@ -461,6 +461,10 @@ Ag2Gest::Engine.routes.draw do
     match 'client_payments/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
     match 'cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
     match 'client_payments/:id/cp_format_number_4/:num', :controller => 'client_payments', :action => 'cp_format_number_4'
+
+    match 'client_payments/reload_current_search/:tab/:all', :controller => 'client_payments', :action => 'reload_current_search'
+    match 'reload_current_search/:tab/:all', :controller => 'client_payments', :action => 'reload_current_search'
+    match 'client_payments/:id/reload_current_search/:tab/:all', :controller => 'client_payments', :action => 'reload_current_search'
     #
     # Debt claims
     match 'debt_claims/dc_generate_no/:project', :controller => 'debt_claims', :action => 'dc_generate_no'

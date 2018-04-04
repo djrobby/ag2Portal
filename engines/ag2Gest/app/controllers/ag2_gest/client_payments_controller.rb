@@ -29,6 +29,7 @@ module Ag2Gest
                                                :cp_restore_filters,
                                                :cp_format_number,
                                                :cp_format_number_4,
+                                               :reload_current_search,
                                                :collection_payment_methods,
                                                :cash,
                                                :cash_instalments,
@@ -64,6 +65,45 @@ module Ag2Gest
       num = number_with_precision(num.round(4), precision: 4)
       @json_data = { "num" => num.to_s }
       render json: @json_data
+    end
+
+    # Change contents of current tab (cash, bank, instalment & other)
+    def reload_current_search
+      tab = params[:tab]
+      all = params[:all]
+      notice = I18n.t('ag2_gest.client_payments.index.reload')
+      per_page = ''
+
+      case tab
+      when 'cash'
+        if all == 'true'
+          per_page = ClientPayment.in_cash.size
+        end
+        params[:per_page_cash] = per_page
+        notice = I18n.t('ag2_gest.client_payments.index.reload_cash')
+      when 'bank'
+        if all == 'true'
+          per_page = ClientPayment.in_bank.size
+        end
+        params[:per_page_bank] = per_page
+        notice = I18n.t('ag2_gest.client_payments.index.reload_bank')
+      when 'instalment'
+        if all == 'true'
+          per_page = ClientPayment.in_deferrals.size
+        end
+        params[:per_page_deferrals] = per_page
+        notice = I18n.t('ag2_gest.client_payments.index.reload_deferrals')
+      when 'other'
+        if all == 'true'
+          per_page = ClientPayment.in_others.size
+        end
+        params[:per_page_others] = per_page
+        notice = I18n.t('ag2_gest.client_payments.index.reload_other')
+      end
+
+      json_data = { "notice" => notice, "per_page" => per_page, "all" => all }
+      render json: json_data
+      # redirect_to client_payments_path, notice: notice
     end
 
     # Payment method for collection
@@ -937,6 +977,12 @@ module Ag2Gest
     def index
       manage_filter_state
 
+      # Set per_page to use in cash, bank, deferrals & others
+      per_page_cash = params[:per_page_cash].blank? ? 10 : params[:per_page_cash]
+      per_page_bank = params[:per_page_bank].blank? ? 10 : params[:per_page_bank]
+      per_page_deferrals = params[:per_page_deferrals].blank? ? 10 : params[:per_page_deferrals]
+      per_page_others = params[:per_page_others].blank? ? 10 : params[:per_page_others]
+
       # Set active_tab to use in searches
       # if params[:active_tab] content finished with !, remove filter
       active_tab = ''
@@ -1009,7 +1055,7 @@ module Ag2Gest
         @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
         @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
         search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+        search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
         @client_payments_cash = search_cash.results
         @client_payments_bank = search_bank.results
       else
@@ -1019,32 +1065,32 @@ module Ag2Gest
         when 'pendings-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'charged-tab'
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'cash-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'banks-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'others-tab'
           search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'fractionated-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order)
+          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         end
@@ -1365,7 +1411,7 @@ module Ag2Gest
       end
     end
 
-    def bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order)
+    def bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order, per_page)
       ClientPayment.search do
         with :payment_type, ClientPayment::BANK
         with :confirmation_date, nil
@@ -1439,7 +1485,7 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:page] || 1, :per_page => per_page
       end
     end
 

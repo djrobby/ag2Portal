@@ -17,6 +17,7 @@ $('#banks').html("<%= escape_javascript(render('payments_bank')) %>");
 $('#others').html("<%= escape_javascript(render('payments_other')) %>");
 $('#fractionated').html("<%= escape_javascript(render('instalments')) %>");
 $("#active_tab").val("<%= params[:active_tab] %>");
+set_show_all_checkboxes();
 
 if (_active_tab == "pendings-tab") {
   <% if !@bills_pending.blank? %>
@@ -736,4 +737,43 @@ $("#initial-cash").change(function() {
 $("#pages a").on("click", function() {
   $.getScript(this.href);
   return false;
+});
+
+/***
+/* Show cash, bank, deferrals or others, by 10 rows per page or one-all single page
+***/
+$("#cash-all").click(function() {
+  var all = $(this).prop('checked')
+  jQuery.getJSON('reload_current_search/cash/' + all, function(data) {
+    $('#per_page_cash').val(data.per_page);
+  });
+  $(".icon-refresh-link").trigger("click");
+  // $("#submit_btn").trigger("click");
+});
+
+$("#bank-all").click(function() {
+  var all = $(this).prop('checked')
+  jQuery.getJSON('reload_current_search/bank/' + all, function(data) {
+    $('#per_page_bank').val(data.per_page);
+  });
+  $(".icon-refresh-link").trigger("click");
+  // $("#submit_btn").trigger("click");
+});
+
+$("#instalment-all").click(function() {
+  var all = $(this).prop('checked')
+  jQuery.getJSON('reload_current_search/instalment/' + all, function(data) {
+    $('#per_page_deferrals').val(data.per_page);
+  });
+  $(".icon-refresh-link").trigger("click");
+  // $("#submit_btn").trigger("click");
+});
+
+$("#other-all").click(function() {
+  var all = $(this).prop('checked')
+  jQuery.getJSON('reload_current_search/other/' + all, function(data) {
+    $('#per_page_others').val(data.per_page);
+  });
+  $(".icon-refresh-link").trigger("click");
+  // $("#submit_btn").trigger("click");
 });

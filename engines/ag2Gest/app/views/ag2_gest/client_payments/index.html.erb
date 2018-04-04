@@ -53,6 +53,29 @@
     }
   }
 
+  function set_show_all_checkboxes() {
+    if ($('#per_page_cash').val() != '') {
+      $('#cash-all').prop('checked', true)
+    } else {
+      $('#cash-all').prop('checked', false)
+    }
+    if ($('#per_page_bank').val() != '') {
+      $('#bank-all').prop('checked', true)
+    } else {
+      $('#bank-all').prop('checked', false)
+    }
+    if ($('#per_page_deferrals').val() != '') {
+      $('#instalment-all').prop('checked', true)
+    } else {
+      $('#instalment-all').prop('checked', false)
+    }
+    if ($('#per_page_others').val() != '') {
+      $('#other-all').prop('checked', true)
+    } else {
+      $('#other-all').prop('checked', false)
+    }
+  }
+
   function setupAllSelect2(p, r, u, c, s, a) {
     projectsSelect2(p);
     periodsSelect2(r);
@@ -267,6 +290,9 @@
     // Hide elements at init
     show_cashier();
 
+    // Set cash, bank, deferrals & others show-all checkboxes
+    set_show_all_checkboxes()
+
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
 
@@ -299,6 +325,10 @@
 
   $(window).bind("load", function() {
     a = "<%= cp_restore_filters %>";
+    $("#per_page_cash").val("<%= params[:per_page_cash] %>");
+    $("#per_page_bank").val("<%= params[:per_page_bank] %>");
+    $("#per_page_deferrals").val("<%= params[:per_page_deferrals] %>");
+    $("#per_page_others").val("<%= params[:per_page_others] %>");
     $("#active_tab").val("<%= params[:active_tab] %>");
     $("#No").val("<%= params[:No] %>");
     // $("#Project").select2("val", "<%#= params[:Project] %>");
@@ -512,6 +542,11 @@
         <%= link_to ag2_gest.client_payments_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %><i class="icon-refresh"></i><% end %>
         <!-- Search form -->
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
+          <!-- Per page -->
+          <%= hidden_field_tag "per_page_cash", params[:per_page_cash], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "per_page_bank", params[:per_page_bank], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "per_page_deferrals", params[:per_page_deferrals], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "per_page_others", params[:per_page_others], :class => 'x-large-text-field shrinked' %>
           <!-- Active Tab -->
           <%= hidden_field_tag "active_tab", params[:active_tab], :class => 'x-large-text-field shrinked' %>
           <!-- No -->
@@ -1592,5 +1627,44 @@
   });
   $("#cash-tab").click(function() {
     $('#active_tab').val('cash-tab');
+  });
+
+  /***
+  /* Show cash, bank, deferrals or others, by 10 rows per page or one-all single page
+  ***/
+  $("#cash-all").click(function() {
+    var all = $(this).prop('checked')
+    jQuery.getJSON('reload_current_search/cash/' + all, function(data) {
+      $('#per_page_cash').val(data.per_page);
+    });
+    $(".icon-refresh-link").trigger("click");
+    // $("#submit_btn").trigger("click");
+  });
+
+  $("#bank-all").click(function() {
+    var all = $(this).prop('checked')
+    jQuery.getJSON('reload_current_search/bank/' + all, function(data) {
+      $('#per_page_bank').val(data.per_page);
+    });
+    $(".icon-refresh-link").trigger("click");
+    // $("#submit_btn").trigger("click");
+  });
+
+  $("#instalment-all").click(function() {
+    var all = $(this).prop('checked')
+    jQuery.getJSON('reload_current_search/instalment/' + all, function(data) {
+      $('#per_page_deferrals').val(data.per_page);
+    });
+    $(".icon-refresh-link").trigger("click");
+    // $("#submit_btn").trigger("click");
+  });
+
+  $("#other-all").click(function() {
+    var all = $(this).prop('checked')
+    jQuery.getJSON('reload_current_search/other/' + all, function(data) {
+      $('#per_page_others').val(data.per_page);
+    });
+    $(".icon-refresh-link").trigger("click");
+    // $("#submit_btn").trigger("click");
   });
 </script>
