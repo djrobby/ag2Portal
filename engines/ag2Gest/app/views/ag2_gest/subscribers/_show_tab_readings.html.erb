@@ -65,14 +65,14 @@
       <tr>
     <% end %>
       <td><%= reading.meter_code unless reading.meter_code.blank? %></td>
-      <td title="<%= reading.service_point.to_full_label %>"><%= reading.try(:service_point).try(:full_code) unless reading.service_point_full_code.blank? %></td>
+      <td title="<%= reading.try(:service_point).try(:to_full_label) %>"><%= reading.try(:service_point).try(:full_code) unless reading.service_point_full_code.blank? %></td>
       <td><%= reading.period unless reading.period.blank? %></td>
       <td><%= reading.reading_type_name unless reading.reading_type_name.blank? %></td>
       <td align="center"><%= formatted_date(reading.reading_date) unless reading.reading_date.blank? %></td>
       <td align="right"><%= reading.reading_index unless reading.reading_index.blank? %></td>
       <td>
         <% unless reading.reading_incidence_types_pluck.blank? %>
-          <i title="<%= reading.reading_incidence_types_pluck %>" class="icon-warning-sign"></i>
+          <i title="<%= reading.try(:reading_incidence_types_pluck) %>" class="icon-warning-sign"></i>
         <% end %>
       </td>
       <td align="right"><%= reading.reading_index_1 unless reading.reading_index_1.blank? %></td>

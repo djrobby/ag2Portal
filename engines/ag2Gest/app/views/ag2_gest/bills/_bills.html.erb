@@ -243,7 +243,9 @@
 <%= link_to "<i class='icon-print icon-white'></i> #{t 'activerecord.attributes.bill.summary'}".html_safe, bills_summary_bill_path(@bills.first.pre_group_no, :format => :pdf), target: "_blank", class: "btn btn-warning", title: I18n.t("activerecord.attributes.bill.summary") %>
 <% end %>
 
-<a href="<%= show_pre_bills_bills_path(:pre_group => @bills.first.pre_group_no,format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+<a href="#select-biller" role="button" class="btn btn-success pull-right" data-toggle="modal"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
+
+<!-- <a href="<%#= show_pre_bills_bills_path(:pre_group => @bills.first.pre_group_no,format: :csv) %>" download class="btn btn-success pull-right"><%#= I18n.t('activerecord.attributes.reading.exportcsv') %></a> -->
 
 <br/><br/>
 
@@ -269,8 +271,27 @@
   <% end %>
 </div>
 
+<div id="select-biller" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="SelectBiller" aria-hidden="true">
+  <%= simple_form_for :pre_bill, url: show_pre_bills_bills_path(format: :csv), :html => {:class => 'modal-footer-right form-inline form_select_biller'} do |f| %>
+    <%= f.input :pre_group, :as => :hidden, :input_html => { :value =>  @bills.first.pre_group_no } %>
+    <div class="modal-header">
+      <h4><%= I18n.t('activerecord.attributes.reading.exportcsv') %></h4>
+    </div>
+    <div class="modal-body">      
+      <%= f.input :biller, collection: @billers, label: I18n.t('activerecord.attributes.billable_item.biller_id'), :label_html => { :class => 'form-label' }, :input_html => {class: "x-large-text-field", id: "select_biller_id"} %>
+    </div>
+    <div class="modal-footer">
+      <%= f.submit I18n.t('activerecord.attributes.reading.exportcsv'), :class => 'btn btn-success', :id => "select_biller_button" %>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    </div>
+  <% end %>
+</div>
+
 <script>
   jQuery(function($) {
+    $("#select_biller_button").click(function () { 
+      $("#select-biller").modal('hide');
+    });
     $("#submit_pre_bill").click(function () { 
       var confirmation_date = $("#confirmation_date").val();
       var invoice_date = $("#invoice_date").val();

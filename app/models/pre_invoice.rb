@@ -1,4 +1,6 @@
 class PreInvoice < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :pre_bill
   belongs_to :invoice_status
   belongs_to :invoice_type
@@ -20,6 +22,46 @@ class PreInvoice < ActiveRecord::Base
   has_many :pre_invoice_taxes, class_name: "PreInvoiceTax", dependent: :destroy
   has_one :active_supply_invoice
 
+  # Scopes
+  scope :by_bill_pre_group_no, -> p {
+    joins("LEFT JOIN pre_bills ON pre_invoices.pre_bill_id=pre_bills.id")
+    .joins("LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id")
+    .joins("LEFT JOIN subscribers ON pre_bills.subscriber_id=subscribers.id")
+    .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .where("pre_bills.pre_group_no = #{p}")
+    .select("pre_bills.project_id project_id_, pre_invoices.biller_id biller_id_, pre_invoices.id p_id_,
+             pre_bills.bill_id bill_id_, pre_bills.id b_id_, pre_invoices.invoice_date invoice_date_, pre_invoices.payday_limit payday_limit_,
+             CONCAT(SUBSTR(pre_invoices.invoice_no,1,5),'-',SUBSTR(pre_invoices.invoice_no,6,4),'-',SUBSTR(pre_invoices.invoice_no,10,7)) pre_invoice_no_,
+             CASE WHEN ISNULL(pre_invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
+             CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
+             CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
+             meters.meter_code meter_code_,
+             pre_invoices.reading_1_date reading_1_date_, pre_invoices.reading_2_date reading_2_date_, pre_invoices.reading_1_index reading_1_index_, pre_invoices.reading_2_index reading_2_index_,
+             pre_bills.reading_2_id reading_2_id_, pre_invoices.consumption consumption_, pre_invoices.consumption_real consumption_real_, pre_invoices.consumption_estimated consumption_estimated_,
+             pre_invoices.consumption_other consumption_other_,
+             pre_invoices.totals totals_") # pre_invoices.total_taxes total_taxes_, (pre_invoices.totals-pre_invoices.total_taxes) subtotal_")
+    .order('pre_invoices.id')
+  }
+  scope :by_bill_pre_group_no_and_biller, -> p,b {
+    joins("LEFT JOIN pre_bills ON pre_invoices.pre_bill_id=pre_bills.id")
+    .joins("LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id")
+    .joins("LEFT JOIN subscribers ON pre_bills.subscriber_id=subscribers.id")
+    .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .where("pre_bills.pre_group_no = #{p} AND pre_invoices.biller_id = #{b}")
+    .select("pre_bills.project_id project_id_, pre_invoices.biller_id biller_id_, pre_invoices.id p_id_,
+             pre_bills.bill_id bill_id_, pre_bills.id b_id_, pre_invoices.invoice_date invoice_date_, pre_invoices.payday_limit payday_limit_,
+             CONCAT(SUBSTR(pre_invoices.invoice_no,1,5),'-',SUBSTR(pre_invoices.invoice_no,6,4),'-',SUBSTR(pre_invoices.invoice_no,10,7)) pre_invoice_no_,
+             CASE WHEN ISNULL(pre_invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
+             CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
+             CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
+             meters.meter_code meter_code_,
+             pre_invoices.reading_1_date reading_1_date_, pre_invoices.reading_2_date reading_2_date_, pre_invoices.reading_1_index reading_1_index_, pre_invoices.reading_2_index reading_2_index_,
+             pre_bills.reading_2_id reading_2_id_, pre_invoices.consumption consumption_, pre_invoices.consumption_real consumption_real_, pre_invoices.consumption_estimated consumption_estimated_,
+             pre_invoices.consumption_other consumption_other_,
+             pre_invoices.totals totals_") # pre_invoices.total_taxes total_taxes_, (pre_invoices.totals-pre_invoices.total_taxes) subtotal_")
+    .order('pre_invoices.id')
+  }
+
   # Callbacks
   before_save :calculate_and_store_totals
 
@@ -33,6 +75,15 @@ class PreInvoice < ActiveRecord::Base
 
   def total_by_concept_ff(billable_concept=1)
     pre_invoice_items.joins(tariff: :billable_item).where('billable_items.billable_concept_id = ? AND subcode = "CF"', billable_concept.to_i).sum(&:amount)
+  end
+
+  def billable_concepts_array
+    _aux = []
+    _ii = pre_invoice_items.joins(tariff: :billable_item).order('billable_items.billable_concept_id').group('billable_items.billable_concept_id')
+    _ii.each do |r|
+      _aux = _aux << r.tariff.billable_concept.id
+    end
+    _aux
   end
 
   #
@@ -103,6 +154,15 @@ class PreInvoice < ActiveRecord::Base
 
   def quantity
     pre_invoice_items.sum(:quantity)
+  end
+
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
   end
 
   private

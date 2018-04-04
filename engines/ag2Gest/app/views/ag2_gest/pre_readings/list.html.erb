@@ -3,7 +3,7 @@
 <h3><%=t 'ag2_gest.pre_readings.list_title' %></h3>
 
 <h5>Periodo: <%= BillingPeriod.find(@period).try(:period) %></h5>
-<h5>Rutas: <%= ReadingRoute.where(id: @routes).map(&:name).join(",") %></h5>
+<h5>Rutas: <%= ReadingRoute.where(id: @routes).map(&:to_label).join(",") %></h5>
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span12" id="div_table">
@@ -12,45 +12,39 @@
           <tr>
             <th><%= t("activerecord.attributes.pre_reading.route") %></th>
             <th align="right"><%= t("activerecord.attributes.pre_reading.reading_seq") %></th>
-            <th><%= t("activerecord.attributes.pre_reading.service_point_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.service_point_id_c") %></th>
             <th><%= t("activerecord.attributes.pre_reading.subscriber_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.delivery_address") %></th>
-            <th><%= t("activerecord.attributes.pre_reading.meter_id") %></th>
-            <th><%= t("activerecord.attributes.pre_reading.billing_period_id") %></th>
             <th><%= t("activerecord.attributes.pre_reading.reading_index_2") %></th>
             <th><%= t("activerecord.attributes.pre_reading.reading_index_1") %></th>
+            <th><%= t("activerecord.attributes.pre_reading.reading_index_c") %></th>
           </tr>
         </thead>
         <tbody>
           <% @pre_readings.each_with_index do |pre_reading,index| %>
             <tr>
-                <td>
-                  <%= pre_reading.try(:reading_route).try(:route_code) %>
-                </td>
-                <td align="right">
-                  <%= pre_reading.reading_sequence %>
-                </td>
-                <td>
-                  <%= pre_reading.try(:service_point).try(:full_code) %>
-                </td>
-                <td>
-                  <%= pre_reading.try(:subscriber).try(:to_label) %>
-                </td>
-                <td>
-                  <%= !pre_reading.subscriber.blank? ? pre_reading.try(:subscriber).try(:address_1) : pre_reading.try(:service_point).try(:address_1) %>
-                </td>
-                <td>
-                  <%= pre_reading.try(:meter).try(:meter_code) %>
-                </td>
-                <td>
-                  <%= pre_reading.try(:billing_period).try(:period) %>
-                </td>
-                <td>
-                  <%= "#{pre_reading.reading_2.try(:billing_period).try(:period)} #{pre_reading.reading_index_2}"  %>
-                </td>
-                <td>
-                  <%= "#{pre_reading.reading_1.try(:billing_period).try(:period)} #{pre_reading.reading_index_1}" %>
-                </td>
+              <td><%= pre_reading.try(:reading_route).try(:route_code) %></td>
+              <td align="right"><%= pre_reading.reading_sequence %></td>
+              <td><%= pre_reading.try(:meter).try(:meter_code) %></td>
+              <td><%= pre_reading.try(:service_point).try(:full_code) %></td>
+              <td><%= pre_reading.try(:subscriber).try(:full_code) %></td>
+              <td><%= !pre_reading.subscriber.blank? ? pre_reading.try(:subscriber).try(:address_1) : pre_reading.try(:service_point).try(:address_1) %></td>
+              <td>
+                <span><%= pre_reading.reading_2.billing_period.period unless (pre_reading.reading_2.blank? || pre_reading.reading_2.billing_period.blank?) %> </span>
+                <span><%= formatted_date(pre_reading.reading_2.reading_date) unless (pre_reading.reading_2.blank? || pre_reading.reading_2.reading_date.blank?) %> </span>
+                <span><%= pre_reading.reading_index_2 unless pre_reading.reading_index_2.blank? %></span>
+              </td>
+              <td>
+                <span><%= pre_reading.reading_1.billing_period.period unless (pre_reading.reading_1.blank? || pre_reading.reading_1.billing_period.blank?) %> </span>
+                <span><%= formatted_date(pre_reading.reading_1.reading_date) unless (pre_reading.reading_1.blank? || pre_reading.reading_1.reading_date.blank?) %> </span>
+                <span><%= pre_reading.reading_index_1 unless pre_reading.reading_index_1.blank? %></span>
+              </td>
+              <td>
+                <span><%= pre_reading.billing_period.period unless pre_reading.billing_period.blank? %> </span>
+                <span><%= formatted_date(pre_reading.reading_date) unless pre_reading.reading_date.blank? %> </span>
+                <span><%= pre_reading.reading_index unless pre_reading.reading_index.blank? %></span>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -62,7 +56,7 @@
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <!-- <%#= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %> -->
       <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary" %>
-      <a href="<%= show_list_pre_readings_path(format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+      <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
     </div>
   </div>
   <br>

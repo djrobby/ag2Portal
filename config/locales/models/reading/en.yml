@@ -65,6 +65,11 @@ en:
         meter: "Contador"
         period: "Periodo"
         exportcsv: "Exportar CSV"
+        lpaa: "LPAA." # Lectura Periodo Ano Anterior
+        lpa: "LPA." # Lectura Periodo Anterior
+        la: "LA." # Lectura Anterior
+        l: "L." # Lectura Actual
+        days: "Days"
     report:
       reading:
         cod_route: "Route"

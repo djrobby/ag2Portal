@@ -46,6 +46,7 @@ en:
         cf: "Fixed Fee"
         cv: "Variable Fee"
         vp: "% Variable Fee"
+        fp: "% Fixed Fee"
         bl: "Consumption"
         bl1: "Consumption B1"
         bl2: "Consumption B2"

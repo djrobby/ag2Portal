@@ -35,6 +35,7 @@ es:
         last_invoice_total: "Importe total"
         biller: "Facturante"
         no_pre_group: "No hay prefacturas para ese grupo"
+        no_pre_group_no_biller: "No hay prefacturas para ese grupo y facturante"
         calc_consumptions: "Calcular Consumos"
       show:
         title: "Recibo"

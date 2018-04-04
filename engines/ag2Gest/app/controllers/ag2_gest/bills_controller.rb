@@ -513,7 +513,7 @@ module Ag2Gest
       title = t("activerecord.models.reading.few")
       respond_to do |format|
         format.html
-        format.csv { send_data Reading.to_csv(@readings),
+        format.csv { send_data Reading.to_csv(@@readings),
                      filename: "#{title}.csv",
                      type: 'application/csv',
                      disposition: 'inline' }
@@ -522,20 +522,32 @@ module Ag2Gest
 
     def show_pre_bills
       bills = []
-      @bills = PreBill.where(pre_group_no: params[:pre_group]) or Bill.where(pre_group_no: params[:pre_group])
-      @bills.each do |pr|
-        bills << pr
+      _params_biller = params[:pre_bill][:biller]
+      if _params_biller.blank?
+        @bills = PreInvoice.by_bill_pre_group_no(params[:pre_bill][:pre_group])
+      else
+        @bills = PreInvoice.by_bill_pre_group_no_and_biller(params[:pre_bill][:pre_group],_params_biller)
       end
-      @p_r = PreBill.where(id: bills)
-      @bills = @p_r
+      if @bills.empty?
+        redirect_to pre_index_bills_path, alert: I18n.t("ag2_gest.bills.index.no_pre_group_no_biller")
+      else
+        _project = @bills.first.project_id_
+        _biller = @bills.first.biller_id_
 
-      title = t("activerecord.models.pre_bill.few")
-      respond_to do |format|
-        format.html
-        format.csv { send_data PreBill.to_csv(@bills),
-                     filename: "#{title}.csv",
-                     type: 'application/csv',
-                     disposition: 'inline' }
+        @bills.each do |pr|
+          bills << PreInvoice.find(pr.p_id_).billable_concepts_array
+        end
+        bills = bills.flatten.uniq
+        code = BillableConcept.where(id: bills)
+
+        title = t("activerecord.models.pre_bill.few")
+        respond_to do |format|
+          format.html
+          format.csv { send_data PreBill.to_csv(@bills,code),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        end
       end
     end
 
@@ -555,6 +567,8 @@ module Ag2Gest
 
     # This method executes on Apply Tariffs
     def index
+      @billers = billers_dropdown
+
       if params[:bills]
         @bills = PreBill.where(pre_group_no: params[:bills]).paginate(:page => params[:page] || 1, :per_page => per_page || 10)
       else
@@ -566,7 +580,7 @@ module Ag2Gest
         end
       end
       if @bills.empty?
-        redirect_to pre_index_bills_path, notice: I18n.t("ag2_gest.bills.index.no_pre_group")
+        redirect_to pre_index_bills_path, alert: I18n.t("ag2_gest.bills.index.no_pre_group")
       else
         @bills2 = PreBill.where(pre_group_no: params[:bills])
         @totals = @bills2.select('count(pre_bills.id) as bills, sum(r2.reading_index-r1.reading_index) as consumptions, sum(pre_invoices.totals) as totals') \
@@ -1049,6 +1063,10 @@ module Ag2Gest
 
     def reading_routes_dropdown
       ReadingRoute.where(project_id: current_projects_ids).order("name")
+    end
+
+    def billers_dropdown
+      session[:organization] != '0' ? Company.belongs_to_organization(session[:organization].to_i) : Company.by_name
     end
 
     def background(&block)

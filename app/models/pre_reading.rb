@@ -56,34 +56,45 @@ class PreReading < ActiveRecord::Base
   # Class (self) user defined methods
   #
   def self.to_csv(array)
-    attributes = [I18n.t('activerecord.attributes.reading.reading_route_id'),
-                  I18n.t('activerecord.attributes.reading.sequence'),
-                  I18n.t('activerecord.attributes.reading.subscriber'),
-                  I18n.t('activerecord.attributes.reading.address'),
-                  I18n.t('activerecord.attributes.reading.meter'),
-                  I18n.t('activerecord.attributes.reading.billing_period_2'),
-                  I18n.t('activerecord.attributes.reading.reading_2_date'),
-                  I18n.t('activerecord.attributes.reading.reading_2_index'),
-                  I18n.t('activerecord.attributes.reading.reading_days'),
-                  I18n.t('activerecord.attributes.reading.consumption_2'),
-                  I18n.t('activerecord.attributes.reading.billing_period_1'),
-                  I18n.t('activerecord.attributes.reading.reading_1_date'),
-                  I18n.t('activerecord.attributes.reading.reading_1_index'),
-                  I18n.t('activerecord.attributes.reading.billing_period_id'),
-                  I18n.t('activerecord.attributes.reading.reading_date'),
-                  I18n.t('activerecord.attributes.reading.reading'),
-                  I18n.t('activerecord.attributes.reading.reading_days'),
-                  I18n.t('activerecord.attributes.reading.consumption'),
-                  I18n.t('activerecord.report.reading.incidences') ]
+    attributes = [array[0].sanitize(I18n.t('activerecord.attributes.reading.meter_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.pre_reading.service_point_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.subscriber_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.subscriber_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.address')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.reading_route_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.sequence')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpaa') + " " + I18n.t('activerecord.attributes.reading.period')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpaa') + " " + I18n.t('activerecord.attributes.reading.reading_date')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpaa') + " " + I18n.t('activerecord.attributes.reading.reading')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpaa') + " " + I18n.t('activerecord.attributes.reading.days')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpaa') + " " + I18n.t('activerecord.attributes.reading.consumption')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpa') + " " + I18n.t('activerecord.attributes.reading.period')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpa') + " " + I18n.t('activerecord.attributes.reading.reading_date')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpa') + " " + I18n.t('activerecord.attributes.reading.reading')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpa') + " " + I18n.t('activerecord.attributes.reading.days')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.lpa') + " " + I18n.t('activerecord.attributes.reading.consumption')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.la') + " " + I18n.t('activerecord.attributes.reading.period')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.la') + " " + I18n.t('activerecord.attributes.reading.reading_date')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.la') + " " + I18n.t('activerecord.attributes.reading.reading')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.la') + " " + I18n.t('activerecord.attributes.reading.days')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.la') + " " + I18n.t('activerecord.attributes.reading.consumption')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.l') + " " + I18n.t('activerecord.attributes.reading.period')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.l') + " " + I18n.t('activerecord.attributes.reading.reading_date')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.l') + " " + I18n.t('activerecord.attributes.reading.reading')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.l') + " " + I18n.t('activerecord.attributes.reading.days')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.reading.l') + " " + I18n.t('activerecord.attributes.reading.consumption')),
+                  array[0].sanitize(I18n.t('activerecord.report.reading.incidences')) ]
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |pre_reading|
-        csv << [  pre_reading.try(:reading_route).try(:to_label),
-                  pre_reading.reading_sequence,
-                  pre_reading.try(:subscriber).try(:to_label),
+        csv << [  pre_reading.try(:meter).try(:meter_code),
+                  pre_reading.try(:service_point).try(:full_code),
+                  pre_reading.try(:subscriber).try(:full_code),
+                  pre_reading.try(:subscriber).try(:full_name_full),
                   pre_reading.try(:subscriber).try(:address_1),
-                  pre_reading.try(:meter).try(:to_label),
+                  pre_reading.try(:reading_route).try(:route_code),
+                  pre_reading.reading_sequence,
                   pre_reading.reading_2.try(:billing_period).try(:period),
                   pre_reading.reading_2.try(:to_reading_date),
                   pre_reading.reading_2.try(:reading_index),
@@ -92,11 +103,18 @@ class PreReading < ActiveRecord::Base
                   pre_reading.reading_1.try(:billing_period).try(:period),
                   pre_reading.reading_1.try(:to_reading_date),
                   pre_reading.reading_1.try(:reading_index),
+                  pre_reading.reading_1.try(:reading_days),
+                  pre_reading.reading_1.try(:consumption_total_period),
+                  pre_reading.pre_previous_reading.try(:billing_period).try(:period),
+                  pre_reading.pre_previous_reading.try(:to_reading_date),
+                  pre_reading.pre_previous_reading.try(:reading_index),
+                  pre_reading.pre_previous_reading.try(:reading_days),
+                  pre_reading.pre_previous_reading.try(:consumption_total_period),
                   pre_reading.try(:billing_period).try(:period),
                   pre_reading.to_reading_date,
                   pre_reading.reading_index,
                   pre_reading.try(:reading_days),
-                  pre_reading.try(:consumption_total_period),
+                  pre_reading.try(:pre_registered_consumption),
                   pre_reading.reading_incidence_types.pluck(:name).join(", ")]
       end
     end
@@ -111,6 +129,8 @@ class PreReading < ActiveRecord::Base
     if !reading_1.nil?
       if reading_date && reading_1.reading_date
         _d = ((reading_date.to_time - reading_1.reading_date.to_time)/86400).to_i
+      else
+        _d = nil
       end
     end
     _d
@@ -124,7 +144,28 @@ class PreReading < ActiveRecord::Base
     end
     total = 0
     readings.each do |reading|
-      total += reading[1].last.consumption
+      if readings[1].last.consumption.nil?
+        total += readings[1].last.consumption
+      else
+        total = nil
+      end
+    end
+    return total
+  end
+
+  def pre_consumption_total_period
+    if !subscriber.blank?
+      pre_readings = subscriber.pre_readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
+    else
+      pre_readings = meter.pre_readings.where(billing_period_id: billing_period_id).where('reading_type_id IN (?)',[ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).group_by(&:reading_1_id)
+    end
+    total = 0
+    pre_readings.each do |pre_readings|
+      if !pre_readings[1].last.consumption.nil?
+        total += pre_readings[1].last.consumption
+      else
+        total = nil
+      end
     end
     return total
   end
@@ -143,6 +184,53 @@ class PreReading < ActiveRecord::Base
       end
     else
       nil
+    end
+  end
+
+  #
+  # Consumption bqsed on Previous chronological reading
+  # (register consumption)
+  #
+  def pre_previous_readings(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    w = ''
+    w = "readings.meter_id = #{meter}" if !meter.nil?
+    if w == ''
+      w = "readings.subscriber_id = #{subscriber}" if !subscriber.nil?
+    else
+      w += " AND readings.subscriber_id = #{subscriber}" if !subscriber.nil?
+    end
+    if w == ''
+      w = "readings.service_point_id = #{service_point}" if !service_point.nil?
+    else
+      w += " AND readings.service_point_id = #{service_point}" if !service_point.nil?
+    end
+    Reading.where("readings.id<>? AND readings.reading_date<=?", self.id, self.reading_date.blank? ? Date.today : self.reading_date)
+           .where(w).by_period_date
+  end
+
+  def pre_previous_reading(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    pr = nil
+    pre_previous_readings = pre_previous_readings(meter, subscriber, service_point)
+    if !pre_previous_readings.blank?
+      # Are there readings with the same DATE and ID greater than the current one?
+      pr_same_date = pre_previous_readings.where("readings.reading_date = ? AND readings.id > ?", self.reading_date.blank? ? Date.today : self.reading_date, self.id)
+      if pr_same_date.blank?
+        # First previous reading found
+        pr = pre_previous_readings.first
+      else
+        # Discard the same date readings found, and use the first valid one
+        pr = pre_previous_readings.where("readings.id NOT IN (?)", pr_same_date.pluck(:id)).first
+      end
+    end
+    return pr
+  end
+
+  def pre_registered_consumption(meter=self.meter_id, subscriber=self.subscriber_id, service_point=self.service_point_id)
+    pre_previous_reading = pre_previous_reading(meter, subscriber, service_point)
+    if (reading_index.nil? || pre_previous_reading.nil?) || reading_type_id == ReadingType::INSTALACION
+      0
+    else
+      (reading_index - pre_previous_reading.reading_index) rescue 0
     end
   end
 

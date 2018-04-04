@@ -57,8 +57,7 @@ module Ag2Gest
     end
 
     def show_list
-      @centers = params[:prereading][:centers].reject { |c| c.empty? } unless params[:prereading][:centers].blank?
-      @routes = params[:prereading][:reading_routes].reject { |c| c.empty? } unless params[:prereading][:reading_routes].blank?
+      @routes = params[:prereading][:reading_routes] unless params[:prereading][:reading_routes].blank?
       @period = params[:prereading][:period]
 
       if @routes.blank?

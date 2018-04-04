@@ -82,31 +82,161 @@ class PreBill < ActiveRecord::Base
 
   #
   # Class (self) user defined methods
-  #
-  def self.to_csv(array)
-    attributes = ["Id",
-                  I18n.t("activerecord.attributes.invoice.billing_period"),
-                  I18n.t("activerecord.attributes.subscriber.subscriber_code2"),
-                  I18n.t("activerecord.attributes.bill.subscriber"),
-                  I18n.t("activerecord.attributes.subscriber.meter"),
-                  I18n.t("activerecord.attributes.invoice.consumption"),
-                  I18n.t("activerecord.attributes.bill.subtotal"),
-                  I18n.t("activerecord.attributes.bill.taxes"),
-                  I18n.t("activerecord.attributes.bill.total")]
+  #m3 registrados  m3 estimados  m3 otros  m3 facturado  Cons.Medio  Subtotal  Impuestos Total
+  def self.to_csv(array,code=nil)
+    attributes = ["Id " + array[0].sanitize(I18n.t("activerecord.models.bill.one")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.invoice.invoice_no")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.bill_date")),
+                  array[0].sanitize(I18n.t("ag2_gest.bills.index.payday_limit")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.report.billing_period")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.subscriber.subscriber_code2")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.subscriber")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.subscriber.meter")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.lec_ant")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.reading_date") + " "  + I18n.t("activerecord.attributes.reading.lec_ant")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.lec_act")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.reading_date") + " "  + I18n.t("activerecord.attributes.reading.lec_act")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.reg")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.est")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.other")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.reading.fac")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.subtotal")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.taxes")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.total"))]
+                  code.each do |c|
+                    attributes << c.code.to_s + " " +  "CF"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "CF"
+                    attributes << c.code.to_s + " " + "CV"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "CV"
+                    attributes << c.code.to_s + " " + "VP"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "VP"
+                    attributes << c.code.to_s + " " + "FP"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "FP"
+                    attributes << c.code.to_s + " " + "BL1"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL1"
+                    attributes << c.code.to_s + " " + "BL2"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL2"
+                    attributes << c.code.to_s + " " + "BL3"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL3"
+                    attributes << c.code.to_s + " " + "BL4"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL4"
+                    attributes << c.code.to_s + " " + "BL5"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL5"
+                    attributes << c.code.to_s + " " + "BL6"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL6"
+                    attributes << c.code.to_s + " " + "BL7"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL7"
+                    attributes << c.code.to_s + " " + "BL8"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL8"
+                  end
+
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
       array.each do |b|
-        csv << [  b.bill_id.blank? ? b.id : b.bill_id,
-                  b.try(:pre_invoices).first.try(:billing_period).try(:period),
-                  b.subscriber.full_code,
-                  b.subscriber.full_name,
-                  b.subscriber.try(:meter).try(:meter_code),
-                  b.try(:reading).try(:consumption_total_period_to_invoice) || 0 ,
-                  b.subtotal.round(4),
-                  b.net_tax.round(4),
-                  b.total.round(4)]
-      end
+        bill = Bill.find(b.bill_id_) unless b.bill_id_.blank?
+        payday_limit = b.payday_limit_.strftime("%d/%m/%Y") unless b.payday_limit_.blank?
+        csv_data = [  b.bill_id_.blank? ? b.b_id_ : b.bill_id_,
+                  b.bill_id_.blank? ? b.pre_invoice_no_ : bill.try(:invoices).first.old_no_based_real_no,
+                  b.invoice_date_.strftime("%d/%m/%Y"),
+                  b.bill_id_.blank? ? payday_limit : bill.try(:invoices).first.try(:payday_limit).strftime("%d/%m/%Y"),
+                  b.billing_period_,
+                  b.full_code_,
+                  b.full_name_,
+                  b.meter_code_,
+                  b.reading_1_index_,
+                  b.reading_1_date_,
+                  b.reading_2_index_,
+                  b.reading_2_date_,
+                  b.consumption_real_,
+                  b.consumption_estimated_,
+                  b.consumption_other_,
+                  b.consumption_,
+                  b.raw_number(PreInvoice.find(b.p_id_).subtotal, 4),
+                  b.raw_number(PreInvoice.find(b.p_id_).net_tax, 4),
+                  b.raw_number(b.totals_, 4)]
+        code.each do |c|
+        data2 = [nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil]
+          PreInvoiceItem.where('pre_invoice_id = ?',b.p_id_).each do |i|
+            if c.code == i.code
+              if i.subcode == "CF"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                data2[0] = quantity_.to_s + " " + i.measure.description
+                data2[1] = amount_.to_s
+              end
+              if i.subcode == "CV"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[2] = quantity_.to_s + " " + i.measure.description
+                  data2[3] = amount_.to_s
+              end
+              if i.subcode == "VP"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[4] = quantity_.to_s + " " + i.measure.description
+                  data2[5] = amount_.to_s
+              end
+              if i.subcode == "FP"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[6] = quantity_.to_s + " " + i.measure.description
+                  data2[7] = amount_.to_s
+              end
+              if i.subcode == "BL1"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[8] = quantity_.to_s + " " + i.measure.description
+                  data2[9] = amount_.to_s
+              end
+              if i.subcode == "BL2"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[10] = quantity_.to_s + " " + i.measure.description
+                  data2[11] = amount_.to_s
+              end
+              if i.subcode == "BL3"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[12] = quantity_.to_s + " " + i.measure.description
+                  data2[13] = amount_.to_s
+              end
+              if i.subcode == "BL4"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[14] = quantity_.to_s + " " + i.measure.description
+                  data2[15] = amount_.to_s
+              end
+              if i.subcode == "BL5"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[16] = quantity_.to_s + " " + i.measure.description
+                  data2[17] = amount_.to_s
+              end
+              if i.subcode == "BL6"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[18] = quantity_.to_s + " " + i.measure.description
+                  data2[19] = amount_.to_s
+              end
+              if i.subcode == "BL7"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[20] = quantity_.to_s + " " + i.measure.description
+                  data2[21] = amount_.to_s
+              end
+              if i.subcode == "BL8"
+                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+                  data2[22] = quantity_.to_s + " " + i.measure.description
+                  data2[23] = amount_.to_s
+              end
+            end # if c.code == i.code
+          end # PreInvoiceItem.where('pre_invoice_id = ?',b.p_id_).each do |i|
+          csv_data += data2
+        end # code.each do |c|
+        csv << csv_data
+      end #array.each do |b| #array.each do |b|
     end
   end
 
