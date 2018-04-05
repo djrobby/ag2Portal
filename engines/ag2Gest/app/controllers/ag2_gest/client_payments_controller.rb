@@ -663,14 +663,25 @@ module Ag2Gest
         xml = sepa.write_xml
 
         # Write & Upload XML file
-        upload_xml_file(sepa.identificacion_fichero + ".xml", xml)
+        file_name = sepa.identificacion_fichero + ".xml"
+        file_path = "/uploads/" + sepa.identificacion_fichero + ".xml"
+        upload_xml_file(file_name, xml)
 
         # Notify successful ending
-        redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
+        # redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
+        redirect_to client_payments_path,
+                    notice: (I18n.t('ag2_gest.client_payments.index.bank_to_order_ok') +
+                            " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name), file_path, download: file_name}"
+                            ).html_safe
       end
 
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s."
+      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
+    end
+
+    def download_bank_to_order_file(file_name)
+      file_to_download = Rails.root.join('public', 'uploads', file_name)
+      send_file file_to_download
     end
 
     # Import SEPA XML file (return, rejections)

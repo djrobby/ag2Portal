@@ -544,7 +544,7 @@
         <%= form_tag "client_payments", :method => 'get', :remote => true do %>
           <!-- Per page -->
           <%= hidden_field_tag "per_page_cash", params[:per_page_cash], :class => 'x-large-text-field shrinked' %>
-          <%= text_field_tag "per_page_bank", params[:per_page_bank], :class => 'x-large-text-field shrinked' %>
+          <%= hidden_field_tag "per_page_bank", params[:per_page_bank], :class => 'x-large-text-field shrinked' %>
           <%= hidden_field_tag "per_page_deferrals", params[:per_page_deferrals], :class => 'x-large-text-field shrinked' %>
           <%= hidden_field_tag "per_page_others", params[:per_page_others], :class => 'x-large-text-field shrinked' %>
           <!-- Active Tab -->
