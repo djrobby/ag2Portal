@@ -14,9 +14,9 @@
   <% end %>
   <td><%= reading.try(:billing_period).try(:period) %></td>
   <td><%= reading.try(:billing_frequency).try(:name) %></td>
-  <td><%= reading.try(:reading_type).try(:name) %></td>
   <td align="center"><%= formatted_timestamp(reading.reading_date) unless reading.reading_date.blank? %></td>
   <td align="right"><%= reading.try(:reading_index) %></td>
+  <td align="center"><%= reading.reading_type.type_label %></td>
   <td>
     <% unless reading.try(:reading_incidence_types).blank? %>
       <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
