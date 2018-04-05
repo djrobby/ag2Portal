@@ -746,34 +746,30 @@ $("#cash-all").click(function() {
   var all = $(this).prop('checked')
   jQuery.getJSON('reload_current_search/cash/' + all, function(data) {
     $('#per_page_cash').val(data.per_page);
+    $("#submit_btn").trigger("click");
   });
-  $(".icon-refresh-link").trigger("click");
-  // $("#submit_btn").trigger("click");
 });
 
 $("#bank-all").click(function() {
   var all = $(this).prop('checked')
   jQuery.getJSON('reload_current_search/bank/' + all, function(data) {
     $('#per_page_bank').val(data.per_page);
+    $("#submit_btn").trigger("click");
   });
-  $(".icon-refresh-link").trigger("click");
-  // $("#submit_btn").trigger("click");
 });
 
 $("#instalment-all").click(function() {
   var all = $(this).prop('checked')
   jQuery.getJSON('reload_current_search/instalment/' + all, function(data) {
     $('#per_page_deferrals').val(data.per_page);
+    $("#submit_btn").trigger("click");
   });
-  $(".icon-refresh-link").trigger("click");
-  // $("#submit_btn").trigger("click");
 });
 
 $("#other-all").click(function() {
   var all = $(this).prop('checked')
   jQuery.getJSON('reload_current_search/other/' + all, function(data) {
     $('#per_page_others').val(data.per_page);
+    $("#submit_btn").trigger("click");
   });
-  $(".icon-refresh-link").trigger("click");
-  // $("#submit_btn").trigger("click");
 });
