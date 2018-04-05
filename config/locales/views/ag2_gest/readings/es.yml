@@ -13,6 +13,7 @@ es:
         label_request_status: "Petición de contrato"
         label_from: "Desde"
         label_to: "Hasta"
+        label_incidences: "Incidencias"
         back_to_management: "Volver a Gestión de Lecturas"
       show:
         title: "Lectura"
@@ -33,4 +34,3 @@ es:
       back_to_main_page: "Volver a Lecturas"
       reading_date_error_ok: "Esta lectura se encuentra fuera del plazo establecido en el calendario de lectura. Incidencia activada."
       reading_date_error: "Imposible utilizar la fecha indicada, se encuentra fuera del plazo establecido en el calendario de lectura."
-

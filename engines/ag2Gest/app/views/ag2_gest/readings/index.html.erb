@@ -42,11 +42,12 @@
   $(window).bind("load", function() {
     $("#Subscriber").val("<%= params[:Subscriber] %>");
     $("#Meter").val("<%= params[:Meter] %>");
-    $("#ReadingDate").select2("val", "<%= params[:ReadingDate] %>");
+    // $("#ReadingDate").select2("val", "<%= params[:ReadingDate] %>");
     $("#Period").select2("val", "<%= params[:Period] %>");
     $("#Route").select2("val", "<%= params[:Route] %>");
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
+    $("#incidences").select2("val", "<%= params[:incidences] %>");
     // $("#No").val("<%= params[:No] %>");
     // $("#Supplier").select2("val", "<%= params[:Supplier] %>");
     // $("#Invoice").select2("val", "<%= params[:Invoice] %>");
@@ -57,11 +58,12 @@
     $("#removeFilter").click(function() {
       $("#Subscriber").val("");
       $("#Meter").val("");
-      $("#ReadingDate").select2("val", "");
+      // $("#ReadingDate").select2("val", "");
       $("#Period").select2("val", "");
       $("#Route").select2("val", "");
       $("#From").val("");
       $("#To").val("");
+      $("#incidences").select2("val", "");
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -108,6 +110,9 @@
         <!-- Route -->
         <%= label_tag I18n.t("ag2_gest.readings.index.label_routes"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Route", options_from_collection_for_select(@routes, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+        <!-- Incidences -->
+        <%= label_tag I18n.t("ag2_gest.readings.index.label_incidences"), nil, :class => 'form-label-under-sel2' %>
+        <%= select_tag "incidences", options_from_collection_for_select(@reading_incidences, "id", "to_label"), multiple: true, :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
         <br><br>
         <!-- Submit -->
         <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>

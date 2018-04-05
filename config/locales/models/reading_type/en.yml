@@ -13,6 +13,12 @@ en:
     attributes:
       reading_type:
         id: "Id"
-        name: "Descripción"
-        successfully: "Tipo de lectura se ha actualizado correctamente."
-        create: "Tipo de lectura se ha creado correctamente."
+        name: "Description"
+        successfully: "Reading type updated successfully."
+        create: "Reading type created successfully."
+        type_1: "I"
+        type_2: "N"
+        type_3: "A"
+        type_4: "L"
+        type_5: "C"
+        type_6: "W"

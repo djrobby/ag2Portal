@@ -57,6 +57,7 @@ module Ag2Gest
       session[:TariffType] = nil
       session[:Phase] = nil
       session[:User] = nil
+      session[:incidences] = nil
     end
 
     def current_projects

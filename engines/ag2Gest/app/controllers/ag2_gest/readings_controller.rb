@@ -108,11 +108,12 @@ module Ag2Gest
       manage_filter_state
       subscriber = params[:Subscriber]
       meter = params[:Meter]
-      reading_date = params[:ReadingDate]
+      # reading_date = params[:ReadingDate]
       period = params[:Period]
       route = params[:Route]
       from = params[:From]
       to = params[:To]
+      incidences = params[:incidences]
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
@@ -120,6 +121,8 @@ module Ag2Gest
       # @meters = meters_dropdown if @meters.nil?
       @periods = periods_dropdown if @periods.nil?
       @routes = routes_dropdown if @routes.nil?
+      @reading_incidences = ReadingIncidenceType.all
+      incidences.delete("") unless incidences.blank?
 
       @search = Reading.search do
         with :project_id, current_projects_ids unless current_projects_ids.blank?
@@ -146,6 +149,9 @@ module Ag2Gest
         end
         if !route.blank?
           with :reading_route_id, route
+        end
+        if !incidences.blank?
+          with :reading_incidence_type, incidences
         end
         order_by :by_period_date, :desc
         paginate :page => params[:page] || 1, :per_page => per_page || 10
@@ -672,6 +678,12 @@ module Ag2Gest
         session[:Route] = params[:Route]
       elsif session[:Route]
         params[:Route] = session[:Route]
+      end
+      # incidences
+      if params[:incidences]
+        session[:incidences] = params[:incidences]
+      elsif session[:incidences]
+        params[:incidences] = session[:incidences]
       end
     end
 

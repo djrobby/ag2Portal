@@ -13,6 +13,7 @@ en:
         label_request_status: "Petición de contrato"
         label_from: "From"
         label_to: "To"
+        label_incidences: "Incidences"
         back_to_management: "Back to Reading Management"
       show:
         title: "Reading"

@@ -17,6 +17,7 @@
       <th align="center"><%= t('activerecord.attributes.reading.billing_period_c') %></th>
       <th><%= t('activerecord.attributes.reading.reading_date') %></th>
       <th align="right"><%= t('activerecord.attributes.reading.reading') %></th>
+      <th align="center"></th>
       <th></th>
       <th align="right"><%= t('activerecord.attributes.reading.reading_1_index_c') %></th>
       <th align="right"><%= t('activerecord.attributes.reading.consumption_r_c') %></th>
@@ -32,11 +33,12 @@
         <tr>
       <% end %>
         <td><%= reading.try(:meter).try(:meter_code) %></td>
-        <td title="<%= reading.service_point.to_full_label %>"><%= reading.try(:service_point).try(:full_code) %></td> <!-- subscriber.name -->
+        <td title="<%= reading.try(:service_point).try(:to_full_label) %>"><%= reading.try(:service_point).try(:full_code) %></td> <!-- subscriber.name -->
         <td title="<%= reading.subscriber.full_name %>"><%= reading.try(:subscriber).try(:full_code) %></td> <!-- subscriber.name -->
         <td align="center"><%= reading.try(:billing_period).try(:period) %></td>
         <td><%= reading.try(:reading_date).strftime("%d/%m/%Y %H:%M") unless reading.try(:reading_date).blank? %></td>
         <td align="right"><%= reading.try(:reading_index) %></td>
+        <td align="center"><%= reading.reading_type.type_label %></td>
         <td>
           <% unless reading.try(:reading_incidence_types).blank? %>
             <i title="<%= reading.reading_incidence_types.pluck(:name).join(", ") %>" class="icon-warning-sign"></i>
