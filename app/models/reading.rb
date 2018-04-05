@@ -1192,6 +1192,12 @@ class Reading < ActiveRecord::Base
     end
   end
 
+
+  # Special method to searchable
+  def reading_incidence_type_ids
+    reading_incidences.pluck(:reading_incidence_type_id)
+  end
+
   #
   # CSV
   #
@@ -1288,6 +1294,9 @@ class Reading < ActiveRecord::Base
       billing_period_id
       reading_date
       sort_id
+    end
+    integer :reading_incidence_type, :multiple => true do
+      reading_incidence_type_ids
     end
     integer :sort_id do
       sort_id
