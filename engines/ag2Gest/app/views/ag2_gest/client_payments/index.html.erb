@@ -908,6 +908,16 @@
 </div><!-- container-fluid -->
 
 <script type="text/javascript">
+  if (location.hash !== '') {
+      $('#payments-tabs a[href="' + location.hash.replace('tab_','') + '"]').tab('show');
+  } else {
+      $('#payments-tabs a:first').tab('show');
+  }
+  $('#payments-tabs a[data-toggle="tab"]').on('shown', function(e) {
+        location.hash = 'tab_'+  e.target.hash.substr(1) ; 
+        return false ;
+  });
+  
   $('#payments-tabs a').click(function (e) {
     _active_tab = $(this).attr("id");
     total_debt = 0;
