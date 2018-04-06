@@ -6,11 +6,11 @@
 <% end %>
   <% if source == 'SP' %>
     <td><%= reading.try(:meter).try(:meter_code) %></td>
-    <td title="<%= reading.subscriber.full_name %>"><%= reading.try(:subscriber).try(:full_code) %></td>
+    <td title="<%= reading.try(:subscriber).try(:full_name) %>"><%= reading.try(:subscriber).try(:full_code) %></td>
   <% end %>
   <% if source == 'M' %>
-    <td title="<%= reading.service_point.to_full_label %>"><%= reading.try(:service_point).try(:full_code) %></td>
-    <td title="<%= reading.subscriber.full_name %>"><%= reading.try(:subscriber).try(:full_code) %></td>
+    <td title="<%= reading.try(:service_point).try(:to_full_label) %>"><%= reading.try(:service_point).try(:full_code) %></td>
+    <td title="<%= reading.try(:subscriber).try(:full_name) %>"><%= reading.try(:subscriber).try(:full_code) %></td>
   <% end %>
   <td><%= reading.try(:billing_period).try(:period) %></td>
   <td><%= reading.try(:billing_frequency).try(:name) %></td>

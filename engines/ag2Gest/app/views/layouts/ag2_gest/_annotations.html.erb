@@ -1,6 +1,6 @@
 <% annotations.each do |w| %>
 <tr>
-  <td><%= w.subscriber %></td>
-  <td><%= link_to w.annotation, w %></td>
+  <td><%= w.subscriber.to_label %></td>
+  <td><%= w.annotation %></td>
 </tr>
 <% end %>

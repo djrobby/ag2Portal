@@ -1,0 +1,11 @@
+<% if (@annotations.count > 0) %>
+  <table class="table table-condensed table-striped">
+    <thead>
+      <%= render 'annotationsheader' %>
+    </thead>
+    <tbody>
+      <%= render :partial => 'annotations', :locals => { :annotations => @annotations } %>
+    </tbody>
+  </table>
+  <%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @annotations, :pvar => "annotation_page"} %>
+<% end %>

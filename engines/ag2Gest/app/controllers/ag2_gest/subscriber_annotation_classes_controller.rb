@@ -25,7 +25,7 @@ module Ag2Gest
     def show
       @breadcrumb = 'read'
       @subscriber_annotation_class = SubscriberAnnotationClass.find(params[:id])
-      @annotations = @subscriber_annotation_class.subscriber_annotations.by_subscriber_class
+      @annotations = @subscriber_annotation_class.subscriber_annotations.by_subscriber_class.paginate(:page => params[:page], :per_page => per_page)
 
       respond_to do |format|
         format.html # show.html.erb

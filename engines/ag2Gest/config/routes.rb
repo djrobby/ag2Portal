@@ -489,6 +489,9 @@ Ag2Gest::Engine.routes.draw do
     match 'bills/check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
     match 'check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
     match 'bills/:id/check_invoice_date/:project_id/:invoice_date', :controller => 'bills', :action => 'check_invoice_date'
+    match 'bills/update_period_by_project/:project_id', :controller => 'bills', :action => 'update_period_by_project'
+    match 'bills/:id/update_period_by_project/:project_id', :controller => 'bills', :action => 'update_period_by_project'
+    match 'update_period_by_project/:project_id', :controller => 'bills', :action => 'update_period_by_project'
     #
     # Resources
     resources :clients

@@ -36,6 +36,43 @@
       //return false;
     });
   });
+  jQuery(function($) {
+    $("#project").change(function() {
+      var project_id = $('#project').val();
+      jQuery.getJSON('update_period_by_project/' + project_id, function(data) {
+        var bp = data.billing_period;
+        $("#period").html("");
+        $("#period").select2("val", "");
+        $("#period").append($('<option></option>').val("").html(""));
+        if (!bp.length) {
+          $.each(data, function(id, option) {
+            if (id == 'billing_period' && option != "") {
+              $("#period").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(bp, function(id, option) {
+            $("#period").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+        var rr = data.reading_route;
+        $("#route").html("");
+        $("#route").select2("val", "");
+        $("#route").append($('<option></option>').val("").html(""));
+        if (!rr.length) {
+          $.each(data, function(id, option) {
+            if (id == 'reading_route' && option != "") {
+              $("#route").append($('<option></option>').val(option[0]).html(option[1]));
+            }
+          });
+        } else {
+          $.each(rr, function(id, option) {
+            $("#route").append($('<option></option>').val(option[0]).html(option[1]));
+          });
+        }
+      })
+    });
+  });
 </script>
 
 <%= render '/layouts/ag2_gest/billsbreadcrumb' %>
@@ -48,10 +85,17 @@
     <%= display_base_errors resource %>
       <div class="row-fluid">
         <div class="span6">
-          <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "sel2 large-text-field"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :project, label: t('activerecord.attributes.reading.project_id'), collection: @projects, input_html: {class: "sel2 large-text-field", :id => "project"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span6">
-          <%= f.input :use, label: t('activerecord.models.use.few'), collection: @uses, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+        </div>
+      </div>
+      <div class="row-fluid">
+        <div class="span6">
+          <%= f.input :period, label: t('activerecord.attributes.reading.billing_period_id'), collection: @billing_periods, input_html: {class: "sel2 large-text-field", :id => "period"}, :label_html => { :class => 'form-label-under-sel2' } %>
+        </div>
+        <div class="span6">
+          <%= f.input :use, label: t('activerecord.models.use.few'), collection: @uses, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label-under-sel2' } %>
         </div>
       </div>
       <div class="row-fluid">
@@ -59,7 +103,7 @@
           <%= f.input :centers, label: t('activerecord.models.center.one'), collection: @centers, required: false, input_html: {class: "sel2 large-text-field multiple", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
         <div class="span6">
-          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "sel2 large-text-field", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
+          <%= f.input :reading_routes, label: t('activerecord.attributes.reading.reading_route'), collection: @reading_routes, required: false, input_html: {class: "sel2 large-text-field", :id => "route", multiple: "multiple"}, :label_html => { :class => 'form-label' } %>
         </div>
       </div>
       <div class="row-fluid">

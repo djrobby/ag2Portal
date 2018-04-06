@@ -29,7 +29,8 @@ module Ag2Gest
                                                 :status_confirm,
                                                 :confirm,
                                                 :pre_index,
-                                                :barcode
+                                                :barcode,
+                                                :update_period_by_project
                                               ]
 
     @@subscribers = nil
@@ -51,6 +52,19 @@ module Ag2Gest
     #   @bill = @reading.generate_pre_bill
     #   redirect_to subscriber_path(@subscriber, bill: @bill.id)
     # end
+
+    def update_period_by_project
+      project = params[:project_id]
+
+      billing_period = billing_periods_dropdown_project(project)
+      reading_route = reading_routes_dropdown_project(project)
+      @json_data = { "billing_period" => billing_period,"reading_route" => reading_route  }
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @json_data }
+      end
+    end
 
     def check_invoice_date
       code = ''
@@ -688,6 +702,7 @@ module Ag2Gest
     # GET /bills/new.json
     def new
       @breadcrumb = 'create'
+      @projects = projects_dropdown
       @billing_periods = billing_periods_dropdown #.select{|b| b.pre_readings.empty?}
       @uses = uses_dropdown
       @reading_routes = reading_routes_dropdown #.select{|r| r.pre_readings.empty?}
@@ -1053,8 +1068,27 @@ module Ag2Gest
     #   _billing_periods = BillingPeriod.where("NOT id IN (?)",_j).order("period DESC")
     # end
 
+    def projects_dropdown
+      if session[:office] != '0'
+        Project.where(office_id: session[:office].to_i).ser_or_tca_order_type
+      elsif session[:company] != '0'
+        Project.where(company_id: session[:company].to_i).ser_or_tca_order_type
+      else
+        session[:organization] != '0' ? Project.where(organization_id: session[:organization].to_i).ser_or_tca_order_type : Project.ser_or_tca_order_type
+      end
+    end
+
     def billing_periods_dropdown
       BillingPeriod.where(project_id: current_projects_ids).order("period DESC")
+    end
+
+    def billing_periods_dropdown_project(project)
+      _bp = BillingPeriod.where(project_id: project).order("period DESC")
+      _array = []
+      _bp.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
     end
 
     def uses_dropdown
@@ -1063,6 +1097,15 @@ module Ag2Gest
 
     def reading_routes_dropdown
       ReadingRoute.where(project_id: current_projects_ids).order("name")
+    end
+
+    def reading_routes_dropdown_project(project)
+      _rr = ReadingRoute.where(project_id: project).order("name")
+      _array = []
+      _rr.each do |i|
+        _array = _array << [i.id, i.to_label]
+      end
+      _array
     end
 
     def billers_dropdown

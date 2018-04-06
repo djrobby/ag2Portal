@@ -76,5 +76,5 @@
     </div>
   </div>
 <% end %>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @bills_charged } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @bills_charged, :pvar => "bills_charged_page" } %>
 <% end %>

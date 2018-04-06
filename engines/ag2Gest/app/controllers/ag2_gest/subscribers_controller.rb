@@ -1012,6 +1012,9 @@ module Ag2Gest
       # end
       # @subscriber_bills = search_bills.results
 
+      ### Annotations ###
+      @annotations = @subscriber.subscriber_annotations.by_subscriber_class.paginate(:page => params[:annotation_page], :per_page => per_page)
+
       respond_to do |format|
        format.html # show.html.erb
        format.json { render json: @subscriber_bills }

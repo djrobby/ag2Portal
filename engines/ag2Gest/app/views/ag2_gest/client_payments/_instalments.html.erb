@@ -131,5 +131,5 @@
     </div>
   </div>
 <% end %> <!-- @instalments.each -->
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @instalments } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @instalments, :pvar => "instalments_page" } %>
 <% end %> <!-- if !@instalments.blank? -->

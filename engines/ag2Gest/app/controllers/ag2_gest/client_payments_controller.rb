@@ -161,10 +161,10 @@ module Ag2Gest
           i.save
         end
       end # invoices.each do
-      redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
+      redirect_to client_payments_path + "#cash", notice: (I18n.t('ag2_gest.client_payments.index.cash_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
       # redirect_to client_payments_path, notice: "Recibo/Factura/s traspasados/as a Caja."
     rescue
-      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.index.cash_error')
+      redirect_to client_payments_path + "#cash", alert: I18n.t('ag2_gest.client_payments.index.cash_error')
     end
 
     def cash_instalments(instalment_ids, amount, payment_method)
@@ -211,11 +211,11 @@ module Ag2Gest
               break
             end
           end   # instalments.each
-          redirect_to client_payments_path, notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
+          redirect_to client_payments_path + "#cash", notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
           # redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
+        redirect_to client_payments_path + "#cash", alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
       end # begin
 
     # Generic method rescue
@@ -365,10 +365,10 @@ module Ag2Gest
             cash_desk_closing.update_column(:instruments_difference, instruments_difference)
           end
         end # ActiveRecord::Base.transaction
-        redirect_to client_payments_path, notice: (I18n.t('ag2_gest.cash_desk_closings.index.closing_ok') + " #{view_context.link_to I18n.t('ag2_gest.cash_desk_closings.index.click_to_print_closing'), close_cash_form_cash_desk_closing_path(cash_desk_closing, :format => :pdf), target: '_blank'}").html_safe
+        redirect_to client_payments_path + "#cash", notice: (I18n.t('ag2_gest.cash_desk_closings.index.closing_ok') + " #{view_context.link_to I18n.t('ag2_gest.cash_desk_closings.index.click_to_print_closing'), close_cash_form_cash_desk_closing_path(cash_desk_closing, :format => :pdf), target: '_blank'}").html_safe
         # redirect_to client_payments_path, notice: "Caja cerrada sin incidencias."
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: I18n.t('ag2_gest.cash_desk_closings.index.closing_error')
+        redirect_to client_payments_path + "#cash", alert: I18n.t('ag2_gest.cash_desk_closings.index.closing_error')
       end # begin
     end
 
@@ -401,9 +401,9 @@ module Ag2Gest
       end
       Sunspot.index [bills, invoices]
       Sunspot.commit
-      redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
+      redirect_to client_payments_path + "#cash", notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
+      redirect_to client_payments_path + "#cash", alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
     #
@@ -413,7 +413,7 @@ module Ag2Gest
       invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort_by {|a| a[:created_at]}
       amount = BigDecimal.new(params[:client_payment_other][:amount])
       payment_method = params[:client_payment_other][:payment_method_id]
-      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
+      redirect_to client_payments_path + "#others", alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method.blank?
       created_by = current_user.id if !current_user.nil?
       acu = amount
       # Receipt No.
@@ -443,7 +443,7 @@ module Ag2Gest
           break
         end
       end
-      redirect_to client_payments_path
+      redirect_to client_payments_path + "#others"
     end
 
     def confirm_others
@@ -453,7 +453,7 @@ module Ag2Gest
         cp.update_attributes(confirmation_date: Time.now)
         cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
       end
-      redirect_to client_payments_path, notice: "Otros cobros confirmados sin incidencias"
+      redirect_to client_payments_path + "#others", notice: "Otros cobros confirmados sin incidencias"
     end
 
     def others_to_pending
@@ -485,9 +485,9 @@ module Ag2Gest
       end
       Sunspot.index [bills, invoices]
       Sunspot.commit
-      redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
+      redirect_to client_payments_path + "#others", notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
+      redirect_to client_payments_path + "#others", alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
     #
@@ -527,9 +527,9 @@ module Ag2Gest
           end
         end
       end # invoices.each
-      redirect_to client_payments_path, notice: "Factura/s domiciliada/s traspasadas a Banco."
+      redirect_to client_payments_path + "#banks", notice: "Factura/s domiciliada/s traspasadas a Banco."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible traspasar factura/s a Banco."
+      redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible traspasar factura/s a Banco."
     end
 
     def bank_instalments(instalment_ids, receipt_no)
@@ -565,15 +565,15 @@ module Ag2Gest
                 end
               end   # i.instalment_invoices.each
               if !op
-                redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Banco." and return
+                redirect_to client_payments_path + "#banks", alert: "¡Error! Imposible traspasar plazo/s a Banco." and return
                 # break
               end
             end   # !client_bank_account.blank?
           end   # instalments.each
-          redirect_to client_payments_path, notice: "Plazo/s domiciliado/s traspasados a Banco."
+          redirect_to client_payments_path + "#banks", notice: "Plazo/s domiciliado/s traspasados a Banco."
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: "¡Error! Imposible traspasar plazo/s a Banco." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Error! Imposible traspasar plazo/s a Banco." and return
       end # begin
     end
 
@@ -584,7 +584,7 @@ module Ag2Gest
         cp.update_attributes(confirmation_date: Time.now)
         cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
       end
-      redirect_to client_payments_path, notice: "Cobros domicilados confirmados sin incidencias"
+      redirect_to client_payments_path + "#banks", notice: "Cobros domicilados confirmados sin incidencias"
     end
 
     def bank_to_pending
@@ -616,9 +616,9 @@ module Ag2Gest
       end
       Sunspot.index [bills, invoices]
       Sunspot.commit
-      redirect_to client_payments_path, notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
+      redirect_to client_payments_path + "#banks", notice: "Factura/s y plazo/s devuelta/o/s a Pendientes sin incidencias."
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
+      redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible devolver factura/s o plazo/s a Pendientes"
     end
 
     # Generates & Export SEPA XML file (order, direct debit)
@@ -639,7 +639,7 @@ module Ag2Gest
         # SEPA Creditor Id
         creditor_id = bank_account.sepa_id
         if creditor_id.blank? || bank_account.bank_suffix.blank? || bank_account.holder_fiscal_id.blank?
-          redirect_to client_payments_path, alert: "¡Error!: Imposible remesar factura/s o plazo/s: Datos bancarios incorrectos." and return
+          redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible remesar factura/s o plazo/s: Datos bancarios incorrectos." and return
         end
 
         # Instantiate class
@@ -669,14 +669,14 @@ module Ag2Gest
 
         # Notify successful ending
         # redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
-        redirect_to client_payments_path,
+        redirect_to client_payments_path + "#banks",
                     notice: (I18n.t('ag2_gest.client_payments.index.bank_to_order_ok') +
                             " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name), file_path, download: file_name}"
                             ).html_safe
       end
 
     rescue
-      redirect_to client_payments_path, alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
+      redirect_to client_payments_path + "#banks", alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
     end
 
     def download_bank_to_order_file(file_name)
@@ -698,11 +698,11 @@ module Ag2Gest
       bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       if bank_account.nil?
         # Can't go on if bank account doesn't exist
-        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
       if session[:company] != '0' && bank_account.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
-        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
       processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_RETURN).first rescue nil
       if !processed_file.blank?
@@ -710,7 +710,7 @@ module Ag2Gest
         created_at = formatted_timestamp(processed_file.created_at)
         created_by = User.find(processed_file.created_by).email rescue 'N/A'
         warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
-        redirect_to client_payments_path, alert: warning and return
+        redirect_to client_payments_path + "#banks", alert: warning and return
       end
       # Search payment method for returns
       organization_id = bank_account.company.organization_id
@@ -755,15 +755,15 @@ module Ag2Gest
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)
       if !processed_file.save
-        redirect_to client_payments_path, alert: "¡Advertencia!: Devoluciones procesadas correctamente, pero el fichero no ha podido ser catalogado." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Advertencia!: Devoluciones procesadas correctamente, pero el fichero no ha podido ser catalogado." and return
       end
 
       # Notify successful ending
       notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
-      redirect_to client_payments_path, notice: notice
+      redirect_to client_payments_path + "#banks", notice: notice
 
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible procesar devoluciones."
+      redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar devoluciones."
     end
 
     # Import Counter text file (bank counter operations)
@@ -782,11 +782,11 @@ module Ag2Gest
       bank_account = CompanyBankAccount.like_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       if bank_account.nil?
         # Can't go on if bank account doesn't exist
-        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
       if session[:company] != '0' && bank_account.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
-        redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
       processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_COUNTER).first rescue nil
       if !processed_file.blank?
@@ -794,7 +794,7 @@ module Ag2Gest
         created_at = formatted_timestamp(processed_file.created_at)
         created_by = User.find(processed_file.created_by).email rescue 'N/A'
         warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
-        redirect_to client_payments_path, alert: warning and return
+        redirect_to client_payments_path + "#banks", alert: warning and return
       end
       # Search payment method for counter
       organization_id = bank_account.company.organization_id
@@ -840,15 +840,15 @@ module Ag2Gest
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)
       if !processed_file.save
-        redirect_to client_payments_path, alert: "¡Advertencia!: Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
+        redirect_to client_payments_path + "#banks", alert: "¡Advertencia!: Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
       end
 
       # Notify successful ending
       notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2) + "."
-      redirect_to client_payments_path, notice: notice
+      redirect_to client_payments_path + "#banks", notice: notice
 
     rescue
-      redirect_to client_payments_path, alert: "¡Error!: Imposible procesar cobros ventanilla."
+      redirect_to client_payments_path + "#banks", alert: "¡Error!: Imposible procesar cobros ventanilla."
     end
 
     #
@@ -863,13 +863,13 @@ module Ag2Gest
       amount_first = params[:instalment][:amount_first].to_d
       charge = params[:instalment][:charge].to_d
       payment_method_id = params[:instalment][:payment_method_id]
-      redirect_to client_payments_path, alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
+      redirect_to client_payments_path + "#fractionated", alert: I18n.t("ag2_gest.client_payments.generate_error_payment") and return if payment_method_id.blank?
       created_by = current_user.id if !current_user.nil?
 
       # Check that all invoices are from the same client
       clients = Client.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('clients.id').group('clients.id').to_a
       if clients.count > 1
-        redirect_to client_payments_path, alert: "Imposible aplazar facturas de varios clientes a la vez."
+        redirect_to client_payments_path + "#fractionated", alert: "Imposible aplazar facturas de varios clientes a la vez."
       end
       client_id = clients.first.id
 
@@ -969,10 +969,10 @@ module Ag2Gest
             j.save
           end
 
-          redirect_to client_payments_path, notice: I18n.t('ag2_gest.client_payments.fractionate_ok', var: instalment_no)
+          redirect_to client_payments_path + "#fractionated", notice: I18n.t('ag2_gest.client_payments.fractionate_ok', var: instalment_no)
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
-        redirect_to client_payments_path, alert: I18n.t(:transaction_error, var: "fractionate") and return
+        redirect_to client_payments_path + "#fractionated", alert: I18n.t(:transaction_error, var: "fractionate") and return
       end # begin
 
     # Generic method rescue
@@ -1131,7 +1131,7 @@ module Ag2Gest
       plans_select = 'count(id) as plans'
       plan_ids = @instalments.map(&:instalment_plan_id).uniq
       @plans_totals = InstalmentPlan.where(id: plan_ids).select(plans_select).first
-      @instalments = @instalments.paginate(:page => params[:page], :per_page => per_page || 10)
+      @instalments = @instalments.paginate(:page => params[:instalments_page], :per_page => per_page || 10)
 
       # bills_select = 'count(bills.id) as bills, coalesce(sum(invoices.totals),0) as totals'
       # pending_bills_select = 'count(bills.id) as bills, coalesce(sum(invoice_current_debts.debt),0) as debts'
@@ -1269,7 +1269,7 @@ module Ag2Gest
         end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}, :instalments]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:bills_pending_page] || 1, :per_page => 10
       end
     end
 
@@ -1343,7 +1343,7 @@ module Ag2Gest
         end
         data_accessor_for(Bill).include = [{client: :client_bank_accounts}, :subscriber, :invoice_status, :payment_method, {invoices: [:invoice_type, :invoice_operation, {invoice_items: :tax_type}]}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:bills_charged_page] || 1, :per_page => 10
       end
     end
 
@@ -1418,7 +1418,7 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:client_payments_cash_page] || 1, :per_page => 10
       end
     end
 
@@ -1496,7 +1496,7 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => per_page
+        paginate :page => params[:client_payments_bank_page] || 1, :per_page => per_page
       end
     end
 
@@ -1572,7 +1572,7 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:client_payments_others_page] || 1, :per_page => 10
       end
     end
 
@@ -1646,7 +1646,7 @@ module Ag2Gest
         end
         data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => 10
+        paginate :page => params[:instalments_page] || 1, :per_page => 10
       end
     end
     ################################

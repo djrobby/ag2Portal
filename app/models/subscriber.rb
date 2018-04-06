@@ -84,6 +84,7 @@ class Subscriber < ActiveRecord::Base
   has_many :invoice_credits
   has_many :invoice_rebills
   has_many :subscriber_estimation_balances
+  has_many :subscriber_annotations
 
   # Nested attributes
   accepts_nested_attributes_for :readings
