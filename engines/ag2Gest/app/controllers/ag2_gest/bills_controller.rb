@@ -238,7 +238,7 @@ module Ag2Gest
       _t2 = _period3.nil? ? "|" : _period3 + "|"
       _t3 = _period2.nil? ? "|" : _period2 + "|"
       _t4 = _period1.nil? ? "" : _period1
-      _t5 = "|1:|0|" + (_array.max + 10).round.to_s
+      # _t5 = "|1:|0|" + (_array.max + 10).round.to_s
       _title = 'chxl=0:|' + _t1 + _t2 + _t3 + _t4 #+ _t5
       _data = 'chd=t:' + _con4.to_s + "," + _con3.to_s + "," + _con2.to_s + "," + _con1.to_s
       _to = 'chds=0,' + (_array.max + 10).to_s
@@ -265,7 +265,7 @@ module Ag2Gest
       @biller_printer.invoices.each do |invoice|
         invoice.invoiced_subtotals_by_concept.each do |sub_concept|
           a = formatted_number_without_delimiter(sub_concept[2], 2)
-          b = (a * 100)
+          # b = (a * 100)
           c = a.to_d / total.to_d
           c = formatted_number_without_delimiter(c, 2)
           value += c.gsub(',','.') + ","
@@ -545,8 +545,8 @@ module Ag2Gest
       if @bills.empty?
         redirect_to pre_index_bills_path, alert: I18n.t("ag2_gest.bills.index.no_pre_group_no_biller")
       else
-        _project = @bills.first.project_id_
-        _biller = @bills.first.biller_id_
+        # _project = @bills.first.project_id_
+        # _biller = @bills.first.biller_id_
 
         @bills.each do |pr|
           bills << PreInvoice.find(pr.p_id_).billable_concepts_array
