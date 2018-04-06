@@ -1060,42 +1060,35 @@ module Ag2Gest
       #    client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
       if no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
          street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank?
-        # No query received, or filters has been removed: Return no results, except cash & bank
+        # No query received, or filters has been removed: Return no results, except cash, bank & others
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
-        @client_payments_others = ClientPayment.search { with :payment_type, -1 }.results
         @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
         search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
+        search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         @client_payments_cash = search_cash.results
         @client_payments_bank = search_bank.results
+        @client_payments_others = search_others.results
       else
         # Valid query received: Return found results
-        # Setup Sunspot searches
+        # Setup Sunspot searches (cash, bank & others should have data always)
         case active_tab
         when 'pendings-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'charged-tab'
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'cash-tab'
-          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'banks-tab'
-          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'others-tab'
           search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'fractionated-tab'
-          search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)

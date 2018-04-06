@@ -127,7 +127,8 @@ class Invoice < ActiveRecord::Base
   before_save :calculate_and_store_totals
   before_validation :item_repeat, :on => :create
   before_create :assign_payday_limit
-  after_save :bill_status, :update_invoice_taxes
+  after_save :bill_status
+  after_save :update_invoice_taxes, :on => :create
 
   #
   # Methods
