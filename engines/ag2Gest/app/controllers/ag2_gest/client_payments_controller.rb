@@ -869,7 +869,7 @@ module Ag2Gest
       # Check that all invoices are from the same client
       clients = Client.joins(bills: :invoices).where('invoices.id IN (?)', invoice_ids).select('clients.id').group('clients.id').to_a
       if clients.count > 1
-        redirect_to client_payments_path + "#tab_pendings", alert: "Imposible aplazar facturas de varios clientes a la vez."
+        redirect_to client_payments_path + "#tab_pendings", alert: "Imposible aplazar facturas de varios clientes a la vez." and return
       end
       client_id = clients.first.id
 
@@ -949,6 +949,9 @@ module Ag2Gest
             instalment_balance = q.amount
             # Loop thru invoices
             while instalment_balance > 0.0001
+              if i > invoices.size
+                break
+              end
               invoice = invoices[i]
               debt = new_debt > 0 ? new_debt : invoice.debts
               amount = debt > instalment_balance ? instalment_balance : debt

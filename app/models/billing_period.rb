@@ -98,7 +98,8 @@ class BillingPeriod < ActiveRecord::Base
   end
 
   def to_label
-    "#{period} (#{billing_frequency.try(:name)})"
+    # "#{period} (#{billing_frequency.try(:name)})"
+    "#{period}"
   end
 
   private
