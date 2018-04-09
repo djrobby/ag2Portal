@@ -330,7 +330,6 @@ end
       @worker = Worker.find(params[:id])
       @worker_items = @worker.worker_items.paginate(:page => params[:page], :per_page => per_page).order('id')
       #@worker_salaries = @worker.worker_salaries.paginate(:page => params[:page], :per_page => per_page).order('year desc')
-      b = true
 
       respond_to do |format|
         # Check worker OCO access

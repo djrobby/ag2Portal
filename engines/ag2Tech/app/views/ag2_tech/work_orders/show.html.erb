@@ -222,9 +222,11 @@
     <%= render partial: 'item', collection: @items %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @items } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @items, :pvar => "item_page"} %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<%#= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @items } %>
+<%= render :partial => '/layouts/paginationunbordered_ok', :locals => { :ivar => @items, :pvar => "item_page"} %>
 <% end %> <!-- end @items.count > 0 -->
 
 <!-- Workers -->
@@ -252,9 +254,11 @@
     <%= render partial: 'worker', collection: @workers %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @workers } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @workers, :pvar => "worker_page"} %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @workers } %>
+<%#= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @workers } %>
+<%= render :partial => '/layouts/paginationunbordered_ok', :locals => { :ivar => @workers, :pvar => "worker_page"} %>
 <% end %> <!-- end @workers.count > 0 -->
 
 <!-- Subcontractors -->
@@ -282,9 +286,11 @@
     <%= render partial: 'subcontractor', collection: @subcontractors %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @subcontractors } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @subcontractors } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @subcontractors, :pvar => "subcontractor_page"} %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @subcontractors } %>
+<%#= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @subcontractors } %>
+<%= render :partial => '/layouts/paginationunbordered_ok', :locals => { :ivar => @subcontractors, :pvar => "subcontractor_page"} %>
 <% end %> <!-- end @subcontractors.count > 0 -->
 
 <!-- Tools -->
@@ -312,9 +318,11 @@
     <%= render partial: 'tool', collection: @tools %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @tools } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @tools } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @tools, :pvar => "tool_page"} %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @tools } %>
+<%#= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @tools } %>
+<%= render :partial => '/layouts/paginationunbordered_ok', :locals => { :ivar => @tools, :pvar => "tool_page"} %>
 <% end %> <!-- end @tools.count > 0 -->
 
 <!-- Vehicles -->
@@ -342,9 +350,11 @@
     <%= render partial: 'vehicle', collection: @vehicles %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @vehicles } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @vehicles } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @vehicles, :pvar => "vehicle_page"} %>
 <% else %>
-<%= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @vehicles } %>
+<%#= render :partial => '/layouts/paginationunbordered', :locals => { :ivar => @vehicles } %>
+<%= render :partial => '/layouts/paginationunbordered_ok', :locals => { :ivar => @vehicles, :pvar => "vehicle_page"} %>
 <% end %> <!-- end @vehicles.count > 0 -->
 
 <!-- Remarks -->
@@ -404,7 +414,8 @@ new_path: new_work_order_path, new_txt: t('ag2_tech.work_orders.index.btn_new') 
     <%= render :partial => '/layouts/ag2_tech/suborders', :locals => { :suborders => @suborders } %>
   </tbody>
 </table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @suborders } %>
+<%#= render :partial => '/layouts/pagination', :locals => { :ivar => @suborders } %>
+<%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @suborders, :pvar => "suborder_page"} %>
 <% end %>
 
 <% if !session[:return_to].nil? %>

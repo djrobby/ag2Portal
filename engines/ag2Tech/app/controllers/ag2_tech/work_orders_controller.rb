@@ -816,13 +816,13 @@ module Ag2Tech
     def show
       @breadcrumb = 'read'
       @work_order = WorkOrder.find(params[:id])
-      @items = @work_order.work_order_items.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @workers = @work_order.work_order_workers.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @tools = @work_order.work_order_tools.paginate(:page => params[:page], :per_page => per_page).order('id')
-      @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:page], :per_page => per_page).order('id')
+      @items = @work_order.work_order_items.paginate(:page => params[:item_page], :per_page => slow_per_page).order('id')
+      @workers = @work_order.work_order_workers.paginate(:page => params[:worker_page], :per_page => slow_per_page).order('id')
+      @subcontractors = @work_order.work_order_subcontractors.paginate(:page => params[:subcontractor_page], :per_page => slow_per_page).order('id')
+      @tools = @work_order.work_order_tools.paginate(:page => params[:tool_page], :per_page => slow_per_page).order('id')
+      @vehicles = @work_order.work_order_vehicles.paginate(:page => params[:vehicle_page], :per_page => slow_per_page).order('id')
       @subscriber_meter = subscriber_meter_required(@work_order)
-      @suborders = @work_order.suborders.paginate(:page => params[:page], :per_page => per_page).by_no
+      @suborders = @work_order.suborders.paginate(:page => params[:suborder_page], :per_page => slow_per_page).by_no
 
       respond_to do |format|
         format.html # show.html.erb
