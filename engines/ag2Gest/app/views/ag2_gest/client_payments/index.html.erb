@@ -914,10 +914,10 @@
       $('#payments-tabs a:first').tab('show');
   }
   $('#payments-tabs a[data-toggle="tab"]').on('shown', function(e) {
-        location.hash = 'tab_'+  e.target.hash.substr(1) ; 
+        location.hash = 'tab_'+  e.target.hash.substr(1) ;
         return false ;
   });
-  
+
   $('#payments-tabs a').click(function (e) {
     _active_tab = $(this).attr("id");
     total_debt = 0;
@@ -1486,6 +1486,16 @@
   // Table checkbox at cash: Updates slave
   $("#cash-checkbox-master").click(function () {
     $(".cash-checkbox-slave").prop('checked', $(this).prop('checked'));
+  });
+
+  // Item checkbox at other
+  $(".other-checkbox-slave").click(function () {
+    $("#other-checkbox-master").prop('checked', false)
+  });
+
+  // Table checkbox at other: Updates slave
+  $("#other-checkbox-master").click(function () {
+    $(".other-checkbox-slave").prop('checked', $(this).prop('checked'));
   });
 
   // Item checkbox at instalment

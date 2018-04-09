@@ -29,7 +29,7 @@
   <tbody>
     <% @client_payments_others.each do |client_payment| %>
       <tr>
-        <td class="cpo-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "cash-checkbox-slave" %></td>
+        <td class="cpo-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "other-checkbox-slave" %></td>
         <td class="cpo-id hidden-text-field"><%= client_payment.id %></td>
         <td><%= client_payment.receipt_no %></td>
         <td><%= link_to client_payment.bill.try(:invoice_based_old_no_real_no), bill_path(client_payment.bill) %></td>

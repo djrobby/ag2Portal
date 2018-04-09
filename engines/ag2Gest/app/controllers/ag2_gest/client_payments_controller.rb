@@ -968,9 +968,8 @@ module Ag2Gest
             j.invoice_status_id = InvoiceStatus::FRACTIONATED
             j.save
           end
-
-          redirect_to client_payments_path + "#tab_pendings", notice: I18n.t('ag2_gest.client_payments.fractionate_ok', var: instalment_no)
         end # ActiveRecord::Base.transaction
+        redirect_to client_payments_path + "#tab_pendings", notice: I18n.t('ag2_gest.client_payments.fractionate_ok', var: instalment_no)
       rescue ActiveRecord::RecordInvalid
         redirect_to client_payments_path + "#tab_pendings", alert: I18n.t(:transaction_error, var: "fractionate") and return
       end # begin
@@ -1340,7 +1339,7 @@ module Ag2Gest
       end
     end
 
-    def cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+    def cash_search(current_projects, no, project, c, s, street_name, bank_account, period, user, per_page=10)
       ClientPayment.search do
         with :payment_type, ClientPayment::CASH
         with :confirmation_date, nil
@@ -1411,11 +1410,11 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:client_payments_cash_page] || 1, :per_page => 10
+        paginate :page => params[:client_payments_cash_page] || 1, :per_page => per_page
       end
     end
 
-    def bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order, per_page)
+    def bank_search(current_projects, no, project, c, s, street_name, bank_account, period, user, bank_order, per_page=10)
       ClientPayment.search do
         with :payment_type, ClientPayment::BANK
         with :confirmation_date, nil
@@ -1493,7 +1492,7 @@ module Ag2Gest
       end
     end
 
-    def others_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+    def others_search(current_projects, no, project, c, s, street_name, bank_account, period, user, per_page=10)
       ClientPayment.search do
         # with(:invoice_status_id, 0..98)
         with :payment_type, ClientPayment::OTHERS
@@ -1565,11 +1564,11 @@ module Ag2Gest
         end
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:client_payments_others_page] || 1, :per_page => 10
+        paginate :page => params[:client_payments_others_page] || 1, :per_page => per_page
       end
     end
 
-    def instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user)
+    def instalment_search(current_projects, no, project, c, s, street_name, bank_account, period, user, per_page=10)
       InstalmentInvoice.search do
         with :client_payment, nil
         if !current_projects.blank?
@@ -1639,7 +1638,7 @@ module Ag2Gest
         end
         data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
-        paginate :page => params[:instalments_page] || 1, :per_page => 10
+        paginate :page => params[:instalments_page] || 1, :per_page => per_page
       end
     end
     ################################
