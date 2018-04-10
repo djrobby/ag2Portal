@@ -724,6 +724,7 @@ module Ag2Gest
       sepa.lista_devoluciones.each do |i|
         # Search original client payment
         original_client_payment = ClientPayment.find(i['client_payment_id'])
+        sepa_return_code = SepaReturnCode.find_by_code(i['codigo_rechazo']).id rescue nil
         if !original_client_payment.nil?
           # If original payment is not confirmed, set confirmation date
           original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
@@ -741,7 +742,8 @@ module Ag2Gest
                                  instalment_id: original_client_payment.instalment_id,
                                  client_bank_account_id: original_client_payment.client_bank_account_id,
                                  charge_account_id: original_client_payment.charge_account_id,
-                                 created_by: created_by)
+                                 created_by: created_by,
+                                 sepa_return_code_id: sepa_return_code)
           if cp.save
             # Set related invoice status to pending
             original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)

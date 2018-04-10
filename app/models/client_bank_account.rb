@@ -1,4 +1,8 @@
 class ClientBankAccount < ActiveRecord::Base
+  # CONSTANTS (origin)
+  MANUAL = 1        # ALTA MANUAL
+  FILE = 2          # PROVIENE DE UN FICHERO BANCARIO
+
   belongs_to :client, :counter_cache => true
   belongs_to :subscriber, :counter_cache => true
   belongs_to :bank_account_class
@@ -7,7 +11,7 @@ class ClientBankAccount < ActiveRecord::Base
   belongs_to :bank_office
   attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
                   :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id,
-                  :holder_fiscal_id, :holder_name, :created_by, :updated_by
+                  :holder_fiscal_id, :holder_name, :created_by, :updated_by, :origin
 
   alias_attribute :cb, :bank_id
   alias_attribute :cs, :bank_office_id

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180315152204) do
+ActiveRecord::Schema.define(:version => 20180410073330) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -714,10 +714,11 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
     t.string   "holder_name"
     t.date     "starting_at"
     t.date     "ending_at"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "origin",                :limit => 1, :default => 1, :null => false
   end
 
   add_index "client_bank_accounts", ["account_no"], :name => "index_client_bank_accounts_on_account_no"
@@ -765,6 +766,7 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
     t.datetime "updated_at",                                                             :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.integer  "sepa_return_code_id"
   end
 
   add_index "client_payments", ["bill_id"], :name => "index_client_payments_on_bill_id"
@@ -778,6 +780,7 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
   add_index "client_payments", ["payment_method_id"], :name => "index_client_payments_on_payment_method_id"
   add_index "client_payments", ["payment_type"], :name => "index_client_payments_on_payment_type"
   add_index "client_payments", ["receipt_no"], :name => "index_client_payments_on_receipt_no"
+  add_index "client_payments", ["sepa_return_code_id"], :name => "index_client_payments_on_sepa_return_code_id"
   add_index "client_payments", ["subscriber_id"], :name => "index_client_payments_on_subscriber_id"
 
   create_table "clients", :force => true do |t|
@@ -3393,6 +3396,15 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
   add_index "sale_offers", ["store_id"], :name => "index_sale_offers_on_store_id"
   add_index "sale_offers", ["work_order_id"], :name => "index_sale_offers_on_work_order_id"
 
+  create_table "sepa_return_codes", :force => true do |t|
+    t.string   "code",       :limit => 10
+    t.string   "name",       :limit => 100
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "sepa_return_codes", ["code"], :name => "index_sepa_return_codes_on_code"
+
   create_table "sepa_scheme_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -3805,7 +3817,7 @@ ActiveRecord::Schema.define(:version => 20180315152204) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
   end
