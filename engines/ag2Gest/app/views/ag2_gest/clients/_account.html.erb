@@ -11,4 +11,5 @@
   <td><%= account.holder_fiscal_id unless account.holder_fiscal_id.blank? %></td>
   <td align="center"><%= formatted_date(account.starting_at) unless account.starting_at.blank? %></td>
   <td align="center"><%= formatted_date(account.ending_at) unless account.ending_at.blank? %></td>
+  <td align="center"><%= account.origin unless account.origin.blank? %></td>
 </tr>

@@ -40,5 +40,6 @@ es:
         p_format: "Cuenta"
         starting_at: "Activada el"
         ending_at: "Expiró el"
+        origin: "Org"
         successfully: "Cuenta bancaria de cliente se ha actualizado correctamente."
         create: "Cuenta bancaria de cliente se ha creado correctamente."

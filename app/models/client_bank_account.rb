@@ -57,7 +57,9 @@ class ClientBankAccount < ActiveRecord::Base
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              CASE ISNULL(client_bank_accounts.subscriber_id) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
-             client_bank_accounts.starting_at, client_bank_accounts.ending_at, (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active, client_bank_accounts.id")
+             client_bank_accounts.starting_at, client_bank_accounts.ending_at,
+             (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active,
+             client_bank_accounts.id, client_bank_accounts.origin")
     .by_ending_at
   }
   scope :active_by_client_full, -> c {
@@ -68,7 +70,9 @@ class ClientBankAccount < ActiveRecord::Base
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              CASE ISNULL(client_bank_accounts.subscriber_id) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
-             client_bank_accounts.starting_at, client_bank_accounts.ending_at, (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active, client_bank_accounts.id")
+             client_bank_accounts.starting_at, client_bank_accounts.ending_at,
+             (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active,
+             client_bank_accounts.id, client_bank_accounts.origin")
     .by_ending_at
   }
   scope :by_subscriber, -> s { where('subscriber_id = ?', s).by_ending_at }
@@ -78,7 +82,9 @@ class ClientBankAccount < ActiveRecord::Base
     .select("bank_account_classes.name bank_account_class_name,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
-             client_bank_accounts.starting_at, client_bank_accounts.ending_at, (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active, client_bank_accounts.id")
+             client_bank_accounts.starting_at, client_bank_accounts.ending_at,
+             (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active,
+             client_bank_accounts.id, client_bank_accounts.origin")
     .by_ending_at
   }
   scope :active_by_subscriber_full, -> s {
@@ -87,7 +93,9 @@ class ClientBankAccount < ActiveRecord::Base
     .select("bank_account_classes.name bank_account_class_name,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
-             client_bank_accounts.starting_at, client_bank_accounts.ending_at, (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active, client_bank_accounts.id")
+             client_bank_accounts.starting_at, client_bank_accounts.ending_at,
+             (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > CURDATE()) is_active,
+             client_bank_accounts.id, client_bank_accounts.origin")
     .by_ending_at
   }
   scope :active_by_client_or_subscriber, -> c, s { active.where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }

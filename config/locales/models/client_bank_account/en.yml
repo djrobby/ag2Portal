@@ -40,5 +40,6 @@ en:
         p_format: "Account"
         starting_at: "Activated on"
         ending_at: "Expired on"
+        origin: "Org"
         successfully: "Client bank account has been updated successfully."
         create: "Client bank account has been created successfully."

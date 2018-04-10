@@ -80,6 +80,7 @@
         <th><%= t "activerecord.attributes.supplier_bank_account.holder_fiscal_id_c" %></th>
         <th align="center"><%= t "activerecord.attributes.supplier_bank_account.starting_at" %></th>
         <th align="center"><%= t "activerecord.attributes.supplier_bank_account.ending_at" %></th>
+        <th align="center"><%= t "activerecord.attributes.client_bank_account.origin" %></th>
         <th></th>
       </tr>
     </thead>
@@ -92,6 +93,7 @@
           <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
           <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>
           <td align="center" id="ending_at"><%= formatted_date(client_bank_account.ending_at) unless client_bank_account.ending_at.blank? %></td>
+          <td align="center" id="origin"><%= client_bank_account.origin unless client_bank_account.origin.blank? %></td>
           <td class="hide"><%= client_bank_account.id %></td>
           <td>
             <a href="<%= @subscriber.id %>/disable_bank_account/<%= client_bank_account.id %>" id="btn_disable_bank_account" data-confirm="<%= t('activerecord.attributes.subscriber.alert_disable_bank_account')%>" data-remote="true" class="btn btn-mini <%= 'hide' unless client_bank_account.is_active != 0 %>" title ='<%=t('activerecord.attributes.subscriber.non_billable_button') %>'><i class='icon-trash'></i></a>
