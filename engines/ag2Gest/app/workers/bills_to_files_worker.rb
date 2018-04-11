@@ -7,7 +7,7 @@ class BillsToFilesWorker
     @expiration ||= 60*60*24*30 # 30 days
   end
 
-  def perform(client_payments_ids, bank_account_id, scheme_type_id, presentation_date, charge_date)
+  def perform(bills)
     # do something
   end
 end
