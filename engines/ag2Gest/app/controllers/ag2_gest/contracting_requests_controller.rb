@@ -1454,16 +1454,24 @@ module Ag2Gest
 
           client_debt = '0'
           project_debt = '0'
-          project_d = ""
+          # project_d = ""
+          project_d = []
           if !client.blank? and !client.invoice_current_debts.unpaid.blank?
             # client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            client_debt = number_with_precision(client.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-            project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS prj,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+            # client_debt = number_with_precision(client.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+            project_group = client.current_debt_by_project
             project_group.each do |pd|
-              _pd_project = Project.find(pd.prj).name
-              project_d = project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+              _pd_project = Project.find(pd['project_id']).name rescue 'N/A'
+              project_d << _pd_project + " --> " + number_with_precision(pd['debt'], precision: 4, delimiter: I18n.locale == :es ? "." : ",")
             end
-            project_debt = project_d[0..-4]
+            project_debt = project_d
+            # project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS prj,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
+            # project_group.each do |pd|
+            #   _pd_project = Project.find(pd.prj).name
+            #   project_d = project_d  << _pd_project + " --> " + number_with_precision(pd.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") + " // "
+            # end
+            # project_debt = project_d[0..-4]
           end
         end
       end
@@ -1857,6 +1865,8 @@ module Ag2Gest
 
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
+
+      @current_debt = @contracting_request.client.current_debt
 
       respond_to do |format|
         format.html # show.html.erb

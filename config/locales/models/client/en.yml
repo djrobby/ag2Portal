@@ -12,6 +12,8 @@ en:
         check_for_client_charges: "Client cannot be destroyed while linked charges exist."
         check_for_subscribers: "Client cannot be destroyed while linked subscribers exist."
         check_active_for_client_subscribers: "Client cannot be deactivate while linked subscribers exist."
+        check_for_water_supply_contracts: "Client cannot be destroyed while linked supply contracts exist."
+        check_for_water_connection_contracts: "Client cannot be destroyed while linked connection contracts exist."
     attributes:
       client:
         entity: "Entity"
@@ -56,4 +58,3 @@ en:
         payment_method_id: "Payment method"
         full_name: "Full Name"
         debt: "Debt"
-

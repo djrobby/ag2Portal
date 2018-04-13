@@ -274,6 +274,10 @@ class Client < ActiveRecord::Base
     # invoices.sum(&:current_debt)
   end
 
+  def current_debt_by_project
+    Client.current_debt_calc_by_project(self.id)
+  end
+
   def active_yes_no
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
@@ -410,6 +414,28 @@ class Client < ActiveRecord::Base
         WHERE client_payments.client_id = #{i} AND NOT ISNULL(client_payments.confirmation_date)
         ) a"
     ).first["debt"]
+  end
+
+  def self.current_debt_calc_by_project(i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT project_id, SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected, bills.project_id
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.client_id = 12
+        group by bills.project_id
+        UNION
+        SELECT 0 as total, SUM(amount) as collected, bills.project_id
+        FROM client_payments
+        INNER JOIN bills on client_payments.bill_id=bills.id
+        WHERE client_payments.client_id = 12 AND NOT ISNULL(client_payments.confirmation_date)
+        group by bills.project_id
+        ) a"
+    )
   end
 
   def self.to_csv(array, company_id=nil)
@@ -611,6 +637,15 @@ class Client < ActiveRecord::Base
     # Check for charges
     if client_payments.count > 0
       errors.add(:base, I18n.t('activerecord.models.client.check_for_client_charges'))
+      return false
+    end
+    # Check for contracts
+    if water_supply_contracts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_water_supply_contracts'))
+      return false
+    end
+    if water_connection_contracts.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client.check_for_water_connection_contracts'))
       return false
     end
   end
