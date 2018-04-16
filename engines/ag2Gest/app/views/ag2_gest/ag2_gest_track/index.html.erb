@@ -10,14 +10,39 @@
       $('label[for=label_detailed]').hide();
     }
   }
+  function show_buttons_without_detail(_show) {
+    if (_show == true) {
+      $('#report_btn').show();
+      $('#csv_btn').show();
+      $('label[for=label_detailed]').hide();
+    } else {
+      $('#report_btn').hide();
+      $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
+    }
+  }
+  function show_buttons_without_detail_and_csv(_show) {
+    if (_show == true) {
+      $('#report_btn').show();
+      $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
+    } else {
+      $('#report_btn').hide();
+      $('#csv_btn').hide();
+      $('label[for=label_detailed]').hide();
+    }
+  }
 
-  function setupAllSelect2(p, s, t, w, a, r) {
+  function setupAllSelect2(p, r, u, c, s, a, b, r, sp) {
     projectsSelect2(p);
-    suppliersSelect2(s);
-    storesSelect2(t);
-    wordersSelect2(w);
-    caccountsSelect2(a);
-    productsSelect2(r);
+    periodsSelect2(r);
+    usersSelect2(u);
+    clientsSelect2(c);
+    subscribersSelect2(s);
+    addressesSelect2(a);
+    billersSelect2(b);    
+    routes_Select2(r);
+    servicePointsSelect2(sp); 
   }
 
   function projectsSelect2(intialValue) {
@@ -39,7 +64,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -48,15 +73,150 @@
     });
   }
 
-  function suppliersSelect2(intialValue) {
-    $('#Supplier').select2({
+  function periodsSelect2(intialValue) {
+    $('#Period').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        url: "/search_suppliers",
+        url: "/search_billing_periods",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function usersSelect2(intialValue) {
+    $('#User').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_users",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function clientsSelect2(intialValue) {
+    $('#Client').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_clients",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function subscribersSelect2(intialValue) {
+    $('#Subscriber').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_subscribers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function addressesSelect2(intialValue) {
+    $('#StreetName').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_supply_addresses",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function billersSelect2(intialValue) {
+    $('#Biller').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_companies",
         dataType: "json",
         delay: 250,
         data: function(term, page) {
@@ -75,15 +235,15 @@
     });
   }
 
-  function storesSelect2(intialValue) {
-    $('#Store').select2({
+  function routes_Select2(intialValue) {
+    $('#ReadingRoute').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        url: "/search_stores",
+        url: "/search_reading_routes",
         dataType: "json",
         delay: 250,
         data: function(term, page) {
@@ -102,69 +262,15 @@
     });
   }
 
-  function wordersSelect2(intialValue) {
-    $('#Order').select2({
+  function servicePointsSelect2(intialValue) {
+    $('#ServicePoint').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       dropdownCssClass: 'shrinked',
       dropdownAutoWidth: true,
       placeholder: intialValue,
       allowClear: true,
       ajax: {
-        url: "/search_work_orders",
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return { 
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }
-
-  function caccountsSelect2(intialValue) {
-    $('#Account').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: "/search_charge_accounts",
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return { 
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }
-
-  function productsSelect2(intialValue) {
-    $('#Product').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: "/search_products",
+        url: "/search_service_points_all",
         dataType: "json",
         delay: 250,
         data: function(term, page) {
@@ -197,9 +303,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @supplier %>",
-                    "<%= @store %>", "<%= @work_order %>",
-                    "<%= @charge_account %>", "<%= @product %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>", "<%= @biller %>", "<%= @reading_route %>", "<%= @service_point %>");
 
     // Hide report button
     show_buttons(false);
@@ -212,94 +316,454 @@
       if (report == "")
         report = 0;
       switch (report) {
+        // water_supply_contract_report
         case 1:
-          // Offer request
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          show("#Store", "label_store");
-          show("#Order", "label_work_order");
-          show("#Account", "label_charge_account");
-          hide("#Status", "label_order_status");
-          show("#Product", "label_product");
-          show_buttons(true);
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          show("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail_and_csv(true);
           break;
+        // water_connection_contract_report
         case 2:
-          // Offer
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          show("#Store", "label_store");
-          show("#Order", "label_work_order");
-          show("#Account", "label_charge_account");
-          hide("#Status", "label_order_status");
-          show("#Product", "label_product");
-          show_buttons(true);
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          hide_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          show("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail_and_csv(true);
           break;
+        // contracting_request_report
         case 3:
-          // Purchase order
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          show("#Store", "label_store");
-          show("#Order", "label_work_order");
-          show("#Account", "label_charge_account");
-          show("#Status", "label_order_status");
-          show("#Product", "label_product");
-          show_buttons(true);
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail_and_csv(true);
           break;
+        // invoice_report
         case 4:
-          // Supplier invoice
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          hide("#Store", "label_store");
-          show("#Order", "label_work_order");
-          show("#Account", "label_charge_account");
-          hide("#Status", "label_order_status");
-          show("#Product", "label_product");
-          show_buttons(true);
+          show("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          hide("#User", "label_user");
+          show("#Biller", "label_biller");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          show("#Status", "label_status");
+          show("#Type", "label_type");
+          show("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
           break;
+        // client_payment_report
         case 5:
-          // Supplier payment
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          hide("#Store", "label_store");
-          hide("#Order", "label_work_order");
-          hide("#Account", "label_charge_account");
-          hide("#Status", "label_order_status");
-          hide("#Product", "label_product");
+          show("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          show("#User", "label_user");
+          show("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          show("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          show("#Status", "label_status");
+          show("#Type", "label_type");
+          show("#Operation", "label_operation");
+          show("#Use", "label_use");
+          show("#TariffType", "label_tariff_type");
           show_buttons(true);
           break;
+        // debt_claim_report
         case 6:
-          // Supplier
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          show("#User", "label_user");
+          show("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          show("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          show("#Status", "label_status");
+          show("#Type", "label_type");
+          show("#Operation", "label_operation");
+          show("#Use", "label_use");
+          show("#TariffType", "label_tariff_type");
+          show_buttons(true);
+          break;
+        // reading_report
+        case 7:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show("#Project", "label_project");
+          show("#Period", "label_period");
+          hide("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // service_point_report 
+        case 8:
           hide_date("#From", "label_from");
           hide_date("#To", "label_to");
-          show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          hide("#Store", "label_store");
-          hide("#Order", "label_work_order");
-          hide("#Account", "label_charge_account");
-          hide("#Status", "label_order_status");
-          hide("#Product", "label_product");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // sp_with_meter
+        case 9:
+          hide_date("#From", "label_from");
+          hide_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // subscriber_report
+        case 10:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // subscriber_eco_report
+        case 11:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
           show_buttons(true);
           break;
+        // subscriber_tec_report
+        case 12:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // client_report
+        case 13:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons(true);
+          break;
+        // meter_report
+        case 14:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // meter_expired_report
+        case 15:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // meter_shared_report
+        case 16:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // meter_master_report
+        case 17:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        //Default
         default:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show("#Project", "label_project");
-          show("#Supplier", "label_supplier");
-          show("#Store", "label_store");
-          show("#Order", "label_work_order");
-          show("#Account", "label_charge_account");
-          show("#Status", "label_order_status");
-          show("#Product", "label_product");
+          show("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show("#StreetName", "label_street");
+          show("#User", "label_user");
+          show("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          show("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          show("#RequestStatus", "label_request_status");
+          show("#RequestType", "label_request_type");
+          show("#Status", "label_status");
+          show("#Type", "label_type");
+          show("#Operation", "label_operation");
+          show("#Use", "label_use");
+          show("#TariffType", "label_tariff_type");
           show_buttons(false);
       }
       return false;
@@ -327,7 +791,35 @@
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
-      if (((from == "") || (to == "")) && report <= 5)
+      if (((from == "") || (to == "")) && report == 1)
+        return;
+      if (((from == "") || (to == "")) && report == 2)
+        return;
+      if (((from == "") || (to == "")) && report == 3)
+        return;
+      if (((from == "") || (to == "")) && report == 4)
+        return;
+      if (((from == "") || (to == "")) && report == 5)
+        return;
+      if (((from == "") || (to == "")) && report == 6)
+        return;
+      if (((from == "") || (to == "")) && report == 7)
+        return;
+      if (((from == "") || (to == "")) && report == 10)
+        return;
+      if (((from == "") || (to == "")) && report == 11)
+        return;
+      if (((from == "") || (to == "")) && report == 12)
+        return;
+      if (((from == "") || (to == "")) && report == 13)
+        return;
+      if (((from == "") || (to == "")) && report == 14)
+        return;
+      if (((from == "") || (to == "")) && report == 15)
+        return;
+      if (((from == "") || (to == "")) && report == 16)
+        return;
+      if (((from == "") || (to == "")) && report == 17)
         return;
       // CSV or PDF
       if (_csv == true) {
@@ -335,91 +827,336 @@
         pag = '_self';
       }
       switch (report) {
+        // OKwater_supply_contract_report
         case 1:
-          // Offer request
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          var store = $('#Store').val();
-          var order = $('#Order').val();
-          var account = $('#Account').val();
-          var product = $('#Product').val();
-          // if ((project == "") && (supplier == "") && (product == ""))
-          //   return;
-          if (detailed == "") {
-            nam = "request_report" + ext;
-          } else {
-            nam = "request_items_report" + ext;
-          }
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, pag);
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var tariff_scheme = $('#TariffScheme').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          var request_status = $('#RequestStatus').val();
+          var request_type = $('#RequestType').val();
+          nam = "water_supply_contract_report" + ext;
+          // if (detailed == "") {
+          //   nam = "water_supply_contract_report" + ext;
+          // } else {
+          //   nam = "water_supply_contract_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project + "&client=" + client 
+            + "&subscriber=" + subscriber + "&meter=" + meter + "&caliber=" + caliber 
+            + "&tariff_scheme=" + tariff_scheme + "&reading_route=" + reading_route + "&use=" + use + "&request_status=" + request_status + "&request_type=" + request_type
+            , pag);
           break;
+        // OKwater_connection_contract_report
         case 2:
-          // Offer
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          var store = $('#Store').val();
-          var order = $('#Order').val();
-          var account = $('#Account').val();
-          var product = $('#Product').val();
-          // if ((project == "") && (supplier == "") && (product == ""))
-          //   return;
-          if (detailed == "") {
-            nam = "offer_report" + ext;
-          } else {
-            nam = "offer_items_report" + ext;
-          }
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&product=" + product, pag);
+          var client = $('#Client').val();
+          var caliber = $('#Caliber').val();
+          var tariff_scheme = $('#TariffScheme').val();
+          var request_status = $('#RequestStatus').val();
+          var request_type = $('#RequestType').val();
+          nam = "water_connection_contract_report" + ext;
+          // if (detailed == "") {
+          //   nam = "water_connection_contract_report" + ext;
+          // } else {
+          //   nam = "water_connection_contract_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project + "&client=" + client 
+            + "&caliber=" + caliber 
+            + "&tariff_scheme=" + tariff_scheme + "&request_status=" + request_status + "&request_type=" + request_type
+            , pag);
           break;
+        // OKcontracting_request_report
         case 3:
-          // Purchase order
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          var store = $('#Store').val();
-          var order = $('#Order').val();
-          var account = $('#Account').val();
-          var petitioner = $('#User').val();
-          var status = $('#Status :selected').val();
-          // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
-          //   return;
-          if (detailed == "") {
-            nam = "order_report" + ext;
-          } else {
-            nam = "order_items_report" + ext;
-          }
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&petitioner=" + petitioner + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&status=" + status, pag);
+          var client = $('#Client').val();
+          var request_status = $('#RequestStatus').val();
+          var request_type = $('#RequestType').val();
+          nam = "contracting_request_report_track" + ext;
+          // if (detailed == "") {
+          //   nam = "contracting_request_report" + ext;
+          // } else {
+          //   nam = "contracting_request_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project + "&client=" + client
+            + "&request_status=" + request_status + "&request_type=" + request_type
+            , pag);
           break;
+        // OKinvoice_report
         case 4:
-          // Supplier invoice
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          var order = $('#Order').val();
-          var account = $('#Account').val();
-          var product = $('#Product').val();
-          // if ((project == "") && (supplier == "") && (order == "") && (account == "") && (product == ""))
-          //   return;
-          if (detailed == "") {
-            nam = "invoice_report" + ext;
-          } else {
-            nam = "invoice_items_report" + ext;
-          }
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&order=" + order + "&account=" + account + "&product=" + product, pag);
+          var period = $('#Period').val();
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var biller = $('#Biller').val();
+          var status = $('#Status').val();
+          var type = $('#Type').val();
+          var operation = $('#Operation').val();
+          nam = "invoice_report" + ext;
+          // if (detailed == "") {
+          //   nam = "invoice_report" + ext;
+          // } else {
+          //   nam = "invoice_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&biller=" + biller
+            + "&status=" + status + "&type=" + type + "&operation=" + operation
+            , pag);
           break;
+        // client_payment_report
         case 5:
-          // Supplier payment
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          // if ((project == "") && (supplier == ""))
-          //   return;
-          nam = "payment_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier, pag);
+          var period = $('#Period').val();
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var user = $('#User').val();
+          var biller = $('#Biller').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var tariff_scheme = $('#TariffScheme').val();
+          var reading_route = $('#ReadingRoute').val();
+          var request_status = $('#RequestStatus').val();
+          var request_type = $('#RequestType').val();
+          var status = $('#Status').val();
+          var type = $('#Type').val();
+          var operation = $('#Operation').val();
+          var use = $('#Use').val();
+          var tariff_type = $('#TariffType').val();
+          if (detailed == "") {
+            nam = "water_supply_contract_report" + ext;
+          } else {
+            nam = "water_supply_contract_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&user=" + user + "&biller=" + biller + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&tariff_scheme=" + tariff_scheme + "&reading_route=" + reading_route + "&request_status=" + request_status
+            + "&request_type=" + request_type + "&status=" + status + "&type=" + type + "&operation=" + operation + "&use=" + use + "&tariff_type=" + tariff_type
+            , pag);
           break;
+        // debt_claim_report
         case 6:
-          // Supplier
           var project = $('#Project').val();
-          var supplier = $('#Supplier').val();
-          // if ((project == "") && (supplier == ""))
-          //   return;
-          nam = "supplier_report" + ext;
-          window.open(nam + "?detailed=" + detailed + "&project=" + project + "&supplier=" + supplier, pag);
+          var period = $('#Period').val();
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var user = $('#User').val();
+          var biller = $('#Biller').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var tariff_scheme = $('#TariffScheme').val();
+          var reading_route = $('#ReadingRoute').val();
+          var request_status = $('#RequestStatus').val();
+          var request_type = $('#RequestType').val();
+          var status = $('#Status').val();
+          var type = $('#Type').val();
+          var operation = $('#Operation').val();
+          var use = $('#Use').val();
+          var tariff_type = $('#TariffType').val();
+          if (detailed == "") {
+            nam = "water_supply_contract_report" + ext;
+          } else {
+            nam = "water_supply_contract_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&user=" + user + "&biller=" + biller + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&tariff_scheme=" + tariff_scheme + "&reading_route=" + reading_route + "&request_status=" + request_status
+            + "&request_type=" + request_type + "&status=" + status + "&type=" + type + "&operation=" + operation + "&use=" + use + "&tariff_type=" + tariff_type
+            , pag);
+          break;
+        // OKreading_report
+        case 7:
+          var project = $('#Project').val();
+          var period = $('#Period').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "reading_report" + ext;
+          // if (detailed == "") {
+          //   nam = "reading_report" + ext;
+          // } else {
+          //   nam = "reading_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route 
+            , pag);
+          break;
+        // OKservice_point_report
+        case 8:
+          var meter = $('#Meter').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "service_point_report" + ext;
+          // if (detailed == "") {
+          //   nam = "service_point_report" + ext;
+          // } else {
+          //   nam = "service_point_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to
+            + "&meter=" + meter + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
+          break;
+        // OKsp_with_meter
+        case 9:
+          var meter = $('#Meter').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "sp_with_meter_report" + ext;
+          // if (detailed == "") {
+          //   nam = "sp_with_meter_report" + ext;
+          // } else {
+          //   nam = "sp_with_meter_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to
+            + "&meter=" + meter + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
+          break;
+        // OKsubscriber_report
+        case 10:
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          nam = "subscriber_report_track" + ext;
+          // if (detailed == "") {
+          //   nam = "subscriber_report" + ext;
+          // } else {
+          //   nam = "subscriber_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
+            , pag);
+          break;
+        // OKsubscriber_report
+        case 11:
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          if (detailed == "") {
+            nam = "subscriber_eco_report" + ext;
+          } else {
+            nam = "subscriber_eco_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
+            , pag);
+          break;
+        // OKsubscriber_report
+        case 12:
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          nam = "subscriber_tec_report" + ext;
+          // if (detailed == "") {
+          //   nam = "subscriber_tec_report" + ext;
+          // } else {
+          //   nam = "subscriber_tec_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
+            , pag);
+          break;
+        // OKclient_report
+        case 13:
+          var client = $('#Client').val();
+          if (detailed == "") {
+            nam = "client_eco_report" + ext;
+          } else {
+            nam = "client_eco_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client
+            , pag);
+          break;
+        // OKmeter_report
+        case 14:
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "meter_report" + ext;
+          // if (detailed == "") {
+          //   nam = "meter_report" + ext;
+          // } else {
+          //   nam = "meter_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + 
+            "&meter=" + meter + "&caliber=" + caliber + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
+          break;
+        // OKmeter_expired_report
+        case 15:
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "meter_expired_report" + ext;
+          // if (detailed == "") {
+          //   nam = "meter_expired_report" + ext;
+          // } else {
+          //   nam = "meter_expired_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + 
+            "&meter=" + meter + "&caliber=" + caliber + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
+          break;
+        // OKmeter_shared_report
+        case 16:
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "meter_shared_report" + ext;
+          // if (detailed == "") {
+          //   nam = "meter_shared_report" + ext;
+          // } else {
+          //   nam = "meter_shared_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + 
+            "&meter=" + meter + "&caliber=" + caliber + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
+          break;
+        // OKmeter_master_report
+        case 17:
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          nam = "meter_master_report" + ext;
+          // if (detailed == "") {
+          //   nam = "meter_master_report" + ext;
+          // } else {
+          //   nam = "meter_master_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + 
+            "&meter=" + meter + "&caliber=" + caliber + "&service_point=" + service_point + "&reading_route=" + reading_route
+            , pag);
           break;
       }
     }
@@ -441,20 +1178,29 @@
         case '#Project':
           projectsSelect2("<%= @project %>");
           break;
-        case '#Supplier':
-          suppliersSelect2("<%= @supplier %>");
+        case '#Period':
+          periodsSelect2("<%= @period %>");
           break;
-        case '#Store':
-          storesSelect2("<%= @store %>");
+        case '#User':
+          usersSelect2("<%= @user %>");
           break;
-        case '#Order':
-          wordersSelect2("<%= @work_order %>");
+        case '#Client':
+          clientsSelect2("<%= @client %>");
           break;
-        case '#Account':
-          caccountsSelect2("<%= @charge_account %>");
+        case '#Subscriber':
+          subscribersSelect2("<%= @subscriber %>");
           break;
-        case '#Product':
-          productsSelect2("<%= @product %>");
+        case '#StreetName':
+          addressesSelect2("<%= @address %>");
+          break;
+        case '#Biller':
+          billersSelect2("<%= @biller %>");
+          break;
+        case '#ReadingRoute':
+          routes_Select2("<%= @reading_route %>");
+          break;
+        case '#ServicePoint':
+          servicePointsSelect2("<%= @service_point %>");
           break;
         default:
           $(_select).select2({
@@ -477,6 +1223,18 @@
       $('label[for=' + _label + ']').show();
       $(_date).addClass('date_picker');
       $(_date).show();
+    }
+
+    function hide_text(_text, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').hide();
+      $(_text).hide();      
+    }
+    
+    function show_text(_text, _label) {
+      _label = replace_with_underscore(_label);
+      $('label[for=' + _label + ']').show();
+      $(_text).show();
     }
   });
 </script>
@@ -512,35 +1270,69 @@
       <%= label_tag t(".label_report"), nil, :class => 'form-label' %>
       <%= select_tag "Report", options_for_select(@reports), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Project -->
-      <%= label_tag "label_project", t(".label_project"), :class => 'form-label-under-sel2' %>
+      <%= label_tag "label_project", I18n.t("ag2_gest.client_payments.index.label_project"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      <!-- Supplier -->
-      <%= label_tag "label_supplier", t(".label_supplier"), :class => 'form-label-under-sel2' %>
-      <%= hidden_field_tag "Supplier", params[:Supplier], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      <!-- Store -->
-      <%= label_tag "label_store", t(".label_store"), :class => 'form-label-under-sel2' %>
-      <%= hidden_field_tag "Store", params[:Store], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      <!-- Work order -->
-      <%= label_tag "label_work_order", t(".label_work_order"), :class => 'form-label-under-sel2' %>
-      <%= hidden_field_tag "Order", params[:Order], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      <!-- Charge account -->
-      <%= label_tag "label_charge_account", t(".label_charge_account"), :class => 'form-label-under-sel2' %>
-      <%= hidden_field_tag "Account", params[:Account], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Period -->
+      <%= label_tag "label_period", I18n.t("ag2_gest.client_payments.index.label_period"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Period", params[:Period], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Client (name) -->
+      <%= label_tag "label_client", I18n.t("ag2_gest.client_payments.index.label_client"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Subscriber (name) -->
+      <%= label_tag "label_subscriber", I18n.t("ag2_gest.client_payments.index.label_subscriber"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Supply address (street name) -->
+      <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- User -->
+      <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "User", params[:User], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Biller -->
+      <%= label_tag "label_biller", I18n.t("ag2_gest.invoices.index.label_biller"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Meter -->
+      <%= label_tag "label_meter", I18n.t("activerecord.attributes.water_supply_contract.meter_id"), :class => 'form-label-under-sel2' %>
+      <%= text_field_tag "Meter", params[:Meter], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
+      <!-- Service Point -->
+      <%= label_tag "label_service_point", I18n.t("activerecord.models.service_point.one"), :class => 'form-label' %>
+      <%= hidden_field_tag "ServicePoint", params[:ServicePoint], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Tariff Scheme -->
+      <%= label_tag "label_tariff_scheme", I18n.t("activerecord.attributes.water_supply_contract.tariff_scheme_id"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "TariffScheme", options_from_collection_for_select(@tariff_schemes, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      <!-- ReadingRoute -->
+      <%= label_tag "label_reading_route", I18n.t("activerecord.attributes.reading.reading_route"), :class => 'form-label-under-sel2' %>
+      <%= hidden_field_tag "ReadingRoute", params[:ReadingRoute], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <!-- Request Status -->
+      <%= label_tag "label_request_status", I18n.t("ag2_gest.contracting_requests.index.label_request_status"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "RequestStatus", options_from_collection_for_select(@request_statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <!-- Request Type -->
+      <%= label_tag "label_request_type", I18n.t("ag2_gest.contracting_requests.index.label_request_type"), :class => 'form-label' %>
+      <%= select_tag "RequestType", options_from_collection_for_select(@request_types, "id", "description"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <!-- Type -->
+      <%= label_tag "label_type", I18n.t("ag2_gest.invoices.index.label_type"), :class => 'form-label' %>
+      <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <!-- Status -->
+      <%= label_tag "label_status", I18n.t("ag2_gest.invoices.index.label_status"), :class => 'form-label' %>
+      <%= select_tag "Status", options_from_collection_for_select(@status, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <!-- Operation -->
+      <%= label_tag "label_operation", I18n.t("ag2_gest.invoices.index.label_operation"), :class => 'form-label' %>
+      <%= select_tag "Operation", options_from_collection_for_select(@operations, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
+      <!-- Caliber -->
+      <%= label_tag "label_caliber", I18n.t("ag2_gest.subscribers.index.caliber"), :class => 'form-label' %>
+      <%= select_tag "Caliber", options_from_collection_for_select(@calibers, "id", "caliber"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      <!-- Use -->
+      <%= label_tag "label_use", I18n.t("ag2_gest.subscribers.index.use"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "Use", options_from_collection_for_select(@uses, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+      <!-- TariffType -->
+      <%= label_tag "label_tariff_type", I18n.t("ag2_gest.subscribers.index.tariff_type"), :class => 'form-label-under-sel2' %>
+      <%= select_tag "TariffType", options_from_collection_for_select(@tariff_types, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
       <!-- Dates -->
       <%= label_tag "label_from", t("control_tracking.label_from"), :class => 'form-label-under-sel2' %>
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <%= label_tag "label_to", t("control_tracking.label_to"), :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
-      <!-- Purchase order Status -->
-      <%= label_tag "label_order_status", t(".label_order_status"), :class => 'form-label' %>
-      <%= select_tag "Status", options_from_collection_for_select(@statuses, "id", "name"), :prompt => "", :class => 'x-large-text-field sel2' %>
-      <!-- Product -->
-      <!-- Last tag into <p></p> tags for spacing -->
-      <p>
-        <%= label_tag "label_product", t(".label_product"), :class => 'form-label-under-sel2' %>
-        <%= hidden_field_tag "Product", params[:Product], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      </p>
       <!-- Detailed? -->
+      <br>
       <%= label_tag 'label_detailed', :class => 'checkbox inline' do %>
         <%= t("control_tracking.detailed") %>
         <%= check_box_tag 'detailed', nil, nil %>

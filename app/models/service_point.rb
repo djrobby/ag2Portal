@@ -1,4 +1,6 @@
 class ServicePoint < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :service_point_type
   belongs_to :service_point_location
   belongs_to :service_point_purpose
@@ -47,6 +49,12 @@ class ServicePoint < ActiveRecord::Base
     .where("service_points.available_for_contract <> ?", 0)
     .where(w)
     .group('service_points.id').by_code.having("COUNT(subscribers.id) < 1")
+  }
+  scope :g_where_all, -> w {
+    joins([street_directory: :street_type], :zipcode)
+    .joins("LEFT JOIN subscribers on service_points.id=subscribers.service_point_id")
+    .where(w)
+    .group('service_points.id').by_code
   }
   # *** For readings ***
   scope :with_meter, -> { where("((NOT meter_id IS NULL) AND meter_id >= 0)").by_reading_sequence }
@@ -166,9 +174,43 @@ class ServicePoint < ActiveRecord::Base
     to_label + (assigned_to_subscriber? ? '*' : '')
   end
 
+  # For CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.direction')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.service_point_location_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.reading_route_c')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.cadastral_reference')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.meter')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.service_point.available_for_contract'))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |sp|
+        csv << [ sp.id,
+                 sp.code,
+                 sp.address_1,
+                 sp.try(:service_point_location).try(:name),
+                 sp.try(:reading_route).try(:routing_code),
+                 sp.try(:cadastral_reference),
+                 sp.try(:meter).try(:meter_code),
+                 sp.try(:available_for_contract)]
+      end
+    end
+  end
+
   def self.dropdown(office=nil)
     if office.present?
       self.for_dropdown_by_office(office)

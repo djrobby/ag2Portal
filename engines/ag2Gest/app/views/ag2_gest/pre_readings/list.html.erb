@@ -52,11 +52,13 @@
       <%= render :partial => '/layouts/pagination', :locals => { :ivar => @pre_readings } %>
     </div>
     <div>
-      <%= link_to "Imprimir", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <%= link_to "Enviar tpl", to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
       <!-- <%#= link_to t('activerecord.attributes.pre_reading.impute_readings'), new_impute_pre_readings_path, class: "btn btn-primary" %> -->
       <%= link_to t('activerecord.attributes.pre_reading.impute_readings'), impute_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-primary" %>
-      <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success pull-right"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+      <span class= "pull-right">
+        <%= link_to "<i class='icon-print icon-white'></i> #{t('ag2_gest.home.index.control')}".html_safe, to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: "btn btn-warning", target: "_blank" %>
+        <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+      </span>
     </div>
   </div>
   <br>

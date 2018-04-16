@@ -7,7 +7,8 @@ module Ag2Gest
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [ :r_reading_date,
                                                 :r_find_meter,
-                                                :r_find_subscriber
+                                                :r_find_subscriber,
+                                                :reading_view_report
                                               ]
 
     def r_reading_date
@@ -540,15 +541,15 @@ module Ag2Gest
     end
 
      # reading report
-    def reading_report
+    def reading_view_report
       manage_filter_state
       subscriber = params[:Subscriber]
       meter = params[:Meter]
-      reading_date = params[:ReadingDate]
       period = params[:Period]
       route = params[:Route]
       from = params[:From]
       to = params[:To]
+      incidences = params[:incidences]
       # OCO
       init_oco if !session[:organization]
 
@@ -578,7 +579,10 @@ module Ag2Gest
         if !route.blank?
           with :reading_route_id, route
         end
-        order_by :reading_date, :desc
+        if !incidences.blank?
+          with :reading_incidence_type, incidences
+        end
+        order_by :by_period_date, :desc
         paginate :page => params[:page] || 1, :per_page => Reading.count
       end
       @reading_report = @search.results
@@ -592,6 +596,10 @@ module Ag2Gest
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Reading.to_csv(@reading_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
                        disposition: 'inline' }
         end
       end

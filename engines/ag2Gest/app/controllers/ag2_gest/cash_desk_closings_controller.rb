@@ -30,49 +30,46 @@ module Ag2Gest
 
      # close_cash report
     def close_cash_report
-        manage_filter_state
+      manage_filter_state
 
-        project = params[:Project]
-        office = params[:Office]
-        company = params[:Company]
-        from = params[:From]
-        to = params[:To]
-        # OCO
-        init_oco if !session[:organization]
-        # Initialize select_tags
-        @projects = current_projects if @projects.nil?
-        @project_ids = current_projects_ids
-        @offices = current_offices if @offices.nil?
-        @companies = companies_dropdown if @companies.nil?
+      project = params[:Project]
+      office = params[:Office]
+      company = params[:Company]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      @projects = current_projects if @projects.nil?
+      @project_ids = current_projects_ids
+      @offices = current_offices if @offices.nil?
+      @companies = companies_dropdown if @companies.nil?
 
-        @search = CashDeskClosing.search do
-          with :project_id, current_projects_ids unless current_projects_ids.blank?
-          if !params[:search].blank?
-            fulltext params[:search]
+      @search = CashDeskClosing.search do
+        with :project_id, @project_ids unless @project_ids.blank?
+        if !project.blank?
+          with :project_id, project
+        end
+        if !office.blank?
+          with :office_id, office
+        end
+        if !company.blank?
+          with :company_id, company
+        end
+        if !from.blank?
+          any_of do
+            with(:created_at).greater_than(from)
+            with :created_at, from
           end
-          if !project.blank?
-            with :project_id, project
+        end
+        if !to.blank?
+          any_of do
+            with(:created_at).less_than(to)
+            with :created_at, to
           end
-          if !office.blank?
-            with :office_id, office
-          end
-          if !company.blank?
-            with :company_id, company
-          end
-          if !from.blank?
-            any_of do
-              with(:created_at).greater_than(from)
-              with :created_at, from
-            end
-          end
-          if !to.blank?
-            any_of do
-              with(:created_at).less_than(to)
-              with :created_at, to
-            end
-          end
-          order_by sort_column, "desc"
-          paginate :page => params[:page] || 1, :per_page => per_page || 10
+        end
+        order_by sort_column, "desc"
+          paginate :page => params[:page] || 1, :per_page => CashDeskClosing.count
         end
 
         @close_cash_report = @search.results.sort_by{ |t| [t.company_id, t.project_id] }
@@ -86,6 +83,10 @@ module Ag2Gest
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data CashDeskClosing.to_csv(@close_cash_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
                        disposition: 'inline' }
         end
       end

@@ -207,6 +207,7 @@ module Ag2Gest
 
     def to_pdf
      #Ordenar array por código de ruta
+     @reading_report = @pre_readings
      title = t("activerecord.models.pre_reading.few")
      respond_to do |format|
        format.pdf {

@@ -1,4 +1,6 @@
 class Subscriber < ActiveRecord::Base
+  include ModelsModule
+
   # CONSTANTS
   # landlord_tenant:
   LANDLORD = 0
@@ -390,6 +392,66 @@ class Subscriber < ActiveRecord::Base
     Subscriber.current_debt_calc(self.id)
   end
 
+  def totals_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total) as total_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["total_total"]
+  end
+
+  def collected_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(collected) as collected_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["collected_total"]
+  end
+
+  def debt_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["debt"]
+  end
+
   # Historical estimation (based on all invoices)
   def total_consumption_estimated
     invoices.reject(&:marked_for_destruction?).sum(:consumption_estimated)
@@ -705,6 +767,15 @@ class Subscriber < ActiveRecord::Base
     self.id
   end
 
+  # For CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -748,6 +819,57 @@ class Subscriber < ActiveRecord::Base
         WHERE client_payments.subscriber_id = #{i} AND NOT ISNULL(client_payments.confirmation_date)
         ) a"
     ).first["debt"]
+  end
+
+  def self.to_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.subscriber_code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.fiscal_id_c')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.full_name')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.address_1')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.office')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.use_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.ending_at')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.starting_at')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.meter_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.reading_route_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.data_contract')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.tariff_type_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.debt'))]
+
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |subscriber|
+        if !subscriber.tariffs.blank?
+          _tariff_type = []
+          subscriber.subscriber_tariffs.each do |tt|
+            if !_tariff_type.include? tt.tariff.tariff_type.name
+              _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+            end
+          end
+          tariff_type = _tariff_type.join(",")
+        else
+          tariff_type = ""
+        end
+        starting_at = subscriber.formatted_date(subscriber.starting_at) unless subscriber.starting_at.blank?
+        ending_at = subscriber.formatted_date(subscriber.ending_at) unless subscriber.ending_at.blank?
+        csv << [ subscriber.id,
+                 subscriber.subscriber_code,
+                 subscriber.fiscal_id,
+                 subscriber.full_name,
+                 subscriber.address_1,
+                 subscriber.try(:office).try(:name),
+                 subscriber.try(:use).try(:name),
+                 starting_at,
+                 ending_at,
+                 subscriber.try(:meter).try(:meter_code),
+                 subscriber.try(:reading_route).try(:to_label),
+                 subscriber.try(:water_supply_contract).try(:contracting_request).try(:full_no),
+                 tariff_type,
+                 subscriber.current_debt]
+      end
+    end
   end
 
   #

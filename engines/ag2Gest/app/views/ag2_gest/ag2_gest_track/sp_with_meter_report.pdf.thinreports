@@ -1,0 +1,94 @@
+if @sp_with_meter_report.blank?
+  return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/sp_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+  # Define the variables used in list
+  c.use_stores page_rows: 0
+
+  # On list page footer insertion
+  c.events.on :page_footer_insert do |e|
+    # Display page sutotals
+    e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.subscriber_report.sum_rows_title"))
+    e.section.item(:sum_rows).value(e.store.page_rows)
+    # Initialize subtotals to 0
+    #e.store.page_rows = 0
+  end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_gest.ag2_gest_track.service_point_report.report_meter_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: formatted_date(@sp_with_meter_report.first.created_at)
+report.page.values to: formatted_date(@sp_with_meter_report.last.created_at)
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+  header.item(:code_c).value I18n.t("activerecord.attributes.service_point.code")
+  header.item(:location_c).value I18n.t("activerecord.attributes.service_point.service_point_location_id")
+  header.item(:route_c).value I18n.t("activerecord.attributes.service_point.reading_route_c")
+  header.item(:cadastral_c).value I18n.t("activerecord.attributes.service_point.cadastral_reference")
+  header.item(:meter_c).value I18n.t("activerecord.attributes.service_point.meter")
+  header.item(:address_c).value I18n.t("activerecord.attributes.service_point.direction")
+  header.item(:available_c).value I18n.t("activerecord.attributes.service_point.available_for_contract")
+  header.item(:subs_c).value I18n.t("activerecord.attributes.service_point.assigned_to_subscriber_c")
+end
+
+# Page Title list
+
+# List detail
+@sp_with_meter_report.each do |service_point|
+  img = service_point.available_for_contract ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
+  img2 = service_point.assigned_to_subscriber? ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
+
+
+  report.page.list(:default).add_row do |row|
+    row.item(:code).value service_point.try(:full_code)
+    row.item(:location).value service_point.try(:service_point_location).try(:name)
+    row.item(:route).value service_point.try(:reading_route).try(:routing_code)
+    row.item(:cadastral).value service_point.try(:cadastral_reference)
+    row.item(:meter).value service_point.try(:meter).try(:meter_code)
+    row.item(:address).value service_point.try(:address_1)
+    row.item(:img).value img
+    row.item(:img2).value img2
+  end
+
+  # Store page subtotals
+  report.page.list(:default) do |list|
+    list.store.page_rows += 1
+  end
+end

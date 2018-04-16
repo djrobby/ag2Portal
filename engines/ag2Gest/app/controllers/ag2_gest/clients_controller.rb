@@ -17,7 +17,46 @@ module Ag2Gest
                                                :cl_check_iban,
                                                :cl_load_dropdowns,
                                                :cl_load_debt,
-                                               :check_client_depent_subscribers]
+                                               :check_client_depent_subscribers,
+                                               :client_report]
+    def client_report
+      manage_filter_state
+      letter = params[:letter]
+      if !session[:organization]
+        init_oco
+      end
+
+      @search = Client.search do
+        fulltext params[:search]
+        if session[:organization] != '0'
+          with :organization_id, session[:organization]
+        end
+        if !letter.blank? && letter != "%"
+          any_of do
+            #with(:last_name).starting_with(letter)
+            with(:full_name).starting_with(letter)
+            with(:company).starting_with(letter)
+          end
+        end
+        order_by :sort_no, :asc
+        paginate :page => params[:page] || 1, :per_page => Client.count
+      end
+
+      @clients = @search.results
+      title = t("activerecord.models.client.few")
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                    filename: "#{title}.pdf",
+                    type: 'application/pdf',
+                    disposition: 'inline' }
+        format.csv { send_data Client.to_client_csv(@clients),
+                     filename: "#{title}.csv",
+                     type: 'application/csv',
+                     disposition: 'inline' }
+      end
+    end
+
     # Update office select at view from bank select
     def cl_update_office_select_from_bank
       bank = params[:bank]

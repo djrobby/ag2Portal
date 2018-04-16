@@ -42,11 +42,35 @@ module Ag2Gest
                                                 :billable_button,
                                                 :disable_bank_account,
                                                 :disable_tariff_button,
-                                                :su_check_invoice_date ]
+                                                :su_check_invoice_date,
+                                                :sub_invoices_report]
     # Helper methods for
     helper_method :sort_column
     # => index filters
     helper_method :su_remove_filters, :su_restore_filters
+
+    def sub_invoices_report
+      @subscriber = Subscriber.find(params[:id])
+      filter = params[:ifilter_show]
+      invoice_status = (0..99).to_a.join(',')
+      if filter == "pending" or filter == "unpaid"
+        invoice_status = (0..98).to_a.join(',')
+      elsif filter == "charged"
+        invoice_status = 99
+      end
+      # subscriber_bills_report = Bill.by_subscriber_id(@subscriber.id, invoice_status).map(&:bill_id_).uniq
+      @invoice_report = Invoice.joins(:bill)
+                        .where("bills.subscriber_id = #{@subscriber.id} AND bills.invoice_status_id IN (#{invoice_status}) AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
+                        .order('invoices.billing_period_id DESC,bills.bill_date DESC,bills.id DESC')
+
+
+      title = t("activerecord.models.offer_request.few") + ".pdf"
+      respond_to do |format|
+        format.pdf {
+          send_data render_to_string, filename: "#{title}_#{@subscriber.full_code}.pdf", type: 'application/pdf', disposition: 'inline'
+        }
+      end
+    end
 
     def su_check_invoice_date
       code = ''
@@ -1357,10 +1381,12 @@ module Ag2Gest
     # subscriber report
     def subscriber_report
       manage_filter_state
+      filter = params[:ifilter]
       subscriber_code = params[:SubscriberCode]
-      service_point = params[:ServicePoint]
+      street_name = params[:StreetName]
       meter = params[:Meter]
-      billing_frequency = params[:BillingFrequency]
+      caliber = params[:Caliber]
+      use = params[:Use]
       tariff_type = params[:TariffType]
       letter = params[:letter]
       # OCO
@@ -1368,6 +1394,7 @@ module Ag2Gest
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+      meter = !meter.blank? ? inverse_meter_search(meter) : meter
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1384,19 +1411,44 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
-        if !service_point.blank?
-          with :service_point_id, service_point
+        if !street_name.blank?
+          with :subscriber_id, street_name
         end
         if !meter.blank?
-          with :meter_id, meter
+          if meter.class == Array
+            with :meter_code, meter
+          else
+            with(:meter_code).starting_with(meter)
+          end
         end
-        if !billing_frequency.blank?
-          with :billing_frequency_id, billing_frequency
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !use.blank?
+          with :use_id, use
         end
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
-        order_by :sort_no, :asc
+        if !filter.blank?
+          case filter
+            when 'all'
+              any_of do
+                with :subscribed, true
+                with :unsubscribed, true
+              end
+            when 'subscribed'
+              with :subscribed, true
+            when 'unsubscribed'
+              with :unsubscribed, true
+            when 'active'
+              with :activated, true
+            when 'inactive'
+              with :deactivated, true
+          end
+        end
+        data_accessor_for(Subscriber).include = [:street_directory, :meter]
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 
@@ -1412,6 +1464,10 @@ module Ag2Gest
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { send_data Subscriber.to_csv(@subscriber_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
         end
       end
     end
@@ -1420,10 +1476,12 @@ module Ag2Gest
      # subscriber tec report
     def subscriber_tec_report
       manage_filter_state
+      filter = params[:ifilter]
       subscriber_code = params[:SubscriberCode]
-      service_point = params[:ServicePoint]
+      street_name = params[:StreetName]
       meter = params[:Meter]
-      billing_frequency = params[:BillingFrequency]
+      caliber = params[:Caliber]
+      use = params[:Use]
       tariff_type = params[:TariffType]
       letter = params[:letter]
       # OCO
@@ -1431,6 +1489,7 @@ module Ag2Gest
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+      meter = !meter.blank? ? inverse_meter_search(meter) : meter
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1447,19 +1506,44 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
-        if !service_point.blank?
-          with :service_point_id, service_point
+        if !street_name.blank?
+          with :subscriber_id, street_name
         end
         if !meter.blank?
-          with :meter_id, meter
+          if meter.class == Array
+            with :meter_code, meter
+          else
+            with(:meter_code).starting_with(meter)
+          end
         end
-        if !billing_frequency.blank?
-          with :billing_frequency_id, billing_frequency
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !use.blank?
+          with :use_id, use
         end
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
-        order_by :sort_no, :asc
+        if !filter.blank?
+          case filter
+            when 'all'
+              any_of do
+                with :subscribed, true
+                with :unsubscribed, true
+              end
+            when 'subscribed'
+              with :subscribed, true
+            when 'unsubscribed'
+              with :unsubscribed, true
+            when 'active'
+              with :activated, true
+            when 'inactive'
+              with :deactivated, true
+          end
+        end
+        data_accessor_for(Subscriber).include = [:street_directory, :meter]
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 
@@ -1482,10 +1566,12 @@ module Ag2Gest
      # subscriber eco report
     def subscriber_eco_report
       manage_filter_state
+      filter = params[:ifilter]
       subscriber_code = params[:SubscriberCode]
-      service_point = params[:ServicePoint]
+      street_name = params[:StreetName]
       meter = params[:Meter]
-      billing_frequency = params[:BillingFrequency]
+      caliber = params[:Caliber]
+      use = params[:Use]
       tariff_type = params[:TariffType]
       letter = params[:letter]
       # OCO
@@ -1493,6 +1579,7 @@ module Ag2Gest
 
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
+      meter = !meter.blank? ? inverse_meter_search(meter) : meter
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1509,19 +1596,44 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
-        if !service_point.blank?
-          with :service_point_id, service_point
+        if !street_name.blank?
+          with :subscriber_id, street_name
         end
         if !meter.blank?
-          with :meter_id, meter
+          if meter.class == Array
+            with :meter_code, meter
+          else
+            with(:meter_code).starting_with(meter)
+          end
         end
-        if !billing_frequency.blank?
-          with :billing_frequency_id, billing_frequency
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !use.blank?
+          with :use_id, use
         end
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
-        order_by :sort_no, :asc
+        if !filter.blank?
+          case filter
+            when 'all'
+              any_of do
+                with :subscribed, true
+                with :unsubscribed, true
+              end
+            when 'subscribed'
+              with :subscribed, true
+            when 'unsubscribed'
+              with :unsubscribed, true
+            when 'active'
+              with :activated, true
+            when 'inactive'
+              with :deactivated, true
+          end
+        end
+        data_accessor_for(Subscriber).include = [:street_directory, :meter]
+        order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 

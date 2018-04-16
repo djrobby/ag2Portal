@@ -4,7 +4,75 @@ module Ag2Gest
   class WaterSupplyContractsController < ApplicationController
     before_filter :authenticate_user!
     load_and_authorize_resource
+    skip_load_and_authorize_resource :only => [:water_supply_contract_view_report]
 
+
+    def water_supply_contract_view_report
+      manage_filter_state
+      no = params[:No]
+      subscriber = params[:Subscriber]
+      meter = params[:Meter]
+      order = params[:Order]
+      caliber = params[:Caliber]
+      from = params[:From]
+      to = params[:To]
+      # OCO
+      init_oco if !session[:organization]
+      # Initialize select_tags
+      # @subscribers = subscribers_dropdown if @subscribers.nil?
+      # @meters = meters_dropdown if @meters.nil?
+      @tariff_schemes = tariff_schemes_dropdown if @tariff_schemes.nil?
+      @calibers = calibers_dropdown if @calibers.nil?
+
+      # ContractingRequest for current projects
+      current_contracting_request = ContractingRequest.where(project_id: current_projects_ids).map(&:id)
+
+      @search = WaterSupplyContract.search do
+        if !current_contracting_request.blank?
+          with :contracting_request_id, current_contracting_request
+        end
+        fulltext params[:search]
+        if !no.blank?
+          with(:contract_no).starting_with(no)
+        end
+        if !subscriber.blank?
+          fulltext subscriber
+        end
+        if !meter.blank?
+          fulltext meter
+        end
+        if !order.blank?
+          with :tariff_scheme_id, order
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !from.blank?
+          any_of do
+            with(:invoice_date).greater_than(from)
+            with :invoice_date, from
+          end
+        end
+        if !to.blank?
+          any_of do
+            with(:invoice_date).less_than(to)
+            with :invoice_date, to
+          end
+        end
+        order_by :id, :desc
+        paginate :page => params[:page] || 1, :per_page => WaterSupplyContract.count
+      end
+      @wsc_report = @search.results
+
+      title = t("activerecord.models.water_supply_contract.few")
+      respond_to do |format|
+        # Render PDF
+        format.pdf { send_data render_to_string,
+                    filename: "#{title}.pdf",
+                    type: 'application/pdf',
+                    disposition: 'inline' }
+      end
+    end
 
     # GET /water_supply_contracts
     # GET /water_supply_contracts.json

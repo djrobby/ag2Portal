@@ -65,6 +65,11 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
+    // when #report_btn is clicked
+     $("#print_report_btn").click(function() {
+       window.open("water_supply_contract_view_report.pdf", "_blank");
+       return false;
+     });
   });
 </script>
 
@@ -108,6 +113,9 @@
         <!-- Remove filter -->
         <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
         <% end %>
+        <!-- Control&Tracking -->
+        <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br /> 
         <%= link_to t(".back_to_management"), ag2_gest.contracting_management_path %>
       </div><!-- /.sidebar-nav -->
     </div><!-- /.span3 -->

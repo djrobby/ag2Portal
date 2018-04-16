@@ -10,20 +10,42 @@ es:
         label_work_order: "Orden de trabajo"
         label_charge_account: "Cuenta analítica"
         label_budget_period: "Periodo presupuestario"
+        label_reading_route: "Ruta de lectura"
+      client_report:
+        report_title: "Padrón Económico de Clientes"
+        report_debt_title: "Clientes: Deuda a fecha"
+        sum_rows_title: "Total Filas:"
+        sum_rows_debt: "Total Deuda:"
       subscriber_report:
         report_title: "Padrón de Abonados"
+        report_eco_title: "Padrón Económico de Abonados"
+        report_tec_title: "Padrón Técnico de Abonados"
         sum_rows_title: "Total Filas:"
         sum_rows_debt: "Total Deuda:"
       reading_report:
+        report_title: "Readings"
         sum_rows_title: "Total Filas:"
+        sum_rows_debt: "Total Deuda:"
       bill_report:
+        report_title: "Recibos"
         sum_rows_title: "Total Filas:"
-      client_payment_report:
+        sum_rows_debt: "Total Deuda:"
+      contracting_request_report:
+        report_title: "Contrataciones"
         sum_rows_title: "Total Filas:"
-      contracting_reques_report:
+        sum_rows_debt: "Total Deuda:"
+      service_point_report:
+        report_title: "Punto de Suministro: Contratados y Facturables"
+        report_meter_title: "Punto de Suministro: Contador Instalado"
         sum_rows_title: "Total Filas:"
+        sum_rows_debt: "Total Deuda:"
       meter_report:
+        report_title: "Contadores por Ruta"
+        report_expiry_title: "Contadores Instalados Caducados"
+        report_shared_title: "Seguimiento Contadores Compartidos"
+        report_master_title: "Seguimiento Contadores Maestros"
         sum_rows_title: "Total Filas:"
+        sum_rows_debt: "Total Deuda:"
       every_report:
         pt: "Página"
         pd: "de"

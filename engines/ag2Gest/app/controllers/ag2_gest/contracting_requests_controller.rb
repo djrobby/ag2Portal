@@ -92,7 +92,8 @@ module Ag2Gest
     def refresh_status
       @contracting_request = ContractingRequest.find(params[:id])
       response_hash = { contracting_request: @contracting_request }
-      response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      # response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
       response_hash[:work_order_status] = @contracting_request.work_order.work_order_status if @contracting_request.work_order
       response_hash[:work_order_installation] = @contracting_request.water_supply_contract.work_order if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.work_order
@@ -120,7 +121,7 @@ module Ag2Gest
     def refresh_connection_status
       @contracting_request = ContractingRequest.find(params[:id])
       response_hash = { contracting_request: @contracting_request }
-      response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       response_hash[:total_sale_offer] = number_with_precision(@contracting_request.water_connection_contract.sale_offer.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.sale_offer
       response_hash[:total_work_order] = number_with_precision(@contracting_request.water_connection_contract.work_order.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.work_order
       response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
@@ -1003,7 +1004,7 @@ module Ag2Gest
         if @contracting_request.save
           @contracting_request.water_connection_contract.update_attributes(contract_date: Date.today) if @contracting_request.water_connection_contract
           response_hash = { contracting_request: @contracting_request }
-          response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+          response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
           response_hash[:bill] = @contracting_request.water_connection_contract.bill
           response_hash[:bill_no] = @contracting_request.water_connection_contract.bill.invoice_based_old_no_real_no
           response_hash[:invoice] = @contracting_request.water_connection_contract.bill.invoices.first
@@ -1257,8 +1258,8 @@ module Ag2Gest
       @street_directory = @subscriber.street_directory
       service_point = @subscriber.service_point rescue nil
 
-      if !@subscriber.blank? and !@subscriber.invoice_current_debts.unpaid.blank?
-        @subscriber_debt = number_with_precision(@subscriber.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      if !@subscriber.blank? and !@subscriber.current_debt.blank?
+        @subscriber_debt = number_with_precision(@subscriber.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
       end
 
       if !service_point.nil?
@@ -1463,9 +1464,9 @@ module Ag2Gest
             project_group = client.current_debt_by_project
             project_group.each do |pd|
               _pd_project = Project.find(pd['project_id']).name rescue 'N/A'
-              project_d << _pd_project + " --> " + number_with_precision(pd['debt'], precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+              project_d << _pd_project + " --> " + number_with_precision(pd['debt'], precision: 4, delimiter: I18n.locale == :es ? "." : ",") + "\n"
             end
-            project_debt = project_d
+            project_debt = project_d.join("")
             # project_group = client.invoice_current_debts.unpaid.select('bills.project_id AS prj,sum(debt) AS debt').joins(invoice: :bill).group('bills.project_id')
             # project_group.each do |pd|
             #   _pd_project = Project.find(pd.prj).name
@@ -1810,6 +1811,7 @@ module Ag2Gest
       @water_connection_contract = @contracting_request.water_connection_contract || WaterConnectionContract.new
       @subscriber = @contracting_request.subscriber || Subscriber.new
       @old_subscriber = @contracting_request.old_subscriber
+      @current_debt = @contracting_request.client.current_debt
 
       @work_order_retired = WorkOrder.where(client_id: @water_supply_contract.client_id, master_order_id: @contracting_request.work_order_id, work_order_type_id: 29, work_order_labor_id: 151, work_order_area_id: 3).first
       @tariff_types_availables = TariffType.availables_to_project(@contracting_request.project_id).order("billable_items.billable_concept_id")
@@ -1865,8 +1867,6 @@ module Ag2Gest
 
       # @meters_for_contract = available_meters_for_contract(@contracting_request)
       # @meters_for_subscriber = available_meters_for_subscriber(@contracting_request)
-
-      @current_debt = @contracting_request.client.current_debt
 
       respond_to do |format|
         format.html # show.html.erb

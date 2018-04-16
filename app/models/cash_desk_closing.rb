@@ -1,4 +1,6 @@
 class CashDeskClosing < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :organization
   belongs_to :company
   belongs_to :office
@@ -53,9 +55,52 @@ class CashDeskClosing < ActiveRecord::Base
     cash_desk_closing_items.where("cash_movement_id IS NOT NULL").sum(:amount)
   end
 
+  # For CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.company')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.project')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.opening_balance')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.closing_balance')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.invoices_collected_c')),
+
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.amount_collected')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.invoices_paid_c')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.cash_desk_closing.amount_paid')),
+                  array[0].sanitize(I18n.t :created_at),
+                  array[0].sanitize(I18n.t :created_by)]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |cdc|
+        created_at = cdc == @time_record ? cdc.formatted_timestamp(cdc.created_at) : cdc.formatted_timestamp(cdc.created_at.utc.getlocal)
+        created_by = User.find(cdc.created_by).email
+        csv << [ cdc.id,
+                 cdc.company.name,
+                 cdc.project.to_label,
+                 cdc.raw_number(cdc.opening_balance,4),
+                 cdc.raw_number(cdc.closing_balance,4),
+                 cdc.raw_number(cdc.invoices_collected,4),
+                 cdc.raw_number(cdc.amount_collected,4),
+                 cdc.raw_number(cdc.invoices_paid,4),
+                 cdc.raw_number(cdc.amount_paid,4),
+                 created_at,
+                 created_by]
+      end
+    end
+  end
+
   def self.last_by_project(x)
     by_project(x).last
   end

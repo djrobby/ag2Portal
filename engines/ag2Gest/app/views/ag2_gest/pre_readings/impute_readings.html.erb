@@ -59,7 +59,7 @@
   });
 
   // modal incidence
-  $('a.btn.btn-warning').click(function(e){
+  $('a.btn.btn-info').click(function(e){
     e.preventDefault();
     modal = $('#modal-incidence');
     form = modal.find("form");
@@ -488,7 +488,7 @@
                   <i class="wrench-column icon-wrench" <%= 'style=display:none' if pre_reading.pre_reading_incidences.empty? %>></i>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
-                  <a id="modal-link-<%= pre_reading.id %>" href="#" class="btn btn-warning btn-mini"><i class="icon-wrench icon-white"></i></a>
+                  <a id="modal-link-<%= pre_reading.id %>" href="#" class="btn btn-info btn-mini"><i class="icon-wrench icon-white"></i></a>
                 </td>
                 <td <%= "class=row-green" unless pre_reading.incomplete? %>>
                   <%= link_to "<i class='icon-trash icon-white'></i>".html_safe, pre_reading_path(pre_reading), :data => { :confirm => "Estas seguro?" }, :method => :delete, :remote => true, class: "btn btn-danger btn-mini delete-prereading", id: "delete-#{pre_reading.id}" %>
@@ -503,8 +503,10 @@
   </div>
   <div class="row">
     <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
-    <%= link_to t('activerecord.attributes.pre_reading.print'), to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary", target: "_blank" %>
-    <%= link_to t('activerecord.attributes.reading.exportcsv'), show_list_pre_readings_path(:format => :csv, prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-success pull-right hide" : "btn btn-success pull-right" %>
+    <span class= "pull-right">
+      <%= link_to "<i class='icon-print icon-white'></i> #{t('ag2_gest.home.index.control')}".html_safe, to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-warning hide" : "btn btn-warning", target: "_blank" %>
+      <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+    </span>
   </div>
   <br>
       <%= link_to t("ag2_gest.pre_readings.back_to_main_page"), ag2_gest.pre_readings_path %>

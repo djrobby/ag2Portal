@@ -1275,8 +1275,8 @@ module Ag2Tech
       @work_order_report = @search.results
 
       title = t("activerecord.models.work_order.few")
-      @from = formatted_date(@work_order_report.first.started_at)
-      @to = formatted_date(@work_order_report.last.completed_at)
+      @from = formatted_date(@work_order_report.first.created_at)
+      @to = formatted_date(@work_order_report.last.created_at)
 
       respond_to do |format|
       # Render PDF

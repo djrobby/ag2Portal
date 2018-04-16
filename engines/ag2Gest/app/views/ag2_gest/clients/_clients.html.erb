@@ -5,6 +5,21 @@
       return false;
     });
   }); 
+
+  jQuery(function($) {
+   // when #report_btn is clicked
+    $("#print_report_btn").click(function() {
+      // make a POST call and get report
+      window.open("client_report.pdf", "_blank");
+      return false;
+    });
+    $("#print_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("client_report.csv", "_self");
+      return false;
+    });
+  });
+
 </script>
 
 <%= render :partial => '/layouts/lettershead_remote', :locals => { :controller => "clients", :action => "index" } %>
@@ -51,5 +66,16 @@
   </tbody>
 </table>
 <%= render :partial => '/layouts/pagination', :locals => { :ivar => @clients } %>
-<%= render :partial => '/layouts/crud/new', :locals => { :model => Client, :path => new_client_path, :txt => t("ag2_gest.clients.index.btn_new") } %>
+
+
+<div class="row">
+  <!-- Control&Tracking -->
+  <span class= "pull-right">
+    <a href="#" id="print_report_btn" class="btn btn-warning "><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+    <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
+  </span>
+  <!-- New Button -->
+  <%= render :partial => '/layouts/crud/new', :locals => { :model => Client, :path => new_client_path, :txt => t("ag2_gest.clients.index.btn_new") } %>
+</div>
+
 <%= link_to t("ag2_gest.clients.index.back_to_root"), ag2_gest.root_path %>

@@ -42,6 +42,7 @@ class Meter < ActiveRecord::Base
   # Scopes
   scope :by_code, -> { order(:meter_code) }
   scope :from_office, ->(office_id) { where(office_id: office_id).by_code }
+  scope :expired, -> { where("meters.expiry_date <= '#{Date.today.to_date}'") }
   # BAD, it's too slow!!
   # scope :availables, ->(old_subscriber_meter=nil) { select{|m| m.subscribers.empty? or m.id == old_subscriber_meter} }
   # BETTER, only one SELECT from DB is faster
@@ -139,6 +140,9 @@ class Meter < ActiveRecord::Base
   scope :shared, -> {
     active_subscribers.group('subscribers.id').having('count(subscribers.id) > 1')
     .select('meters.id meter_id, count(subscribers.id) count_id')
+  }
+  scope :shared_all, -> {
+    active_subscribers.having('count(subscribers.id) > 1')
   }
 
   # Callbacks
@@ -331,9 +335,46 @@ class Meter < ActiveRecord::Base
     users > 0 ? 'C' : 'I'
   end
 
+  # For CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.meter.meter_code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.meter.meter_model_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.reading_sequence')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.meter.caliber_id')),
+                  array[0].sanitize(I18n.t("activerecord.attributes.meter.route")),
+                  array[0].sanitize(I18n.t('activerecord.attributes.meter.manufacturing_year_min')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.meter.expiry_date_min')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.subscriber_code2'))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |meter|
+        expiry = meter.formatted_date(meter.expiry_date) unless meter.expiry_date.blank?
+        route = !meter.details.blank? ? meter.details : "N/A"
+        csv << [ meter.id,
+                 meter.meter_code,
+                 meter.try(:meter_model).try(:full_name),
+                 meter.try(:subscribers).try(:first).try(:reading_sequence),
+                 meter.try(:caliber).try(:caliber),
+                 route,
+                 meter.manufacturing_year,
+                 expiry]
+      end
+    end
+  end
+
   def self.filter_organization(session, current_user)
     if session != '0'
       Meter.where(organization_id: session.to_i)

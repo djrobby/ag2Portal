@@ -14,14 +14,34 @@ Ag2Gest::Engine.routes.draw do
 
     # Routes to Control&Tracking
     match 'ag2_gest_track' => 'ag2_gest_track#index', :as => :ag2_gest_track
+    match 'invoice_report', :controller => 'ag2_gest_track', :action => 'invoice_report'
+    match 'client_eco_report', :controller => 'ag2_gest_track', :action => 'client_eco_report'
+    match 'client_eco_items_report', :controller => 'ag2_gest_track', :action => 'client_eco_items_report'
+    match 'subscriber_report_track', :controller => 'ag2_gest_track', :action => 'subscriber_report_track'
+    match 'subscriber_eco_report', :controller => 'ag2_gest_track', :action => 'subscriber_eco_report'
+    match 'subscriber_eco_items_report', :controller => 'ag2_gest_track', :action => 'subscriber_eco_items_report'
+    match 'subscriber_tec_report', :controller => 'ag2_gest_track', :action => 'subscriber_tec_report'
+    match 'meter_report', :controller => 'ag2_gest_track', :action => 'meter_report'
+    match 'meter_expired_report', :controller => 'ag2_gest_track', :action => 'meter_expired_report'
+    match 'meter_shared_report', :controller => 'ag2_gest_track', :action => 'meter_shared_report'
+    match 'meter_master_report', :controller => 'ag2_gest_track', :action => 'meter_master_report'
+    match 'reading_report', :controller => 'ag2_gest_track', :action => 'reading_report'
+    match 'contracting_request_report_track', :controller => 'ag2_gest_track', :action => 'contracting_request_report_track'
+    match 'water_supply_contract_report', :controller => 'ag2_gest_track', :action => 'water_supply_contract_report'
+    match 'water_connection_contract_report', :controller => 'ag2_gest_track', :action => 'water_connection_contract_report'
+    match 'service_point_report', :controller => 'ag2_gest_track', :action => 'service_point_report'
+    match 'sp_with_meter_report', :controller => 'ag2_gest_track', :action => 'sp_with_meter_report'
+
     #
     # Control&Tracking
+    # report client
+    match 'client_report', :controller => 'clients', :action => 'client_report'
     # report subscriber
     match 'subscriber_report', :controller => 'subscribers', :action => 'subscriber_report'
     match 'subscriber_tec_report', :controller => 'subscribers', :action => 'subscriber_tec_report'
     match 'subscriber_eco_report', :controller => 'subscribers', :action => 'subscriber_eco_report'
     # report reading
-    match 'reading_report', :controller => 'readings', :action => 'reading_report'
+    match 'reading_view_report', :controller => 'readings', :action => 'reading_view_report'
     # report bill
     match 'bill_report', :controller => 'client_payments', :action => 'bill_report'
     match 'bill_pending_report', :controller => 'client_payments', :action => 'bill_pending_report'
@@ -38,6 +58,10 @@ Ag2Gest::Engine.routes.draw do
     match 'meter_view_report', :controller => 'meters', :action => 'meter_view_report'
     #report cash_desk_closing
     match 'close_cash_report', :controller => 'cash_desk_closings', :action => 'close_cash_report'
+    #report water_supply_contract
+    match 'water_supply_contract_view_report', :controller => 'water_supply_contracts', :action => 'water_supply_contract_view_report'
+    #report water_connection_contract
+    match 'water_connection_contract_view_report', :controller => 'water_connection_contracts', :action => 'water_connection_contract_view_report'
 
     # Routes for jQuery POSTs
     #
@@ -498,6 +522,7 @@ Ag2Gest::Engine.routes.draw do
     resources :subscribers do
       get 'sub_load_postal', on: :collection
       get 'sub_sepa_pdf', on: :member
+      get 'sub_invoices_report', on: :member
       get 'subscriber_pdf', on: :member
       post 'change_meter', on: :member
       post 'simple_bill', on: :member

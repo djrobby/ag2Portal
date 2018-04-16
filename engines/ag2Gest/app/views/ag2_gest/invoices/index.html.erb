@@ -2,10 +2,13 @@
   var _thisForm = '';
   var changing = false;
 
-  function setupAllSelect2(p, b, r) {
+  function setupAllSelect2(p, b, r, c, s, a) {
     projectsSelect2(p);
     billersSelect2(b);    
     periodsSelect2(r);    
+    clientsSelect2(c);
+    subscribersSelect2(s);
+    addressesSelect2(a);
   }
 
   function clientsSelect2(intialValue) {
@@ -26,7 +29,34 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
+  function subscribersSelect2(intialValue) {
+    $('#Subscriber').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_subscribers",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
             results: data
           }
         },
@@ -117,6 +147,33 @@
     });
   }
 
+  function addressesSelect2(intialValue) {
+    $('#StreetName').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_supply_addresses",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -144,7 +201,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @biller %>", "<%= @period %>");
+    setupAllSelect2("<%= @project %>", "<%= @biller %>", "<%= @period %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
 
     // Initialized form variable
     _thisForm = $("#Client").closest('form')[0];
@@ -168,9 +225,9 @@
     // $("#Project").select2("val", "<%#= params[:Project] %>");
     // $("#Client").select2("val", "<%#= params[:Client] %>");
     // $("#Subscriber").select2("val", "<%#= params[:Subscriber] %>");
-    $("#Client").val("<%= params[:Client] %>");
-    $("#Subscriber").val("<%= params[:Subscriber] %>");
-    $("#StreetName").val("<%= params[:StreetName] %>");
+    // $("#Client").val("<%= params[:Client] %>");
+    // $("#Subscriber").val("<%= params[:Subscriber] %>");
+    // $("#StreetName").val("<%= params[:StreetName] %>");
     $("#Status").val("<%= params[:Status] %>");
     $("#Type").val("<%= params[:Type] %>");
     $("#Operation").val("<%= params[:Operation] %>");
@@ -200,9 +257,9 @@
     $("#removeFilter").click(function() {
       $("#No").val("");
       $("#Project").select2("val", "");
-      $("#Client").val("");
-      $("#Subscriber").val("");
-      $("#StreetName").val("");
+      $("#Client").select2("val", "");
+      $("#Subscriber").select2("val", "");
+      $("#StreetName").select2("val", "");
       $("#Status").val("");
       $("#Type").val("");
       $("#Operation").val("");
@@ -212,7 +269,7 @@
       $("#To").val("");
       $("#search").val("");
       a = "<%= iv_remove_filters %>";
-      setupAllSelect2(a, a, a);
+      setupAllSelect2(a, a, a, a, a, a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -223,6 +280,11 @@
     $("#print_report_btn").click(function() {
       // make a POST call and get report
       window.open("invoice_view_report.pdf", "_blank");
+      return false;
+    });
+    $("#print_csv_btn").click(function() {
+      // make a POST call and get report
+      window.open("invoice_view_report.csv", "_self");
       return false;
     });
   });
@@ -247,18 +309,18 @@
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_project"), nil, :class => 'form-label' %>
         <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Client -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_client"), nil, :class => 'form-label-under-sel2' %>
-        <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "label_client", I18n.t("ag2_gest.client_payments.index.label_client"), :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!--<%#= hidden_field_tag "Client", params[:Client], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>-->
         <!--<%#= select_tag "Client", options_from_collection_for_select(@clients, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>-->
         <!-- Subscriber -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_subscriber"), nil, :class => 'form-label' %>
-        <%= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
-        <!-- Street name -->
-        <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
-        <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+        <%= label_tag "label_subscriber", I18n.t("ag2_gest.client_payments.index.label_subscriber"), :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+        <!-- Supply address (street name) -->
+        <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label-under-sel2' %>
+        <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
         <!-- Type -->
-        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label' %>
+        <%= label_tag I18n.t("ag2_gest.invoices.index.label_type"), nil, :class => 'form-label-under-sel2' %>
         <%= select_tag "Type", options_from_collection_for_select(@types, "id", "name"), :prompt => "", :class => 'x-large-text-field shrinked' %>
         <!-- Status -->
         <%= label_tag I18n.t("ag2_gest.invoices.index.label_status"), nil, :class => 'form-label' %>
@@ -289,6 +351,8 @@
         <% end %>
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
+        <br /><br /> 
+        <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
         <br /><br />
         <%= link_to t(".back_to_management"), ag2_gest.bill_management_path %>
       </div><!-- /.sidebar-nav -->

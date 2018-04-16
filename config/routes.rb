@@ -48,6 +48,7 @@ Ag2Portal::Application.routes.draw do
     match 'search_stores', :controller => 'engines', :action => 'search_stores'
     match 'search_reading_routes', :controller => 'engines', :action => 'search_reading_routes'
     match 'search_service_points', :controller => 'engines', :action => 'search_service_points'
+    match 'search_service_points_all', :controller => 'engines', :action => 'search_service_points_all'
     match 'search_supply_addresses', :controller => 'engines', :action => 'search_supply_addresses'
 
     # Routes for custom error pages

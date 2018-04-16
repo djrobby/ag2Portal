@@ -1,0 +1,155 @@
+if @subscriber_eco_items_report.blank?
+  return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/client_eco_items_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+  # Define the variables used in list
+  c.use_stores page_rows: 0,p_subtotal: 0, p_taxes: 0, p_total: 0, p_total_paid: 0, p_paid: 0, p_debt: 0
+
+  # On list page footer insertion
+  c.events.on :page_footer_insert do |e|
+    # Display page sutotals
+    e.section.item(:sum_rows_title).value(I18n.t("ag2_tech.ag2_tech_track.every_report.cumulative_total"))
+    e.section.item(:sum_rows).value(e.store.page_rows)
+    e.section.item(:full_subtotal).value number_with_precision(e.store.p_subtotal, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:full_taxes).value number_with_precision(e.store.p_taxes, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:full_total).value number_with_precision(e.store.p_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:full_total_paid).value number_with_precision(e.store.p_total_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:full_paid).value number_with_precision(e.store.p_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    e.section.item(:full_debt).value number_with_precision(e.store.p_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    # Initialize subtotals to 0
+    #e.store.page_rows = 0
+  end
+end
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_gest.subscribers.report.subscriber_eco_report")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"),
+           currency_note: "* " + I18n.t("every_report.currency_note"))
+
+# Page Title list
+subscriber_id = @subscriber_eco_items_report.first.id
+# List detail
+@subscriber_eco_items_report.each do |subscriber|
+
+  if subscriber.id != subscriber_id
+    report.page.list(:default).page_break
+    report.page.list(:default) do |list|
+    end
+    subscriber_id = subscriber.id
+  end
+
+  total = subscriber.totals_date(@from,@to).blank? ? 0 : subscriber.totals_date(@from,@to)
+  collected = subscriber.collected_date(@from,@to).blank? ? 0 : subscriber.collected_date(@from,@to)
+  debt = subscriber.debt_date(@from,@to).blank? ? 0 : subscriber.debt_date(@from,@to)
+
+  report.page.list(:default).header do |header|
+    #client
+    header.item(:code_client_c).value I18n.t("activerecord.attributes.client.client_code")
+    header.item(:fiscal_c).value I18n.t("activerecord.attributes.client.fiscal_id")
+    header.item(:name_c).value I18n.t("activerecord.attributes.client.name")
+    header.item(:street_c).value I18n.t("activerecord.attributes.client.address")
+    header.item(:total_c).value I18n.t("activerecord.attributes.subscriber.total")
+    header.item(:paid_c).value I18n.t("activerecord.attributes.subscriber.charged_c")
+    header.item(:debt_c).value I18n.t("activerecord.attributes.subscriber.debt")
+    #client_data
+    header.item(:code_client).value subscriber.full_code
+    header.item(:fiscal).value subscriber.fiscal_id
+    header.item(:name).value subscriber.full_name
+    header.item(:street).value subscriber.address_1
+    header.item(:total_client).value number_with_precision(total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    header.item(:paid_client).value number_with_precision(collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    header.item(:debt_client).value number_with_precision(debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    #invoices
+    header.item(:bill).value I18n.t("activerecord.attributes.subscriber.receipt")
+    header.item(:code).value I18n.t("activerecord.attributes.subscriber.invoice_number")
+    header.item(:teo).value I18n.t("activerecord.attributes.invoice.codes")
+    header.item(:period).value I18n.t("activerecord.attributes.subscriber.period")
+    header.item(:date).value I18n.t("activerecord.attributes.invoice.invoice_date")
+    header.item(:payday_limit).value I18n.t("activerecord.attributes.invoice_current_debt.payday_limit")
+    header.item(:subtotal).value I18n.t("activerecord.attributes.invoice.subtotal")
+    header.item(:taxes).value I18n.t("activerecord.attributes.invoice.taxes")
+    header.item(:total_c1).value I18n.t("activerecord.attributes.subscriber.total")
+    header.item(:total_paid_c1).value I18n.t("activerecord.attributes.invoice.receivable_c")
+    header.item(:paid_c1).value I18n.t("activerecord.attributes.subscriber.charged_c")
+    header.item(:debt_c1).value I18n.t("activerecord.attributes.subscriber.debt")
+  end
+
+  Invoice.joins(:bill).where("bills.subscriber_id = #{subscriber.id} AND (invoices.invoice_date >= '#{@from.to_date}' AND invoices.invoice_date <= '#{@to.to_date}')").by_no.each do |i|
+    report.page.list(:default).add_row do |row2|
+      row2.item(:bill).value i.bill.invoice_based_old_no_real_no
+      row2.item(:code).value i.old_no_based_real_no
+      row2.item(:period).value i.billing_period.period unless i.billing_period.blank?
+      row2.item(:date).value formatted_date(i.invoice_date) unless i.invoice_date.blank?
+      row2.item(:payday_limit).value formatted_date(i.payday_limit) unless i.payday_limit.blank?
+      #data teo
+      full_teo = ""
+      if !i.invoice_type.blank?
+        full_teo += i.invoice_type.code.to_s
+      else
+        full_teo += i.invoice_type.blank?
+      end
+      if !i.invoice_status.blank?
+        full_teo += full_teo.blank? ? i.invoice_status.code : " " + i.invoice_status.code.to_s
+      else
+        full_teo += full_teo.blank? ? i.invoice_status.blank? : " " + i.invoice_status.blank?
+      end
+      if !i.invoice_operation.blank?
+        full_teo += full_teo.blank? ? i.invoice_operation.code : " " + i.invoice_operation.code.to_s
+      else
+        full_teo += full_teo.blank? ? i.invoice_operation.blank? : " " + i.invoice_operation.blank?
+      end
+      row2.item(:teo).value full_teo
+      row2.item(:subtotal).value number_with_precision(i.subtotals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.subtotals.blank?
+      row2.item(:taxes).value number_with_precision(i.total_taxes, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total_taxes.blank?
+      row2.item(:total).value number_with_precision(i.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.totals.blank?
+      row2.item(:total_paid).value number_with_precision(i.receivables, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.receivables.blank?
+      row2.item(:paid).value number_with_precision(i.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.collected.blank?
+      row2.item(:debt).value number_with_precision(i.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.debt.blank?
+    end
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+      list.store.p_subtotal += i.subtotals.round(2)
+      list.store.p_taxes += i.total_taxes.round(2)
+      list.store.p_total += i.totals.round(2)
+      list.store.p_total_paid += i.receivables.round(2)
+      list.store.p_paid += i.collected.round(2)
+      list.store.p_debt += i.debt.round(2)
+    end
+  end
+end

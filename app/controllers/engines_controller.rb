@@ -415,7 +415,7 @@ class EnginesController < ApplicationController
     w = "office_id = #{session[:office]} AND " if session[:office] != '0'
     if @q != ''
       w += "(meter_code LIKE '%#{@q}%' OR meter_models.model LIKE '%#{@q}%' OR meter_brands.brand LIKE '%#{@q}%' OR calibers.caliber LIKE '%#{@q}%')"
-      @meters = serialized(Meter.g_where(w),
+      @meters = serialized(Meter.g_where(w).limit(30),
                             Api::V1::MetersSerializer)
     end
     render json: @meters
@@ -432,7 +432,7 @@ class EnginesController < ApplicationController
     w = "subscribers.id = #{subscriber} AND " if !subscriber.blank?
     if @q != ''
       w += "(meter_code LIKE '%#{@q}%' OR meter_models.model LIKE '%#{@q}%' OR meter_brands.brand LIKE '%#{@q}%' OR calibers.caliber LIKE '%#{@q}%')"
-      @meters = serialized(Meter.g_where_with_subscribers(w),
+      @meters = serialized(Meter.g_where_with_subscribers(w).limit(30),
                             Api::V1::MetersSerializer)
     end
     render json: @meters
@@ -492,6 +492,21 @@ class EnginesController < ApplicationController
       # w += "(service_points.code LIKE '%#{@q}%' OR service_points.name LIKE '%#{@q}%' OR street_types.street_type_code LIKE '%#{@q}%' OR street_directories.street_name LIKE '%#{@q}%' OR service_points.street_number LIKE '%#{@q}%' OR service_points.building LIKE '%#{@q}%' OR zipcodes.zipcode LIKE '%#{@q}%')"
       w += "(service_points.code LIKE '%#{@q}%' OR street_types.street_type_code LIKE '%#{@q}%' OR street_directories.street_name LIKE '%#{@q}%' OR service_points.street_number LIKE '%#{@q}%' OR zipcodes.zipcode LIKE '%#{@q}%')"
       @service_points = serialized(ServicePoint.g_where(w).limit(30),
+                            Api::V1::ServicePointsSerializer)
+    end
+    render json: @service_points
+  end
+
+  def search_service_points_all
+    @service_points = []
+    w = ''
+    w = "service_points.organization_id = #{session[:organization]} AND " if session[:organization] != '0'
+    w = "service_points.company_id = #{session[:company]} AND " if session[:company] != '0'
+    w = "service_points.office_id = #{session[:office]} AND " if session[:office] != '0'
+    if @q != ''
+      # w += "(service_points.code LIKE '%#{@q}%' OR service_points.name LIKE '%#{@q}%' OR street_types.street_type_code LIKE '%#{@q}%' OR street_directories.street_name LIKE '%#{@q}%' OR service_points.street_number LIKE '%#{@q}%' OR service_points.building LIKE '%#{@q}%' OR zipcodes.zipcode LIKE '%#{@q}%')"
+      w += "(service_points.code LIKE '%#{@q}%' OR street_types.street_type_code LIKE '%#{@q}%' OR street_directories.street_name LIKE '%#{@q}%' OR service_points.street_number LIKE '%#{@q}%' OR zipcodes.zipcode LIKE '%#{@q}%')"
+      @service_points = serialized(ServicePoint.g_where_all(w).limit(30),
                             Api::V1::ServicePointsSerializer)
     end
     render json: @service_points

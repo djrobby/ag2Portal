@@ -10,9 +10,42 @@ en:
         label_work_order: "Work order"
         label_charge_account: "Analytical account"
         label_budget_period: "Budget period"
+        label_reading_route: "Reading route"
+      client_report:
+        report_title: "Clients Economical Registry"
+        report_debt_title: "Clients: Debt to date"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
       subscriber_report:
         report_title: "Subscribers Registry"
+        report_eco_title: "Subscribers Economical Registry"
+        report_tec_title: "Subscribers Technical Registry"
         sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
+      reading_report:
+        report_title: "Readings"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
+      bill_report:
+        report_title: "Bills"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
+      contracting_request_report:
+        report_title: "Contracting Requests"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
+      service_point_report:
+        report_title: "Service Point: Hired and Billed"
+        report_meter_title: "Service Point: Installed Meter"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
+      meter_report:
+        report_title: "Meters by Route"
+        report_expiry_title: "Installed Meters Expired"
+        report_shared_title: "Follow-up Shared Meters"
+        report_master_title: "Follow-up Master Meters"
+        sum_rows_title: "Total Rows:"
+        sum_rows_debt: "Total Debt:"
       every_report:
         pt: "Page"
         pd: "of"

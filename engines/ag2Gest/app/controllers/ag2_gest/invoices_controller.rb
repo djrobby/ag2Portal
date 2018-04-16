@@ -6,7 +6,8 @@ module Ag2Gest
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:iv_remove_filters,
-                                               :iv_restore_filters]
+                                               :iv_restore_filters,
+                                               :invoice_view_report]
     # Helper methods for
     # => returns client code & full name
     helper_method :client_name
@@ -45,9 +46,9 @@ module Ag2Gest
       current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      client = !client.blank? ? inverse_client_search(client) : client
-      subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
-      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      # client = !client.blank? ? inverse_client_search(client) : client
+      # subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
+      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Invoice.search do
         with :project_id, current_projects
@@ -62,30 +63,36 @@ module Ag2Gest
         if !project.blank?
           with :project_id, project
         end
-        if !client.blank?
-          if client.class == Array
-            with :client_code_name_fiscal, client
-          else
-            with(:client_code_name_fiscal).starting_with(client)
-          end
-        end
         # if !client.blank?
-        #   with :client_id, client
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !client.blank?
+          with :client_id, client
+        end
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
         # end
         if !subscriber.blank?
-          if subscriber.class == Array
-            with :subscriber_code_name_fiscal, subscriber
-          else
-            with(:subscriber_code_name_fiscal).starting_with(subscriber)
-          end
+          with :subscriber_id, subscriber
         end
         if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
+          with :subscriber_id, street_name
         end
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
         # if !subscriber.blank?
         #   fulltext subscriber
         # end
@@ -213,6 +220,7 @@ module Ag2Gest
       project = params[:Project]
       client = params[:Client]
       subscriber = params[:Subscriber]
+      street_name = params[:StreetName]
       status = params[:Status]
       type = params[:Type]
       operation = params[:Operation]
@@ -222,10 +230,26 @@ module Ag2Gest
       to = params[:To]
       # OCO
       init_oco if !session[:organization]
+      # Initialize select_tags
+      # @client = !client.blank? ? Client.find(client).to_label : " "
+      @project = !project.blank? ? Project.find(project).full_name : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
+      @period = !period.blank? ? BillingPeriod.find(period).to_label : " "
+      @status = invoice_statuses_dropdown if @status.nil?
+      @types = invoice_types_dropdown if @types.nil?
+      @operations = invoice_operations_dropdown if @operations.nil?
 
+      # Arrays for search
+      @projects = projects_dropdown if @projects.nil?
+      current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+      # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      # client = !client.blank? ? inverse_client_search(client) : client
+      # subscriber = !subscriber.blank? ? inverse_subscriber_search(subscriber) : subscriber
+      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Invoice.search do
+        with :project_id, current_projects
         fulltext params[:search]
         if !no.blank?
           if no.class == Array
@@ -234,20 +258,50 @@ module Ag2Gest
             with(:invoice_no).starting_with(no)
           end
         end
-        if !client.blank?
-          with :client_id, client
-        end
-        if !subscriber.blank?
-          with :subscriber_id, subscriber
-        end
         if !project.blank?
           with :project_id, project
         end
-        if !status.blank?
-          with :invoice_status_id, status
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        if !client.blank?
+          with :client_id, client
         end
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        if !subscriber.blank?
+          with :subscriber_id, subscriber
+        end
+        if !street_name.blank?
+          with :subscriber_id, street_name
+        end
+        # if !street_name.blank?
+        #   if street_name.class == Array
+        #     with :supply_address, street_name
+        #   else
+        #     with(:supply_address).starting_with(street_name)
+        #   end
+        # end
+        # if !subscriber.blank?
+        #   fulltext subscriber
+        # end
+        # if !subscriber.blank?
+        #   with :subscriber_id, subscriber
+        # end
         if !type.blank?
           with :invoice_type_id, type
+        end
+        if !status.blank?
+          with :invoice_status_id, status
         end
         if !operation.blank?
           with :invoice_operation_id, operation
@@ -270,12 +324,21 @@ module Ag2Gest
             with :invoice_date, to
           end
         end
+        data_accessor_for(Invoice).include = [:invoice_type, :invoice_status, :invoice_operation, {bill: :client}, :biller, {invoice_items: :tax_type}]
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => Invoice.count
       end
       @invoice_report = @search.results
+      @invoice_report_csv = Invoice.to_csv_id("invoices.id IN (#{@invoice_report.map(&:id).join(",")})")
 
-      if !@invoice_report.blank?
+      bills = []
+      @invoice_report_csv.each do |pr|
+        bills << Invoice.find(pr.p_id_).billable_concepts_array
+      end
+      bills = bills.flatten.uniq
+      code = BillableConcept.where(id: bills)
+
+      if !@invoice_report.blank? && !@invoice_report_csv.blank?
         title = t("activerecord.models.invoice.few")
         @from = formatted_date(@invoice_report.first.created_at)
         @to = formatted_date(@invoice_report.last.created_at)
@@ -284,6 +347,10 @@ module Ag2Gest
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data Bill.to_csv(@invoice_report_csv,code),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
                        disposition: 'inline' }
         end
       end

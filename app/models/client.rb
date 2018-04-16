@@ -1,4 +1,6 @@
 class Client < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :entity
   belongs_to :street_type
   belongs_to :zipcode
@@ -278,6 +280,66 @@ class Client < ActiveRecord::Base
     Client.current_debt_calc_by_project(self.id)
   end
 
+  def totals_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total) as total_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["total_total"]
+  end
+
+  def collected_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(collected) as collected_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["collected_total"]
+  end
+
+  def debt_date(from,to,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.client_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["debt"]
+  end
+
   def active_yes_no
     active ? I18n.t(:yes_on) : I18n.t(:no_off)
   end
@@ -379,6 +441,14 @@ class Client < ActiveRecord::Base
     !self.country.name.blank? ? sanitize_string(self.country.name.strip, true, true, true, false) : ''
   end
 
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
   #
   # Class (self) user defined methods
   #
@@ -426,16 +496,71 @@ class Client < ActiveRecord::Base
         SELECT SUM(receivables) as total, 0 as collected, bills.project_id
         FROM invoices
         INNER join bills ON invoices.bill_id = bills.id
-        WHERE bills.client_id = 12
+        WHERE bills.client_id = #{i}
         group by bills.project_id
         UNION
         SELECT 0 as total, SUM(amount) as collected, bills.project_id
         FROM client_payments
         INNER JOIN bills on client_payments.bill_id=bills.id
-        WHERE client_payments.client_id = 12 AND NOT ISNULL(client_payments.confirmation_date)
+        WHERE client_payments.client_id = #{i} AND NOT ISNULL(client_payments.confirmation_date)
         group by bills.project_id
         ) a"
     )
+  end
+
+  def self.to_client_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.client_code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.fiscal_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.name')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.address')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.phone')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.email'))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |client|
+        csv << [ client.id,
+                 client.client_code,
+                 client.fiscal_id,
+                 client.to_name,
+                 client.address_1,
+                 client.try(:phone),
+                 client.try(:email)]
+      end
+    end
+  end
+
+  def self.to_client_debt_csv(array,from,to)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.client_code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.fiscal_id')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.name')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.address')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.phone')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client.email')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.total')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.charged_c')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.subscriber.debt'))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |client|
+        total = client.totals_date(from,to).blank? ? 0 : client.totals_date(from,to)
+        collected = client.collected_date(from,to).blank? ? 0 : client.collected_date(from,to)
+        debt = client.debt_date(from,to).blank? ? 0 : client.debt_date(from,to)
+        csv << [ client.id,
+                 client.client_code,
+                 client.fiscal_id,
+                 client.to_name,
+                 client.address_1,
+                 client.try(:phone),
+                 client.try(:email),
+                 client.raw_number(total, 2),
+                 client.raw_number(collected, 2),
+                 client.raw_number(debt, 2)]
+      end
+    end
   end
 
   def self.to_csv(array, company_id=nil)

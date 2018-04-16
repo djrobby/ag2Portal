@@ -1461,8 +1461,8 @@ module Ag2Gest
         # if !s.empty?
         #   with :subscriber_ids, s
         # end
-        if !c.blank?
-          with :client_id, c
+        if !s.blank?
+          with :subscriber_id, s
         end
         # Supply address
         # if !street_name.blank?

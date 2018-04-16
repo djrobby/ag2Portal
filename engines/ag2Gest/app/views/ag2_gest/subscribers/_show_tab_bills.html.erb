@@ -92,11 +92,12 @@
   });
 </script>
 <div class="row-fluid">
-  <div class="span3">
+  <div class="span4">
     <a href="#new-bill" role="button" id="new_bill" class="btn btn-mini btn-primary <%= 'hide' unless !@subscriber.non_billable %>" data-toggle="modal">Nueva factura</a>
     <button id="collapse-init" class="btn btn-mini btn-primary"><%= "Ver todos" %></button>
+    <%= link_to "<i class='icon-print icon-white'></i> #{t('ag2_gest.ag2_gest_track.index.label_report')}".html_safe, {controller: "subscribers", action: "sub_invoices_report", ifilter_show: @active_ifilter, :format => :pdf},class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber.blank?  %>
   </div>
-  <div class="span5" align="center">
+  <div class="span4" align="center">
     <%= link_to t('ag2_gest.subscribers.show.pendig_only'), {controller: "subscribers", action: "show", ifilter_show: "pending", :remote => true}, class: "bill-pending" %> |
     <%= link_to t('ag2_gest.subscribers.show.charged_only'), {controller: "subscribers", action: "show", ifilter_show: "charged", :remote => true}, class: "bill-charged" %> |
     <%= link_to t('ag2_gest.subscribers.show.all'), {controller: "subscribers", action: "show", ifilter_show: "all", :remote => true}, class: "bill-all" %>

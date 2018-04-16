@@ -1,0 +1,141 @@
+if @reading_report.blank?
+	return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/reading_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+	# Set page-number
+	e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+	e.pages.each do |page|
+		# Set total-page-number
+		page.item(:page_count).value(e.report.page_count)
+	end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+	# Define the variables used in list
+	c.use_stores page_rows: 0
+
+	# On list page footer insertion
+	c.events.on :page_footer_insert do |e|
+		# Display page sutotals
+		e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.reading_report.sum_rows_title"))
+		e.section.item(:sum_rows).value(e.store.page_rows)
+		# Initialize subtotals to 0
+		#e.store.page_rows = 0
+	end
+end
+
+# New page & start
+report.start_new_page
+
+# Page header
+report.page.values report_title: I18n.t("ag2_gest.readings.index.title")
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+				   pt: I18n.t("every_report.pt"),
+				   pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+	header.item(:period_c).value I18n.t("activerecord.report.reading.period_header")
+	header.item(:date_lect_c).value I18n.t("activerecord.report.reading.date_header")
+	header.item(:index_c).value I18n.t("activerecord.report.reading.index_header")
+	header.item(:incidence_c).value I18n.t("activerecord.report.reading.incidences")
+	header.item(:period_ant_c).value I18n.t("activerecord.report.reading.period_header_1")
+	header.item(:date_lect_ant_c).value I18n.t("activerecord.report.reading.date_header_1")
+	header.item(:index_ant_c).value I18n.t("activerecord.report.reading.index_header_1")
+	header.item(:incidence_ant_c).value I18n.t("activerecord.report.reading.incidences_1")
+	header.item(:subscriber_c).value I18n.t("activerecord.report.reading.subs_name")
+	header.item(:meter_c).value I18n.t("activerecord.report.reading.meter_header")
+end
+
+
+# Page Title list
+project_id = @reading_report.first.project_id
+
+# List detail
+@reading_report.each do |i|
+	if !i.project_id.blank? && (i.project_id != project_id)
+		report.page.list(:default).page_break
+		report.page.list(:default) do |list|	
+			list.store.page_rows = 0
+		end
+		project_id = i.project_id
+	end
+
+	report.page.list(:default).add_row do |row|
+		report.page.values project_c: I18n.t("activerecord.attributes.reading.project_id")+": "
+		report.page.values project: i.project.name
+		row.item(:period).value i.billing_period.period unless i.billing_period.blank?
+		row.item(:date_lect).value formatted_date(i.reading_date) unless i.reading_date.blank?
+		row.item(:index).value i.reading_index unless i.reading_index.blank?
+		row.item(:incidence).value i.incidences unless i.incidences.blank?
+		if !i.reading_1_id.blank?
+			period = i.reading_1.billing_period.period
+			date = formatted_date(i.reading_1.reading_date) 
+			index = i.reading_1.reading_index
+		else
+			period = ""
+			date = ""
+			index = ""
+		end
+		row.item(:period_ant).value period
+		row.item(:date_lect_ant).value date
+		row.item(:index_ant).value index
+		if !i.reading_1_id.blank?
+			incidencia = i.reading_1.incidences
+		else
+			incidencia = ""
+		end
+		row.item(:incidence_ant).value incidencia
+	#data subscriber
+		full_subscriber = ""
+		if !i.subscriber.blank?
+			full_subscriber += i.subscriber.full_code.to_s
+		end
+		if !i.subscriber.blank?
+			full_subscriber += full_subscriber.blank? ? i.subscriber.full_name : " - " + i.subscriber.full_name.to_s
+		end
+		if !i.subscriber.blank?
+			full_subscriber += full_subscriber.blank? ? i.subscriber.address_1 : " - " + i.subscriber.address_1.to_s
+		end
+		row.item(:subscriber).value full_subscriber
+	# data meter
+		full_meter = ""
+		if !i.meter.blank?
+			full_meter += i.meter.meter_code.to_s
+		end
+		if !i.meter.meter_model.blank?
+			full_meter += full_meter.blank? ? i.meter.meter_model.full_name : " - " + i.meter.meter_model.full_name.to_s
+		end
+		if !i.meter.caliber.blank?
+			full_meter += full_meter.blank? ? i.meter.caliber.caliber : " - " + i.meter.caliber.caliber.to_s
+		end
+		if !i.subscriber.service_point.blank?
+			full_meter += full_meter.blank? ? i.subscriber.service_point.service_point_location.name : " - " + i.subscriber.service_point.service_point_location.name.to_s
+		end
+		row.item(:meter).value full_meter
+	end
+
+	# Store page subtotals
+  report.page.list(:default) do |list|
+		list.store.page_rows += 1
+	end
+end

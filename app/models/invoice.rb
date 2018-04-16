@@ -122,6 +122,25 @@ class Invoice < ActiveRecord::Base
              companies.name biller_name_, companies.fiscal_id biller_fiscal_id_, client_payments.created_at payment_date_, payment_methods.description payment_method_, client_payments.payment_type payment_type_")
     .order('invoices.id')
   }
+  scope :to_csv_id, -> w {
+    joins("LEFT JOIN bills ON invoices.bill_id=bills.id")
+    .joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id")
+    .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
+    .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .where("#{w}")
+    .select("bills.project_id project_id_, invoices.biller_id biller_id_, invoices.id p_id_,
+             bills.id b_id_, invoices.invoice_date invoice_date_, invoices.payday_limit payday_limit_,
+             CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) invoice_no_,
+             CASE WHEN ISNULL(invoices.billing_period_id) THEN '' ELSE billing_periods.period END billing_period_,
+             CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
+             CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
+             meters.meter_code meter_code_,
+             invoices.reading_1_date reading_1_date_, invoices.reading_2_date reading_2_date_, invoices.reading_1_index reading_1_index_, invoices.reading_2_index reading_2_index_,
+             bills.reading_2_id reading_2_id_, invoices.consumption consumption_, invoices.consumption_real consumption_real_, invoices.consumption_estimated consumption_estimated_,
+             invoices.consumption_other consumption_other_,
+             invoices.totals totals_")
+    .order('invoices.id')
+  }
 
   # Callbacks
   before_save :calculate_and_store_totals
@@ -129,6 +148,15 @@ class Invoice < ActiveRecord::Base
   before_create :assign_payday_limit
   after_save :bill_status
   after_save :update_invoice_taxes, :on => :create
+
+  def billable_concepts_array
+    _aux = []
+    _ii = invoice_items.joins(tariff: :billable_item).order('billable_items.billable_concept_id').group('billable_items.billable_concept_id')
+    _ii.each do |r|
+      _aux = _aux << r.tariff.billable_concept.id
+    end
+    _aux
+  end
 
   #
   # Methods
@@ -517,6 +545,15 @@ class Invoice < ActiveRecord::Base
       end
     end
     return _prev_consumptions, _average_consumption
+  end
+
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
   end
 
   searchable do
