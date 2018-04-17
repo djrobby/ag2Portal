@@ -7,6 +7,9 @@ en:
         few:   "Supply points"
         other: "Supply points"
         no_street_directory_error: "Street directory unavailable"
+        check_for_subscribers: "Supply point cannot be destroyed while linked subscribers exist."
+        check_for_readings: "Supply point cannot be destroyed while linked readings exist."
+        check_for_pre_readings: "Supply point cannot be destroyed while linked readings (unconfirmed) exist."
     attributes:
       service_point:
         id: "Id"
@@ -66,4 +69,3 @@ en:
         caliber: "Caliber"
         model_brand_caliber: "Model/Brand/Caliber"
         pub_record: "PB Record"
-

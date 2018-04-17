@@ -29,11 +29,14 @@ class ServicePoint < ActiveRecord::Base
   has_many :pre_readings
 
   validates :code,                    :presence => true,
-                                      :length => { :minimum => 3, :maximum => 11 }
+                                      :length => { :minimum => 3, :maximum => 11 },
+                                      :uniqueness => { :scope => :office_id },
+                                      :format => { with: /\A\d+\Z/, message: :code_invalid }
   validates :service_point_type,      :presence => true
   validates :service_point_location,  :presence => true
   validates :service_point_purpose,   :presence => true
   validates :organization,            :presence => true
+  validates :office,                  :presence => true
   validates :center,                  :presence => true
   validates :street_directory,        :presence => true
 
@@ -88,6 +91,10 @@ class ServicePoint < ActiveRecord::Base
      .group('service_points.id').by_code
   }
 
+  # Callbacks
+  before_destroy :check_for_dependent_records
+
+  # Methods
   def to_label
     _ret = code
     if street_directory.nil?
@@ -242,5 +249,26 @@ class ServicePoint < ActiveRecord::Base
     integer :zipcode_id
     integer :reading_route_id
     integer :organization_id
+  end
+
+  private
+
+  # Before destroy
+  def check_for_dependent_records
+    # Check for subscribers
+    if subscribers.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_subscribers'))
+      return false
+    end
+    # Check for readings
+    if readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_readings'))
+      return false
+    end
+    # Check for prereadings
+    if pre_readings.count > 0
+      errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_pre_readings'))
+      return false
+    end
   end
 end

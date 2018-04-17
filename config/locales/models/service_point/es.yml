@@ -7,6 +7,9 @@ es:
         few:   "Puntos de suministro"
         other: "Puntos de suministro"
         no_street_directory_error: "Callejero no disponible"
+        check_for_subscribers: "Punto de suministro no puede ser eliminado mientras existan abonados vinculados."
+        check_for_readings: "Punto de suministro no puede ser eliminado mientras existan lecturas vinculadas."
+        check_for_pre_readings: "Punto de suministro no puede ser eliminado mientras existan lecturas (no confirmadas) vinculadas."
     attributes:
       service_point:
         id: "Id"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180410073330) do
+ActiveRecord::Schema.define(:version => 20180417083813) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2442,6 +2442,7 @@ ActiveRecord::Schema.define(:version => 20180410073330) do
     t.integer  "water_supply_contract_template_id"
     t.integer  "water_connection_contract_template_id"
     t.integer  "days_for_invoice_due_date",             :limit => 2,                                :default => 0,   :null => false
+    t.string   "invoice_note"
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
@@ -3817,7 +3818,7 @@ ActiveRecord::Schema.define(:version => 20180410073330) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
   end
