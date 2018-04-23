@@ -154,12 +154,12 @@ module Ag2Admin
       @notifications = notifications_dropdown
       @users = users_dropdown
       @classes = bank_account_classes_dropdown
-      @countries = countries_dropdown
       @zipcodes = zipcodes_dropdown
       @towns = towns_dropdown
       @provinces = provinces_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
+      # @countries = countries_dropdown
+      # @banks = banks_dropdown
+      # @offices = bank_offices_dropdown
       $attachment = Attachment.new
       destroy_attachment
 
@@ -176,12 +176,12 @@ module Ag2Admin
       @notifications = notifications_dropdown
       @users = users_dropdown
       @classes = bank_account_classes_dropdown
-      @countries = countries_dropdown
       @zipcodes = zipcodes_dropdown
       @towns = towns_dropdown
       @provinces = provinces_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
+      # @countries = countries_dropdown
+      # @banks = banks_dropdown
+      # @offices = bank_offices_dropdown
       $attachment = Attachment.new
       destroy_attachment
     end
@@ -208,12 +208,12 @@ module Ag2Admin
           @notifications = notifications_dropdown
           @users = users_dropdown
           @classes = bank_account_classes_dropdown
-          @countries = countries_dropdown
           @zipcodes = zipcodes_dropdown
           @towns = towns_dropdown
           @provinces = provinces_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          # @countries = countries_dropdown
+          # @banks = banks_dropdown
+          # @offices = bank_offices_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "new" }
@@ -245,12 +245,12 @@ module Ag2Admin
           @notifications = notifications_dropdown
           @users = users_dropdown
           @classes = bank_account_classes_dropdown
-          @countries = countries_dropdown
           @zipcodes = zipcodes_dropdown
           @towns = towns_dropdown
           @provinces = provinces_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          # @countries = countries_dropdown
+          # @banks = banks_dropdown
+          # @offices = bank_offices_dropdown
           $attachment.destroy
           $attachment = Attachment.new
           format.html { render action: "edit" }

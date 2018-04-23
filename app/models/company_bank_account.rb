@@ -206,6 +206,10 @@ class CompanyBankAccount < ActiveRecord::Base
     BankOffice.by_bank_and_code(iban_bank_id, iban_office).first.id rescue nil
   end
 
+  def iban_format_with_spaces
+    iban.gsub(/(.{4})(?=.)/, '\1 \2')
+  end
+
   private
 
   def iban_save

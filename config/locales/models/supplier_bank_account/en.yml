@@ -30,3 +30,4 @@ en:
         p_format: "Account"
         starting_at: "Activated on"
         ending_at: "Expired on"
+        iban: "IBAN"

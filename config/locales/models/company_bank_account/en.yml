@@ -31,3 +31,4 @@ en:
         starting_at: "Activated on"
         ending_at: "Expired on"
         bank_suffix: "Suffix"
+        iban: "IBAN"

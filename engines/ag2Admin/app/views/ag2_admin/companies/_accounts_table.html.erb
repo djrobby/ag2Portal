@@ -58,12 +58,13 @@
 
     // when #check_iban_btn is clicked
     $(".check_iban_btn").click(function() {
-      var country = $(this).closest('tr').find('select.fnt-country :selected').val();
-      var dc = $(this).closest('tr').find('.fnt-iban-dc').val();
-      var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
-      var office = $(this).closest('tr').find('select.fnt-office :selected').val();
-      var account = $(this).closest('tr').find('.fnt-account').val();
-      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'co_check_iban');
+      // var country = $(this).closest('tr').find('select.fnt-country :selected').val();
+      // var dc = $(this).closest('tr').find('.fnt-iban-dc').val();
+      // var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
+      // var office = $(this).closest('tr').find('select.fnt-office :selected').val();
+      // var account = $(this).closest('tr').find('.fnt-account').val();
+      var iban = $(this).closest('tr').find('.fnt-iban').val();
+      var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);
       return false;
     });
 
@@ -84,17 +85,19 @@
   <!-- class -->
   <col width="10%" />
   <!-- country  -->
-  <col width="7%" />
+  <!--<col width="7%" />-->
   <!-- iban dc  -->
-  <col width="4%" />
+  <!--<col width="4%" />-->
   <!-- bank  -->
-  <col width="8%" />
+  <!--<col width="8%" />-->
   <!-- bank office  -->
-  <col width="8%" />
+  <!--<col width="8%" />-->
   <!-- account no  -->
-  <col width="12%" />
+  <!--<col width="12%" />-->
+  <!-- iban -->
+  <col width="29%" />
   <!-- holder name -->
-  <col width="19%" />
+  <col width="29%" />
   <!-- holder fiscal_id -->
   <col width="8%" />
   <!-- bank_suffix -->
@@ -112,11 +115,12 @@
     <%= f.simple_fields_for :company_bank_accounts, defaults: { input_html: { class: 'sub-form' } } do |i| %>
     <tr class="fields">
       <td><%= i.association :bank_account_class, label: false, wrapper: false, collection: @classes, input_html: { class: 'wsel2 fnt-class' } %></td>
-      <td><%= i.association :country, label: false, wrapper: false, label_method: :full_name, value_method: :id, input_html: { class: 'wsel2 fnt-country' } %></td>
-      <td><%= i.input :iban_dc, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-iban-dc', maxlength: 2 } %></td>
-      <td><%= i.association :bank, label: false, wrapper: false, collection: @banks, input_html: { class: 'wsel2 fnt-bank', maxlength: 4 } %></td>
-      <td><%= i.association :bank_office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office', maxlength: 4 } %></td>
-      <td><%= i.input :account_no, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>
+      <!--<td><%#= i.association :country, label: false, wrapper: false, label_method: :full_name, value_method: :id, input_html: { class: 'wsel2 fnt-country' } %></td>-->
+      <!--<td><%#= i.input :iban_dc, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-iban-dc', maxlength: 2 } %></td>-->
+      <!--<td><%#= i.association :bank, label: false, wrapper: false, collection: @banks, input_html: { class: 'wsel2 fnt-bank', maxlength: 4 } %></td>-->
+      <!--<td><%#= i.association :bank_office, label: false, wrapper: false, collection: @offices, input_html: { class: 'wsel2 fnt-office', maxlength: 4 } %></td>-->
+      <!--<td><%#= i.input :account_no, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-account', maxlength: 12 } %></td>-->
+      <td><%= i.input :iban, label: false, wrapper: false, input_html: { onkeydown: "only_digit_or_letter(event)", onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-iban', minlength: 4, maxlength: 34 } %></td>
       <td><%= i.input :holder_name, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-name', maxlength: 40 } %></td>
       <td><%= i.input :holder_fiscal_id, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-fiscal-id' } %></td>
       <td><%= i.input :bank_suffix, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-suffix', maxlength: 3 } %></td>
