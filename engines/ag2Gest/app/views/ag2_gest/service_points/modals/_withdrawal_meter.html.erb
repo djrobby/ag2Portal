@@ -21,83 +21,55 @@
 
   //Via Ajax Indicate Meter associated
   jQuery(function($) {
-
-    $("#form_withdrawal_meter").bind("ajax:success", function(xhr, data, status) {
-
-      //Clean fields
-      $('#info_meter, #info_brand, #info_caliber').empty();
-
-      $(".modalMeterwithdrawal").modal().hide();
-      $('.modalMeterwithdrawal').modal('toggle');
-
-      var add_button = `<a href="#installMeter" id="install_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.data_add_meter') %></a>`;
-
-      var parent_buttons = $('#link_reading').parent();
-      parent_buttons.children().remove(); //Delete Children Buttons
-      parent_buttons.append(add_button); //Add Button "Add Meter"
-
-      //Formatt Date
-      var date =``;
-
-      if (data.reading.reading_date !== undefined) {
-        date += `${data.reading.reading_date.substring(8, 10)}/${data.reading.reading_date.substring(5, 7)}/${data.reading.reading_date.substring(0, 4)}`;
-      }
-
-      //ReadingIncidenceTypes
-      var reading_incidence_types = "";
-      var title = "";
-
-      if (data.reading_incidence_types[0] == undefined && data.reading_incidence_types[0] == null){
-        reading_incidence_types = "-";
-
+    $("#input_withdrawal_billing_period").change(function() {
+      var billing_period = $('#input_withdrawal_billing_period').val();
+      if (billing_period == "") {
+        $('#input_withdrawal_reading_date').prop('disabled', true);
       } else {
-        var str_incidence = data.reading_incidence_types.length;
-        /*Añadir los elementos i en función de los incidence types que tenga*/
-
-        for(var i=0; i < str_incidence; i++) {
-          if (i >= 1) {
-            title += `, `;
-          }
-          title += `${data.reading_incidence_types[i]}`;
-        }
-        reading_incidence_types = `<i title="${title}" class="icon-ok"></i>`;
+        $('#input_withdrawal_reading_date').prop('disabled', false);
       }
-
-      //Add Reading to Table
-      var text = `<tr><td>${data.reading.id}</td><td>-</td><td><a href="/es/ag2_gest/es/reading_types/${data.reading.reading_type_id}">${data.reading_type_name}</a></td><td>${date}</td><td>${data.reading.reading_index}</td><td>${reading_incidence_types}</td>`;
-        text += `<td class="a_inline"><a href="/es/ag2_gest/es/readings/${data.reading.id}/edit" class="btn btn-mini"><i class="icon-edit"></i></a><a href="/es/ag2_gest/es/readings/${data.reading.id}"class="btn btn-mini" data-confirm="Are you sure?" data-method="delete" rel="nofollow"><i class="icon-trash"></i></a></td></tr>`;
-
-      $('#readings table tbody').after(text);
-
-      //Put Values to 0
-      $('#form_withdrawal_meter').find('[type=checkbox]').prop('checked', false);
-      $('#input_withdrawal_reading_index, #input_withdrawal_reading_date').val("");
-
-      //Hide Collapse Options //=> doesn't work
-      //$('#collapseQuitMeter').collapse('hide');
-
     });
 
+    $("#input_withdrawal_reading_date").on('changeDate', function() {
+      // preserve the current object
+      var billing_period = $('#input_withdrawal_billing_period').val();
+      var reading_date = $('#input_withdrawal_reading_date').val();
+
+      // Right formatted date
+      reading_date = right_date(reading_date,"<%= I18n.locale %>");
+      // make the POST call
+      jQuery.getJSON('/ag2_gest/readings/r_reading_date/' + billing_period  + '/' + reading_date, function(data) {
+        if (data.code == "$err_ok") {
+          alert('<%= I18n.t("ag2_gest.readings.reading_date_error_ok") %>');
+        } else if (data.code == "$err") {
+          alert('<%= I18n.t("ag2_gest.readings.reading_date_error") %>');
+          $("#input_withdrawal_reading_date").val("");
+        }
+      });
+      return false;
+    });
   });//End jQuery function, exclusive $ jQuery functions
 
 </script>
 
-<!-- QuitMeter -->
-<div id="withdrawalMeter" class="modal modalMeterwithdrawal hide fade" data-backdrop="static">
+<!-- withdrawalMeter -->
+<!-- <div id="withdrawalMeter" class="modal modalMeterwithdrawal hide fade" data-backdrop="static"> -->
+<div id="withdrawalMeter" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3><%= t('activerecord.attributes.subscriber.quit_meter') %></h3>
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
-  <%= simple_form_for @reading, url: { action: :withdrawal_meter, controller: 'service_points'}, :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_withdrawal_meter' } do |f| %>
+  <%= simple_form_for @reading, url: withdrawal_meter_service_point_path(@service_point), method: :post, :remote => true, :html => { class: 'modal-footer-right' , :id => 'form_withdrawal_meter'} do |f| %>
+
     <div class="modal-body">
       <%#= f.association :project, collection: @project_dropdown, label: t('activerecord.attributes.subscriber.project'), input_html: { class: 'x-large-text-field sel2', :id => "project" }, :required => true, label_html: { class: 'form-label' }, include_blank: true %>
 
+      <%= f.association :billing_period, collection: @billing_period, label_method: :to_label_, value_method: :id, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field', :id => "input_withdrawal_billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
+
+      <%= f.input :reading_date, disabled: true, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => 'input_withdrawal_reading_date'  }, :label_html => { :class => 'form-label' } %>
+
       <%= f.input :reading_index, label: t('activerecord.attributes.reading.reading'), :required => true, :input_html => { :class => 'mid-text-field', :id => 'input_withdrawal_reading_index' }, :label_html => { :class => 'form-label' } %>
-
-      <%= f.input :reading_date, label: t('activerecord.attributes.reading.reading_date'), :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => (f.object.reading_date.strftime("%d/%m/%Y") if f.object.reading_date), :class => 'mid-text-field date_picker', :id => 'input_withdrawal_reading_date'  }, :label_html => { :class => 'form-label' } %>
-
-      <%= f.association :billing_period, collection: @billing_period, label: t('activerecord.attributes.subscriber.reading_period'), :required => true, input_html: { class: 'x-large-text-field sel2', :id => "input_withdrawal_billing_period" }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <div class="accordion-group">
         <div class="accordion-heading">
@@ -140,6 +112,7 @@
         alert("<%= I18n.t(:index_negative) %>");
         return false;
       }
+      $("#withdrawalMeter").modal('hide');
     });
   });
 </script>

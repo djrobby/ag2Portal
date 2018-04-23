@@ -5,7 +5,8 @@
   <td></td>
   <td><%= t :"activerecord.attributes.invoice.total" %></td>
   <td></td>
-  <td align="right"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless bill.total.blank? %></td>
-  <td align="right"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless bill.debt.blank? %></td>
+  <td align="right"><%= number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless bill.total.blank? %></td>
+  <td align="right"><%= number_with_precision(bill.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless bill.collected.blank? %></td>
+  <td align="right"><%= number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless bill.debt.blank? %></td>
   <td></td>
 </tr>

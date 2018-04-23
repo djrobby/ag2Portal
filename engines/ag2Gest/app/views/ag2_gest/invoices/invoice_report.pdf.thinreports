@@ -142,11 +142,11 @@ project_id = @invoice_report.first.bill.project_id
       full_teo += full_teo.blank? ? i.invoice_operation.blank? : " " + i.invoice_operation.blank?
     end
     row.item(:teo).value full_teo
-    row.item(:subtotal).value number_with_precision(i.subtotals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.subtotals.blank?
-    row.item(:taxes).value number_with_precision(i.total_taxes, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.total_taxes.blank?
-    row.item(:total).value number_with_precision(i.totals, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.totals.blank?
-    row.item(:paid).value number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.collected.blank?
-    row.item(:debt).value number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.debt.blank?
+    row.item(:subtotal).value number_with_precision(i.subtotals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.subtotals.blank?
+    row.item(:taxes).value number_with_precision(i.total_taxes, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.total_taxes.blank?
+    row.item(:total).value number_with_precision(i.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.totals.blank?
+    row.item(:paid).value number_with_precision(i.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.collected.blank?
+    row.item(:debt).value number_with_precision(i.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.debt.blank?
   end
 
   # Store page subtotals

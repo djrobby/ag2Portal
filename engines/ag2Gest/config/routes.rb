@@ -528,6 +528,9 @@ Ag2Gest::Engine.routes.draw do
       post 'simple_bill', on: :member
       post 'update_simple', on: :member
       post 'update_tariffs', on: :member
+      post 'quit_meter', on: :member
+      post 'add_meter', on: :member
+      post 'change_meter', on: :member
       resources :clients, except: [:index, :show, :edit, :new]
     end
     #
@@ -589,7 +592,11 @@ Ag2Gest::Engine.routes.draw do
     resources :meter_owners
     resources :calibers
     #
-    resources :service_points
+    resources :service_points do
+      post 'install_meter', on: :member
+      post 'withdrawal_meter', on: :member
+      post 'change_meter', on: :member
+    end
     resources :water_connections
     resources :service_point_types
     resources :water_connection_types

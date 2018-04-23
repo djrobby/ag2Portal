@@ -390,14 +390,10 @@ module Ag2Gest
         save_all_ok = false
       end
 
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
-          format.json { render json: @reading, status: :created, location: @reading }
-        else
-          format.html { redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.add_meter_failure') }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to subscriber_path(@subscriber) + "#readings", notice: t('activerecord.attributes.subscriber.add_meter_successful')
+      else
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.add_meter_failure')
       end
     end
 
@@ -413,7 +409,7 @@ module Ag2Gest
       save_all_ok = false
 
       if @meter.is_shared?
-        redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.quit_meter_shared_failure') and return
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.quit_meter_shared_failure') and return
       else
         #Create Reading
         @reading = Reading.new( project_id: project,
@@ -473,15 +469,10 @@ module Ag2Gest
         end
       end #@meter.is_shared?
 
-
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.quit_meter_successful') }
-          format.json { render json: @reading, status: :created, location: @reading }
-        else
-          format.html { redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.quit_meter_failure') }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to subscriber_path(@subscriber) + "#readings", notice: t('activerecord.attributes.subscriber.quit_meter_successful')
+      else
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.quit_meter_failure')
       end
     end
 
@@ -499,7 +490,7 @@ module Ag2Gest
       save_all_ok = false
 
       if @meter_q.is_shared?
-        redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.quit_meter_shared_failure') and return
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.quit_meter_shared_failure') and return
       else
         #Create Reading
         @reading_q = Reading.new( project_id: project,
@@ -556,7 +547,7 @@ module Ag2Gest
           save_all_ok = false
         end
 
-        redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.quit_meter_failure') and return if !save_all_ok
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.quit_meter_failure') and return if !save_all_ok
 
         # Add meter
         @meter_a = Meter.find params[:reading][:meter_id]
@@ -615,15 +606,10 @@ module Ag2Gest
           save_all_ok = false
         end
       end
-
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @subscriber, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
-          format.json { render json: @reading_a, status: :created, location: @reading_a }
-        else
-          format.html { redirect_to @subscriber, alert: t('activerecord.attributes.subscriber.add_meter_failure') }
-          format.json { render json: @reading_a.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to subscriber_path(@subscriber) + "#readings", notice: t('activerecord.attributes.subscriber.add_meter_successful')
+      else
+        redirect_to subscriber_path(@subscriber) + "#readings", alert: t('activerecord.attributes.subscriber.add_meter_failure')
       end
     end
 
@@ -1845,6 +1831,7 @@ module Ag2Gest
           new_invoice.invoice_no = void_invoice_next_no(invoice.biller_id, bill.project.office_id)
           new_invoice.bill_id = bill_cancel.id
           new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
+          new_invoice.invoice_status_id = InvoiceStatus::PENDING
           new_invoice.original_invoice_id = invoice.id
           new_invoice.save
           invoice.invoice_items.each do |item|

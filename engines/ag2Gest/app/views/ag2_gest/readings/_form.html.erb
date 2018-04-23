@@ -98,6 +98,10 @@
       });
       return false;
     });
+
+    $("#submit_btn").click(function() {
+      $('#reading_date').prop('disabled', false);
+    });
   });
 </script>
 
@@ -170,7 +174,7 @@
       <tbody>
         <tr class="form-tr">
           <span class="left-floated shrinked" style="vertical-align: bottom" id="alert_change"></span>
-          <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary' %> </td>
+          <td class="form-td-three left-winged"> <%= f.button :submit, :class => 'btn-primary', :id => 'submit_btn' %> </td>
         </tr>
       </tbody>
     </table>

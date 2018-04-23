@@ -36,10 +36,10 @@ report.layout.config.list(:default) do |c|
 		e.section.item(:sum_rows_title).value(I18n.t("ag2_tech.ag2_tech_track.project_report.sum_rows_title"))
 		e.section.item(:sum_rows).value(e.store.page_rows)
 		e.section.item(:full_total_c).value I18n.t("ag2_products.ag2_products_track.every_report.cumulative_total")
-		e.section.item(:collected).value number_with_precision(e.store.p_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-		e.section.item(:total_collected).value number_with_precision(e.store.p_t_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-		e.section.item(:paid).value number_with_precision(e.store.p_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-		e.section.item(:total_paid).value number_with_precision(e.store.p_t_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		e.section.item(:collected).value number_with_precision(e.store.p_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		e.section.item(:total_collected).value number_with_precision(e.store.p_t_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		e.section.item(:paid).value number_with_precision(e.store.p_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		e.section.item(:total_paid).value number_with_precision(e.store.p_t_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 		# Initialize subtotals to 0
 		#e.store.page_rows = 0
 	end
@@ -104,12 +104,12 @@ project_id = @close_cash_report.first.project_id
 		report.page.values company: i.company.name unless i.company.blank?
 		report.page.values project: i.project.to_label
 		row.item(:id).value i.id
-		row.item(:opening_balance).value number_with_precision(i.opening_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:closing_balance).value number_with_precision(i.closing_balance, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		row.item(:opening_balance).value number_with_precision(i.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+		row.item(:closing_balance).value number_with_precision(i.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 		row.item(:invoices_collected).value number_with_precision(i.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:amount_collected).value number_with_precision(i.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		row.item(:amount_collected).value number_with_precision(i.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 		row.item(:invoices_paid).value number_with_precision(i.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:amount_paid).value number_with_precision(i.amount_paid, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+		row.item(:amount_paid).value number_with_precision(i.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 		row.item(:created_at).value i == @time_record ? formatted_timestamp(i.created_at) : formatted_timestamp(i.created_at.utc.getlocal)
 		row.item(:created_by).value User.find(i.created_by).email
 	end

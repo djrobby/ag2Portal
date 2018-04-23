@@ -1,5 +1,5 @@
 <tr>
   <td><%= item.try(:payment_method).try(:to_label) %></td>
   <td><%= item.origin_label %></td>
-  <td align="right"><%= number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td align="right"><%= number_with_precision(item.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
 </tr>

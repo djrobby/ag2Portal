@@ -233,13 +233,13 @@ end
 		if _payment_method == "first"
 			row.item(:payment_method).value cc.payment_method.to_label unless cc.payment_method.blank?
 			row.item(:no).value cc.origin_label unless cc.blank?
-			row.item(:amount).value number_with_precision(cc.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cc.blank?
+			row.item(:amount).value number_with_precision(cc.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cc.blank?
 			_total += cc.amount unless cc.blank?
 			_old_method = cc.payment_method.to_label
 		elsif _payment_method == cc.payment_method_id
 			row.item(:payment_method).hide
 			row.item(:no).value cc.origin_label unless cc.blank?
-			row.item(:amount).value number_with_precision(cc.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless cc.blank?
+			row.item(:amount).value number_with_precision(cc.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cc.blank?
 			_total += cc.amount unless cc.blank?
 			_old_method = cc.payment_method.to_label
 		else
@@ -247,7 +247,7 @@ end
 				row2.item(:payment_method).value I18n.t("activerecord.attributes.bill.total") + " " + _old_method
 				row2.item(:no).hide
 				row2.item(:amount).hide
-				row2.item(:amount_total).value number_with_precision(_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount_total).value number_with_precision(_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				_total = 0
 			end
 			row.item(:payment_method).value cc.payment_method.to_label unless cc.payment_method.blank?
@@ -268,5 +268,5 @@ report.page.list(:default).add_row do |row2|
 	row2.item(:payment_method).value I18n.t("activerecord.attributes.bill.total") + " " + _old_method
 	row2.item(:no).hide
 	row2.item(:amount).hide
-	row2.item(:amount_total).value number_with_precision(_total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	row2.item(:amount_total).value number_with_precision(_total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 end

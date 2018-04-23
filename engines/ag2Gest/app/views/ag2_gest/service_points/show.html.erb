@@ -105,35 +105,10 @@ delete_path: @service_point, delete_txt: t('.btn_delete'), msg: t("activerecord.
 new_path: new_service_point_path, new_txt: t('ag2_gest.service_points.index.btn_new') } %>
 
 <!-- Readings -->
-<table class="form-table">
-  <tbody>
-    <tr class="form-tr underlined-tr">
-      <td class="form-td-two left-winged">
-        <h4><%=t 'ag2_gest.meters.show.subtable_title_readings' %></h4>
-      </td>
-      <td class="form-td-two right-winged">
-        <% unless @meter.blank? %>
-          <a href="#newReadingModal" id="link_reading" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.reading_new') %></a>
-          <a href="#withdrawalMeter" id="withdrawal_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal" data-confirm="<%= t("activerecord.attributes.subscriber.alert_quit_meters")%>" ><%= t('activerecord.attributes.subscriber.remove_meter') %></a>
-          <a href="#changeMeter" id="change_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_meter') %></a>
-        <% else %>
-          <a href="#installMeter" id="install_meter" role="button" class="btn btn-mini btn-primary" data-toggle="modal" data-confirm="<%= t("activerecord.attributes.subscriber.alert_add_meters")%>" ><%= t('activerecord.attributes.subscriber.add_meter') %></a>
-        <% end %>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<% if (@readings.count > 0) %>
-<table class="table table-condensed table-striped shrinked">
-  <thead>
-    <%= render :partial => '/layouts/ag2_gest/readingsheader', :locals => { :source => 'SP' } %>
-  </thead>
-  <tbody>
-    <%= render :partial => '/layouts/ag2_gest/readings', :locals => { :readings => @readings, :source => 'SP' } %>
-  </tbody>
-</table>
-<%= render :partial => '/layouts/pagination', :locals => { :ivar => @readings } %>
-<% end %>
+<div id="reading">
+  <%= render 'show_reading' %>
+</div>
+
 
 <br>
 <% if !session[:return_to].nil? %>
@@ -144,7 +119,6 @@ new_path: new_service_point_path, new_txt: t('ag2_gest.service_points.index.btn_
 <% end %>
 
 <%= link_to I18n.t('ag2_gest.service_points.back_to_main_page'), service_points_path %>
-
 
 <!-- MODALS -->
 <%= render '/ag2_gest/subscribers/modals/new_reading' %>

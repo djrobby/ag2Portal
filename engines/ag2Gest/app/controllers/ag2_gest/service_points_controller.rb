@@ -131,7 +131,7 @@ module Ag2Gest
           save_all_ok = false
         end
       end
-      redirect_to @service_point, alert: t('activerecord.attributes.subscriber.quit_meter_failure') and return if !save_all_ok
+      redirect_to service_point_path(@service_point), alert: t('activerecord.attributes.subscriber.quit_meter_failure') and return if !save_all_ok
 
 
       # Install meter--
@@ -245,15 +245,10 @@ module Ag2Gest
           save_all_ok = false
         end
       end # !su.blank?
-
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @service_point, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
-          format.json { render json: @reading_a, status: :created, location: @reading_a }
-        else
-          format.html { redirect_to @service_point, alert: t('activerecord.attributes.subscriber.add_meter_failure') }
-          format.json { render json: @reading_a.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to service_point_path(@service_point), notice: t('activerecord.attributes.subscriber.add_meter_successful')
+      else
+        redirect_to service_point_path(@service_point), alert: t('activerecord.attributes.subscriber.add_meter_failure')
       end
     end
 
@@ -368,14 +363,10 @@ module Ag2Gest
         end
       end
 
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @service_point, notice: t('activerecord.attributes.subscriber.add_meter_successful') }
-          format.json { render json: @reading, status: :created, location: @reading }
-        else
-          format.html { redirect_to @service_point, alert: t('activerecord.attributes.subscriber.add_meter_failure') }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to service_point_path(@service_point), notice: t('activerecord.attributes.subscriber.add_meter_successful')
+      else
+        redirect_to service_point_path(@service_point), alert: t('activerecord.attributes.subscriber.add_meter_failure')
       end
     end
 
@@ -492,14 +483,10 @@ module Ag2Gest
         end
       end
 
-      respond_to do |format|
-        if save_all_ok
-          format.html { redirect_to @service_point, notice: t('activerecord.attributes.subscriber.quit_meter_successful') }
-          format.json { render json: @reading, status: :created, location: @reading }
-        else
-          format.html { redirect_to @service_point, alert: t('activerecord.attributes.subscriber.quit_meter_failure') }
-          format.json { render json: @reading.errors, status: :unprocessable_entity }
-        end
+      if save_all_ok
+        redirect_to service_point_path(@service_point), notice: t('activerecord.attributes.subscriber.quit_meter_successful')
+      else
+        redirect_to service_point_path(@service_point), alert: t('activerecord.attributes.subscriber.quit_meter_failure')
       end
     end
 
@@ -655,6 +642,7 @@ module Ag2Gest
       @service_point = ServicePoint.find(params[:id])
       @readings = @service_point.readings.paginate(:page => params[:page], :per_page => per_page).by_period_date
       @meter = @service_point.meter rescue nil
+      @meter_location = MeterLocation.all
       @reading = Reading.new
       @billing_period = billing_periods_dropdown(@service_point.office_id)
       @reading_type = ReadingType.single_manual_reading
@@ -664,6 +652,7 @@ module Ag2Gest
       respond_to do |format|
         format.html # show.html.erb
         format.json { render json: @service_point }
+        format.js
       end
     end
 

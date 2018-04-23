@@ -44,12 +44,12 @@
       <td><%=t 'activerecord.attributes.cash_desk_closing.opening_balance' %>:</td>
       <td>
         <%= number_with_precision(@cash_desk_closing.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
-        (<%= number_with_precision(@cash_desk_closing.last_closing.difference_of_balance_due_to_rounding, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>)
+        (<%= number_with_precision(@cash_desk_closing.last_closing.difference_of_balance_due_to_rounding, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>)
       </td>
       <td><%=t 'activerecord.attributes.cash_desk_closing.closing_balance' %>:</td>
       <td class="highlighted bolded">
         <%= number_with_precision(@cash_desk_closing.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
-        (<%= number_with_precision(@cash_desk_closing.difference_of_balance_due_to_rounding, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>)
+        (<%= number_with_precision(@cash_desk_closing.difference_of_balance_due_to_rounding, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>)
       </td>
     </tr>
     <tr>

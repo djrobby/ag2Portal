@@ -71,6 +71,7 @@ module Ag2Gest
       @breadcrumb = 'create'
       @billing_period = BillingPeriod.new(params[:billing_period])
       @billing_period.created_by = current_user.id if !current_user.nil?
+      @projects = current_projects.blank? ? Project.all : current_projects
 
       respond_to do |format|
         if @billing_period.save

@@ -27,6 +27,17 @@ report.page.values(company_name: @biller_printer.project.company.name,
            company_email: @biller_printer.project.company.email_and_website
            )
 report.page.values(company_data: (@biller_printer.project.company.invoice_footer_complete + "/r90"))
+
+#bank
+bank_string = I18n.t("activerecord.attributes.bill.company_bank") + "\n"
+@biller_printer.project.company.company_bank_accounts.each do |bank|
+  bank_string += "- " + bank.bank.name.to_s + " " + bank.p_format.to_s + "\n"
+end
+
+report.page.values company_bank: bank_string
+report.page.values office_note: @biller_printer.project.office.invoice_note unless @biller_printer.project.office.invoice_note.blank?
+
+
 #
 # Remarks and note
 
@@ -152,7 +163,7 @@ end
 _code1 = @biller_printer.invoices.first.invoiced_subtotals_by_billable_item.first
 _code = _code1[3]
 _number1 = 1
-_bridge = " "
+# _bridge = " "
 _array = [ ]
 regulation_tariff = " "
 _ab = []
@@ -174,9 +185,9 @@ a = @biller_printer.invoices.first
         end
           _array << ([_number1.to_s, sub_billable_item[4], sub_billable_item[5], sub_billable_item[0]])
 
-          regulation_tariff += _bridge + "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "." unless regulation.blank?
+          regulation_tariff += "(" + _number1.to_s + ") " + regulation.regulation_type.description + " " + regulation.description + " " + regulation.starting_at.strftime(_format) + "\n" unless regulation.blank?
 
-          _bridge = " // "
+          # _bridge = " // "
       end
     end
   end
@@ -326,7 +337,7 @@ var_invoice_limit = @biller_printer.invoices.second.payday_limit.strftime(_forma
               _number1 = _number1 + 1.to_i
               row.item(:sub).value "(" + _number1.to_s + ")"
               _array << ([_number1.to_s, item.tariff.billable_concept.name, item.tariff.billable_item.regulation_id])
-              regulation_tariff += _bridge + "(" + _number1.to_s + ") " + item.tariff.billable_item.regulation.regulation_type.description + " " + item.tariff.billable_item.regulation.description + " " + item.tariff.billable_item.regulation.starting_at.strftime("%d/%m/%Y") + "." unless item.tariff.billable_item.regulation.blank?
+              regulation_tariff += "(" + _number1.to_s + ") " + item.tariff.billable_item.regulation.regulation_type.description + " " + item.tariff.billable_item.regulation.description + " " + item.tariff.billable_item.regulation.starting_at.strftime("%d/%m/%Y") + "\n" unless item.tariff.billable_item.regulation.blank?
             end
           end
           row.item(:items).value item.subcode_name
@@ -459,7 +470,7 @@ end
         row1.item(:measure).value item.try(:measure).try(:description)
         row1.item(:quantity).value number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
         row1.item(:price).value number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
-        row1.item(:amount).value number_with_precision(item.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+        row1.item(:amount).value number_with_precision(item.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
         row1.item(:tax).value number_with_precision(item.tax_type.tax, precision: 2).to_s + "%" if item.tax_type.tax != TaxType.exempt.tax
         var_concept = item.try(:description)[1..-1]
       end

@@ -102,20 +102,20 @@ end
 
 @payment_receipt_bill.each do |receipt|
 	var_bill_date = receipt.bill.bill_date.strftime(_format) unless receipt.bill.bill_date.blank?
-	_debt = number_with_precision(receipt.bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+	_debt = number_with_precision(receipt.bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 	if _debt < "0"
-		_debt_total = "0,0000"
+		_debt_total = "0,00"
   else
     _debt_total = _debt
 	end
-	if _debt == "0,0000"
+	if _debt == "0,00"
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
         row2.item(:cv).value "CV:" + receipt.burst_security.upcase
 				row2.item(:receipt_date).value var_bill_date
-				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				_bill += (receipt.bill.try(:invoice_based_old_no_real_no) + ", ")
 			end
 	else
@@ -124,16 +124,16 @@ end
 				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
         row2.item(:cv).value "CV:" + receipt.burst_security.upcase
 				row2.item(:receipt_date).value var_bill_date
-				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:debt).value _debt_total
 				_bill += (receipt.bill.try(:invoice_based_old_no_real_no) + ", ")
 			end
 				receipt.bill.invoices.each do |invoices|
 					var_invoice_date = invoices.invoice_date.strftime(_format) unless invoices.invoice_date.blank?
-            _debt_invoice = number_with_precision(invoices.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+            _debt_invoice = number_with_precision(invoices.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             if _debt_invoice < "0"
-              _debt_invoice_total = "0,0000"
+              _debt_invoice_total = "0,00"
             else
               _debt_invoice_total = _debt_invoice
             end
@@ -141,8 +141,8 @@ end
 							row3.item(:sup).hide
 							row3.item(:invoice_no).value invoices.try(:full_no)
 							row3.item(:invoice_date).value var_invoice_date
-							row3.item(:invoice_total).value number_with_precision(invoices.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-							row3.item(:invoice_amount).value number_with_precision(invoices.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+							row3.item(:invoice_total).value number_with_precision(invoices.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+							row3.item(:invoice_amount).value number_with_precision(invoices.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
               row3.item(:invoice_debt).value _debt_invoice_total
 						end
 					if !receipt.instalment.blank?
@@ -151,8 +151,8 @@ end
 								row4.item(:sup).hide
 								row4.item(:instalment_no).value I18n.t("activerecord.models.instalment_plan.one") + ": " + receipt_instalment.instalment.instalment_no.to_s + " " + I18n.t("activerecord.attributes.instalment_plan.instalments_qty_c.") + ": " + receipt_instalment.instalment.instalment.to_s
 								row4.item(:instalment_date).value var_invoice_date
-								row4.item(:instalment_total).value number_with_precision(receipt_instalment.instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
-								row4.item(:instalment_amount).value number_with_precision(receipt_instalment.instalment.amount_collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",")
+								row4.item(:instalment_total).value number_with_precision(receipt_instalment.instalment.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+								row4.item(:instalment_amount).value number_with_precision(receipt_instalment.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 							end
 						end
 					end

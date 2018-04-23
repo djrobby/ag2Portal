@@ -503,7 +503,7 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.total_sale_offer') %></b></td>
           <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.sale_offer %>
-            <td id="total_sale_offer"><%= number_with_precision(@contracting_request.water_connection_contract.sale_offer.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td id="total_sale_offer"><%= number_with_precision(@contracting_request.water_connection_contract.sale_offer.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <% else %>
             <td id="total_sale_offer"></td>
           <% end %>
@@ -556,7 +556,7 @@
         <tr>
           <td><b><%= t('activerecord.attributes.contracting_request.total_work_order') %></b></td>
           <% if @contracting_request.water_connection_contract && @contracting_request.water_connection_contract.work_order %>
-            <td id="total_work_order"><%= number_with_precision(@contracting_request.water_connection_contract.work_order.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td id="total_work_order"><%= number_with_precision(@contracting_request.water_connection_contract.work_order.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
           <% else %>
             <td id="total_work_order"></td>
           <% end %>

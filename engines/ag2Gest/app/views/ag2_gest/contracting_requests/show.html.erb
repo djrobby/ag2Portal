@@ -37,7 +37,7 @@
     <tr>
       <td colspan="4"><h4><%= @contracting_request.try(:entity).try(:to_label) %></h4></td>
       <td><%= t :"activerecord.attributes.subscriber.debt" %>:</td>
-      <td id="debt"><%= number_with_precision(@current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
+      <td id="debt"><%= number_with_precision(@current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless @current_debt.blank? %></td>
     </tr>
   </tbody>
 </table>

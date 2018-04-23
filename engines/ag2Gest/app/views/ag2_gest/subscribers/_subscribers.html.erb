@@ -24,7 +24,7 @@
   <tbody>
     <% @subscribers.each do |subscriber| %>
       <tr>
-        <td><%= link_to subscriber.try(:full_code), subscriber_path(subscriber) %>  <% if subscriber.active_bank_accounts? %><i class="icon-briefcase"></i><% end %></td>
+        <td><%= link_to subscriber.try(:full_code), subscriber_path(subscriber) %>  <% if subscriber.active_bank_accounts? && subscriber.client.active_bank_accounts? %><i class="icon-briefcase"></i><% end %></td>
         <td><%= subscriber.try(:full_name) %></td>
         <td><%= subscriber.try(:fiscal_id) %></td>
         <td><%= subscriber.try(:address_1) %></td>

@@ -77,7 +77,7 @@ project_id = @contracting_request_complete_report.first.project_id
 @contracting_request_complete_report.each do |i|
 	if !i.project_id.blank? && (i.project_id != project_id)
 		report.page.list(:default).page_break
-		report.page.list(:default) do |list|	
+		report.page.list(:default) do |list|
 			list.store.page_rows = 0
 		end
 		project_id = i.project_id
@@ -116,8 +116,8 @@ project_id = @contracting_request_complete_report.first.project_id
 		row.item(:status).value i.contracting_request_status.name
 		row.item(:date).value formatted_date(i.request_date) unless i.request_date.blank?
 		row.item(:invoice).value i.water_supply_contract.bill.invoices.first.full_no unless i.water_supply_contract.blank? or i.water_supply_contract.bill.blank?
-		row.item(:total).value number_with_precision(i.water_supply_contract.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless i.water_supply_contract.blank? or i.water_supply_contract.bill.blank?
-	end 
+		row.item(:total).value number_with_precision(i.water_supply_contract.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.water_supply_contract.blank? or i.water_supply_contract.bill.blank?
+	end
 
 	# Store page subtotals
   report.page.list(:default) do |list|

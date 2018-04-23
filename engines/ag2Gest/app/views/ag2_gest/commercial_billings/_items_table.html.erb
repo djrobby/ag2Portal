@@ -210,13 +210,13 @@
       <td><%= i.input :description, label: false, wrapper: false, input_html: { onkeyup: "caps(this)", class: 'sub-alfanumeric-text-field fnt-description', maxlength: 40 } %></td>
       <td style="display:none;"><%= i.input :code, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-code' } %></td>
       <td style="display:none;"><%= i.input :subcode, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-subcode' } %></td>
-      <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 4) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
+      <td><%= i.input :quantity, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.quantity, precision: 2) if i.object.quantity), class: 'sub-number-text-field fnt-quantity' } %></td>
       <td><%= i.input :price, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.price, precision: 4) if i.object.price), class: 'sub-number-text-field fnt-price' } %></td>
       <td><%= i.input :discount_pct, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount_pct, precision: 2) if i.object.discount_pct), class: 'sub-number-text-field fnt-discount-pct' } %></td>
-      <td><%= i.input :discount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 4) if i.object.discount), class: 'sub-number-text-field fnt-discount' } %></td>
-      <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 4) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
+      <td><%= i.input :discount, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.discount, precision: 2) if i.object.discount), class: 'sub-number-text-field fnt-discount' } %></td>
+      <td><%= i.input :amount, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.amount, precision: 2) if i.object.amount), class: 'sub-number-text-field sub-disabled-field fnt-amount' } %></td>
       <td style="display:none;"><%= i.input :tax_type_id, label: false, wrapper: false, input_html: { class: 'sub-alfanumeric-text-field fnt-tax-type' } %></td>
-      <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 4) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
+      <td><%= i.input :tax, disabled: true, label: false, wrapper: false, as: :string, input_html: { value: (number_with_precision(i.object.tax, precision: 2) if i.object.tax), class: 'sub-number-text-field sub-disabled-field fnt-tax' } %></td>
       <td style="display:none;"><%= i.input :sale_offer_id, label: false, wrapper: false, input_html: { class: 'fnt-sale-offer' } %></td>
       <td style="display:none;"><%= i.input :sale_offer_item_id, label: false, wrapper: false, input_html: { class: 'fnt-sale-offer-item' } %></td>
       <% if @breadcrumb == 'create' || @breadcrumb == 'update' %>

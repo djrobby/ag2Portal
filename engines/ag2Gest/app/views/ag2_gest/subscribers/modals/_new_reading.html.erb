@@ -17,52 +17,11 @@
       $('.date_picker').datepicker('hide');
     });
 
-    $("#form_new_reading") //Element form
-      .bind("ajax:success", function(xhr, data, status){ //enlazar pasandole param this
-
-        //Oculto Modal
-        $("#newReadingModal").modal('hide');
-
-        var reading_incidence_types = "";
-        var title = "";
-
-        if (data.reading_incidence_types[0] == undefined && data.reading_incidence_types[0] == null){
-          reading_incidence_types = "-";
-
-        } else {
-          var str_incidence = data.reading_incidence_types.length;
-          /*Añadir los elementos i en función de los incidence types que tenga*/
-
-          for(var i=0; i < str_incidence; i++) {
-            if (i >= 1) {
-              title += `, `;
-            }
-            title += `${data.reading_incidence_types[i]}`;
-          }
-          reading_incidence_types = `<i title="${title}" class="icon-ok"></i>`;
-        }
-
-        var date =``;
-
-        if (data.reading.reading_date !== undefined) {
-          /*var year = data.reading.reading_date.substring(0, 4);
-          var month = data.reading.reading_date.substring(5, 7);
-          var day = data.reading.reading_date.substring(8, 10);
-          var */
-          date += `${data.reading.reading_date.substring(8, 10)}/${data.reading.reading_date.substring(5, 7)}/${data.reading.reading_date.substring(0, 4)}`;
-        }
-
-        var text = `<tr><td>${data.reading.id}</td><td>${data.billing_period.period}</td><td><a href="/es/ag2_gest/es/reading_types/${data.reading.reading_type_id}">${data.reading_type.name}</a></td><td>${date}</td><td>${data.reading.reading_index}</td><td>${reading_incidence_types}</td>`;
-        text += `<td class="a_inline"><a href="/es/ag2_gest/es/readings/${data.reading.id}/edit" class="btn btn-mini"><i class="icon-edit"></i></a><a href="/es/ag2_gest/es/readings/${data.reading.id}"class="btn btn-mini" data-confirm="Are you sure?" data-method="delete" rel="nofollow"><i class="icon-trash"></i></a></td></tr>`;
-
-        $('#readings table tbody').after(text);
-
-      })
-      .bind("ajax:error", function(xhr, data, status){
-        /*Sí da error*/
-        alert("Error");
-      });
+    $('#submit_new_reading').click(function(){
+      $("#newReadingModal").modal('hide');
+    });
   });//End Ready
+
   jQuery(function($) {
     $("#billing_period").change(function() {
       if ($('#billing_period').val() == "") {
@@ -94,7 +53,7 @@
 
 <!-- NewReading -->
 <div id="newReadingModal" class="modal hide fade">
-  <%= simple_form_for [@reading], :html => { "data-type" => :json, :class => 'modal-footer-right form-inline', :id => 'form_new_reading' } do |f| %>
+  <%= simple_form_for [@reading], method: :post, :remote => true, :html => { class: 'modal-footer-right' , :id => 'form_new_reading'} do |f| %>
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&#215;</a>
     <h3><%= t('activerecord.attributes.subscriber.new_reading') %></h3>

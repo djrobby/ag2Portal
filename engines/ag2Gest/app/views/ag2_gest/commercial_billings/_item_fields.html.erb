@@ -357,15 +357,15 @@
     <%= f.input :description, input_html: { class: 'x-large-text-field field', maxlength: 40, id: 'fnt-description', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
     <%= f.input :code, input_html: { class: 'mid-text-field field', id: 'fnt-code' }, label_html: { class: 'form-label' } %>
     <%= f.input :subcode, disabled: true, input_html: { class: 'mid-text-field field', id: 'fnt-subcode' }, label_html: { class: 'form-label' } %>
-    <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 4) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
+    <%= f.input :quantity, as: :string, input_html: { value: (number_with_precision(f.object.quantity, precision: 2) if f.object.quantity), class: 'mid-text-field number-text-field field', id: 'fnt-quantity' }, label_html: { class: 'form-label' } %>
     <%= f.input :price, as: :string, input_html: { value: (number_with_precision(f.object.price, precision: 4) if f.object.price), class: 'mid-text-field number-text-field field', id: 'fnt-price' }, label_html: { class: 'form-label' } %>
     <%= f.input :discount_pct, as: :string, input_html: { value: (number_with_precision(f.object.discount_pct, precision: 2) if f.object.discount_pct), class: 'mid-text-field number-text-field field', id: 'fnt-discount-pct' }, label_html: { class: 'form-label' } %>
-    <%= f.input :discount, as: :string, input_html: { value: (number_with_precision(f.object.discount, precision: 4) if f.object.discount), class: 'mid-text-field number-text-field field', id: 'fnt-discount' }, label_html: { class: 'form-label' } %>
-    <%= f.input :amount, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 4) if f.object.amount), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-amount' }, label_html: { class: 'form-label' } %>
+    <%= f.input :discount, as: :string, input_html: { value: (number_with_precision(f.object.discount, precision: 2) if f.object.discount), class: 'mid-text-field number-text-field field', id: 'fnt-discount' }, label_html: { class: 'form-label' } %>
+    <%= f.input :amount, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.amount, precision: 2) if f.object.amount), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-amount' }, label_html: { class: 'form-label' } %>
     <%= f.association :tax_type, collection: TaxType.where('expiration IS NULL').order('description'), input_html: { class: 'x-large-text-field field', id: 'fnt-tax-type', data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
     <a href="javascript:scrollToAnchorModal('#fnt-sale-offer');" style="float: right" id="go-top"><i class="icon-arrow-up" title="<%=t(:top) %>"></i></a>
     <div style="overflow: hidden; padding-left: 0em;">
-      <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 4) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
+      <%= f.input :tax, disabled: true, as: :string, input_html: { value: (number_with_precision(f.object.tax, precision: 2) if f.object.tax), class: 'mid-text-field number-text-field sub-disabled-field field', id: 'fnt-tax' }, label_html: { class: 'form-label' } %>
     </div>
     <%= f.input :_destroy, as: :hidden, input_html: { class: 'field' } %>
   </div>

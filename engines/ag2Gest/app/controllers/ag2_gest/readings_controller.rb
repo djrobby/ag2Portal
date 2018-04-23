@@ -257,7 +257,7 @@ module Ag2Gest
                 if session[:return_to_subscriber].nil?
                   redirect_to @reading, alert: t('activerecord.attributes.reading.wrongly')
                 else
-                  redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+                  redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.wrongly')
                 end
                 break
               else
@@ -288,7 +288,7 @@ module Ag2Gest
             if session[:return_to_subscriber].nil?
               redirect_to @reading, notice: t('activerecord.attributes.reading.create')
             else
-              redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
+              redirect_to session[:return_to_subscriber_url] + "#readings", notice: t('activerecord.attributes.reading.create')
             end
           else
             @reading = Reading.new(params[:reading])
@@ -336,13 +336,13 @@ module Ag2Gest
               if session[:return_to_subscriber].nil?
                 redirect_to @reading, notice: t('activerecord.attributes.reading.create')
               else
-                redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
+                redirect_to session[:return_to_subscriber_url] + "#readings", notice: t('activerecord.attributes.reading.create')
               end
             else
               if session[:return_to_subscriber].nil?
                 redirect_to @reading, alert: t('activerecord.attributes.reading.wrongly')
               else
-                redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+                redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.wrongly')
               end
             end
           end # @meter.is_shared?
@@ -350,7 +350,7 @@ module Ag2Gest
           if session[:return_to_subscriber].nil?
             redirect_to @reading, alert: t('activerecord.attributes.reading.repeat')
           else
-            redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat')
+            redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.repeat')
           end
         end # @reading_exits.blank?
       end # !@meter.blank?
@@ -442,7 +442,7 @@ module Ag2Gest
                 if session[:return_to_subscriber].nil?
                   redirect_to @reading.first, alert: t('activerecord.attributes.reading.wrongly')
                 else
-                  redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+                  redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.wrongly')
                 end
                 break
               end
@@ -450,7 +450,7 @@ module Ag2Gest
             if session[:return_to_subscriber].nil?
               redirect_to @reading, notice: t('activerecord.attributes.reading.create')
             else
-              redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
+              redirect_to session[:return_to_subscriber_url] + "#readings", notice: t('activerecord.attributes.reading.create')
             end
           else
             @reading.assign_attributes params[:reading]
@@ -499,13 +499,13 @@ module Ag2Gest
               if session[:return_to_subscriber].nil?
                 redirect_to @reading, notice: t('activerecord.attributes.reading.create')
               else
-                redirect_to session[:return_to_subscriber_url], notice: t('activerecord.attributes.reading.create')
+                redirect_to session[:return_to_subscriber_url] + "#readings", notice: t('activerecord.attributes.reading.create')
               end
             else
               if session[:return_to_subscriber].nil?
                 redirect_to @reading, alert: t('activerecord.attributes.reading.wrongly')
               else
-                redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.wrongly')
+                redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.wrongly')
               end
             end
           end # @meter.is_shared?
@@ -513,7 +513,7 @@ module Ag2Gest
           if session[:return_to_subscriber].nil?
             redirect_to @reading, alert: t('activerecord.attributes.reading.repeat')
           else
-            redirect_to session[:return_to_subscriber_url], alert: t('activerecord.attributes.reading.repeat')
+            redirect_to session[:return_to_subscriber_url] + "#readings", alert: t('activerecord.attributes.reading.repeat')
           end
         end # @reading_exits.blank?
       end # !@meter.blank?
@@ -530,7 +530,7 @@ module Ag2Gest
             format.html { redirect_to readings_url,
                         notice: (crud_notice('destroyed', @reading) + "#{undo_link(@reading)}").html_safe }
           else
-            format.html { redirect_to session[:return_to_subscriber_url], notice: crud_notice('destroyed', @reading) }
+            format.html { redirect_to session[:return_to_subscriber_url] + "#readings", notice: crud_notice('destroyed', @reading) }
           end
           format.json { head :no_content }
         else

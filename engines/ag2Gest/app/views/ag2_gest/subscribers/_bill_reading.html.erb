@@ -74,33 +74,33 @@
               <tr class="<%= 'text-error' if unpaid %> fields">
                 <td><%= item.code_ %></td>
                 <td><%= InvoiceItem.subcode_names(item.subcode_) %></td>
-                <td align="right"><%= number_with_precision(item.quantity_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.quantity_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= number_with_precision(item.price_, precision: 6, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.amount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.tax_type_tax_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.discount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.discount_pct_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(item.total_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.amount_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.tax_type_tax_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.discount_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.discount_pct_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(item.total_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
             <% end %>
             <tr class="subtotal <%= 'text-error' if unpaid %> fields">
               <td colspan="7" class="no-boder"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.subtotal').upcase %></b></td>
-              <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right" class="black-border"><%= number_with_precision(invoice.subtotal_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
             <% InvoiceTax.by_invoice_id(invoice.invoice_id_).each do |tax| %>
               <tr class="<%= 'text-error' if unpaid %> fields">
                 <td colspan="5" class="no-boder"></td>
-                <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp;  <%= number_with_precision(tax.taxable_, precision: 4, delimiter: I18n.locale == :es ? "." : ",")  %></td>
+                <td class="no-boder"><b>Base imponible:</b>&nbsp;&nbsp;  <%= number_with_precision(tax.taxable_, precision: 2, delimiter: I18n.locale == :es ? "." : ",")  %></td>
                 <td class="no-boder"><%= "#{pluralize(tax.items_qty_, 'artículo')}"  %></td>
                 <td><b><%= " #{t('activerecord.attributes.subscriber.vat')} (#{tax.tax_}%)" %></b></td>
-                <td align="right"><%= number_with_precision(tax.tax_amount_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(tax.tax_amount_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
               </tr>
             <% end %>
             <tr class="<%= 'text-error' if unpaid %> fields">
               <td colspan="7" class="black-border"></td>
               <td class="black-border"><b><%= t('activerecord.attributes.subscriber.total').upcase %></b></td>
-              <td  align="right" class="black-border"><%= number_with_precision(invoice.totals_, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td  align="right" class="black-border"><%= number_with_precision(invoice.totals_, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
         <% end %>
         </table>
