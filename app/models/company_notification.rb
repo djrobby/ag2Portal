@@ -11,7 +11,7 @@ class CompanyNotification < ActiveRecord::Base
   validates :role,          :presence => true
 
   def role_label
-    role_label = case role
+    case role
       when 1 then I18n.t('activerecord.attributes.company_notification.role_1')
       when 2 then I18n.t('activerecord.attributes.company_notification.role_2')
       else 'N/A'
