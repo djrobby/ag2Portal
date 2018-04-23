@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180417083813) do
+ActiveRecord::Schema.define(:version => 20180423083122) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -714,11 +714,12 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
     t.string   "holder_name"
     t.date     "starting_at"
     t.date     "ending_at"
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.integer  "origin",                :limit => 1, :default => 1, :null => false
+    t.integer  "origin",                :limit => 1,  :default => 1, :null => false
+    t.string   "iban",                  :limit => 50
   end
 
   add_index "client_bank_accounts", ["account_no"], :name => "index_client_bank_accounts_on_account_no"
@@ -730,6 +731,7 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
   add_index "client_bank_accounts", ["country_id"], :name => "index_client_bank_accounts_on_country_id"
   add_index "client_bank_accounts", ["holder_fiscal_id"], :name => "index_client_bank_accounts_on_holder_fiscal_id"
   add_index "client_bank_accounts", ["holder_name"], :name => "index_client_bank_accounts_on_holder_name"
+  add_index "client_bank_accounts", ["iban"], :name => "index_client_bank_accounts_on_iban"
   add_index "client_bank_accounts", ["subscriber_id"], :name => "index_client_bank_accounts_on_subscriber_id"
 
   create_table "client_ledger_accounts", :force => true do |t|
@@ -936,9 +938,10 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
     t.date     "starting_at"
     t.date     "ending_at"
     t.string   "bank_suffix"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "ledger_account_id"
+    t.string   "iban",                  :limit => 50
   end
 
   add_index "company_bank_accounts", ["account_no"], :name => "index_company_bank_accounts_on_account_no"
@@ -951,6 +954,7 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
   add_index "company_bank_accounts", ["country_id"], :name => "index_company_bank_accounts_on_country_id"
   add_index "company_bank_accounts", ["holder_fiscal_id"], :name => "index_company_bank_accounts_on_holder_fiscal_id"
   add_index "company_bank_accounts", ["holder_name"], :name => "index_company_bank_accounts_on_holder_name"
+  add_index "company_bank_accounts", ["iban"], :name => "index_company_bank_accounts_on_iban"
   add_index "company_bank_accounts", ["ledger_account_id"], :name => "index_company_bank_accounts_on_ledger_account_id"
 
   create_table "company_notifications", :force => true do |t|
@@ -3874,10 +3878,11 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
     t.string   "holder_name"
     t.date     "starting_at"
     t.date     "ending_at"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "iban",                  :limit => 50
   end
 
   add_index "supplier_bank_accounts", ["account_no"], :name => "index_supplier_bank_accounts_on_account_no"
@@ -3887,6 +3892,7 @@ ActiveRecord::Schema.define(:version => 20180417083813) do
   add_index "supplier_bank_accounts", ["country_id"], :name => "index_supplier_bank_accounts_on_country_id"
   add_index "supplier_bank_accounts", ["holder_fiscal_id"], :name => "index_supplier_bank_accounts_on_holder_fiscal_id"
   add_index "supplier_bank_accounts", ["holder_name"], :name => "index_supplier_bank_accounts_on_holder_name"
+  add_index "supplier_bank_accounts", ["iban"], :name => "index_supplier_bank_accounts_on_iban"
   add_index "supplier_bank_accounts", ["supplier_id", "bank_account_class_id", "country_id", "iban_dc", "bank_id", "bank_office_id", "ccc_dc", "account_no"], :name => "index_supplier_bank_accounts_on_supplier_and_class_and_no", :unique => true
   add_index "supplier_bank_accounts", ["supplier_id"], :name => "index_supplier_bank_accounts_on_supplier_id"
 

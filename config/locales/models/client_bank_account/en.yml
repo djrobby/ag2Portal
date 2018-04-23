@@ -6,6 +6,7 @@ en:
         one:   Client bank account
         few:   Client bank accounts
         other: Client bank accounts
+        check_for_client_payments: "Account cannot be destroyed while linked client payments exist."
     attributes:
       client_bank_account:
         id: "Id"

@@ -10,8 +10,8 @@ class ClientBankAccount < ActiveRecord::Base
   belongs_to :bank
   belongs_to :bank_office
   attr_accessible :client_id, :subscriber_id, :bank_account_class_id, :account_no, :cb, :ccc_dc, :country_code, :cs,
-                  :ending_at, :fiscal_id, :iban, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id,
-                  :holder_fiscal_id, :holder_name, :created_by, :updated_by, :origin
+                  :ending_at, :fiscal_id, :iban_dc, :name, :starting_at, :country_id, :bank_id, :bank_office_id,
+                  :holder_fiscal_id, :holder_name, :created_by, :updated_by, :origin, :iban
 
   alias_attribute :cb, :bank_id
   alias_attribute :cs, :bank_office_id
@@ -19,16 +19,19 @@ class ClientBankAccount < ActiveRecord::Base
   alias_attribute :name, :holder_name
   alias_attribute :country_code, :country_id
 
+  has_many :client_payments
+
   has_paper_trail
 
   validates :client,              :presence => true
   validates :bank_account_class,  :presence => true
-  validates :country,             :presence => true
+  validates :country,             :presence => true, :if => "!country.blank?"
   validates :iban_dc,             :presence => true,
                                   :length => { :is => 2 },
-                                  :format => { with: /\A\d+\Z/, message: :dc_invalid }
-  validates :bank,                :presence => true
-  validates :bank_office,         :presence => true
+                                  :format => { with: /\A\d+\Z/, message: :dc_invalid },
+                                  :if => "!iban_dc.blank?"
+  validates :bank,                :presence => true, :if => "!bank.blank?"
+  validates :bank_office,         :presence => true, :if => "!bank_office.blank?"
   # validates :ccc_dc,              :presence => true,
   #                                 :length => { :is => 2 },
   #                                 :format => { with: /\A\d+\Z/, message: :dc_invalid }
@@ -36,11 +39,16 @@ class ClientBankAccount < ActiveRecord::Base
                                   :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
                                   :uniqueness => { :scope => [:bank_account_class_id, :country_id,
-                                                              :iban_dc, :bank_id, :bank_office_id, :ccc_dc] }
+                                                              :iban_dc, :bank_id, :bank_office_id, :ccc_dc] },
+                                  :if => "!account_no.blank?"
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }
   validates :holder_name,         :presence => true
   validates :starting_at,         :presence => true
+  validates :iban,                :presence => true,
+                                  :length => { :minimum => 4, :maximum => 34 },
+                                  :format => { with: /\A[a-zA-Z\d]+\Z/, message: :iban_invalid },
+                                  :if => "country.blank? && account_no.blank?"
 
   # Scopes
   scope :by_ending_at, -> { order(:ending_at) }
@@ -102,11 +110,20 @@ class ClientBankAccount < ActiveRecord::Base
   scope :active_by_client, -> c { active.where('client_id = ?', c).by_ending_at }
   scope :active_by_subscriber, -> s { active.where('subscriber_id = ?', s).by_ending_at }
 
+  # Callbacks
   before_validation :fields_to_uppercase
+  before_save :iban_save
+  before_destroy :check_for_dependent_records
 
+  #
+  # Methods
+  #
   def fields_to_uppercase
     if !self.holder_fiscal_id.blank?
       self[:holder_fiscal_id].upcase!
+    end
+    if !self.iban.blank?
+      self[:iban].upcase!
     end
     true
   end
@@ -253,5 +270,73 @@ class ClientBankAccount < ActiveRecord::Base
 
   def is_active?
     ending_at IS NULL OR ending_at > Date.today
+  end
+
+  def country_code
+    !country_id.blank? ? country.code : ''
+  end
+
+  #
+  # IBAN treatment
+  #
+  def iban_country
+    !iban.blank? ? iban[0,2] : ''
+  end
+  def iban_dc_
+    !iban.blank? ? iban[2,2] : ''
+  end
+  def iban_bank
+    iban_country == 'ES' ? iban[4,4] : ''
+  end
+  def iban_office
+    iban_country == 'ES' ? iban[8,4] : ''
+  end
+  def iban_ccc_dc
+    iban_country == 'ES' ? iban[12,2] : ''
+  end
+  def iban_ccc
+    iban_country == 'ES' ? iban[14,10] : ''
+  end
+  def iban_account_no
+    iban_country == 'ES' ? iban[12,12] : ''
+  end
+
+  def iban_country_id
+    Country.find_by_code(iban_country).id rescue nil
+  end
+  def iban_bank_id
+    Bank.find_by_code(iban_bank).id rescue nil
+  end
+  def iban_office_id
+    BankOffice.by_bank_and_code(iban_bank_id, iban_office).first.id rescue nil
+  end
+
+  private
+
+  def iban_save
+    if iban.blank?
+       # IBAN empty, must be generated if it's from Spain
+       if (!country_id.blank? && !iban_dc.blank? && !bank.blank? && !bank_office.blank? && !account_no.blank?) &&
+           country_code == 'ES'
+          self.iban = e_format
+       end
+    else
+      # IBAN filled, CCC data must be generated if it's from Spain
+      if iban_country == 'ES'
+        self.country_id = iban_country_id
+        self.iban_dc = iban_dc_
+        self.bank_id = iban_bank_id
+        self.bank_office_id = iban_office_id
+        self.account_no = iban_account_no
+      end
+    end
+  end
+
+  def check_for_dependent_records
+    # Check for client bank accounts
+    if client_payments.count > 0
+      errors.add(:base, I18n.t('activerecord.models.client_bank_account.check_for_client_payments'))
+      return false
+    end
   end
 end

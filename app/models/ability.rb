@@ -55,6 +55,7 @@ class Ability
       can :crud, BankOffice
       can :crud, BankAccountClass
       can :crud, Company
+      can :crud, CompanyBankAccount
       can :read, CompanyNotification
       can :crud, Country
       can :crud, Currency
@@ -81,6 +82,7 @@ class Ability
       can :read, BankOffice
       can :read, BankAccountClass
       can :read, Company
+      can :read, CompanyBankAccount
       can :read, CompanyNotification
       can :read, Country
       can :read, Currency
@@ -107,6 +109,7 @@ class Ability
       cannot :manage, BankOffice
       cannot :manage, BankAccountClass
       cannot :manage, Company
+      cannot :manage, CompanyBankAccount
       cannot :manage, CompanyNotification
       cannot :manage, Country
       cannot :manage, Currency

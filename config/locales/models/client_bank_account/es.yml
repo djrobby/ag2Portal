@@ -6,6 +6,7 @@ es:
         one:   Cuenta bancaria de cliente
         few:   Cuentas bancarias de cliente
         other: Cuentas bancarias de cliente
+        check_for_client_payments: "Cuenta no puede ser eliminada mientras existan cobros vinculados."
     attributes:
       client_bank_account:
         id: "Id"

@@ -29,6 +29,10 @@ class BankOffice < ActiveRecord::Base
   validates :region,        :presence => true
   validates :country,       :presence => true
 
+  # Scopes
+  scope :by_bank_and_code, -> b,c { where("bank_id=? AND code=?", b, c) }
+
+  # Callbacks
   before_destroy :check_for_dependent_records
 
   def to_label
