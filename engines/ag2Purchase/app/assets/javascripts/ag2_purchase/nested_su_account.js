@@ -16,7 +16,7 @@ var su_accountFieldsUI = {
         };
 
         $('#addAccountButton').on('click', function(e) {
-            var isValidIBAN = validate_iban(invalidIBAN, tryAgain, $('#fnt-country').val(), $('#fnt-iban-dc').val(), $('#fnt-bank').val(), $('#fnt-office').val(), $('#fnt-account').val(), 'su_check_iban');
+            var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, $('#fnt-iban').val());
             var isValid = $('#new-account-fields').validate(false, validationSettings);
             if (!isValid || !isValidIBAN) {
                 e.stopPropagation();

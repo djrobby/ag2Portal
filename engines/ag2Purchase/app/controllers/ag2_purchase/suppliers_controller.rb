@@ -335,8 +335,8 @@ module Ag2Purchase
       @ledger_accounts = ledger_accounts_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
+      # @banks = banks_dropdown
+      # @offices = bank_offices_dropdown
       @companies = companies_dropdown
       @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
       @withholding_types = WithholdingType.current
@@ -359,8 +359,8 @@ module Ag2Purchase
       @ledger_accounts = ledger_accounts_dropdown
       @classes = bank_account_classes_dropdown
       @countries = countries_dropdown
-      @banks = banks_dropdown
-      @offices = bank_offices_dropdown
+      # @banks = banks_dropdown
+      # @offices = bank_offices_dropdown
       @companies = companies_dropdown
       @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
       @withholding_types = WithholdingType.current
@@ -386,8 +386,8 @@ module Ag2Purchase
           @ledger_accounts = ledger_accounts_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          # @banks = banks_dropdown
+          # @offices = bank_offices_dropdown
           @companies = companies_dropdown
           @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
           @towns = towns_dropdown
@@ -417,8 +417,8 @@ module Ag2Purchase
           @ledger_accounts = ledger_accounts_dropdown
           @classes = bank_account_classes_dropdown
           @countries = countries_dropdown
-          @banks = banks_dropdown
-          @offices = bank_offices_dropdown
+          # @banks = banks_dropdown
+          # @offices = bank_offices_dropdown
           @companies = companies_dropdown
           @ledger_accounts_by_company = ledger_accounts_by_company_dropdown
           @towns = towns_dropdown
