@@ -47,7 +47,7 @@
     });
 
     // Setup special search (select2)
-    setupSubscribersSelect2("<%= @address %>");
+    // setupSubscribersSelect2("<%= @address %>");
 
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
@@ -68,7 +68,7 @@
   $(window).bind("load", function() {
     a = "<%= su_restore_filters %>";
     $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
-    // $("#StreetName").val("<%= params[:StreetName] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
     $("#Meter").val("<%= params[:Meter] %>");
     $("#Caliber").select2("val", "<%= params[:Caliber] %>");
     $("#Use").select2("val", "<%= params[:Use] %>");
@@ -80,7 +80,7 @@
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#SubscriberCode").val("");
-      // $("#StreetName").val("");
+      $("#StreetName").val("");
       $("#StreetName").select2("val", "");
       $("#Meter").val("");
       $("#Caliber").select2("val", "");
@@ -88,7 +88,7 @@
       $("#TariffType").select2("val", "");
       $("#search").val("");
       a = "<%= su_remove_filters %>";
-      setupSubscribersSelect2(a);
+      // setupSubscribersSelect2(a);
       // no AJAX
       //_thisForm.submit();
       // AJAX
@@ -160,10 +160,10 @@
           <%= text_field_tag "SubscriberCode", params[:SubscriberCode], :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Street name -->
           <%= label_tag I18n.t("ag2_gest.subscribers.index.supply_address"), nil, :class => 'form-label' %>
-          <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-          <%#= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+          <%#= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Meter -->
-          <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label-under-sel2' %>
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.meter"), nil, :class => 'form-label' %>
           <%= text_field_tag "Meter", params[:Meter], :class => 'x-large-text-field shrinked', onkeyup: "caps(this)" %>
           <!-- Caliber -->
           <%= label_tag I18n.t("ag2_gest.subscribers.index.caliber"), nil, :class => 'form-label' %>
@@ -194,7 +194,7 @@
         <br /><br />
         <!-- Control&Tracking -->
         <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a>
-        <br /><br /> 
+        <br /><br />
         <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a>
         <br /><br />
         <!-- Back -->

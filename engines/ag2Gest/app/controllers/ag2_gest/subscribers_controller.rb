@@ -808,7 +808,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       # Initialize select_tags
-      @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
+      # @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
       @calibers = Caliber.by_caliber if @calibers.nil?
       @uses = Use.by_code if @uses.nil?
       @tariff_types = TariffType.by_code if @tariff_types.nil?
@@ -818,7 +818,7 @@ module Ag2Gest
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
-      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -835,16 +835,16 @@ module Ag2Gest
             with(:subscriber_code).starting_with(subscriber_code)
           end
         end
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
         if !street_name.blank?
-          with :subscriber_id, street_name
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
         end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         if !meter.blank?
           if meter.class == Array
             with :meter_code, meter
