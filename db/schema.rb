@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180423083122) do
+ActiveRecord::Schema.define(:version => 20180425102603) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -3822,9 +3822,10 @@ ActiveRecord::Schema.define(:version => 20180423083122) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
+    t.date     "inhabitants_ending_at"
   end
 
   add_index "subscribers", ["billing_frequency_id"], :name => "index_subscribers_on_billing_frequency_id"

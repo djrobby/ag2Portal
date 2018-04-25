@@ -87,6 +87,7 @@ es:
         gis_id_wc: "Gis ID Acometida"
         endowments: "Dotaciones"
         inhabitants: "Habitantes"
+        inhabitants_ending_at: "Habitantes caduca el"
         km: "KM"
         pub_record: "Registro OP"
         use: "Uso"

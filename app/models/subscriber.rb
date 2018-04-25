@@ -40,8 +40,9 @@ class Subscriber < ActiveRecord::Base
                   :postal_street_directory_id, :postal_street_type_id, :postal_street_name, :postal_street_number,
                   :postal_building, :postal_floor, :postal_floor_office, :postal_zipcode_id, :postal_town_id,
                   :postal_province_id, :postal_region_id, :postal_country_id, :non_billable,
-                  :sub_use, :pub_entity, :landlord_tenant,
-                  :consumption_estimated_balance, :consumption_estimated_balance_init_at, :consumption_estimated_balance_reset_at
+                  :sub_use, :pub_entity, :landlord_tenant, :consumption_estimated_balance,
+                  :consumption_estimated_balance_init_at, :consumption_estimated_balance_reset_at,
+                  :inhabitants_ending_at
 
   attr_accessor :reading_index_add, :reading_date_add
 
@@ -230,6 +231,7 @@ class Subscriber < ActiveRecord::Base
   # Callbacks
   before_validation :fields_to_uppercase
   before_destroy :check_for_dependent_records
+  before_save :inhabitants_expire_change_annotation
 
   # Methods
   def fields_to_uppercase
@@ -996,6 +998,25 @@ class Subscriber < ActiveRecord::Base
     if pre_bills.count > 0
       errors.add(:base, I18n.t('activerecord.models.subscriber.check_for_pre_bills'))
       return false
+    end
+  end
+
+  def inhabitants_expire_change_annotation
+    iea_has_changed = inhabitants_ending_at_changed? rescue false
+    iea_prev = inhabitants_ending_at_was rescue inhabitants_ending_at
+    if iea_has_changed && iea_prev != inhabitants_ending_at
+      annotation_created_by = (!updated_by.blank? ? updated_by : created_by) rescue created_by
+      if iea_prev.blank?
+        annotation = formatted_date(inhabitants_ending_at)
+      else
+        annotation = formatted_date(iea_prev) + " => " + formatted_date(inhabitants_ending_at)
+      end
+      SubscriberAnnotation.create(
+                          subscriber_id: self.id,
+                          annotation: annotation,
+                          created_by: annotation_created_by,
+                          subscriber_annotation_class_id: 1)
+
     end
   end
 end

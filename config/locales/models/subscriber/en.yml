@@ -86,6 +86,7 @@ en:
         gis_id_wc: "Gis ID Acometida"
         endowments: "Endowments"
         inhabitants: "Inhabitants"
+        inhabitants_ending_at: "Inhabitants expire at"
         km: "KM"
         pub_record: "PB Record"
         use: "Use"
