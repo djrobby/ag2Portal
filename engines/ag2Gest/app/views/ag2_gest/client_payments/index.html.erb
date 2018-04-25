@@ -82,7 +82,7 @@
     usersSelect2(u);
     clientsSelect2(c);
     subscribersSelect2(s);
-    addressesSelect2(a);
+    // addressesSelect2(a);
   }
 
   function projectsSelect2(intialValue) {
@@ -285,7 +285,8 @@
     }
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
+    // setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>");
 
     // Hide elements at init
     show_cashier();
@@ -338,7 +339,7 @@
     // $("#Subscriber").val("<%= params[:Subscriber] %>");
     // $("#SubscriberCode").val("<%= params[:SubscriberCode] %>");
     // $("#SubscriberFiscal").val("<%= params[:SubscriberFiscal] %>");
-    // $("#StreetName").val("<%= params[:StreetName] %>");
+    $("#StreetName").val("<%= params[:StreetName] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
     $("#BankOrder").val("<%= params[:BankOrder] %>");
     // $("#Period").select2("val", "<%#= params[:billing_period] %>");
@@ -395,7 +396,8 @@
       $("#Subscriber").select2("val", "");
       // $("#SubscriberCode").val("");
       // $("#SubscriberFiscal").val("");
-      $("#StreetName").select2("val", "");
+      // $("#StreetName").select2("val", "");
+      $("#StreetName").val("");
       $("#BankAccount").val("");
       $("#BankOrder").val("");
       $("#User").select2("val", "");
@@ -580,10 +582,10 @@
           <%#= text_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked' %>
           <!-- Supply address (street name) -->
           <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label-under-sel2' %>
-          <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-          <%#= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+          <%#= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Have BankAccount? -->
-          <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label-under-sel2' %>
+          <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
           <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
           <!-- Bank -->
           <%= label_tag "label_bank", I18n.t("ag2_gest.client_payments.index.label_bank"), :class => 'form-label' %>

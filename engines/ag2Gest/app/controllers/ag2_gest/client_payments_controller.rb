@@ -1030,8 +1030,8 @@ module Ag2Gest
       @user = !user.blank? ? User.find(user).to_label : " "
       @client = !client.blank? ? Client.find(client).to_label : " "
       @subscriber = !subscriber.blank? ? Subscriber.find(subscriber).to_label : " "
-      @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
-      # @address = !street_name.blank? ? SubscriberSupplyAddress.find(street_name).supply_address : " "
+      # @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
+      # DO NOT USE @address = !street_name.blank? ? SubscriberSupplyAddress.find(street_name).supply_address : " "
       @have_bank_account = have_bank_account_array
       @payment_methods = payment_methods_dropdown
       @cashier_payment_methods = cashier_payment_methods_dropdown
@@ -1041,7 +1041,7 @@ module Ag2Gest
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      # street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
       current_projects = current_projects_ids
 
       # Setup Client for search
@@ -1239,19 +1239,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
@@ -1315,19 +1315,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
@@ -1390,19 +1390,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
@@ -1465,19 +1465,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
@@ -1544,19 +1544,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
@@ -1618,19 +1618,19 @@ module Ag2Gest
           with :subscriber_id, s
         end
         # Supply address
-        # if !street_name.blank?
-        #   if street_name.class == Array
-        #     with :supply_address, street_name
-        #   else
-        #     with(:supply_address).starting_with(street_name)
-        #   end
-        # end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
         # if !street_name.blank?
         #   with :supply_address, street_name
         # end
-        if !street_name.blank?
-          with :subscriber_id, street_name
-        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         # Have active bank account?
         if !bank_account.blank?
           with :bank_account, bank_account
