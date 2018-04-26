@@ -1,4 +1,6 @@
 class SubscriberAnnotation < ActiveRecord::Base
+  include ModelsModule
+
   belongs_to :subscriber
   belongs_to :subscriber_annotation_class
   attr_accessible :annotation, :subscriber_id, :subscriber_annotation_class_id,
@@ -20,5 +22,13 @@ class SubscriberAnnotation < ActiveRecord::Base
 
   def annotation_class_type
     subscriber_annotation_class_id.blank? ? 'N/A' : subscriber_annotation_class.type_label
+  end
+
+  def annotation_created_at
+    formatted_date(created_at) rescue ''
+  end
+
+  def annotation_created_by
+    User.find(created_by).email rescue 'N/A'
   end
 end

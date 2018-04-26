@@ -13,3 +13,5 @@ es:
         subscriber_annotation_class: "Clase"
         subscriber_annotation_class_id: "Clase"
         annotation: "Anotación"
+        created_at: "Creada el"
+        created_by: "Creada por"

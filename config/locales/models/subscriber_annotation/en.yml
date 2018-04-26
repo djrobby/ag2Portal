@@ -1,6 +1,6 @@
 en:
   activerecord:
-    models: 
+    models:
       subscriber_annotation:
         zero:  Annotations
         one:   Annotation
@@ -13,3 +13,5 @@ en:
         subscriber_annotation_class: "Class"
         subscriber_annotation_class_id: "Class"
         annotation: "Annotation"
+        created_at: "Created at"
+        created_by: "Created by"
