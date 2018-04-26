@@ -39,7 +39,7 @@
     usersSelect2(u);
     clientsSelect2(c);
     subscribersSelect2(s);
-    addressesSelect2(a);
+    // addressesSelect2(a);
     billersSelect2(b);    
     routes_Select2(r);
     servicePointsSelect2(sp); 
@@ -181,32 +181,32 @@
     });
   }
 
-  function addressesSelect2(intialValue) {
-    $('#StreetName').select2({
-      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
-      dropdownCssClass: 'shrinked',
-      dropdownAutoWidth: true,
-      placeholder: intialValue,
-      allowClear: true,
-      ajax: {
-        url: "/search_supply_addresses",
-        dataType: "json",
-        delay: 250,
-        data: function(term, page) {
-          return {
-            q: term || '',
-            page: page || 1
-          };
-        },
-        results: function(data, page) {
-          return {
-            results: data
-          }
-        },
-        cache: true
-      }
-    });
-  }
+  // function addressesSelect2(intialValue) {
+  //   $('#StreetName').select2({
+  //     formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+  //     dropdownCssClass: 'shrinked',
+  //     dropdownAutoWidth: true,
+  //     placeholder: intialValue,
+  //     allowClear: true,
+  //     ajax: {
+  //       url: "/search_supply_addresses",
+  //       dataType: "json",
+  //       delay: 250,
+  //       data: function(term, page) {
+  //         return {
+  //           q: term || '',
+  //           page: page || 1
+  //         };
+  //       },
+  //       results: function(data, page) {
+  //         return {
+  //           results: data
+  //         }
+  //       },
+  //       cache: true
+  //     }
+  //   });
+  // }
 
   function billersSelect2(intialValue) {
     $('#Biller').select2({
@@ -303,7 +303,7 @@
     });
 
     // Setup special search (select2)
-    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>", "<%= @biller %>", "<%= @reading_route %>", "<%= @service_point %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @biller %>", "<%= @reading_route %>", "<%= @service_point %>");
 
     // Hide report button
     show_buttons(false);
@@ -324,7 +324,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -349,7 +349,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           hide_text("#Meter", "label_meter");
@@ -374,7 +374,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           hide_text("#Meter", "label_meter");
@@ -399,7 +399,7 @@
           show("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           hide("#User", "label_user");
           show("#Biller", "label_biller");
           hide_text("#Meter", "label_meter");
@@ -424,7 +424,7 @@
           show("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           show("#User", "label_user");
           show("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -449,7 +449,7 @@
           show("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           show("#User", "label_user");
           show("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -474,7 +474,7 @@
           show("#Period", "label_period");
           hide("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -499,7 +499,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -524,7 +524,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -549,7 +549,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -574,7 +574,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -599,7 +599,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -624,7 +624,7 @@
           hide("#Period", "label_period");
           show("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           hide_text("#Meter", "label_meter");
@@ -649,7 +649,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -674,7 +674,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -699,7 +699,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -724,7 +724,7 @@
           hide("#Period", "label_period");
           hide("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
-          hide("#StreetName", "label_street");
+          hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -749,7 +749,7 @@
           show("#Period", "label_period");
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
-          show("#StreetName", "label_street");
+          show_text("#StreetName", "label_street");
           show("#User", "label_user");
           show("#Biller", "label_biller");
           show_text("#Meter", "label_meter");
@@ -1190,9 +1190,9 @@
         case '#Subscriber':
           subscribersSelect2("<%= @subscriber %>");
           break;
-        case '#StreetName':
-          addressesSelect2("<%= @address %>");
-          break;
+        // case '#StreetName':
+        //   addressesSelect2("<%= @address %>");
+        //   break;
         case '#Biller':
           billersSelect2("<%= @biller %>");
           break;
@@ -1283,7 +1283,7 @@
       <%= hidden_field_tag "Subscriber", params[:Subscriber], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- Supply address (street name) -->
       <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label-under-sel2' %>
-      <%= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+      <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
       <!-- User -->
       <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "User", params[:User], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>

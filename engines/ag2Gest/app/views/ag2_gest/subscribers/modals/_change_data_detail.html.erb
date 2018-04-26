@@ -1,0 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $("#submit_change_data_detail").click(function () {
+      $("#changeDataDetail").modal('hide');
+    });
+  });
+
+</script>
+
+<div id="changeDataDetail" class="modal hide fade" data-backdrop="static">
+  <%= simple_form_for @subscriber, url: change_data_detail_subscriber_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right' , :id => 'form_change_data_detail'} do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= I18n.t('activerecord.attributes.subscriber.data_detail') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.input :id, as: :hidden, input_html: { id: 'fnt_id', :value => @subscriber.id } %>
+    <%= f.input :pub_entity, :input_html => {:class => 'mid-text-field', :value => !@subscriber.pub_entity.blank? ? @subscriber.pub_entity : "" }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :cadastral_reference, :input_html => {:class => 'mid-text-field', :value => !@subscriber.cadastral_reference.blank? ? @subscriber.cadastral_reference : @subscriber.try(:service_point).try(:cadastral_reference) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :pub_record, :input_html => {:class => 'mid-text-field', :value => !@subscriber.pub_record.blank? ? @subscriber.pub_record : @subscriber.try(:service_point).try(:pub_record) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_sequence, :input_html => {:class => 'mid-text-field', :value => !@subscriber.reading_sequence.blank? ? @subscriber.reading_sequence : @subscriber.try(:service_point).try(:reading_sequence) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :reading_variant, :input_html => {:class => 'mid-text-field', :value => !@subscriber.reading_variant.blank? ? @subscriber.reading_variant : @subscriber.try(:service_point).try(:reading_variant) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :gis_id_wc, :input_html => {:class => 'mid-text-field', :value => !@subscriber.gis_id_wc.blank? ? @subscriber.gis_id_wc : "" }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :gis_id, :input_html => {:class => 'mid-text-field', :value => !@subscriber.gis_id.blank? ? @subscriber.gis_id : @subscriber.try(:service_point).try(:gis_id) }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :endowments, :input_html => {:class => 'mid-text-field', :value => !@subscriber.endowments.blank? ? @subscriber.endowments : "" }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :inhabitants, :input_html => {:class => 'mid-text-field', :value => !@subscriber.inhabitants.blank? ? @subscriber.inhabitants : "" }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :inhabitants_ending_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => {:class => 'mid-text-field date_picker', :value => (f.object.inhabitants_ending_at.strftime("%d/%m/%Y") if f.object.inhabitants_ending_at)}, :label_html => { :class => 'form-label' } %>
+    <%= f.input :equiv_dwelling, :input_html => {:class => 'mid-text-field', :value => !@subscriber.equiv_dwelling.blank? ? @subscriber.equiv_dwelling : "" }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :m2, :input_html => {:class => 'mid-text-field', :value => !@subscriber.m2.blank? ? @subscriber.m2 : "" }, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit t('activerecord.attributes.subscriber.accept'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary", :id => "submit_change_data_detail" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+  <% end %>
+</div>

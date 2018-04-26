@@ -61,7 +61,7 @@
   <!-- Button to trigger modal -->
   <div class="row-fluid">
     <div class="span3">
-      <a id="su_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
+      <a id="sub_load_bank_button" href="#newAccountModal" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.new_account') %></a>
       <%= link_to "<i class='icon-print icon-white'></i> #{t('activerecord.attributes.water_supply_contract.pay_sepa_order_c')}".html_safe, sub_sepa_pdf_subscriber_path(@subscriber, :format => :pdf), id: "sepa_pdf",class: "btn btn-mini btn-warning", target: "_blank" unless @subscriber_accounts.blank?  %>
     </div>
     <div class="span5" align="center">

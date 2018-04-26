@@ -76,7 +76,9 @@ en:
         summary: "Billed Summary"
         alert_invoice_date: "This invoice date is less than the last existing invoice date."
         amount_c: "A_"
+        quantity_c: "Q_"
         company_bank: "This invoice can be made effective in:"
+        inhabitants: "Number of people in the house:"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

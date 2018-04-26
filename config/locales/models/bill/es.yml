@@ -82,7 +82,9 @@ es:
         summary: "Resumen Facturado"
         alert_invoice_date: "La Fecha de factura introducida es menor que la ultima fecha de factura existente."
         amount_c: "I_"
+        quantity_c: "C_"
         company_bank: "Esta factura puede hacerse efectiva en:"
+        inhabitants: "Numero de personas en la vivienda:"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

@@ -64,7 +64,7 @@ jQuery(function($) {
 });
 </script>
 
-<div id="newAccountModal" class="modal fade" style="display: none;">
+<div id="newAccountModal" class="modal hide fade" style="display: none;">
   <%= simple_form_for ClientBankAccount.new, url: add_bank_account_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right form-inline', :id => 'form_new_client_bank' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>

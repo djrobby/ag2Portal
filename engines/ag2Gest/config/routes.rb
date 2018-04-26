@@ -520,7 +520,7 @@ Ag2Gest::Engine.routes.draw do
     # Resources
     resources :clients
     resources :subscribers do
-      get 'sub_load_postal', on: :collection
+      # get 'sub_load_postal', on: :collection
       get 'sub_sepa_pdf', on: :member
       get 'sub_invoices_report', on: :member
       get 'subscriber_pdf', on: :member
@@ -531,6 +531,8 @@ Ag2Gest::Engine.routes.draw do
       post 'quit_meter', on: :member
       post 'add_meter', on: :member
       post 'change_meter', on: :member
+      post 'change_data_supply', on: :member
+      post 'change_data_detail', on: :member
       resources :clients, except: [:index, :show, :edit, :new]
     end
     #

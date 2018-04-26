@@ -1,0 +1,45 @@
+    <a id="sub_load_postal_button" href="#changeDataSupply" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_data_supply') %></a>
+    <table class="table table-condensed table-striped shrinked">
+    <!-- <table class="table"> -->
+      <thead>
+        <!-- <br></br> -->
+      </thead>
+      <tbody>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.name') %></b></td>
+          <td><%= @subscriber.right_postal_name %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.street_name') %></b></td>
+          <td><%= @subscriber.right_postal_street_name %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.number') %></b></td>
+          <td><%= @subscriber.right_postal_street_number %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.block') %></b></td>
+          <td><%= @subscriber.right_postal_building %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.floor') %></b></td>
+          <td><%= @subscriber.right_postal_floor %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.door') %></b></td>
+          <td><%= @subscriber.right_postal_floor_office %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.town_id') %></b></td>
+          <td><%= @subscriber.right_postal_town %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.zipcode_id') %></b></td>
+          <td><%= @subscriber.right_postal_zipcode %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.province_id') %></b></td>
+          <td><%= @subscriber.right_postal_province %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.region_id') %></b></td>
+          <td><%= @subscriber.right_postal_region %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.country_id') %></b></td>
+          <td colspan="3"><%= @subscriber.right_postal_country %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.phone') %></b></td>
+          <td><%= @subscriber.right_phone %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.cellular') %></b></td>
+          <td><%= @subscriber.right_cellular %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.fax') %></b></td>
+          <td><%= @subscriber.right_fax %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.email') %></b></td>
+          <td colspan="5"><%= @subscriber.right_email %></td>
+        </tr>
+      </tbody>
+    </table>

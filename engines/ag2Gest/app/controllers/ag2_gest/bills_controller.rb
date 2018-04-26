@@ -214,33 +214,39 @@ module Ag2Gest
       # _period3 = _b2.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
       # _period4 = _b3.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
 
-      i = Bill.joins("LEFT JOIN invoices ON bills.id=invoices.bill_id").joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id").where('bills.subscriber_id = ? AND bills.bill_date <= ? AND invoices.invoice_operation_id in (?)',@biller_printer.subscriber_id, @biller_printer.bill_date,[1,3]).group('invoices.billing_period_id').order('bills.bill_no DESC').limit(4)
+      i = Bill.joins("LEFT JOIN invoices ON bills.id=invoices.bill_id").joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id").where('bills.subscriber_id = ? AND bills.bill_date <= ? AND invoices.invoice_operation_id in (?)',@biller_printer.subscriber_id, @biller_printer.bill_date,[1,3]).group('invoices.billing_period_id').order('bills.bill_no DESC').limit(6)
 
       _con1 = !i[0].blank? ? i[0].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
       _con2 = !i[1].blank? ? i[1].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
       _con3 = !i[2].blank? ? i[2].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
       _con4 = !i[3].blank? ? i[3].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
+      _con5 = !i[4].blank? ? i[4].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
+      _con6 = !i[5].blank? ? i[5].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
 
       _period1 = !i[0].blank? ? i[0].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
       _period2 = !i[1].blank? ? i[1].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
       _period3 = !i[2].blank? ? i[2].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
       _period4 = !i[3].blank? ? i[3].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
+      _period5 = !i[4].blank? ? i[4].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
+      _period6 = !i[5].blank? ? i[5].try(:invoices).first.try(:billing_period).try(:period).to_s : nil
 
-      _array = [_con1,_con2,_con3,_con4].sort
+      _array = [_con1,_con2,_con3,_con4,_con5,_con6].sort
 
       _type_chart = 'cht=bvs'
-      _size = 'chs=218x88'
+      _size = 'chs=280x88'
       _color = 'chco=908f8f'
       _background = 'chf=bg,s,00000000'
       _bar = 'chxt=x' #_bar = 'chxt=x,y'
       _data_bar = 'chm=N,000000,0,-1,11'
-      _t1 = _period4.nil? ? "|" : _period4 + "|"
-      _t2 = _period3.nil? ? "|" : _period3 + "|"
-      _t3 = _period2.nil? ? "|" : _period2 + "|"
-      _t4 = _period1.nil? ? "" : _period1
+      _t1 = _period6.nil? ? "|" : _period6 + "|"
+      _t2 = _period5.nil? ? "|" : _period5 + "|"
+      _t3 = _period4.nil? ? "|" : _period4 + "|"
+      _t4 = _period3.nil? ? "|" : _period3 + "|"
+      _t5 = _period2.nil? ? "|" : _period2 + "|"
+      _t6 = _period1.nil? ? "" : _period1
       # _t5 = "|1:|0|" + (_array.max + 10).round.to_s
-      _title = 'chxl=0:|' + _t1 + _t2 + _t3 + _t4 #+ _t5
-      _data = 'chd=t:' + _con4.to_s + "," + _con3.to_s + "," + _con2.to_s + "," + _con1.to_s
+      _title = 'chxl=0:|' + _t1 + _t2 + _t3 + _t4 + _t5 + _t6
+      _data = 'chd=t:' + _con6.to_s + "," + _con5.to_s  + "," + _con4.to_s + "," + _con3.to_s + "," + _con2.to_s + "," + _con1.to_s
       _to = 'chds=0,' + (_array.max + 10).to_s
       _with = 'chbh=r,0.5,1.5'
 
@@ -258,8 +264,11 @@ module Ag2Gest
       leyend = ''
       label = ''
       total = 0
+      tax = 0
       @biller_printer.invoices.each do |total_invoice|
         total += total_invoice.subtotal
+        total += total_invoice.taxes
+        tax += total_invoice.taxes
       end
       total = formatted_number_without_delimiter(total, 2)
       @biller_printer.invoices.each do |invoice|
@@ -274,11 +283,21 @@ module Ag2Gest
         end
       end
 
+      #CUOTA IVA
+      if tax != 0
+        a = formatted_number_without_delimiter(tax, 2)
+        c = tax.to_d / total.to_d
+        c = formatted_number_without_delimiter(c, 2)
+        value += c.gsub(',','.') + ","
+        label += a.gsub(',','.') + "|"
+        leyend += t("activerecord.attributes.contracting_request.iva_c")+ "|"
+      end
+
       _title = 'chtt=' + t("activerecord.attributes.report.billable_concept")
       # _type_chart = 'cht=p'
       # _size = 'chs=477x210'
       _type_chart = 'cht=p3'
-      _size = 'chs=470x190'
+      _size = 'chs=500x190'
       _color = 'chco=908f8f'
       _value = 'chd=t:' + value[0..-2]
       _label = 'chl=' + label[0..-2]

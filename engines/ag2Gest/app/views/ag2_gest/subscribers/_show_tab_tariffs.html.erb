@@ -137,7 +137,7 @@
 </div>
 
 <!-- Body -->
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
       <th><%= t('activerecord.attributes.tariff_scheme.billable_concept') %></th>
@@ -169,7 +169,7 @@
 <%= render :partial => '/layouts/pagination_ok', :locals => { :ivar => @subscriber_tariffs, :pvar => "tariff_page"} %>
 
 <!-- Modal -->
-<div id="add_tariff" class="modal fade" style="display: none;">
+<div id="add_tariff" class="modal hide fade" style="display: none;">
   <%= simple_form_for @subscriber, url: update_tariffs_subscriber_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right' , :id => 'form_new_tariff'} do |f| %>
     <div class="modal-header">
       <a class="close" data-dismiss="modal">&#215;</a>

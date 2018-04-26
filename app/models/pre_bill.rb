@@ -105,28 +105,40 @@ class PreBill < ActiveRecord::Base
                   array[0].sanitize(I18n.t("activerecord.attributes.bill.total"))]
                   code.each do |c|
                     attributes << c.code.to_s + " " +  "CF"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "CF"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "CF"
                     attributes << c.code.to_s + " " + "CV"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "CV"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "CV"
                     attributes << c.code.to_s + " " + "VP"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "VP"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "VP"
                     attributes << c.code.to_s + " " + "FP"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "FP"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "FP"
                     attributes << c.code.to_s + " " + "BL1"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL1"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL1"
                     attributes << c.code.to_s + " " + "BL2"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL2"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL2"
                     attributes << c.code.to_s + " " + "BL3"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL3"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL3"
                     attributes << c.code.to_s + " " + "BL4"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL4"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL4"
                     attributes << c.code.to_s + " " + "BL5"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL5"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL5"
                     attributes << c.code.to_s + " " + "BL6"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL6"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL6"
                     attributes << c.code.to_s + " " + "BL7"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL7"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL7"
                     attributes << c.code.to_s + " " + "BL8"
+                    attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.quantity_c") + "BL8"
                     attributes << c.code.to_s + " " + I18n.t("activerecord.attributes.bill.amount_c") + "BL8"
                   end
 
@@ -159,77 +171,73 @@ class PreBill < ActiveRecord::Base
         data2 = [nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil]
           PreInvoiceItem.where('pre_invoice_id = ?',b.p_id_).each do |i|
             if c.code == i.code
-              if i.subcode == "CF"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                data2[0] = quantity_.to_s + " " + i.measure.description
-                data2[1] = amount_.to_s
-              end
-              if i.subcode == "CV"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[2] = quantity_.to_s + " " + i.measure.description
-                  data2[3] = amount_.to_s
-              end
-              if i.subcode == "VP"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[4] = quantity_.to_s + " " + i.measure.description
-                  data2[5] = amount_.to_s
-              end
-              if i.subcode == "FP"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[6] = quantity_.to_s + " " + i.measure.description
-                  data2[7] = amount_.to_s
-              end
-              if i.subcode == "BL1"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[8] = quantity_.to_s + " " + i.measure.description
-                  data2[9] = amount_.to_s
-              end
-              if i.subcode == "BL2"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[10] = quantity_.to_s + " " + i.measure.description
-                  data2[11] = amount_.to_s
-              end
-              if i.subcode == "BL3"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[12] = quantity_.to_s + " " + i.measure.description
-                  data2[13] = amount_.to_s
-              end
-              if i.subcode == "BL4"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[14] = quantity_.to_s + " " + i.measure.description
-                  data2[15] = amount_.to_s
-              end
-              if i.subcode == "BL5"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[16] = quantity_.to_s + " " + i.measure.description
-                  data2[17] = amount_.to_s
-              end
-              if i.subcode == "BL6"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[18] = quantity_.to_s + " " + i.measure.description
-                  data2[19] = amount_.to_s
-              end
-              if i.subcode == "BL7"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[20] = quantity_.to_s + " " + i.measure.description
-                  data2[21] = amount_.to_s
-              end
-              if i.subcode == "BL8"
-                quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-                amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
-                  data2[22] = quantity_.to_s + " " + i.measure.description
-                  data2[23] = amount_.to_s
+              quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
+              amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+              if i.code == "CON"
+                data2[0] = i.measure.description
+                data2[1] = quantity_
+                data2[2] = amount_
+              else
+                if i.subcode == "CF"
+                  data2[0] = i.measure.description
+                  data2[1] = quantity_
+                  data2[2] = amount_
+                end
+                if i.subcode == "CV"
+                  data2[3] = i.measure.description
+                  data2[4] = quantity_
+                  data2[5] = amount_
+                end
+                if i.subcode == "VP"
+                  data2[6] = i.measure.description
+                  data2[7] = quantity_
+                  data2[8] = amount_
+                end
+                if i.subcode == "FP"
+                  data2[9] = i.measure.description
+                  data2[10] = quantity_
+                  data2[11] = amount_
+                end
+                if i.subcode == "BL1"
+                  data2[12] = i.measure.description
+                  data2[13] = quantity_
+                  data2[14] = amount_
+                end
+                if i.subcode == "BL2"
+                  data2[15] = i.measure.description
+                  data2[16] = quantity_
+                  data2[17] = amount_
+                end
+                if i.subcode == "BL3"
+                  data2[18] = i.measure.description
+                  data2[19] = quantity_
+                  data2[20] = amount_
+                end
+                if i.subcode == "BL4"
+                  data2[21] = i.measure.description
+                  data2[22] = quantity_
+                  data2[23] = amount_
+                end
+                if i.subcode == "BL5"
+                  data2[24] = i.measure.description
+                  data2[25] = quantity_
+                  data2[26] = amount_
+                end
+                if i.subcode == "BL6"
+                  data2[27] = i.measure.description
+                  data2[28] = quantity_
+                  data2[29] = amount_
+                end
+                if i.subcode == "BL7"
+                  data2[30] = i.measure.description
+                  data2[31] = quantity_
+                  data2[32] = amount_
+                end
+                if i.subcode == "BL8"
+                  data2[33] = i.measure.description
+                  data2[34] = quantity_
+                  data2[35] = amount_
+                end
               end
             end # if c.code == i.code
           end # PreInvoiceItem.where('pre_invoice_id = ?',b.p_id_).each do |i|

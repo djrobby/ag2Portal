@@ -126,6 +126,7 @@ class Invoice < ActiveRecord::Base
     joins("LEFT JOIN bills ON invoices.bill_id=bills.id")
     .joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id")
     .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
+    .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
     .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
     .where("#{w}")
     .select("bills.project_id project_id_, invoices.biller_id biller_id_, invoices.id p_id_,

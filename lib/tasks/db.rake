@@ -122,6 +122,39 @@ namespace :db do
     puts "Task finished at " + Time.now.to_s + "."
   end
 
+  desc "Update IBAN (SupplierBankAccount)"
+  task :update_iban_suppliers => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    SupplierBankAccount.find_each do |p|
+      p.update_column(:iban, p.e_format)
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
+  desc "Update IBAN (ClientBankAccount)"
+  task :update_iban_suppliers => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    ClientBankAccount.find_each do |p|
+      p.update_column(:iban, p.e_format)
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
+  desc "Update IBAN (CompanyBankAccount)"
+  task :update_iban_suppliers => :environment do
+    puts "Task started at " + Time.now.to_s + "."
+
+    CompanyBankAccount.find_each do |p|
+      p.update_column(:iban, p.e_format)
+    end
+
+    puts "Task finished at " + Time.now.to_s + "."
+  end
+
   desc "Solr reindex searchable models"
   task :reindex_models => :environment do
     puts "Task started at " + Time.now.to_s + "."

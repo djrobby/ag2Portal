@@ -406,9 +406,17 @@ end
         # Line to print global CONCEPT
         report.page.list(:default).add_row do |row|
           if item.try(:description)[0] != 0.to_s && item.try(:description)[0] != 1.to_s
-            row.item(:concept).value item.try(:description).upcase
+            if item.try(:code) == "CMA"
+              row.item(:concept).value item.try(:description).upcase + ", " + I18n.t("activerecord.attributes.bill.inhabitants") + " " + @biller_printer.subscriber.inhabitants.to_s
+            else
+              row.item(:concept).value item.try(:description).upcase
+            end
           else
-            row.item(:concept).value item.try(:description)[1..-1].upcase
+            if item.try(:code) == "CMA"
+              row.item(:concept).value item.try(:description)[1..-1].upcase + ", " + I18n.t("activerecord.attributes.bill.inhabitants") + " " + @biller_printer.subscriber.inhabitants.to_s
+            else
+              row.item(:concept).value item.try(:description)[1..-1].upcase
+            end
           end
         end
       end

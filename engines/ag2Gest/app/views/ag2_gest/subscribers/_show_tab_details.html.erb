@@ -1,0 +1,62 @@
+    <a id="sub_load_detail_button" href="#changeDataDetail" class="btn btn-mini btn-primary" data-toggle="modal"><%= t('activerecord.attributes.subscriber.change_data_detail') %></a>
+    <table class="table table-condensed table-striped shrinked">
+      <tbody>
+        <tr class="tr-no-top-border">
+          <td><b><%= t('activerecord.attributes.subscriber.contract') %>:</b></td>
+          <td><%= link_to @subscriber.try(:water_supply_contract_full_no), ag2_gest.water_supply_contract_path(@subscriber.water_supply_contract) unless @subscriber.water_supply_contract.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.tariff_scheme_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:tariff_scheme_name), tariff_scheme_path(@subscriber.tariff_scheme_id) unless @subscriber.tariff_scheme_id.blank? %></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.billing_frequency_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:billing_frequency_name), billing_frequency_path(@subscriber.billing_frequency_id) unless @subscriber.billing_frequency_id.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.use') %>:</b></td>
+          <td><%= @subscriber.try(:use_name)%></td>
+          <td><b><%= t('activerecord.attributes.subscriber.sub_use') %>:</b></td>
+          <td><%= @subscriber.try(:sub_use)%></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.meter_id') %>:</b></td>
+          <td id="info_meter"><% if @meter_is_shared %><i class="icon-screenshot"></i> &nbsp;<% end %><%= link_to @subscriber.try(:meter_meter_code), ag2_gest.meter_path(@subscriber.meter_id) unless @subscriber.meter_id.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.model') %>:</b></td>
+          <td id="info_brand"><%= link_to @subscriber.try(:meter_model_full_name), ag2_gest.meter_model_path(@subscriber.meter_meter_model_id) unless @subscriber.meter_id.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.caliber') %>:</b></td>
+          <td id="info_caliber"><%= link_to @subscriber.try(:meter_caliber_caliber), ag2_gest.caliber_path(@subscriber.meter_caliber_id) unless @subscriber.meter_caliber_id.blank? %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_route_id') %>:</b></td>
+          <td><%= link_to @subscriber.try(:reading_route_to_label), reading_route_path(@subscriber.reading_route_id) unless @subscriber.reading_route_id.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_sequence') %>:</b></td>
+          <td><%= @subscriber.try(:reading_sequence) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.reading_variant') %>:</b></td>
+          <td><%= @subscriber.try(:reading_variant) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.gis_id_wc') %>:</b></td>
+          <td><%= @subscriber.try(:gis_id_wc) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.gis_id') %>:</b></td>
+          <td><%= @subscriber.try(:gis_id) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.endowments') %>:</b></td>
+          <td><%= @subscriber.try(:endowments) %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.inhabitants') %>:</b></td>
+          <td><%= @subscriber.try(:inhabitants) %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.inhabitants_ending_at') %>:</b></td>
+          <td><%= formatted_date(@subscriber.inhabitants_ending_at) unless @subscriber.inhabitants_ending_at.blank? %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.equiv_dwelling') %>:</b></td>
+          <td><%= number_with_precision(@subscriber.try(:equiv_dwelling), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        </tr>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.m2') %>:</b></td>
+          <td><%= number_with_precision(@subscriber.try(:m2), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+          <td><b><%= t('activerecord.attributes.subscriber.landlord_tenant') %>:</b></td>
+          <td colspan="4"> <% if @subscriber.landlord_tenant == 0 %> <%= t('activerecord.attributes.subscriber.landlord') %> <% else %> <%= t('activerecord.attributes.subscriber.tenant') %> <% end %> </td>
+        <tr>
+          <td><b><%= t('activerecord.attributes.subscriber.comments') %>:</b></td>
+          <td colspan="6"><%= @subscriber.try(:remarks) %></td>
+        </tr>
+      </tbody>
+    </table>

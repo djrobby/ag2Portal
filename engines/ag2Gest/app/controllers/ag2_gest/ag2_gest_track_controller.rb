@@ -304,6 +304,8 @@ module Ag2Gest
         project = current_projects.join(",")
       end
 
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+
       # Dates are mandatory
       if @from.blank? || @to.blank?
         return
@@ -332,7 +334,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "bills.subscriber_id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !biller.blank?
         w += " AND " if w != ''
@@ -358,7 +360,10 @@ module Ag2Gest
         w += " AND " if w != ''
         w += "invoices.invoice_date <= '#{@to_date.to_date}'"
       end
-      @invoice_report = Invoice.joins(:bill).where(w).by_no
+      @invoice_report = Invoice.joins(:bill)
+                          .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
+                          .where(w).by_no
       @invoice_report_csv = Invoice.to_csv_id(w)
       bills = []
       @invoice_report_csv.each do |pr|
@@ -415,6 +420,7 @@ module Ag2Gest
       end
 
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -440,7 +446,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "readings.subscriber_id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !meter.blank?
         w += " AND " if w != ''
@@ -463,7 +469,9 @@ module Ag2Gest
         w += "readings.reading_date <= '#{@to_date.to_date}'"
       end
 
-      @reading_report = Reading.where(w).by_period_date
+      @reading_report = Reading.joins("LEFT JOIN subscribers ON readings.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
+                          .where(w).by_period_date
 
       # Setup filename
       title = t("activerecord.models.reading.few") + "_#{@from}_#{@to}"
@@ -604,6 +612,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -615,7 +624,9 @@ module Ag2Gest
       @to_date = @to
 
       w = ''
-      w += "office_id = #{session[:office]}"
+      if session[:office] != '0'
+        w += "office_id = #{session[:office]}"
+      end
       if !client.blank?
         w += " AND " if w != ''
         w += "client_id = #{client}"
@@ -626,7 +637,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !meter.blank?
         w += " AND " if w != ''
@@ -659,7 +670,7 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.subscriber_report.report_title") + "_#{@from}_#{@to}"
-      @subscriber_report = Subscriber.activated.where(w).by_code
+      @subscriber_report = Subscriber.joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id").activated.where(w).by_code
 
       respond_to do |format|
         # Render PDF
@@ -695,6 +706,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -706,7 +718,9 @@ module Ag2Gest
       @to_date = @to
 
       w = ''
-      w += "office_id = #{session[:office]}"
+      if session[:office] != '0'
+        w += "office_id = #{session[:office]}"
+      end
       if !client.blank?
         w += " AND " if w != ''
         w += "client_id = #{client}"
@@ -717,7 +731,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !meter.blank?
         w += " AND " if w != ''
@@ -750,7 +764,7 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.subscriber_report.report_eco_title") + "_#{@from}_#{@to}"
-      @subscriber_eco_report = Subscriber.activated.where(w).by_code
+      @subscriber_eco_report = Subscriber.joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id").activated.where(w).by_code
 
       respond_to do |format|
         # Render PDF
@@ -786,6 +800,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -797,7 +812,9 @@ module Ag2Gest
       @to_date = @to
 
       w = ''
-      w += "office_id = #{session[:office]}"
+      if session[:office] != '0'
+        w += "office_id = #{session[:office]}"
+      end
       if !client.blank?
         w += " AND " if w != ''
         w += "client_id = #{client}"
@@ -808,7 +825,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !meter.blank?
         w += " AND " if w != ''
@@ -841,7 +858,7 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.subscriber_report.report_eco_title") + "_#{@from}_#{@to}"
-      @subscriber_eco_items_report = Subscriber.activated.where(w).by_code
+      @subscriber_eco_items_report = Subscriber.joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id").activated.where(w).by_code
 
       respond_to do |format|
         # Render PDF
@@ -877,6 +894,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -888,7 +906,9 @@ module Ag2Gest
       @to_date = @to
 
       w = ''
-      w += "office_id = #{session[:office]}"
+      if session[:office] != '0'
+        w += "office_id = #{session[:office]}"
+      end
       if !client.blank?
         w += " AND " if w != ''
         w += "client_id = #{client}"
@@ -899,7 +919,7 @@ module Ag2Gest
       end
       if !street_name.blank?
         w += " AND " if w != ''
-        w += "id = #{street_name}"
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
       end
       if !meter.blank?
         w += " AND " if w != ''
@@ -932,7 +952,7 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.subscriber_report.report_tec_title") + "_#{@from}_#{@to}"
-      @subscriber_tec_report = Subscriber.activated.where(w).by_code
+      @subscriber_tec_report = Subscriber.joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id").activated.where(w).by_code
 
       respond_to do |format|
         # Render PDF
@@ -1372,6 +1392,7 @@ module Ag2Gest
       end
 
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Dates are mandatory
       if @from.blank? || @to.blank?
@@ -1455,7 +1476,7 @@ module Ag2Gest
       @user = !user.blank? ? User.find(user).to_label : " "
       @client = !client.blank? ? Client.find(client).to_label : " "
       @subscriber = !subscriber.blank? ? Subscriber.find(subscriber).to_label : " "
-      @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
+      # @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
       @biller = !biller.blank? ? Company.find(biller).full_name : " "
       @service_point = !service_point.blank? ? ServicePoint.find(service_point).to_label : " "
       @reading_route = !reading_route.blank? ? ReadingRoute.find(reading_route).to_label : " "
@@ -1582,5 +1603,15 @@ module Ag2Gest
       end
       _numbers = _numbers.blank? ? meter : _numbers
     end
+
+    def inverse_street_name_search(supply_address)
+      _numbers = []
+      no = setup_no(supply_address)
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
+        _numbers = _numbers << i.supply_address.to_s
+      end
+      _numbers = _numbers.blank? ? supply_address : _numbers
+    end
+
   end
 end

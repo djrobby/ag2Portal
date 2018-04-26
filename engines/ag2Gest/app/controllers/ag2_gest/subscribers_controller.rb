@@ -43,7 +43,9 @@ module Ag2Gest
                                                 :disable_bank_account,
                                                 :disable_tariff_button,
                                                 :su_check_invoice_date,
-                                                :sub_invoices_report]
+                                                :sub_invoices_report,
+                                                :change_data_supply,
+                                                :change_data_detail]
     # Helper methods for
     helper_method :sort_column
     # => index filters
@@ -82,6 +84,50 @@ module Ag2Gest
         code = I18n.t("activerecord.attributes.bill.alert_invoice_date")
       end
       render json: { "code" => code }
+    end
+
+    # Change data detail
+    def change_data_detail
+      @subscriber = Subscriber.find(params[:subscriber][:id])
+      @subscriber.update_attributes(pub_entity: params[:subscriber][:pub_entity]) unless params[:subscriber][:pub_entity].blank?
+      @subscriber.update_attributes(cadastral_reference: params[:subscriber][:cadastral_reference]) unless params[:subscriber][:cadastral_reference].blank?
+      @subscriber.update_attributes(pub_record: params[:subscriber][:pub_record]) unless params[:subscriber][:pub_record].blank?
+      @subscriber.update_attributes(reading_sequence: params[:subscriber][:reading_sequence]) unless params[:subscriber][:reading_sequence].blank?
+      @subscriber.update_attributes(reading_variant: params[:subscriber][:reading_variant]) unless params[:subscriber][:reading_variant].blank?
+      @subscriber.update_attributes(gis_id_wc: params[:subscriber][:gis_id_wc]) unless params[:subscriber][:gis_id_wc].blank?
+      @subscriber.update_attributes(gis_id: params[:subscriber][:gis_id]) unless params[:subscriber][:gis_id].blank?
+      @subscriber.update_attributes(endowments: params[:subscriber][:endowments]) unless params[:subscriber][:endowments].blank?
+      @subscriber.update_attributes(inhabitants: params[:subscriber][:inhabitants]) unless params[:subscriber][:inhabitants].blank?
+      @subscriber.update_attributes(inhabitants_ending_at: params[:subscriber][:inhabitants_ending_at]) unless params[:subscriber][:inhabitants_ending_at].blank?
+      @subscriber.update_attributes(equiv_dwelling: params[:subscriber][:equiv_dwelling]) unless params[:subscriber][:equiv_dwelling].blank?
+      @subscriber.update_attributes(m2: params[:subscriber][:m2]) unless params[:subscriber][:m2].blank?
+
+      redirect_to subscriber_path(@subscriber) + "#direction"
+    end
+
+    # Change data supply
+    def change_data_supply
+      @subscriber = Subscriber.find(params[:subscriber][:id])
+      @subscriber.update_attributes(postal_first_name: params[:subscriber][:postal_first_name]) unless params[:subscriber][:postal_first_name].blank?
+      @subscriber.update_attributes(postal_last_name: params[:subscriber][:postal_last_name]) unless params[:subscriber][:postal_last_name].blank?
+      @subscriber.update_attributes(postal_company: params[:subscriber][:postal_company]) unless params[:subscriber][:postal_company].blank?
+      @subscriber.update_attributes(phone: params[:subscriber][:phone]) unless params[:subscriber][:phone].blank?
+      @subscriber.update_attributes(cellular: params[:subscriber][:cellular]) unless params[:subscriber][:cellular].blank?
+      @subscriber.update_attributes(email: params[:subscriber][:email]) unless params[:subscriber][:email].blank?
+
+      @subscriber.update_attributes(postal_street_type_id: params[:subscriber][:postal_street_type]) unless params[:subscriber][:postal_street_type].blank?
+      @subscriber.update_attributes(postal_street_name: params[:subscriber][:postal_street_name]) unless params[:subscriber][:postal_street_name].blank?
+      @subscriber.update_attributes(postal_street_number: params[:subscriber][:postal_street_number]) unless params[:subscriber][:postal_street_number].blank?
+      @subscriber.update_attributes(postal_building: params[:subscriber][:postal_building]) unless params[:subscriber][:postal_building].blank?
+      @subscriber.update_attributes(postal_floor: params[:subscriber][:postal_floor]) unless params[:subscriber][:postal_floor].blank?
+      @subscriber.update_attributes(postal_floor_office: params[:subscriber][:postal_floor_office]) unless params[:subscriber][:postal_floor_office].blank?
+      @subscriber.update_attributes(postal_zipcode_id: params[:subscriber][:postal_zipcode]) unless params[:subscriber][:postal_zipcode].blank?
+      @subscriber.update_attributes(postal_town_id: params[:subscriber][:postal_town]) unless params[:subscriber][:postal_town].blank?
+      @subscriber.update_attributes(postal_province_id: params[:subscriber][:postal_province]) unless params[:subscriber][:postal_province].blank?
+      @subscriber.update_attributes(postal_region_id: params[:subscriber][:postal_region]) unless params[:subscriber][:postal_region].blank?
+      @subscriber.update_attributes(postal_country_id: params[:subscriber][:postal_country]) unless params[:subscriber][:postal_country].blank?
+
+      redirect_to subscriber_path(@subscriber) + "#direction"
     end
 
     # update subscriber estimation
@@ -1320,7 +1366,7 @@ module Ag2Gest
       period = BillingPeriod.find(params[:bills][:billing_period_id])
       bill_original = ''
       bill_void = ''
-      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::INSTALACION, ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date).last
+      @reading = @subscriber.readings.where(billing_period_id: params[:bills][:billing_period_id], reading_type_id: [ReadingType::INSTALACION, ReadingType::NORMAL,ReadingType::OCTAVILLA,ReadingType::RETIRADA,ReadingType::AUTO]).order(:reading_date,:id).last
       # payday_limit = params[:bills][:payday_limit].blank? ? @reading.billing_period.billing_starting_date : params[:bills][:payday_limit]
       # invoice_date = params[:bills][:invoice_date].blank? ? @reading.billing_period.billing_ending_date : params[:bills][:invoice_date]
       invoice_date = Date.today
@@ -1381,6 +1427,7 @@ module Ag2Gest
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1398,8 +1445,15 @@ module Ag2Gest
           end
         end
         if !street_name.blank?
-          with :subscriber_id, street_name
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
         end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         if !meter.blank?
           if meter.class == Array
             with :meter_code, meter
@@ -1476,6 +1530,7 @@ module Ag2Gest
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1493,8 +1548,15 @@ module Ag2Gest
           end
         end
         if !street_name.blank?
-          with :subscriber_id, street_name
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
         end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         if !meter.blank?
           if meter.class == Array
             with :meter_code, meter
@@ -1566,6 +1628,7 @@ module Ag2Gest
       # If inverse no search is required
       subscriber_code = !subscriber_code.blank? && subscriber_code[0] == '%' ? inverse_no_search(subscriber_code) : subscriber_code
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       @search = Subscriber.search do
         fulltext params[:search]
@@ -1583,8 +1646,15 @@ module Ag2Gest
           end
         end
         if !street_name.blank?
-          with :subscriber_id, street_name
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
         end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
         if !meter.blank?
           if meter.class == Array
             with :meter_code, meter
