@@ -38,8 +38,8 @@ class ClientBankAccount < ActiveRecord::Base
   validates :account_no,          :presence => true,
                                   :length => { :is => 12 },
                                   :format => { with: /\A\d+\Z/, message: :code_invalid },
-                                  :uniqueness => { :scope => [:bank_account_class_id, :country_id,
-                                                              :iban_dc, :bank_id, :bank_office_id, :ccc_dc] },
+                                  :uniqueness => { :scope => [:client_id, :subscriber_id, :bank_account_class_id, :country_id,
+                                                              :iban_dc, :bank_id, :bank_office_id] },
                                   :if => "!account_no.blank?"
   validates :holder_fiscal_id,    :presence => true,
                                   :length => { :minimum => 8 }
@@ -61,7 +61,7 @@ class ClientBankAccount < ActiveRecord::Base
     joins(:bank_account_class, :country, :bank, :bank_office)
     .joins('LEFT JOIN subscribers ON client_bank_accounts.subscriber_id = subscribers.id')
     .where('client_bank_accounts.client_id = ?', c)
-    .select("bank_account_classes.name bank_account_class_name,
+    .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              CASE ISNULL(client_bank_accounts.subscriber_id) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
@@ -74,7 +74,7 @@ class ClientBankAccount < ActiveRecord::Base
     joins(:bank_account_class, :country, :bank, :bank_office)
     .joins('LEFT JOIN subscribers ON client_bank_accounts.subscriber_id = subscribers.id')
     .where('client_bank_accounts.client_id = ? AND (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > ?)', c, Date.today)
-    .select("bank_account_classes.name bank_account_class_name,
+    .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              CASE ISNULL(client_bank_accounts.subscriber_id) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
@@ -87,7 +87,7 @@ class ClientBankAccount < ActiveRecord::Base
   scope :by_subscriber_full, -> s {
     joins(:bank_account_class, :country, :bank, :bank_office)
     .where('client_bank_accounts.subscriber_id = ?', s)
-    .select("bank_account_classes.name bank_account_class_name,
+    .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
              client_bank_accounts.starting_at, client_bank_accounts.ending_at,
@@ -98,7 +98,7 @@ class ClientBankAccount < ActiveRecord::Base
   scope :active_by_subscriber_full, -> s {
     joins(:bank_account_class, :country, :bank, :bank_office)
     .where('client_bank_accounts.subscriber_id = ? AND (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > ?)', s, Date.today)
-    .select("bank_account_classes.name bank_account_class_name,
+    .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
              client_bank_accounts.holder_name holder_name, client_bank_accounts.holder_fiscal_id holder_fiscal_id,
              client_bank_accounts.starting_at, client_bank_accounts.ending_at,

@@ -33,6 +33,7 @@ class SupplierBankAccount < ActiveRecord::Base
   validates :starting_at,         :presence => true
   validates :iban,                :presence => true,
                                   :length => { :minimum => 4, :maximum => 34 },
+                                  :format => { with: /\A[a-zA-Z\d]+\Z/, message: :iban_invalid },
                                   :if => "country.blank? && account_no.blank?"
 
   # Scopes
