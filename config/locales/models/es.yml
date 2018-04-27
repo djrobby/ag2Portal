@@ -126,6 +126,8 @@ es:
               dc_invalid: "inválido (deben ser dos dígitos numéricos)"
             account_no:
               code_invalid: "inválido (deben ser doce dígitos numéricos)"
+            iban:
+              iban_invalid: "inválido"
         infrastructure:
           attributes:
             code:
@@ -169,6 +171,8 @@ es:
               dc_invalid: "inválido (deben ser dos dígitos numéricos)"
             account_no:
               code_invalid: "inválido (deben ser doce dígitos numéricos)"
+            iban:
+              iban_invalid: "inválido"
         company_bank_account:
           iban_invalid: "IBAN inválido."
           attributes:
@@ -178,6 +182,8 @@ es:
               dc_invalid: "inválido (deben ser dos dígitos numéricos)"
             account_no:
               code_invalid: "inválido (deben ser doce dígitos numéricos)"
+            iban:
+              iban_invalid: "inválido"
         bill:
           attributes:
             bill_no:
@@ -197,6 +203,8 @@ es:
           attributes:
             request_no:
               code_invalid: "inválido"
+            iban:
+              iban_invalid: "inválido"
         debt_claim:
           attributes:
             claim_no:

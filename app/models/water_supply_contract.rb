@@ -22,7 +22,7 @@ class WaterSupplyContract < ActiveRecord::Base
                   :unsubscribe_bill_id,     # Service bill for: Change of holder or unsubscribe (to OLD subscriber, meter withdrawal)
                   :bailback_bill_id,        # Contract bill for: Change of holder or unsubscribe (return of deposit to OLD subscriber)
                   :cadastral_reference, :caliber_id, :client_id, :contract_date,
-                  :contracting_request_id, :endowments, :gis_id, :inhabitants,
+                  :contracting_request_id, :endowments, :gis_id, :inhabitants, :inhabitants_ending_at,
                   :installation_date, :meter_id, :reading_route_id, :reading_sequence, :installation_index,
                   :remarks, :subscriber_id, :tariff_scheme_id, :work_order_id, :use_id, :tariff_type_id,
                   :created_by, :updated_by, :meter_code_input,

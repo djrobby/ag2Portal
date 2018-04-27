@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180425102603) do
+ActiveRecord::Schema.define(:version => 20180427073039) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -1240,6 +1240,7 @@ ActiveRecord::Schema.define(:version => 20180425102603) do
     t.datetime "updated_at",                     :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "iban"
   end
 
   add_index "contracting_requests", ["bank_id"], :name => "index_contracting_requests_on_bank_id"
@@ -1262,6 +1263,7 @@ ActiveRecord::Schema.define(:version => 20180425102603) do
   add_index "contracting_requests", ["entity_street_type_id"], :name => "index_contracting_requests_on_entity_street_type_id"
   add_index "contracting_requests", ["entity_town_id"], :name => "index_contracting_requests_on_entity_town_id"
   add_index "contracting_requests", ["entity_zipcode_id"], :name => "index_contracting_requests_on_entity_zipcode_id"
+  add_index "contracting_requests", ["iban"], :name => "index_contracting_requests_on_iban"
   add_index "contracting_requests", ["project_id"], :name => "index_contracting_requests_on_project_id"
   add_index "contracting_requests", ["r_fiscal_id"], :name => "index_contracting_requests_on_r_fiscal_id"
   add_index "contracting_requests", ["request_no"], :name => "index_contracting_requests_on_request_no"
@@ -3822,7 +3824,7 @@ ActiveRecord::Schema.define(:version => 20180425102603) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
     t.date     "inhabitants_ending_at"
@@ -4766,6 +4768,7 @@ ActiveRecord::Schema.define(:version => 20180425102603) do
     t.string   "contract_term"
     t.string   "contract_no"
     t.string   "pub_record"
+    t.date     "inhabitants_ending_at"
   end
 
   add_index "water_supply_contracts", ["bailback_bill_id"], :name => "index_water_supply_contracts_on_bailback_bill_id"

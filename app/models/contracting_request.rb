@@ -52,7 +52,8 @@ class ContractingRequest < ActiveRecord::Base
                   :subscriber_region_id, :subscriber_street_directory_id, :subscriber_street_name,
                   :subscriber_street_number, :subscriber_street_type_id, :subscriber_town_id,
                   :subscriber_zipcode_id, :iban, :country_id, :iban_dc, :bank_id, :bank_office_id, :ccc_dc,
-                  :account_no, :work_order_id, :subscriber_id, :service_point_id, :service_point, :created_by
+                  :account_no, :work_order_id, :subscriber_id, :service_point_id, :service_point, :iban,
+                  :created_by
 
   attr_accessible :contracting_request_documents_attributes
 
@@ -105,8 +106,11 @@ class ContractingRequest < ActiveRecord::Base
   validates :subscriber_street_type,      :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
   validates :subscriber_town,             :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
   validates :subscriber_zipcode,          :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
-  validates :service_point_id,             :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
-  # validates :subscriber_id, presence: true, if: "contracting_request_type_id==2"
+  validates :service_point_id,            :presence => true, if: 'contracting_request_type_id!=ContractingRequestType::CONNECTION'
+  # validates :subscriber_id,             presence: true, if: "contracting_request_type_id==2"
+  validates :iban,                        :length => { :minimum => 4, :maximum => 34 },
+                                          :format => { with: /\A[a-zA-Z\d]+\Z/, message: :iban_invalid },
+                                          :if => "!iban.blank?"
 
   validate :check_document_required?
 
