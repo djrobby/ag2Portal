@@ -22,6 +22,7 @@ es:
         endowments: "Dotaciones"
         gis_id: "GIS Id."
         inhabitants: "Habitantes"
+        inhabitants_ending_at: "Habitantes caduca el"
         installation_date: "Fecha de instalación"
         meter_id: "Contador"
         meter: "Contador"

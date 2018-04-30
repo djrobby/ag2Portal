@@ -28,6 +28,9 @@ class PreInvoice < ActiveRecord::Base
     .joins("LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id")
     .joins("LEFT JOIN subscribers ON pre_bills.subscriber_id=subscribers.id")
     .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .joins("LEFT JOIN invoice_types ON pre_invoices.invoice_type_id=invoice_types.id")
+    .joins("LEFT JOIN invoice_statuses ON pre_invoices.invoice_status_id=invoice_statuses.id")
+    .joins("LEFT JOIN invoice_operations ON pre_invoices.invoice_operation_id=invoice_operations.id")
     .where("pre_bills.pre_group_no = #{p}")
     .select("pre_bills.project_id project_id_, pre_invoices.biller_id biller_id_, pre_invoices.id p_id_,
              pre_bills.bill_id bill_id_, pre_bills.id b_id_, pre_invoices.invoice_date invoice_date_, pre_invoices.payday_limit payday_limit_,
@@ -36,6 +39,8 @@ class PreInvoice < ActiveRecord::Base
              CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
              CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
              meters.meter_code meter_code_,
+             invoice_types.name invoice_type_, invoice_statuses.name invoice_status_, invoice_operations.name invoice_operation_,
+             subscribers.equiv_dwelling equiv_dwelling_,
              pre_invoices.reading_1_date reading_1_date_, pre_invoices.reading_2_date reading_2_date_, pre_invoices.reading_1_index reading_1_index_, pre_invoices.reading_2_index reading_2_index_,
              pre_bills.reading_2_id reading_2_id_, pre_invoices.consumption consumption_, pre_invoices.consumption_real consumption_real_, pre_invoices.consumption_estimated consumption_estimated_,
              pre_invoices.consumption_other consumption_other_,
@@ -47,6 +52,9 @@ class PreInvoice < ActiveRecord::Base
     .joins("LEFT JOIN billing_periods ON pre_invoices.billing_period_id=billing_periods.id")
     .joins("LEFT JOIN subscribers ON pre_bills.subscriber_id=subscribers.id")
     .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .joins("LEFT JOIN invoice_types ON pre_invoices.invoice_type_id=invoice_types.id")
+    .joins("LEFT JOIN invoice_statuses ON pre_invoices.invoice_status_id=invoice_statuses.id")
+    .joins("LEFT JOIN invoice_operations ON pre_invoices.invoice_operation_id=invoice_operations.id")
     .where("pre_bills.pre_group_no = #{p} AND pre_invoices.biller_id = #{b}")
     .select("pre_bills.project_id project_id_, pre_invoices.biller_id biller_id_, pre_invoices.id p_id_,
              pre_bills.bill_id bill_id_, pre_bills.id b_id_, pre_invoices.invoice_date invoice_date_, pre_invoices.payday_limit payday_limit_,
@@ -55,6 +63,8 @@ class PreInvoice < ActiveRecord::Base
              CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
              CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
              meters.meter_code meter_code_,
+             invoice_types.name invoice_type_, invoice_statuses.name invoice_status_, invoice_operations.name invoice_operation_,
+             subscribers.equiv_dwelling equiv_dwelling_,
              pre_invoices.reading_1_date reading_1_date_, pre_invoices.reading_2_date reading_2_date_, pre_invoices.reading_1_index reading_1_index_, pre_invoices.reading_2_index reading_2_index_,
              pre_bills.reading_2_id reading_2_id_, pre_invoices.consumption consumption_, pre_invoices.consumption_real consumption_real_, pre_invoices.consumption_estimated consumption_estimated_,
              pre_invoices.consumption_other consumption_other_,

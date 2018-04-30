@@ -5,7 +5,7 @@
   <tr>
 <% end %>
   <td><%= account.bank_account_class_name unless account.bank_account_class_name.blank? %></td>
-  <td><%= account.iban_with_spaces unless account.iban_with_spaces.blank? %></td>
+  <td><%= account.iban_format_with_spaces unless account.iban_format_with_spaces.blank? %></td>
   <td><%= account.subscriber_full_code unless account.subscriber_full_code.blank? %></td>
   <td><%= account.holder_name unless account.holder_name.blank? %></td>
   <td><%= account.holder_fiscal_id unless account.holder_fiscal_id.blank? %></td>

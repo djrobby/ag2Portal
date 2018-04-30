@@ -838,6 +838,10 @@
           <td id="water_supply_contract_inhabitants"><%= @water_supply_contract.inhabitants %></td>
         </tr>
         <tr>
+          <td><b><%= t('activerecord.attributes.water_supply_contract.inhabitants_ending_at') %></b></td>
+          <td id="water_supply_contract_inhabitants_ending_at"><%=l @water_supply_contract.try(:inhabitants_ending_at), format: :long if @water_supply_contract.try(:inhabitants_ending_at) %></td>
+        </tr>
+        <tr>
           <td><b><%= t('activerecord.attributes.water_supply_contract.min_pressure') %></b></td>
           <td id="water_supply_contract_min_pressure"><%= @water_supply_contract.min_pressure %></td>
         </tr>
@@ -1075,7 +1079,7 @@
           <td>
             <% if @contracting_request.try(:water_supply_contract).try(:bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
               <% if @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
-                <%= link_to @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.bill_no), id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
+                <%= link_to @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no, client_payment_url(:id => "",:No => @contracting_request.water_supply_contract.bill.raw_invoice_based_no), id: "link-bill" %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
               <% elsif @contracting_request.try(:water_supply_contract).try(:bill).try(:invoices).first.try(:invoice_status_id) != InvoiceStatus::PENDING %>
                 <%= @contracting_request.water_supply_contract.bill.invoice_based_old_no_real_no %><span class="yellow" id="link-bill-span"><%= " " + @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.bill.invoices.first.invoice_status.blank? %></span>
               <% end %>
@@ -1090,7 +1094,7 @@
               <td>
               <% if @contracting_request.try(:water_supply_contract).try(:bailback_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING  %>
                 <% if @contracting_request.try(:water_supply_contract).try(:bbailback_billill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
-                  <%= link_to @contracting_request.water_supply_contract.bailback_bill.invoice_based_old_no_real_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.bailback_bill.bill_no)  %>
+                  <%= link_to @contracting_request.water_supply_contract.bailback_bill.invoice_based_old_no_real_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.bailback_bill.raw_invoice_based_no)  %>
                 <% elsif @contracting_request.try(:water_supply_contract).try(:bailback_bill).try(:invoices).first.try(:invoice_status_id) != InvoiceStatus::PENDING %>
                   <%= @contracting_request.water_supply_contract.bailback_bill.invoice_based_old_no_real_no %>
                 <% end %>
@@ -1104,7 +1108,7 @@
               <td>
               <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill) && @contracting_request.contracting_request_status_id != ContractingRequestStatus::BILLING   %>
                 <% if @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices).first.try(:invoice_status_id) == InvoiceStatus::PENDING %>
-                  <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.invoice_based_old_no_real_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.bill_no), id: "link-unsubscribe-bill" %><span class="yellow" id="link-unsubscribe-bill-span"><%= " " + @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.blank? %></span>
+                  <%= link_to @contracting_request.water_supply_contract.unsubscribe_bill.invoice_based_old_no_real_no, client_payment_path(:id => "",:No => @contracting_request.water_supply_contract.unsubscribe_bill.raw_invoice_based_no), id: "link-unsubscribe-bill" %><span class="yellow" id="link-unsubscribe-bill-span"><%= " " + @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.blank? %></span>
                 <% elsif @contracting_request.try(:water_supply_contract).try(:unsubscribe_bill).try(:invoices).first.try(:invoice_status_id) != InvoiceStatus::PENDING %>
                   <%= @contracting_request.water_supply_contract.unsubscribe_bill.invoice_based_old_no_real_no %><span class="yellow" id="link-unsubscribe-bill-span"><%= " " + @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.code unless @contracting_request.water_supply_contract.unsubscribe_bill.invoices.first.invoice_status.blank? %></span>
                 <% end %>

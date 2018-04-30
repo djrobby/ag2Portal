@@ -480,8 +480,8 @@ module Ag2Gest
       @zipcodes = zipcodes_array
       @regions = regions_array
       @countries = country_array
-      @banks = banks_array
-      @offices = bank_offices_array
+      # @banks = banks_array
+      # @offices = bank_offices_array
       @classes = bank_account_classes_array
     end
 

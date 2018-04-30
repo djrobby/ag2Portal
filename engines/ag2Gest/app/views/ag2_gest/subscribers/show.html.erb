@@ -277,9 +277,9 @@
         var r_id = data.region_id;
         var c_id = data.country_id;
         var s_id = data.street_type_id;
-        var b = data.banks;
-        var bo = data.bank_offices;
-        var bac = data.bank_account_classes;
+        // var b = data.banks;
+        // var bo = data.bank_offices;
+        // var bac = data.bank_account_classes;
         var ml = data.meter_location;
         var bp = data.billing_period;
         var pj = data.projects;
@@ -477,20 +477,20 @@
         $("#fnt_country").html("");
         $("#fnt_country").val("val", "");
         $("#fnt_country").append($('<option></option>').val("").html(""));
-        $("#fnt_bank_country").html("");
-        $("#fnt_bank_country").val("val", "");
-        $("#fnt_bank_country").append($('<option></option>').val("").html(""));
+        // $("#fnt_bank_country").html("");
+        // $("#fnt_bank_country").val("val", "");
+        // $("#fnt_bank_country").append($('<option></option>').val("").html(""));
         if (!c.length) {
           $.each(data, function(id, option) {
             if (id == 'countries' && option != "") {
               $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
-              $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+              // $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
             }
           });
         } else {
           $.each(c, function(id, option) {
             $("#fnt_country").append($('<option></option>').val(option[0]).html(option[1]));
-            $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+            // $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
           });
         }
         if (c_id != 0) $("#fnt_country").val(c_id);
@@ -511,51 +511,51 @@
         }
         if (s_id != 0) $("#fnt_street_type").val(s_id);
 
-        // banks
-        $("#fnt_bank").html("");
-        $("#fnt_bank").val("val", "");
-        $("#fnt_bank").append($('<option></option>').val("").html(""));
-        if (!b.length) {
-          $.each(data, function(id, option) {
-            if (id == 'banks' && option != "") {
-              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(b, function(id, option) {
-              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        // bank offices
-        $("#fnt_bank_office").html("");
-        $("#fnt_bank_office").val("val", "");
-        $("#fnt_bank_office").append($('<option></option>').val("").html(""));
-        if (!bo.length) {
-          $.each(data, function(id, option) {
-            if (id == 'bank_offices' && option != "") {
-              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(bo, function(id, option) {
-              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        // bank account classes
-        $("#fnt_bank_account_class").html("");
-        $("#fnt_bank_account_class").val("val", "");
-        $("#fnt_bank_account_class").append($('<option></option>').val("").html(""));
-        if (!bac.length) {
-          $.each(data, function(id, option) {
-            if (id == 'bank_account_classes' && option != "") {
-              $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(bac, function(id, option) {
-              $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
+        // // banks
+        // $("#fnt_bank").html("");
+        // $("#fnt_bank").val("val", "");
+        // $("#fnt_bank").append($('<option></option>').val("").html(""));
+        // if (!b.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'banks' && option != "") {
+        //       $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(b, function(id, option) {
+        //       $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
+        // // bank offices
+        // $("#fnt_bank_office").html("");
+        // $("#fnt_bank_office").val("val", "");
+        // $("#fnt_bank_office").append($('<option></option>').val("").html(""));
+        // if (!bo.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'bank_offices' && option != "") {
+        //       $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(bo, function(id, option) {
+        //       $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
+        // // bank account classes
+        // $("#fnt_bank_account_class").html("");
+        // $("#fnt_bank_account_class").val("val", "");
+        // $("#fnt_bank_account_class").append($('<option></option>').val("").html(""));
+        // if (!bac.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'bank_account_classes' && option != "") {
+        //       $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(bac, function(id, option) {
+        //       $("#fnt_bank_account_class").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
 
         return false;
     });
@@ -721,47 +721,47 @@
       var subscriber_id = $("#fnt_id").val();
       if (subscriber_id == "") subscriber_id = "0";
       jQuery.getJSON('sub_load_bank/' + subscriber_id, function(data) {
-        var b = data.banks;
-        var bo = data.bank_offices;
+        // var b = data.banks;
+        // var bo = data.bank_offices;
         var bac = data.bank_account_classes;
-        var c = data.countries;
-        var b_id = data.bank_id;
-        var bo_id = data.bank_office_id;
+        // var c = data.countries;
+        // var b_id = data.bank_id;
+        // var bo_id = data.bank_office_id;
         var bac_id = data.bank_account_class_id;
-        var c_id = data.country_id;
+        // var c_id = data.country_id;
 
-        // banks
-        $("#fnt_bank").html("");
-        $("#fnt_bank").val("val", "");
-        $("#fnt_bank").append($('<option></option>').val("").html(""));
-        if (!b.length) {
-          $.each(data, function(id, option) {
-            if (id == 'banks' && option != "") {
-              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(b, function(id, option) {
-              $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        if (b_id != 0) $("#fnt_bank").val(b_id);
-        // bank offices
-        $("#fnt_bank_office").html("");
-        $("#fnt_bank_office").val("val", "");
-        $("#fnt_bank_office").append($('<option></option>').val("").html(""));
-        if (!bo.length) {
-          $.each(data, function(id, option) {
-            if (id == 'bank_offices' && option != "") {
-              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(bo, function(id, option) {
-              $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        if (bo_id != 0) $("#fnt_bank_office").val(bo_id);
+        // // banks
+        // $("#fnt_bank").html("");
+        // $("#fnt_bank").val("val", "");
+        // $("#fnt_bank").append($('<option></option>').val("").html(""));
+        // if (!b.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'banks' && option != "") {
+        //       $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(b, function(id, option) {
+        //       $("#fnt_bank").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
+        // if (b_id != 0) $("#fnt_bank").val(b_id);
+        // // bank offices
+        // $("#fnt_bank_office").html("");
+        // $("#fnt_bank_office").val("val", "");
+        // $("#fnt_bank_office").append($('<option></option>').val("").html(""));
+        // if (!bo.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'bank_offices' && option != "") {
+        //       $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(bo, function(id, option) {
+        //       $("#fnt_bank_office").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
+        // if (bo_id != 0) $("#fnt_bank_office").val(bo_id);
         // bank account classes
         $("#fnt_bank_account_class").html("");
         $("#fnt_bank_account_class").val("val", "");
@@ -778,22 +778,22 @@
           });
         }
         if (bac_id != 0) $("#fnt_bank_account_class").val(bac_id);
-        // countries
-        $("#fnt_bank_country").html("");
-        $("#fnt_bank_country").val("val", "");
-        $("#fnt_bank_country").append($('<option></option>').val("").html(""));
-        if (!c.length) {
-          $.each(data, function(id, option) {
-            if (id == 'countries' && option != "") {
-              $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
-            }
-          });
-        } else {
-          $.each(c, function(id, option) {
-              $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
-          });
-        }
-        if (c_id != 0) $("#fnt_bank_country").val(c_id);
+        // // countries
+        // $("#fnt_bank_country").html("");
+        // $("#fnt_bank_country").val("val", "");
+        // $("#fnt_bank_country").append($('<option></option>').val("").html(""));
+        // if (!c.length) {
+        //   $.each(data, function(id, option) {
+        //     if (id == 'countries' && option != "") {
+        //       $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+        //     }
+        //   });
+        // } else {
+        //   $.each(c, function(id, option) {
+        //       $("#fnt_bank_country").append($('<option></option>').val(option[0]).html(option[1]));
+        //   });
+        // }
+        // if (c_id != 0) $("#fnt_bank_country").val(c_id);
 
         return false;
       });

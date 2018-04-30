@@ -22,7 +22,7 @@
     <% @water_supply_contracts.each do |water_supply_contract| %>
     <tr>
       <td><%= water_supply_contract.full_no %>
-      <td><%= water_supply_contract.subscriber.try(:full_code) %></td>
+      <td title="<%= water_supply_contract.try(:subscriber).try(:full_name_full) %>"><%= water_supply_contract.try(:subscriber).try(:full_code) %></td> <!-- subscriber.name -->
       <td align="center"><%= formatted_date(water_supply_contract.contract_date) if water_supply_contract.contract_date %></td>
       <td><%= water_supply_contract.meter.try(:meter_code) %></td>
       <td><%= water_supply_contract.tariff_scheme.try(:to_label) %></td>

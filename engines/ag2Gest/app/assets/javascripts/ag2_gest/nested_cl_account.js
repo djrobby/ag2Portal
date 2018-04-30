@@ -16,14 +16,29 @@ var cl_accountFieldsUI = {
         };
 
         $('#addAccountButton').on('click', function(e) {
-            var isValidIBAN = validate_iban(invalidIBAN, tryAgain, $('#fnt-country').val(), $('#fnt-iban-dc').val(), $('#fnt-bank').val(), $('#fnt-office').val(), $('#fnt-account').val(), 'cl_check_iban');
+          e.stopPropagation();
+            var iban = $("#fnt-iban").val();
+            // var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, $('#fnt-iban').val());
             var isValid = $('#new-account-fields').validate(false, validationSettings);
-            if (!isValid || !isValidIBAN) {
-                e.stopPropagation();
+            if (!isValid || !iban.length) {
                 return false;
             }
-            cl_account_formHandler.appendFields(sel2NoMatches);
-            cl_account_formHandler.hideForm();
+            if (iban.length){
+              e.preventDefault();
+              var isValid = true;
+              jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+                isValid = data.valid
+                if (data.valid == false) {
+                  alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+                  $("#fnt-iban").val("");
+                  return false;
+                } else {
+                  alert(data.iban + ' OK');
+                  cl_account_formHandler.appendFields(sel2NoMatches);
+                  cl_account_formHandler.hideForm(); 
+                }
+              });
+            }
         });
 
         $('#cancelAccountButton').on('click', function(e) {
@@ -46,7 +61,7 @@ var cl_account_formHandler = {
     // Public method for adding a new row to the table.
     appendFields: function (sel2NoMatches) {
         // Get a handle on all the input fields in the form and detach them from
-		    // the DOM (we'll attach them later).
+        // the DOM (we'll attach them later).
         var inputFields = $(cl_account_cfg.formId + ' ' + cl_account_cfg.inputFieldClassSelector);
         inputFields.detach();
 
@@ -120,6 +135,9 @@ var cl_account_rowBuilder = function() {
               $(this).removeAttr('id');
               $(this).addClass(css);
               // Add new column to row
+              if (id == "fnt-iban") {
+                $(this).attr('readonly', 'true')
+              }
               var td = $('<td/>').append($(this));
               // If destroy field, add delete link also
               if (id.indexOf("_destroy") != -1) {
@@ -133,7 +151,7 @@ var cl_account_rowBuilder = function() {
     };
 
     // A public method for building a row and attaching it to the end of a
-	// <TBODY> element.
+  // <TBODY> element.
     var attachRow = function(tableBody, fields) {
         var row = buildRow(fields);
         $(row).appendTo($(tableBody));

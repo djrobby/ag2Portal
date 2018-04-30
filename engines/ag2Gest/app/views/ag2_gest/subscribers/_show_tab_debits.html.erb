@@ -88,7 +88,8 @@
       <% @subscriber_accounts.each do |client_bank_account| %>
         <tr>
           <td><%= client_bank_account.bank_account_class_name unless client_bank_account.bank_account_class_name.blank? %></td>
-          <td><%= client_bank_account.iban_with_spaces unless client_bank_account.iban_with_spaces.blank? %></td>
+          <!-- <td><%#= client_bank_account.iban_with_spaces unless client_bank_account.iban_with_spaces.blank? %></td> -->
+          <td><%= client_bank_account.iban_format_with_spaces unless client_bank_account.iban_format_with_spaces.blank? %></td>
           <td><%= client_bank_account.holder_name unless client_bank_account.holder_name.blank? %></td>
           <td><%= client_bank_account.holder_fiscal_id unless client_bank_account.holder_fiscal_id.blank? %></td>
           <td align="center"><%= formatted_date(client_bank_account.starting_at) unless client_bank_account.starting_at.blank? %></td>

@@ -365,6 +365,10 @@ class ContractingRequest < ActiveRecord::Base
     !country_id.blank? && !iban_dc.blank? && !bank_id.blank? && !bank_office_id.blank? && !account_no.blank?
   end
 
+  def data_iban?
+    !iban.blank?
+  end
+
   # Assign right request no (if current one is empty or already exists)
   def assign_right_no
     no = self.request_no
@@ -404,7 +408,7 @@ class ContractingRequest < ActiveRecord::Base
       region_id: client_region_id,
       country_id: client_country_id,
       created_by: created_by,
-      payment_method_id: account_no.blank? ? 1 : 6
+      payment_method_id: iban.blank? ? 1 : 6
     )
     if self.contracting_request_type_id != ContractingRequestType::CANCELLATION
       client.client_bank_accounts.where(ending_at: nil, subscriber_id: subscriber_id).update_all(ending_at: request_date, updated_by: self.created_by)
@@ -412,15 +416,16 @@ class ContractingRequest < ActiveRecord::Base
     ClientBankAccount.create(client_id: client.id,
                               bank_account_class_id: BankAccountClass::SERVICIO,
                               starting_at: request_date,
-                              country_id: country_id,
-                              iban_dc: iban_dc,
-                              bank_id: bank_id,
-                              bank_office_id: bank_office_id,
+                              # country_id: country_id,
+                              # iban_dc: iban_dc,
+                              # bank_id: bank_id,
+                              # bank_office_id: bank_office_id,
                               # ccc_dc: ccc_dc,
-                              account_no: account_no,
+                              # account_no: account_no,
+                              iban: iban,
                               created_by: created_by,
                               holder_fiscal_id: client.fiscal_id,
-                              holder_name: client.to_name) if data_account?
+                              holder_name: client.to_name) if data_iban?
   end
 
   def to_subscriber
@@ -447,6 +452,7 @@ class ContractingRequest < ActiveRecord::Base
       pub_record: (water_supply_contract.pub_record if water_supply_contract),
       gis_id: (water_supply_contract.gis_id if water_supply_contract),
       inhabitants: (water_supply_contract.inhabitants if water_supply_contract),
+      inhabitants_ending_at: (water_supply_contract.inhabitants_ending_at if water_supply_contract),
       meter_id: (water_supply_contract.meter_id if water_supply_contract),
       # name: ,
       # office_id: ,
@@ -512,6 +518,7 @@ class ContractingRequest < ActiveRecord::Base
                               caliber_id: old_subscriber.meter.caliber_id,
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
+                              inhabitants_ending_at: old_subscriber.inhabitants_ending_at,
                               use_id:old_subscriber.use_id,
                               created_by: created_by #,
                               #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
@@ -525,13 +532,14 @@ class ContractingRequest < ActiveRecord::Base
 
     if !client.client_bank_accounts.where(ending_at: nil).blank?
       self.update_attributes(
-        country_id: client.client_bank_accounts.where(ending_at: nil).last.country_id,
-        iban_dc: client.client_bank_accounts.where(ending_at: nil).last.iban_dc,
-        bank_id: client.client_bank_accounts.where(ending_at: nil).last.bank_id,
-        bank_office_id: client.client_bank_accounts.where(ending_at: nil).last.bank_office_id,
+        # country_id: client.client_bank_accounts.where(ending_at: nil).last.country_id,
+        # iban_dc: client.client_bank_accounts.where(ending_at: nil).last.iban_dc,
+        # bank_id: client.client_bank_accounts.where(ending_at: nil).last.bank_id,
+        # bank_office_id: client.client_bank_accounts.where(ending_at: nil).last.bank_office_id,
         # ccc_dc: client.client_bank_accounts.where(ending_at: nil).last.ccc_dc,
         created_by: created_by,
-        account_no: client.client_bank_accounts.where(ending_at: nil).last.account_no
+        iban: client.client_bank_accounts.where(ending_at: nil).last.iban
+        # account_no: client.client_bank_accounts.where(ending_at: nil).last.account_no
       )
       self.save
     end
@@ -563,6 +571,7 @@ class ContractingRequest < ActiveRecord::Base
                               use_id:old_subscriber.use_id,
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
+                              inhabitants_ending_at: old_subscriber.inhabitants_ending_at,
                               installation_date: old_subscriber.meter_details.first.installation_date,
                               installation_index: old_subscriber.meter_details.first.installation_reading,
                               created_by: created_by
@@ -635,6 +644,7 @@ class ContractingRequest < ActiveRecord::Base
                               use_id:old_subscriber.use_id,
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
+                              inhabitants_ending_at: old_subscriber.inhabitants_ending_at,
                               installation_date: old_subscriber.meter_details.first.installation_date,
                               installation_index: old_subscriber.meter_details.first.installation_reading,
                               created_by: created_by
@@ -705,6 +715,7 @@ class ContractingRequest < ActiveRecord::Base
                               caliber_id: old_subscriber.meter.caliber_id,
                               endowments: old_subscriber.endowments,
                               inhabitants: old_subscriber.inhabitants,
+                              inhabitants_ending_at: old_subscriber.inhabitants_ending_at,
                               use_id:old_subscriber.use_id,
                               created_by: created_by #,
                               #tariff_type_id: old_subscriber.subscriber_tariffs.where(ending_at: nil).last.tariff.tariff_type_id
@@ -896,6 +907,10 @@ class ContractingRequest < ActiveRecord::Base
         self.contracting_request_status_id = ContractingRequestStatus::COMPLETE
       end
     end
+  end
+
+  def iban_format_with_spaces
+    iban.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
   private

@@ -338,9 +338,9 @@ module Ag2Gest
 
     def add_bank_account
       @subscriber = Subscriber.find(params[:id])
-      @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
+      # @countries = Country.order(:name)
+      # @bank = banks_dropdown
+      # @bank_offices = bank_offices_dropdown
       _class = params[:client_bank_account][:bank_account_class_id]
       if !@subscriber.client_bank_accounts.where(ending_at: nil,bank_account_class_id: _class).blank?
         _bank_account = @subscriber.client_bank_accounts.where('bank_account_class_id = ?', _class).order("ending_at").active
@@ -353,12 +353,13 @@ module Ag2Gest
                               subscriber_id: params[:client_bank_account][:subscriber_id],
                               bank_account_class_id: params[:client_bank_account][:bank_account_class_id],
                               starting_at: params[:client_bank_account][:starting_at],
-                              country_id: params[:client_bank_account][:country_id],
-                              iban_dc: params[:client_bank_account][:iban_dc],
-                              bank_id: params[:client_bank_account][:bank_id],
-                              bank_office_id: params[:client_bank_account][:bank_office_id],
+                              # country_id: params[:client_bank_account][:country_id],
+                              # iban_dc: params[:client_bank_account][:iban_dc],
+                              # bank_id: params[:client_bank_account][:bank_id],
+                              # bank_office_id: params[:client_bank_account][:bank_office_id],
                               # ccc_dc: params[:client_bank_account][:account_no].to_s[0..1],
-                              account_no: params[:client_bank_account][:account_no].to_s[0..11],
+                              # account_no: params[:client_bank_account][:account_no].to_s[0..11],
+                              iban: params[:client_bank_account][:iban],
                               holder_fiscal_id: params[:client_bank_account][:holder_fiscal_id],
                               holder_name: params[:client_bank_account][:holder_name]
                             )
@@ -781,10 +782,11 @@ module Ag2Gest
       bank_office_id = 0
       bank_account_class_id = 0
       country_id = 0
-      @json_data = { "banks" => banks_array, "bank_offices" => bank_offices_array,
-                     "bank_account_classes" => bank_account_classes_array, "countries" => country_array,
-                     "bank_id" => bank_id, "bank_office_id" => bank_office_id,
-                     "bank_account_class_id" => bank_account_class_id, "country_id" => country_id }
+      @json_data = { "bank_account_classes" => bank_account_classes_array,"bank_account_class_id" => bank_account_class_id,
+                     # "banks" => banks_array, "bank_offices" => bank_offices_array,
+                     # "countries" => country_array,
+                     # "bank_id" => bank_id, "bank_office_id" => bank_office_id,"country_id" => country_id
+                    }
       render json: @json_data
     end
 
@@ -814,8 +816,8 @@ module Ag2Gest
                      "regions" => regions_array, "countries" => country_array, "street_types" => street_types_array,
                       "town_id" => town_id, "province_id" => province_id, "zipcode_id" => zipcode_id,
                       "region_id" => region_id, "country_id" => country_id, "street_type_id" => street_type_id,
-                      "banks" => banks_array, "bank_offices" => bank_offices_array,
-                      "bank_account_classes" => bank_account_classes_array, "meter_location" => meter_locations_array,
+                      # "banks" => banks_array, "bank_offices" => bank_offices_array,"bank_account_classes" => bank_account_classes_array,
+                      "meter_location" => meter_locations_array,
                       "billing_period" => billing_periods_array(subscriber), "projects" => projects_array,
                       "reading_type" => reading_types_array }
                       # "billing_periods_reading" => billing_period_readings_array(subscriber)
@@ -1122,8 +1124,8 @@ module Ag2Gest
     def edit
       @subscriber = Subscriber.find(params[:id])
       @countries = Country.order(:name)
-      @bank = banks_dropdown
-      @bank_offices = bank_offices_dropdown
+      # @bank = banks_dropdown
+      # @bank_offices = bank_offices_dropdown
     end
 
     # POST /subscribers
@@ -1156,6 +1158,7 @@ module Ag2Gest
           gis_id: @contracting_request.water_supply_contract.try(:gis_id),
           pub_record: @contracting_request.water_supply_contract.try(:pub_record),
           inhabitants: @contracting_request.water_supply_contract.try(:inhabitants),
+          inhabitants_ending_at: nil,
           # name: @contracting_request.entity.try(:full_name),
           office_id: @contracting_request.project.try(:office).try(:id),
           # province_id: @contracting_request.subscriber_province_id,
@@ -1199,6 +1202,7 @@ module Ag2Gest
           created_by: (current_user.id if !current_user.nil?)
         )
         if @subscriber.save
+          @subscriber.update_attributes(inhabitants_ending_at: @contracting_request.water_supply_contract.try(:inhabitants_ending_at))
           @contracting_request.water_supply_contract.contracted_tariffs.update_all(:starting_at => @subscriber.starting_at)
           @subscriber.tariffs << @contracting_request.water_supply_contract.tariffs
           @subscriber.subscriber_tariffs.where(ending_at: nil).update_all(:starting_at => @subscriber.starting_at)
@@ -1330,8 +1334,8 @@ module Ag2Gest
           format.json { head :no_content }
         else
           @countries = Country.order(:name)
-          @bank = banks_dropdown
-          @bank_offices = bank_offices_dropdown
+          # @bank = banks_dropdown
+          # @bank_offices = bank_offices_dropdown
           format.html { render action: "edit" }
           format.json { render json: @subscriber.errors, status: :unprocessable_entity }
         end

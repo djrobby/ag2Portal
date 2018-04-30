@@ -3,11 +3,11 @@
 <% else %>
   <tr>
 <% end %>
-  <td><%= account.bank_account_class.name %></td>
-  <td><%= account.iban_format_with_spaces %></td>
-  <td><%= account.holder_name[0..40] %></td>
-  <td><%= account.holder_fiscal_id %></td>
-  <td><%= account.bank_suffix %></td>
-  <td align="center"><%= account.starting_at.strftime("%d/%m/%Y") %></td>
-  <td align="center"><%= account.ending_at.strftime("%d/%m/%Y") unless account.ending_at.blank? %></td>
+  <td><%= account.bank_account_class.name unless account.bank_account_class.blank?%></td>
+  <td><%= account.iban_format_with_spaces unless account.iban_format_with_spaces.blank?%></td>
+  <td><%= account.holder_name[0..40] unless account.holder_name.blank?%></td>
+  <td><%= account.holder_fiscal_id unless account.holder_fiscal_id.blank?%></td>
+  <td><%= account.bank_suffix unless account.bank_suffix.blank? %></td>
+  <td align="center"><%= formatted_date(account.starting_at) unless account.starting_at.blank? %></td>
+  <td align="center"><%= formatted_date(account.ending_at) unless account.ending_at.blank? %></td>
 </tr>

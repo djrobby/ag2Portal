@@ -11,6 +11,12 @@
       closeOnSelect: false,
       allowClear: true
     });
+    $('.date_picker').datepicker({
+      format : 'dd/mm/yyyy',
+      weekStart : 1
+    }).on('changeDate', function(e){
+      $('.date_picker').datepicker('hide');
+    });
 
     // Save default text color
     text_field_color = $("#alert").css('color')
@@ -45,6 +51,7 @@
       $("#water_supply_contract_gis_id").text(data.water_supply_contract.gis_id);
       $("#water_supply_contract_endowments").text(data.water_supply_contract.endowments);
       $("#water_supply_contract_inhabitants").text(data.water_supply_contract.inhabitants);
+      $("#water_supply_contract_inhabitants_ending_at").text(data.water_supply_contract.inhabitants_ending_at);
       $("#water_supply_contract_remarks").text(data.water_supply_contract.remarks);
       $("#tariff_scheme").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/tariff_schemes/" + data.tariff_scheme.id);
       $("#tariff_scheme").text(data.tariff_scheme.name);
@@ -214,6 +221,8 @@ jQuery(function($) {
 
       <%= f.input :endowments, :input_html => { :class => 'x-large-text-field', :id => 'wsc_endowments' }, :label_html => { :class => 'form-label-under-sel2' } %>
       <%= f.input :inhabitants, :input_html => { :class => 'x-large-text-field', :id => 'wsc_inhabitants' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :inhabitants_ending_at, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => {:class => 'x-large-text-field date_picker', :id => 'wsc_inhabitants_ending_at'}, :label_html => { :class => 'form-label' } %>
+
       <%= f.input :contract_term, :input_html => { :class => 'x-large-text-field', :id => 'wsc_contract_term' }, :label_html => { :class => 'form-label' } %>
       <h4><%= t('activerecord.attributes.contracting_request.measuring_device') %></h4>
 

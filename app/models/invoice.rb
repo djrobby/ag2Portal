@@ -128,6 +128,9 @@ class Invoice < ActiveRecord::Base
     .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
     .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
     .joins("LEFT JOIN meters ON subscribers.meter_id=meters.id")
+    .joins("LEFT JOIN invoice_types ON invoices.invoice_type_id=invoice_types.id")
+    .joins("LEFT JOIN invoice_statuses ON invoices.invoice_status_id=invoice_statuses.id")
+    .joins("LEFT JOIN invoice_operations ON invoices.invoice_operation_id=invoice_operations.id")
     .where("#{w}")
     .select("bills.project_id project_id_, invoices.biller_id biller_id_, invoices.id p_id_,
              bills.id b_id_, invoices.invoice_date invoice_date_, invoices.payday_limit payday_limit_,
@@ -136,6 +139,8 @@ class Invoice < ActiveRecord::Base
              CASE WHEN ISNULL(subscribers.subscriber_code) THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4), '-', SUBSTR(subscribers.subscriber_code,5,7)) END full_code_,
              CASE WHEN (ISNULL(subscribers.company) OR subscribers.company = '') THEN CONCAT(subscribers.last_name, ', ', subscribers.first_name) ELSE subscribers.company END full_name_,
              meters.meter_code meter_code_,
+             invoice_types.name invoice_type_, invoice_statuses.name invoice_status_, invoice_operations.name invoice_operation_,
+             subscribers.equiv_dwelling equiv_dwelling_,
              invoices.reading_1_date reading_1_date_, invoices.reading_2_date reading_2_date_, invoices.reading_1_index reading_1_index_, invoices.reading_2_index reading_2_index_,
              bills.reading_2_id reading_2_id_, invoices.consumption consumption_, invoices.consumption_real consumption_real_, invoices.consumption_estimated consumption_estimated_,
              invoices.consumption_other consumption_other_,

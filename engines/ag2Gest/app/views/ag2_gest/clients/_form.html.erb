@@ -329,7 +329,7 @@
   }
 </script>
 
-<%= simple_form_for @client, :html => {:class => 'form-vertical well' } do |f| %>
+<%= simple_form_for @client, :html => {:class => 'form-vertical well'} do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 <% if session[:organization] != '0' %>
@@ -400,7 +400,7 @@
         <h4><%= t 'ag2_purchase.suppliers.accounts_info' %></h4>
       </td>
       <td class="form-td-two right-winged">
-        <%= link_to_add_fields(t("ag2_purchase.suppliers.btn_new_account"), f, :client_bank_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-btn") %>
+        <%= link_to_add_fields(t("ag2_purchase.suppliers.btn_new_account"), f, :client_bank_accounts, "account_fields", "new-account-fields", class: "btn btn-warning fnt-new-btn", :id => 'form_client_account') %>
       </td>
     </tr>
   </tbody>

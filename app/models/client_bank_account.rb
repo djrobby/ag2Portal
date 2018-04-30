@@ -58,7 +58,10 @@ class ClientBankAccount < ActiveRecord::Base
   scope :by_client_or_subscriber, -> c, s { where('client_id = ? OR subscriber_id = ?', c, s).by_ending_at }
   scope :by_client, -> c { where('client_id = ?', c).by_ending_at }
   scope :by_client_full, -> c {
-    joins(:bank_account_class, :country, :bank, :bank_office)
+    joins(:bank_account_class)
+    .joins('LEFT JOIN countries ON client_bank_accounts.country_id = countries.id')
+    .joins('LEFT JOIN banks ON client_bank_accounts.bank_id = banks.id')
+    .joins('LEFT JOIN bank_offices ON client_bank_accounts.bank_office_id = bank_offices.id')
     .joins('LEFT JOIN subscribers ON client_bank_accounts.subscriber_id = subscribers.id')
     .where('client_bank_accounts.client_id = ?', c)
     .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
@@ -71,7 +74,10 @@ class ClientBankAccount < ActiveRecord::Base
     .by_ending_at
   }
   scope :active_by_client_full, -> c {
-    joins(:bank_account_class, :country, :bank, :bank_office)
+    joins(:bank_account_class)
+    .joins('LEFT JOIN countries ON client_bank_accounts.country_id = countries.id')
+    .joins('LEFT JOIN banks ON client_bank_accounts.bank_id = banks.id')
+    .joins('LEFT JOIN bank_offices ON client_bank_accounts.bank_office_id = bank_offices.id')
     .joins('LEFT JOIN subscribers ON client_bank_accounts.subscriber_id = subscribers.id')
     .where('client_bank_accounts.client_id = ? AND (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > ?)', c, Date.today)
     .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
@@ -85,7 +91,10 @@ class ClientBankAccount < ActiveRecord::Base
   }
   scope :by_subscriber, -> s { where('subscriber_id = ?', s).by_ending_at }
   scope :by_subscriber_full, -> s {
-    joins(:bank_account_class, :country, :bank, :bank_office)
+    joins(:bank_account_class)
+    .joins('LEFT JOIN countries ON client_bank_accounts.country_id = countries.id')
+    .joins('LEFT JOIN banks ON client_bank_accounts.bank_id = banks.id')
+    .joins('LEFT JOIN bank_offices ON client_bank_accounts.bank_office_id = bank_offices.id')
     .where('client_bank_accounts.subscriber_id = ?', s)
     .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,
@@ -96,7 +105,10 @@ class ClientBankAccount < ActiveRecord::Base
     .by_ending_at
   }
   scope :active_by_subscriber_full, -> s {
-    joins(:bank_account_class, :country, :bank, :bank_office)
+    joins(:bank_account_class)
+    .joins('LEFT JOIN countries ON client_bank_accounts.country_id = countries.id')
+    .joins('LEFT JOIN banks ON client_bank_accounts.bank_id = banks.id')
+    .joins('LEFT JOIN bank_offices ON client_bank_accounts.bank_office_id = bank_offices.id')
     .where('client_bank_accounts.subscriber_id = ? AND (client_bank_accounts.ending_at IS NULL OR client_bank_accounts.ending_at > ?)', s, Date.today)
     .select("bank_account_classes.name bank_account_class_name,client_bank_accounts.iban,
              CONCAT(TRIM(countries.code),TRIM(client_bank_accounts.iban_dc),' ',TRIM(banks.code),' ',TRIM(bank_offices.code),' ',SUBSTR(client_bank_accounts.account_no,1,4),' ',SUBSTR(client_bank_accounts.account_no,5,4),' ',SUBSTR(client_bank_accounts.account_no,9,4)) iban_with_spaces,

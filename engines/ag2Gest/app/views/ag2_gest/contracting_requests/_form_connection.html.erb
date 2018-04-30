@@ -377,23 +377,52 @@
 
     // when #check_iban_btn is clicked
     $(".check_iban_btn").click(function() {
-      var country = $("#contracting_request_country_id").val();
-      var dc = $("#contracting_request_iban_dc").val();
-      var bank = $("#contracting_request_bank_id").val();
-      var office = $("#contracting_request_bank_office_id").val();
-      var account = $("#contracting_request_account_no").val();
-      var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'cr_check_iban');
+      // var country = $("#contracting_request_country_id").val();
+      // var dc = $("#contracting_request_iban_dc").val();
+      // var bank = $("#contracting_request_bank_id").val();
+      // var office = $("#contracting_request_bank_office_id").val();
+      // var account = $("#contracting_request_account_no").val();
+      // var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'cr_check_iban');
+      var iban = $("#fnt-iban").val();
+      if (iban.length){
+      var isValid = true;
+        jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+          isValid = data.valid
+          if (data.valid == false) {
+            alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+            $("#fnt-iban").val("");
+          } else {
+            alert(data.iban + ' OK');
+          }
+        });
+      }
       return false;
     });
 
     $("#submit_btn").click(function() {
+      var iban = $("#fnt-iban").val();
+      if (iban.length){
+        e.preventDefault();
+        var isValid = true;
+        jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+          isValid = data.valid
+          if (data.valid == false) {
+            alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+            $("#fnt-iban").val("");
+            return false;
+          } else {
+            alert(data.iban + ' OK');
+            $("#form_contracting_request_connection").submit();   
+          }
+        });
+      }
       $('.entity-field').prop('disabled', false);
       $('.client-field').prop('disabled', false);
     });
   });
 </script>
 
-<%= simple_form_for @contracting_request, :html => {:class => 'form-vertical well' } do |f| %>
+<%= simple_form_for @contracting_request, :html => {:class => 'form-vertical well', :id => 'form_contracting_request_connection' } do |f| %>
 <%= f.error_notification %>
 <%= display_base_errors resource %>
 
@@ -627,21 +656,27 @@
 <div class="row-fluid row-bank-account">
   <!-- IBAN INFO -->
   <h4><%=t 'ag2_gest.contracting_requests.new.iban' %></h4>
-  <div class="row-fluid">
+  <!-- <div class="row-fluid"> -->
     <!-- COUNTRY CODE -->
-    <%= f.input :country_id, collection: @countries, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%#= f.input :country_id, collection: @countries, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
     <!-- IBAN DC -->
-    <%= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
+    <%#= f.input :iban_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- BANK -->
-    <%= f.input :bank_id, collection: @bank, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%#= f.input :bank_id, collection: @bank, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- BANK OFFICE -->
-    <%= f.input :bank_office_id, collection: @bank_offices, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
+    <%#= f.input :bank_office_id, collection: @bank_offices, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', maxlength: "4" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span3" } %>
     <!-- DC -->
     <%#= f.input :ccc_dc, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span1" } %>
     <!-- ACCOUNT NO -->
-    <%= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <%#= f.input :account_no, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' }, wrapper_html: { class: "span2" } %>
+    <!-- <a href="#" class="check_iban_btn" title="<%#=t('validate') %>"><i class="icon-ok"></i></a> -->
+  <!-- </div> -->
+  <label class="multi-field-label-two">
+    <%= f.input :iban, :required => true, input_html: { class: 'x-large-text-field field', minlength: 4, maxlength: 34, id: 'fnt-iban', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeydown: "only_digit_or_letter(event)", onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
+  </label>
+  <label class="multi-field-label-two">
     <a href="#" class="check_iban_btn" title="<%=t('validate') %>"><i class="icon-ok"></i></a>
-  </div>
+  </label>
 </div>
 
 <!-- Documents -->

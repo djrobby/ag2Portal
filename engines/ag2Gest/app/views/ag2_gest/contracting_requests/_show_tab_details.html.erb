@@ -15,30 +15,32 @@
   <table class="table table-condensed table-striped shrinked stu">
     <thead>
       <th><%= t "activerecord.attributes.client_bank_account.bank_account_class_id" %>:</th>
+      <th><%= t "activerecord.attributes.company_bank_account.iban" %></th>
       <th><%= t "activerecord.attributes.client_bank_account.holder_fiscal_id" %>:</th>
       <th><%= t "activerecord.attributes.client_bank_account.holder_name" %>:</th>
       <th><%= t "activerecord.attributes.client_bank_account.starting_at" %>:</th>
       <th><%= t "activerecord.attributes.client_bank_account.ending_at" %>:</th>
-      <th><%= t "activerecord.attributes.contracting_request.country_code" %>:</th>
-      <th><%= t "activerecord.attributes.contracting_request.iban_dc" %>:</th>
-      <th><%= t "activerecord.attributes.contracting_request.cb" %>:</th>
-      <th><%= t "activerecord.attributes.contracting_request.cs" %>:</th>
-      <!-- <th><#%= t "activerecord.attributes.contracting_request.ccc_dc" %>:</th> -->
-      <th><%= t "activerecord.attributes.contracting_request.account_no" %>:</th>
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.country_code" %>:</th> -->
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.iban_dc" %>:</th> -->
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.cb" %>:</th> -->
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.cs" %>:</th> -->
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.ccc_dc" %>:</th> -->
+      <!-- <th><%#= t "activerecord.attributes.contracting_request.account_no" %>:</th> -->
     </thead>
     <tbody>
       <tr>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:bank_account_class).try(:name) %></td>
+        <td><%= @contracting_request.iban_format_with_spaces unless @contracting_request.iban_format_with_spaces.blank? %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:holder_fiscal_id) %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:holder_name) %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:starting_at) %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:ending_at) %></td>
-        <td><%= @contracting_request.try(:country_id) %></td>
-      	<td><%= @contracting_request.try(:iban_dc) %></td>
-      	<td><%= @contracting_request.try(:bank).try(:full_name) %></td>
-      	<td><%= @contracting_request.try(:bank_office).try(:full_name) %></td>
+        <!-- <td><%#= @contracting_request.try(:country_code) %></td> -->
+      	<!-- <td><%#= @contracting_request.try(:iban_dc) %></td> -->
+      	<!-- <td><%#= @contracting_request.try(:bank).try(:full_name) %></td> -->
+      	<!-- <td><%#= @contracting_request.try(:bank_office).try(:full_name) %></td> -->
       	<!-- <td><#%= @contracting_request.try(:ccc_dc) %></td> -->
-      	<td><%= @contracting_request.try(:account_no) %></td>
+      	<!-- <td><%#= @contracting_request.try(:account_no) %></td> -->
       </tr>
     </tbody>
   </table>
