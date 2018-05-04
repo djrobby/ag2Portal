@@ -110,6 +110,7 @@ cond = true
       #   row.item(:date_installation).value(formatted_date(reading_date.first.try(:reading_date))).style(:color, "#6E6E6E")# OR row.item(:date_installation).value((MeterDetail.find_by_meter_id_and_subscriber_id(preading.meter_id, preading.subscriber_id)).try(:installation_date)).style(:color, "#6E6E6E")
       # end
       row.item(:period).value(preading.try(:billing_period).try(:period)).style(:color, "#6E6E6E")
+      row.item(:type).value(preading.try(:reading_type).try(:type_label)).style(:color, "#6E6E6E")
       row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}").style(:color, "#6E6E6E")
       row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}").style(:color, "#6E6E6E")
       row.item(:date).style(:color, "#6E6E6E").value formatted_timestamp(preading.reading_date) unless preading.reading_date.blank?
@@ -145,6 +146,7 @@ cond = true
       #   row.item(:date_installation).value formatted_date(reading_date.first.try(:reading_date))
       # end
       row.item(:period).value(preading.try(:billing_period).try(:period))
+      row.item(:type).value(preading.try(:reading_type).try(:type_label))
       row.item(:read_year).value("#{preading.reading_2.try(:billing_period).try(:period)} #{preading.reading_index_2}")
       row.item(:read_period).value("#{preading.reading_1.try(:billing_period).try(:period)} #{preading.reading_index_1}")
       row.item(:date).value formatted_timestamp(preading.reading_date) unless preading.reading_date.blank?

@@ -219,7 +219,7 @@ class PreReading < ActiveRecord::Base
         pr = pre_previous_readings.first
       else
         # Discard the same date readings found, and use the first valid one
-        pr = pre_previous_readings.where("readings.id NOT IN (?)", pr_same_date.pluck(:id)).first
+        pr = pre_previous_readings.where("readings.id NOT IN (?)", pr_same_date.pluck("readings.id")).first
       end
     end
     return pr

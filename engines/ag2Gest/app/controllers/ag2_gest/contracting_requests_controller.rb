@@ -1288,7 +1288,8 @@ module Ag2Gest
                      "ServicePoint" => service_point_code,
                      "ServicePointLabel" => service_point_label,
                      "subscriber_debt" => @subscriber_debt,
-                     "service_point" => search_array
+                     "service_point" => search_array,
+                     "center_id" => @subscriber.center_id
                     }
 
       respond_to do |format|
