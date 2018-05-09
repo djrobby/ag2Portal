@@ -33,6 +33,16 @@
     }
   }
 
+  function show_bank_filters() {
+    if (_active_tab == "banks-tab") {
+      $("#bank").show();
+      $("#have-bank-account").hide();
+    } else if (_active_tab == "fractionated-tab") {
+      $("#bank-order").hide();
+      $("#have-bank-account").show();
+    }
+  }
+
   function enable_client_payment_amount(b) {
     if (b) {
       $('#client_payment_amount').prop('disabled', false);
@@ -290,6 +300,7 @@
 
     // Hide elements at init
     show_cashier();
+    show_bank_filters();
 
     // Set cash, bank, deferrals & others show-all checkboxes
     set_show_all_checkboxes()
@@ -585,14 +596,18 @@
           <%#= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
           <!-- Have BankAccount? -->
-          <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
-          <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
+          <div id="have-bank-account">
+            <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
+            <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
+          </div>
           <!-- Bank -->
-          <%= label_tag "label_bank", I18n.t("ag2_gest.client_payments.index.label_bank"), :class => 'form-label' %>
-          <%= text_field_tag "Bank", params[:Bank], :class => 'x-large-text-field shrinked' %>
+          <%#= label_tag "label_bank", I18n.t("ag2_gest.client_payments.index.label_bank"), :class => 'form-label' %>
+          <%#= text_field_tag "Bank", params[:Bank], :class => 'x-large-text-field shrinked' %>
           <!-- Bank Order -->
-          <%= label_tag "label_bank_order", I18n.t("ag2_gest.client_payments.index.label_bank_order"), :class => 'form-label' %>
-          <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
+          <div id="bank-order">
+            <%= label_tag "label_bank_order", I18n.t("ag2_gest.client_payments.index.label_bank_order"), :class => 'form-label' %>
+            <%= text_field_tag "BankOrder", params[:BankOrder], :class => 'x-large-text-field shrinked' %>
+          </div>
           <!-- User -->
           <%= label_tag "label_user", I18n.t("activerecord.models.user.one"), :class => 'form-label' %>
           <%= hidden_field_tag "User", params[:User], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
@@ -848,6 +863,12 @@
       <%= simple_form_for :bank_to_order, url: bank_to_order_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-to-order-form'} do |f| %>
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
+          <div class="control-group string required">
+            <label class="string control-label">Remesa</label>
+            <div class="controls highlighted bolded">
+              <span id="bank-to-order-order-selected">Nº</span>
+            </div>
+          </div>
           <div class="control-group string required">
             <label class="string control-label">Recibos seleccionados</label>
             <div class="controls highlighted bolded">
