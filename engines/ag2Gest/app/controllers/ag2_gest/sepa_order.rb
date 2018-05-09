@@ -130,7 +130,7 @@ module Ag2Gest
                 anombre = cp.sanitized_client_name
                 adirecc = cp.sanitized_client_address
               end
-              self.concepto = "FRA.AGUA " + cp.bill.real_no_unformatted + " " + cp.bill.billing_period_code + " " + adirecc + " " + anombre
+              self.concepto = "FRA.AGUA " + cp.bill.invoice_based_old_no_real_no + " " + cp.bill.billing_period_code + " " + adirecc + " " + anombre
               self.entidad_deudor = cp.client_bank_account_swift.ljust(11)
               self.importe_adeudo = en_formatted_number_without_delimiter(cp.total, 2)
               # Max. 35: based on client or subscriber for_sepa_mandate_id method (last 8 digits = Client Id or Subscriber Id)

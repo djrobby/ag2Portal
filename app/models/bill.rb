@@ -146,7 +146,8 @@ class Bill < ActiveRecord::Base
     invoices.first.old_no rescue old_no
   end
   def invoice_based_old_no_real_no
-    invoice_based_old_no.blank? ? real_no : invoice_based_old_no
+    ibon = invoice_based_old_no
+    ibon.blank? ? real_no : ibon
   end
   def old_no_based_no
     old_no.blank? ? full_no : old_no
