@@ -37,41 +37,42 @@ show_bank_filters();
 //   event.handled = true;
 // }
 
-$('#payments-tabs a').click(function (e) {
-  _active_tab = $(this).attr("id");
-  total_debt = 0;
-  invoices_id = [];
-  e.preventDefault();
-  $('input:checkbox').removeAttr('checked');
-  $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
-  $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
-  $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
-  $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
-  $("#client_payment_amount").val('')
-  $(this).tab('show');
-  if (_active_tab == "pendings-tab") {
-    <% if !@bills_pending.blank? %>
-    $("#cashier").show();
-    _cashier_shown = true;
-    <% else %>
-    $("#cashier").hide();
-    _cashier_shown = false;
-    <% end %>
-  } else if (_active_tab == "fractionated-tab") {
-    <% if !@instalment_invoices.blank? %>
-    $("#cashier").show();
-    _cashier_shown = true;
-    <% else %>
-    $("#cashier").hide();
-    _cashier_shown = false;
-    <% end %>
-  } else {
-    $("#cashier").hide();
-  _cashier_shown = false;
-  }
-  enable_client_payment_amount(true);
-  enable_pending_buttons(true);
-});
+// $('#payments-tabs a').click(function (e) {
+//   _active_tab = $(this).attr("id");
+//   total_debt = 0;
+//   invoices_id = [];
+//   e.preventDefault();
+//   $('input:checkbox').removeAttr('checked');
+//   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+//   $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
+//   $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+//   $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+//   $("#client_payment_amount").val('')
+//   $(this).tab('show');
+//   if (_active_tab == "pendings-tab") {
+//     <% if !@bills_pending.blank? %>
+//     $("#cashier").show();
+//     _cashier_shown = true;
+//     <% else %>
+//     $("#cashier").hide();
+//     _cashier_shown = false;
+//     <% end %>
+//   } else if (_active_tab == "fractionated-tab") {
+//     <% if !@instalment_invoices.blank? %>
+//     $("#cashier").show();
+//     _cashier_shown = true;
+//     <% else %>
+//     $("#cashier").hide();
+//     _cashier_shown = false;
+//     <% end %>
+//   } else {
+//     $("#cashier").hide();
+//   _cashier_shown = false;
+//   }
+//   show_bank_filters();
+//   enable_client_payment_amount(true);
+//   enable_pending_buttons(true);
+// });
 
 $('.accor').click(function () {
   if (this.classList.contains("collapsed")){
@@ -211,9 +212,11 @@ $("#bank-to-pending").click(function(){
 $("#bank-to-order").click(function(){
   var cp_ids = [];
   var cp_amount = 0.0;
+  var cp_order = '';
   $('#bank-table tr').each(function() {
     if ($(this).find('td input:checkbox').is(':checked')) {
       id = $(this).find('td.cpb-id').text();
+      cp_order = $(this).find('td.cpb-order').text();
       if (id != null && id != '') {
         cp_ids.push(id);
         amount = $(this).find('td.cpb-amount').text().replace(",", ".");
@@ -227,7 +230,8 @@ $("#bank-to-order").click(function(){
   } else {
     $("#bank_to_order_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-order
     $("#bank-to-order-bills-selected").html(cp_ids.length);
-    $("#bank-to-order-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+    $("#bank-to-order-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
+    $("#bank-to-order-order-selected").html(cp_order);
   }
 });
 

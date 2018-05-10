@@ -43,6 +43,7 @@ es:
         scheme_type_id: "Esquema SEPA"
         presentation_date: "Fecha de presentación"
         charge_date: "Fecha de cargo"
+        by_invoice: "¿Genera fichero por factura?"
         return_file: "Archivo de Devoluciones/Rechazos"
         counter_file: "Archivo de Cobros por Ventanilla"
         charge_account: "Cuenta analítica"

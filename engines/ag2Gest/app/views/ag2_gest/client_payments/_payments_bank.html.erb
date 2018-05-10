@@ -30,7 +30,7 @@
       <tr>
         <td class="cpb-cb"><%= check_box_tag 'client_payment_id', client_payment.id, false, class: "checkbox-slave" %></td>
         <td class="cpb-id hidden-text-field"><%= client_payment.id %></td>
-        <td><%= client_payment.receipt_no %></td>
+        <td class="cpb-order"><%= client_payment.receipt_no %></td>
         <td>
           <%= link_to client_payment.bill.try(:invoice_based_old_no_real_no), bill_path(client_payment.bill) %>
           <%= client_payment.invoice.try(:old_no_based_real_no) %>

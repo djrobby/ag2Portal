@@ -34,10 +34,11 @@
   }
 
   function show_bank_filters() {
+    // alert(_active_tab);
     if (_active_tab == "banks-tab") {
-      $("#bank").show();
+      $("#bank-order").show();
       $("#have-bank-account").hide();
-    } else if (_active_tab == "fractionated-tab") {
+    } else {
       $("#bank-order").hide();
       $("#have-bank-account").show();
     }
@@ -300,7 +301,8 @@
 
     // Hide elements at init
     show_cashier();
-    show_bank_filters();
+    // show_bank_filters();
+    $("#payments-tabs #pendings-tab").trigger("click");
 
     // Set cash, bank, deferrals & others show-all checkboxes
     set_show_all_checkboxes()
@@ -864,9 +866,9 @@
         <div class="modal-body">
           <%= f.input :client_payments_ids, :as => :hidden %>
           <div class="control-group string required">
-            <label class="string control-label">Remesa</label>
+            <label class="string control-label">Remesa seleccionada</label>
             <div class="controls highlighted bolded">
-              <span id="bank-to-order-order-selected">Nº</span>
+              <span id="bank-to-order-order-selected"></span>
             </div>
           </div>
           <div class="control-group string required">
@@ -881,6 +883,7 @@
               <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
+          <%= f.input :by_invoice, as: :boolean, label: false, inline_label: I18n.t("activerecord.attributes.client_payment.by_invoice"), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :bank_account_id, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_account_id"), collection: @bank_accounts, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :scheme_type_id, required: true, label: I18n.t("activerecord.attributes.client_payment.scheme_type_id"), collection: @scheme_types, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :presentation_date, required: true, label: I18n.t("activerecord.attributes.client_payment.presentation_date"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
@@ -953,14 +956,52 @@
     $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
     $("#client_payment_amount").val('')
     $(this).tab('show');
-    if (_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") {
-      show_cashier();
-    } else {
+    if (_active_tab == "pendings-tab") {
+      <% if !@bills_pending.blank? %>
+      $("#cashier").show();
+      _cashier_shown = true;
+      <% else %>
       $("#cashier").hide();
       _cashier_shown = false;
+      <% end %>
+    } else if (_active_tab == "fractionated-tab") {
+      <% if !@instalment_invoices.blank? %>
+      $("#cashier").show();
+      _cashier_shown = true;
+      <% else %>
+      $("#cashier").hide();
+      _cashier_shown = false;
+      <% end %>
+    } else {
+      $("#cashier").hide();
+    _cashier_shown = false;
     }
+    show_bank_filters();
     enable_client_payment_amount(true);
+    enable_pending_buttons(true);
   });
+
+  // $('#payments-tabs a').click(function (e) {
+  //   _active_tab = $(this).attr("id");
+  //   total_debt = 0;
+  //   invoices_id = [];
+  //   e.preventDefault();
+  //   $('input:checkbox').removeAttr('checked');
+  //   $("#client_payment_invoices_ids").val(invoices_id.filter(i=>i!=null))
+  //   $("#client_payment_ids").val(invoices_id.filter(i=>i!=null))
+  //   $(".debt-total-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  //   $(".cash-return-cashier").text(total_debt.format(2, 3, _delimiter, _separator));
+  //   $("#client_payment_amount").val('')
+  //   $(this).tab('show');
+  //   if (_active_tab == "pendings-tab" || _active_tab == "fractionated-tab") {
+  //     show_cashier();
+  //   } else {
+  //     $("#cashier").hide();
+  //     _cashier_shown = false;
+  //   }
+  //   show_bank_filters();
+  //   enable_client_payment_amount(true);
+  // });
 
   // when .btn-payment (cash, bank, fractionated and others) clicked (register payment)
   $(".btn-payment").click(function(){
@@ -1159,9 +1200,11 @@
   $("#bank-to-order").click(function(){
     var cp_ids = [];
     var cp_amount = 0.0;
+    var cp_order = '';
     $('#bank-table tr').each(function() {
       if ($(this).find('td input:checkbox').is(':checked')) {
         id = $(this).find('td.cpb-id').text();
+        cp_order = $(this).find('td.cpb-order').text();
         if (id != null && id != '') {
           cp_ids.push(id);
           amount = $(this).find('td.cpb-amount').text().replace(",", ".");
@@ -1176,6 +1219,7 @@
       $("#bank_to_order_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-order
       $("#bank-to-order-bills-selected").html(cp_ids.length);
       $("#bank-to-order-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#bank-to-order-order-selected").html(cp_order);
     }
   });
 

@@ -624,6 +624,7 @@ module Ag2Gest
     # Generates & Export SEPA XML file (order, direct debit)
     def bank_to_order
       client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
+      by_invoice = params[:bank_to_order][:by_invoice]
       bank_account_id = params[:bank_to_order][:bank_account_id]
       scheme_type_id = params[:bank_to_order][:scheme_type_id]
       presentation_date = params[:bank_to_order][:presentation_date]

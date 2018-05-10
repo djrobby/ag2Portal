@@ -43,6 +43,7 @@ en:
         scheme_type_id: "SEPA Scheme"
         presentation_date: "Presentation date"
         charge_date: "Charge date"
+        by_invoice: "Generate file by invoice?"
         return_file: "Unpaid/Rejected Receipts File"
         counter_file: "Counter File"
         charge_account: "Analytical account"
