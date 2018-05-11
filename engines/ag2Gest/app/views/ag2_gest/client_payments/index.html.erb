@@ -301,8 +301,8 @@
 
     // Hide elements at init
     show_cashier();
-    // show_bank_filters();
-    $("#payments-tabs #pendings-tab").trigger("click");
+    show_bank_filters();
+    // $("#payments-tabs #pendings-tab").trigger("click");
 
     // Set cash, bank, deferrals & others show-all checkboxes
     set_show_all_checkboxes()
@@ -883,7 +883,7 @@
               <span id="bank-to-order-total-selected"><%= number_with_precision(@bank_totals[:totals], precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></span>
             </div>
           </div>
-          <%= f.input :by_invoice, as: :boolean, label: false, inline_label: I18n.t("activerecord.attributes.client_payment.by_invoice"), :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :by_invoice, as: :boolean, label: false, inline_label: I18n.t("activerecord.attributes.client_payment.by_invoice"), :input_html => { :class => 'x-large-text-field bank-to-order-by-invoice' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :bank_account_id, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_account_id"), collection: @bank_accounts, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :scheme_type_id, required: true, label: I18n.t("activerecord.attributes.client_payment.scheme_type_id"), collection: @scheme_types, inline_label: "Yes", :input_html => { :class => 'x-large-text-field sel4' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :presentation_date, required: true, label: I18n.t("activerecord.attributes.client_payment.presentation_date"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
@@ -1218,7 +1218,7 @@
     } else {
       $("#bank_to_order_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-order
       $("#bank-to-order-bills-selected").html(cp_ids.length);
-      $("#bank-to-order-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#bank-to-order-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
       $("#bank-to-order-order-selected").html(cp_order);
     }
   });
@@ -1403,6 +1403,11 @@
       // alert("<%= I18n.t('activerecord.attributes.cash_desk_closing.instruments_neq_closing') %>");
       // return false;
     }
+  });
+
+  $("form.bank-to-order-form").submit(function() {
+    var by_invoice = $(this).find(".bank-to-order-by-invoice").prop('checked');
+    alert(by_invoice);
   });
   /*** End forms submit ***/
 

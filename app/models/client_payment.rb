@@ -34,6 +34,8 @@ class ClientPayment < ActiveRecord::Base
 
   # Scopes
   scope :by_no, -> { order(:receipt_no) }
+  scope :by_bill, -> { order(:bill_id) }
+  scope :by_bill_invoice, -> { order(:bill_id, :invoice_id) }
   #
   scope :none, where("1 = 0")
   scope :in_cash, -> { where(payment_type: CASH) }
@@ -41,6 +43,16 @@ class ClientPayment < ActiveRecord::Base
   scope :in_deferrals, -> { where(payment_type: FRACTIONATED) }
   scope :in_counter, -> { where(payment_type: COUNTER) }
   scope :in_others, -> { where(payment_type: OTHERS) }
+  # By bill for bank order
+  scope :by_bill_for_bank_order, -> cp {
+    select("min(id) id, min(receipt_no) receipt_no, min(payment_type) payment_type,bill_id,
+            min(invoice_id) invoice_id,min(payment_method_id) payment_method_id, min(client_id) client_id,
+            min(subscriber_id) subscriber_id, min(payment_date) payment_date, min(confirmation_date) confirmation_date,
+            sum(amount) amount, sum(surcharge) surcharge, min(client_bank_account_id) client_bank_account_id,
+            min(charge_account_id) charge_account_id, min(created_at) created_at, min(updated_at) updated_at,
+            min(created_by) created_by, min(updated_by) updated_by, min(sepa_return_code_id) sepa_return_code_id")
+    .where(id: cp).in_bank.group(:bill_id)
+  }
 
   # Callbacks
   # before_save :check_debt

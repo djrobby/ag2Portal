@@ -24,6 +24,7 @@ end
 group :development do
   gem "better_errors", '~> 1.1.0'
   gem "binding_of_caller", :platforms=>[:mri_19, :rbx]
+  gem "hirb"
 end
 
 gem 'jquery-rails'

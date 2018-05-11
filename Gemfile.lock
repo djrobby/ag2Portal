@@ -148,6 +148,7 @@ GEM
     hashie (2.0.5)
     highline (1.6.15)
     hike (1.2.2)
+    hirb (0.7.3)
     hitimes (1.2.5)
     httpauth (0.2.0)
     i18n (0.6.4)
@@ -334,6 +335,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   dbf
   devise
+  hirb
   jquery-rails
   libv8
   mysql2
@@ -355,3 +357,9 @@ DEPENDENCIES
   thinreports-rails
   uglifier (>= 1.0.3)
   will_paginate (~> 3.0.0)
+
+RUBY VERSION
+   ruby 1.9.3p327
+
+BUNDLED WITH
+   1.16.1

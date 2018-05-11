@@ -624,12 +624,15 @@ module Ag2Gest
     # Generates & Export SEPA XML file (order, direct debit)
     def bank_to_order
       client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
-      by_invoice = params[:bank_to_order][:by_invoice]
+      by_invoice = params[:bank_to_order][:by_invoice] == "1" ? true : false
+      # redirect_to client_payments_path + "#tab_banks", alert: by_invoice and return
       bank_account_id = params[:bank_to_order][:bank_account_id]
       scheme_type_id = params[:bank_to_order][:scheme_type_id]
       presentation_date = params[:bank_to_order][:presentation_date]
       charge_date = params[:bank_to_order][:charge_date]
-      client_payments = ClientPayment.where(id: client_payments_ids)
+
+      # client_payments = ClientPayment.where(id: client_payments_ids)
+      client_payments = by_invoice == true ? ClientPayment.where(id: client_payments_ids) : ClientPaymentby_bill_for_bank_order(client_payment_ids)
       bank_account = CompanyBankAccount.find(bank_account_id)
       scheme_type = SepaSchemeType.find(scheme_type_id)
 
@@ -662,6 +665,7 @@ module Ag2Gest
 
         # Generate XML object
         xml = sepa.write_xml
+        # xml = by_invoice == true ? sepa.write_xml : sepa.write_xml_by_bill
 
         # Write & Upload XML file
         file_name = sepa.identificacion_fichero + ".xml"
