@@ -680,8 +680,8 @@ module Ag2Gest
                             ).html_safe
       end
 
-    # rescue
-    #   redirect_to client_payments_path + "#tab_banks", alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
+    rescue
+      redirect_to client_payments_path + "#tab_banks", alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
     end
 
     def download_bank_to_order_file(file_name)
