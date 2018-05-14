@@ -320,6 +320,7 @@
         case 1:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -345,6 +346,7 @@
         case 2:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -370,6 +372,7 @@
         case 3:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -395,6 +398,7 @@
         case 4:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           show("#Period", "label_period");
           show("#Client", "label_client");
@@ -414,12 +418,13 @@
           show("#Operation", "label_operation");
           hide("#Use", "label_use");
           hide("#TariffType", "label_tariff_type");
-          show_buttons_without_detail(true);
+          show_buttons(true);
           break;
         // client_payment_report
         case 5:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           show("#Period", "label_period");
           show("#Client", "label_client");
@@ -445,6 +450,7 @@
         case 6:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           show("#Period", "label_period");
           show("#Client", "label_client");
@@ -470,6 +476,7 @@
         case 7:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           show("#Period", "label_period");
           hide("#Client", "label_client");
@@ -495,6 +502,7 @@
         case 8:
           hide_date("#From", "label_from");
           hide_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -520,6 +528,7 @@
         case 9:
           hide_date("#From", "label_from");
           hide_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -545,6 +554,7 @@
         case 10:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -570,6 +580,7 @@
         case 11:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -595,6 +606,7 @@
         case 12:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -616,10 +628,63 @@
           hide("#TariffType", "label_tariff_type");
           show_buttons_without_detail(true);
           break;
-        // client_report
+        // subscriber_debt_report
         case 13:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          show_date("#ToDebt", "label_to_debt");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show_text("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons(true);
+          break;
+        // client_report
+        case 14:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide_text("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons(true);
+          break;
+        // client_debt_report
+        case 15:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          show_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           show("#Client", "label_client");
@@ -642,9 +707,10 @@
           show_buttons(true);
           break;
         // meter_report
-        case 14:
+        case 16:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -667,9 +733,10 @@
           show_buttons_without_detail(true);
           break;
         // meter_expired_report
-        case 15:
+        case 17:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -692,9 +759,10 @@
           show_buttons_without_detail(true);
           break;
         // meter_shared_report
-        case 16:
+        case 18:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -717,9 +785,10 @@
           show_buttons_without_detail(true);
           break;
         // meter_master_report
-        case 17:
+        case 19:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
           hide("#Client", "label_client");
@@ -745,6 +814,7 @@
         default:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
+          show_date("#ToDebt", "label_to_debt");
           show("#Project", "label_project");
           show("#Period", "label_period");
           show("#Client", "label_client");
@@ -791,6 +861,7 @@
       var detailed = $('#detailed').prop('checked');
       var from = $('#From').val();
       var to = $('#To').val();
+      var todebt = $('#ToDebt').val();
       if (((from == "") || (to == "")) && report == 1)
         return;
       if (((from == "") || (to == "")) && report == 2)
@@ -820,6 +891,10 @@
       if (((from == "") || (to == "")) && report == 16)
         return;
       if (((from == "") || (to == "")) && report == 17)
+        return;
+      if (((from == "") || (to == "")) && report == 18)
+        return;
+      if (((from == "") || (to == "")) && report == 19)
         return;
       // CSV or PDF
       if (_csv == true) {
@@ -896,12 +971,11 @@
           var status = $('#Status').val();
           var type = $('#Type').val();
           var operation = $('#Operation').val();
-          nam = "invoice_report" + ext;
-          // if (detailed == "") {
-          //   nam = "invoice_report" + ext;
-          // } else {
-          //   nam = "invoice_items_report" + ext;
-          // }
+          if (detailed == "") {
+            nam = "invoice_report" + ext;
+          } else {
+            nam = "invoice_items_report" + ext;
+          }
           window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period + "&client=" + client 
             + "&subscriber=" + subscriber + "&street_name=" + street_name + "&biller=" + biller
             + "&status=" + status + "&type=" + type + "&operation=" + operation
@@ -1042,7 +1116,7 @@
             + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
             , pag);
           break;
-        // OKsubscriber_report
+        // OKsubscriber_eco_report
         case 11:
           var client = $('#Client').val();
           var subscriber = $('#Subscriber').val();
@@ -1062,7 +1136,7 @@
             + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
             , pag);
           break;
-        // OKsubscriber_report
+        // OKsubscriber_tec_report
         case 12:
           var client = $('#Client').val();
           var subscriber = $('#Subscriber').val();
@@ -1083,8 +1157,28 @@
             + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
             , pag);
           break;
-        // OKclient_report
+        // OKsubscriber_debt_report
         case 13:
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          if (detailed == "") {
+            nam = "subscriber_debt_report" + ext;
+          } else {
+            nam = "subscriber_debt_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&todebt=" + todebt + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
+            , pag);
+          break;
+        // OKclient_eco_report
+        case 14:
           var client = $('#Client').val();
           if (detailed == "") {
             nam = "client_eco_report" + ext;
@@ -1094,8 +1188,19 @@
           window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client
             , pag);
           break;
+        // OKclient_debt_report
+        case 15:
+          var client = $('#Client').val();
+          if (detailed == "") {
+            nam = "client_debt_report" + ext;
+          } else {
+            nam = "client_debt_items_report" + ext;
+          }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&todebt=" + todebt + "&client=" + client
+            , pag);
+          break;
         // OKmeter_report
-        case 14:
+        case 16:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1111,7 +1216,7 @@
             , pag);
           break;
         // OKmeter_expired_report
-        case 15:
+        case 17:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1127,7 +1232,7 @@
             , pag);
           break;
         // OKmeter_shared_report
-        case 16:
+        case 18:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1143,7 +1248,7 @@
             , pag);
           break;
         // OKmeter_master_report
-        case 17:
+        case 19:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1331,6 +1436,8 @@
       <%= text_field_tag "From", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <%= label_tag "label_to", t("control_tracking.label_to"), :class => 'form-label' %>
       <%= text_field_tag "To", params[:date], :class =>  'mid-text-field date_picker centered' %>
+      <%= label_tag "label_to_debt", t("ag2_gest.ag2_gest_track.index.label_to_debt"), :class => 'form-label' %>
+      <%= text_field_tag "ToDebt", params[:date], :class =>  'mid-text-field date_picker centered' %>
       <!-- Detailed? -->
       <br>
       <%= label_tag 'label_detailed', :class => 'checkbox inline' do %>

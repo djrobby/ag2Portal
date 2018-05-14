@@ -700,8 +700,14 @@ module Ag2Gest
     def su_find_invoice_to_period
       subscriber = Subscriber.find(params[:subscriber_id])
       period = BillingPeriod.find(params[:period])
-      bill_last_date = formatted_date(Bill.last_billed_date(period.project.company_id, period.project.office_id)) rescue "N/A"
-      alert_date = I18n.t("activerecord.attributes.bill.alert_invoice_date") + " " + bill_last_date
+      new_bill_date = Date.today
+      office = subscriber.office
+      if !Bill.is_new_bill_date_valid?(new_bill_date, office.company_id, office.id)
+        bill_last_date = formatted_date(Bill.last_billed_date(period.project.company_id, period.project.office_id)) rescue "N/A"
+        alert_date = I18n.t("activerecord.attributes.bill.alert_invoice_date") + " " + bill_last_date
+      else
+        alert_date = ""
+      end
       alert_bill = ""
       code_bill = ''
       bill_original = ''

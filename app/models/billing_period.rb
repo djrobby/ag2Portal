@@ -72,8 +72,8 @@ class BillingPeriod < ActiveRecord::Base
               WHERE (readings.bill_id IS NOT NULL
               AND readings.subscriber_id = ?
               AND readings.reading_type_id IN (?))
-              GROUP BY readings.billing_period_id)", s, ReadingType.without_control )
-    .where("readings.subscriber_id = ? AND readings.reading_type_id IN (?)", s, ReadingType.without_control)
+              GROUP BY readings.billing_period_id)", s, ReadingType.billable )
+    .where("readings.subscriber_id = ? AND readings.reading_type_id IN (?)", s, ReadingType.billable)
     .select("billing_periods.*, billing_frequencies.name billing_frequency_name,
              CONCAT(billing_periods.period, ' (', billing_frequencies.name, ')') to_label_").group('billing_periods.id')
     .by_period_desc

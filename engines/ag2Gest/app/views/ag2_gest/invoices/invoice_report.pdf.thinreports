@@ -64,7 +64,7 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
 # List header
 report.page.list(:default).header do |header|
   header.item(:code_c).value I18n.t("activerecord.attributes.subscriber.invoice_number")
-  header.item(:client_c).value I18n.t("activerecord.attributes.bill.client")
+  header.item(:client_c).value I18n.t("activerecord.attributes.report.client_code")
   header.item(:concept_c).value I18n.t("activerecord.attributes.report.billable_concept")
   header.item(:period_c).value I18n.t("activerecord.attributes.subscriber.period")
   header.item(:date_c).value I18n.t("activerecord.attributes.invoice.invoice_date")

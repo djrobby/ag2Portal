@@ -15,11 +15,16 @@ Ag2Gest::Engine.routes.draw do
     # Routes to Control&Tracking
     match 'ag2_gest_track' => 'ag2_gest_track#index', :as => :ag2_gest_track
     match 'invoice_report', :controller => 'ag2_gest_track', :action => 'invoice_report'
+    match 'invoice_items_report', :controller => 'ag2_gest_track', :action => 'invoice_items_report'
     match 'client_eco_report', :controller => 'ag2_gest_track', :action => 'client_eco_report'
     match 'client_eco_items_report', :controller => 'ag2_gest_track', :action => 'client_eco_items_report'
+    match 'client_debt_report', :controller => 'ag2_gest_track', :action => 'client_debt_report'
+    match 'client_debt_items_report', :controller => 'ag2_gest_track', :action => 'client_debt_items_report'
     match 'subscriber_report_track', :controller => 'ag2_gest_track', :action => 'subscriber_report_track'
     match 'subscriber_eco_report', :controller => 'ag2_gest_track', :action => 'subscriber_eco_report'
     match 'subscriber_eco_items_report', :controller => 'ag2_gest_track', :action => 'subscriber_eco_items_report'
+    match 'subscriber_debt_report', :controller => 'ag2_gest_track', :action => 'subscriber_debt_report'
+    match 'subscriber_debt_items_report', :controller => 'ag2_gest_track', :action => 'subscriber_debt_items_report'
     match 'subscriber_tec_report', :controller => 'ag2_gest_track', :action => 'subscriber_tec_report'
     match 'meter_report', :controller => 'ag2_gest_track', :action => 'meter_report'
     match 'meter_expired_report', :controller => 'ag2_gest_track', :action => 'meter_expired_report'

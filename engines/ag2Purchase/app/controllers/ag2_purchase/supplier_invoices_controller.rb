@@ -43,7 +43,8 @@ module Ag2Purchase
                                                :si_generate_invoice,
                                                :si_generate_invoice_from_order,
                                                :si_update_payday_limit_from_method,
-                                               :si_generate_no]
+                                               :si_generate_no,
+                                               :export_invoices]
     # Helper methods for
     # => index filters
     helper_method :si_remove_filters, :si_restore_filters

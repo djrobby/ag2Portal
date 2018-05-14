@@ -34,7 +34,7 @@ module Ag2Gest
     attr_accessor :concepto
     attr_accessor :time_now
 
-    def initialize(client_payments)
+    def initialize(client_payments, by_invoice)
       # Receive unconfirmed payments to write
       @client_payments = client_payments
 
@@ -44,8 +44,15 @@ module Ag2Gest
 
       # Initialize attribute default values
       self.fecha_firma_mandato = '2009-10-31'
-      self.numero_total_adeudos = @client_payments.count
-      self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge'), 2)
+      self.numero_total_adeudos = 0
+      self.importe_total = 0
+      if by_invoice == true
+        self.numero_total_adeudos = @client_payments.count
+        self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge'), 2)
+      else
+        self.numero_total_adeudos = @client_payments.count.count
+        self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge').values.sum, 2)
+      end
     end
 
     #

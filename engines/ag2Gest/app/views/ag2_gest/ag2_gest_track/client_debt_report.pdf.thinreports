@@ -5,7 +5,7 @@ end
 # Localization for numbers
 delimiter = I18n.locale == :es ? "." : ","
 
-report.set_layout tlf: 'reports/client_debt_report', layout_options: { default: true }
+report.set_layout tlf: 'reports/client_eco_report', layout_options: { default: true }
 
 #
 # Report events
@@ -47,7 +47,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("activerecord.models.client.few")
+report.page.values report_title: I18n.t("ag2_gest.ag2_gest_track.client_report.report_debt_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
 report.page.values from: @from
@@ -77,9 +77,9 @@ end
 @client_debt_report.each do |i|
   b = i.subscribers.size
   img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
-  total = i.totals_date(@from,@to).blank? ? 0 : i.totals_date(@from,@to)
-  collected = i.collected_date(@from,@to).blank? ? 0 : i.collected_date(@from,@to)
-  debt = i.debt_date(@from,@to).blank? ? 0 : i.debt_date(@from,@to)
+  total = i.totals_current_date(@from,@to,@todebt).blank? ? 0 : i.totals_current_date(@from,@to,@todebt)
+  collected = i.collected_current_date(@from,@to,@todebt).blank? ? 0 : i.collected_current_date(@from,@to,@todebt)
+  debt = i.debt_current_date(@from,@to,@todebt).blank? ? 0 : i.debt_current_date(@from,@to,@todebt)
 
   report.page.list(:default).add_row do |row|
     row.item(:code).value i.full_code

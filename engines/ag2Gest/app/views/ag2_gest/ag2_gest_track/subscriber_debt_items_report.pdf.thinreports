@@ -1,4 +1,4 @@
-if @client_debt_report.blank?
+if @subscriber_eco_items_report.blank?
   return
 end
 
@@ -49,7 +49,7 @@ end
 report.start_new_page
 
 # Page header
-report.page.values report_title: I18n.t("ag2_gest.ag2_gest_track.client_report.report_debt_title")
+report.page.values report_title: I18n.t("ag2_gest.ag2_gest_track.subscriber_report.report_debt_title")
 report.page.values from_title: I18n.t("every_report.from_title")
 report.page.values to_title: I18n.t("every_report.to_title")
 report.page.values from: @from
@@ -62,15 +62,20 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
            currency_note: "* " + I18n.t("every_report.currency_note"))
 
 # Page Title list
-
+subscriber_id = @subscriber_eco_items_report.first.id
 # List detail
-@client_debt_report.each do |client|
+@subscriber_eco_items_report.each do |subscriber|
 
-  b = client.subscribers.size
-  img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
-  total = client.totals_current_date(@from,@to,@todebt).blank? ? 0 : client.totals_current_date(@from,@to,@todebt)
-  collected = client.collected_current_date(@from,@to,@todebt).blank? ? 0 : client.collected_current_date(@from,@to,@todebt)
-  debt = client.debt_current_date(@from,@to,@todebt).blank? ? 0 : client.debt_current_date(@from,@to,@todebt)
+  if subscriber.id != subscriber_id
+    report.page.list(:default).page_break
+    report.page.list(:default) do |list|
+    end
+    subscriber_id = subscriber.id
+  end
+
+  total = subscriber.totals_current_date(@from,@to,@todebt).blank? ? 0 : subscriber.totals_current_date(@from,@to,@todebt)
+  collected = subscriber.collected_current_date(@from,@to,@todebt).blank? ? 0 : subscriber.collected_current_date(@from,@to,@todebt)
+  debt = subscriber.debt_current_date(@from,@to,@todebt).blank? ? 0 : subscriber.debt_current_date(@from,@to,@todebt)
 
   report.page.list(:default).header do |header|
     #client
@@ -82,11 +87,10 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
     header.item(:paid_c).value I18n.t("activerecord.attributes.subscriber.charged_c")
     header.item(:debt_c).value I18n.t("activerecord.attributes.subscriber.debt")
     #client_data
-    header.item(:code_client).value client.full_code
-    header.item(:img).value img
-    header.item(:fiscal).value client.fiscal_id
-    header.item(:name).value client.to_name
-    header.item(:street).value client.address_1
+    header.item(:code_client).value subscriber.full_code
+    header.item(:fiscal).value subscriber.fiscal_id
+    header.item(:name).value subscriber.full_name
+    header.item(:street).value subscriber.address_1
     header.item(:total_client).value number_with_precision(total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
     header.item(:paid_client).value number_with_precision(collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
     header.item(:debt_client).value number_with_precision(debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
@@ -105,7 +109,7 @@ report.page.values(printed_at: formatted_timestamp(Time.now),
     header.item(:debt_c1).value I18n.t("activerecord.attributes.subscriber.debt")
   end
 
-  Invoice.joins(:bill).where("bills.client_id = #{client.id} AND (invoices.invoice_date >= '#{@from.to_date}' AND invoices.invoice_date <= '#{@to.to_date}')").by_no.each do |i|
+  Invoice.joins(:bill).where("bills.subscriber_id = #{subscriber.id} AND (invoices.invoice_date >= '#{@from.to_date}' AND invoices.invoice_date <= '#{@to.to_date}')").by_no.each do |i|
     report.page.list(:default).add_row do |row2|
       row2.item(:bill).value i.bill.invoice_based_old_no_real_no
       row2.item(:code).value i.old_no_based_real_no

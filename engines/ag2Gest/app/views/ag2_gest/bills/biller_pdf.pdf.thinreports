@@ -452,35 +452,38 @@ end
         end
       end
 
-      # Line to print full item detail
-      report.page.list(:default).add_row do |row1|
-        if _bloque.include? item.try(:subcode)
-          from = _bll + 1
-          to = item.quantity + _qty_ant
+      if item.code == "CMA" && item.subcode == "BL1" && item.price = 0.000000
+      else
+        # Line to print full item detail
+        report.page.list(:default).add_row do |row1|
+          if _bloque.include? item.try(:subcode)
+            from = _bll + 1
+            to = item.quantity + _qty_ant
 
-          if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
-            max = _bll + 1
-            row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_more") + max.to_i.to_s
+            if item.tariff.instance_eval("block#{item.subcode[2].to_s}_limit").blank?
+              max = _bll + 1
+              row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_more") + max.to_i.to_s
+            else
+              row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_from") + from.to_i.to_s + I18n.t("activerecord.attributes.invoice_item.bl_to") + to.to_i.to_s
+            end
+            _qty_ant += item.quantity
+            _bll = to
           else
-            row1.item(:bloque).value I18n.t("activerecord.attributes.invoice_item.bl_from") + from.to_i.to_s + I18n.t("activerecord.attributes.invoice_item.bl_to") + to.to_i.to_s
+            if item.try(:description)[0] == 0.to_s || item.try(:description)[0] == 1.to_s
+              row1.item(:sub).value _number.to_s
+              row1.item(:subcode).value item.subcode_name + " (" + I18n.t("activerecord.models.tariff.one") + " " + date_tariff + ")"
+            else
+              row1.item(:subcode).value item.subcode_name
+            end
           end
-          _qty_ant += item.quantity
-          _bll = to
-        else
-          if item.try(:description)[0] == 0.to_s || item.try(:description)[0] == 1.to_s
-            row1.item(:sub).value _number.to_s
-            row1.item(:subcode).value item.subcode_name + " (" + I18n.t("activerecord.models.tariff.one") + " " + date_tariff + ")"
-          else
-            row1.item(:subcode).value item.subcode_name
-          end
+
+          row1.item(:measure).value item.try(:measure).try(:description)
+          row1.item(:quantity).value number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row1.item(:price).value number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
+          row1.item(:amount).value number_with_precision(item.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+          row1.item(:tax).value number_with_precision(item.tax_type.tax, precision: 2).to_s + "%" if item.tax_type.tax != TaxType.exempt.tax
+          var_concept = item.try(:description)[1..-1]
         end
-
-        row1.item(:measure).value item.try(:measure).try(:description)
-        row1.item(:quantity).value number_with_precision(item.quantity, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-        row1.item(:price).value number_with_precision(item.price, precision: 6, delimiter: I18n.locale == :es ? "." : ",")
-        row1.item(:amount).value number_with_precision(item.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-        row1.item(:tax).value number_with_precision(item.tax_type.tax, precision: 2).to_s + "%" if item.tax_type.tax != TaxType.exempt.tax
-        var_concept = item.try(:description)[1..-1]
       end
     end
 #

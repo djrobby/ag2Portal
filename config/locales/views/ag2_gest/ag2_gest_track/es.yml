@@ -11,6 +11,7 @@ es:
         label_charge_account: "Cuenta analítica"
         label_budget_period: "Periodo presupuestario"
         label_reading_route: "Ruta de lectura"
+        label_to_debt: "Deuda a fecha"
       client_report:
         report_title: "Padrón Económico de Clientes"
         report_debt_title: "Clientes: Deuda a fecha"
@@ -20,6 +21,7 @@ es:
         report_title: "Padrón de Abonados"
         report_eco_title: "Padrón Económico de Abonados"
         report_tec_title: "Padrón Técnico de Abonados"
+        report_debt_title: "Abonados: Deuda a fecha"
         sum_rows_title: "Total Filas:"
         sum_rows_debt: "Total Deuda:"
       reading_report:

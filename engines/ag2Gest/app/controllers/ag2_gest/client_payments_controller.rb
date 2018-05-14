@@ -632,12 +632,12 @@ module Ag2Gest
       charge_date = params[:bank_to_order][:charge_date]
 
       # client_payments = ClientPayment.where(id: client_payments_ids)
-      client_payments = by_invoice == true ? ClientPayment.where(id: client_payments_ids) : ClientPaymentby_bill_for_bank_order(client_payment_ids)
+      client_payments = by_invoice == true ? ClientPayment.where(id: client_payments_ids) : ClientPayment.by_bill_for_bank_order(client_payments_ids)
       bank_account = CompanyBankAccount.find(bank_account_id)
       scheme_type = SepaSchemeType.find(scheme_type_id)
 
       # Process only if there is unconfirmed payments
-      if client_payments.count > 0 && !bank_account.blank? && !scheme_type.blank?
+      if !client_payments.count.blank? && !bank_account.blank? && !scheme_type.blank?
         time_now = Time.new
 
         # SEPA Creditor Id
@@ -647,7 +647,7 @@ module Ag2Gest
         end
 
         # Instantiate class
-        sepa = Ag2Gest::SepaOrder.new(client_payments)
+        sepa = Ag2Gest::SepaOrder.new(client_payments, by_invoice)
 
         # Initialize class attributes
         sepa.identificacion_fichero = "PRE" + time_now.strftime("%Y%m%d%H%M%S%L") + "00" +
@@ -680,8 +680,8 @@ module Ag2Gest
                             ).html_safe
       end
 
-    rescue
-      redirect_to client_payments_path + "#tab_banks", alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
+    # rescue
+    #   redirect_to client_payments_path + "#tab_banks", alert: I18n.t('ag2_gest.client_payments.index.bank_to_order_error')
     end
 
     def download_bank_to_order_file(file_name)

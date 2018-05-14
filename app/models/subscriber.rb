@@ -454,6 +454,66 @@ class Subscriber < ActiveRecord::Base
     ).first["debt"]
   end
 
+  def totals_current_date(from,to,todebt,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total) as total_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND client_payments.payment_date <= '#{todebt.to_date}' AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["total_total"]
+  end
+
+  def collected_current_date(from,to,todebt,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(collected) as collected_total FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND client_payments.payment_date <= '#{todebt.to_date}' AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["collected_total"]
+  end
+
+  def debt_current_date(from,to,todebt,i=nil)
+    if i.nil?
+      i = self.id
+    end
+    ActiveRecord::Base.connection.exec_query(
+      "SELECT SUM(total)-SUM(collected) as debt FROM
+        (
+        SELECT SUM(receivables) as total, 0 as collected
+        FROM invoices
+        INNER join bills ON invoices.bill_id = bills.id
+        WHERE bills.subscriber_id = #{i} AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}')
+        UNION
+        SELECT 0 as total, SUM(amount) as collected
+        FROM client_payments
+        INNER join invoices ON client_payments.invoice_id = invoices.id
+        WHERE client_payments.subscriber_id = #{i} AND client_payments.payment_date <= '#{todebt.to_date}' AND (invoices.invoice_date >= '#{from.to_date}' AND invoices.invoice_date <= '#{to.to_date}') AND NOT ISNULL(client_payments.confirmation_date)
+        ) a"
+    ).first["debt"]
+  end
+
   # Historical estimation (based on all invoices)
   def total_consumption_estimated
     invoices.reject(&:marked_for_destruction?).sum(:consumption_estimated)

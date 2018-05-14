@@ -11,6 +11,7 @@ en:
         label_charge_account: "Analytical account"
         label_budget_period: "Budget period"
         label_reading_route: "Reading route"
+        label_to_debt: "Debt to date"
       client_report:
         report_title: "Clients Economical Registry"
         report_debt_title: "Clients: Debt to date"
@@ -20,6 +21,7 @@ en:
         report_title: "Subscribers Registry"
         report_eco_title: "Subscribers Economical Registry"
         report_tec_title: "Subscribers Technical Registry"
+        report_debt_title: "Subscribers: Debt to date"
         sum_rows_title: "Total Rows:"
         sum_rows_debt: "Total Debt:"
       reading_report:
