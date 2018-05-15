@@ -33,9 +33,30 @@
     }
   }
 
+  function current_payments_tabs_tab() {
+    var _tab_active = '';
+    $("#payments-tabs a").each(function(i) {
+      if ($(this).hasClass("tab-active")) {
+        _tab_active = $(this).attr("id");
+      }
+    });
+    return _tab_active;
+  }
+
+  function remove_tab_active_from_payments_tabs() {
+    $('#payments-tabs a').removeClass("tab-active");
+  }
+
   function show_bank_filters() {
-    // alert(_active_tab);
-    if (_active_tab == "banks-tab") {
+    //var _tab_active = current_payments_tabs_tab();
+    var _tab_active = _active_tab;
+    //alert(_active_tab);
+    //alert($("#payments-tabs a.tab-active").index());
+    //$('#payments-tabs a#pendings-tab').removeClass("tab-active");
+    //$(this).addClass("tab-active");
+    //alert($(this).attr("class"));
+    //alert('showbank: ' + _tab_active);
+    if (_tab_active == "banks-tab") {
       $("#bank-order").show();
       $("#have-bank-account").hide();
     } else {
@@ -298,6 +319,10 @@
     // Setup special search (select2)
     // setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
     setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>");
+
+    // Set active tab
+    _active_tab = $("#active_tab").val();
+    //alert(_active_tab);
 
     // Hide elements at init
     show_cashier();
@@ -946,6 +971,9 @@
 
   $('#payments-tabs a').click(function (e) {
     _active_tab = $(this).attr("id");
+    $("#active_tab").val(_active_tab);
+    remove_tab_active_from_payments_tabs();
+    $(this).addClass("tab-active");
     total_debt = 0;
     invoices_id = [];
     e.preventDefault();
@@ -1406,7 +1434,10 @@
   });
 
   $("form.bank-to-order-form").submit(function() {
-    var by_invoice = $(this).find(".bank-to-order-by-invoice").prop('checked');
+    //var by_invoice = $(this).find(".bank-to-order-by-invoice").prop('checked');
+    _active_tab = "banks-tab";
+    $("#active_tab").val("banks-tab");
+    //alert($("#active_tab").val());
     //alert(by_invoice);
   });
   /*** End forms submit ***/

@@ -116,6 +116,9 @@ module Ag2Gest
     #
     # If amount <= 0, must charge every invoice debts!
     def cash
+      # Set active_tab to use in view filters
+      session[:active_tab] = "pendings-tab"
+
       invoice_ids = params[:client_payment][:invoices_ids].split(",")
       instalment_ids = params[:client_payment][:ids].split(",")
       amount = BigDecimal.new(params[:client_payment][:amount]) rescue 0  # 0 if error beause :amount is null and debt negative
@@ -168,6 +171,9 @@ module Ag2Gest
     end
 
     def cash_instalments(instalment_ids, amount, payment_method)
+      # Set active_tab to use in view filters
+      session[:active_tab] = "fractionated-tab"
+
       client_payment = nil
       instalments = Instalment.where(id: instalment_ids)
       op = true
@@ -239,6 +245,9 @@ module Ag2Gest
     end
 
     def close_cash
+      # Set active_tab to use in view filters
+      session[:active_tab] = "cash-tab"
+
       # Input parameters
       client_payments_ids = params[:close_cash][:client_payments_ids].split(",")
       opening_balance = params[:close_cash][:opening_balance].to_d
@@ -373,6 +382,9 @@ module Ag2Gest
     end
 
     def cash_to_pending
+      # Set active_tab to use in view filters
+      session[:active_tab] = "cash-tab"
+
       client_payments_ids = params[:cash_to_pending][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payments_ids)
       invoices = []
@@ -410,6 +422,9 @@ module Ag2Gest
     # Others methods
     #
     def others
+      # Set active_tab to use in view filters
+      session[:active_tab] = "pendings-tab"
+
       invoices = Invoice.find_all_by_id(params[:client_payment_other][:invoices_ids].split(",")).sort_by {|a| a[:created_at]}
       amount = BigDecimal.new(params[:client_payment_other][:amount])
       payment_method = params[:client_payment_other][:payment_method_id]
@@ -447,6 +462,9 @@ module Ag2Gest
     end
 
     def confirm_others
+      # Set active_tab to use in view filters
+      session[:active_tab] = "others-tab"
+
       client_payment_ids = params[:others_confirm][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payment_ids)
       client_payments.each do |cp|
@@ -457,6 +475,9 @@ module Ag2Gest
     end
 
     def others_to_pending
+      # Set active_tab to use in view filters
+      session[:active_tab] = "others-tab"
+
       client_payments_ids = params[:others_to_pending][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payments_ids)
       invoices = []
@@ -494,6 +515,9 @@ module Ag2Gest
     # Bank methods
     #
     def banks
+      # Set active_tab to use in view filters
+      session[:active_tab] = "pendings-tab"
+
       invoice_ids = params[:client_payment_bank][:invoices_ids].split(",")
       instalment_ids = params[:client_payment_bank][:ids].split(",")
       # Bank order No.
@@ -533,6 +557,9 @@ module Ag2Gest
     end
 
     def bank_instalments(instalment_ids, receipt_no)
+      # Set active_tab to use in view filters
+      session[:active_tab] = "fractionated-tab"
+
       instalments = Instalment.where(id: instalment_ids)
       # Payment type & status
       organization_id = instalments.first.instalment_invoices.first.invoice.organization_id
@@ -578,6 +605,9 @@ module Ag2Gest
     end
 
     def confirm_bank
+      # Set active_tab to use in view filters
+      session[:active_tab] = "banks-tab"
+
       client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payment_ids)
       client_payments.each do |cp|
@@ -588,6 +618,9 @@ module Ag2Gest
     end
 
     def bank_to_pending
+      # Set active_tab to use in view filters
+      session[:active_tab] = "banks-tab"
+
       client_payments_ids = params[:bank_to_pending][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payments_ids)
       invoices = []
@@ -623,6 +656,9 @@ module Ag2Gest
 
     # Generates & Export SEPA XML file (order, direct debit)
     def bank_to_order
+      # Set active_tab to use in view filters
+      session[:active_tab] = "banks-tab"
+
       client_payments_ids = params[:bank_to_order][:client_payments_ids].split(",")
       by_invoice = params[:bank_to_order][:by_invoice] == "1" ? true : false
       # redirect_to client_payments_path + "#tab_banks", alert: by_invoice and return
@@ -674,6 +710,7 @@ module Ag2Gest
 
         # Notify successful ending
         # redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
+        # redirect_to client_payments_path + "#tab_banks?active_tab=banks_tab",
         redirect_to client_payments_path + "#tab_banks",
                     notice: (I18n.t('ag2_gest.client_payments.index.bank_to_order_ok') +
                             " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name), file_path, download: file_name}"
@@ -691,6 +728,9 @@ module Ag2Gest
 
     # Import SEPA XML file (return, rejections)
     def bank_from_return
+      # Set active_tab to use in view filters
+      session[:active_tab] = "banks-tab"
+
       file_to_process = params[:bank_from_return][:file_to_process]
       # Instantiate class
       sepa = Ag2Gest::SepaReturn.new(file_to_process)
@@ -776,6 +816,9 @@ module Ag2Gest
     # Import Counter text file (bank counter operations)
     # pending
     def bank_from_counter
+      # Set active_tab to use in view filters
+      session[:active_tab] = "banks-tab"
+
       file_to_process = params[:bank_from_counter][:file_to_process]
 
       # Instantiate class
@@ -863,7 +906,9 @@ module Ag2Gest
     #
     # Must fractionate invoices from the same client!!
     def fractionate
-      # invoices = Invoice.find_all_by_id().sort {|a, b| b[:created_at] <=> a[:created_at]}
+      # Set active_tab to use in view filters
+      session[:active_tab] = "pendings-tab"
+
       # Params
       invoice_ids = params[:instalment][:invoices_ids].split(",")
       number_quotas = params[:instalment][:number_inst].to_i
@@ -1009,6 +1054,7 @@ module Ag2Gest
       if params[:active_tab]
         active_tab = params[:active_tab]
       end
+      puts ">>>>>>>" + active_tab
 
       no = params[:No]
       project = params[:Project]
@@ -1083,7 +1129,7 @@ module Ag2Gest
         # Valid query received: Return found results
         # Setup Sunspot searches (cash, bank & others should have data always)
         case active_tab
-        when 'pendings-tab'
+        when 'pendings-tab', 'cash-tab', 'banks-tab', 'others-tab', 'fractionated-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
@@ -1091,14 +1137,14 @@ module Ag2Gest
           search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         when 'charged-tab'
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        when 'cash-tab'
-          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        when 'banks-tab'
-          search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-        when 'others-tab'
-          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        when 'fractionated-tab'
-          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        # when 'cash-tab'
+        #   search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        # when 'banks-tab'
+        #   search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
+        # when 'others-tab'
+        #   search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        # when 'fractionated-tab'
+        #   search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)

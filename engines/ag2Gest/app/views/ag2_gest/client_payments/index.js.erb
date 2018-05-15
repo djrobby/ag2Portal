@@ -19,6 +19,7 @@ $('#fractionated').html("<%= escape_javascript(render('instalments')) %>");
 $("#active_tab").val("<%= params[:active_tab] %>");
 set_show_all_checkboxes();
 
+//alert('js');
 if (_active_tab == "pendings-tab") {
   <% if !@bills_pending.blank? %>
   $("#cashier").show();
