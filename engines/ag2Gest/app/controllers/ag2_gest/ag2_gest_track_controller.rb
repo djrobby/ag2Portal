@@ -19,10 +19,12 @@ module Ag2Gest
                                                :subscriber_debt_report,
                                                :subscriber_debt_items_report,
                                                :subscriber_tec_report,
+                                               :subscriber_invoice_charged_report,
                                                :client_eco_report,
                                                :client_eco_items_report,
                                                :client_debt_report,
                                                :client_debt_items_report,
+                                               :client_invoice_charged_report,
                                                :meter_report,
                                                :meter_expired_report,
                                                :meter_shared_report,
@@ -1288,7 +1290,98 @@ module Ag2Gest
       end
     end
 
-    def client_eco_report #case14
+    def subscriber_invoice_charged_report #case14
+      detailed = params[:detailed]
+      @from = params[:from]
+      @to = params[:to]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      street_name = params[:street_name]
+      meter = params[:meter]
+      caliber = params[:caliber]
+      service_point = params[:service_point]
+      reading_route = params[:reading_route]
+      use = params[:use]
+
+      # OCO
+      init_oco if !session[:organization]
+      meter = !meter.blank? ? inverse_meter_search(meter) : meter
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      # Format dates
+      @from_date = @from
+      @to_date = @to
+
+      w = ''
+      if session[:office] != '0'
+        w += "office_id = #{session[:office]}"
+      end
+      if !client.blank?
+        w += " AND " if w != ''
+        w += "client_id = #{client}"
+      end
+      if !subscriber.blank?
+        w += " AND " if w != ''
+        w += "id = #{subscriber}"
+      end
+      if !street_name.blank?
+        w += " AND " if w != ''
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
+      end
+      if !meter.blank?
+        w += " AND " if w != ''
+        w += "meter_id IN (#{meter.join(",")})"
+      end
+      if !caliber.blank?
+        w += " AND " if w != ''
+        w += "caliber_id = #{caliber}"
+      end
+      if !service_point.blank?
+        w += " AND " if w != ''
+        w += "service_point_id = '#{service_point}'"
+      end
+      if !reading_route.blank?
+        w += " AND " if w != ''
+        w += "reading_route_id = '#{reading_route}'"
+      end
+      if !use.blank?
+        w += " AND " if w != ''
+        w += "use_id = '#{use}'"
+      end
+      if !@from.blank?
+        w += " AND " if w != ''
+        w += "starting_at >= '#{@from_date.to_date}'"
+      end
+      if !@to.blank?
+        w += " AND " if w != ''
+        w += "starting_at <= '#{@to_date.to_date}'"
+      end
+
+      # Setup filename
+      title = t("ag2_gest.ag2_gest_track.subscriber_report.report_fact_charged") + "_#{@from}_#{@to}"
+      @subscriber_invoice_charged_report = Subscriber.joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id").activated.where(w).by_code
+
+      respond_to do |format|
+        # Render PDF
+        if !@subscriber_invoice_charged_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        else
+          format.csv { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
+    def client_eco_report #case15
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1339,7 +1432,7 @@ module Ag2Gest
       end
     end
 
-    def client_eco_items_report #case14
+    def client_eco_items_report #case15
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1391,7 +1484,7 @@ module Ag2Gest
       end
     end
 
-    def client_debt_report #case15
+    def client_debt_report #case16
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1443,7 +1536,7 @@ module Ag2Gest
       end
     end
 
-    def client_debt_items_report #case15
+    def client_debt_items_report #case16
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1496,7 +1589,55 @@ module Ag2Gest
       end
     end
 
-    def meter_report #case16
+    def client_invoice_charged_report #case17
+      detailed = params[:detailed]
+      @from = params[:from]
+      @to = params[:to]
+      client = params[:client]
+
+      # OCO
+      init_oco if !session[:organization]
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      # Format dates
+      @from_date = @from
+      @to_date = @to
+
+      w = ''
+      if !session[:organization].blank?
+        w += " AND " if w != ''
+        w += "clients.organization_id = #{session[:organization]}"
+      end
+      if !client.blank?
+        w += " AND " if w != ''
+        w += "clients.id = #{client}"
+      end
+
+      @client_invoice_charged_report = Client.where(w).by_code
+
+      # Setup filename
+      title = t("ag2_gest.ag2_gest_track.client_report.report_fact_charged") + "_#{@from}_#{@to}"
+
+      respond_to do |format|
+        # Render PDF
+        if !@client_invoice_charged_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        else
+          format.csv { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
+    end
+
+    def meter_report #case18
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1567,7 +1708,7 @@ module Ag2Gest
       end
     end
 
-    def meter_expired_report #case17
+    def meter_expired_report #case19
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1638,7 +1779,7 @@ module Ag2Gest
       end
     end
 
-    def meter_shared_report #case18
+    def meter_shared_report #case20
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1709,7 +1850,7 @@ module Ag2Gest
       end
     end
 
-    def meter_master_report #case19
+    def meter_master_report #case21
       detailed = params[:detailed]
       @from = params[:from]
       @to = params[:to]
@@ -1933,13 +2074,17 @@ module Ag2Gest
       _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_title") #case10
       _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_eco_title") #case11
       _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_tec_title") #case12
-      _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_debt_title") #case11
-      _array = _array << t("ag2_gest.ag2_gest_track.client_report.report_title") #case14
-      _array = _array << t("ag2_gest.ag2_gest_track.client_report.report_debt_title") #case15
-      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_title") #case16
-      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_expiry_title") #case17
-      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_shared_title") #case18
-      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_master_title") #case19
+      _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_debt_title") #case13
+      _array = _array << t("ag2_gest.ag2_gest_track.subscriber_report.report_fact_charged") #case14
+
+      _array = _array << t("ag2_gest.ag2_gest_track.client_report.report_title") #case15
+      _array = _array << t("ag2_gest.ag2_gest_track.client_report.report_debt_title") #case16
+      _array = _array << t("ag2_gest.ag2_gest_track.client_report.report_fact_charged") #case17
+
+      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_title") #case18
+      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_expiry_title") #case19
+      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_shared_title") #case20
+      _array = _array << t("ag2_gest.ag2_gest_track.meter_report.report_master_title") #case21
       _array
     end
 

@@ -15,6 +15,7 @@ es:
       client_report:
         report_title: "Padrón Económico de Clientes"
         report_debt_title: "Clientes: Deuda a fecha"
+        report_fact_charged: "Clientes: Fact. Cobradas"
         sum_rows_title: "Total Filas:"
         sum_rows_debt: "Total Deuda:"
       subscriber_report:
@@ -22,6 +23,7 @@ es:
         report_eco_title: "Padrón Económico de Abonados"
         report_tec_title: "Padrón Técnico de Abonados"
         report_debt_title: "Abonados: Deuda a fecha"
+        report_fact_charged: "Abonados: Fact. Cobradas"
         sum_rows_title: "Total Filas:"
         sum_rows_debt: "Total Deuda:"
       reading_report:

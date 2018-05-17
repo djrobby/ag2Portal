@@ -654,8 +654,34 @@
           hide("#TariffType", "label_tariff_type");
           show_buttons(true);
           break;
-        // client_report
+        // subscriber_invoice_charged_report
         case 14:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          show("#Client", "label_client");
+          show("#Subscriber", "label_subscriber");
+          show_text("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          show("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail_and_csv(true);
+          break;
+        // client_report
+        case 15:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           hide_date("#ToDebt", "label_to_debt");
@@ -681,7 +707,7 @@
           show_buttons(true);
           break;
         // client_debt_report
-        case 15:
+        case 16:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           show_date("#ToDebt", "label_to_debt");
@@ -706,49 +732,23 @@
           hide("#TariffType", "label_tariff_type");
           show_buttons(true);
           break;
-        // meter_report
-        case 16:
-          show_date("#From", "label_from");
-          show_date("#To", "label_to");
-          hide_date("#ToDebt", "label_to_debt");
-          hide("#Project", "label_project");
-          hide("#Period", "label_period");
-          hide("#Client", "label_client");
-          hide("#Subscriber", "label_subscriber");
-          hide_text("#StreetName", "label_street");
-          hide("#User", "label_user");
-          hide("#Biller", "label_biller");
-          show_text("#Meter", "label_meter");
-          show("#Caliber", "label_caliber");
-          show("#ServicePoint", "label_service_point");
-          hide("#TariffScheme", "label_tariff_scheme");
-          show("#ReadingRoute", "label_reading_route");
-          hide("#RequestStatus", "label_request_status");
-          hide("#RequestType", "label_request_type");
-          hide("#Status", "label_status");
-          hide("#Type", "label_type");
-          hide("#Operation", "label_operation");
-          hide("#Use", "label_use");
-          hide("#TariffType", "label_tariff_type");
-          show_buttons_without_detail(true);
-          break;
-        // meter_expired_report
+        // client_invoice_charged_report
         case 17:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           hide_date("#ToDebt", "label_to_debt");
           hide("#Project", "label_project");
           hide("#Period", "label_period");
-          hide("#Client", "label_client");
+          show("#Client", "label_client");
           hide("#Subscriber", "label_subscriber");
           hide_text("#StreetName", "label_street");
           hide("#User", "label_user");
           hide("#Biller", "label_biller");
-          show_text("#Meter", "label_meter");
-          show("#Caliber", "label_caliber");
-          show("#ServicePoint", "label_service_point");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
           hide("#TariffScheme", "label_tariff_scheme");
-          show("#ReadingRoute", "label_reading_route");
+          hide("#ReadingRoute", "label_reading_route");
           hide("#RequestStatus", "label_request_status");
           hide("#RequestType", "label_request_type");
           hide("#Status", "label_status");
@@ -756,9 +756,9 @@
           hide("#Operation", "label_operation");
           hide("#Use", "label_use");
           hide("#TariffType", "label_tariff_type");
-          show_buttons_without_detail(true);
+          show_buttons_without_detail_and_csv(true);
           break;
-        // meter_shared_report
+        // meter_report
         case 18:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
@@ -784,8 +784,60 @@
           hide("#TariffType", "label_tariff_type");
           show_buttons_without_detail(true);
           break;
-        // meter_master_report
+        // meter_expired_report
         case 19:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide_text("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // meter_shared_report
+        case 20:
+          show_date("#From", "label_from");
+          show_date("#To", "label_to");
+          hide_date("#ToDebt", "label_to_debt");
+          hide("#Project", "label_project");
+          hide("#Period", "label_period");
+          hide("#Client", "label_client");
+          hide("#Subscriber", "label_subscriber");
+          hide_text("#StreetName", "label_street");
+          hide("#User", "label_user");
+          hide("#Biller", "label_biller");
+          show_text("#Meter", "label_meter");
+          show("#Caliber", "label_caliber");
+          show("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          show("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
+          hide("#Status", "label_status");
+          hide("#Type", "label_type");
+          hide("#Operation", "label_operation");
+          hide("#Use", "label_use");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
+          break;
+        // meter_master_report
+        case 21:
           show_date("#From", "label_from");
           show_date("#To", "label_to");
           hide_date("#ToDebt", "label_to_debt");
@@ -882,19 +934,23 @@
         return;
       if (((from == "") || (to == "")) && report == 12)
         return;
-      if (((from == "") || (to == "")) && report == 13)
+      if (((from == "") || (to == "") || (todebt == "")) && report == 13)
         return;
       if (((from == "") || (to == "")) && report == 14)
         return;
       if (((from == "") || (to == "")) && report == 15)
         return;
-      if (((from == "") || (to == "")) && report == 16)
+      if (((from == "") || (to == "") || (todebt == "")) && report == 16)
         return;
       if (((from == "") || (to == "")) && report == 17)
         return;
       if (((from == "") || (to == "")) && report == 18)
         return;
       if (((from == "") || (to == "")) && report == 19)
+        return;
+      if (((from == "") || (to == "")) && report == 20)
+        return;
+      if (((from == "") || (to == "")) && report == 21)
         return;
       // CSV or PDF
       if (_csv == true) {
@@ -1177,8 +1233,29 @@
             + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
             , pag);
           break;
-        // OKclient_eco_report
+        // OKsubscriber_invoice_charged_report
         case 14:
+          var client = $('#Client').val();
+          var subscriber = $('#Subscriber').val();
+          var street_name = $('#StreetName').val();
+          var meter = $('#Meter').val();
+          var caliber = $('#Caliber').val();
+          var service_point = $('#ServicePoint').val();
+          var reading_route = $('#ReadingRoute').val();
+          var use = $('#Use').val();
+          nam = "subscriber_invoice_charged_report" + ext;
+          // if (detailed == "") {
+          //   nam = "subscriber_tec_report" + ext;
+          // } else {
+          //   nam = "subscriber_tec_items_report" + ext;
+          // }
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client 
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&meter=" + meter + "&caliber=" + caliber 
+            + "&service_point=" + service_point + "&reading_route=" + reading_route + "&use=" + use
+            , pag);
+          break;
+        // OKclient_eco_report
+        case 15:
           var client = $('#Client').val();
           if (detailed == "") {
             nam = "client_eco_report" + ext;
@@ -1189,7 +1266,7 @@
             , pag);
           break;
         // OKclient_debt_report
-        case 15:
+        case 16:
           var client = $('#Client').val();
           if (detailed == "") {
             nam = "client_debt_report" + ext;
@@ -1199,8 +1276,15 @@
           window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&todebt=" + todebt + "&client=" + client
             , pag);
           break;
+        // OKclient_invoice_charged_report
+        case 17:
+          var client = $('#Client').val();
+          nam = "client_invoice_charged_report" + ext;
+          window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&client=" + client
+            , pag);
+          break;
         // OKmeter_report
-        case 16:
+        case 18:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1216,7 +1300,7 @@
             , pag);
           break;
         // OKmeter_expired_report
-        case 17:
+        case 19:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1232,7 +1316,7 @@
             , pag);
           break;
         // OKmeter_shared_report
-        case 18:
+        case 20:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();
@@ -1248,7 +1332,7 @@
             , pag);
           break;
         // OKmeter_master_report
-        case 19:
+        case 21:
           var meter = $('#Meter').val();
           var caliber = $('#Caliber').val();
           var service_point = $('#ServicePoint').val();

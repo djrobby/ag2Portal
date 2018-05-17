@@ -15,6 +15,7 @@ en:
       client_report:
         report_title: "Clients Economical Registry"
         report_debt_title: "Clients: Debt to date"
+        report_fact_charged: "Clients: Invoices charged"
         sum_rows_title: "Total Rows:"
         sum_rows_debt: "Total Debt:"
       subscriber_report:
@@ -22,6 +23,7 @@ en:
         report_eco_title: "Subscribers Economical Registry"
         report_tec_title: "Subscribers Technical Registry"
         report_debt_title: "Subscribers: Debt to date"
+        report_fact_charged: "Subscribers: Invoices charged"
         sum_rows_title: "Total Rows:"
         sum_rows_debt: "Total Debt:"
       reading_report:
