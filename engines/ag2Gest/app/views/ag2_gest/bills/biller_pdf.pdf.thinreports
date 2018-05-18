@@ -33,14 +33,11 @@ bank_string = I18n.t("activerecord.attributes.bill.company_bank") + "\n"
 @biller_printer.project.company.company_bank_accounts.each do |bank|
   bank_string += "- " + bank.bank.name.to_s + " " + bank.p_format.to_s + "\n"
 end
-
 report.page.values company_bank: bank_string
 report.page.values office_note: @biller_printer.project.office.invoice_note unless @biller_printer.project.office.invoice_note.blank?
 
-
 #
 # Remarks and note
-
 report.page.values(currency_note: "* " + I18n.t("every_report.currency_note"),
            remark: "* " + I18n.t("activerecord.attributes.bill.payment_note"))
 

@@ -299,7 +299,9 @@ module Ag2Gest
       # request_type = params[:request_type]
       status = params[:status]
       type = params[:type]
+      payment_method = params[:payment_method]
       operation = params[:operation]
+      concept = params[:concept]
       # use = params[:use]
       # tariff_type = params[:tariff_type]
 
@@ -355,9 +357,17 @@ module Ag2Gest
         w += " AND " if w != ''
         w += "invoices.invoice_type_id = '#{type}'"
       end
+      if !payment_method.blank?
+        w += " AND " if w != ''
+        w += "payment_methods.id = '#{payment_method}'"
+      end
       if !operation.blank?
         w += " AND " if w != ''
         w += "invoices.invoice_operation_id = '#{operation}'"
+      end
+      if !concept.blank?
+        w += " AND " if w != ''
+        w += "invoice_items.code = '#{BillableConcept.find(concept).code}'"
       end
       if !@from.blank?
         w += " AND " if w != ''
@@ -370,6 +380,9 @@ module Ag2Gest
       @invoice_report = Invoice.joins(:bill)
                           .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
                           .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN invoice_items ON invoice_items.invoice_id=invoices.id")
+                          .joins("LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id")
+                          .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
                           .where(w).by_no
       @invoice_report_csv = Invoice.to_csv_id(w)
       bills = []
@@ -420,7 +433,9 @@ module Ag2Gest
       # request_type = params[:request_type]
       status = params[:status]
       type = params[:type]
+      payment_method = params[:payment_method]
       operation = params[:operation]
+      concept = params[:concept]
       # use = params[:use]
       # tariff_type = params[:tariff_type]
 
@@ -480,6 +495,14 @@ module Ag2Gest
         w += " AND " if w != ''
         w += "invoices.invoice_operation_id = '#{operation}'"
       end
+      if !payment_method.blank?
+        w += " AND " if w != ''
+        w += "payment_methods.id = '#{payment_method}'"
+      end
+      if !concept.blank?
+        w += " AND " if w != ''
+        w += "invoice_items.code = '#{BillableConcept.find(concept).code}'"
+      end
       if !@from.blank?
         w += " AND " if w != ''
         w += "invoices.invoice_date >= '#{@from_date.to_date}'"
@@ -491,6 +514,9 @@ module Ag2Gest
       @invoice_report = Invoice.joins(:bill)
                           .joins("LEFT JOIN subscribers ON bills.subscriber_id=subscribers.id")
                           .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN invoice_items ON invoice_items.invoice_id=invoices.id")
+                          .joins("LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id")
+                          .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
                           .where(w).by_no
       @invoice_report_csv = Invoice.to_csv_id(w)
       bills = []
@@ -2027,6 +2053,8 @@ module Ag2Gest
       type = params[:Type]
       operation = params[:Operation]
       use = params[:Use]
+      payment_method = params[:PaymentMethod]
+      concept = params[:Concept]
       tariff_type = params[:TariffType]
 
       @reports = reports_array
@@ -2050,6 +2078,8 @@ module Ag2Gest
       @operations = invoice_operations_dropdown if @operations.nil?
       @calibers = Caliber.by_caliber if @calibers.nil?
       @uses = Use.by_code if @uses.nil?
+      @payment_methods = invoice_payment_methods_dropdown if @payment_methods.nil?
+      @concepts = billable_concept_dropdown
       @tariff_types = TariffType.by_code if @tariff_types.nil?
     end
 
@@ -2154,8 +2184,16 @@ module Ag2Gest
       InvoiceType.all
     end
 
+    def invoice_payment_methods_dropdown
+      PaymentMethod.all
+    end
+
     def invoice_operations_dropdown
       InvoiceOperation.all
+    end
+
+    def billable_concept_dropdown
+        BillableConcept.all
     end
 
     def setup_no(no)

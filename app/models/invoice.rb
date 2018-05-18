@@ -131,6 +131,9 @@ class Invoice < ActiveRecord::Base
     .joins("LEFT JOIN invoice_types ON invoices.invoice_type_id=invoice_types.id")
     .joins("LEFT JOIN invoice_statuses ON invoices.invoice_status_id=invoice_statuses.id")
     .joins("LEFT JOIN invoice_operations ON invoices.invoice_operation_id=invoice_operations.id")
+    .joins("LEFT JOIN invoice_items ON invoice_items.invoice_id=invoices.id")
+    .joins("LEFT JOIN client_payments ON invoices.id=client_payments.invoice_id")
+    .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
     .where("#{w}")
     .select("bills.project_id project_id_, invoices.biller_id biller_id_, invoices.id p_id_,
              bills.id b_id_, invoices.invoice_date invoice_date_, invoices.payday_limit payday_limit_,
