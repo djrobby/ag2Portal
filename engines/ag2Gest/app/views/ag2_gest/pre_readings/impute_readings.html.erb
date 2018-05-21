@@ -31,7 +31,7 @@
     row.addClass("date-clicked");
     reading_ending_date = row.data("reading-ending-date");
     reading_starting_date = row.data("reading-starting-date");
-    
+
     if (reading_ending_date != 0 || reading_starting_date != 0 ){
       var d1 = reading_starting_date.split("/");
       var d2 = reading_ending_date.split("/");
@@ -39,8 +39,8 @@
 
       var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
       var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
-      var from_more_day = quitDays(from, 30);  
-      var to_more_day   = addDays(to, 30); 
+      var from_more_day = quitDays(from, 30);
+      var to_more_day   = addDays(to, 30);
       var check = new Date(c[2], parseInt(c[1])-1, c[0]);
       if (check < from_more_day || check > to_more_day){
         alert('<%= I18n.t("ag2_gest.readings.reading_date_error") %>');
@@ -103,8 +103,8 @@
 
       var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
       var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
-      var from_more_day = quitDays(from, 30);  
-      var to_more_day   = addDays(to, 30); 
+      var from_more_day = quitDays(from, 30);
+      var to_more_day   = addDays(to, 30);
       var check = new Date(c[2], parseInt(c[1])-1, c[0]);
     };
 
@@ -126,7 +126,7 @@
         row.find("td").fadeOut(500).fadeIn(500);
       };
     };
-    
+
     cons_act = index - row.data("index-one");
     con_baj = (row.data("consumption-one") / 2);
     con_exc = (row.data("consumption-one") * 2);
@@ -289,7 +289,7 @@
               };
             };
           // Lectura fuera de plazo
-          } else if (reading_ending_date != 0 || reading_starting_date != 0 ) { 
+          } else if (reading_ending_date != 0 || reading_starting_date != 0 ) {
             if (check < from || check > to) {
               // var lap_meter = confirm("Lectura fuera de plazo");
               if (lap_meter == true) {
@@ -350,7 +350,7 @@
       row.find(".wrench-column").show()
       row.find("td").addClass("row-green");
       if (index.length == 0) {
-        row.find("input[type='number']").val(row.data("index-one"));        
+        row.find("input[type='number']").val(row.data("index-one"));
       }
     } else {
       row.find(".wrench-column").hide()
@@ -503,9 +503,10 @@
   </div>
   <div class="row">
     <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
+    <%#= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), confirm_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
     <span class= "pull-right">
       <%= link_to "<i class='icon-print icon-white'></i> #{t('ag2_gest.home.index.control')}".html_safe, to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-warning hide" : "btn btn-warning", target: "_blank" %>
-      <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>   
+      <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>
     </span>
   </div>
   <br>
