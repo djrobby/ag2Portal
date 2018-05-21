@@ -79,6 +79,29 @@ module Ag2Gest
       end
     end
 
+    def create_reading(pre_reading, service_point_id, subscriber_id)
+      return Reading.new( project_id: pre_reading.project_id,
+                          billing_period_id: pre_reading.billing_period_id,
+                          billing_frequency_id: pre_reading.billing_frequency_id,
+                          reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
+                          meter_id: pre_reading.meter_id,
+                          service_point_id: service_point_id,
+                          subscriber_id: subscriber_id,
+                          coefficient: pre_reading.meter.shared_coefficient,
+                          reading_route_id: pre_reading.reading_route_id,
+                          reading_sequence: pre_reading.reading_sequence,
+                          reading_variant: pre_reading.reading_variant,
+                          # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
+                          reading_date: pre_reading.reading_date ,
+                          reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
+                          reading_index_1: pre_reading.reading_index_1,
+                          reading_index_2: pre_reading.reading_index_2,
+                          # reading_incidence_types: pre_reading.reading_incidence_types,
+                          reading_1: pre_reading.reading_1,
+                          reading_2: pre_reading.reading_2,
+                          created_by: (current_user.id if !current_user.nil?))
+    end
+
     def to_reading
       @to_readings = @pre_readings
       # .select{|p| !p.reading_index.nil? or !p.reading_incidence_types.empty?}
@@ -91,26 +114,27 @@ module Ag2Gest
             pre_reading.meter.subscribers.actives.each do |s|
               reading_old = Reading.where(project_id: pre_reading.project_id, billing_period_id: pre_reading.billing_period_id, meter_id: pre_reading.meter_id, subscriber_id: s.id, reading_date: pre_reading.reading_date, reading_type_id: pre_reading.reading_type_id)
               if reading_old.blank?
-                reading = Reading.new( project_id: pre_reading.project_id,
-                                      billing_period_id: pre_reading.billing_period_id,
-                                      billing_frequency_id: pre_reading.billing_frequency_id,
-                                      reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
-                                      meter_id: pre_reading.meter_id,
-                                      service_point_id: s.service_point_id,
-                                      subscriber_id: s.id,
-                                      coefficient: pre_reading.meter.shared_coefficient,
-                                      reading_route_id: pre_reading.reading_route_id,
-                                      reading_sequence: pre_reading.reading_sequence,
-                                      reading_variant: pre_reading.reading_variant,
-                                      # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
-                                      reading_date: pre_reading.reading_date ,
-                                      reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
-                                      reading_index_1: pre_reading.reading_index_1,
-                                      reading_index_2: pre_reading.reading_index_2,
-                                      # reading_incidence_types: pre_reading.reading_incidence_types,
-                                      reading_1: pre_reading.reading_1,
-                                      reading_2: pre_reading.reading_2,
-                                      created_by: (current_user.id if !current_user.nil?))
+                reading = create_reading(pre_reading, s.service_point_id, s.id)
+                # reading = Reading.new( project_id: pre_reading.project_id,
+                #                       billing_period_id: pre_reading.billing_period_id,
+                #                       billing_frequency_id: pre_reading.billing_frequency_id,
+                #                       reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
+                #                       meter_id: pre_reading.meter_id,
+                #                       service_point_id: s.service_point_id,
+                #                       subscriber_id: s.id,
+                #                       coefficient: pre_reading.meter.shared_coefficient,
+                #                       reading_route_id: pre_reading.reading_route_id,
+                #                       reading_sequence: pre_reading.reading_sequence,
+                #                       reading_variant: pre_reading.reading_variant,
+                #                       # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
+                #                       reading_date: pre_reading.reading_date ,
+                #                       reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
+                #                       reading_index_1: pre_reading.reading_index_1,
+                #                       reading_index_2: pre_reading.reading_index_2,
+                #                       # reading_incidence_types: pre_reading.reading_incidence_types,
+                #                       reading_1: pre_reading.reading_1,
+                #                       reading_2: pre_reading.reading_2,
+                #                       created_by: (current_user.id if !current_user.nil?))
                 if reading.save
                   pre_reading.reading_incidence_types.each do |i|
                     ReadingIncidence.create(reading_id: reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
@@ -128,26 +152,27 @@ module Ag2Gest
           else
             reading_old = Reading.where(project_id: pre_reading.project_id, billing_period_id: pre_reading.billing_period_id, meter_id: pre_reading.meter_id, subscriber_id: nil, reading_date: pre_reading.reading_date, reading_type_id: pre_reading.reading_type_id)
             if reading_old.blank?
-              reading = Reading.new( project_id: pre_reading.project_id,
-                                    billing_period_id: pre_reading.billing_period_id,
-                                    billing_frequency_id: pre_reading.billing_frequency_id,
-                                    reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
-                                    meter_id: pre_reading.meter_id,
-                                    service_point_id: pre_reading.meter.service_points.first.id,
-                                    subscriber_id: nil,
-                                    coefficient: pre_reading.meter.shared_coefficient,
-                                    reading_route_id: pre_reading.reading_route_id,
-                                    reading_sequence: pre_reading.reading_sequence,
-                                    reading_variant: pre_reading.reading_variant,
-                                    # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
-                                    reading_date: pre_reading.reading_date ,
-                                    reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
-                                    reading_index_1: pre_reading.reading_index_1,
-                                    reading_index_2: pre_reading.reading_index_2,
-                                    # reading_incidence_types: pre_reading.reading_incidence_types,
-                                    reading_1: pre_reading.reading_1,
-                                    reading_2: pre_reading.reading_2,
-                                    created_by: (current_user.id if !current_user.nil?))
+              reading = create_reading(pre_reading, pre_reading.meter.service_points.first.id, nil)
+              # reading = Reading.new( project_id: pre_reading.project_id,
+              #                       billing_period_id: pre_reading.billing_period_id,
+              #                       billing_frequency_id: pre_reading.billing_frequency_id,
+              #                       reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
+              #                       meter_id: pre_reading.meter_id,
+              #                       service_point_id: pre_reading.meter.service_points.first.id,
+              #                       subscriber_id: nil,
+              #                       coefficient: pre_reading.meter.shared_coefficient,
+              #                       reading_route_id: pre_reading.reading_route_id,
+              #                       reading_sequence: pre_reading.reading_sequence,
+              #                       reading_variant: pre_reading.reading_variant,
+              #                       # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
+              #                       reading_date: pre_reading.reading_date ,
+              #                       reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
+              #                       reading_index_1: pre_reading.reading_index_1,
+              #                       reading_index_2: pre_reading.reading_index_2,
+              #                       # reading_incidence_types: pre_reading.reading_incidence_types,
+              #                       reading_1: pre_reading.reading_1,
+              #                       reading_2: pre_reading.reading_2,
+              #                       created_by: (current_user.id if !current_user.nil?))
               if reading.save
                 pre_reading.reading_incidence_types.each do |i|
                   ReadingIncidence.create(reading_id: reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
@@ -166,26 +191,27 @@ module Ag2Gest
         else
           reading_old = Reading.where(project_id: pre_reading.project_id, billing_period_id: pre_reading.billing_period_id, meter_id: pre_reading.meter_id, subscriber_id: pre_reading.subscriber_id, reading_date: pre_reading.reading_date, reading_type_id: pre_reading.reading_type_id)
           if reading_old.blank?
-            reading = Reading.new( project_id: pre_reading.project_id,
-                                  billing_period_id: pre_reading.billing_period_id,
-                                  billing_frequency_id: pre_reading.billing_frequency_id,
-                                  reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
-                                  meter_id: pre_reading.meter_id,
-                                  coefficient: pre_reading.meter.shared_coefficient,
-                                  service_point_id: Subscriber.find(pre_reading.subscriber_id).service_point_id,
-                                  subscriber_id: pre_reading.subscriber_id,
-                                  reading_route_id: pre_reading.reading_route_id,
-                                  reading_sequence: pre_reading.reading_sequence,
-                                  reading_variant: pre_reading.reading_variant,
-                                  # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
-                                  reading_date: pre_reading.reading_date ,
-                                  reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
-                                  reading_index_1: pre_reading.reading_index_1,
-                                  reading_index_2: pre_reading.reading_index_2,
-                                  # reading_incidence_types: pre_reading.reading_incidence_types,
-                                  reading_1: pre_reading.reading_1,
-                                  reading_2: pre_reading.reading_2,
-                                  created_by: (current_user.id if !current_user.nil?))
+            reading = create_reading(pre_reading, Subscriber.find(pre_reading.subscriber_id).service_point_id, pre_reading.subscriber_id)
+            # reading = Reading.new( project_id: pre_reading.project_id,
+            #                       billing_period_id: pre_reading.billing_period_id,
+            #                       billing_frequency_id: pre_reading.billing_frequency_id,
+            #                       reading_type_id: !pre_reading.reading_index.blank? ? pre_reading.reading_type_id : ReadingType::AUTO,
+            #                       meter_id: pre_reading.meter_id,
+            #                       coefficient: pre_reading.meter.shared_coefficient,
+            #                       service_point_id: Subscriber.find(pre_reading.subscriber_id).service_point_id,
+            #                       subscriber_id: pre_reading.subscriber_id,
+            #                       reading_route_id: pre_reading.reading_route_id,
+            #                       reading_sequence: pre_reading.reading_sequence,
+            #                       reading_variant: pre_reading.reading_variant,
+            #                       # reading_date: !pre_reading.reading_date.blank? ? pre_reading.reading_date : BillingPeriod.find(@period).reading_ending_date,
+            #                       reading_date: pre_reading.reading_date ,
+            #                       reading_index: !pre_reading.reading_index.blank? ? pre_reading.reading_index : pre_reading.reading_index_1,
+            #                       reading_index_1: pre_reading.reading_index_1,
+            #                       reading_index_2: pre_reading.reading_index_2,
+            #                       # reading_incidence_types: pre_reading.reading_incidence_types,
+            #                       reading_1: pre_reading.reading_1,
+            #                       reading_2: pre_reading.reading_2,
+            #                       created_by: (current_user.id if !current_user.nil?))
             if reading.save
               pre_reading.reading_incidence_types.each do |i|
                 ReadingIncidence.create(reading_id: reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
