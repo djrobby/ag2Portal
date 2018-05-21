@@ -90,6 +90,8 @@ function setupPolling(options){
         remote_url: '/ag2_gest/es/bills/status_prebills'
       <% elsif !current_user.blank? and current_user.confirming_prebills? %>
         remote_url: '/ag2_gest/es/bills/status_confirm'
+      <% elsif !current_user.blank? and current_user.confirming_prereadings? %>
+        remote_url: '/ag2_gest/es/pre_readings/status_confirm'
       <% end %>
     }).start();
   })
