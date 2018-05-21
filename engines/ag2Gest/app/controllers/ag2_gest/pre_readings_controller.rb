@@ -22,6 +22,7 @@ module Ag2Gest
                                                :new_impute,
                                                :to_reading,
                                                :confirm_readings,
+                                               :status_confirm,
                                                :update_reading_route_from_period]
     @@readings = nil
 
@@ -125,6 +126,21 @@ module Ag2Gest
                             status: Sidekiq::Status::status(job_id),
                             type_work: "confirm_prereadings")
       redirect_to pre_readings_path, notice: t('activerecord.attributes.bill.invoices_query')
+    end
+
+    def status_confirm
+      works = current_user.wconfirm_prereadings
+      works_complete = works.select{|w| Sidekiq::Status::complete? w.work_no}
+      unless works_complete.blank? #Sidekiq::Status::complete? session[:prebills_job_no]
+        work = works_complete.first
+        total = work.total
+        head 404 and return if group_no.blank?
+        works_complete.first.update_attributes(complete: true, status: Sidekiq::Status::status(works_complete.first.work_no))
+        response_hash = { message: "Las prelecturas elegidas han sido confirmadas: #{total} Lecturas generadas. ", link_resume: readings_path, text_resume: 'Click aqui para verlas'}
+        render json: response_hash
+      else #if Sidekiq::Status::queued? session[:prebills_job_no] or Sidekiq::Status::working? session[:prebills_job_no]
+        render json: {}, :status => 202
+      end
     end
 
     # Copy current PreReadings to Readings Online

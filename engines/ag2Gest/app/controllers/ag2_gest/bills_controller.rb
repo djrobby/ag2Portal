@@ -998,7 +998,7 @@ module Ag2Gest
     #   # end
     # end
 
-    def create #NEW CREATE FACT OFFLINE
+    def create #NEW CREATE PreBills OFFLINE
       readings_ids = @@readings.map(&:id) #params[:bill][:readings][0...-1][1..-1].split(", ")
       group_no = PreBill.next_no
       user_id = current_user.nil? ? nil : current_user.id

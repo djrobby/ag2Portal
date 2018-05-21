@@ -621,6 +621,8 @@ Ag2Gest::Engine.routes.draw do
       get 'list', on: :collection
       get 'list_q', on: :collection
       get 'show_list', on: :collection
+      get 'confirm_readings', on: :collection
+      get 'status_confirm', on: :collection
       #get 'new_pre_readings' on: :member
     end
     resources :readings do

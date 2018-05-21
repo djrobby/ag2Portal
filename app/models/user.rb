@@ -62,12 +62,20 @@ class User < ActiveRecord::Base
     works_pending.any?{|w| w.type_work == "confirm_prebills"}
   end
 
+  def confirming_prereadings?
+    works_pending.any?{|w| w.type_work == "confirm_prereadings"}
+  end
+
   def wcreating_pending
     works_pending.where(type_work: "create_prebills")
   end
 
   def wconfirm_pending
     works_pending.where(type_work: "confirm_prebills")
+  end
+
+  def wconfirm_prereadings
+    works_pending.where(type_work: "confirm_prereadings")
   end
 
   def prebill_pending?(group_no)
