@@ -48,7 +48,7 @@ module Ag2Gest
                                                :bank_from_return,
                                                :bank_from_counter,
                                                :payment_receipt,
-                                               :client_payment_report]
+                                               :client_payment_view_report]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
@@ -1715,7 +1715,7 @@ module Ag2Gest
     end
 
      # client payment report
-    def client_payment_report
+    def client_payment_view_report
       manage_filter_state
       bill_no = params[:bill_no]
       client = params[:client]

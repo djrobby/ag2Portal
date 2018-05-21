@@ -38,6 +38,7 @@ Ag2Gest::Engine.routes.draw do
     match 'water_connection_contract_report', :controller => 'ag2_gest_track', :action => 'water_connection_contract_report'
     match 'service_point_report', :controller => 'ag2_gest_track', :action => 'service_point_report'
     match 'sp_with_meter_report', :controller => 'ag2_gest_track', :action => 'sp_with_meter_report'
+    match 'client_payment_report', :controller => 'ag2_gest_track', :action => 'client_payment_report'
 
     #
     # Control&Tracking
@@ -57,7 +58,7 @@ Ag2Gest::Engine.routes.draw do
     # report invoice
     match 'invoice_view_report', :controller => 'invoices', :action => 'invoice_view_report'
     # report client_payment
-    match 'client_payment_report', :controller => 'client_payments', :action => 'client_payment_report'
+    match 'client_payment_view_report', :controller => 'client_payments', :action => 'client_payment_view_report'
     # report contracting_request
     match 'contracting_request_report', :controller => 'contracting_requests', :action => 'contracting_request_report'
     match 'contracting_request_complete_report', :controller => 'contracting_requests', :action => 'contracting_request_complete_report'

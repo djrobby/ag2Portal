@@ -12,6 +12,7 @@ en:
         back_to_management: "Back to Billing"
         back_to_pre_index: "Back to Mass Billing of Services"
         confirmation_date: "Fecha de confirmación"
+        confirmation_date_c: "Cnf."
         invoice_date: "Fecha de factura"
         payday_limit: "Fecha de vencimiento"
         billing_period_id: "Periodo"

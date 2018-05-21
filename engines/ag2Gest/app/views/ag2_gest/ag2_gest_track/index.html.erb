@@ -438,23 +438,23 @@
           show("#Client", "label_client");
           show("#Subscriber", "label_subscriber");
           show_text("#StreetName", "label_street");
-          show("#User", "label_user");
+          hide("#User", "label_user");
           show("#Biller", "label_biller");
-          show_text("#Meter", "label_meter");
-          show("#Caliber", "label_caliber");
-          show("#ServicePoint", "label_service_point");
-          show("#TariffScheme", "label_tariff_scheme");
-          show("#ReadingRoute", "label_reading_route");
-          show("#RequestStatus", "label_request_status");
-          show("#RequestType", "label_request_type");
+          hide_text("#Meter", "label_meter");
+          hide("#Caliber", "label_caliber");
+          hide("#ServicePoint", "label_service_point");
+          hide("#TariffScheme", "label_tariff_scheme");
+          hide("#ReadingRoute", "label_reading_route");
+          hide("#RequestStatus", "label_request_status");
+          hide("#RequestType", "label_request_type");
           show("#Status", "label_status");
           show("#Type", "label_type");
           show("#Operation", "label_operation");
-          show("#Use", "label_use");
-          hide("#PaymentMethod", "label_payment_method");
-          hide("#Concept", "label_concept");
-          show("#TariffType", "label_tariff_type");
-          show_buttons(true);
+          hide("#Use", "label_use");
+          show("#PaymentMethod", "label_payment_method");
+          show("#Concept", "label_concept");
+          hide("#TariffType", "label_tariff_type");
+          show_buttons_without_detail(true);
           break;
         // debt_claim_report
         case 6:
@@ -1090,29 +1090,21 @@
           var client = $('#Client').val();
           var subscriber = $('#Subscriber').val();
           var street_name = $('#StreetName').val();
-          var user = $('#User').val();
           var biller = $('#Biller').val();
-          var meter = $('#Meter').val();
-          var caliber = $('#Caliber').val();
-          var service_point = $('#ServicePoint').val();
-          var tariff_scheme = $('#TariffScheme').val();
-          var reading_route = $('#ReadingRoute').val();
-          var request_status = $('#RequestStatus').val();
-          var request_type = $('#RequestType').val();
           var status = $('#Status').val();
           var type = $('#Type').val();
+          var payment_method = $('#PaymentMethod').val();
           var operation = $('#Operation').val();
-          var use = $('#Use').val();
-          var tariff_type = $('#TariffType').val();
-          if (detailed == "") {
-            nam = "water_supply_contract_report" + ext;
-          } else {
-            nam = "water_supply_contract_items_report" + ext;
-          }
+          var concept = $('#Concept').val();
+          nam = "client_payment_report" + ext;
+          // if (detailed == "") {
+          //   nam = "client_payment_report" + ext;
+          // } else {
+          //   nam = "client_payment_items_report" + ext;
+          // }
           window.open(nam + "?detailed=" + detailed + "&from=" + from + "&to=" + to + "&project=" + project  + "&period=" + period + "&client=" + client 
-            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&user=" + user + "&biller=" + biller + "&meter=" + meter + "&caliber=" + caliber 
-            + "&service_point=" + service_point + "&tariff_scheme=" + tariff_scheme + "&reading_route=" + reading_route + "&request_status=" + request_status
-            + "&request_type=" + request_type + "&status=" + status + "&type=" + type + "&operation=" + operation + "&use=" + use + "&tariff_type=" + tariff_type
+            + "&subscriber=" + subscriber + "&street_name=" + street_name + "&biller=" + biller
+            + "&status=" + status + "&type=" + type + "&operation=" + operation + "&concept=" + concept + "&payment_method=" + payment_method
             , pag);
           break;
         // debt_claim_report

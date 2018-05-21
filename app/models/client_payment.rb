@@ -64,7 +64,7 @@ class ClientPayment < ActiveRecord::Base
   #
   def full_no
     # Receipt no (Office & year & sequential number) => OOOO-YYYY-NNNNN
-    receipt_no.blank? ? "" : receipt_no[0..3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]
+    receipt_no.blank? ? "" : receipt_no.length < 13 ? receipt_no : receipt_no[0..3] + '-' + receipt_no[4..7] + '-' + receipt_no[8..12]
   end
 
   # 9 digits Id for bank orders
@@ -158,6 +158,68 @@ class ClientPayment < ActiveRecord::Base
   end
   def real_payment_method_code
     payment_method.code rescue ''
+  end
+
+  #
+  # CSV
+  #
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize("Id"),
+                  array[0].sanitize(I18n.t("activerecord.attributes.client_payment.receipt_no")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.subscriber.invoice_number")),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.payment_date')),
+                  array[0].sanitize(I18n.t('ag2_gest.bills.index.confirmation_date_c')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.report.client_code')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.charged')),
+                  array[0].sanitize(I18n.t('activerecord.models.instalment_plan.one')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.amount')),
+                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.total'))]
+
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |cp|
+        date = cp.formatted_date(cp.payment_date) unless cp.payment_date.blank?
+        date_confirm = cp.formatted_date(cp.confirmation_date) unless cp.confirmation_date.blank?
+        full_subscriber = ""
+        if !cp.subscriber.blank?
+          full_subscriber += cp.subscriber.full_name_or_company_and_code.to_s
+        else
+          full_subscriber += cp.client.full_name_or_company_and_code.to_s
+        end
+        payment_type = PaymentType.code_with_param(cp.payment_type)
+        amount = cp.number_with_precision(cp.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.amount.blank?
+        if cp.instalment_id.blank?
+          total = cp.number_with_precision(cp.invoice.receivables, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
+          instalment = ""
+        else
+          total = cp.number_with_precision(cp.instalment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
+          instalment = cp.instalment.partial_instalment_no unless cp.instalment_id.blank?
+        end
+        csv << [  cp.id,
+                  cp.full_no,
+                  cp.try(:invoice).try(:old_no_based_real_no),
+                  date,
+                  date_confirm,
+                  full_subscriber,
+                  payment_type,
+                  instalment,
+                  amount,
+                  total]
+      end
+    end
   end
 
   searchable do

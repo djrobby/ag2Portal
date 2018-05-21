@@ -548,6 +548,129 @@ module Ag2Gest
     end
 
     def client_payment_report #case5
+      detailed = params[:detailed]
+      @from = params[:from]
+      @to = params[:to]
+      project = params[:project]
+      period = params[:period]
+      client = params[:client]
+      subscriber = params[:subscriber]
+      street_name = params[:street_name]
+      # user = params[:user]
+      biller = params[:biller]
+      # meter = params[:meter]
+      # caliber = params[:caliber]
+      # service_point = params[:service_point]
+      # tariff_scheme = params[:tariff_scheme]
+      # reading_route = params[:reading_route]
+      # request_status = params[:request_status]
+      # request_type = params[:request_type]
+      status = params[:status]
+      type = params[:type]
+      payment_method = params[:payment_method]
+      operation = params[:operation]
+      concept = params[:concept]
+      # use = params[:use]
+      # tariff_type = params[:tariff_type]
+
+      # OCO
+      init_oco if !session[:organization]
+      if project.blank?
+        @projects = projects_dropdown if @projects.nil?
+        current_projects = @projects.blank? ? [0] : current_projects_for_index(@projects)
+        project = current_projects.join(",")
+      end
+
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+
+      # Dates are mandatory
+      if @from.blank? || @to.blank?
+        return
+      end
+
+      # Format dates
+      @from_date = @from
+      @to_date = @to
+
+      w = ''
+      if !project.blank?
+        w += " AND " if w != ''
+        w += "bills.project_id IN (#{project})"
+      end
+      if !period.blank?
+        w += " AND " if w != ''
+        w += "invoices.billing_period_id = #{period}"
+      end
+      if !client.blank?
+        w += " AND " if w != ''
+        w += "bills.client_id = #{client}"
+      end
+      if !subscriber.blank?
+        w += " AND " if w != ''
+        w += "bills.subscriber_id = #{subscriber}"
+      end
+      if !street_name.blank?
+        w += " AND " if w != ''
+        w += "subscriber_supply_addresses.supply_address IN ('#{street_name.join("','")}')"
+      end
+      if !biller.blank?
+        w += " AND " if w != ''
+        w += "invoices.biller_id = #{biller}"
+      end
+      if !status.blank?
+        w += " AND " if w != ''
+        w += "invoices.invoice_status_id = '#{status}'"
+      end
+      if !type.blank?
+        w += " AND " if w != ''
+        w += "invoices.invoice_type_id = '#{type}'"
+      end
+      if !payment_method.blank?
+        w += " AND " if w != ''
+        w += "payment_methods.id = '#{payment_method}'"
+      end
+      if !operation.blank?
+        w += " AND " if w != ''
+        w += "invoices.invoice_operation_id = '#{operation}'"
+      end
+      if !concept.blank?
+        w += " AND " if w != ''
+        w += "invoice_items.code = '#{BillableConcept.find(concept).code}'"
+      end
+      if !@from.blank?
+        w += " AND " if w != ''
+        w += "client_payments.payment_date >= '#{@from_date.to_date}'"
+      end
+      if !@to.blank?
+        w += " AND " if w != ''
+        w += "client_payments.payment_date <= '#{@to_date.to_date}'"
+      end
+      @client_payment_report = ClientPayment.joins(:bill)
+                          .joins("LEFT JOIN subscribers ON client_payments.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN subscriber_supply_addresses ON subscriber_supply_addresses.subscriber_id=subscribers.id")
+                          .joins("LEFT JOIN invoices ON client_payments.invoice_id=invoices.id")
+                          .joins("LEFT JOIN invoice_items ON invoice_items.invoice_id=invoices.id")
+                          .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
+                          .where(w).by_no
+      # Setup filename
+      title = t("activerecord.models.client_payment.few") + "_#{@from}_#{@to}"
+
+      respond_to do |format|
+        # Render PDF
+        if !@client_payment_report.blank?
+          format.pdf { send_data render_to_string,
+                       filename: "#{title}.pdf",
+                       type: 'application/pdf',
+                       disposition: 'inline' }
+          format.csv { send_data ClientPayment.to_csv(@client_payment_report),
+                       filename: "#{title}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to ag2_gest_track_url, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+        end
+      end
     end
 
     def debt_claim_report #case6
