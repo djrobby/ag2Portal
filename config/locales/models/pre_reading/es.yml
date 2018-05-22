@@ -10,6 +10,8 @@ es:
         # check_for_sale_offers: "Cliente no puede ser eliminado mientras existan presupuestos vinculados."
         # check_for_client_invoices: "Cliente no puede ser eliminado mientras existan facturas C vinculadas."
         # check_for_client_charges: "Cliente no puede ser eliminado mientras existan cobros vinculados."
+        job_running: "El proceso de Confirmación de Lecturas se encuentra en ejecución. Recibirás un mensaje cuando haya finalizado."
+        job_completed: "Las prelecturas elegidas han sido confirmadas. #{total} Lecturas generadas. "
     attributes:
       pre_reading:
         id: "Id"

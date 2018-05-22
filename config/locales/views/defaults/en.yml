@@ -90,6 +90,7 @@ en:
   records: "records"
   model: "Model"
   models: "Models"
+  click_here_to_show: "Click here to show"
   hours_type:
     regular: "Regular"
     overtime: "Overtime"

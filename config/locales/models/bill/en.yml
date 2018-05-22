@@ -18,7 +18,7 @@ en:
         billing: "Mass Billing"
         invoices_created: "Invoices created"
         invoices_query: "Prebilling process is running. You will receive a message when this process is finished."
-        confirm_query: "Confirmation process is running. You will receive a message when this process is finished."
+        confirm_query: "Billing process is running. You will receive a message when this process is finished."
         export_google: "Export to Google Sheets"
         massive_billing_consumption: "Mass Billing - Consumption"
         id: "Id"
@@ -94,5 +94,3 @@ en:
         charged: "Cobrado"
         detail: "Desglose de Conceptos"
         remark: "El pago de esta factura se acredita con la posesión del justificante de cobro o el adeudo bancario y no presupone el pago de las facturas anteriores. "
-
-

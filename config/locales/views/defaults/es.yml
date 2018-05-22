@@ -90,6 +90,7 @@ es:
   records: "registros"
   model: "Modelo"
   models: "Modelos"
+  click_here_to_show: "Haz clic aquí para ver"
   hours_type:
     regular: "Normal"
     overtime: "Extra"
