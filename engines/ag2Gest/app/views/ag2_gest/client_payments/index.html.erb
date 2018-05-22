@@ -932,6 +932,7 @@
           <%#= f.input :file_to_process, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
           <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.return_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_name, as: :hidden, label: false %>
         </div><!-- modal-body -->
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
@@ -950,6 +951,7 @@
         <div class="modal-body">
           <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.counter_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field hidden-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_name, as: :hidden, label: false %>
           <!--<textarea style="width:98%;" id="bank_from_counter_file_content"></textarea>-->
         </div><!-- modal-body -->
         <div class="modal-footer">
@@ -1446,7 +1448,8 @@
 
   $('#bank_from_return_file_to_process').change( function(event) {
     var output = document.getElementById("bank_from_return_file_content");
-    readFile(this, output);
+    var name = document.getElementById("bank_from_return_file_name");
+    readFile(this, output, name);
     // if (this.files && this.files[0]) {
     //   var reader = new FileReader();
     //   reader.onload = function(e) {
@@ -1457,8 +1460,10 @@
   });
 
   $('#bank_from_counter_file_to_process').change( function(event) {
+    // console.log(this.files[0].name);
     var output = document.getElementById("bank_from_counter_file_content");
-    readFile(this, output);
+    var name = document.getElementById("bank_from_counter_file_name");
+    readFile(this, output, name);
     // if (this.files && this.files[0]) {
     //   var reader = new FileReader();
     //   reader.onload = function(e) {
@@ -1468,11 +1473,12 @@
     // }
   });
 
-  function readFile(input, output) {
+  function readFile(input, output, name) {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       reader.onload = function(e) {
         output.textContent = e.target.result;
+        name.value = input.files[0].name;
       }
       reader.readAsText(input.files[0]);
     }

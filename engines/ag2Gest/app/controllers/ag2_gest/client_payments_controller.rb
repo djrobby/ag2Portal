@@ -825,6 +825,7 @@ module Ag2Gest
 
       file_to_process = params[:bank_from_counter][:file_to_process]
       file_content = params[:bank_from_counter][:file_content]
+      file_name = params[:bank_from_counter][:file_name]
 
       # Instantiate class
       # sepa = Ag2Gest::SepaCounter.new(file_to_process)
@@ -892,17 +893,19 @@ module Ag2Gest
         end # !bill.nil?
       end # sepa.lista_cobros.each
 
+      notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2)
+
       # Catalogs the processed file
-      processed_file = ProcessedFile.new(filename: file_to_process,
+      processed_file = ProcessedFile.new(filename: file_name,
                                          processed_file_type_id: ProcessedFileType::BANK_COUNTER,
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)
       if !processed_file.save
-        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
+        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! #{notice}, pero el fichero no ha podido ser catalogado." and return
       end
 
       # Notify successful ending
-      notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2) + "."
+      notice = notice + "."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
     # rescue
