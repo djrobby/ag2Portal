@@ -26,9 +26,18 @@ module Ag2Gest
     attr_accessor :lista_devoluciones
     attr_accessor :remesa
 
-    def initialize(file_to_process)
+    # def initialize(file_to_process)
+    #   # Open XML file
+    #   self.fichero = File.new(file_to_process)
+    #   # Initialize XML Document
+    #   @doc = Document.new self.fichero
+    #   # Initialize attribute default values
+    #   self.lista_devoluciones = []
+    # end
+
+    def initialize(file_content)
       # Open XML file
-      self.fichero = File.new(file_to_process)
+      self.fichero = file_content
       # Initialize XML Document
       @doc = Document.new self.fichero
       # Initialize attribute default values

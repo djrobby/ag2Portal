@@ -931,6 +931,7 @@
         <div class="modal-body">
           <%#= f.input :file_to_process, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
           <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.return_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field hidden-text-field' }, :label_html => { :class => 'form-label' } %>
         </div><!-- modal-body -->
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
@@ -947,7 +948,9 @@
       </div>
       <%= simple_form_for :bank_from_counter, url: bank_from_counter_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-from-counter-form'} do |f| %>
         <div class="modal-body">
-          <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.counter_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field file-to-process-counter' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.counter_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field hidden-text-field' }, :label_html => { :class => 'form-label' } %>
+          <!--<textarea style="width:98%;" id="bank_from_counter_file_content"></textarea>-->
         </div><!-- modal-body -->
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
@@ -1441,14 +1444,44 @@
     //alert(by_invoice);
   });
 
-  $('.file-to-process-counter').change( function(event) {
-    var tmppath = URL.createObjectURL(event.target.files[0]);
-    alert(tmppath);
+  $('#bank_from_return_file_to_process').change( function(event) {
+    var output = document.getElementById("bank_from_return_file_content");
+    readFile(this, output);
+    // if (this.files && this.files[0]) {
+    //   var reader = new FileReader();
+    //   reader.onload = function(e) {
+    //     output.textContent = e.target.result;
+    //   }
+    //   reader.readAsText(this.files[0]);
+    // }
   });
 
+  $('#bank_from_counter_file_to_process').change( function(event) {
+    var output = document.getElementById("bank_from_counter_file_content");
+    readFile(this, output);
+    // if (this.files && this.files[0]) {
+    //   var reader = new FileReader();
+    //   reader.onload = function(e) {
+    //     output.textContent = e.target.result;
+    //   }
+    //   reader.readAsText(this.files[0]);
+    // }
+  });
+
+  function readFile(input, output) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        output.textContent = e.target.result;
+      }
+      reader.readAsText(input.files[0]);
+    }
+  }
+
   $("form.bank-from-counter-form").submit(function() {
-    var file = $(this).find(".file-to-process-counter").val();
-    alert(file);
+    // var file = $(this).find(".file-to-process-counter").val();
+    // alert(file);
+    // return false;
   });
 
   /*** End forms submit ***/

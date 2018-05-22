@@ -22,9 +22,16 @@ module Ag2Gest
     attr_accessor :total_amount
     attr_accessor :lista_cobros
 
-    def initialize(file_to_process)
+    # def initialize(file_to_process)
+    #   # Set TXT file
+    #   self.fichero = file_to_process
+    #   # Initialize attribute default values
+    #   self.lista_cobros = []
+    # end
+
+    def initialize(file_content)
       # Set TXT file
-      self.fichero = file_to_process
+      self.fichero = file_content
       # Initialize attribute default values
       self.lista_cobros = []
     end
@@ -41,7 +48,9 @@ module Ag2Gest
     #
     def read_txt
       # Open TXT file
-      f = File.open(self.fichero, "r")
+      # f = File.open(self.fichero, "r")
+      # Use TXT file content
+      f = self.fichero
       # Loop thru open file lines
       f.each_line do |line|
         cod_reg = line[0,2]
@@ -75,7 +84,7 @@ module Ag2Gest
                                  reference: line[76,13])
         end
       end # f.each_line
-      f.close
+      # f.close
     end # read_txt
   end
 end

@@ -40,7 +40,7 @@ class PreReadingsWorker
             if reading.blank?
               reading = new_reading(pre_reading, s.service_point_id, s.id, user_id)
               if reading.save
-                new_reading_new_incidences(pre_reading)
+                new_reading_new_incidences(pre_reading, reading)
               end
             else
               reading_exists_new_incidences(pre_reading, reading)
@@ -53,7 +53,7 @@ class PreReadingsWorker
           if reading.blank?
             reading = new_reading(pre_reading, pre_reading.meter.service_points.first.id, nil, user_id)
             if reading.save
-              new_reading_new_incidences(pre_reading)
+              new_reading_new_incidences(pre_reading, reading)
               pre_reading.destroy
               r = true
             end
@@ -68,7 +68,7 @@ class PreReadingsWorker
         if reading.blank?
           reading = new_reading(pre_reading, Subscriber.find(pre_reading.subscriber_id).service_point_id, pre_reading.subscriber_id, user_id)
           if reading.save
-            new_reading_new_incidences(pre_reading)
+            new_reading_new_incidences(pre_reading, reading)
             pre_reading.destroy
             r = true
           end
@@ -104,9 +104,9 @@ class PreReadingsWorker
   end
 
   # Create new Reading Incidences
-  def new_reading_new_incidences(pre_reading)
+  def new_reading_new_incidences(pre_reading, reading)
     pre_reading.reading_incidence_types.each do |i|
-      ReadingIncidence.create(reading_id: pre_reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
+      ReadingIncidence.create(reading_id: reading.id, reading_incidence_type_id: i.id, created_at: Time.now)
     end
   end
 

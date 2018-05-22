@@ -732,8 +732,11 @@ module Ag2Gest
       session[:active_tab] = "banks-tab"
 
       file_to_process = params[:bank_from_return][:file_to_process]
+      file_content = params[:bank_from_counter][:file_content]
+
       # Instantiate class
-      sepa = Ag2Gest::SepaReturn.new(file_to_process)
+      # sepa = Ag2Gest::SepaReturn.new(file_to_process)
+      sepa = Ag2Gest::SepaReturn.new(file_content)
       # Read XML object
       sepa.read_xml
 
@@ -820,31 +823,33 @@ module Ag2Gest
       session[:active_tab] = "banks-tab"
 
       file_to_process = params[:bank_from_counter][:file_to_process]
-      redirect_to client_payments_path + "#tab_banks", alert: :file_to_process and return
+      file_content = params[:bank_from_counter][:file_content]
 
       # Instantiate class
-      sepa = Ag2Gest::SepaCounter.new(file_to_process)
+      # sepa = Ag2Gest::SepaCounter.new(file_to_process)
+      sepa = Ag2Gest::SepaCounter.new(file_content)
       # Read TXT object
       sepa.read_txt
 
       # Check:
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
+      # redirect_to client_payments_path + "#tab_banks", alert: sepa.nif + ' - ' + sepa.sufijo and return
       bank_account = CompanyBankAccount.like_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
-      if bank_account.nil?
+      if bank_account.nil? || bank_account.empty?
         # Can't go on if bank account doesn't exist
-        redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
+        redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
       if session[:company] != '0' && bank_account.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
-        redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
+        redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
       processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_COUNTER).first rescue nil
       if !processed_file.blank?
         # Can't go on because file has already been processed
         created_at = formatted_timestamp(processed_file.created_at)
         created_by = User.find(processed_file.created_by).email rescue 'N/A'
-        warning = "¡Advertencia!: El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
+        warning = "¡Advertencia! El fichero que intentas procesar ya ha sido procesado por " + created_by + " el " + created_at + "."
         redirect_to client_payments_path + "#tab_banks", alert: warning and return
       end
       # Search payment method for counter
@@ -855,6 +860,7 @@ module Ag2Gest
       end
       # Created by
       created_by = !current_user.nil? ? current_user.id : nil
+      # redirect_to client_payments_path + "#tab_banks", alert: "No procesado." and return
 
       # Loop thru counter items
       sepa.lista_cobros.each do |c|
@@ -891,7 +897,7 @@ module Ag2Gest
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)
       if !processed_file.save
-        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia!: Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
+        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! Cobros por ventanilla procesados correctamente, pero el fichero no ha podido ser catalogado." and return
       end
 
       # Notify successful ending
@@ -899,7 +905,7 @@ module Ag2Gest
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
     # rescue
-    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar cobros ventanilla."
+    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla."
     end
 
     #
