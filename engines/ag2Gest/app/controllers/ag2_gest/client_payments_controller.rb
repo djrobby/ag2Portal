@@ -846,7 +846,7 @@ module Ag2Gest
         # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
-      processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_COUNTER).first rescue nil
+      processed_file = ProcessedFile.by_name_and_type(file_name, ProcessedFileType::BANK_COUNTER).first rescue nil
       if !processed_file.blank?
         # Can't go on because file has already been processed
         created_at = formatted_timestamp(processed_file.created_at)

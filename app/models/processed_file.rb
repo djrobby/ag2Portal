@@ -14,7 +14,7 @@ class ProcessedFile < ActiveRecord::Base
                                   :numericality => { :only_integer => true, :greater_than => 0, :less_than => 3 }
 
   # Scopes
-  scope :by_name_and_type, -> f,t { where("filename = ? AND processed_file_type_id > ?", f, t) }
+  scope :by_name_and_type, -> f,t { where("filename = ? AND processed_file_type_id = ?", f, t) }
 
   def flow_label
     case flow
