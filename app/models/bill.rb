@@ -564,6 +564,13 @@ class Bill < ActiveRecord::Base
     joins('LEFT JOIN invoices ON bills.id=invoices.bill_id').where('invoices.bill_id IS NULL')
   end
 
+  # Search by old_no for SEPA counter
+  # Parameter must be string & 11 digits length
+  def self.search_by_old_no(o)
+    old_no_to_search = o[0,2] + '/' + o[2..-1].to_i.to_s
+    find_by_old_no(old_no_to_search)
+  end
+
   def self.to_csv(array,code=nil)
     attributes = ["Id " + array[0].sanitize(I18n.t("activerecord.models.bill.one")),
                   array[0].sanitize(I18n.t("activerecord.attributes.invoice.invoice_no")),

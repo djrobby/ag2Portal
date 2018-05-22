@@ -732,7 +732,7 @@ module Ag2Gest
       session[:active_tab] = "banks-tab"
 
       file_to_process = params[:bank_from_return][:file_to_process]
-      file_content = params[:bank_from_counter][:file_content]
+      file_content = params[:bank_from_return][:file_content]
 
       # Instantiate class
       # sepa = Ag2Gest::SepaReturn.new(file_to_process)
@@ -743,12 +743,13 @@ module Ag2Gest
       # Check:
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
+      # redirect_to client_payments_path + "#tab_banks", alert: sepa.fecha_hora_confeccion and return
       bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       if bank_account.nil?
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
-      if session[:company] != '0' && bank_account.company_id != session[:company].to_i
+      if session[:company] != '0' && bank_account.first.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
@@ -761,7 +762,7 @@ module Ag2Gest
         redirect_to client_payments_path + "#tab_banks", alert: warning and return
       end
       # Search payment method for returns
-      organization_id = bank_account.company.organization_id
+      organization_id = bank_account.first.company.organization_id
       payment_method_id = PaymentType.find(ClientPayment::BANK).return_payment_method_id rescue collection_payment_methods(organization_id).first.id
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
@@ -812,8 +813,8 @@ module Ag2Gest
       notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
-    rescue
-      redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones."
+    # rescue
+    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones."
     end
 
     # Import Counter text file (bank counter operations)
@@ -840,7 +841,7 @@ module Ag2Gest
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
-      if session[:company] != '0' && bank_account.company_id != session[:company].to_i
+      if session[:company] != '0' && bank_account.first.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
@@ -853,7 +854,7 @@ module Ag2Gest
         redirect_to client_payments_path + "#tab_banks", alert: warning and return
       end
       # Search payment method for counter
-      organization_id = bank_account.company.organization_id
+      organization_id = bank_account.first.company.organization_id
       payment_method_id = PaymentType.find(ClientPayment::COUNTER).payment_method_id rescue collection_payment_methods(organization_id).first.id
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
@@ -865,7 +866,7 @@ module Ag2Gest
       # Loop thru counter items
       sepa.lista_cobros.each do |c|
         # Search original bill
-        bill = Bill.find(c['bill_id'])
+        bill = Bill.find(c['bill_id']) rescue Bill.search_by_old_no(c['bill_id'].to_s)
         if !bill.nil?
           # Add to client payments
           bill.invoices.each do |i|
