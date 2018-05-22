@@ -502,8 +502,8 @@
     </div>
   </div>
   <div class="row">
-    <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
-    <%#= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), confirm_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
+    <%#= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), to_reading_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
+    <%= link_to t('activerecord.attributes.pre_reading.pass_to_definitive'), confirm_readings_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-primary hide" : "btn btn-primary" %>
     <span class= "pull-right">
       <%= link_to "<i class='icon-print icon-white'></i> #{t('ag2_gest.home.index.control')}".html_safe, to_pdf_pre_readings_path(:format => :pdf, prereading: {reading_routes: @routes, period: @period, project: @project }), class: @pre_readings.blank? ? "btn btn-warning hide" : "btn btn-warning", target: "_blank" %>
       <a href="<%= show_list_pre_readings_path(prereading: {reading_routes: @routes, period: @period, project: @project },format: :csv) %>" download class="btn btn-success"><%= I18n.t('activerecord.attributes.reading.exportcsv') %></a>

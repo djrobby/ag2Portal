@@ -134,7 +134,7 @@ module Ag2Gest
       unless works_complete.blank? #Sidekiq::Status::complete? session[:prebills_job_no]
         work = works_complete.first
         total = work.total
-        head 404 and return if group_no.blank?
+        head 404 and return if total.blank?
         works_complete.first.update_attributes(complete: true, status: Sidekiq::Status::status(works_complete.first.work_no))
         response_hash = { message: "Las prelecturas elegidas han sido confirmadas: #{total} Lecturas generadas. ", link_resume: readings_path, text_resume: 'Click aqui para verlas'}
         render json: response_hash

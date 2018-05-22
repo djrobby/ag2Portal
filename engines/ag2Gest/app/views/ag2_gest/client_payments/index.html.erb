@@ -947,7 +947,7 @@
       </div>
       <%= simple_form_for :bank_from_counter, url: bank_from_counter_client_payments_path, method: :post, :html => {:class => 'modal-footer-right bank-from-counter-form'} do |f| %>
         <div class="modal-body">
-          <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.counter_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.counter_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field file-to-process-counter' }, :label_html => { :class => 'form-label' } %>
         </div><!-- modal-body -->
         <div class="modal-footer">
           <%= f.button :submit, "Confirmar", disable_with: t("activerecord.attributes.pre_reading.loading"), :class => 'btn btn-primary' %>
@@ -1440,6 +1440,17 @@
     //alert($("#active_tab").val());
     //alert(by_invoice);
   });
+
+  $('.file-to-process-counter').change( function(event) {
+    var tmppath = URL.createObjectURL(event.target.files[0]);
+    alert(tmppath);
+  });
+
+  $("form.bank-from-counter-form").submit(function() {
+    var file = $(this).find(".file-to-process-counter").val();
+    alert(file);
+  });
+
   /*** End forms submit ***/
 
   $("#btn-close-modal-cash-close").click(function() {

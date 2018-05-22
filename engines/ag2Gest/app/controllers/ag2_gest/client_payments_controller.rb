@@ -820,6 +820,7 @@ module Ag2Gest
       session[:active_tab] = "banks-tab"
 
       file_to_process = params[:bank_from_counter][:file_to_process]
+      redirect_to client_payments_path + "#tab_banks", alert: :file_to_process and return
 
       # Instantiate class
       sepa = Ag2Gest::SepaCounter.new(file_to_process)
@@ -897,8 +898,8 @@ module Ag2Gest
       notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2) + "."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
-    rescue
-      redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar cobros ventanilla."
+    # rescue
+    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar cobros ventanilla."
     end
 
     #
