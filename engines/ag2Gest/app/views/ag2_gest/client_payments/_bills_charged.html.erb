@@ -53,6 +53,8 @@
                 <th>Nº</th>
                 <th>Fecha</th>
                 <th>Ult.Cobro</th>
+                <th>Ult.Cobro</th>
+                <th>Nº Cobro</th>
                 <th align="right">Total</th>
                 <th align="right">Cobrado</th>
                 <th align="right">Deuda</th>
@@ -64,6 +66,7 @@
                   <td><%= i.old_no_based_real_no %></td>
                   <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
                   <td><%= i.payment_date %></td>
+                  <td><%= i.receipt_no %></td>
                   <td align="right"><%= number_with_precision(i.receivables, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
                   <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>

@@ -416,6 +416,10 @@ class Invoice < ActiveRecord::Base
     formatted_date(client_payments.last.payment_date) rescue ''
   end
 
+  def receipt_no
+    client_payments.last.receipt_no rescue ''
+  end
+
   def item_discount_present?
     present = false
     invoice_items.each do |i|

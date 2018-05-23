@@ -90,6 +90,10 @@ class CompanyBankAccount < ActiveRecord::Base
     sanitize_string(company_name, true, true, true, false)
   end
 
+  def right_iban
+    iban.blank? ? e_format : iban
+  end
+
   def e_format
     _f = ""
     if !self.country.blank?

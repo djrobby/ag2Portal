@@ -696,7 +696,7 @@ module Ag2Gest
         sepa.tipo_esquema = scheme_type.name
         sepa.identificacion_info_pago = creditor_id + time_now.strftime("%Y%m%d%H%M%S%L") + "00"
         sepa.fecha_cobro = charge_date.to_date.strftime("%Y-%m-%d")
-        sepa.cuenta_acreedor = bank_account.e_format
+        sepa.cuenta_acreedor = bank_account.right_iban
         sepa.time_now = time_now
 
         # Generate XML object

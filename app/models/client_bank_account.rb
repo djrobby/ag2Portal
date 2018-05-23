@@ -178,6 +178,10 @@ class ClientBankAccount < ActiveRecord::Base
     (yy * 10000000000) + (mm * 100000000) + refere.to_i
   end
 
+  def right_iban
+    iban.blank? ? e_format : iban
+  end
+
   def e_format
     _f = ""
     if !self.country.blank?

@@ -113,7 +113,7 @@ class ClientPayment < ActiveRecord::Base
   end
 
   def client_bank_account_iban
-    !self.client_bank_account.blank? ? self.client_bank_account.e_format : ''
+    !self.client_bank_account.blank? ? self.client_bank_account.right_iban : ''
   end
 
   def client_bank_account_swift
