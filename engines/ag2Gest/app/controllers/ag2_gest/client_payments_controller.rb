@@ -690,7 +690,7 @@ module Ag2Gest
                                       bank_account.bank_suffix.strip + bank_account.holder_fiscal_id.strip
         sepa.fecha_hora_confeccion = time_now.strftime("%Y-%m-%d") + "T" + time_now.strftime("%H:%M:%S")
         # sepa.numero_total_adeudos = client_payments.count
-        # sepa.importe_total = en_formatted_number_without_delimiter(client_payments.sum('amount+surcharge'), 2)
+        # sepa..to_d = en_formatted_number_without_delimiter(client_payments.sum('amount+surcharge'), 2)
         sepa.nombre_presentador = bank_account.sanitized_company_name
         sepa.identificacion_presentador = creditor_id
         sepa.tipo_esquema = scheme_type.name
@@ -773,8 +773,8 @@ module Ag2Gest
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
         # Search original client payment
-        original_client_payment = ClientPayment.find(i['client_payment_id'])
-        sepa_return_code = SepaReturnCode.find_by_code(i['codigo_rechazo']).id rescue nil
+        original_client_payment = ClientPayment.find(i[:client_payment_id])
+        sepa_return_code = SepaReturnCode.find_by_code(i[:codigo_rechazo]).id rescue nil
         if !original_client_payment.nil?
           # If original payment is not confirmed, set confirmation date
           original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
@@ -788,7 +788,7 @@ module Ag2Gest
                                  subscriber_id: original_client_payment.subscriber_id,
                                  payment_date: sepa.fecha_devolucion,
                                  confirmation_date: Time.now,
-                                 amount: i['importe_adeudo'],
+                                 amount: i[:importe_adeudo],
                                  instalment_id: original_client_payment.instalment_id,
                                  client_bank_account_id: original_client_payment.client_bank_account_id,
                                  charge_account_id: original_client_payment.charge_account_id,
@@ -801,10 +801,10 @@ module Ag2Gest
         end
       end # sepa.lista_devoluciones.each
 
-      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")"
+      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total.to_d, 2) + ")"
 
       # Catalogs the processed file
-      processed_file = ProcessedFile.new(filename: file_to_process,
+      processed_file = ProcessedFile.new(filename: file_name,
                                          processed_file_type_id: ProcessedFileType::BANK_RETURN,
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)

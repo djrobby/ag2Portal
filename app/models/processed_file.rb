@@ -4,7 +4,7 @@ class ProcessedFile < ActiveRecord::Base
   OUTPUT = 2
 
   belongs_to :processed_file_type
-  attr_accessible :filename, :processed_file_type_id, :flow
+  attr_accessible :filename, :processed_file_type_id, :flow, :created_by
 
   has_paper_trail
 
