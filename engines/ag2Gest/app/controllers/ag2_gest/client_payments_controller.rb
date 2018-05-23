@@ -733,6 +733,7 @@ module Ag2Gest
 
       file_to_process = params[:bank_from_return][:file_to_process]
       file_content = params[:bank_from_return][:file_content]
+      file_name = params[:bank_from_counter][:file_name]
 
       # Instantiate class
       # sepa = Ag2Gest::SepaReturn.new(file_to_process)
@@ -745,7 +746,7 @@ module Ag2Gest
       # Belongs to current company & bank suffix
       # redirect_to client_payments_path + "#tab_banks", alert: sepa.fecha_hora_confeccion and return
       bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
-      if bank_account.nil?
+      if bank_account.nil? || bank_account.empty?
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
@@ -753,7 +754,7 @@ module Ag2Gest
         # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
-      processed_file = ProcessedFile.by_name_and_type(file_to_process, ProcessedFileType::BANK_RETURN).first rescue nil
+      processed_file = ProcessedFile.by_name_and_type(file_name, ProcessedFileType::BANK_RETURN).first rescue nil
       if !processed_file.blank?
         # Can't go on because file has already been processed
         created_at = formatted_timestamp(processed_file.created_at)
@@ -800,17 +801,19 @@ module Ag2Gest
         end
       end # sepa.lista_devoluciones.each
 
+      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")"
+
       # Catalogs the processed file
       processed_file = ProcessedFile.new(filename: file_to_process,
                                          processed_file_type_id: ProcessedFileType::BANK_RETURN,
                                          flow: ProcessedFile::INPUT,
                                          created_by: created_by)
       if !processed_file.save
-        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia!: Devoluciones procesadas correctamente, pero el fichero no ha podido ser catalogado." and return
+        redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! #{notice}, pero el fichero no ha podido ser catalogado." and return
       end
 
       # Notify successful ending
-      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total, 2) + ")."
+      notice = notice + "."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
     # rescue
@@ -908,8 +911,8 @@ module Ag2Gest
       notice = notice + "."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
-    # rescue
-    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla."
+    rescue
+      redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla."
     end
 
     #
