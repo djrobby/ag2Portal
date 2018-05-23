@@ -60,13 +60,19 @@ module Ag2Gest
       # fiscal id, bank suffix & date of order
       self.OrgnlMsgId = @doc.get_elements('//OrgnlMsgId')[0].text
       self.OrgnlPmtInfId = @doc.get_elements('//OrgnlPmtInfId')[0].text
-      begin   # based on OrgnlPmtInfId
+      begin   # sufijo based on OrgnlPmtInfId
         self.sufijo = self.OrgnlPmtInfId[4,3]
-        self.nif = self.OrgnlPmtInfId[7,9]
-        self.fecha_devolucion = self.OrgnlPmtInfId[16,8].to_date
-      rescue  # based on OrgnlMsgId
+      rescue  # sufijo based on OrgnlMsgId
         self.sufijo = self.OrgnlMsgId[22,3]
+      end
+      begin   # nif based on OrgnlPmtInfId
+        self.nif = self.OrgnlPmtInfId[7,9]
+      rescue  # nif based on OrgnlMsgId
         self.nif = self.OrgnlMsgId[25,9]
+      end
+      begin   # nif based on OrgnlPmtInfId
+        self.fecha_devolucion = self.OrgnlPmtInfId[16,8].to_date
+      rescue  # nif based on OrgnlMsgId
         self.fecha_devolucion = self.OrgnlMsgId[3,8].to_date
       end
       # Original file data

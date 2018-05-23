@@ -76,6 +76,10 @@ class SupplierBankAccount < ActiveRecord::Base
     account_no[2..-1]
   end
 
+  def right_iban
+    iban.blank? ? e_format : iban
+  end
+
   def e_format
     _f = ""
     if !self.country.blank?
