@@ -119,7 +119,7 @@ class Invoice < ActiveRecord::Base
              invoices.total_taxes total_taxes_, (invoices.totals-invoices.total_taxes) subtotal_,
              CASE WHEN ISNULL(invoices.old_no) THEN CONCAT(SUBSTR(invoices.invoice_no,1,5),'-',SUBSTR(invoices.invoice_no,6,4),'-',SUBSTR(invoices.invoice_no,10,7)) ELSE invoices.old_no END invoice_no_,
              CASE WHEN ISNULL(original_invoices.old_no) THEN CONCAT(SUBSTR(original_invoices.invoice_no,1,5),'-',SUBSTR(original_invoices.invoice_no,6,4),'-',SUBSTR(original_invoices.invoice_no,10,7)) ELSE original_invoices.old_no END original_invoice_no_,
-             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_, client_payments.created_at payment_date_, payment_methods.description payment_method_, client_payments.payment_type payment_type_")
+             companies.name biller_name_, companies.fiscal_id biller_fiscal_id_, client_payments.created_at payment_date_, payment_methods.description payment_method_, LPAD(payment_methods.id, 3, '0') payment_method_code_, client_payments.payment_type payment_type_")
     .order('invoices.id')
   }
   scope :to_csv_id, -> w {
