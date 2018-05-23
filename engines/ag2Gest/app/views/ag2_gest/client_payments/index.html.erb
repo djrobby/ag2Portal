@@ -931,7 +931,7 @@
         <div class="modal-body">
           <%#= f.input :file_to_process, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %>
           <%= f.input :file_to_process, as: :file, required: true, label: I18n.t("activerecord.attributes.client_payment.return_file"), inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
-          <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %>
+          <%= f.input :file_content, as: :text, label: false, inline_label: "Yes", :input_html => { :class => 'x-large-text-field hidden-text-field' }, :label_html => { :class => 'form-label' } %>
           <%= f.input :file_name, as: :hidden, label: false %>
         </div><!-- modal-body -->
         <div class="modal-footer">

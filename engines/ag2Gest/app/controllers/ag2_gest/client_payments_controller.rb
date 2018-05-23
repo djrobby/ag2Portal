@@ -733,7 +733,7 @@ module Ag2Gest
 
       file_to_process = params[:bank_from_return][:file_to_process]
       file_content = params[:bank_from_return][:file_content]
-      file_name = params[:bank_from_counter][:file_name]
+      file_name = params[:bank_from_return][:file_name]
 
       # Instantiate class
       # sepa = Ag2Gest::SepaReturn.new(file_to_process)

@@ -70,8 +70,8 @@ module Ag2Gest
         self.fecha_devolucion = self.OrgnlMsgId[3,8].to_date
       end
       # Original file data
-      self.numero_total_adeudos = @doc.elements['CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlNbOfTxs'].text
-      self.importe_total = @doc.elements['CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlCtrlSum'].text
+      self.numero_total_adeudos = @doc.elements['//CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlNbOfTxs'].text
+      self.importe_total = @doc.elements['//CstmrPmtStsRpt'].elements['OrgnlPmtInfAndSts'].elements['OrgnlCtrlSum'].text
       #
       # Loop thru rejections (TxInfAndSts)
       #
