@@ -25,6 +25,7 @@ module Ag2Gest
     attr_accessor :fecha_devolucion
     attr_accessor :lista_devoluciones
     attr_accessor :remesa
+    attr_accessor :remesa_old
 
     # def initialize(file_to_process)
     #   # Open XML file
@@ -82,6 +83,7 @@ module Ag2Gest
       # Loop thru rejections (TxInfAndSts)
       #
       receipt_no = ''
+      remesa_old = ''
       @doc.elements.each('//TxInfAndSts') do |e|
         referencia_adeudo = e.elements['OrgnlEndToEndId'].text
         codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
@@ -96,6 +98,7 @@ module Ag2Gest
         id_client_payment = referencia_adeudo[10,9].to_i
         receipt_no = referencia_adeudo[19,6]
         id_client = referencia_mandato.last(8).to_i
+        remesa_old = referencia_adeudo[10,6]
 
         # *** Save in returns array ***
         self.lista_devoluciones.push(referencia_adeudo: referencia_adeudo,
@@ -113,6 +116,7 @@ module Ag2Gest
                                      client_id: id_client)
       end
       self.remesa = receipt_no
+      self.remesa_old = remesa_old
     end # read_xml
   end
 end

@@ -740,6 +740,7 @@ module Ag2Gest
       sepa = Ag2Gest::SepaReturn.new(file_content)
       # Read XML object
       sepa.read_xml
+      remesa = sepa.remesa
 
       # Check:
       # Has not been proccessed previously
@@ -770,13 +771,16 @@ module Ag2Gest
       end
       created_by = !current_user.nil? ? current_user.id : nil
 
-      redirect_to client_payments_path + "#tab_banks", alert: sepa.bill_id + "-" + sepa.receipt_no and return
-
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
         # Search original client payment
-        original_client_payment = ClientPayment.find(i[:client_payment_id]) rescue ClientPayment.search_by_old_no_from_return(i[:client_payment_id].to_s)
-        # bill = Bill.find(c['bill_id']) rescue Bill.search_by_old_no(c['bill_id'].to_s)
+        begin
+          original_client_payment = ClientPayment.find(i[:client_payment_id])
+        rescue  # sufijo based on OrgnlMsgId
+          original_client_payment = ClientPayment.search_by_old_no_from_return(i[:client_payment_id].to_s)
+          remesa = sepa.remesa_old
+        end
+        # original_client_payment = ClientPayment.find(i[:client_payment_id]) rescue ClientPayment.search_by_old_no_from_return(i[:client_payment_id].to_s)
         sepa_return_code = SepaReturnCode.find_by_code(i[:codigo_rechazo]).id rescue nil
         if !original_client_payment.nil?
           # If original payment is not confirmed, set confirmation date
@@ -804,7 +808,7 @@ module Ag2Gest
         end
       end # sepa.lista_devoluciones.each
 
-      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + sepa.remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total.to_d, 2) + ")"
+      notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total.to_d, 2) + ")"
 
       # Catalogs the processed file
       processed_file = ProcessedFile.new(filename: file_name,
