@@ -175,6 +175,25 @@ class ClientPayment < ActiveRecord::Base
   #
   # Class (self) user defined methods
   #
+  # Search by old_no for SEPA return
+  # Parameter must be string & 10 digits length
+  def self.search_by_old_no_from_return(o)
+    r = nil
+    b = Bill.search_by_old_no_from_return(o)
+    if !b.nil?
+      r = search_by_bill_and_type(b.id, ClientPayment::BANK, 0, '>')
+    end
+    return r
+  end
+
+  def self.search_by_bill_and_type(b=0, t=0, a=0, s=nil)
+    case s
+    when '>' then where('bill_id=? AND payment_type=? AND amount>0', b, t).first
+    when '<' then where('bill_id=? AND payment_type=? AND amount<0', b, t).first
+    else find_by_bill_id_and_payment_type(b, t)
+    end
+  end
+
   def self.to_csv(array)
     attributes = [array[0].sanitize("Id"),
                   array[0].sanitize(I18n.t("activerecord.attributes.client_payment.receipt_no")),

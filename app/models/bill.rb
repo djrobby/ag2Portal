@@ -565,9 +565,16 @@ class Bill < ActiveRecord::Base
   end
 
   # Search by old_no for SEPA counter
-  # Parameter must be string & 11 digits length
-  def self.search_by_old_no(o)
+  # Parameter must be string & 11 digits length (SSNNNNNNNNN)
+  def self.search_by_old_no_from_counter(o)
     old_no_to_search = o[0,2] + '/' + o[2..-1].to_i.to_s
+    find_by_old_no(old_no_to_search)
+  end
+
+  # Search by old_no for SEPA return
+  # Parameter must be string & 10 digits length (NNNNNNSS00)
+  def self.search_by_old_no_from_return(o)
+    old_no_to_search = o[6,2] + '/' + o[0,6].to_i.to_s
     find_by_old_no(old_no_to_search)
   end
 
