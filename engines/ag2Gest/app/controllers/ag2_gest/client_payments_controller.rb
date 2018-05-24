@@ -823,8 +823,8 @@ module Ag2Gest
       notice = notice + "."
       redirect_to client_payments_path + "#tab_banks", notice: notice
 
-    # rescue
-    #   redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones."
+    rescue
+      redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones."
     end
 
     # Import Counter text file (bank counter operations)
