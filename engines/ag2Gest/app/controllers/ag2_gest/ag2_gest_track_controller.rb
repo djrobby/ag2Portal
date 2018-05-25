@@ -651,7 +651,7 @@ module Ag2Gest
                           .joins("LEFT JOIN invoices ON client_payments.invoice_id=invoices.id")
                           .joins("LEFT JOIN invoice_items ON invoice_items.invoice_id=invoices.id")
                           .joins("LEFT JOIN payment_methods ON payment_methods.id=client_payments.payment_method_id")
-                          .where(w).by_no
+                          .where(w).by_no.group('client_payments.id')
       # Setup filename
       title = t("activerecord.models.client_payment.few") + "_#{@from}_#{@to}"
 

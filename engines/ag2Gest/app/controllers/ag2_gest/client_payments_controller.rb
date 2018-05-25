@@ -877,23 +877,24 @@ module Ag2Gest
       # Loop thru counter items
       sepa.lista_cobros.each do |c|
         # Search original bill
-        bill = Bill.find(c['bill_id']) rescue Bill.search_by_old_no_from_counter(c['bill_id'].to_s)
+        bill = Bill.find(c[:bill_id]) rescue Bill.search_by_old_no_from_counter(c[:bill_id].to_s)
         if !bill.nil?
+          receipt_no = receipt_next_no(bill.invoices.first.invoice_no[3..4]) || '0000000000'
           # Add to client payments
           bill.invoices.each do |i|
-            cp = ClientPayment.new(receipt_no: bill.receipt_no,
+            cp = ClientPayment.new(receipt_no: receipt_no,
                                    payment_type: ClientPayment::COUNTER,
                                    bill_id: bill.id,
                                    invoice_id: i.id,
                                    payment_method_id: payment_method_id,
                                    client_id: bill.client_id,
                                    subscriber_id: bill.subscriber_id,
-                                   payment_date: c['date'],
+                                   payment_date: c[:date],
                                    confirmation_date: Time.now,
-                                   amount: c['amount'],
+                                   amount: i.debt,
                                    instalment_id: nil,
                                    client_bank_account_id: nil,
-                                   charge_account_id: bill.charge_account_id,
+                                   charge_account_id: i.charge_account_id,
                                    created_by: created_by)
             if cp.save
               # Set related invoice status to charged

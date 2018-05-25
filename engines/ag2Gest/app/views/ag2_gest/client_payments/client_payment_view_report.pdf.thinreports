@@ -44,6 +44,12 @@ end
 
 # New page & start
 report.start_new_page
+# Page header
+report.page.values report_title: I18n.t("ag2_gest.ag2_gest_track.client_report.report_title")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
 
 # Page header
 report.page.values report_title: I18n.t("ag2_gest.client_payments.report.client_payment_report")
@@ -69,6 +75,11 @@ end
 
 # List detail
 @client_payment_report.each do |i|
+  report.page.item(:from_title).hide
+  report.page.item(:to_title).hide
+  report.page.item(:from).hide
+  report.page.item(:to).hide
+  report.page.item(:l13).hide
 
   report.page.list(:default).add_row do |row|
     row.item(:date).value formatted_date(i.payment_date) unless i.payment_date.blank?
@@ -86,8 +97,10 @@ end
     row.item(:amount).value number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.amount.blank?
     if i.instalment_id.blank?
       row.item(:total).value number_with_precision(i.invoice.receivables, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice.blank?
+      row.item(:type).value PaymentType.code_with_param(i.payment_type)
     else
       row.item(:total).value number_with_precision(i.instalment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.instalment.blank?
+      row.item(:type).value PaymentType.code_with_param(i.payment_type) + ", " + I18n.t("activerecord.attributes.instalment_plan.instalment_no") + ": " + i.instalment.partial_instalment_no.to_s
     end
   #cobrado por
      # pay_type = ""
@@ -103,7 +116,6 @@ end
      # if i.payment_type == 4
      #  pay_type = "Otros"
      # end
-    row.item(:type).value PaymentType.code_with_param(i.payment_type)
   end
 
   # Store page subtotals
