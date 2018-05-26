@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180427073039) do
+ActiveRecord::Schema.define(:version => 20180526064944) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2710,6 +2710,24 @@ ActiveRecord::Schema.define(:version => 20180427073039) do
   add_index "pre_readings", ["service_point_id"], :name => "index_pre_readings_on_service_point_id"
   add_index "pre_readings", ["subscriber_id"], :name => "index_pre_readings_on_subscriber_id"
 
+  create_table "processed_file_items", :force => true do |t|
+    t.integer "processed_file_id"
+    t.integer "item_type"
+    t.string  "item_model"
+    t.integer "item_id"
+    t.string  "subitem_model"
+    t.integer "subitem_id"
+    t.decimal "item_amount",       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.string  "item_remarks"
+  end
+
+  add_index "processed_file_items", ["item_id"], :name => "index_processed_file_items_on_item_id"
+  add_index "processed_file_items", ["item_model"], :name => "index_processed_file_items_on_item_model"
+  add_index "processed_file_items", ["item_type"], :name => "index_processed_file_items_on_item_type"
+  add_index "processed_file_items", ["processed_file_id"], :name => "index_processed_file_items_on_processed_file_id"
+  add_index "processed_file_items", ["subitem_id"], :name => "index_processed_file_items_on_subitem_id"
+  add_index "processed_file_items", ["subitem_model"], :name => "index_processed_file_items_on_subitem_model"
+
   create_table "processed_file_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
@@ -2726,8 +2744,10 @@ ActiveRecord::Schema.define(:version => 20180427073039) do
     t.datetime "updated_at",                          :null => false
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.string   "fileid"
   end
 
+  add_index "processed_files", ["fileid"], :name => "index_processed_files_on_fileid"
   add_index "processed_files", ["filename"], :name => "index_processed_files_on_filename"
   add_index "processed_files", ["flow"], :name => "index_processed_files_on_flow"
   add_index "processed_files", ["processed_file_type_id"], :name => "index_processed_files_on_processed_file_type_id"
@@ -3824,7 +3844,7 @@ ActiveRecord::Schema.define(:version => 20180427073039) do
     t.boolean  "non_billable",                                                           :default => false, :null => false
     t.string   "postal_company"
     t.integer  "client_bank_accounts_count",                                             :default => 0
-    t.integer  "sub_use",                    :limit => 2,                                :default => 0
+    t.integer  "sub_use",                    :limit => 2,                                :default => 0,     :null => false
     t.string   "pub_entity"
     t.integer  "landlord_tenant",            :limit => 2,                                :default => 0,     :null => false
     t.date     "inhabitants_ending_at"

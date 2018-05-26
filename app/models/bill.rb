@@ -462,15 +462,15 @@ class Bill < ActiveRecord::Base
   # Calculated fields
   #
   def total
-    invoices.reject(&:marked_for_destruction?).sum(&:totals)
+    (invoices.reject(&:marked_for_destruction?).sum(&:totals)).round(2)
   end
 
   def receivable
-    invoices.reject(&:marked_for_destruction?).sum(&:receivables)
+    (invoices.reject(&:marked_for_destruction?).sum(&:receivables)).round(2)
   end
 
   def collected
-    client_payments.sum(:amount)
+    (client_payments.sum(:amount)).round(2)
   end
 
   def debt

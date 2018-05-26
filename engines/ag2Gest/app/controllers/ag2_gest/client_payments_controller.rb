@@ -710,7 +710,6 @@ module Ag2Gest
 
         # Notify successful ending
         # redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
-        # redirect_to client_payments_path + "#tab_banks?active_tab=banks_tab",
         redirect_to client_payments_path + "#tab_banks",
                     notice: (I18n.t('ag2_gest.client_payments.index.bank_to_order_ok') +
                             " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name), file_path, download: file_name}"
@@ -783,28 +782,34 @@ module Ag2Gest
         # original_client_payment = ClientPayment.find(i[:client_payment_id]) rescue ClientPayment.search_by_old_no_from_return(i[:client_payment_id].to_s)
         sepa_return_code = SepaReturnCode.find_by_code(i[:codigo_rechazo]).id rescue nil
         if !original_client_payment.nil?
-          # If original payment is not confirmed, set confirmation date
-          original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
-          # Add rejections to client payments
-          cp = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
-                                 payment_type: ClientPayment::BANK,
-                                 bill_id: original_client_payment.bill_id,
-                                 invoice_id: original_client_payment.invoice_id,
-                                 payment_method_id: payment_method_id,
-                                 client_id: original_client_payment.client_id,
-                                 subscriber_id: original_client_payment.subscriber_id,
-                                 payment_date: sepa.fecha_devolucion,
-                                 confirmation_date: Time.now,
-                                 amount: i[:importe_adeudo],
-                                 instalment_id: original_client_payment.instalment_id,
-                                 client_bank_account_id: original_client_payment.client_bank_account_id,
-                                 charge_account_id: original_client_payment.charge_account_id,
-                                 created_by: created_by,
-                                 sepa_return_code_id: sepa_return_code)
-          if cp.save
-            # Set related invoice status to pending
-            original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
-          end
+          # Check if it's already returned
+          if !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?(original_client_payment.receipt_no,
+                                                                                       original_client_payment.invoice_id,
+                                                                                       ClientPayment::BANK,
+                                                                                       payment_method_id)
+            # If original payment is not confirmed, set confirmation date
+            original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
+            # Add rejections to client payments
+            cp = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
+                                  payment_type: ClientPayment::BANK,
+                                  bill_id: original_client_payment.bill_id,
+                                  invoice_id: original_client_payment.invoice_id,
+                                  payment_method_id: payment_method_id,
+                                  client_id: original_client_payment.client_id,
+                                  subscriber_id: original_client_payment.subscriber_id,
+                                  payment_date: sepa.fecha_devolucion,
+                                  confirmation_date: Time.now,
+                                  amount: i[:importe_adeudo],
+                                  instalment_id: original_client_payment.instalment_id,
+                                  client_bank_account_id: original_client_payment.client_bank_account_id,
+                                  charge_account_id: original_client_payment.charge_account_id,
+                                  created_by: created_by,
+                                  sepa_return_code_id: sepa_return_code)
+            if cp.save
+              # Set related invoice status to pending
+              original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+            end
+          end # !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?
         end
       end # sepa.lista_devoluciones.each
 
@@ -882,23 +887,27 @@ module Ag2Gest
           receipt_no = receipt_next_no(bill.invoices.first.invoice_no[3..4]) || '0000000000'
           # Add to client payments
           bill.invoices.each do |i|
-            cp = ClientPayment.new(receipt_no: receipt_no,
-                                   payment_type: ClientPayment::COUNTER,
-                                   bill_id: bill.id,
-                                   invoice_id: i.id,
-                                   payment_method_id: payment_method_id,
-                                   client_id: bill.client_id,
-                                   subscriber_id: bill.subscriber_id,
-                                   payment_date: c[:date],
-                                   confirmation_date: Time.now,
-                                   amount: i.debt,
-                                   instalment_id: nil,
-                                   client_bank_account_id: nil,
-                                   charge_account_id: i.charge_account_id,
-                                   created_by: created_by)
-            if cp.save
-              # Set related invoice status to charged
-              i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+            # Check if invoice is already charged
+            if (i.debt > 0 && i.invoice_status_id != InvoiceStatus::CHARGED &&
+                !ClientPayment.is_there_one_with_this_receipt_invoice_and_type?(receipt_no, i.id, ClientPayment::COUNTER))
+              cp = ClientPayment.new(receipt_no: receipt_no,
+                                    payment_type: ClientPayment::COUNTER,
+                                    bill_id: bill.id,
+                                    invoice_id: i.id,
+                                    payment_method_id: payment_method_id,
+                                    client_id: bill.client_id,
+                                    subscriber_id: bill.subscriber_id,
+                                    payment_date: c[:date],
+                                    confirmation_date: Time.now,
+                                    amount: i.debt,
+                                    instalment_id: nil,
+                                    client_bank_account_id: nil,
+                                    charge_account_id: i.charge_account_id,
+                                    created_by: created_by)
+              if cp.save
+                # Set related invoice status to charged
+                i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+              end
             end
           end # bill.invoices.each
         end # !bill.nil?

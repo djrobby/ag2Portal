@@ -500,35 +500,35 @@ class Invoice < ActiveRecord::Base
   end
 
   def subtotal
-    tax_breakdown.sum{|t| t[1]}
+    (tax_breakdown.sum{|t| t[1]}).round(2)
   end
 
   def bonus
-    (discount_pct / 100) * subtotal
+    ((discount_pct / 100) * subtotal).round(2)
   end
 
   def taxable
-    subtotal - bonus
+    (subtotal - bonus).round(2)
   end
 
   def taxes
-    tax_breakdown.sum{|t| t[2]}
+    (tax_breakdown.sum{|t| t[2]}).round(2)
   end
 
   def total
-    (taxes + taxable).truncate(4)
+    (taxes + taxable).round(2)
   end
 
   def receivable
-    total - exemption
+    (total - exemption).round(2)
   end
 
   def collected
-    client_payments.sum(:amount)
+    (client_payments.sum(:amount)).round(2)
   end
 
   def debt
-    receivables - collected
+    (receivables - collected).round(2)
   end
 
   def current_debt

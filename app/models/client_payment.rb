@@ -73,7 +73,7 @@ class ClientPayment < ActiveRecord::Base
   end
 
   def total
-    amount + surcharge
+    (amount + surcharge).round(2)
   end
 
   def instalment_invoices
@@ -191,6 +191,34 @@ class ClientPayment < ActiveRecord::Base
     when '>' then where('bill_id=? AND payment_type=? AND amount>0', b, t).first
     when '<' then where('bill_id=? AND payment_type=? AND amount<0', b, t).first
     else find_by_bill_id_and_payment_type(b, t)
+    end
+  end
+
+  def self.search_by_receipt_invoice_type(r=nil, i=0, t=0)
+    find_by_receipt_no_and_invoice_id_and_payment_type(r, i, t)
+  end
+
+  def self.search_by_receipt_invoice_type_method(r=nil, i=0, t=0, m=0)
+    find_by_receipt_no_and_invoice_id_and_payment_type_and_payment_method_id(r, i, t, m)
+  end
+
+  def self.search_return_by_receipt_invoice_type_method(r=nil, i=0, t=0, m=0)
+    where('receipt_no=? AND invoice_id=? AND payment_type=? AND payment_method_id=? and amount<0', r, i, t, m).first rescue nil
+  end
+
+  def self.is_there_one_with_this_receipt_invoice_and_type?(r=nil, i=0, t=0)
+    if search_by_receipt_invoice_type(r, i, t).nil?
+      return false
+    else
+      return true
+    end
+  end
+
+  def self.is_there_return_with_this_receipt_invoice_type_and_method?(r=nil, i=0, t=0, m=0)
+    if search_return_by_receipt_invoice_type_method(r, i, t, m).nil?
+      return false
+    else
+      return true
     end
   end
 
