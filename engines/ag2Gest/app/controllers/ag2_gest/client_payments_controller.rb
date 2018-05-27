@@ -877,7 +877,10 @@ module Ag2Gest
       end
       # Created by
       created_by = !current_user.nil? ? current_user.id : nil
-      # redirect_to client_payments_path + "#tab_banks", alert: "No procesado." and return
+      # Processed file items
+      processed_file_items = []
+      processed_model = nil
+      processed_id = nil
 
       # Loop thru counter items
       sepa.lista_cobros.each do |c|
@@ -891,23 +894,41 @@ module Ag2Gest
             if (i.debt > 0 && i.invoice_status_id != InvoiceStatus::CHARGED &&
                 !ClientPayment.is_there_one_with_this_receipt_invoice_and_type?(receipt_no, i.id, ClientPayment::COUNTER))
               cp = ClientPayment.new(receipt_no: receipt_no,
-                                    payment_type: ClientPayment::COUNTER,
-                                    bill_id: bill.id,
-                                    invoice_id: i.id,
-                                    payment_method_id: payment_method_id,
-                                    client_id: bill.client_id,
-                                    subscriber_id: bill.subscriber_id,
-                                    payment_date: c[:date],
-                                    confirmation_date: Time.now,
-                                    amount: i.debt,
-                                    instalment_id: nil,
-                                    client_bank_account_id: nil,
-                                    charge_account_id: i.charge_account_id,
-                                    created_by: created_by)
+                                     payment_type: ClientPayment::COUNTER,
+                                     bill_id: bill.id,
+                                     invoice_id: i.id,
+                                     payment_method_id: payment_method_id,
+                                     client_id: bill.client_id,
+                                     subscriber_id: bill.subscriber_id,
+                                     payment_date: c[:date],
+                                     confirmation_date: Time.now,
+                                     amount: i.debt,
+                                     instalment_id: nil,
+                                     client_bank_account_id: nil,
+                                     charge_account_id: i.charge_account_id,
+                                     created_by: created_by)
               if cp.save
                 # Set related invoice status to charged
                 i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+                # Processed file item
+                processed_model = 'ClientPayment'
+                processed_id = cp.id
+              else
+                # Readed but not processed file item
+                processed_model = nil
+                processed_id = nil
               end
+              # Cache processed file item
+              processed_file_items.push(processed_file_id: 0,
+                                        item_amount: c[:amount],
+                                        item_id: bill.id,
+                                        item_remarks: '',
+                                        item_type: ClientPayment::COUNTER,
+                                        subitem_id: i.id,
+                                        item_model: 'Bill',
+                                        subitem_model: 'Invoice',
+                                        processed_model: processed_model,
+                                        processed_id: processed_id)
             end
           end # bill.invoices.each
         end # !bill.nil?
@@ -916,13 +937,18 @@ module Ag2Gest
       notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2)
 
       # Catalogs the processed file
-      processed_file = ProcessedFile.new(filename: file_name,
-                                         processed_file_type_id: ProcessedFileType::BANK_COUNTER,
-                                         flow: ProcessedFile::INPUT,
-                                         created_by: created_by)
+      processed_file = catalog_processed_file(file_name, ProcessedFileType::BANK_COUNTER,
+                                              ProcessedFile::INPUT, created_by,
+                                              '', sepa.process_date_time)
+      # processed_file = ProcessedFile.new(filename: file_name,
+      #                                    processed_file_type_id: ProcessedFileType::BANK_COUNTER,
+      #                                    flow: ProcessedFile::INPUT,
+      #                                    created_by: created_by)
       if !processed_file.save
         redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! #{notice}, pero el fichero no ha podido ser catalogado." and return
       end
+      # Catalogs the processed file items
+      catalog_processed_file_items(processed_file.id, processed_file_items, ProcessedFileType::BANK_COUNTER)
 
       # Notify successful ending
       notice = notice + "."
@@ -930,6 +956,30 @@ module Ag2Gest
 
     rescue
       redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla."
+    end
+
+    def catalog_processed_file(file_name, file_type, flow, created_by, file_id, file_date)
+      return ProcessedFile.new(filename: file_name,
+                               processed_file_type_id: file_type,
+                               flow: flow,
+                               created_by: created_by,
+                               fileid: file_id,
+                               filedate: file_date)
+    end
+
+    def catalog_processed_file_items(processed_file_id, items, file_type)
+      items.each do |i|
+        ProcessedFileItem.create(processed_file_id: processed_file_id,
+                                 item_amount: i[:item_amount],
+                                 item_id: i[:item_id],
+                                 item_remarks: i[:item_remarks],
+                                 item_type: i[:item_type],
+                                 subitem_id: i[:subitem_id],
+                                 item_model: i[:item_model],
+                                 subitem_model: i[:subitem_model],
+                                 processed_model: i[:processed_model],
+                                 processed_id: i[:processed_id])
+      end # items.each
     end
 
     #

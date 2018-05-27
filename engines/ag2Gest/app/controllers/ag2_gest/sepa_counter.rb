@@ -61,8 +61,10 @@ module Ag2Gest
           self.total_amount = (amount[0,10] + '.' + amount[10,2]).to_d
         elsif cod_reg == '02'
           # Header line
+          pdate = line[36,6]
           self.nif = line[10,8]
           self.sufijo = line[18,3]
+          self.process_date_time = Date.parse(pdate[4,2] + pdate[2,2] + pdate[0,2])
         else
           # Invoice charged line: Save in array
           amount = line[36,12]

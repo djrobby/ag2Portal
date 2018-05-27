@@ -4,7 +4,7 @@ class ProcessedFile < ActiveRecord::Base
   OUTPUT = 2
 
   belongs_to :processed_file_type
-  attr_accessible :filename, :processed_file_type_id, :flow, :created_by, :fileid
+  attr_accessible :filename, :processed_file_type_id, :flow, :created_by, :fileid, :filedate
 
   has_many :processed_file_items, dependent: :destroy
 
