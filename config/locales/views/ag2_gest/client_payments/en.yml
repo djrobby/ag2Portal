@@ -29,6 +29,8 @@ en:
         other_movements_c: "Movements"
         other_movements: "Other movements"
         collect_instalments: "Collect instalments"
+        processed_files_c: "P.Files"
+        processed_files: "Processed files"
         back_to_pending: "Back to pending"
         cash: "Cash"
         bank: "Bank"

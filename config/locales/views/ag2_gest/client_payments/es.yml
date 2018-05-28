@@ -29,6 +29,8 @@ es:
         other_movements_c: "Movimientos"
         other_movements: "Otros movimientos"
         collect_instalments: "Cobrar cuotas"
+        processed_files_c: "F.Procesados"
+        processed_files: "Ficheros procesados"
         back_to_pending: "Devolver a pendientes"
         cash: "Caja"
         bank: "Banco"
