@@ -131,6 +131,10 @@ class Bill < ActiveRecord::Base
   def full_id
     self.id.blank? ? '0000000000' : self.id.to_s.rjust(10,'0')
   end
+  # 9 digits Id for bank orders
+  def full_id9
+    self.id.blank? ? '000000000' : self.id.to_s.rjust(9,'0')
+  end
 
   # First invoice no. (own, service)
   def real_no

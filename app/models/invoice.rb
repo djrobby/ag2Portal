@@ -194,9 +194,19 @@ class Invoice < ActiveRecord::Base
     invoice_items.flatten.select{|item| item.tariff.billable_item.billable_concept_id == billable_concept.to_i}.sum(&:amount)
   end
 
+  # Formal No
   def full_no
     # Invoice no (Invoice code & office & year & sequential number) => SSSOO-YYYY-NNNNNNN
     invoice_no.blank? ? "" : invoice_no[0..4] + '-' + invoice_no[5..8] + '-' + invoice_no[9..15]
+  end
+
+  # 10 digits Id for bank orders
+  def full_id
+    self.id.blank? ? '0000000000' : self.id.to_s.rjust(10,'0')
+  end
+  # 9 digits Id for bank orders
+  def full_id9
+    self.id.blank? ? '000000000' : self.id.to_s.rjust(9,'0')
   end
 
   # Old program No

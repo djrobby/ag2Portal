@@ -35,6 +35,7 @@ module Ag2Gest
     attr_accessor :concepto
     attr_accessor :time_now
     attr_accessor :remesa
+    attr_accessor :referencia_tipo  # by_invoice==true->I, by_invoice==false->B
 
     def initialize(client_payments, by_invoice)
       # Receive unconfirmed payments to write
@@ -51,9 +52,11 @@ module Ag2Gest
       if by_invoice == true
         self.numero_total_adeudos = @client_payments.count
         self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge'), 2)
+        self.referencia_tipo = 'I'
       else
         self.numero_total_adeudos = @client_payments.count.count
         self.importe_total = en_formatted_number_without_delimiter(@client_payments.sum('amount+surcharge').values.sum, 2)
+        self.referencia_tipo = 'B'
       end
     end
 
@@ -150,8 +153,16 @@ module Ag2Gest
               self.identificacion_instruccion = self.time_now.strftime("%Y%m%d%H%M%S%L") + i.to_s.rjust(4,'0')
               self.nombre_deudor = cp.sanitized_client_bank_account_holder
               self.cuenta_deudor = cp.client_bank_account_iban
-              # Max. 35: bill_id 10 + client_payment_id 9 + receipt_no 6 + date 10
-              self.referencia_adeudo = cp.bill.full_id + cp.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%y%m%d%H%M")
+              # Max. 35: invoice_id/bill_id 9 + client_payment_id 9 + receipt_no 6 + date 10 + referencia_tipo 1
+              if referencia_tipo == 'I'
+                # by_invoice
+                self.referencia_adeudo = cp.invoice.full_id9
+              else
+                # by_bill (Warning: cp.full_id is the first ClientPayment found!!)
+                self.referencia_adeudo = cp.bill.full_id9
+              end
+              self.referencia_adeudo += cp.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%y%m%d%H%M") + referencia_tipo
+              # self.referencia_adeudo = cp.bill.full_id + cp.full_id + cp.receipt_no.rjust(6,'0') + self.time_now.strftime("%y%m%d%H%M")
               # *** Write payment line ***
               @xml.DrctDbtTxInf do
                 @xml.PmtId do

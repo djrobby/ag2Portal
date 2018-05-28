@@ -756,7 +756,6 @@ module Ag2Gest
       sepa = Ag2Gest::SepaReturn.new(file_content)
       # Read XML object
       sepa.read_xml
-      remesa = sepa.remesa
 
       # Check:
       # Has not been proccessed previously
@@ -787,11 +786,19 @@ module Ag2Gest
       end
       # Created by
       created_by = !current_user.nil? ? current_user.id : nil
+      # Remittance
+      remesa = sepa.remesa
       # Processed file items
       processed_file_items = []
       processed_model = nil
       processed_id = nil
 
+      # Returns depending on referencia_tipo
+      if self.referencia_tipo == 'I'
+        processed_file_items, remesa = return_by_invoice(sepa, payment_method_id, created_by)
+      else
+        processed_file_items, remesa = return_by_bill(sepa, payment_method_id, created_by)
+      end
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
         # Search original client payment
@@ -859,10 +866,6 @@ module Ag2Gest
       processed_file = catalog_processed_file(file_name, ProcessedFileType::BANK_RETURN,
                                               ProcessedFile::INPUT, created_by,
                                               '', sepa.process_date_time)
-      # processed_file = ProcessedFile.new(filename: file_name,
-      #                                    processed_file_type_id: ProcessedFileType::BANK_RETURN,
-      #                                    flow: ProcessedFile::INPUT,
-      #                                    created_by: created_by)
       if !processed_file.save
         redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! #{notice}, pero el fichero no ha podido ser catalogado." and return
       end
@@ -875,6 +878,75 @@ module Ag2Gest
 
     rescue
       redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones."
+    end
+
+    def return_by_invoice(sepa, payment_method_id, created_by)
+      processed_model = nil
+      processed_id = nil
+      remesa = sepa.remesa
+      # Loop thru return/reject items
+      sepa.lista_devoluciones.each do |i|
+        # Search original client payment
+        begin
+          original_client_payment = ClientPayment.find(i[:client_payment_id])
+        rescue  # sufijo based on OrgnlMsgId
+          original_client_payment = ClientPayment.search_by_old_no_from_return(i[:client_payment_id].to_s)
+          remesa = sepa.remesa_old
+        end
+        sepa_return_code = SepaReturnCode.find_by_code(i[:codigo_rechazo]).id rescue nil
+        if !original_client_payment.nil?
+          # Check if it's already returned
+          if !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?(original_client_payment.receipt_no,
+                                                                                       original_client_payment.invoice_id,
+                                                                                       ClientPayment::BANK,
+                                                                                       payment_method_id)
+            # If original payment is not confirmed, set confirmation date
+            original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
+            # Add rejections to client payments
+            cp = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
+                                  payment_type: ClientPayment::BANK,
+                                  bill_id: original_client_payment.bill_id,
+                                  invoice_id: original_client_payment.invoice_id,
+                                  payment_method_id: payment_method_id,
+                                  client_id: original_client_payment.client_id,
+                                  subscriber_id: original_client_payment.subscriber_id,
+                                  payment_date: sepa.fecha_devolucion,
+                                  confirmation_date: Time.now,
+                                  amount: i[:importe_adeudo],
+                                  instalment_id: original_client_payment.instalment_id,
+                                  client_bank_account_id: original_client_payment.client_bank_account_id,
+                                  charge_account_id: original_client_payment.charge_account_id,
+                                  created_by: created_by,
+                                  sepa_return_code_id: sepa_return_code)
+            if cp.save
+              # Set related invoice status to pending
+              original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+              # Processed file item
+              processed_model = 'ClientPayment'
+              processed_id = cp.id
+            else
+              # Readed but not processed file item
+              processed_model = nil
+              processed_id = nil
+            end
+            # Cache processed file item
+            processed_file_items.push(processed_file_id: 0,
+                                      item_amount: i[:importe_adeudo],
+                                      item_id: original_client_payment.bill_id,
+                                      item_remarks: '',
+                                      item_type: ClientPayment::BANK,
+                                      subitem_id: original_client_payment.invoice_id,
+                                      item_model: 'Bill',
+                                      subitem_model: 'Invoice',
+                                      processed_model: processed_model,
+                                      processed_id: processed_id)
+          end # !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?
+        end
+      end # lista_devoluciones.each
+      return processed_file_items, remesa
+    end
+
+    def return_by_bill(lista_devoluciones)
     end
 
     # Import Counter text file (bank counter operations)

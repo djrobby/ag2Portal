@@ -27,6 +27,7 @@ module Ag2Gest
     attr_accessor :lista_devoluciones
     attr_accessor :remesa
     attr_accessor :remesa_old
+    attr_accessor :referencia_tipo  # by_invoice==true->I, by_invoice==false->B
 
     # def initialize(file_to_process)
     #   # Open XML file
@@ -86,6 +87,7 @@ module Ag2Gest
       #
       receipt_no = ''
       remesa_old = ''
+      referencia_tipo = ''
       @doc.elements.each('//TxInfAndSts') do |e|
         referencia_adeudo = e.elements['OrgnlEndToEndId'].text
         codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
@@ -96,7 +98,8 @@ module Ag2Gest
         concepto = e.elements['OrgnlTxRef'].elements['RmtInf'].elements['Ustrd'].text
         nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
-        id_bill = referencia_adeudo.first(10).to_i
+        referencia_tipo = referencia_adeudo[34,1]
+        id_bill = referencia_adeudo.first(10).to_i # if referencia_tipo=='I'->invoice_id else referencia_tipo!='I'->bill_id
         id_client_payment = referencia_adeudo[10,9].to_i
         receipt_no = referencia_adeudo[19,6]
         id_client = referencia_mandato.last(8).to_i
@@ -119,6 +122,7 @@ module Ag2Gest
       end
       self.remesa = receipt_no
       self.remesa_old = remesa_old
+      self.referencia_tipo = referencia_tipo
     end # read_xml
   end
 end

@@ -45,7 +45,7 @@ class ClientPayment < ActiveRecord::Base
   scope :in_others, -> { where(payment_type: OTHERS) }
   # By bill for bank order
   scope :by_bill_for_bank_order, -> cp {
-    select("min(id) id, min(receipt_no) receipt_no, min(payment_type) payment_type,bill_id,
+    select("min(id) id, min(receipt_no) receipt_no, min(payment_type) payment_type, bill_id,
             min(invoice_id) invoice_id,min(payment_method_id) payment_method_id, min(client_id) client_id,
             min(subscriber_id) subscriber_id, min(payment_date) payment_date, min(confirmation_date) confirmation_date,
             sum(amount) amount, sum(surcharge) surcharge, min(client_bank_account_id) client_bank_account_id,
