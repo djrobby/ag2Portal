@@ -14,6 +14,7 @@ module Ag2Gest
 
     # Attributes
     attr_accessor :identificacion_fichero
+    attr_accessor :process_date_time
     attr_accessor :fecha_hora_confeccion
     attr_accessor :numero_total_adeudos
     attr_accessor :importe_total
@@ -33,6 +34,7 @@ module Ag2Gest
     attr_accessor :entidad_deudor
     attr_accessor :concepto
     attr_accessor :time_now
+    attr_accessor :remesa
 
     def initialize(client_payments, by_invoice)
       # Receive unconfirmed payments to write
@@ -127,6 +129,7 @@ module Ag2Gest
             #
             i = 0
             @client_payments.each do |cp|
+              self.remesa = cp.receipt_no.rjust(6,'0')
               # Look for data & Set attribute values
               anombre = ''
               adirecc = ''

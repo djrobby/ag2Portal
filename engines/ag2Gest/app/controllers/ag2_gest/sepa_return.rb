@@ -15,6 +15,7 @@ module Ag2Gest
 
     # Attributes
     attr_accessor :fichero
+    attr_accessor :process_date_time
     attr_accessor :OrgnlMsgId
     attr_accessor :OrgnlPmtInfId
     attr_accessor :fecha_hora_confeccion
@@ -58,6 +59,7 @@ module Ag2Gest
     def read_xml
       # date & time of rejections
       self.fecha_hora_confeccion = @doc.get_elements('//CreDtTm')[0].text
+      self.process_date_time = Date.parse(self.fecha_hora_confeccion[0,10]) rescue Date.today
       # fiscal id, bank suffix & date of order
       self.OrgnlMsgId = @doc.get_elements('//OrgnlMsgId')[0].text
       self.OrgnlPmtInfId = @doc.get_elements('//OrgnlPmtInfId')[0].text

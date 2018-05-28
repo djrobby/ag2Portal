@@ -689,6 +689,7 @@ module Ag2Gest
         sepa.identificacion_fichero = "PRE" + time_now.strftime("%Y%m%d%H%M%S%L") + "00" +
                                       bank_account.bank_suffix.strip + bank_account.holder_fiscal_id.strip
         sepa.fecha_hora_confeccion = time_now.strftime("%Y-%m-%d") + "T" + time_now.strftime("%H:%M:%S")
+        sepa.process_date_time = Date.today
         # sepa.numero_total_adeudos = client_payments.count
         # sepa..to_d = en_formatted_number_without_delimiter(client_payments.sum('amount+surcharge'), 2)
         sepa.nombre_presentador = bank_account.sanitized_company_name
@@ -703,16 +704,32 @@ module Ag2Gest
         xml = sepa.write_xml
         # xml = by_invoice == true ? sepa.write_xml : sepa.write_xml_by_bill
 
+        # Created by
+        created_by = !current_user.nil? ? current_user.id : nil
+        # Bank order (remesa)
+        remesa = sepa.remesa
+
         # Write & Upload XML file
         file_name = sepa.identificacion_fichero + ".xml"
         file_path = "/uploads/" + sepa.identificacion_fichero + ".xml"
         upload_xml_file(file_name, xml)
 
+        # Catalogs the processed file
+        processed_file = catalog_processed_file(file_name, ProcessedFileType::BANK_ORDER,
+                                                ProcessedFile::OUTPUT, created_by,
+                                                '', sepa.process_date_time)
+        if !processed_file.save
+          redirect_to client_payments_path + "#tab_banks",
+                      alert: (I18n.t('ag2_gest.client_payments.index.bank_to_order_no_catalog') +
+                              " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name, var1: remesa), file_path, download: file_name}"
+                              ).html_safe
+        end
+
         # Notify successful ending
         # redirect_to client_payments_path, notice: "Factura/s y plazo/s remesados sin incidencias."
         redirect_to client_payments_path + "#tab_banks",
                     notice: (I18n.t('ag2_gest.client_payments.index.bank_to_order_ok') +
-                            " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name), file_path, download: file_name}"
+                            " #{view_context.link_to I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name, var1: remesa), file_path, download: file_name}"
                             ).html_safe
       end
 
@@ -768,7 +785,12 @@ module Ag2Gest
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
       end
+      # Created by
       created_by = !current_user.nil? ? current_user.id : nil
+      # Processed file items
+      processed_file_items = []
+      processed_model = nil
+      processed_id = nil
 
       # Loop thru return/reject items
       sepa.lista_devoluciones.each do |i|
@@ -808,7 +830,25 @@ module Ag2Gest
             if cp.save
               # Set related invoice status to pending
               original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+              # Processed file item
+              processed_model = 'ClientPayment'
+              processed_id = cp.id
+            else
+              # Readed but not processed file item
+              processed_model = nil
+              processed_id = nil
             end
+            # Cache processed file item
+            processed_file_items.push(processed_file_id: 0,
+                                      item_amount: i[:importe_adeudo],
+                                      item_id: original_client_payment.bill_id,
+                                      item_remarks: '',
+                                      item_type: ClientPayment::BANK,
+                                      subitem_id: original_client_payment.invoice_id,
+                                      item_model: 'Bill',
+                                      subitem_model: 'Invoice',
+                                      processed_model: processed_model,
+                                      processed_id: processed_id)
           end # !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?
         end
       end # sepa.lista_devoluciones.each
@@ -816,13 +856,18 @@ module Ag2Gest
       notice = sepa.lista_devoluciones.size.to_s + " Devoluciones procesadas correctamente (Remesa: " + remesa + "=" + sepa.numero_total_adeudos + "x" + formatted_number(sepa.importe_total.to_d, 2) + ")"
 
       # Catalogs the processed file
-      processed_file = ProcessedFile.new(filename: file_name,
-                                         processed_file_type_id: ProcessedFileType::BANK_RETURN,
-                                         flow: ProcessedFile::INPUT,
-                                         created_by: created_by)
+      processed_file = catalog_processed_file(file_name, ProcessedFileType::BANK_RETURN,
+                                              ProcessedFile::INPUT, created_by,
+                                              '', sepa.process_date_time)
+      # processed_file = ProcessedFile.new(filename: file_name,
+      #                                    processed_file_type_id: ProcessedFileType::BANK_RETURN,
+      #                                    flow: ProcessedFile::INPUT,
+      #                                    created_by: created_by)
       if !processed_file.save
         redirect_to client_payments_path + "#tab_banks", alert: "¡Advertencia! #{notice}, pero el fichero no ha podido ser catalogado." and return
       end
+      # Catalogs the processed file items
+      catalog_processed_file_items(processed_file.id, processed_file_items, ProcessedFileType::BANK_RETURN)
 
       # Notify successful ending
       notice = notice + "."

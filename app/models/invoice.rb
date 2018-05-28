@@ -603,7 +603,7 @@ class Invoice < ActiveRecord::Base
       bill.subscriber.code_full_name_or_company_fiscal unless (bill.blank? || bill.subscriber.blank?)
     end
     string :supply_address, :multiple => true do
-      bill.subscriber.subscriber_supply_address.supply_address unless (bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
+      bill.subscriber.subscriber_supply_address.supply_address unless (bill.blank? || bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
     end
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
     integer :id

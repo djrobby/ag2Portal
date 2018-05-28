@@ -64,7 +64,7 @@ module Ag2Gest
           pdate = line[36,6]
           self.nif = line[10,8]
           self.sufijo = line[18,3]
-          self.process_date_time = Date.parse(pdate[4,2] + pdate[2,2] + pdate[0,2])
+          self.process_date_time = Date.parse(pdate[4,2] + pdate[2,2] + pdate[0,2]) rescue Date.today
         else
           # Invoice charged line: Save in array
           amount = line[36,12]
