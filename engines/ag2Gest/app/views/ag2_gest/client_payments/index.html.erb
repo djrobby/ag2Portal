@@ -108,13 +108,14 @@
     }
   }
 
-  function setupAllSelect2(p, r, u, c, s, a) {
+  function setupAllSelect2(p, r, u, c, s, a, b) {
     projectsSelect2(p);
     periodsSelect2(r);
     usersSelect2(u);
     clientsSelect2(c);
     subscribersSelect2(s);
     // addressesSelect2(a);
+    billersSelect2(s);
   }
 
   function projectsSelect2(intialValue) {
@@ -280,6 +281,33 @@
     });
   }
 
+  function billersSelect2(intialValue) {
+    $('#Biller').select2({
+      formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
+      dropdownCssClass: 'shrinked',
+      dropdownAutoWidth: true,
+      placeholder: intialValue,
+      allowClear: true,
+      ajax: {
+        url: "/search_companies",
+        dataType: "json",
+        delay: 250,
+        data: function(term, page) {
+          return {
+            q: term || '',
+            page: page || 1
+          };
+        },
+        results: function(data, page) {
+          return {
+            results: data
+          }
+        },
+        cache: true
+      }
+    });
+  }
+
   $(document).ready(function() {
     $('.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -318,7 +346,7 @@
 
     // Setup special search (select2)
     // setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @address %>");
-    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>");
+    setupAllSelect2("<%= @project %>", "<%= @period %>", "<%= @user %>", "<%= @client %>", "<%= @subscriber %>", "<%= @biller %>");
 
     // Set active tab
     _active_tab = $("#active_tab").val();
@@ -436,6 +464,7 @@
       // $("#SubscriberFiscal").val("");
       // $("#StreetName").select2("val", "");
       $("#StreetName").val("");
+      $("#Biller").select2("val", "");
       $("#BankAccount").val("");
       $("#BankOrder").val("");
       $("#User").select2("val", "");
@@ -589,9 +618,12 @@
           <%= hidden_field_tag "per_page_others", params[:per_page_others], :class => 'x-large-text-field shrinked' %>
           <!-- Active Tab -->
           <%= hidden_field_tag "active_tab", params[:active_tab], :class => 'x-large-text-field shrinked' %>
-          <!-- No -->
+          <!-- Invoice No -->
           <%= label_tag "label_no", I18n.t("ag2_gest.client_payments.index.label_no"), :class => 'form-label' %>
           <%= text_field_tag "No", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
+          <!-- Bill No -->
+          <%= label_tag "label_billno", I18n.t("ag2_gest.client_payments.index.label_billno"), :class => 'form-label' %>
+          <%= text_field_tag "BillNo", nil, :class => 'x-large-text-field shrinked number-text-field', onkeyup: "caps(this)" %>
           <!-- Project -->
           <%= label_tag "label_project", I18n.t("ag2_gest.client_payments.index.label_project"), :class => 'form-label' %>
           <%= hidden_field_tag "Project", params[:Project], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
@@ -622,6 +654,14 @@
           <%= label_tag "label_street", I18n.t("ag2_gest.client_payments.index.label_street"), :class => 'form-label-under-sel2' %>
           <%#= hidden_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
           <%= text_field_tag "StreetName", params[:StreetName], :class => 'x-large-text-field shrinked' %>
+          <!-- Biller -->
+          <%= label_tag "label_biller", I18n.t("ag2_gest.client_payments.index.label_biller"), :class => 'form-label' %>
+          <%= hidden_field_tag "Biller", params[:Biller], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
+          <!-- Dates -->
+          <%= label_tag I18n.t("ag2_gest.client_payments.index.label_date"), nil, :class => 'form-label-under-sel2' %>
+          <%= text_field_tag "From", params[:From], :class =>  'x-large-text-field shrinked date_picker' %>
+          <%= label_tag I18n.t("ag2_gest.client_payments.index.label_payday"), nil, :class => 'form-label' %>
+          <%= text_field_tag "To", params[:To], :class =>  'x-large-text-field shrinked date_picker' %>
           <!-- Have BankAccount? -->
           <div id="have-bank-account">
             <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>

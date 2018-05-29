@@ -1433,6 +1433,7 @@ module Ag2Gest
       puts ">>>>>>>" + active_tab
 
       no = params[:No]
+      bill_no = params[:BillNo]
       project = params[:Project]
       period = params[:Period]
       # client_code = params[:ClientCode]
@@ -1444,6 +1445,9 @@ module Ag2Gest
       # subscriber_name = params[:Subscriber]
       subscriber = params[:Subscriber]
       street_name = params[:StreetName]
+      biller = params[:Biller]
+      invoice_date = params[:From]
+      invoice_payday = params[:To]
       bank_account = params[:BankAccount] == t(:yes_on) ? true : false
       bank = params[:Bank]
       bank_order = params[:BankOrder]
@@ -1457,6 +1461,7 @@ module Ag2Gest
       @user = !user.blank? ? User.find(user).to_label : " "
       @client = !client.blank? ? Client.find(client).to_label : " "
       @subscriber = !subscriber.blank? ? Subscriber.find(subscriber).to_label : " "
+      @biller = !biller.blank? ? Company.find(biller).full_name : " "
       # @address = !street_name.blank? ? Subscriber.find(street_name).supply_address : " "
       # DO NOT USE @address = !street_name.blank? ? SubscriberSupplyAddress.find(street_name).supply_address : " "
       @have_bank_account = have_bank_account_array
@@ -2411,6 +2416,30 @@ module Ag2Gest
       elsif session[:User]
         params[:User] = session[:User]
       end
+      # bill_no
+      if params[:BillNo]
+        session[:BillNo] = params[:BillNo]
+      elsif session[:BillNo]
+        params[:BillNo] = session[:BillNo]
+      end
+      # biller
+      if params[:Biller]
+        session[:Biller] = params[:Biller]
+      elsif session[:Biller]
+        params[:Biller] = session[:Biller]
+      end
+      # from
+      if params[:From]
+        session[:From] = params[:From]
+      elsif session[:From]
+        params[:From] = session[:From]
+      end
+      # to
+      if params[:To]
+        session[:To] = params[:To]
+      elsif session[:To]
+        params[:To] = session[:To]
+      end
     end
 
     def cp_remove_filters
@@ -2428,6 +2457,10 @@ module Ag2Gest
       params[:Bank] = ""
       params[:BankOrder] = ""
       params[:User] = ""
+      params[:BillNo] = ""
+      params[:Biller] = ""
+      params[:From] = ""
+      params[:To] = ""
       return " "
     end
 
@@ -2446,6 +2479,10 @@ module Ag2Gest
       params[:Bank] = session[:Bank]
       params[:BankOrder] = session[:BankOrder]
       params[:User] = session[:User]
+      params[:BillNo] = session[:BillNo]
+      params[:Biller] = session[:Biller]
+      params[:From] = session[:From]
+      params[:To] = session[:To]
     end
   end
 end

@@ -58,6 +58,9 @@ module Ag2Gest
       session[:Phase] = nil
       session[:User] = nil
       session[:incidences] = nil
+      session[:From] = nil
+      session[:To] = nil
+      session[:BillNo] = nil
     end
 
     def current_projects
