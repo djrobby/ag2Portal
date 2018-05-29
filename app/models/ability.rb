@@ -188,6 +188,8 @@ class Ability
     # ag2Gest
     if user.has_role? :ag2Gest_User
       can :crud, Client
+      can :crud, ProcessedFile
+      can :crud, ProcessedFileItem
       can :crud, CashDeskClosing
       can :crud, CashDeskClosingItem
       can :crud, CashDeskClosingInstrument
@@ -269,6 +271,8 @@ class Ability
       can :crud, ContractedTariff
     elsif user.has_role? :ag2Gest_Guest
       can :read, Client
+      can :read, ProcessedFile
+      can :read, ProcessedFileItem
       can :read, CashDeskClosing
       can :read, CashDeskClosingItem
       can :read, CashDeskClosingInstrument
@@ -350,6 +354,8 @@ class Ability
       can :read, ContractedTariff
     elsif user.has_role? :ag2Gest_Banned
       cannot :manage, Client
+      cannot :manage, ProcessedFile
+      cannot :manage, ProcessedFileItem
       cannot :manage, CashDeskClosing
       cannot :manage, CashDeskClosingItem
       cannot :manage, CashDeskClosingInstrument

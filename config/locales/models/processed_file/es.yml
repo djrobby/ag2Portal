@@ -8,9 +8,12 @@ es:
         other: Ficheros procesados
     attributes:
       processed_file:
+        id: "Id"
         filename: "Nombre de archivo"
         processed_file_type: "Tipo de archivo"
         processed_file_type_id: "Tipo de archivo"
         flow: "Flujo"
         input: "ENTRADA"
         output: "SALIDA"
+        file_id: "Id del archivo"
+        file_date: "Fecha del archivo"

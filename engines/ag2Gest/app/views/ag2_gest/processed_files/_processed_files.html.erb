@@ -1,0 +1,39 @@
+<script>
+  $(document).ready(function() {
+    $("#div_table th a, #div_table #pages a").on("click", function() {
+      $.getScript(this.href);
+      return false;
+    });
+  }); 
+</script>
+
+<table class="table table-condensed table-striped shrinked">
+  <thead>
+    <tr>
+      <!-- <th><%#= t "activerecord.attributes.processed_file.id" %></th> -->
+      <th><%= t "activerecord.attributes.processed_file.file_id" %></th>
+      <th><%= t "activerecord.attributes.processed_file.filename" %></th>
+      <th align="center"><%= t "activerecord.attributes.processed_file.file_date" %></th>
+      <th><%= t "activerecord.attributes.processed_file.processed_file_type" %></th>
+      <th><%= t "activerecord.attributes.processed_file.flow" %></th>
+      <th align="center"><%= t :created_at %></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @processed_files.each do |processed_file| %>
+    <tr>
+      <!-- <td><%#= processed_file.id %></td> -->
+      <td><%= processed_file.fileid %></td>
+      <td><%= processed_file.filename %></td>
+      <td align="center"><%= formatted_date(processed_file.filedate) %></td>
+      <td><%= processed_file.processed_file_type.name %></td>
+      <td><%= processed_file.flow_label %></td>
+      <td align="center"><%= formatted_timestamp(processed_file.created_at.utc.getlocal) %></td>
+      <td><%= render :partial => '/layouts/crud/read', :locals => { :model => ProcessedFile, :path => processed_file_path(processed_file) } %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= render :partial => '/layouts/pagination', :locals => { :ivar => @processed_files } %>
+

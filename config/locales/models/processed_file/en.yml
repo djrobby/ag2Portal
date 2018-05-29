@@ -8,9 +8,12 @@ en:
         other: Processed files
     attributes:
       processed_file:
+        id: "Id"
         filename: "File name"
         processed_file_type: "File type"
         processed_file_type_id: "File type"
         flow: "Flow"
         input: "INPUT"
         output: "OUTPUT"
+        file_id: "File Id"
+        file_date: "File Date"

@@ -790,8 +790,8 @@ module Ag2Gest
       remesa = sepa.remesa
       # Processed file items
       processed_file_items = []
-      processed_model = nil
-      processed_id = nil
+      # processed_model = nil
+      # processed_id = nil
 
       # Returns depending on referencia_tipo
       if self.referencia_tipo == 'I'

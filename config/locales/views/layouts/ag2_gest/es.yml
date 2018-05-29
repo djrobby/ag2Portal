@@ -4,6 +4,9 @@ es:
       clients:
         items: "Clientes"
         item: "Cliente"
+      processed_files:
+        items: "Ficheros procesados"
+        item: "Fichero procesado"
       cash_desk_closings:
         items: "Cierres de Caja"
         item: "Cierre de Caja"

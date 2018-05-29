@@ -1,0 +1,61 @@
+<%= render '/layouts/ag2_gest/processedfilesbreadcrumb' %>
+
+<table class="form-table">
+  <tbody>
+    <tr class="form-tr underlined-tr">
+      <td class="form-td-two left-winged">
+        <h3><%=t '.title' %></h3>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table odd_even_table">
+  <tbody>
+    <tr>
+      <td><%= t "activerecord.attributes.processed_file.id" %></td>
+      <td id="id"><%= @processed_file.id %></td>
+      <td><%= t "activerecord.attributes.processed_file.file_id" %></td>
+      <td><%= @processed_file.fileid %></td>
+    </tr>
+    <tr>
+      <td><%= t "activerecord.attributes.processed_file.filename" %></td>
+      <td id="id"><%= @processed_file.filename %></td>
+      <td><%= t "activerecord.attributes.processed_file.file_date" %></td>
+      <td><%= formatted_date(@processed_file.filedate) %></td>
+    </tr>    
+    <tr>
+      <td><%= t "activerecord.attributes.processed_file.processed_file_type" %></td>
+      <td id="id"><%= @processed_file.processed_file_type.name %></td>
+      <td><%= t "activerecord.attributes.processed_file.flow" %></td>
+      <td><%= @processed_file.flow_label %></td>
+    </tr>
+    <%= render :partial => '/layouts/createdat_updatedat', :locals => { :ivar => @processed_file } %>
+    <%= render :partial => '/layouts/createdby_updatedby', :locals => { :ivar => @processed_file } %>
+  </tbody>
+</table>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <!-- Items -->
+    <div>
+      <% if (@processed_file_items.count > 0) %>
+      <h4><%= t 'activerecord.models.processed_file_item.zero' %></h4>
+      <table class="table table-condensed table-striped shrinked">
+        <thead>
+          <%= render partial: 'items_header', :locals => { cash_desk_closing: @processed_file } %>
+        </thead>
+        <!-- <tfoot>
+          <%#= render partial: 'items_footer', :locals => { cash_desk_closing: @processed_file } %>
+        </tfoot> -->
+        <tbody>
+          <%= render partial: 'item', collection: @processed_file_items %>
+        </tbody>
+      </table>
+      <%= render :partial => '/layouts/pagination', :locals => { :ivar => @processed_file_items } %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= link_to t("ag2_gest.processed_files.back_to_main_page"), processed_files_path %>

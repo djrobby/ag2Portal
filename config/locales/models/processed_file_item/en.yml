@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      processed_file_item:
+        zero:  Processed Files Items
+        one:   Processed File Item
+        few:   Processed Files Items
+        other: Processed Files Items
+    attributes:
+      processed_file_item:
+        processed_file: "Processed File"
+        processed_file_id: "Processed File"
+        item_type: "Payment Type"
+        item_model: "Item Model"
+        item_id: "Item Id"
+        subitem_model: "SubItem Model"
+        subitem_id: "SubItem Id"
+        item_amount: "Item Amount"
+        item_remarks: "Item Remarks"
+        processed_model: "Processed Model"
+        processed_id: "Processed Id"

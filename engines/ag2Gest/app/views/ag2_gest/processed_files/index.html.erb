@@ -1,0 +1,30 @@
+<%= render '/layouts/ag2_gest/processedfilesbreadcrumb' %>
+<h3><%= t '.title' %></h3>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <div class="well sidebar-nav">
+        <!-- Refresh -->
+        <%= link_to ag2_gest.processed_files_path, title: I18n.t(:refresh), class: "icon-refresh-link", remote: true do %> <i class="icon-refresh"></i> <% end %>
+        
+        <!-- Control&Tracking -->
+        <!-- <a href="#" id="print_report_btn" class="btn btn-warning"><i class="icon-print icon-white"></i> <%= t 'ag2_gest.home.index.control' %></a> -->
+        <!-- <br /><br /> -->
+        <!-- <a href="#" id="print_csv_btn" class="btn btn-success"><i class="glyphicon glyphicon-download-alt icon-download-alt icon-white"></i> <%= t 'ag2_tech.home.index.control_csv' %></a> -->
+        <!-- <br /><br /> -->
+        <!-- Back -->
+        <% if !session[:return_to].nil? %>
+          <%= link_to session[:return_to], session[:return_to_url] + "#tab_banks" %>
+        <% end %>
+      </div><!-- /.sidebar-nav -->
+    </div><!-- /.span3 -->
+    
+    <div class="span9">
+      <div id="loader"></div>
+      <div id="div_table">
+        <%= render 'processed_files' %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+es:
+  ag2_gest:
+    processed_files:
+      index:
+        title: "Ficheros procesados"
+        btn_new: "Nueva Fichero procesado"
+        back_to_root: "Volver a ag2Gest"
+        all: "Todos"
+      show:
+        title: "Fichero procesado"
+        btn_edit: "Editar Fichero procesado"
+        btn_delete: "Borrar Fichero procesado"
+        subtable_title: "Proveedores con la Fichero procesado"
+        return_to: "Volver a Fichero procesado"
+      edit:
+        title: "Editar Fichero procesado"
+        btn_show: "Ver Fichero procesado"
+      new:
+        title: "Nueva Fichero procesado"
+      back_to_main_page: "Volver a Ficheros procesados"

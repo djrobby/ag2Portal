@@ -1,0 +1,21 @@
+es:
+  activerecord:
+    models:
+      processed_file_item:
+        zero:  Items de Ficheros procesados
+        one:   Item de Fichero procesado
+        few:   Items de Ficheros procesados
+        other: Items de Ficheros procesados
+    attributes:
+      processed_file_item:
+        processed_file: "Fichero procesado"
+        processed_file_id: "Fichero procesado"
+        item_type: "Tipo de cobro"
+        item_model: "Modelo Item"
+        item_id: "No Item"
+        subitem_model: "Modelo SubItem"
+        subitem_id: "No SubItem"
+        item_amount: "Cantidad"
+        item_remarks: "Comentario"
+        processed_model: "Modelo Procesado"
+        processed_id: "No Procesado"

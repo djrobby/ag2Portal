@@ -1,0 +1,12 @@
+<tr>
+  <td><%= item.id %></td>
+  <td><%= PaymentType.code_with_param(item.item_type) %></td>
+  <td><%= item.item_label %></td>
+  <td><%= item.item_no %></td>
+  <td><%= item.subitem_label %></td>
+  <td><%= item.subitem_no %></td>
+  <td align="right"><%= number_with_precision(item.item_amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+  <td><%= item.processed_label %></td>
+  <td><%= item.processed_no %></td>
+  <td><%= item.item_remarks %></td>
+</tr>

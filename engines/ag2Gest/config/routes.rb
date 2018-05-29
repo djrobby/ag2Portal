@@ -685,6 +685,7 @@ Ag2Gest::Engine.routes.draw do
       get 'payment_receipt', on: :member
     end
     resources :payment_methods
+    resources :processed_files
     #
     resources :cash_desk_closings do
       get 'close_cash_form', on: :member

@@ -1,0 +1,19 @@
+en:
+  ag2_gest:
+    processed_files:
+      index:
+        title: "Processed files"
+        btn_new: "New Processed file"
+        back_to_root: "Back to ag2Gest"
+        all: "All"
+      show:
+        title: "Processed file"
+        btn_edit: "Edit Processed file"
+        btn_delete: "Delete Processed file"
+        return_to: "Back to Processed file"
+      edit:
+        title: "Edit Processed file"
+        btn_show: "Show Processed file"
+      new:
+        title: "New Processed file"
+      back_to_main_page: "Back to Processed files"
