@@ -1220,11 +1220,11 @@ module Ag2Gest
                                     item_id: bill.id,
                                     item_remarks: iban,
                                     item_type: ClientPayment::COUNTER,
-                                    subitem_id: i.id,
+                                    subitem_id: nil,
                                     item_model: 'Bill',
                                     subitem_model: nil,
                                     processed_model: processed_model,
-                                    processed_id: processed_id,
+                                    processed_id: nil,
                                     multiple_processed_id: multiple_processed_id.to_s.tr('[]',''))
         else
           # Cache not processed file item (bill not found)
