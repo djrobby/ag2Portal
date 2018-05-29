@@ -331,6 +331,14 @@ class ClientBankAccount < ActiveRecord::Base
     iban.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
+  #
+  # Class (self) user defined methods
+  #
+  # Search by IBAN
+  def self.search_by_iban(i=nil)
+    find_by_iban(i)
+  end
+
   private
 
   def iban_save

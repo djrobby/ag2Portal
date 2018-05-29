@@ -202,6 +202,10 @@ class ClientPayment < ActiveRecord::Base
     find_by_receipt_no_and_invoice_id_and_payment_type_and_payment_method_id(r, i, t, m)
   end
 
+  def self.search_order_by_bill_type(b=0, t=0)
+    where('bill_id=? AND payment_type=? and amount>=0', b, t) rescue nil
+  end
+
   def self.search_return_by_receipt_invoice_type_method(r=nil, i=0, t=0, m=0)
     where('receipt_no=? AND invoice_id=? AND payment_type=? AND payment_method_id=? and amount<0', r, i, t, m).first rescue nil
   end

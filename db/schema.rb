@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180527083533) do
+ActiveRecord::Schema.define(:version => 20180529080935) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2717,15 +2717,17 @@ ActiveRecord::Schema.define(:version => 20180527083533) do
     t.integer "item_id"
     t.string  "subitem_model"
     t.integer "subitem_id"
-    t.decimal "item_amount",       :precision => 13, :scale => 4, :default => 0.0, :null => false
+    t.decimal "item_amount",           :precision => 13, :scale => 4, :default => 0.0, :null => false
     t.string  "item_remarks"
     t.string  "processed_model"
     t.integer "processed_id"
+    t.string  "multiple_processed_id"
   end
 
   add_index "processed_file_items", ["item_id"], :name => "index_processed_file_items_on_item_id"
   add_index "processed_file_items", ["item_model"], :name => "index_processed_file_items_on_item_model"
   add_index "processed_file_items", ["item_type"], :name => "index_processed_file_items_on_item_type"
+  add_index "processed_file_items", ["multiple_processed_id"], :name => "index_processed_file_items_on_multiple_processed_id"
   add_index "processed_file_items", ["processed_file_id"], :name => "index_processed_file_items_on_processed_file_id"
   add_index "processed_file_items", ["processed_id"], :name => "index_processed_file_items_on_processed_id"
   add_index "processed_file_items", ["processed_model"], :name => "index_processed_file_items_on_processed_model"

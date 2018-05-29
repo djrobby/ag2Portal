@@ -135,6 +135,21 @@ class Client < ActiveRecord::Base
     full_name[0,40]
   end
 
+  def full_name_full
+    full_name = ""
+    if !company.blank?
+      full_name = company
+    else
+      if !self.last_name.blank?
+        full_name += self.last_name
+      end
+      if !self.first_name.blank?
+        full_name += ", " + self.first_name
+      end
+    end
+    full_name
+  end
+
   def partial_name30
     full_name[0,30]
   end

@@ -65,6 +65,8 @@ module Ag2Gest
           self.nif = line[10,8]
           self.sufijo = line[18,3]
           self.process_date_time = Date.parse(pdate[4,2] + pdate[2,2] + pdate[0,2]) rescue Date.today
+        elsif cod_reg == '01' || cod_reg == '90'
+          # First or Last line
         else
           # Invoice charged line: Save in array
           amount = line[36,12]
@@ -77,6 +79,7 @@ module Ag2Gest
                                  charge_bank: line[22,4],
                                  charge_office: line[26,4],
                                  charge_id: line[48,6],
+                                 iban_head: line[4,4],
                                  ccc_bank: line[54,4],
                                  ccc_office: line[58,4],
                                  ccc_dc: line[62,2],
