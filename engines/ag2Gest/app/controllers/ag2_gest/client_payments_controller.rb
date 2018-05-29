@@ -1123,8 +1123,9 @@ module Ag2Gest
       processed_file_items = []
       processed_model = nil
       processed_id = nil
+      multiple_processed_id = []
 
-      # Loop thru counter items
+      # Loop thru counter items (bills)
       sepa.lista_cobros.each do |c|
         # Search original bill
         bill = Bill.find(c[:bill_id]) rescue Bill.search_by_old_no_from_counter(c[:bill_id].to_s)
@@ -1155,6 +1156,7 @@ module Ag2Gest
 
         if !bill.nil?
           receipt_no = receipt_next_no(bill.invoices.first.invoice_no[3..4]) || '0000000000'
+          multiple_processed_id = []
           # Add to client payments
           bill.invoices.each do |i|
             # Check if invoice is already charged
@@ -1180,38 +1182,50 @@ module Ag2Gest
                 # Processed file item
                 processed_model = 'ClientPayment'
                 processed_id = cp.id
-              else
-                # Readed but not processed file item
-                processed_model = nil
-                processed_id = nil
+                multiple_processed_id << cp.id
+              # else
+              #   # Readed but not processed file item
+              #   processed_model = nil
+              #   processed_id = nil
               end
               # Cache processed file item
-              processed_file_items.push(processed_file_id: 0,
-                                        item_amount: c[:amount],
-                                        item_id: bill.id,
-                                        item_remarks: iban,
-                                        item_type: ClientPayment::COUNTER,
-                                        subitem_id: i.id,
-                                        item_model: 'Bill',
-                                        subitem_model: 'Invoice',
-                                        processed_model: processed_model,
-                                        processed_id: processed_id,
-                                        multiple_processed_id: nil)
-            else
-              # Cache not processed file item (already charged)
-              processed_file_items.push(processed_file_id: 0,
-                                        item_amount: c[:amount],
-                                        item_id: bill.id,
-                                        item_remarks: iban,
-                                        item_type: ClientPayment::COUNTER,
-                                        subitem_id: i.id,
-                                        item_model: 'Bill',
-                                        subitem_model: 'Invoice',
-                                        processed_model: nil,
-                                        processed_id: nil,
-                                        multiple_processed_id: nil)
+            #   processed_file_items.push(processed_file_id: 0,
+            #                             item_amount: c[:amount],
+            #                             item_id: bill.id,
+            #                             item_remarks: iban,
+            #                             item_type: ClientPayment::COUNTER,
+            #                             subitem_id: i.id,
+            #                             item_model: 'Bill',
+            #                             subitem_model: 'Invoice',
+            #                             processed_model: processed_model,
+            #                             processed_id: processed_id,
+            #                             multiple_processed_id: nil)
+            # else
+            #   # Cache not processed file item (already charged)
+            #   processed_file_items.push(processed_file_id: 0,
+            #                             item_amount: c[:amount],
+            #                             item_id: bill.id,
+            #                             item_remarks: iban,
+            #                             item_type: ClientPayment::COUNTER,
+            #                             subitem_id: i.id,
+            #                             item_model: 'Bill',
+            #                             subitem_model: 'Invoice',
+            #                             processed_model: nil,
+            #                             processed_id: nil,
+            #                             multiple_processed_id: nil)
             end # i.debt > 0 && i.invoice_status_id != InvoiceStatus::CHARGED...
           end # bill.invoices.each
+          processed_file_items.push(processed_file_id: 0,
+                                    item_amount: c[:amount],
+                                    item_id: bill.id,
+                                    item_remarks: iban,
+                                    item_type: ClientPayment::COUNTER,
+                                    subitem_id: i.id,
+                                    item_model: 'Bill',
+                                    subitem_model: nil,
+                                    processed_model: processed_model,
+                                    processed_id: processed_id,
+                                    multiple_processed_id: multiple_processed_id.to_s.tr('[]',''))
         else
           # Cache not processed file item (bill not found)
           processed_file_items.push(processed_file_id: 0,
