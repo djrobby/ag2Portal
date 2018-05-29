@@ -99,9 +99,9 @@ module Ag2Gest
         nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
         referencia_tipo = referencia_adeudo[34,1]
-        id_bill = referencia_adeudo.first(10).to_i # if referencia_tipo=='I'->invoice_id else referencia_tipo!='I'->bill_id
-        id_client_payment = referencia_adeudo[10,9].to_i
-        receipt_no = referencia_adeudo[19,6]
+        id_bill = referencia_adeudo[0,9].to_i # if referencia_tipo=='I'->invoice_id else referencia_tipo!='I'->bill_id
+        id_client_payment = referencia_adeudo[9,9].to_i
+        receipt_no = referencia_adeudo[18,6]
         id_client = referencia_mandato.last(8).to_i
         remesa_old = referencia_adeudo[10,6]
 

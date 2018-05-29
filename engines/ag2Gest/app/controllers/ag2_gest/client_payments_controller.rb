@@ -794,7 +794,7 @@ module Ag2Gest
       # processed_id = nil
 
       # Returns depending on referencia_tipo
-      if self.referencia_tipo == 'I'
+      if sepa.referencia_tipo == 'I'
         processed_file_items, remesa = return_by_invoice(sepa, payment_method_id, created_by)
       else
         processed_file_items, remesa = return_by_bill(sepa, payment_method_id, created_by)
@@ -940,7 +940,8 @@ module Ag2Gest
                                       item_model: 'Bill',
                                       subitem_model: 'Invoice',
                                       processed_model: processed_model,
-                                      processed_id: processed_id)
+                                      processed_id: processed_id,
+                                      multiple_processed_id: nil)
           else
             # Cache readed but already returned file item
             processed_file_items.push(processed_file_id: 0,
@@ -952,7 +953,8 @@ module Ag2Gest
                                       item_model: 'Bill',
                                       subitem_model: 'Invoice',
                                       processed_model: nil,
-                                      processed_id: nil)
+                                      processed_id: nil,
+                                      multiple_processed_id: nil)
           end # !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?
         else
           # Cache readed but not found file item
@@ -965,7 +967,8 @@ module Ag2Gest
                                     item_model: nil,
                                     subitem_model: nil,
                                     processed_model: nil,
-                                    processed_id: nil)
+                                    processed_id: nil,
+                                    multiple_processed_id: nil)
         end # !original_client_payment.nil?
       end # lista_devoluciones.each
       return processed_file_items, remesa
@@ -1011,7 +1014,7 @@ module Ag2Gest
                                       subscriber_id: c.subscriber_id,
                                       payment_date: sepa.fecha_devolucion,
                                       confirmation_date: Time.now,
-                                      amount: c.amount,
+                                      amount: c.amount * (-1),
                                       instalment_id: c.instalment_id,
                                       client_bank_account_id: c.client_bank_account_id,
                                       charge_account_id: c.charge_account_id,
@@ -1049,7 +1052,8 @@ module Ag2Gest
                                       item_model: 'Bill',
                                       subitem_model: nil,
                                       processed_model: nil,
-                                      processed_id: nil)
+                                      processed_id: nil,
+                                      multiple_processed_id: nil)
           end # !current_bill_payments.nil?
         else
           # Cache readed (but not found) file item
@@ -1062,7 +1066,8 @@ module Ag2Gest
                                     item_model: nil,
                                     subitem_model: nil,
                                     processed_model: nil,
-                                    processed_id: nil)
+                                    processed_id: nil,
+                                    multiple_processed_id: nil)
         end # !original_client_payment.nil?
       end # lista_devoluciones.each
       return processed_file_items, remesa
@@ -1189,7 +1194,8 @@ module Ag2Gest
                                         item_model: 'Bill',
                                         subitem_model: 'Invoice',
                                         processed_model: processed_model,
-                                        processed_id: processed_id)
+                                        processed_id: processed_id,
+                                        multiple_processed_id: nil)
             else
               # Cache not processed file item (already charged)
               processed_file_items.push(processed_file_id: 0,
@@ -1201,7 +1207,8 @@ module Ag2Gest
                                         item_model: 'Bill',
                                         subitem_model: 'Invoice',
                                         processed_model: nil,
-                                        processed_id: nil)
+                                        processed_id: nil,
+                                        multiple_processed_id: nil)
             end # i.debt > 0 && i.invoice_status_id != InvoiceStatus::CHARGED...
           end # bill.invoices.each
         else
@@ -1215,7 +1222,8 @@ module Ag2Gest
                                     item_model: nil,
                                     subitem_model: nil,
                                     processed_model: nil,
-                                    processed_id: nil)
+                                    processed_id: nil,
+                                    multiple_processed_id: nil)
         end # !bill.nil?
       end # sepa.lista_cobros.each
 
@@ -1243,9 +1251,6 @@ module Ag2Gest
       redirect_to client_payments_path + "#tab_banks", alert: "¡Error! Imposible procesar cobros ventanilla."
     end
 
-    def add_element_to_processed_file_items_array(processed_file_items)
-    end
-
     def catalog_processed_file(file_name, file_type, flow, created_by, file_id, file_date)
       return ProcessedFile.new(filename: file_name,
                                processed_file_type_id: file_type,
@@ -1266,7 +1271,8 @@ module Ag2Gest
                                  item_model: i[:item_model],
                                  subitem_model: i[:subitem_model],
                                  processed_model: i[:processed_model],
-                                 processed_id: i[:processed_id])
+                                 processed_id: i[:processed_id],
+                                 multiple_processed_id: i[:multiple_processed_id])
       end # items.each
     end
 
