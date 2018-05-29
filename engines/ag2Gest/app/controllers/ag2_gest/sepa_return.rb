@@ -25,6 +25,7 @@ module Ag2Gest
     attr_accessor :nif
     attr_accessor :fecha_devolucion
     attr_accessor :lista_devoluciones
+    attr_accessor :cuenta_acreedor
     attr_accessor :remesa
     attr_accessor :remesa_old
     attr_accessor :referencia_tipo  # by_invoice==true->I, by_invoice==false->B
@@ -88,6 +89,7 @@ module Ag2Gest
       receipt_no = ''
       remesa_old = ''
       referencia_tipo = ''
+      cuenta_acreedor = ''
       @doc.elements.each('//TxInfAndSts') do |e|
         referencia_adeudo = e.elements['OrgnlEndToEndId'].text
         codigo_rechazo = e.elements['StsRsnInf'].elements['Rsn'].elements['Cd'].text
@@ -98,6 +100,7 @@ module Ag2Gest
         concepto = e.elements['OrgnlTxRef'].elements['RmtInf'].elements['Ustrd'].text
         nombre_deudor = e.elements['OrgnlTxRef'].elements['Dbtr'].elements['Nm'].text
         cuenta_deudor = e.elements['OrgnlTxRef'].elements['DbtrAcct'].elements['Id'].elements['IBAN'].text
+        cuenta_acreedor = e.elements['OrgnlTxRef'].elements['CdtrAcct'].elements['Id'].elements['IBAN'].text
         referencia_tipo = referencia_adeudo[34,1]
         id_bill = referencia_adeudo[0,9].to_i # if referencia_tipo=='I'->invoice_id else referencia_tipo!='I'->bill_id
         id_client_payment = referencia_adeudo[9,9].to_i
@@ -120,6 +123,7 @@ module Ag2Gest
                                      receipt_no: receipt_no,
                                      client_id: id_client)
       end
+      self.cuenta_acreedor = cuenta_acreedor
       self.remesa = receipt_no
       self.remesa_old = remesa_old
       self.referencia_tipo = referencia_tipo

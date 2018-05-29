@@ -761,7 +761,8 @@ module Ag2Gest
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
       # redirect_to client_payments_path + "#tab_banks", alert: sepa.fecha_hora_confeccion and return
-      bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
+      # bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
+      bank_account = CompanyBankAccount.find_by_iban(sepa.cuenta_acreedor)
       if bank_account.nil? || bank_account.empty?
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
@@ -1030,6 +1031,7 @@ module Ag2Gest
               end # !ClientPayment.is_there_return_with_this_receipt_invoice_type_and_method?
             end # current_bill_payments.each
             # Cache processed file item
+            # To read => multiple_processed_id.split(",").map { |s| s.to_i }
             processed_file_items.push(processed_file_id: 0,
                                       item_amount: i[:importe_adeudo],
                                       item_id: original_client_payment.bill_id,
@@ -1092,7 +1094,6 @@ module Ag2Gest
       # Check:
       # Has not been proccessed previously
       # Belongs to current company & bank suffix
-      # redirect_to client_payments_path + "#tab_banks", alert: sepa.nif + ' - ' + sepa.sufijo and return
       bank_account = CompanyBankAccount.like_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       if bank_account.nil? || bank_account.empty?
         # Can't go on if bank account doesn't exist
