@@ -88,9 +88,9 @@
               <td><%= link_to instalment.client.to_name, client_path(instalment.client) %></td>
               <td align="right"><%= instalment.instalment %></td>
               <td align="center"><%= formatted_date(instalment.payday_limit) unless instalment.payday_limit.blank? %></td>
-              <td align="right"><%= number_with_precision(instalment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-              <td align="right"><%= number_with_precision(instalment.surcharge, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-              <td align="right" class="debt-field"><%= number_with_precision(instalment.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right"><%= number_with_precision(instalment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right"><%= number_with_precision(instalment.surcharge, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+              <td align="right" class="debt-field"><%= number_with_precision(instalment.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
             </tr>
           </tbody>
         </table> <!-- form-table -->
@@ -121,7 +121,7 @@
                   <td><%= link_to i.bill.try(:full_no), bill_path(i.bill) %></td>
                   <td><%= link_to i.invoice.try(:full_no), invoice_path(i.invoice) %></td>
                   <td class="shrinked"><%= link_to i.instalment.instalment_plan.subscriber.to_label, subscriber_path(i.instalment.instalment_plan.subscriber) unless i.instalment.instalment_plan.subscriber.blank? %></td>
-                  <td align="right"><%= number_with_precision(i.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                  <td align="right"><%= number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 </tr>
               <% end %>
             </tbody>

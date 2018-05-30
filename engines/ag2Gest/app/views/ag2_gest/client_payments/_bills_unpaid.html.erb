@@ -35,7 +35,7 @@
             <%= "Bco." if bill.client.active_bank_accounts?  %>
           </div>
           <div align="right" class="span2 soft-padding">
-            <%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %>
+            <%= number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %>
           </div>
         </div>
 
@@ -63,13 +63,13 @@
                     <td><%= i.invoice_date.strftime("%d/%m/%Y") %></td>
                     <td><%= i.payday_limit.strftime("%d/%m/%Y") %></td>
                     <% if i.bill.try(:instalments).blank? %>
-                      <td align="right"><%= number_with_precision(i.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                      <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                      <td align="right"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                     <% else %>
-                      <td align="right"><%= number_with_precision(i.bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                      <td align="right"><%= number_with_precision(i.bill.client_payments.sum("amount"), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                      <td align="right"><%= number_with_precision(i.bill.total - i.bill.client_payments.sum("amount"), precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.bill.client_payments.sum("amount"), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                      <td align="right"><%= number_with_precision(i.bill.total - i.bill.client_payments.sum("amount"), precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                     <% end %>
                     <td align="right"><%= i.invoice_status.name %></td>
                   </tr>

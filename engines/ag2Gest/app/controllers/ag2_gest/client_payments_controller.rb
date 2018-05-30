@@ -1554,6 +1554,7 @@ module Ag2Gest
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      no = !bill_no.blank? && bill_no[0] == '%' ? inverse_bill_no_search(no) : bill_no
       street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
       current_projects = current_projects_ids
 
@@ -2253,6 +2254,15 @@ module Ag2Gest
     def setup_no(no)
       no = no[0] != '%' ? '%' + no : no
       no = no[no.length-1] != '%' ? no + '%' : no
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      # Add numbers found
+      Invoice.where('invoice_no LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.invoice_no
+      end
+      _numbers = _numbers.blank? ? no : _numbers
     end
 
     def inverse_no_search(no)

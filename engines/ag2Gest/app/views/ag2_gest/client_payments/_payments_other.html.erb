@@ -35,7 +35,7 @@
         <td><%= link_to client_payment.bill.try(:invoice_based_old_no_real_no), bill_path(client_payment.bill) %></td>
         <td><%= link_to client_payment.client.to_label, client_path(client_payment.client) %></td>
         <td><%= formatted_date(client_payment.payment_date) unless client_payment.payment_date.blank? %></td>
-        <td class="cpo-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+        <td class="cpo-amount" align="right"><%= number_with_precision(client_payment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
         <td align="right" title="<%= client_payment.real_payment_method_name %>"><%= client_payment.real_payment_method_code %></td>
         <td>
           <%= link_to "<i class='icon-print icon-white'></i>".html_safe, payment_receipt_client_payment_path(client_payment, :format => :pdf), target: "_blank", class: "btn btn-warning btn-mini", title: I18n.t('ag2_gest.client_payments.index.print_receipt') %>

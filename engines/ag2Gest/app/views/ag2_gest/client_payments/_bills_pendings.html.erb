@@ -53,7 +53,7 @@
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
             <% end %>
             <td align="right"><%= bill.billing_period_code %></td>
-            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.invoice_status.name unless bill.invoice_status.blank? %></td>
             </tr>
           </tbody>
@@ -83,9 +83,9 @@
                 <td><%= i.old_no_based_real_no %></td>
                 <td><%= formatted_date(i.invoice_date) unless i.invoice_date.blank? %></td>
                 <td><%= formatted_date(i.payday_limit) unless i.payday_limit.blank? %></td>
-                <td align="right"><%= number_with_precision(i.receivables, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right"><%= number_with_precision(i.collected, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
-                <td align="right" class="debt-field"><%= number_with_precision(i.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(i.receivables, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right"><%= number_with_precision(i.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
+                <td align="right" class="debt-field"><%= number_with_precision(i.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 <td align="right"><%= i.invoice_status.name %></td>
               </tr>
             <% end %>
