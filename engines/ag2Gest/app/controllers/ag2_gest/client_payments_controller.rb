@@ -1237,9 +1237,9 @@ module Ag2Gest
                                      created_by: created_by)
               if cp.save
                 # Set related invoice status to pending
-                i.update_column(:invoice_status_id, InvoiceStatus::PENDING)
+                i.update_column(:invoice_status_id, InvoiceStatus::CHARGED)
                 invoices << i
-                if bill.invoice_status_id > i.invoice_status_id
+                if bill.invoice_status_id < i.invoice_status_id
                   bill.update_column(:invoice_status_id, i.invoice_status_id)
                   bills << bill
                 end
