@@ -1014,8 +1014,25 @@
         return false ;
   });
 
+  function pending_rows() {
+    var rowCount = $("#myPendingTable td").closest("tr").length;
+    return rowCount;
+  }
+  function instalment_rows() {
+    var rowCount = $("#instalments-table td").closest("tr").length;
+    return rowCount;
+  }
+
+  function are_there_pendings() {
+    return (pending_rows() > 0);
+  }
+  function are_there_instalments() {
+    return (instalment_rows() > 0);
+  }
+
   $('#payments-tabs a').click(function (e) {
     _active_tab = $(this).attr("id");
+    console.log(_active_tab);
     $("#active_tab").val(_active_tab);
     remove_tab_active_from_payments_tabs();
     $(this).addClass("tab-active");
@@ -1030,24 +1047,24 @@
     $("#client_payment_amount").val('')
     $(this).tab('show');
     if (_active_tab == "pendings-tab") {
-      <% if !@bills_pending.blank? %>
-      $("#cashier").show();
-      _cashier_shown = true;
-      <% else %>
-      $("#cashier").hide();
-      _cashier_shown = false;
-      <% end %>
+      if (are_there_pendings()) {
+        $("#cashier").show();
+        _cashier_shown = true;
+      } else {
+        $("#cashier").hide();
+        _cashier_shown = false;
+      }
     } else if (_active_tab == "fractionated-tab") {
-      <% if !@instalment_invoices.blank? %>
-      $("#cashier").show();
-      _cashier_shown = true;
-      <% else %>
-      $("#cashier").hide();
-      _cashier_shown = false;
-      <% end %>
+      if (are_there_instalments()) {
+        $("#cashier").show();
+        _cashier_shown = true;
+      } else {
+        $("#cashier").hide();
+        _cashier_shown = false;
+      }
     } else {
       $("#cashier").hide();
-    _cashier_shown = false;
+      _cashier_shown = false;
     }
     show_bank_filters();
     enable_client_payment_amount(true);

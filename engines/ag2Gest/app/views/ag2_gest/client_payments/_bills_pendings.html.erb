@@ -22,7 +22,7 @@
   <div class="accordion condensed-accordion">
     <div class="accordion-group">
       <div class="accordion-heading row-fluid shrinked">
-        <table class="form-table">
+        <table class="form-table" id="myPendingTable">
           <!-- plus -->
           <col width="8%" />
           <!-- bill -->
@@ -36,6 +36,7 @@
           <!-- status -->
           <col width="10%" />
           <tbody>
+            <tr>
             <td>
               <input type="checkbox" class="checkbox-master pull-left" <%= 'disabled' if bill.invoice_status_id != 1 %>>
               <a class="accor accordion-toggle collapsed pull-left" data-toggle="collapse" data-parent="#accordion2" href="#collapse-<%= bill.id %>"><i class='icon-plus'></i></a>
@@ -54,6 +55,7 @@
             <td align="right"><%= bill.billing_period_code %></td>
             <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.invoice_status.name unless bill.invoice_status.blank? %></td>
+            </tr>
           </tbody>
         </table>
       </div>

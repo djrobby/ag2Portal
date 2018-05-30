@@ -604,16 +604,39 @@ module Ag2Gest
       end # begin
     end
 
+    # def confirm_bank
+    #   # Set active_tab to use in view filters
+    #   session[:active_tab] = "banks-tab"
+
+    #   client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
+    #   client_payments = ClientPayment.where(id: client_payment_ids)
+    #   client_payments.each do |cp|
+    #     cp.update_attributes(confirmation_date: Time.now)
+    #     cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+    #   end
+    #   redirect_to client_payments_path + "#tab_banks", notice: "Cobros domicilados confirmados sin incidencias"
+    # end
     def confirm_bank
       # Set active_tab to use in view filters
       session[:active_tab] = "banks-tab"
 
       client_payment_ids = params[:bank_confirm][:client_payments_ids].split(",")
       client_payments = ClientPayment.where(id: client_payment_ids)
+      invoices = []
+      bills = []
       client_payments.each do |cp|
-        cp.update_attributes(confirmation_date: Time.now)
-        cp.invoice.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+        invoice = cp.invoice
+        bill = cp.bill
+        cp.update_column(:confirmation_date, Time.now)
+        invoice.update_column(:invoice_status_id, InvoiceStatus::CHARGED)
+        invoices << invoice
+        if bill.invoice_status_id < invoice.invoice_status_id
+          bill.update_column(:invoice_status_id, invoice.invoice_status_id)
+          bills << bill
+        end
       end
+      Sunspot.index [bills, invoices, client_payments]
+      Sunspot.commit
       redirect_to client_payments_path + "#tab_banks", notice: "Cobros domicilados confirmados sin incidencias"
     end
 
@@ -763,11 +786,11 @@ module Ag2Gest
       # redirect_to client_payments_path + "#tab_banks", alert: sepa.fecha_hora_confeccion and return
       # bank_account = CompanyBankAccount.by_fiscal_id_and_suffix(sepa.nif, sepa.sufijo)
       bank_account = CompanyBankAccount.find_by_iban(sepa.cuenta_acreedor)
-      if bank_account.nil? || bank_account.empty?
+      if bank_account.nil?
         # Can't go on if bank account doesn't exist
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: No se ha encontrado cuenta empresa con los datos del fichero indicado." and return
       end
-      if session[:company] != '0' && bank_account.first.company_id != session[:company].to_i
+      if session[:company] != '0' && bank_account.company_id != session[:company].to_i
         # Can't go on if it's not the right bank account for current company
         redirect_to client_payments_path + "#tab_banks", alert: "¡Error!: Imposible procesar devoluciones: El fichero que intentas procesar pertenece a otra empresa o cuenta." and return
       end
@@ -780,7 +803,7 @@ module Ag2Gest
         redirect_to client_payments_path + "#tab_banks", alert: warning and return
       end
       # Search payment method for returns
-      organization_id = bank_account.first.company.organization_id
+      organization_id = bank_account.company.organization_id
       payment_method_id = PaymentType.find(ClientPayment::BANK).return_payment_method_id rescue collection_payment_methods(organization_id).first.id
       if payment_method_id.nil?
         payment_method_id = collection_payment_methods(organization_id).first.id
