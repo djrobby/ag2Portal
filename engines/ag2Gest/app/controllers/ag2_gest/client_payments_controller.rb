@@ -1592,14 +1592,15 @@ module Ag2Gest
         # Valid query received: Return found results
         # Setup Sunspot searches (cash, bank & others should have data always)
         case active_tab
-        when 'pendings-tab', 'cash-tab', 'banks-tab', 'others-tab', 'fractionated-tab'
+        when 'pendings-tab', 'cash-tab', 'banks-tab', 'others-tab', 'fractionated-tab', 'charged-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
           search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        when 'charged-tab'
-          search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        # when 'charged-tab'
+        #   search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         # when 'cash-tab'
         #   search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         # when 'banks-tab'

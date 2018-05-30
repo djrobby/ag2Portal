@@ -665,7 +665,7 @@
           <!-- Have BankAccount? -->
           <div id="have-bank-account">
             <%= label_tag "label_bank_account", I18n.t("ag2_gest.client_payments.index.label_bank_account"), :class => 'form-label' %>
-            <%= select_tag "BankAccount", options_for_select(@have_bank_account), include_blank: true, :prompt => "", :class => 'x-large-text-field shrinked' %>
+            <%= select_tag "BankAccount", options_for_select(@have_bank_account), :prompt => "", :class => 'x-large-text-field shrinked' %>
           </div>
           <!-- Bank -->
           <%#= label_tag "label_bank", I18n.t("ag2_gest.client_payments.index.label_bank"), :class => 'form-label' %>

@@ -38,7 +38,7 @@
             <td><%= link_to bill.client.to_label, client_path(bill.client) if bill.client %></td>
             <% end %>
             <td align="right"><%= bill.billing_period_code %></td>
-            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") %></td>
+            <td align="right" title="<%= bill.invoices.size.to_s %>"><%= number_with_precision(bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
             <td align="right"><%= bill.payment_date %></td>
             <td align="right" title="<%= bill.real_payment_method_name %>"><%= bill.real_payment_method_code %></td>
           </tbody>
