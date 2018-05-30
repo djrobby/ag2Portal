@@ -908,6 +908,9 @@ module Ag2Gest
       processed_file_items = []
       processed_model = nil
       processed_id = nil
+      invoices = []
+      bills = []
+      client_payments = []
       remesa = sepa.remesa
       # Loop thru return/reject invoices
       sepa.lista_devoluciones.each do |i|
@@ -925,8 +928,15 @@ module Ag2Gest
                                                                                        original_client_payment.invoice_id,
                                                                                        ClientPayment::BANK,
                                                                                        payment_method_id)
+            invoice = original_client_payment.invoice
+            bill = original_client_payment.bill
+
             # If original payment is not confirmed, set confirmation date
-            original_client_payment.update_attributes(confirmation_date: Time.now) if original_client_payment.confirmation_date.blank?
+            if original_client_payment.confirmation_date.blank?
+              original_client_payment.update_column(:confirmation_date, Time.now)
+              client_payments << original_client_payment
+            end
+
             # Add rejections to client payments
             cp = ClientPayment.new(receipt_no: original_client_payment.receipt_no,
                                   payment_type: ClientPayment::BANK,
@@ -945,7 +955,12 @@ module Ag2Gest
                                   sepa_return_code_id: sepa_return_code)
             if cp.save
               # Set related invoice status to pending
-              original_client_payment.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+              invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
+              invoices << invoice
+              if bill.invoice_status_id > invoice.invoice_status_id
+                bill.update_column(:invoice_status_id, invoice.invoice_status_id)
+                bills << bill
+              end
               # Processed file item
               processed_model = 'ClientPayment'
               processed_id = cp.id
@@ -995,6 +1010,8 @@ module Ag2Gest
                                     multiple_processed_id: nil)
         end # !original_client_payment.nil?
       end # lista_devoluciones.each
+      Sunspot.index [bills, invoices, client_payments]
+      Sunspot.commit
       return processed_file_items, remesa
     end
 
@@ -1002,6 +1019,9 @@ module Ag2Gest
       processed_file_items = []
       processed_model = nil
       multiple_processed_id = []
+      invoices = []
+      bills = []
+      client_payments = []
       remesa = sepa.remesa
       # Loop thru return/reject bills
       sepa.lista_devoluciones.each do |i|
@@ -1026,8 +1046,15 @@ module Ag2Gest
                                                                                           c.invoice_id,
                                                                                           ClientPayment::BANK,
                                                                                           payment_method_id)
+                invoice = c.invoice
+                bill = c.bill
+
                 # If original payment is not confirmed, set confirmation date
-                c.update_attributes(confirmation_date: Time.now) if c.confirmation_date.blank?
+                if c.confirmation_date.blank?
+                  c.update_column(:confirmation_date, Time.now)
+                  client_payments << c
+                end
+
                 # Add rejection to client payments
                 cp = ClientPayment.new(receipt_no: c.receipt_no,
                                       payment_type: ClientPayment::BANK,
@@ -1046,7 +1073,12 @@ module Ag2Gest
                                       sepa_return_code_id: sepa_return_code)
                 if cp.save
                   # Set related invoice status to pending
-                  c.invoice.update_attributes(invoice_status_id: InvoiceStatus::PENDING)
+                  invoice.update_column(:invoice_status_id, InvoiceStatus::PENDING)
+                  invoices << invoice
+                  if bill.invoice_status_id > invoice.invoice_status_id
+                    bill.update_column(:invoice_status_id, invoice.invoice_status_id)
+                    bills << bill
+                  end
                   # Processed file item
                   processed_model = 'ClientPayment'
                   multiple_processed_id << cp.id
@@ -1095,6 +1127,8 @@ module Ag2Gest
                                     multiple_processed_id: nil)
         end # !original_client_payment.nil?
       end # lista_devoluciones.each
+      Sunspot.index [bills, invoices, client_payments]
+      Sunspot.commit
       return processed_file_items, remesa
     end
 
@@ -1147,6 +1181,8 @@ module Ag2Gest
       processed_model = nil
       processed_id = nil
       multiple_processed_id = []
+      invoices = []
+      bills = []
 
       # Loop thru counter items (bills)
       sepa.lista_cobros.each do |c|
@@ -1200,8 +1236,14 @@ module Ag2Gest
                                      charge_account_id: i.charge_account_id,
                                      created_by: created_by)
               if cp.save
-                # Set related invoice status to charged
-                i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
+                # Set related invoice status to pending
+                i.update_column(:invoice_status_id, InvoiceStatus::PENDING)
+                invoices << i
+                if bill.invoice_status_id > i.invoice_status_id
+                  bill.update_column(:invoice_status_id, i.invoice_status_id)
+                  bills << bill
+                end
+                # i.update_attributes(invoice_status_id: InvoiceStatus::CHARGED)
                 # Processed file item
                 processed_model = 'ClientPayment'
                 processed_id = cp.id
@@ -1264,6 +1306,8 @@ module Ag2Gest
                                     multiple_processed_id: nil)
         end # !bill.nil?
       end # sepa.lista_cobros.each
+      Sunspot.index [bills, invoices]
+      Sunspot.commit
 
       notice = sepa.total_bills.to_s + " Cobros por ventanilla procesados correctamente x " + formatted_number(sepa.total_amount, 2)
 
