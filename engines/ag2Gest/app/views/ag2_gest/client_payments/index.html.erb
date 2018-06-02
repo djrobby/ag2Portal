@@ -1237,7 +1237,7 @@
     } else {
       $("#cash_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-cash-to-pending
       $("#bills-cash-to-pending").html(cp_ids.length);
-      $("#total-cash-to-pending").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#total-cash-to-pending").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 
@@ -1260,7 +1260,7 @@
     } else {
       $("#bank_confirm_client_payments_ids").val(cp_ids)   // modal-bank
       $("#bank-bills-selected").html(cp_ids.length);
-      $("#bank-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#bank-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 
@@ -1283,7 +1283,7 @@
     } else {
       $("#bank_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-bank-to-pending
       $("#bank-to-pending-bills-selected").html(cp_ids.length);
-      $("#bank-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#bank-to-pending-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 
@@ -1332,7 +1332,7 @@
     } else {
       $("#others_confirm_client_payments_ids").val(cp_ids)   // modal-others-confirm
       $("#others-bills-selected").html(cp_ids.length);
-      $("#others-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#others-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 
@@ -1355,7 +1355,7 @@
     } else {
       $("#others_to_pending_client_payments_ids").val(cp_ids.filter(i => i!=null || i!=''))   // modal-others-to-pending
       $("#others-to-pending-bills-selected").html(cp_ids.length);
-      $("#others-to-pending-total-selected").html(cp_amount.format(4, 3, _delimiter, _separator));
+      $("#others-to-pending-total-selected").html(cp_amount.format(2, 3, _delimiter, _separator));
     }
   });
 
