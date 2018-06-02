@@ -1529,8 +1529,9 @@ module Ag2Gest
       biller = params[:Biller]
       invoice_date = params[:From]
       invoice_payday = params[:To]
-      bank_account = params[:BankAccount] == t(:yes_on) ? true : false
-      bank = params[:Bank]
+      # bank_account = params[:BankAccount] == I18n.t(:yes_on) ? true : false
+      bank_account = search_if_have_active_bank_account?(params[:BankAccount])
+      # bank = params[:Bank]
       bank_order = params[:BankOrder]
       user = params[:User]
 
@@ -1571,22 +1572,23 @@ module Ag2Gest
       # subscriber_fiscal = !subscriber_fiscal.blank? ? inverse_subscriber_fiscal_search(subscriber_fiscal) : []
       # subscriber_name = !subscriber_name.blank? ? inverse_subscriber_name_search(subscriber_name) : []
       # s = (subscriber_code + subscriber_fiscal + subscriber_name).uniq
+      per_page_others = params[:per_page_others].blank? ? 10 : params[:per_page_others]
 
       # Initialize datasets
       # if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
       #    street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
       #    client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
       if no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
-         street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank?
+         street_name.blank? && bank_account.nil? && bank_order.blank?  && user.blank?
         # No query received, or filters has been removed: Return no results, except cash, bank & others
+        search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_cash)
+        search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
+        search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_others)
         @bills_pending = Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = Bill.search { with :invoice_status_id, -1 }.results
-        @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
-        search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-        search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-        search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         @client_payments_cash = search_cash.results
         @client_payments_bank = search_bank.results
+        @instalment_invoices = InstalmentInvoice.search { with :client_id, -1 }.results
         @client_payments_others = search_others.results
       else
         # Valid query received: Return found results
@@ -1595,10 +1597,10 @@ module Ag2Gest
         when 'pendings-tab', 'cash-tab', 'banks-tab', 'others-tab', 'fractionated-tab', 'charged-tab'
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_cash)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_deferrals)
+          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_others)
         # when 'charged-tab'
         #   search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
         # when 'cash-tab'
@@ -1612,17 +1614,17 @@ module Ag2Gest
         else  # No active tab, or remove filters button has been clicked
           search_pending = pendings_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
           search_charged = charged_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_cash = cash_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_cash)
           search_bank = bank_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, bank_order, per_page_bank)
-          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
-          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+          search_instalment = instalment_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_deferrals)
+          search_others = others_search(current_projects, no, project, client, subscriber, street_name, bank_account, period, user, per_page_others)
         end
         @bills_pending = search_pending.results rescue Bill.search { with :invoice_status_id, -1 }.results
         @bills_charged = search_charged.results rescue Bill.search { with :invoice_status_id, -1 }.results
-        @client_payments_others = search_others.results rescue ClientPayment.search { with :payment_type, -1 }.results
-        @instalment_invoices = search_instalment.results rescue InstalmentInvoice.search { with :client_id, -1 }.results
         @client_payments_cash = search_cash.results rescue ClientPayment.search { with :payment_type, -1 }.results
         @client_payments_bank = search_bank.results rescue ClientPayment.search { with :payment_type, -1 }.results
+        @instalment_invoices = search_instalment.results rescue InstalmentInvoice.search { with :client_id, -1 }.results
+        @client_payments_others = search_others.results rescue ClientPayment.search { with :payment_type, -1 }.results
       end
 
       # Set active_tab to use in view filters
@@ -1768,7 +1770,7 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
+        if (bank_account == true || bank_account == false)
           with :bank_account, bank_account
         end
         # Billing period
@@ -1844,7 +1846,7 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
+        if (bank_account == true || bank_account == false)
           with :bank_account, bank_account
         end
         if !period.blank?
@@ -1919,7 +1921,7 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
+        if (bank_account == true || bank_account == false)
           with :bank_account, bank_account
         end
         if !period.blank?
@@ -1994,9 +1996,9 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
+        # if !bank_account.blank?
+        #   with :bank_account, bank_account
+        # end
         if !period.blank?
           with :billing_period_id, period
         end
@@ -2073,7 +2075,7 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
+        if (bank_account == true || bank_account == false)
           with :bank_account, bank_account
         end
         if !period.blank?
@@ -2147,7 +2149,7 @@ module Ag2Gest
         #   with :subscriber_id, street_name
         # end
         # Have active bank account?
-        if !bank_account.blank?
+        if (bank_account == true || bank_account == false)
           with :bank_account, bank_account
         end
         if !period.blank?
@@ -2244,6 +2246,20 @@ module Ag2Gest
     end
 
     private
+
+    # Must search using params[:BankAccount]? (bank_account)
+    # If returns nil, do not search!
+    def search_if_have_active_bank_account?(bank_account)
+      case bank_account
+      when I18n.t(:yes_on)
+        have_bank_account = true
+      when I18n.t(:no_off)
+        have_bank_account = false
+      else
+        have_bank_account = nil
+      end
+      return have_bank_account
+    end
 
     def have_bank_account_array()
       _array = []
