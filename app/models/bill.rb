@@ -244,6 +244,10 @@ class Bill < ActiveRecord::Base
     reading_2
   end
 
+  def invoice_date
+    invoices.first.invoice_date rescue nil
+  end
+
   def payday_limit
     invoices.first.payday_limit rescue nil
   end
@@ -460,6 +464,14 @@ class Bill < ActiveRecord::Base
       end
       full_name[0,40]
     end
+  end
+
+  def biller_ids
+    invoices.pluck(:biller_id)
+  end
+
+  def biller_id
+    invoices.first.biller_id rescue nil
   end
 
   #
@@ -784,6 +796,12 @@ class Bill < ActiveRecord::Base
     integer :subscriber_ids, :multiple => true do
       subscriber_id unless subscriber_id.blank?
     end
+    # integer :billers, :multiple => true do
+    #   invoices.map { |invoice| invoice.biller_id }
+    # end
+    integer :biller_ids, :multiple => true do
+      biller_ids
+    end
     boolean :bank_account do
       client.active_bank_accounts? unless client.blank?
     end
@@ -792,6 +810,13 @@ class Bill < ActiveRecord::Base
     end
     integer :reading_route_id do
       subscriber.nil? ? nil : subscriber.reading_route_id
+    end
+    date :bill_date
+    date :invoice_date do
+      invoice_date
+    end
+    date :payday_limit do
+      payday_limit
     end
     string :sort_no do
       bill_no

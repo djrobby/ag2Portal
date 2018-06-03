@@ -160,6 +160,21 @@ class ClientPayment < ActiveRecord::Base
     payment_method.code rescue ''
   end
 
+  # Invoice date
+  def invoice_date
+    invoice.invoice_date rescue nil
+  end
+
+  # Invoice payment limit
+  def payday_limit
+    invoice.payday_limit rescue nil
+  end
+
+  # Invoice biller
+  def biller_id
+    invoice.biller_id rescue nil
+  end
+
   #
   # CSV
   #
@@ -277,6 +292,7 @@ class ClientPayment < ActiveRecord::Base
     text :receipt_no
     integer :payment_type
     integer :id
+    date :payment_date
     date :confirmation_date
     date :created_at
     integer :created_by
@@ -296,6 +312,12 @@ class ClientPayment < ActiveRecord::Base
     string :invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
       invoice.invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
     end
+    string :raw_bill_no, :multiple => true do     # Multiple search values accepted in one search (inverse_no_search)
+      bill.raw_invoice_based_no unless (bill.blank? || bill.bill_no.blank?)
+    end
+    string :raw_invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
+      invoice.raw_invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
+    end
     integer :client_id
     integer :subscriber_id
     integer :client_ids, :multiple => true do
@@ -303,6 +325,9 @@ class ClientPayment < ActiveRecord::Base
     end
     integer :subscriber_ids, :multiple => true do
       subscriber_id unless subscriber_id.blank?
+    end
+    integer :biller_id do
+      biller_id
     end
     integer :project_id, :multiple => true do
       bill.project_id unless (bill.blank? || bill.project_id.blank?)
@@ -312,6 +337,12 @@ class ClientPayment < ActiveRecord::Base
     end
     integer :billing_period_id do
       bill.reading_2.nil? ? nil : bill.reading_2.billing_period_id
+    end
+    date :invoice_date do
+      invoice_date
+    end
+    date :invoice_payday_limit do
+      payday_limit
     end
     string :sort_no do
       bill.bill_no

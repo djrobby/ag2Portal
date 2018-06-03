@@ -214,6 +214,10 @@ class Invoice < ActiveRecord::Base
     old_no.blank? ? full_no : old_no
   end
 
+  def raw_invoice_no
+    old_no.blank? ? invoice_no : old_no
+  end
+
   def formatted_payday_limit
     formatted_date(payday_limit) rescue ''
   end
