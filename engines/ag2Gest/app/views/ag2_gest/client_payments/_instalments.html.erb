@@ -118,8 +118,8 @@
             <tbody>
               <% instalment.instalment_invoices.order(:id).each do |i| %>
                 <tr>
-                  <td><%= link_to i.bill.try(:full_no), bill_path(i.bill) %></td>
-                  <td><%= link_to i.invoice.try(:full_no), invoice_path(i.invoice) %></td>
+                  <td><%= link_to i.bill.try(:invoice_based_old_no_real_no), bill_path(i.bill) %></td>
+                  <td><%= link_to i.invoice.try(:old_no_based_real_no), invoice_path(i.invoice) %></td>
                   <td class="shrinked"><%= link_to i.instalment.instalment_plan.subscriber.to_label, subscriber_path(i.instalment.instalment_plan.subscriber) unless i.instalment.instalment_plan.subscriber.blank? %></td>
                   <td align="right"><%= number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></td>
                 </tr>

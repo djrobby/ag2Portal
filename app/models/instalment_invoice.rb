@@ -43,6 +43,12 @@ class InstalmentInvoice < ActiveRecord::Base
     string :invoice_no, :multiple => true do   # Multiple search values accepted in one search (inverse_no_search)
       invoice.invoice_no unless invoice.blank?
     end
+    string :raw_bill_no, :multiple => true do   # Multiple search values accepted in one search (inverse_no_search)
+      bill.raw_invoice_based_no unless (bill.blank? || bill.bill_no.blank?)
+    end
+    string :raw_invoice_no, :multiple => true do   # Multiple search values accepted in one search (inverse_no_search)
+      invoice.raw_invoice_no unless (invoice.blank? || invoice.invoice_no.blank?)
+    end
     string :client_code_name_fiscal, :multiple => true do
       bill.client.full_name_or_company_code_fiscal unless (bill.blank? || bill.client.blank?)
     end

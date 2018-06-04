@@ -620,6 +620,15 @@ class Invoice < ActiveRecord::Base
       bill.subscriber.subscriber_supply_address.supply_address unless (bill.blank? || bill.subscriber.blank? || bill.subscriber.subscriber_supply_address.blank? || bill.subscriber.subscriber_supply_address.supply_address.blank?)
     end
     string :invoice_no, :multiple => true   # Multiple search values accepted in one search (inverse_no_search)
+    string :bill_no, :multiple => true do     # Multiple search values accepted in one search (inverse_no_search)
+      bill.bill_no unless (bill.blank? || bill.bill_no.blank?)
+    end
+    string :raw_bill_no, :multiple => true do     # Multiple search values accepted in one search (inverse_no_search)
+      bill.raw_invoice_based_no unless (bill.blank? || bill.bill_no.blank?)
+    end
+    string :raw_invoice_no, :multiple => true do  # Multiple search values accepted in one search (inverse_no_search)
+      raw_invoice_no
+    end
     integer :id
     integer :original_invoice_id
     integer :bill_id

@@ -71,6 +71,7 @@ class EnginesController < ApplicationController
     session[:ifilter_index_tariff] = nil
     session[:ifilter_show_account] = nil
     session[:incidences] = nil
+    session[:BillNo] = nil
     # Ag2HelpDesk
     session[:Id] = nil
     session[:OfficeT] = nil

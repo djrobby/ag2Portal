@@ -1555,7 +1555,7 @@ module Ag2Gest
 
       # If inverse no search is required
       no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
-      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_bill_no_search(no) : bill_no
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_bill_no_search(bill_no) : bill_no
       street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
       current_projects = current_projects_ids
 
@@ -1578,8 +1578,9 @@ module Ag2Gest
       # if no.blank? && project.blank? && period.blank? && client_name.blank? && subscriber_name.blank? &&
       #    street_name.blank? && bank_account.blank? && bank.blank? && bank_order.blank?  && user.blank? &&
       #    client_code.blank? && client_fiscal.blank? && subscriber_code.blank? && subscriber_fiscal.blank?
-      if no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
-         street_name.blank? && bank_account.nil? && bank_order.blank? && user.blank?
+      if no.blank? && bill_no.blank? && project.blank? && period.blank? && client.blank? && subscriber.blank? &&
+         street_name.blank? && bank_account.nil? && bank_order.blank? && user.blank? && biller.blank? &&
+         issue_date.blank? && payday_limit.blank?
         # No query received, or filters has been removed: Return no results, except cash, bank & others
         search_cash = cash_search(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page_cash)
         search_bank = bank_search(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, bank_order, per_page_bank)
@@ -1717,20 +1718,42 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
         if !no.blank?
           if no.class == Array
-            with :invoice_no, no
+            with(:invoice_ids, no)
           else
             with(:invoice_no).starting_with(no)
           end
         end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
         if !bill_no.blank?
           if bill_no.class == Array
-            with :invoice_no, bill_no
+            with :bill_no, bill_no
           else
-            with(:invoice_no).starting_with(bill_no)
+            with(:bill_no).starting_with(bill_no)
           end
         end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
         if !project.blank?
           with :project_id, project
         end
@@ -1813,13 +1836,42 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
         if !no.blank?
           if no.class == Array
-            with :invoice_no, no
+            with(:invoice_ids, no)
           else
             with(:invoice_no).starting_with(no)
           end
         end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
         if !project.blank?
           with :project_id, project
         end
@@ -1901,36 +1953,41 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
         # By raw invoice No
         # if !no.blank?
         #   if no.class == Array
-        #     with :invoice_no, no
+        #     with :raw_invoice_no, no
         #   else
-        #     with(:invoice_no).starting_with(no)
+        #     with(:raw_invoice_no).starting_with(no)
         #   end
         # end
-        if !no.blank?
-          if no.class == Array
-            with :raw_invoice_no, no
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
           else
-            with(:raw_invoice_no).starting_with(no)
+            with(:bill_no).starting_with(bill_no)
           end
         end
         # By raw bill No
         # if !bill_no.blank?
         #   if bill_no.class == Array
-        #     with :bill_no, bill_no
+        #     with :raw_bill_no, bill_no
         #   else
-        #     with(:bill_no).starting_with(bill_no)
+        #     with(:raw_bill_no).starting_with(bill_no)
         #   end
         # end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :raw_bill_no, bill_no
-          else
-            with(:raw_bill_no).starting_with(bill_no)
-          end
-        end
+
         # by project
         if !project.blank?
           with :project_id, project
@@ -2013,6 +2070,8 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
         if !no.blank?
           if no.class == Array
             with :invoice_no, no
@@ -2020,6 +2079,33 @@ module Ag2Gest
             with(:invoice_no).starting_with(no)
           end
         end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
         if !project.blank?
           with :project_id, project
         end
@@ -2105,6 +2191,8 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
         if !no.blank?
           if no.class == Array
             with :invoice_no, no
@@ -2112,6 +2200,33 @@ module Ag2Gest
             with(:invoice_no).starting_with(no)
           end
         end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
         if !project.blank?
           with :project_id, project
         end
@@ -2192,6 +2307,8 @@ module Ag2Gest
         if !current_projects.blank?
           with :project_id, current_projects
         end
+
+        # By invoice_no
         if !no.blank?
           if no.class == Array
             with :invoice_no, no
@@ -2199,6 +2316,33 @@ module Ag2Gest
             with(:invoice_no).starting_with(no)
           end
         end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
         if !project.blank?
           with :project_id, project
         end
@@ -2382,21 +2526,33 @@ module Ag2Gest
       no = no[no.length-1] != '%' ? no + '%' : no
     end
 
+    # def inverse_no_search(no)
+    #   _numbers = []
+    #   # Add numbers found
+    #   Invoice.where('invoice_no LIKE ?', "#{no}").each do |i|
+    #     _numbers = _numbers << i.invoice_no
+    #   end
+    #   _numbers = _numbers.blank? ? no : _numbers
+    # end
+    # def inverse_no_search(no)
+    #   _numbers = Invoice.where('invoice_no LIKE ?', "#{no}").pluck(:invoice_no)
+    #   _numbers = _numbers.blank? ? no : _numbers
+    # end
     def inverse_no_search(no)
-      _numbers = []
-      # Add numbers found
-      Invoice.where('invoice_no LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.invoice_no
-      end
+      _numbers = Invoice.where('invoice_no LIKE ?', "#{no}").pluck(:id)
       _numbers = _numbers.blank? ? no : _numbers
     end
 
-    def inverse_no_search(no)
-      _numbers = []
-      # Add numbers found
-      Invoice.where('invoice_no LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.invoice_no
-      end
+    # def inverse_bill_no_search(no)
+    #   _numbers = []
+    #   # Add numbers found
+    #   Bill.where('bill_no LIKE ?', "#{no}").each do |b|
+    #     _numbers = _numbers << b.bill_no
+    #   end
+    #   _numbers = _numbers.blank? ? no : _numbers
+    # end
+    def inverse_bill_no_search(no)
+      _numbers = Bill.where('bill_no LIKE ?', "#{no}").pluck(:bill_no)
       _numbers = _numbers.blank? ? no : _numbers
     end
 

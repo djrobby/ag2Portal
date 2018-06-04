@@ -398,6 +398,7 @@
     $("#per_page_others").val("<%= params[:per_page_others] %>");
     $("#active_tab").val("<%= params[:active_tab] %>");
     $("#No").val("<%= params[:No] %>");
+    $("#BillNo").val("<%= params[:BillNo] %>");
     // $("#Project").select2("val", "<%#= params[:Project] %>");
     // $("#Client").val("<%= params[:Client] %>");
     // $("#ClientCode").val("<%= params[:ClientCode] %>");
@@ -408,6 +409,8 @@
     $("#StreetName").val("<%= params[:StreetName] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
     $("#BankOrder").val("<%= params[:BankOrder] %>");
+    $("#From").val("<%= params[:From] %>");
+    $("#To").val("<%= params[:To] %>");
     // $("#Period").select2("val", "<%#= params[:billing_period] %>");
     $("#initial-cash").val("<%= @opening_balance %>");
   });
@@ -454,6 +457,7 @@
 
     $("#removeFilter").click(function() {
       $("#No").val("");
+      $("#BillNo").val("");
       $("#Project").select2("val", "");
       $("#Period").select2("val", "");
       $("#Client").select2("val", "");
@@ -465,6 +469,8 @@
       // $("#StreetName").select2("val", "");
       $("#StreetName").val("");
       $("#Biller").select2("val", "");
+      $("#From").val("");
+      $("#To").val("");
       $("#BankAccount").val("");
       $("#BankOrder").val("");
       $("#User").select2("val", "");
