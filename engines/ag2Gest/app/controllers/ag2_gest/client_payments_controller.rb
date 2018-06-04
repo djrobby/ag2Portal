@@ -183,6 +183,9 @@ module Ag2Gest
       invoice_no = instalments.first.instalment_invoices.first.invoice.invoice_no
       receipt_no = receipt_next_no(invoice_no[3..4]) || '0000000000'
 
+      invoices = []
+      bills = []
+
       # Begin the transaction
       begin
         ActiveRecord::Base.transaction do
@@ -195,17 +198,33 @@ module Ag2Gest
                 amount_paid = acu
                 acu = 0
               end
+              acu_j = acu
               i.instalment_invoices.each do |j|
+                if acu_j >= j.debt
+                  amount_paid_j = j.debt
+                  acu_j -= j.debt
+                else
+                  amount_paid_j = acu_j
+                  acu_j = 0
+                end
                 client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::CASH, bill_id: j.bill_id, invoice_id: j.invoice_id,
                                      payment_method_id: payment_method, client_id: j.bill.client_id, subscriber_id: j.bill.subscriber_id,
-                                     payment_date: Time.now, confirmation_date: nil, amount: amount_paid, instalment_id: i.id,
+                                     payment_date: Time.now, confirmation_date: nil, amount: amount_paid_j, instalment_id: i.id,
                                      client_bank_account_id: nil, charge_account_id: j.invoice.charge_account_id, created_by: created_by)
                 if !client_payment.save
                   op = false;
                   break
                 else
-                  if j.invoice.debt == 0  # No more debt, change invoice status
-                    j.invoice.update_attributes(invoice_status_id: InvoiceStatus::CASH)
+                  if j.invoice_debt == 0  # No more debt, change invoice status
+                    # j.invoice.update_attributes(invoice_status_id: InvoiceStatus::CASH)
+                    invoice = j.invoice
+                    invoice.update_column(:invoice_status_id, InvoiceStatus::CASH)
+                    invoices << invoice
+                    # Set bill status to min invoices status
+                    bill = invoice.bill
+                    min_invoice_status_id = bill.min_invoice_status_id
+                    bill.update_column(:invoice_status_id, min_invoice_status_id)
+                    bills << bill
                   end
                 end
               end # i.instalment_invoices.each
@@ -217,9 +236,17 @@ module Ag2Gest
               break
             end
           end   # instalments.each
-          redirect_to client_payments_path + "#tab_fractionated", notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
-          # redirect_to client_payments_path, notice: "Plazo/s traspasados a Caja."
+          # invoices = invoices.uniq
+          # bills = bills.uniq
+          # Sunspot.index [bills, invoices]
+          # Sunspot.commit
+          # redirect_to client_payments_path + "#tab_fractionated", notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
         end # ActiveRecord::Base.transaction
+        invoices = invoices.uniq
+        bills = bills.uniq
+        Sunspot.index [bills, invoices]
+        Sunspot.commit
+        redirect_to client_payments_path + "#tab_fractionated", notice: (I18n.t('ag2_gest.client_payments.index.cash_instalments_ok') + " #{view_context.link_to I18n.t('ag2_gest.client_payments.index.click_to_print_receipt'), payment_receipt_client_payment_path(client_payment, :format => :pdf), target: '_blank'}").html_safe
       rescue ActiveRecord::RecordInvalid
         redirect_to client_payments_path + "#tab_fractionated", alert: "¡Error! Imposible traspasar plazo/s a Caja." and return
       end # begin
@@ -570,6 +597,9 @@ module Ag2Gest
       created_by = current_user.id if !current_user.nil?
 
       op = true
+      d = 0
+      notice = "Plazo/s domiciliado/s traspasados a Banco"
+
       # Begin the transaction
       begin
         ActiveRecord::Base.transaction do
@@ -595,9 +625,18 @@ module Ag2Gest
                 redirect_to client_payments_path + "#tab_fractionated", alert: "¡Error! Imposible traspasar plazo/s a Banco." and return
                 # break
               end
+            else
+              d = d + 1
             end   # !client_bank_account.blank?
           end   # instalments.each
-          redirect_to client_payments_path + "#tab_fractionated", notice: "Plazo/s domiciliado/s traspasados a Banco."
+          if d <= 0
+            notice = notice + "."
+            redirect_to client_payments_path + "#tab_fractionated", notice: notice
+          else
+            d = d.to_s
+            notice = "¡Advertencia! Traspaso a Banco finalizado, pero #{d} plazo/s no estaba/n domiciliado/s."
+            redirect_to client_payments_path + "#tab_fractionated", alert: notice
+          end
         end # ActiveRecord::Base.transaction
       rescue ActiveRecord::RecordInvalid
         redirect_to client_payments_path + "#tab_fractionated", alert: "¡Error! Imposible traspasar plazo/s a Banco." and return

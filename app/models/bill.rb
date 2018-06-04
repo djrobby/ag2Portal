@@ -474,6 +474,14 @@ class Bill < ActiveRecord::Base
     invoices.pluck(:invoice_no)
   end
 
+  def invoice_status_ids
+    invoices.pluck(:invoice_status_id)
+  end
+
+  def min_invoice_status_id
+    invoice_status_ids.uniq.min || 1
+  end
+
   def biller_ids
     invoices.pluck(:biller_id)
   end

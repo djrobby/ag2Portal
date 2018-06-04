@@ -12,6 +12,10 @@ class InstalmentInvoice < ActiveRecord::Base
   #
   # Methods
   #
+  def invoice_debt
+    invoice.debt
+  end
+
   def instalment_date
     instalment_plan.instalment_date rescue nil
   end
