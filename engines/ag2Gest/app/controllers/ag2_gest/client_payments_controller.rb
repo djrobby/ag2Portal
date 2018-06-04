@@ -198,7 +198,7 @@ module Ag2Gest
                 amount_paid = acu
                 acu = 0
               end
-              acu_j = acu
+              acu_j = amount_paid
               i.instalment_invoices.each do |j|
                 if acu_j >= j.debt
                   amount_paid_j = j.debt

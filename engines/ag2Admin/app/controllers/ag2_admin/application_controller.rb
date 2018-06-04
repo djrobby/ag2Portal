@@ -25,11 +25,16 @@ module Ag2Admin
         next if table.match(/\Aschema_migrations\Z/)
         klass = table.singularize.camelize.constantize rescue nil
         if !klass.nil?
+          # kname = klass.name rescue nil
+          # kount = klass.count rescue 0
+          # if !kname.nil? && kount>0
+          #   krcrd = kount > 1 ? I18n.t(:records) : I18n.t(:record)
+          #   krcrd = kname + ' (' + kount.to_s + ' ' + krcrd + ')'
+          #   _array = _array << [krcrd, kname]
+          # end
           kname = klass.name rescue nil
-          kount = klass.count rescue 0
-          if !kname.nil? && kount>0
-            krcrd = kount > 1 ? I18n.t(:records) : I18n.t(:record)
-            krcrd = kname + ' (' + kount.to_s + ' ' + krcrd + ')'
+          if !kname.nil?
+            krcrd = kname
             _array = _array << [krcrd, kname]
           end
         end
