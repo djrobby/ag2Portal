@@ -296,7 +296,7 @@ class ApplicationController < ActionController::Base
           if fiscal_id.length == 9 && fiscal_id[8] != _dc
             _dc = '$err'
           end
-        elsif fiscal_id[0] == 'X'
+        elsif fiscal_id[0] == 'X' || fiscal_id[0] == 'Y' || fiscal_id[0] == 'Z'
           # NIE
           _dc = calc_dc_individual(fiscal_id[1, fiscal_id.length-1].to_i)
         elsif fiscal_id[0] == 'U'
