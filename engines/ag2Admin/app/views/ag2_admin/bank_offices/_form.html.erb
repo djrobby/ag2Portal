@@ -10,7 +10,7 @@
     // when the #bank_office_town_id field changes
     $("#bank_office_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#bank_office_town_id :selected').val();
+      var contact = $('select#bank_office_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('bo_update_province_textfield_from_town/' + contact, function(data) {
@@ -24,7 +24,7 @@
     // when the #bank_office_province_id field changes
     $("#bank_office_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#bank_office_province_id :selected').val();
+      var contact = $('select#bank_office_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('bo_update_region_textfield_from_province/' + contact, function(data) {
@@ -37,7 +37,7 @@
     // when the #bank_office_zipcode_id field changes
     $("#bank_office_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#bank_office_zipcode_id :selected').val();
+      var contact = $('select#bank_office_zipcode_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('bo_update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -52,7 +52,7 @@
     // when the #bank_office_region_id field changes
     $("#bank_office_region_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#bank_office_region_id :selected').val();
+      var contact = $('select#bank_office_region_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('bo_update_country_textfield_from_region/' + contact, function(data) {

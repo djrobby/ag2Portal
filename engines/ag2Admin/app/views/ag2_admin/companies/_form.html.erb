@@ -42,7 +42,7 @@
     // when the #company_town_id field changes
     $("#company_town_id").change(function() {
       // make a POST call and replace the content
-      var company = $('select#company_town_id :selected').val();
+      var company = $('select#company_town_id').val();
       if (company == "")
         company = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + company, function(data) {
@@ -54,7 +54,7 @@
     // when the #company_zipcode_id field changes
     $("#company_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var company = $('select#company_zipcode_id :selected').val();
+      var company = $('select#company_zipcode_id').val();
       if (company == "")
         company = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + company, function(data) {
@@ -67,7 +67,7 @@
     // when the #company_organization_id field changes
     $("#company_organization_id").change(function() {
       // make a POST call
-      var company = $('select#company_organization_id :selected').val();
+      var company = $('select#company_organization_id').val();
       if (company == "")
         company = "0";
       jQuery.getJSON('co_update_from_organization/' + company, function(data) {
@@ -105,8 +105,8 @@
       recalculate(_this);
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var total = $('#company_max_order_total').val().replace(",", ".");
@@ -116,7 +116,7 @@
       $('#company_max_order_price').val(price);
       $('#company_overtime_pct').val(overtime);
     });
-    
+
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
@@ -211,7 +211,7 @@
     <tr class="form-tr">
     <div class="field file-field">
       <td class="form-td-two left-winged"> <%= f.input :logo, as: :file, input_html: { accept: 'image/*' }, label_html: { class: 'form-label' } %> </td>
-      <%= f.hidden_field :logo_cache %> 
+      <%= f.hidden_field :logo_cache %>
       <td class="form-td-two right-winged">
       <div id="dd_files">
         <% if !@company.logo_file_name.nil? %>

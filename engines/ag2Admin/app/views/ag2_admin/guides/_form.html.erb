@@ -3,7 +3,7 @@
     // when the #guide_app_id field changes
     $("#guide_app_id").change(function() {
       // make a POST call and replace the content
-      var app = $('select#guide_app_id :selected').val();
+      var app = $('select#guide_app_id').val();
       if (app == "")
         app = "0";
       jQuery.getJSON('gu_update_site_from_app/' + app, function(data) {

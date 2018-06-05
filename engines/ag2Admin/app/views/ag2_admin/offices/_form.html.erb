@@ -14,7 +14,7 @@
     // when the #office_town_id field changes
     $("#office_town_id").change(function() {
       // make a POST call and replace the content
-      var office = $('select#office_town_id :selected').val();
+      var office = $('select#office_town_id').val();
       if (office == "")
         office = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + office, function(data) {
@@ -26,7 +26,7 @@
     // when the #office_zipcode_id field changes
     $("#office_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var office = $('select#office_zipcode_id :selected').val();
+      var office = $('select#office_zipcode_id').val();
       var code = $('#office_office_code').val();
       if (office == "")
         office = "0";
@@ -42,7 +42,7 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var office = $('select#office_zipcode_id :selected').val();
+      var office = $('select#office_zipcode_id').val();
       if (office == "")
         office = "0";
       jQuery.getJSON('update_code_textfield_from_zipcode/' + office, function(data) {
@@ -74,8 +74,8 @@
       recalculate(_this);
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var total = $('#office_max_order_total').val().replace(",", ".");
@@ -85,7 +85,7 @@
       $('#office_max_order_price').val(price);
       $('#office_overtime_pct').val(overtime);
     });
-    
+
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content

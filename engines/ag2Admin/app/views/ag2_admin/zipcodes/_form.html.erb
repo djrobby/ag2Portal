@@ -3,7 +3,7 @@
     // when the #zipcode_town_id field changes
     $("#zipcode_town_id").change(function() {
       // make a POST call and replace the content
-      var town = $('select#zipcode_town_id :selected').val();
+      var town = $('select#zipcode_town_id').val();
       if (town == "")
         town = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + town, function(data) {

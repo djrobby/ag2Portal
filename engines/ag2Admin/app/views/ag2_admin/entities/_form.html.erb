@@ -7,7 +7,7 @@
       allowClear: true
     });
 
-    var contact = $('select#entity_entity_type_id :selected').val();
+    var contact = $('select#entity_entity_type_id').val();
     if (contact == "")
       contact = "0";
     if (contact == "0") {
@@ -60,7 +60,7 @@
     // when the #entity_town_id field changes
     $("#entity_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_town_id :selected').val();
+      var contact = $('select#entity_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -74,7 +74,7 @@
     // when the #entity_province_id field changes
     $("#entity_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_province_id :selected').val();
+      var contact = $('select#entity_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -87,7 +87,7 @@
     // when the #entity_zipcode_id field changes
     $("#entity_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_zipcode_id :selected').val();
+      var contact = $('select#entity_zipcode_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -102,7 +102,7 @@
     // when the #entity_region_id field changes
     $("#entity_region_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_region_id :selected').val();
+      var contact = $('select#entity_region_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
@@ -114,7 +114,7 @@
     // when the #entity_entity_type_id field changes
     $("#entity_entity_type_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#entity_entity_type_id :selected').val();
+      var contact = $('select#entity_entity_type_id').val();
       if (contact == "")
         contact = "0";
       if (contact == "0") {// Empty type

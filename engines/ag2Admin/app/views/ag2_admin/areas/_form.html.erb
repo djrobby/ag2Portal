@@ -4,13 +4,13 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
     });
-  });  
+  });
 
   jQuery(function($) {
     // when the #area_department_id field changes
     $("#area_department_id").change(function() {
       // make a POST call and replace the content
-      var department = $('select#area_department_id :selected').val();
+      var department = $('select#area_department_id').val();
       if (department == "")
         department = "0";
       jQuery.getJSON('ar_update_worker_select_from_department/' + department, function(data) {
