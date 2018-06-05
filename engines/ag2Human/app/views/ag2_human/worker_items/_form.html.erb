@@ -10,12 +10,12 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; }
     });
   });
-  
+
   jQuery(function($) {
     // when the #worker_item_office_id field changes
     $("#worker_item_office_id").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#worker_item_office_id :selected').val();
+      var worker = $('select#worker_item_office_id').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_company_textfield_from_office/' + worker, function(data) {

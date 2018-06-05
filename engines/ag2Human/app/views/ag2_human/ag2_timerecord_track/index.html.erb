@@ -10,17 +10,17 @@
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       containerCssClass: 'left-winged'
     });
-  }); 
+  });
 
   jQuery(function($) {
     // when #worker_report_btn is clicked
     $("#worker_report_btn").click(function() {
       // make a POST call and get report
-      var worker = $('select#Worker :selected').val();
+      var worker = $('select#Worker').val();
       var from = $('#From').val();
       var to = $('#To').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
+      var office = $('select#Office').val();
+      var code = $('select#Code').val();
       if ((worker == "") || (from == "") || (to == ""))
         return;
       var dateFrom = right_date(from, 'es');
@@ -39,11 +39,11 @@
     // when #offce_report_btn is clicked
     $("#offce_report_btn").click(function() {
       // make a POST call and get report
-      var worker = $('select#Worker :selected').val();
+      var worker = $('select#Worker').val();
       var from = $('#From').val();
       var to = $('#To').val();
-      var office = $('select#Office :selected').val();
-      var code = $('select#Code :selected').val();
+      var office = $('select#Office').val();
+      var code = $('select#Code').val();
       if ((office == "") || (from == "") || (to == ""))
         return;
       var dateFrom = right_date(from, 'es');
@@ -62,7 +62,7 @@
     // when the #Office field changes
     $("#Office").change(function() {
       // make a POST call and replace the content
-      var worker = $('#Office :selected').val();
+      var worker = $('#Office').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_workers_select_from_office/' + worker, function(data) {

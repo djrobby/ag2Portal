@@ -1,7 +1,7 @@
 <script>
   var _thisForm = '';
   var changing = false;
-  
+
   $(document).ready(function() {
     // Initialized form variable
     _thisForm = $("#removeFilter").closest('form')[0];
@@ -27,7 +27,7 @@
     // when the #WrkrCompany field changes
     $("#WrkrCompany").change(function() {
       // make a POST call and replace the content
-      var worker = $('#WrkrCompany :selected').val();
+      var worker = $('#WrkrCompany').val();
       if (worker == "")
         worker = "0";
       changing = true;
@@ -51,7 +51,7 @@
       changing = false;
       return false;
     });
-    
+
     // when the #removeFilter button clicked
     $("#removeFilter").click(function() {
       $("#WrkrCompany").val("");
@@ -118,4 +118,3 @@
     </div><!-- /.span9 -->
   </div><!-- /.row-fluid -->
 </div><!-- /.container-fluid -->
-

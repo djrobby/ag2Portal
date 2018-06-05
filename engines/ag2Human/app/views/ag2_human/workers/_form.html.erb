@@ -36,12 +36,12 @@
       return false;
     }));
   });
-  
+
   jQuery(function($) {
     // when the #worker_town_id field changes
     $("#worker_town_id").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#worker_town_id :selected').val();
+      var worker = $('select#worker_town_id').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + worker, function(data) {
@@ -53,7 +53,7 @@
     // when the #worker_zipcode_id field changes
     $("#worker_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#worker_zipcode_id :selected').val();
+      var worker = $('select#worker_zipcode_id').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + worker, function(data) {
@@ -82,7 +82,7 @@
     // when the #worker_office_id field changes
     $("#worker_office_id").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#worker_office_id :selected').val();
+      var worker = $('select#worker_office_id').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_company_textfield_from_office/' + worker, function(data) {
@@ -94,7 +94,7 @@
     // when the #worker_user_id field changes
     $("#worker_user_id").change(function() {
       // make a POST call and replace the content
-      var worker = $('select#worker_user_id :selected').val();
+      var worker = $('select#worker_user_id').val();
       if (worker == "")
         worker = "0";
       jQuery.getJSON('update_email_textfield_from_user/' + worker, function(data) {
