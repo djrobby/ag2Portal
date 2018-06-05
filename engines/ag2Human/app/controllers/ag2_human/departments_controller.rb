@@ -195,7 +195,7 @@ module Ag2Human
     end
 
     def workers_by_company(_company)
-      _workers = Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
+      Worker.joins(:worker_items).group('worker_items.worker_id').where(worker_items: { company_id: _company }).order(:last_name, :first_name)
     end
 
     # Keeps filter state
