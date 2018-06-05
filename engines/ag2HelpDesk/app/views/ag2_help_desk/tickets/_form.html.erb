@@ -17,7 +17,7 @@
     // when the #ticket_created_by field changes
     $("#ticket_created_by").change(function() {
       // make a POST call and replace the content
-      var ticket = $('select#ticket_created_by :selected').val();
+      var ticket = $('select#ticket_created_by').val();
       if (ticket == "")
         ticket = "0";
       jQuery.getJSON('ti_update_office_textfield_from_created_by/' + ticket, function(data) {
@@ -36,7 +36,7 @@
     // when the #ticket_organization_id field changes
     $("#ticket_organization_id").change(function() {
       // make a POST call and replace the content
-      var ticket = $('select#ticket_organization_id :selected').val();
+      var ticket = $('select#ticket_organization_id').val();
       if (ticket == "")
         ticket = "0";
       jQuery.getJSON('ti_update_office_textfield_from_organization/' + ticket, function(data) {
