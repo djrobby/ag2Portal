@@ -7,7 +7,7 @@
     // when the #corp_contact_office_id field changes
     $("#corp_contact_office_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#corp_contact_office_id :selected').val();
+      var contact = $('select#corp_contact_office_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_company_textfield_from_office/' + contact, function(data) {
