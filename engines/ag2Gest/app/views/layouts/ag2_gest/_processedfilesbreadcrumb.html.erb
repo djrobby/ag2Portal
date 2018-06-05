@@ -35,26 +35,6 @@
   <li>
     <span class="divider"></span>
   </li>
-  <li>
-    <%= link_to @processed_file.to_first, :class => 'notice-icon-button', :id => 'first', :title => I18n.t(:first) do %>
-    <i class="icon-fast-backward"></i>
-    <% end %>
-  </li>
-  <li>
-    <%= link_to @processed_file.to_prev, :class => 'notice-icon-button', :id => 'prev', :title => I18n.t(:prev) do %>
-    <i class="icon-backward"></i>
-    <% end %>
-  </li>
-  <li>
-    <%= link_to @processed_file.to_next, :class => 'notice-icon-button', :id => 'next', :title => I18n.t(:next) do %>
-    <i class="icon-forward"></i>
-    <% end %>
-  </li>
-  <li>
-    <%= link_to @processed_file.to_last, :class => 'notice-icon-button', :id => 'last', :title => I18n.t(:last) do %>
-    <i class="icon-fast-forward"></i>
-    <% end %>
-  </li>
   <% end %>
   <% end %>
   <!-- Close -->

@@ -1,0 +1,92 @@
+if @processed_files.blank?
+  return
+end
+
+# Localization for numbers
+delimiter = I18n.locale == :es ? "." : ","
+
+report.set_layout tlf: 'reports/processed_file_report', layout_options: { default: true }
+
+#
+# Report events
+#
+# On page create
+report.events.on :page_create do |e|
+  # Set page-number
+  e.page.item(:page_no).value(e.page.no)
+end
+# On report generate
+report.events.on :generate do |e|
+  e.pages.each do |page|
+    # Set total-page-number
+    page.item(:page_count).value(e.report.page_count)
+  end
+end
+
+#
+# List configuration (stores & events)
+#
+report.layout.config.list(:default) do |c|
+  # Define the variables used in list
+  c.use_stores page_rows: 0
+
+  # On list page footer insertion
+  c.events.on :page_footer_insert do |e|
+    # Display page sutotals
+    e.section.item(:sum_rows_title).value(I18n.t("ag2_gest.ag2_gest_track.every_report.cumulative_total"))
+    e.section.item(:sum_rows).value(e.store.page_rows)
+    # Initialize subtotals to 0
+    #e.store.page_rows = 0
+  end
+end
+
+# New page & start
+report.start_new_page
+# Page header
+report.page.values report_title: I18n.t("activerecord.models.processed_file.few")
+report.page.values from_title: I18n.t("every_report.from_title")
+report.page.values to_title: I18n.t("every_report.to_title")
+report.page.values from: @from
+report.page.values to: @to
+
+# Page footer
+report.page.values(printed_at: formatted_timestamp(Time.now),
+           pt: I18n.t("every_report.pt"),
+           pd: I18n.t("every_report.pd"))
+
+
+# List header
+report.page.list(:default).header do |header|
+  header.item(:fileid_c).value I18n.t("activerecord.attributes.processed_file.file_id")
+  header.item(:filename_c).value I18n.t("activerecord.attributes.processed_file.filename")
+  header.item(:date_c).value I18n.t("activerecord.attributes.processed_file.file_date")
+  header.item(:type_c).value I18n.t("activerecord.attributes.processed_file.processed_file_type")
+  header.item(:flow_c).value I18n.t("activerecord.attributes.processed_file.flow")
+  header.item(:created_at_c).value I18n.t(:created_at)
+  header.item(:created_by_c).value I18n.t(:created_by)
+end
+
+
+# List detail
+@processed_files.each do |i|
+  report.page.item(:from_title).hide
+  report.page.item(:to_title).hide
+  report.page.item(:from).hide
+  report.page.item(:to).hide
+  report.page.item(:l13).hide
+
+  report.page.list(:default).add_row do |row|
+    row.item(:fileid).value i.fileid unless i.fileid.blank?
+    row.item(:filename).value i.filename unless i.filename.blank?
+    row.item(:date).value formatted_date(i.filedate) unless i.filedate.blank?
+    row.item(:type).value i.processed_file_type.name unless i.processed_file_type.blank?
+    row.item(:flow).value i.flow_label unless i.flow_label.blank?
+    row.item(:created_at).value formatted_timestamp(i.created_at.utc.getlocal) unless i.created_at.blank?
+    row.item(:created_by).value User.find(i.created_by).email unless i.created_by.blank?
+  end
+
+  # Store page subtotals
+  report.page.list(:default) do |list|
+    list.store.page_rows += 1
+  end
+end

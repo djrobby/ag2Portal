@@ -2,7 +2,7 @@
   var text_field_color;
 
   $(document).ready(function() {
-    var contact = $('select#fnt_entity_type :selected').val();
+    var contact = $('#fnt_entity_type').val();
     if (contact == "")
       contact = "0";
     if (contact == "0") {// Empty type
@@ -24,7 +24,7 @@
 
   jQuery(function($) {
     $('#form_new_entity').on('submit', function() {
-      var entity_type = $('select#fnt_entity_type :selected').val();
+      var entity_type = $('#fnt_entity_type').val();
       var fiscal_id = $('#fnt_fiscal_id').val();
       var company = $('#fnt_company').val();
       var last_name = $('#fnt_last_name').val();
@@ -32,18 +32,18 @@
       var phone = $('#fnt_phone').val();
       var cellular = $('#fnt_cellular').val();
       var email = $('#fnt_email').val();
-      var street_type = $('select#fnt_street_type :selected').val();
+      var street_type = $('#fnt_street_type').val();
       var street_name = $('#fnt_street_name').val();
       var street_number = $('#fnt_street_number').val();
       var building = $('#fnt_building').val();
       var floor = $('#fnt_floor').val();
       var floor_office = $('#fnt_floor_office').val();
-      var zipcode = $('select#fnt_zipcode :selected').val();
-      var town = $('select#fnt_town :selected').val();
-      var province = $('select#fnt_province :selected').val();
-      var region = $('select#fnt_region :selected').val();
-      var country = $('select#fnt_country :selected').val();
-      var organization = $('select#fnt_organization :selected').val();
+      var zipcode = $('#fnt_zipcode').val();
+      var town = $('#fnt_town').val();
+      var province = $('#fnt_province').val();
+      var region = $('#fnt_region').val();
+      var country = $('#fnt_country').val();
+      var organization = $('#fnt_organization').val();
 
       if ((entity_type == "") || (fiscal_id == "")  || (phone == "")  ||
           (street_type == "") || (zipcode == "")  || (town == "")  || (province == "") ||
@@ -88,7 +88,7 @@
     // when the #fnt_town field changes
     $("#fnt_town").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_town :selected').val();
+      var contact = $('#fnt_town').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -102,7 +102,7 @@
     // when the #fnt_province field changes
     $("#fnt_province").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_province :selected').val();
+      var contact = $('#fnt_province').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -115,7 +115,7 @@
     // when the #fnt_zipcode field changes
     $("#fnt_zipcode").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_zipcode :selected').val();
+      var contact = $('#fnt_zipcode').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -130,7 +130,7 @@
     // when the #fnt_region field changes
     $("#fnt_region").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_region :selected').val();
+      var contact = $('#fnt_region').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
@@ -142,7 +142,7 @@
     // when the #fnt_entity_type field changes
     $("#fnt_entity_type").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_entity_type :selected').val();
+      var contact = $('#fnt_entity_type').val();
       if (contact == "")
         contact = "0";
       if (contact == "0") {// Empty type
@@ -171,7 +171,7 @@
     <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
   </div>
   <div class="modal-body">
-    <%= f.association :entity_type, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :entity_type_id, :autofocus => true, collection: EntityType.all(order: 'name'), :input_html => { :class => 'mid-text-field', :id => 'fnt_entity_type' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :fiscal_id, :input_html => { onkeyup: "caps(this)", :class => 'mid-text-field', :id => 'fnt_fiscal_id' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :company, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_company' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :last_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_last_name' }, :label_html => { :class => 'form-label' } %>
@@ -179,23 +179,23 @@
     <%= f.input :phone, required: true, :input_html => { :class => 'mid-text-field', :id => 'fnt_phone' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :cellular, :input_html => { :class => 'mid-text-field', :id => 'fnt_cellular' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :email, :input_html => { :class => 'x-large-text-field', :id => 'fnt_email' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :street_type, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :street_type_id, required: true, collection: StreetType.all(order: 'street_type_code'), :input_html => { :class => 'mid-text-field', :id => 'fnt_street_type' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :street_name, required: true, :input_html => { :class => 'x-large-text-field', :id => 'fnt_street_name' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :street_number, required: true, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_street_number' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :building, :input_html => { :class => 'mid-text-field', :id => 'fnt_building' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :floor, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor' }, :label_html => { :class => 'form-label' } %>
     <%= f.input :floor_office, :input_html => { :class => 'small-text-field number-text-field', :id => 'fnt_floor_office' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :zipcode, collection: @zipcodes, label_method: :second, value_method: :first, :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :town, collection: @towns, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :province, collection: @provinces, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :region, collection: @regions, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
-    <%= f.association :country, collection: @countries, label_method: :second, value_method: :first, :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :zipcode_id, required: true, collection: @zipcodes, label_method: :second, value_method: :first, :input_html => { :class => 'large-text-field', :id => 'fnt_zipcode' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :town_id, required: true, collection: @towns, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_town' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :province_id, required: true, collection: @provinces, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_province' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :region_id, required: true, collection: @regions, label_method: :second, value_method: :first, :input_html => { :class => 'x-large-text-field', :id => 'fnt_region' }, :label_html => { :class => 'form-label' } %>
+    <%= f.input :country_id, required: true, collection: @countries, label_method: :second, value_method: :first, :input_html => { :class => 'large-text-field', :id => 'fnt_country' }, :label_html => { :class => 'form-label' } %>
     <% if session[:organization] != '0' %>
-    <%= f.association :organization, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.input :organization_id, collection: Organization.where("id = ?", "#{session[:organization]}").all, input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% elsif current_user.organizations.count > 0 %>
-    <%= f.association :organization, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' }, include_blank: false %>
+    <%= f.input :organization_id, collection: current_user.organizations.order('name'), input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' }, include_blank: false %>
     <% else %>
-    <%= f.association :organization, collection: Organization.order('name'), input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' } %>
+    <%= f.input :organization_id, collection: Organization.order('name'), input_html: { class: 'x-large-text-field', :id => 'fnt_organization' }, label_html: { class: 'form-label' } %>
     <% end %>
   </div>
   <div class="modal-footer">

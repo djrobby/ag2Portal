@@ -108,7 +108,7 @@ end
   else
     _debt_total = _debt
 	end
-	if _debt == "0,00"
+	if _debt == "0,00" && receipt.instalment.blank?
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
@@ -146,14 +146,17 @@ end
               row3.item(:invoice_debt).value _debt_invoice_total
 						end
 					if !receipt.instalment.blank?
-						@payment_receipt.each do |receipt_instalment|
-							report.page.list(:default).add_row do |row4|
-								row4.item(:sup).hide
-								row4.item(:instalment_no).value I18n.t("activerecord.models.instalment_plan.one") + ": " + receipt_instalment.instalment.instalment_no.to_s + " " + I18n.t("activerecord.attributes.instalment_plan.instalments_qty_c.") + ": " + receipt_instalment.instalment.instalment.to_s
-								row4.item(:instalment_date).value var_invoice_date
-								row4.item(:instalment_total).value number_with_precision(receipt_instalment.instalment.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-								row4.item(:instalment_amount).value number_with_precision(receipt_instalment.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-							end
+						# invoices.client_payments.each do |receipt_instalment|
+            @payment_receipt.each do |receipt_instalment|
+              if invoices.id == receipt_instalment.invoice_id
+  							report.page.list(:default).add_row do |row4|
+  								row4.item(:sup).hide
+  								row4.item(:instalment_no).value I18n.t("activerecord.models.instalment_plan.one") + ": " + receipt_instalment.instalment.instalment_no.to_s + " " + I18n.t("activerecord.attributes.instalment_plan.instalments_qty_c.") + ": " + receipt_instalment.instalment.instalment.to_s
+  								row4.item(:instalment_date).value var_invoice_date
+  								row4.item(:instalment_total).value number_with_precision(receipt_instalment.instalment.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  								row4.item(:instalment_amount).value number_with_precision(receipt_instalment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  							end
+              end
 						end
 					end
 				end

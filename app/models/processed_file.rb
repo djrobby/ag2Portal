@@ -1,4 +1,5 @@
 class ProcessedFile < ActiveRecord::Base
+  include ModelsModule
   # CONSTANTS
   INPUT = 1
   OUTPUT = 2
@@ -23,6 +24,44 @@ class ProcessedFile < ActiveRecord::Base
       when 1 then I18n.t('activerecord.attributes.processed_file.input')
       when 2 then I18n.t('activerecord.attributes.processed_file.output')
       else 'N/A'
+    end
+  end
+
+  #
+  # CSV
+  #
+  # Aux methods for CSV
+  def raw_number(_number, _d)
+    formatted_number_without_delimiter(_number, _d)
+  end
+
+  def sanitize(s)
+    !s.blank? ? sanitize_string(s.strip, true, true, true, false) : ''
+  end
+
+  #
+  # Class (self) user defined methods
+  #
+  def self.to_csv(array)
+    attributes = [array[0].sanitize(I18n.t("activerecord.attributes.processed_file.file_id")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.processed_file.filename")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.processed_file.file_date")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.processed_file.processed_file_type")),
+                  array[0].sanitize(I18n.t("activerecord.attributes.processed_file.flow")),
+                  array[0].sanitize(I18n.t(:created_at)),
+                  array[0].sanitize(I18n.t(:created_by))]
+    col_sep = I18n.locale == :es ? ";" : ","
+    CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
+      csv << attributes
+      array.each do |processed_file|
+        csv << [  processed_file.fileid,
+                  processed_file.filename,
+                  processed_file.formatted_date(processed_file.filedate),
+                  processed_file.processed_file_type.name,
+                  processed_file.flow_label,
+                  processed_file.formatted_timestamp(processed_file.created_at.utc.getlocal),
+                  User.find(processed_file.created_by).email]
+      end
     end
   end
 end

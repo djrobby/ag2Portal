@@ -40,9 +40,24 @@ class ProcessedFileItem < ActiveRecord::Base
   end
 
   def processed_no
-    case processed_model
-      when 'ClientPayment' then ClientPayment.find(processed_id).full_no
-      else 'N/A'
+    if !processed_id.nil?
+      case processed_model
+        when 'ClientPayment' then ClientPayment.find(processed_id).full_no
+        else 'N/A'
+      end
+    else
+      mp = multiple_processed_id.split(",").map { |s| s.to_i }
+      multiple_processed = []
+      mp.each do |a|
+        cp = ClientPayment.find(a).full_no
+        if !multiple_processed.include? cp
+          multiple_processed << cp
+        end
+      end
+      case processed_model
+        when 'ClientPayment' then multiple_processed.join(",")
+        else 'N/A'
+      end
     end
   end
 end

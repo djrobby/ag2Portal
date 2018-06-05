@@ -42,6 +42,8 @@ Ag2Gest::Engine.routes.draw do
 
     #
     # Control&Tracking
+    # report processed_files
+    match 'processed_files_view_report', :controller => 'processed_files', :action => 'processed_files_view_report'
     # report client
     match 'client_report', :controller => 'clients', :action => 'client_report'
     # report subscriber

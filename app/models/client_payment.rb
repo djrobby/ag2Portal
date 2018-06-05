@@ -138,16 +138,16 @@ class ClientPayment < ActiveRecord::Base
 
   #encrypted security code
   def burst_security
-    fact = self.bill.raw_invoice_based_no
-    date = formatted_timestamp(self.bill.bill_date)
-    userid = self.created_by.to_s
-    collected = self.bill.collected.round(2)
+    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
+    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
+    userid = self.created_by.to_s.rjust(6,'0') #6characters
+    collected = self.bill.collected.round(2) #10characters
     ci = collected.to_i
     cr = (collected - ci).to_s
     crl = cr.length
     crr = (cr[2..crl]).ljust(2,"0")
     collected = ci.to_s + crr
-    security_no = fact + date + userid + collected
+    security_no = fact + date + userid + collected.rjust(10,'0') #48characters
     # hashed_password = BCrypt::Password.create("AES332017005242830/05/201700:00:00003300246623891")
     Digest::MD5.hexdigest(security_no)
   end
@@ -250,8 +250,9 @@ class ClientPayment < ActiveRecord::Base
                   array[0].sanitize(I18n.t('activerecord.attributes.report.client_code')),
                   array[0].sanitize(I18n.t('activerecord.attributes.client_payment.charged')),
                   array[0].sanitize(I18n.t('activerecord.models.instalment_plan.one')),
-                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.amount')),
-                  array[0].sanitize(I18n.t('activerecord.attributes.client_payment.total'))]
+                  array[0].sanitize(I18n.t("activerecord.attributes.bill.total")),
+                  array[0].sanitize(I18n.t("ag2_gest.client_payments.report.amount_receipt")),
+                  array[0].sanitize(I18n.t("ag2_gest.client_payments.report.debt_pending"))]
 
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
@@ -265,14 +266,16 @@ class ClientPayment < ActiveRecord::Base
         else
           full_subscriber += cp.client.full_name_or_company_and_code.to_s
         end
-        payment_type = PaymentType.code_with_param(cp.payment_type)
         amount = cp.number_with_precision(cp.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.amount.blank?
+        payment_type = PaymentType.code_with_param(cp.payment_type)
         if cp.instalment_id.blank?
-          total = cp.number_with_precision(cp.invoice.receivables, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
+          total = cp.number_with_precision(cp.invoice.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
+          debt = cp.number_with_precision(cp.invoice.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
           instalment = ""
         else
-          total = cp.number_with_precision(cp.instalment.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
-          instalment = cp.instalment.partial_instalment_no unless cp.instalment_id.blank?
+          total = cp.number_with_precision(cp.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
+          debt = cp.number_with_precision(cp.instalment.amount_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
+          instalment = cp.instalment.partial_instalment_no.to_s
         end
         csv << [  cp.id,
                   cp.full_no,
@@ -283,7 +286,8 @@ class ClientPayment < ActiveRecord::Base
                   payment_type,
                   instalment,
                   amount,
-                  total]
+                  total,
+                  debt]
       end
     end
   end

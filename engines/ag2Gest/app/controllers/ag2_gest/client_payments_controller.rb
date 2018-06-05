@@ -2102,6 +2102,123 @@ module Ag2Gest
       end
     end
 
+    def cash_search_report(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page=10)
+      ClientPayment.search do
+        with :payment_type, ClientPayment::CASH
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+
+        # By invoice_no
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        # if !street_name.blank?
+        #   with :supply_address, street_name
+        # end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
+        # Have active bank account?
+        if (bank_account == true || bank_account == false)
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        # Created by (user)
+        if !user.blank?
+          with :created_by, user
+        end
+        # Biller
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        # Invoice date
+        if !issue_date.blank?
+          with :invoice_date, issue_date
+        end
+        # Invoice payday limit
+        if !payday_limit.blank?
+          with :invoice_payday_limit, payday_limit
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:client_payments_cash_page] || 1, :per_page => ClientPayment.count
+      end
+    end
+
     def bank_search(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, bank_order, per_page=10)
       ClientPayment.search do
         with :payment_type, ClientPayment::BANK
@@ -2219,6 +2336,126 @@ module Ag2Gest
         data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
         order_by :sort_no, :asc
         paginate :page => params[:client_payments_bank_page] || 1, :per_page => per_page
+      end
+    end
+
+    def bank_search_report(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, bank_order, per_page=10)
+      ClientPayment.search do
+        with :payment_type, ClientPayment::BANK
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+
+        # By invoice_no
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        # if !street_name.blank?
+        #   with :supply_address, street_name
+        # end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
+        # Have active bank account?
+        # if !bank_account.blank?
+        #   with :bank_account, bank_account
+        # end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        if !bank_order.blank?
+          with :receipt_no, bank_order
+        end
+        # Created by (user)
+        if !user.blank?
+          with :created_by, user
+        end
+        # Biller
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        # Invoice date
+        if !issue_date.blank?
+          with :invoice_date, issue_date
+        end
+        # Invoice payday limit
+        if !payday_limit.blank?
+          with :invoice_payday_limit, payday_limit
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:client_payments_bank_page] || 1, :per_page => ClientPayment.count
       end
     end
 
@@ -2340,6 +2577,124 @@ module Ag2Gest
       end
     end
 
+    def others_search_report(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page=10)
+      ClientPayment.search do
+        # with(:invoice_status_id, 0..98)
+        with :payment_type, ClientPayment::OTHERS
+        with :confirmation_date, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+
+        # By invoice_no
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        # if !street_name.blank?
+        #   with :supply_address, street_name
+        # end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
+        # Have active bank account?
+        if (bank_account == true || bank_account == false)
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        # Created by (user)
+        if !user.blank?
+          with :created_by, user
+        end
+        # Biller
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        # Invoice date
+        if !issue_date.blank?
+          with :invoice_date, issue_date
+        end
+        # Invoice payday limit
+        if !payday_limit.blank?
+          with :invoice_payday_limit, payday_limit
+        end
+        data_accessor_for(ClientPayment).include = [:bill, :client, :payment_method, :instalment, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:client_payments_others_page] || 1, :per_page => ClientPayment.count
+      end
+    end
+
     def instalment_search(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page=10)
       InstalmentInvoice.search do
         with :client_payment, nil
@@ -2455,6 +2810,122 @@ module Ag2Gest
         paginate :page => params[:instalments_page] || 1, :per_page => per_page
       end
     end
+
+    def instalment_search_report(current_projects, no, bill_no, project, c, s, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page=10)
+      InstalmentInvoice.search do
+        with :client_payment, nil
+        if !current_projects.blank?
+          with :project_id, current_projects
+        end
+
+        # By invoice_no
+        if !no.blank?
+          if no.class == Array
+            with :invoice_no, no
+          else
+            with(:invoice_no).starting_with(no)
+          end
+        end
+        # By raw invoice No
+        # if !no.blank?
+        #   if no.class == Array
+        #     with :raw_invoice_no, no
+        #   else
+        #     with(:raw_invoice_no).starting_with(no)
+        #   end
+        # end
+
+        # By bill_no
+        if !bill_no.blank?
+          if bill_no.class == Array
+            with :bill_no, bill_no
+          else
+            with(:bill_no).starting_with(bill_no)
+          end
+        end
+        # By raw bill No
+        # if !bill_no.blank?
+        #   if bill_no.class == Array
+        #     with :raw_bill_no, bill_no
+        #   else
+        #     with(:raw_bill_no).starting_with(bill_no)
+        #   end
+        # end
+
+        # by project
+        if !project.blank?
+          with :project_id, project
+        end
+        # Client
+        # if !client.blank?
+        #   if client.class == Array
+        #     with :client_code_name_fiscal, client
+        #   else
+        #     with(:client_code_name_fiscal).starting_with(client)
+        #   end
+        # end
+        # if !c.empty?
+        #   with :client_ids, c
+        # end
+        if !c.blank?
+          with :client_id, c
+        end
+        # Subscriber
+        # if !subscriber.blank?
+        #   if subscriber.class == Array
+        #     with :subscriber_code_name_fiscal, subscriber
+        #   else
+        #     with(:subscriber_code_name_fiscal).starting_with(subscriber)
+        #   end
+        # end
+        # if !s.empty?
+        #   with :subscriber_ids, s
+        # end
+        if !s.blank?
+          with :subscriber_id, s
+        end
+        # Supply address
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        # if !street_name.blank?
+        #   with :supply_address, street_name
+        # end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
+        # Have active bank account?
+        if (bank_account == true || bank_account == false)
+          with :bank_account, bank_account
+        end
+        if !period.blank?
+          with :billing_period_id, period
+        end
+        # Created by (user)
+        if !user.blank?
+          with :created_by, user
+        end
+        # Biller
+        if !biller.blank?
+          with :biller_id, biller
+        end
+        # Invoice date
+        if !issue_date.blank?
+          with :invoice_date, issue_date
+        end
+        # Invoice payday limit
+        if !payday_limit.blank?
+          with :invoice_payday_limit, payday_limit
+        end
+        data_accessor_for(InstalmentInvoice).include = [:bill, {instalment: {instalment_plan: [:client, :subscriber, :payment_method]}}, {invoice: {invoice_items: :tax_type}}]
+        order_by :sort_no, :asc
+        paginate :page => params[:instalments_page] || 1, :per_page => InstalmentInvoice.count
+      end
+    end
     ################################
     # End Region: Sunspot searches #
     ################################
@@ -2472,67 +2943,90 @@ module Ag2Gest
       end
     end
 
-     # client payment report
+    # client payment report
     def client_payment_view_report
       manage_filter_state
-      bill_no = params[:bill_no]
-      client = params[:client]
-      subscriber = params[:subscriber]
-      entity = params[:entity]
-      project = params[:project]
-      bank_account = params[:bank_account] == "SI" ? true : false
-      billing_period = params[:billing_period]
-      reading_routes = params[:reading_routes]
+
+      # Set per_page to use in cash, bank, deferrals & others
+      per_page_cash = params[:per_page_cash].blank? ? 10 : params[:per_page_cash]
+      per_page_bank = params[:per_page_bank].blank? ? 10 : params[:per_page_bank]
+      per_page_deferrals = params[:per_page_deferrals].blank? ? 10 : params[:per_page_deferrals]
+      per_page_others = params[:per_page_others].blank? ? 10 : params[:per_page_others]
+
+      # Set active_tab to use in searches
+      # if params[:active_tab] content finished with !, remove filter
+      active_tab = ''
+      if params[:active_tab]
+        active_tab = params[:active_tab]
+      end
+
+      no = params[:No]
+      bill_no = params[:BillNo]
+      project = params[:Project]
+      period = params[:Period]
+      # client_code = params[:ClientCode]
+      # client_fiscal = params[:ClientFiscal]
+      # client_name = params[:Client]
+      client = params[:Client]
+      # subscriber_code = params[:SubscriberCode]
+      # subscriber_fiscal = params[:SubscriberFiscal]
+      # subscriber_name = params[:Subscriber]
+      subscriber = params[:Subscriber]
+      street_name = params[:StreetName]
+      biller = params[:Biller]
+      issue_date = params[:From]
+      payday_limit = params[:To]
+      # bank_account = params[:BankAccount] == I18n.t(:yes_on) ? true : false
+      bank_account = search_if_have_active_bank_account?(params[:BankAccount])
+      # bank = params[:Bank]
+      bank_order = params[:BankOrder]
+      user = params[:User]
 
       # OCO
       init_oco if !session[:organization]
 
       # If inverse no search is required
-      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_no_search(bill_no) : bill_no
+      no = !no.blank? && no[0] == '%' ? inverse_no_search(no) : no
+      bill_no = !bill_no.blank? && bill_no[0] == '%' ? inverse_bill_no_search(no) : bill_no
+      street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
+      current_projects = current_projects_ids
 
-      @search = ClientPayment.search do
-        fulltext params[:search]
-        if !current_projects_ids.blank?
-          with :project_id, current_projects_ids
-        end
-        if !bill_no.blank?
-          if bill_no.class == Array
-            with :bill_no, bill_no
-          else
-            with(:bill_no).starting_with(bill_no)
-          end
-        end
-        if !client.blank?
-          with :client_id, client
-        end
-        if !subscriber.blank?
-          with :subscriber_id, subscriber
-        end
-        if !entity.blank?
-          with :entity_id, entity
-        end
-        if !bank_account.blank?
-          with :bank_account, bank_account
-        end
-        if !reading_routes.blank?
-          with :reading_route_id, reading_routes
-        end
-        order_by :sort_no, :asc
-        paginate :page => params[:page] || 1, :per_page => ClientPayment.count
+      case active_tab
+      when 'cash-tab'
+          search_cash = cash_search_report(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page_cash)
+        @client_payment_report = search_cash.results rescue ClientPayment.search { with :payment_type, -1 }.results
+      when 'banks-tab'
+          search_bank = bank_search_report(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, bank_order, per_page_bank)
+        @client_payment_report = search_bank.results rescue ClientPayment.search { with :payment_type, -1 }.results
+      when 'others-tab'
+          search_others = others_search_report(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page_others)
+        @client_payment_report = search_others.results rescue ClientPayment.search { with :payment_type, -1 }.results
+      when 'fractionated-tab'
+          search_instalment = instalment_search_report(current_projects, no, bill_no, project, client, subscriber, street_name, bank_account, period, user, biller, issue_date, payday_limit, per_page_deferrals)
+        @client_payment_report = search_instalment.results rescue InstalmentInvoice.search { with :client_id, -1 }.results
+      when 'charged-tab'
+        search_charged = charged_search_report(current_projects, no, project, client, subscriber, street_name, bank_account, period, user)
+        @client_payment_report = search_charged.results rescue ClientPayment.search { with :payment_type, -1 }.results
       end
 
-      @client_payment_report = @search.results
 
-      if !@client_payment_report.blank?
-        title = t("activerecord.models.client_payment.few")
-        @to = formatted_date(@client_payment_report.first.created_at)
-        @from = formatted_date(@client_payment_report.last.created_at)
-        respond_to do |format|
+      title = t("activerecord.models.client_payment.few")
+      respond_to do |format|
+        if !@client_payment_report.blank?
+          @to = formatted_date(@client_payment_report.first.created_at)
+          @from = formatted_date(@client_payment_report.last.created_at)
           # Render PDF
           format.pdf { send_data render_to_string,
                        filename: "#{title}_#{@from}-#{@to}.pdf",
                        type: 'application/pdf',
                        disposition: 'inline' }
+          format.csv { send_data ClientPayment.to_csv(@client_payment_report),
+                       filename: "#{title}_#{@from}-#{@to}.csv",
+                       type: 'application/csv',
+                       disposition: 'inline' }
+        else
+          format.csv { redirect_to client_payments_path, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
+          format.pdf { redirect_to client_payments_path, alert: I18n.t("ag2_purchase.ag2_purchase_track.index.error_report") }
         end
       end
     end
