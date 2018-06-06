@@ -89,7 +89,8 @@
     // when the #client_organization_id field changes
     $("#client_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#client_organization_id :selected').val();
+      //var order = $('select#client_organization_id :selected').val();
+      var order = $('select#client_organization_id').val();
       if (order == "")
         order = "0";
       // make a POST call and replace the content
@@ -151,7 +152,8 @@
     // when the #client_town_id field changes
     $("#client_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#client_town_id :selected').val();
+      //var contact = $('select#client_town_id :selected').val();
+      var contact = $('select#client_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -165,7 +167,8 @@
     // when the #client_province_id field changes
     $("#client_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#client_province_id :selected').val();
+      //var contact = $('select#client_province_id :selected').val();
+      var contact = $('select#client_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -178,7 +181,8 @@
     // when the #client_zipcode_id field changes
     $("#client_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#client_zipcode_id :selected').val();
+      //var contact = $('select#client_zipcode_id :selected').val();
+      var contact = $('select#client_zipcode_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -193,7 +197,8 @@
     // when the #client_region_id field changes
     $("#client_region_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#client_region_id :selected').val();
+      //var contact = $('select#client_region_id :selected').val();
+      var contact = $('select#client_region_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {

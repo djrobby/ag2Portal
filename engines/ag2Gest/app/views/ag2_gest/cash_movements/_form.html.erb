@@ -27,7 +27,8 @@
     // when the #cash_movement_organization_id field changes
     $("#cash_movement_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#cash_movement_organization_id :selected').val();
+      //var order = $('select#cash_movement_organization_id :selected').val();
+      var order = $('select#cash_movement_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('cm_update_selects_from_organization/' + order, function(data) {
@@ -118,7 +119,8 @@
     // when the #cash_movement_project_id field changes
     $("#cash_movement_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#cash_movement_project_id :selected').val();
+      //var order = $('select#cash_movement_project_id :selected').val();
+      var order = $('select#cash_movement_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('cm_update_selects_from_project/' + order, function(data) {
@@ -165,7 +167,8 @@
     // when the #cash_movement_office_id field changes
     $("#cash_movement_office_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#cash_movement_office_id :selected').val();
+      //var order = $('select#cash_movement_office_id :selected').val();
+      var order = $('select#cash_movement_office_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('cm_update_selects_from_office/' + order, function(data) {
@@ -195,7 +198,8 @@
     $("#cash_movement_amount").change(function() {
       var num = $('#cash_movement_amount').val();
       if (num == "") num = "0";
-      var order = $('select#cash_movement_cash_movement_type_id :selected').val();
+      //var order = $('select#cash_movement_cash_movement_type_id :selected').val();
+      var order = $('select#cash_movement_cash_movement_type_id').val();
       if (order == "") order = "0";
       // Right formatted for passing as REST parameter
       num = parseInt(right_number(num, 2) * 100);

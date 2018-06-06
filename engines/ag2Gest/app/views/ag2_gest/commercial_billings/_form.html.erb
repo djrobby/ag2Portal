@@ -1,17 +1,17 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
 
@@ -33,7 +33,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -41,7 +41,7 @@
       }
     });
   }
-  
+
   $(document).ready(function() {
     $("#notify_mesage").hide();
 
@@ -60,11 +60,11 @@
     }
 
     // Setup special search (select2)
-    clientsSelect2ForNew("<%= @client %>");    
+    clientsSelect2ForNew("<%= @client %>");
 
     // Save default text color
     text_field_color = $("#invoice_invoice_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#invoice_invoice_no").closest('form')[0];
 
@@ -97,7 +97,7 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Can't change invoice no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#invoice_invoice_no').prop('readonly', true);
@@ -105,11 +105,11 @@
       $('#invoice_invoice_no').prop('readonly', false);
       $('#invoice_invoice_status_id').select2("val", 1);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #invoice_invoice_no field changes
     $("#invoice_invoice_no").change(function() {
@@ -124,11 +124,12 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#Project :selected').val();
+      //var order = $('select#Project :selected').val();
+      var order = $('select#Project').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('ci_generate_no/' + order, function(data) {
@@ -148,7 +149,8 @@
     // when the #invoice_organization_id field changes
     $("#invoice_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#invoice_organization_id :selected').val();
+      //var order = $('select#invoice_organization_id :selected').val();
+      var order = $('select#invoice_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('ci_update_selects_from_organization/' + order, function(data) {
@@ -270,7 +272,8 @@
     // when the #invoice_sale_offer_id field changes
     $("#invoice_sale_offer_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#invoice_sale_offer_id :selected').val();
+      //var o = $('select#invoice_sale_offer_id :selected').val();
+      var o = $('select#invoice_sale_offer_id').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('ci_update_selects_from_offer/' + o, function(data) {
@@ -342,7 +345,8 @@
     // when the #Project field changes
     $("#Project").change(function() {
       // make a POST call and replace the content
-      var order = $('select#Project :selected').val();
+      //var order = $('select#Project :selected').val();
+      var order = $('select#Project').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('ci_update_selects_from_project/' + order, function(data) {
@@ -399,8 +403,10 @@
 
     // when the #submit_btn button clicked, test Project & Client content
     $("#submit_btn").click(function() {
-      var p = $('select#Project :selected').val();
-      var c = $('select#Client :selected').val();
+      //var p = $('select#Project :selected').val();
+      //var c = $('select#Client :selected').val();
+      var p = $('select#Project').val();
+      var c = $('select#Client').val();
       if (c == "" || p == "") {
         // Show message
         $("#notify_mesage").show();
@@ -408,7 +414,7 @@
       }
     });
 
-    // when submit    
+    // when submit
     $(_thisForm).on('submit', function() {
       var price = '';
       var qty = '';
