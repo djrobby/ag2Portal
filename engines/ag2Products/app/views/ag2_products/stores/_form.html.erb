@@ -35,7 +35,7 @@
     // when the #store_office_id field changes
     $("#store_office_id").change(function() {
       // make a POST call and replace the content
-      var store = $('select#store_office_id :selected').val();
+      var store = $('select#store_office_id').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('st_update_company_textfield_from_office/' + store, function(data) {
@@ -54,7 +54,7 @@
     // when the #store_organization_id field changes
     $("#store_organization_id").change(function() {
       // make a POST call and replace the content
-      var store = $('select#store_organization_id :selected').val();
+      var store = $('select#store_organization_id').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('st_update_company_and_office_textfields_from_organization/' + store, function(data) {
@@ -113,7 +113,7 @@
     // when the #store_town_id field changes
     $("#store_town_id").change(function() {
       // make a POST call and replace the content
-      var office = $('select#store_town_id :selected').val();
+      var office = $('select#store_town_id').val();
       if (office == "")
         office = "0";
       jQuery.getJSON('st_update_province_textfield_from_town/' + office, function(data) {
@@ -125,7 +125,7 @@
     // when the #store_zipcode_id field changes
     $("#store_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var office = $('select#store_zipcode_id :selected').val();
+      var office = $('select#store_zipcode_id').val();
       if (office == "")
         office = "0";
       jQuery.getJSON('st_update_province_textfield_from_zipcode/' + office, function(data) {

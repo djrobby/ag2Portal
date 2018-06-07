@@ -10,39 +10,39 @@
     // Purchase Order
     $("#fnt-purchase-order").html("");
     $('#receipt_note_purchase_order_id option').clone().appendTo('#fnt-purchase-order');
-    var _po = $('#receipt_note_purchase_order_id :selected').val();
+    var _po = $('#receipt_note_purchase_order_id').val();
     if (_po == "") _po = "0";
     $('#fnt-purchase-order').val(_po);
     // Project
     $("#fnt-project").html("");
     $('#receipt_note_project_id option').clone().appendTo('#fnt-project');
-    var _p = $('#receipt_note_project_id :selected').val();
+    var _p = $('#receipt_note_project_id').val();
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
     $("#fnt-work-order").html("");
     $('#receipt_note_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#receipt_note_work_order_id :selected').val();
+    var _o = $('#receipt_note_work_order_id').val();
     if (_o == "") _o = "0";
     $('#fnt-work-order').val(_o);
     // Charge Account
     $("#fnt-charge-account").html("");
     $('#receipt_note_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#receipt_note_charge_account_id :selected').val();
+    var _c = $('#receipt_note_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Store
     $("#fnt-store").html("");
     $('#receipt_note_store_id option').clone().appendTo('#fnt-store');
-    var _s = $('#receipt_note_store_id :selected').val();
+    var _s = $('#receipt_note_store_id').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
     // Supplier
-    _supplier = $('#receipt_note_supplier_id :selected').val();
+    _supplier = $('#receipt_note_supplier_id').val();
     if (_supplier == "") _supplier = "0";
     // Product & Order item
     init();
-    
+
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -56,7 +56,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -70,7 +70,7 @@
       }
       if (qty == "")
         qty = "0";
-      var store = $('select#fnt-store :selected').val();
+      var store = $('select#fnt-store').val();
       if (typeof store === "undefined") {
         tbl = true;
         store = $(_this).closest('tr').find('.fnt-store').val();
@@ -110,10 +110,10 @@
     // when the #fnt-store field changes
     $("#fnt-store").change(function() {
       // make a POST call and replace the content
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (product == "")
         product = "0";
-      var store = $('select#fnt-store :selected').val();
+      var store = $('select#fnt-store').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('rn_current_stock/' + product + '/' + store, function(data) {
@@ -125,7 +125,7 @@
     // when the #fnt-work-order field changes
     $("#fnt-work-order").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-work-order :selected').val();
+      var order = $('select#fnt-work-order').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_charge_account_from_order/' + order, function(data) {
@@ -172,7 +172,7 @@
     // when the #fnt-project field changes
     $("#fnt-project").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-project :selected').val();
+      var order = $('select#fnt-project').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_charge_account_from_project/' + order, function(data) {
@@ -231,7 +231,7 @@
     // when the #fnt-purchase-order field changes
     $("#fnt-purchase-order").change(function() {
       // make a POST call and replace the content
-      var o = $('select#fnt-purchase-order :selected').val();
+      var o = $('select#fnt-purchase-order').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
@@ -353,7 +353,7 @@
     // when the #fnt-purchase-order-item field changes
     $("#fnt-purchase-order-item").change(function() {
       // make a POST call and replace the content
-      var i = $('select#fnt-purchase-order-item :selected').val();
+      var i = $('select#fnt-purchase-order-item').val();
       if (i == "")
         i = "0";
       jQuery.getJSON('rn_update_product_select_from_order_item/' + i, function(data) {
@@ -370,7 +370,7 @@
       // preserve the current object
       var _this = (this);
       // balance check
-      var i = $('select#fnt-purchase-order-item :selected').val();
+      var i = $('select#fnt-purchase-order-item').val();
       if (typeof i === "undefined") {
         i = $(_this).closest('tr').find('.fnt-purchase-order-item').val();
       }
@@ -456,7 +456,7 @@
       }
       if (discount == "")
         discount = "0";
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -493,7 +493,7 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var o = $('select#receipt_note_purchase_order_id :selected').val();
+    var o = $('select#receipt_note_purchase_order_id').val();
     if (o != "" && o != "0") {
       jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
         var prods = data.product
@@ -530,7 +530,7 @@
         }
       });
     } else {
-      var order = $('select#receipt_note_organization_id :selected').val();
+      var order = $('select#receipt_note_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_product_select_from_organization/' + order, function(data) {

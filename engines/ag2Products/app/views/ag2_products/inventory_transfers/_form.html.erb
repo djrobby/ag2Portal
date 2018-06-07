@@ -1,20 +1,20 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -32,7 +32,7 @@
 
     // Save default text color
     text_field_color = $("#inventory_count_count_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#inventory_count_count_no").closest('form')[0];
 
@@ -65,18 +65,18 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Can't change count no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#inventory_count_count_no').prop('readonly', true);
     } else {
       $('#inventory_count_count_no').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #inventory_count_count_no field changes
     $("#inventory_count_count_no").change(function() {
@@ -91,11 +91,11 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var store = $('select#inventory_count_store_id :selected').val();
+      var store = $('select#inventory_count_store_id').val();
       if (store == "")
         store = "$";
       jQuery.getJSON('ic_generate_no/' + store, function(data) {
@@ -115,7 +115,7 @@
     // when the #inventory_count_organization_id field changes
     $("#inventory_count_organization_id").change(function() {
       // make a POST call and replace the content
-      var org = $('select#inventory_count_organization_id :selected').val();
+      var org = $('select#inventory_count_organization_id').val();
       if (org == "")
         org = "0";
       jQuery.getJSON('ic_update_from_organization/' + org, function(data) {
@@ -148,7 +148,7 @@
     // when the #inventory_count_store_id field changes
     $("#inventory_count_store_id").change(function() {
       // First, update types select
-      var store = $('select#inventory_count_store_id :selected').val();
+      var store = $('select#inventory_count_store_id').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('ic_update_type_select_from_store/' + store, function(data) {
@@ -176,7 +176,7 @@
         }
 
         // Second, update families select
-        var type = $('select#inventory_count_inventory_count_type_id :selected').val();
+        var type = $('select#inventory_count_inventory_count_type_id').val();
         if (type == "")
           type = "0";
         jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
@@ -211,10 +211,10 @@
     // when the #inventory_count_inventory_count_type_id field changes
     $("#inventory_count_inventory_count_type_id").change(function() {
       // make a POST call and replace the content
-      var store = $('select#inventory_count_store_id :selected').val();
+      var store = $('select#inventory_count_store_id').val();
       if (store == "")
         store = "0";
-      var type = $('select#inventory_count_inventory_count_type_id :selected').val();
+      var type = $('select#inventory_count_inventory_count_type_id').val();
       if (type == "")
         type = "0";
       jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
@@ -236,8 +236,8 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var qty = '';

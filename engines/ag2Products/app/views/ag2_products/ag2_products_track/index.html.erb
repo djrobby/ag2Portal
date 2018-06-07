@@ -41,7 +41,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -68,7 +68,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -95,7 +95,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -122,7 +122,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -149,7 +149,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -176,7 +176,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -203,7 +203,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -230,7 +230,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -260,7 +260,7 @@
 
     // Hide report button
     show_buttons(false);
-  }); 
+  });
 
   jQuery(function($) {
     // when the #Report field changes
@@ -426,7 +426,7 @@
       get_report_or_csv(true);
       return false;
     });
-    
+
     function get_report_or_csv(_csv) {
       var nam = '';
       var ext = '.pdf';
@@ -466,7 +466,7 @@
           var order = $('#Order').val();
           var account = $('#Account').val();
           var petitioner = $('#User').val();
-          var status = $('#Status :selected').val();
+          var status = $('#Status').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
           //   return;
           if (detailed == "") {
@@ -484,7 +484,7 @@
           var order = $('#Order').val();
           var account = $('#Account').val();
           var petitioner = $('#User').val();
-          var status = $('#Status :selected').val();
+          var status = $('#Status').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
           //   return;
           if (detailed == "") {
@@ -501,14 +501,14 @@
           var store = $('#Store').val();
           var order = $('#Order').val();
           var account = $('#Account').val();
-          var balance = $('#Balance :selected').val();
+          var balance = $('#Balance').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (balance == ""))
           //   return;
           if (detailed == "") {
             nam = "receipt_report" + ext;
           } else {
             nam = "receipt_items_report" + ext;
-          } 
+          }
           window.open(nam + "?detailed=" + detailed + "&project=" + project + "&from=" + from + "&to=" + to + "&supplier=" + supplier + "&store=" + store + "&order=" + order + "&account=" + account + "&balance=" + balance,  pag);
           break;
         case 5:
@@ -554,15 +554,15 @@
           break;
       }
     }
-    
+
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').hide();
       $(_select).removeClass('sel2');
       $(_select).select2('destroy');
-      $(_select).hide();      
+      $(_select).hide();
     }
-    
+
     function show(_select, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').show();
@@ -601,14 +601,14 @@
           });
       }
     }
-    
+
     function hide_date(_date, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').hide();
       $(_date).removeClass('date_picker');
-      $(_date).hide();      
+      $(_date).hide();
     }
-    
+
     function show_date(_date, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').show();
@@ -682,7 +682,7 @@
       <!-- Petitioner -->
       <%= label_tag "label_petitioner", t(".label_petitioner"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "User", params[:User], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>
-      <%#= select_tag "User", options_from_collection_for_select(@petitioners, "id", "to_label"), :prompt => "", :class => 'x-large-text-field sel2' %>      
+      <%#= select_tag "User", options_from_collection_for_select(@petitioners, "id", "to_label"), :prompt => "", :class => 'x-large-text-field sel2' %>
       <!-- Product Family -->
       <%= label_tag "label_family", t(".label_family"), :class => 'form-label-under-sel2' %>
       <%= hidden_field_tag "Family", params[:Family], :class => 'x-large-text-field shrinked', data: { allow: { clear: 'false' } } %>

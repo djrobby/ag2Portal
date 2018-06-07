@@ -1,20 +1,20 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -32,7 +32,7 @@
 
     // Save default text color
     text_field_color = $("#purchase_order_order_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#purchase_order_order_no").closest('form')[0];
 
@@ -65,7 +65,7 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Can't change order no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#purchase_order_order_no').prop('readonly', true);
@@ -73,11 +73,11 @@
       $('#purchase_order_order_no').prop('readonly', false);
       $('#purchase_order_order_status_id').select2("val", 1);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #purchase_order_order_no field changes
     $("#purchase_order_order_no").change(function() {
@@ -92,11 +92,11 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#purchase_order_project_id :selected').val();
+      var order = $('select#purchase_order_project_id').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('po_generate_no/' + order, function(data) {
@@ -116,7 +116,7 @@
     // when the #purchase_order_organization_id field changes
     $("#purchase_order_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#purchase_order_organization_id :selected').val();
+      var order = $('select#purchase_order_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_project_textfields_from_organization/' + order, function(data) {
@@ -228,7 +228,7 @@
     // when the #purchase_order_supplier_id field changes
     $("#purchase_order_supplier_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#purchase_order_supplier_id :selected').val();
+      var supplier = $('select#purchase_order_supplier_id').val();
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('po_update_offer_select_from_supplier/' + supplier, function(data) {
@@ -254,7 +254,7 @@
     // when the #purchase_order_offer_id field changes
     $("#purchase_order_offer_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#purchase_order_offer_id :selected').val();
+      var o = $('select#purchase_order_offer_id').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('po_update_selects_from_offer/' + o, function(data) {
@@ -361,7 +361,7 @@
     // when the #purchase_order_project_id field changes
     $("#purchase_order_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#purchase_order_project_id :selected').val();
+      var order = $('select#purchase_order_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_charge_account_from_project/' + order, function(data) {
@@ -428,7 +428,7 @@
     // when the #purchase_order_work_order_id field changes
     $("#purchase_order_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#purchase_order_work_order_id :selected').val();
+      var order = $('select#purchase_order_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_charge_account_from_order/' + order, function(data) {
@@ -506,7 +506,7 @@
     // when the #purchase_order_store_id field changes
     $("#purchase_order_store_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#purchase_order_store_id :selected').val();
+      var order = $('select#purchase_order_store_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('po_update_addresses_from_store/' + order, function(data) {
@@ -515,9 +515,9 @@
         $('#purchase_order_store_phones').val(data.phones);
       });
       return false;
-    });    
+    });
 
-    // when submit    
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var price = '';

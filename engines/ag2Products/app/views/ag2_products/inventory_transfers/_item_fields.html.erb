@@ -1,7 +1,7 @@
 <script>
   var _f = '';
   var _s = '';
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -9,7 +9,7 @@
     // Form
     _f = $("#fnt-product").closest('form')[0];
     // Store
-    _s = $('#inventory_transfer_store_id :selected').val();
+    _s = $('#inventory_transfer_store_id').val();
     if (_s == "") _s = "0";
     // Product
     init();
@@ -27,7 +27,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(this).closest('tr').find('.fnt-product').val();
@@ -116,7 +116,7 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var org = $('select#inventory_transfer_organization_id :selected').val();
+    var org = $('select#inventory_transfer_organization_id').val();
     if (org == "")
       org = "0";
     jQuery.getJSON('ic_update_product_select_from_organization/' + org, function(data) {

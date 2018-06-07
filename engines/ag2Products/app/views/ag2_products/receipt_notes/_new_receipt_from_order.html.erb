@@ -18,7 +18,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -38,7 +38,7 @@
   jQuery(function($) {
     $('#btn_accept').click(function() {
       var supplier = $('#Supplier_').val();
-      var request = $('#Request_ :selected').val();
+      var request = $('#Request_').val();
       var offer_no = $('#No_').val();
       var offer_date = $('#Date_').val();
       if ((supplier == "") || (request == "")  || (offer_no == "")  || (offer_date == "")) {
@@ -101,7 +101,7 @@
     // when the #Request_ field changes
     $("#Request_").change(function() {
       // make a POST call and replace the content
-      var order = $('#Request_ :selected').val();
+      var order = $('#Request_').val();
       if (order == "") order = 0;
       jQuery.getJSON('rn_current_balance/' + order, function(data) {
         $("#current-balance").html(data.balance);

@@ -2,7 +2,7 @@
   var _f = '';
   var _s = '';
   var _org = '';
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -10,13 +10,13 @@
     // Form
     _f = $("#fnt-product").closest('form')[0];
     // Store
-    _s = $('#inventory_count_store_id :selected').val();
+    _s = $('#inventory_count_store_id').val();
     if (_s == "") _s = "0";
     // Product
     //init();
 
     // Fill fnt-product (convert to select2 and paginate)
-    _org = $('select#inventory_count_organization_id :selected').val();
+    _org = $('select#inventory_count_organization_id').val();
     if (_org == "") _org = "0";
     $("#fnt-product").select2({
       placeholder: "Search for a product",
@@ -43,7 +43,7 @@
         }
       },
       formatResult: productFormatResult,
-      formatSelection: productFormatSelection 
+      formatSelection: productFormatSelection
     });
 
     // Set focus
@@ -59,11 +59,11 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      //var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product').val();
       var product = $('#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
-        product = $(this).closest('tr').find('select.fnt-product :selected').val();
+        product = $(this).closest('tr').find('select.fnt-product').val();
       }
       if (product == "")
         product = "0";
@@ -124,12 +124,12 @@
     }
   });
 
-  // Format select2 product results 
+  // Format select2 product results
   function productFormatResult(product) {
       var markup = "<table><tr>";
       markup += "<td>" + product[1] + ' ' + product[2] + "</td>";
       markup += "</tr></table>"
-/*      
+/*
       if ( user.uid !== null) {
            markup += "<td class='movie-image'><img src='" + user.avatar + "'/></td>";
       }
@@ -137,19 +137,19 @@
           var gravatar = user.avatar + 40
            markup += "<td class='movie-image'><img src='" + gravatar + "'/></td>";
        }
-*/  
-  
+*/
+
       markup = product[1] + ' ' + product[2];
       return markup;
   }
-  // Format select2 product selection 
+  // Format select2 product selection
   function productFormatSelection(product) {
       return (product[1] + ' ' + product[2]);
   }
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var org = $('select#inventory_count_organization_id :selected').val();
+    var org = $('select#inventory_count_organization_id').val();
     if (org == "")
       org = "0";
     jQuery.getJSON('ic_update_from_organization/' + org, function(data) {

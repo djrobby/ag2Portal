@@ -63,14 +63,14 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#product_product_code').prop('readonly', true);
     } else {
       $('#product_product_code').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
@@ -79,7 +79,7 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var product = $('select#product_product_family_id :selected').val();
+      var product = $('select#product_product_family_id').val();
       if (product == "")
         product = "$";
       var org = $('#product_organization_id').val();
@@ -101,7 +101,7 @@
     // when the #product_organization_id field changes
     $("#product_organization_id").change(function() {
       // make a POST call and replace the content
-      var product = $('select#product_organization_id :selected').val();
+      var product = $('select#product_organization_id').val();
       if (product == "")
         product = "0";
       jQuery.getJSON('pr_update_family_textfield_from_organization/' + product, function(data) {
@@ -130,7 +130,7 @@
 
     // when the #product_product_family_id field changes
     $("#product_product_family_id").change(function() {
-      var product = $('select#product_product_family_id :selected').val();
+      var product = $('select#product_product_family_id').val();
       if (product == "")
         product = "0";
       if (product == "0") {
@@ -234,7 +234,7 @@
       return false;
     });
 
-    // when submit    
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var r = $('#product_reference_price').val().replace(",", ".");
@@ -249,13 +249,13 @@
       $('#product_markup').val(m);
     });
   });
-  
+
   function show_hide_generate_code_btn() {
     // Disable generate_code_btn if product_organization_id and product_product_family_id are blank
-    var product = $('select#product_product_family_id :selected').val();
+    var product = $('select#product_product_family_id').val();
     if (product == "")
       product = "$";
-    var org = $('select#product_organization_id :selected').val();
+    var org = $('select#product_organization_id').val();
     if (org == "")
       org = "$";
     if (product != "$" && org != "$") {
@@ -274,7 +274,7 @@
     } else {
       // Hide
       $('#generate_code_btn').hide();
-    }    
+    }
   }
 </script>
 
@@ -356,7 +356,7 @@
       <td class="form-td-three centered">
         <% if !cannot_edit(@product) %>
         <%= render partial: '/layouts/ag2_products/productstocksprices', locals: { product: @product } %>
-        <% end %>        
+        <% end %>
       </td>
       <% end %>
       <td class="form-td-three right-winged"><a href="#" id="generate_code_btn" class="btn btn-warning"><%=t 'ag2_products.products.generate_code_btn' %></a></td>

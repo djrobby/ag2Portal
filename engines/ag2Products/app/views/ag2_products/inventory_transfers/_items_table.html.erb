@@ -1,12 +1,12 @@
 <script>
   var _s = '';
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
      */
     // Store
-    _s = $('#inventory_transfer_store_id :selected').val();
+    _s = $('#inventory_transfer_store_id').val();
     if (_s == "") _s = "0";
 
     $('.isel2').select2({
@@ -35,7 +35,7 @@
     });
     // Update and display totals
     $('#items-table').trigger('totals');
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-product field changes
@@ -74,7 +74,7 @@
       recalculate_ic_table(_this);
       return false;
     });
-    
+
     // Recalculate amounts & prices
     function recalculate_ic_table(_this) {
       // make a POST call and replace the content

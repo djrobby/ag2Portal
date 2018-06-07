@@ -1,17 +1,17 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
 
@@ -33,7 +33,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -62,7 +62,7 @@
 
     // Save default text color
     text_field_color = $("#delivery_note_delivery_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#delivery_note_delivery_no").closest('form')[0];
 
@@ -95,18 +95,18 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Can't change delivery no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#delivery_note_delivery_no').prop('readonly', true);
     } else {
       $('#delivery_note_delivery_no').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #delivery_note_delivery_no field changes
     $("#delivery_note_delivery_no").change(function() {
@@ -121,11 +121,11 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#delivery_note_project_id :selected').val();
+      var order = $('select#delivery_note_project_id').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('dn_generate_no/' + order, function(data) {
@@ -145,7 +145,7 @@
     // when the #delivery_note_organization_id field changes
     $("#delivery_note_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#delivery_note_organization_id :selected').val();
+      var order = $('select#delivery_note_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('dn_update_project_textfields_from_organization/' + order, function(data) {
@@ -297,7 +297,7 @@
     // when the #delivery_note_project_id field changes
     $("#delivery_note_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#delivery_note_project_id :selected').val();
+      var order = $('select#delivery_note_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('dn_update_charge_account_from_project/' + order, function(data) {
@@ -357,7 +357,7 @@
     // when the #delivery_note_work_order_id field changes
     $("#delivery_note_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#delivery_note_work_order_id :selected').val();
+      var order = $('select#delivery_note_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('dn_update_charge_account_from_order/' + order, function(data) {
@@ -415,8 +415,8 @@
       $('#items-table').trigger('totals');
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var qty = '';

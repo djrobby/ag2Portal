@@ -2,9 +2,9 @@
 <script>
   jQuery(function($) {
     $('#btn_accept').click(function() {
-      var type = $('#Type_ :selected').val();
-      var store = $('#Store_ :selected').val();
-      var family = $('#Family_ :selected').val();
+      var type = $('#Type_').val();
+      var store = $('#Store_').val();
+      var family = $('#Family_').val();
       if ((store == "") || (family == "") || (type == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');
@@ -34,9 +34,9 @@
     // when the #Type_ field changes
     $("#Type_").change(function() {
       // make a POST call and replace the content
-      var store = $('#Store_ :selected').val();
+      var store = $('#Store_').val();
       if (store == "") store = 0;
-      var type = $('#Type_ :selected').val();
+      var type = $('#Type_').val();
       if (type == "") type = 0;
       jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
         var f = data.product_families;
@@ -73,7 +73,7 @@
     // when the #Store_ field changes
     $("#Store_").change(function() {
       // make a POST call and replace the content
-      var store = $('#Store_ :selected').val();
+      var store = $('#Store_').val();
       if (store == "") store = 0;
       jQuery.getJSON('ic_update_type_select_from_store/' + store, function(data) {
         var t = data.types;
@@ -110,7 +110,7 @@
         }
 
         // Second, update families select
-        var type = $('#Type_ :selected').val();
+        var type = $('#Type_').val();
         if (type == "") type = 0;
         jQuery.getJSON('ic_update_family_select_from_store/' + store + '/' + type, function(data) {
           var r = data.product_families;

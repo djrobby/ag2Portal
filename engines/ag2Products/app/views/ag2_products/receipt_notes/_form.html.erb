@@ -1,20 +1,20 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -34,7 +34,7 @@
 
     // Save default text color
     text_field_color = $("#receipt_note_order_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#receipt_note_receipt_no").closest('form')[0];
 
@@ -50,7 +50,7 @@
       show_new(true);
     }
   });
-  
+
   jQuery(function($) {
     // when the #receipt_note_attachment field changes
     $("#receipt_note_attachment").change(function() {
@@ -76,7 +76,7 @@
     // when the #receipt_note_organization_id field changes
     $("#receipt_note_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#receipt_note_organization_id :selected').val();
+      var order = $('select#receipt_note_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_project_textfields_from_organization/' + order, function(data) {
@@ -188,7 +188,7 @@
     // when the #receipt_note_supplier_id field changes
     $("#receipt_note_supplier_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#receipt_note_supplier_id :selected').val();
+      var supplier = $('select#receipt_note_supplier_id').val();
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('rn_update_order_select_from_supplier/' + supplier, function(data) {
@@ -214,7 +214,7 @@
     // when the #receipt_note_purchase_order_id field changes
     $("#receipt_note_purchase_order_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#receipt_note_purchase_order_id :selected').val();
+      var o = $('select#receipt_note_purchase_order_id').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('rn_update_selects_from_order/' + o, function(data) {
@@ -322,7 +322,7 @@
     // when the #receipt_note_project_id field changes
     $("#receipt_note_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#receipt_note_project_id :selected').val();
+      var order = $('select#receipt_note_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_charge_account_from_project/' + order, function(data) {
@@ -381,7 +381,7 @@
     // when the #receipt_note_work_order_id field changes
     $("#receipt_note_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#receipt_note_work_order_id :selected').val();
+      var order = $('select#receipt_note_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('rn_update_charge_account_from_order/' + order, function(data) {
@@ -452,8 +452,8 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var price = '';
