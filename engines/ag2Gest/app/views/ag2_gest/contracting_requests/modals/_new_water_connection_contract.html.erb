@@ -53,7 +53,8 @@
 
     $("#connection_tariff_scheme_id").change(function() {
       // make a POST call and replace the content
-      var tariff_scheme_ids = $('select#connection_tariff_scheme_id :selected').val();
+      //var tariff_scheme_ids = $('select#connection_tariff_scheme_id :selected').val();
+      var tariff_scheme_ids = $('select#connection_tariff_scheme_id').val();
       if (tariff_scheme_ids == "")
         tariff_scheme_ids = "0";
       jQuery.getJSON('cr_tariff_scheme_validate/' + tariff_scheme_ids, function(data) {
@@ -119,5 +120,3 @@
     </div>
   <% end %>
 </div>
-
-

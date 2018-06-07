@@ -12,7 +12,8 @@
     // when the #contract_template_town_id field changes
     $("#contract_template_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contract_template_town_id :selected').val();
+      //var contact = $('select#contract_template_town_id :selected').val();
+      var contact = $('select#contract_template_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -26,11 +27,12 @@
     // when the #contract_template_province_id field changes
     $("#contract_template_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contract_template_province_id :selected').val();
+      //var contact = $('select#contract_template_province_id :selected').val();
+      var contact = $('select#contract_template_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
-        $("#contract_template_town_id").val('');  
+        $("#contract_template_town_id").val('');
         $("#contract_template_region_id").val(data.region_id);
         $("#contract_template_country_id").val(data.country_id);
       })
@@ -40,12 +42,13 @@
     // when the #contract_template_region_id field changes
     $("#contract_template_region_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contract_template_region_id :selected').val();
+      //var contact = $('select#contract_template_region_id :selected').val();
+      var contact = $('select#contract_template_region_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
-        $("#contract_template_town_id").val('');  
-        $("#contract_template_province_id").val('');  
+        $("#contract_template_town_id").val('');
+        $("#contract_template_province_id").val('');
         $("#contract_template_country_id").val(data.id);
       })
       return false;

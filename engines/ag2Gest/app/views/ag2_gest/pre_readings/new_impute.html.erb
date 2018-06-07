@@ -7,11 +7,12 @@
     });
 
     jQuery(function($) {
-      
+
       // when the #pre_period field changes
       $("#prereading_period").change(function() {
         // make a POST call and replace the content
-        var contact = $('select#prereading_period :selected').val();
+        //var contact = $('select#prereading_period :selected').val();
+        var contact = $('select#prereading_period').val();
         if (contact == "")
           contact = "0";
         jQuery.getJSON('update_reading_route_from_period/' + contact, function(data) {

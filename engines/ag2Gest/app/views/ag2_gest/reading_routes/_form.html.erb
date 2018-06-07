@@ -10,7 +10,8 @@
     //$("#reading_route_project_id").change(function() {
     $("#reading_route_project_id").on("change", function (e) {
       // make a POST call and replace the content
-      var project = $('select#reading_route_project_id :selected').val();
+      //var project = $('select#reading_route_project_id :selected').val();
+      var project = $('select#reading_route_project_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('/ag2_gest/reading_routes/update_office_textfield_from_project/' + project, function(data) {

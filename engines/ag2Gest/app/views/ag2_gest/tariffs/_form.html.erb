@@ -11,7 +11,7 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
-    
+
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
@@ -25,7 +25,8 @@
 
     $("#billable-item").change(function() {
       // make a POST call and replace the content
-      var bi = $('select#billable-item :selected').val();
+      //var bi = $('select#billable-item :selected').val();
+      var bi = $('select#billable-item').val();
       if (bi == "")
         bi = "0";
       jQuery.getJSON('bi_endowments_inhabitants_users_from/' + bi, function(data) {

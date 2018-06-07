@@ -391,7 +391,8 @@
     // when the #contracting_request_service_point_id field changes
     $("#contracting_request_service_point_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_service_point_id :selected').val();
+      //var contact = $('select#contracting_request_service_point_id :selected').val();
+      var contact = $('select#contracting_request_service_point_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_subscriber_from_service_point/' + contact, function(data) {
@@ -414,7 +415,8 @@
     // when the #contracting_request_bank_id field changes
     $("#contracting_request_bank_id").change(function() {
       // make a POST call and replace the content
-      var bank = $('select#contracting_request_bank_id :selected').val();
+      //var bank = $('select#contracting_request_bank_id :selected').val();
+      var bank = $('select#contracting_request_bank_id').val();
       if (bank == "")
         bank = "0";
       jQuery.getJSON('update_bank_offices_from_bank/' + bank, function(data) {
@@ -516,7 +518,8 @@
     // when the #client_town_id field changes
     $("#contracting_request_client_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_town_id :selected').val();
+      //var contact = $('select#contracting_request_client_town_id :selected').val();
+      var contact = $('select#contracting_request_client_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -530,7 +533,8 @@
     // when the #old-subscriber field changes
     $("#old-subscriber").change(function() {
       // make a POST call and replace the content
-      var subscriber = $('select#old-subscriber :selected').val();
+      //var subscriber = $('select#old-subscriber :selected').val();
+      var subscriber = $('select#old-subscriber').val();
       if (subscriber == ""){
         subscriber = "0";
         $('.contracting_request_type_id').prop('disabled', false);
@@ -608,7 +612,8 @@
     // when the #client_town_id field changes
     $("#contracting_request_client_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_town_id :selected').val();
+      //var contact = $('select#contracting_request_client_town_id :selected').val();
+      var contact = $('select#contracting_request_client_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -622,7 +627,8 @@
     // when the #contracting_request_client_province_id field changes
     $('#contracting_request_client_province_id').change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_province_id :selected').val();
+      //var contact = $('select#contracting_request_client_province_id :selected').val();
+      var contact = $('select#contracting_request_client_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -752,7 +758,7 @@
             return false;
           } else {
             alert(data.iban + ' OK');
-            $("#form_contracting_request").submit();   
+            $("#form_contracting_request").submit();
           }
         });
       }

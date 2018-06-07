@@ -10,29 +10,34 @@
     // Project
     $("#fnt-project").html("");
     $('#sale_offer_project_id option').clone().appendTo('#fnt-project');
-    var _p = $('#sale_offer_project_id :selected').val();
+    //var _p = $('#sale_offer_project_id :selected').val();
+    var _p = $('#sale_offer_project_id').val();
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
     $("#fnt-work-order").html("");
     $('#sale_offer_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#sale_offer_work_order_id :selected').val();
+    //var _o = $('#sale_offer_work_order_id :selected').val();
+    var _o = $('#sale_offer_work_order_id').val();
     if (_o == "") _o = "0";
     $('#fnt-work-order').val(_o);
     // Charge Account
     $("#fnt-charge-account").html("");
     $('#sale_offer_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#sale_offer_charge_account_id :selected').val();
+    //var _c = $('#sale_offer_charge_account_id :selected').val();
+    var _c = $('#sale_offer_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Store
     $("#fnt-store").html("");
     $('#sale_offer_store_id option').clone().appendTo('#fnt-store');
-    var _s = $('#sale_offer_store_id :selected').val();
+    //var _s = $('#sale_offer_store_id :selected').val();
+    var _s = $('#sale_offer_store_id').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
     // Client
-    _client = $('#sale_offer_client_id :selected').val();
+    //_client = $('#sale_offer_client_id :selected').val();
+    _client = $('#sale_offer_client_id').val();
     if (_client == "") _client = "0";
     // Product
     init();
@@ -50,7 +55,8 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -96,10 +102,12 @@
     // when the #fnt-store field changes
     $("#fnt-store").change(function() {
       // make a POST call and replace the content
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (product == "")
         product = "0";
-      var store = $('select#fnt-store :selected').val();
+      //var store = $('select#fnt-store :selected').val();
+      var store = $('select#fnt-store').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('so_current_stock/' + product + '/' + store, function(data) {
@@ -111,7 +119,8 @@
     // when the #fnt-work-order field changes
     $("#fnt-work-order").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-work-order :selected').val();
+      //var order = $('select#fnt-work-order :selected').val();
+      var order = $('select#fnt-work-order').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('so_update_charge_account_from_order/' + order, function(data) {
@@ -158,7 +167,8 @@
     // when the #fnt-project field changes
     $("#fnt-project").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-project :selected').val();
+      //var order = $('select#fnt-project :selected').val();
+      var order = $('select#fnt-project').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('so_update_charge_account_from_project/' + order, function(data) {
@@ -285,7 +295,8 @@
       }
       if (discount == "")
         discount = "0";
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -322,7 +333,8 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var order = $('select#sale_offer_organization_id :selected').val();
+    //var order = $('select#sale_offer_organization_id :selected').val();
+    var order = $('select#sale_offer_organization_id').val();
     if (order == "")
       order = "0";
     jQuery.getJSON('so_update_product_select_from_organization/' + order, function(data) {

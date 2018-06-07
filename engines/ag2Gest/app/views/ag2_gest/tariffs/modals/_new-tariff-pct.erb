@@ -8,7 +8,7 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
-    
+
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
       allowClear: true
@@ -19,7 +19,8 @@
     // when the #contracting_request_bank_id field changes
     $("#project_id").change(function() {
       // make a POST call and replace the content
-      var project_ids = $('select#project_id :selected').val();
+      //var project_ids = $('select#project_id :selected').val();
+      var project_ids = $('select#project_id').val();
       if (project_ids == "")
         project_ids = "0";
       jQuery.getJSON('update_billable_concept_select_from_project/' + project_ids, function(data) {
@@ -67,7 +68,8 @@
       });
 
       $("#billable_item").removeClass("disabled");
-      var project_ids = $('select#project_id :selected').val();
+      //var project_ids = $('select#project_id :selected').val();
+      var project_ids = $('select#project_id').val();
       if (project_ids == "")
         project_ids = "0";
       var billable_concept_ids = $('#BillableConcept_').val();

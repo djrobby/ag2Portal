@@ -101,7 +101,8 @@ jQuery(function($) {
 
     $("#use_id").change(function() {
       // make a POST call and replace the content
-      var use_ids = $('select#use_id :selected').val();
+      //var use_ids = $('select#use_id :selected').val();
+      var use_ids = $('select#use_id').val();
       if (use_ids == "")
         use_ids = "0";
       var billable_concept_ids = $('#concept_BillableConcept_').val();
@@ -203,7 +204,7 @@ jQuery(function($) {
       <%= f.input :contracting_request_id, :as => :hidden, :input_html => { :value => @contracting_request.id } %>
       <%= f.input :client_id, :as => :hidden, :input_html => { :value => @contracting_request.client.try(:id) } %>
       <h4><%= t('activerecord.attributes.contracting_request.tariff_data') %></h4>
-      
+
       <%= f.input :use_id, :as => :hidden, :input_html => { :value => @water_supply_contract.use_id } %>
       <%= f.association :use, :disabled => true, collection: Use.all, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true, wrapper_html: { class: "span5" } %>
 
@@ -212,7 +213,7 @@ jQuery(function($) {
 
       <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
       <%= select_tag "concept_BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
-      
+
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
 
 <!--       <#%= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->

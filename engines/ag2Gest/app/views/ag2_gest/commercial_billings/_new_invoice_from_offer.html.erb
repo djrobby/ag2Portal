@@ -19,7 +19,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -35,7 +35,7 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
-    
+
     $("#proc_mesage").hide();
     if ($('#Date_').val() == "") {
       $('#Date_').datepicker('setValue', es_date(new Date()));
@@ -46,7 +46,8 @@
   jQuery(function($) {
     $('#btn_accept').click(function() {
       var supplier = $('#Client_').val();
-      var request = $('#Offer_ :selected').val();
+      //var request = $('#Offer_ :selected').val();
+      var request = $('#Offer_').val();
       var offer_date = $('#Date_').val();
       if ((supplier == "") || (request == "") || (offer_date == "")) {
         // Error
@@ -108,7 +109,8 @@
     // when the #Offer_ field changes
     $("#Offer_").change(function() {
       // make a POST call and replace the content
-      var order = $('#Offer_ :selected').val();
+      //var order = $('#Offer_ :selected').val();
+      var order = $('#Offer_').val();
       if (order == "") order = 0;
       jQuery.getJSON('ci_current_balance/' + order, function(data) {
         $("#current-balance").html(data.balance);

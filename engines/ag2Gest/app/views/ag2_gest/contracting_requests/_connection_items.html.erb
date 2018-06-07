@@ -1,12 +1,13 @@
 <script>
- 
+
 jQuery(function($) {
 
 	// when the .fnt-vehicle field changes
 	$(".wcc_item_type").change(function() {
 	  // preserve the current object
 	  var _this = (this);
-	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  //var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type').val();
 	  if (wcc_item_type == "")
 	  	wcc_item_type = "0";
 	  var wcc_quantity = $(this).closest('tr').find('.wcc_quantity').val();
@@ -23,7 +24,8 @@ jQuery(function($) {
 	$(".wcc_quantity").change(function() {
 	  // preserve the current object
 	  var _this = (this);
-	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  //var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type :selected').val();
+	  var wcc_item_type = $(this).closest('tr').find('select.wcc_item_type').val();
 	  if (wcc_item_type == "")
 	  	wcc_item_type = "0";
 	  var wcc_quantity = $(this).closest('tr').find('.wcc_quantity').val();

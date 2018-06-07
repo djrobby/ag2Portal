@@ -26,7 +26,7 @@ var text_field_color;
       $('#generate_serpoint_code_btn').trigger("click");
       return false;
     }));
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
@@ -84,7 +84,8 @@ var text_field_color;
     $("#fnt_zipcode").change(function() {
 
       // make a POST call and replace the content
-      var contact = $('select#fnt_zipcode :selected').val();
+      //var contact = $('select#fnt_zipcode :selected').val();
+      var contact = $('select#fnt_zipcode').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -99,7 +100,8 @@ var text_field_color;
     // when changes street_directory, street_name and street_type changes and disbaled, or enables if empty
     $("#street_directory").change(function() {
 
-      var contact = $('select#street_directory :selected').val();
+      //var contact = $('select#street_directory :selected').val();
+      var contact = $('select#street_directory').val();
 
       if (contact == "")
         contact = "0";
@@ -134,7 +136,7 @@ var text_field_color;
       });
       return false;
     });
-    
+
     // when #input_change_meter changes
     $("#input_add_meter").change(function() {
       // make a POST call and replace the content
@@ -208,7 +210,7 @@ var text_field_color;
   <% if session[:office] != '0' %>
     <label class="multi-field-label-two"> <%= f.association :center, collection: Center.where("town_id = ?", Office.find("#{session[:office]}").town_id).by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
   <% else %>
-    <label class="multi-field-label-two"> <%= f.association :center, collection: Center.by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>  
+    <label class="multi-field-label-two"> <%= f.association :center, collection: Center.by_town, :input_html => { :class => 'x-large-text-field sel2' }, :label_html => { :class => 'form-label' } %> </label>
   <% end %>
 </div>
 <div>

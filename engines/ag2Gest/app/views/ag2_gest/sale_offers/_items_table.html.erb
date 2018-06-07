@@ -10,7 +10,8 @@
     });
 
     // Client
-    _client = $('#sale_offer_client_id :selected').val();
+    //_client = $('#sale_offer_client_id :selected').val();
+    _client = $('#sale_offer_client_id').val();
     if (_client == "") _client = "0";
 
     // Trigger to display totals at table foot
@@ -43,7 +44,7 @@
     });
     // Update and display totals
     $('#items-table').trigger('totals');
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-product field changes
@@ -108,7 +109,7 @@
       recalculate_so_table(_this);
       return false;
     });
-    
+
     // Recalculate amounts & prices
     function recalculate_so_table(_this) {
       // make a POST call and replace the content

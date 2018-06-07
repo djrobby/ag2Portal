@@ -33,7 +33,7 @@ $(document).ready(function() {
           return false;
         } else {
           alert(data.iban + ' OK');
-          $("#form_new_client_bank").submit();   
+          $("#form_new_client_bank").submit();
           $("#newAccountModal").modal('hide');
         }
       });
@@ -45,7 +45,8 @@ jQuery(function($) {
   // when the #client_bank_account_bank field changes
   $("#fnt_bank").change(function() {
     // make a POST call and replace the content
-    var bank = $('select#fnt_bank :selected').val();
+    //var bank = $('select#fnt_bank :selected').val();
+    var bank = $('select#fnt_bank').val();
     if (bank == "")
       bank = "0";
     jQuery.getJSON('/ag2_gest/contracting_requests/update_bank_offices_from_bank/' + bank, function(data) {

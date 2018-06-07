@@ -69,7 +69,7 @@
       }
       // update data fields
       $("#water_supply_contract_cadastral_reference").text(data.water_supply_contract.cadastral_reference);
-      $("#water_supply_contract_pub_record").text(data.water_supply_contract.pub_record);     
+      $("#water_supply_contract_pub_record").text(data.water_supply_contract.pub_record);
       $("#water_supply_contract_gis_id").text(data.water_supply_contract.gis_id);
       $("#water_supply_contract_endowments").text(data.water_supply_contract.endowments);
       $("#water_supply_contract_inhabitants").text(data.water_supply_contract.inhabitants);
@@ -123,7 +123,8 @@ jQuery(function($) {
 
     $("#tariff_scheme_id").change(function() {
       // make a POST call and replace the content
-      var tariff_scheme_ids = $('select#tariff_scheme_id :selected').val();
+      //var tariff_scheme_ids = $('select#tariff_scheme_id :selected').val();
+      var tariff_scheme_ids = $('select#tariff_scheme_id').val();
       if (tariff_scheme_ids == "")
         tariff_scheme_ids = "0";
       jQuery.getJSON('cr_tariff_scheme_validate/' + tariff_scheme_ids, function(data) {
@@ -137,7 +138,8 @@ jQuery(function($) {
 
     $("#use_id").change(function() {
       // make a POST call and replace the content
-      var use_ids = $('select#use_id :selected').val();
+      //var use_ids = $('select#use_id :selected').val();
+      var use_ids = $('select#use_id').val();
       if (use_ids == "")
         use_ids = "0";
       var billable_concept_ids = $('#BillableConcept_').val();
@@ -243,10 +245,10 @@ jQuery(function($) {
       <%= f.association :use, collection: Use.all, input_html: { :id => 'use_id' ,class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
 
       <%= f.association :tariff_scheme, required: true, collection: TariffScheme.where(project_id: @contracting_request.project_id).actives, input_html: { :id => 'tariff_scheme_id' , class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' }, include_blank: true %>
-      
+
       <label for="BillableConcept_" class="form-label"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.billable_concept.zero") %></label>
       <%= select_tag "BillableConcept_", options_from_collection_for_select(@billable_concept_availables, "id", "to_label_biller", @billable_concept_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %>
-      
+
       <label for="TariffType_" class="form-label-under-sel2"> <abbr title="requerido">*</abbr> <%= I18n.t("activerecord.models.tariff_type.zero") %></label>
 
 <!--       <%#= select_tag "TariffType_", options_from_collection_for_select(@tariff_type_dropdown, "id", "to_label", @tariff_type_select ), :prompt => "", :class => 'x-large-text-field sel2', multiple: true %> -->

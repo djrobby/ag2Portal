@@ -68,7 +68,8 @@ var text_field_color;
     $("#fnt_town").change(function() {
 
       // make a POST call and replace the content
-      var contact = $('select#fnt_town :selected').val();
+      //var contact = $('select#fnt_town :selected').val();
+      var contact = $('select#fnt_town').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -82,7 +83,8 @@ var text_field_color;
     // when the #fnt_province field changes
     $("#fnt_province").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#fnt_province :selected').val();
+      //var contact = $('select#fnt_province :selected').val();
+      var contact = $('select#fnt_province').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -95,7 +97,8 @@ var text_field_color;
     $("#fnt_zipcode").change(function() {
 
       // make a POST call and replace the content
-      var contact = $('select#fnt_zipcode :selected').val();
+      //var contact = $('select#fnt_zipcode :selected').val();
+      var contact = $('select#fnt_zipcode').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -131,7 +134,8 @@ var text_field_color;
     $("#fnt_region").change(function() {
       // make a POST call and replace the content
 
-      var contact = $('select#fnt_region :selected').val();
+      //var contact = $('select#fnt_region :selected').val();
+      var contact = $('select#fnt_region').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
@@ -143,7 +147,8 @@ var text_field_color;
     // when changes street_directory, street_name and street_type changes and disbaled, or enables if empty
     $("#street_directory").change(function() {
 
-      var contact = $('select#street_directory :selected').val();
+      //var contact = $('select#street_directory :selected').val();
+      var contact = $('select#street_directory').val();
 
       if (contact == "")
         contact = "0";

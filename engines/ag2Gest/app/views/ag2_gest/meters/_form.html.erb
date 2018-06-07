@@ -20,14 +20,14 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
         cache: true
       }
     });
-  }  
+  }
 
   $(document).ready(function() {
     // $('.date_picker').datepicker({
@@ -40,7 +40,7 @@
     }).on('changeDate', function(e){
       $('.date_picker').datepicker('hide');
     });
-    
+
     // Select2
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -49,7 +49,7 @@
 
     // Setup special search (select2)
     metersSelect2ForNew("<%= @master_meter %>");
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
@@ -58,7 +58,8 @@
     // when the #meter_company_id field changes
     $("#meter_company_id").change(function() {
       // make a POST call and replace the content
-      var meter = $('select#meter_company_id :selected').val();
+      //var meter = $('select#meter_company_id :selected').val();
+      var meter = $('select#meter_company_id').val();
       if (meter == "")
         meter = "0";
       jQuery.getJSON('me_update_office_select_from_company/' + meter, function(data) {
@@ -84,7 +85,8 @@
     // when the #meter_organization_id field changes
     $("#meter_organization_id").change(function() {
       // make a POST call and replace the content
-      var meter = $('select#meter_organization_id :selected').val();
+      //var meter = $('select#meter_organization_id :selected').val();
+      var meter = $('select#meter_organization_id').val();
       if (meter == "")
         meter = "0";
       jQuery.getJSON('me_update_company_select_from_organization/' + meter, function(data) {

@@ -222,7 +222,8 @@
     // when the #contracting_request_service_point_id field changes
     $("#contracting_request_subscriber_street_directory").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_subscriber_street_directory :selected').val();
+      //var contact = $('select#contracting_request_subscriber_street_directory :selected').val();
+      var contact = $('select#contracting_request_subscriber_street_directory').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_connection_from_street_directory/' + contact, function(data) {
@@ -241,7 +242,8 @@
     // when the #contracting_request_bank_id field changes
     $("#contracting_request_bank_id").change(function() {
       // make a POST call and replace the content
-      var bank = $('select#contracting_request_bank_id :selected').val();
+      //var bank = $('select#contracting_request_bank_id :selected').val();
+      var bank = $('select#contracting_request_bank_id').val();
       if (bank == "")
         bank = "0";
       jQuery.getJSON('update_bank_offices_from_bank/' + bank, function(data) {
@@ -284,7 +286,8 @@
     // when the #client_town_id field changes
     $("#contracting_request_client_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_town_id :selected').val();
+      //var contact = $('select#contracting_request_client_town_id :selected').val();
+      var contact = $('select#contracting_request_client_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -331,7 +334,8 @@
     // when the #client_town_id field changes
     $("#contracting_request_client_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_town_id :selected').val();
+      //var contact = $('select#contracting_request_client_town_id :selected').val();
+      var contact = $('select#contracting_request_client_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -346,7 +350,8 @@
     $('#contracting_request_client_province_id').change(function() {
     // $("#contracting_request_client_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#contracting_request_client_province_id :selected').val();
+      //var contact = $('select#contracting_request_client_province_id :selected').val();
+      var contact = $('select#contracting_request_client_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -412,7 +417,7 @@
             return false;
           } else {
             alert(data.iban + ' OK');
-            $("#form_contracting_request_connection").submit();   
+            $("#form_contracting_request_connection").submit();
           }
         });
       }

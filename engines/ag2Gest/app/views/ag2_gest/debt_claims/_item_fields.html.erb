@@ -1,6 +1,6 @@
 <script>
   var _client;
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -10,11 +10,13 @@
     // Sale Offer
     $("#fnt-sale-offer").html("");
     $('#invoice_sale_offer_id option').clone().appendTo('#fnt-sale-offer');
-    var _po = $('#invoice_sale_offer_id :selected').val();
+    //var _po = $('#invoice_sale_offer_id :selected').val();
+    var _po = $('#invoice_sale_offer_id').val();
     if (_po == "") _po = "0";
     $('#fnt-sale-offer').val(_po);
     // Client
-    _client = $('#invoice_client_id :selected').val();
+    //_client = $('#invoice_client_id :selected').val();
+    _client = $('#invoice_client_id').val();
     if (_client == "") _client = "0";
     // Product & Offer item
     init();
@@ -32,7 +34,8 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -77,7 +80,8 @@
     // when the #fnt-sale-offer field changes
     $("#fnt-sale-offer").change(function() {
       // make a POST call and replace the content
-      var o = $('select#fnt-sale-offer :selected').val();
+      //var o = $('select#fnt-sale-offer :selected').val();
+      var o = $('select#fnt-sale-offer').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('ci_update_selects_from_offer/' + o, function(data) {
@@ -132,7 +136,8 @@
     // when the #fnt-sale-offer-item field changes
     $("#fnt-sale-offer-item").change(function() {
       // make a POST call and replace the content
-      var i = $('select#fnt-sale-offer-item :selected').val();
+      //var i = $('select#fnt-sale-offer-item :selected').val();
+      var i = $('select#fnt-sale-offer-item').val();
       if (i == "")
         i = "0";
       jQuery.getJSON('ci_update_product_select_from_offer_item/' + i, function(data) {
@@ -149,7 +154,8 @@
       // preserve the current object
       var _this = (this);
       // balance check
-      var i = $('select#fnt-sale-offer-item :selected').val();
+      //var i = $('select#fnt-sale-offer-item :selected').val();
+      var i = $('select#fnt-sale-offer-item').val();
       if (typeof i === "undefined") {
         i = $(_this).closest('tr').find('.fnt-sale-offer-item').val();
       }
@@ -235,7 +241,8 @@
       }
       if (discount == "")
         discount = "0";
-      var product = $('select#fnt-product :selected').val();
+      //var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -272,7 +279,8 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var o = $('select#invoice_sale_offer_id :selected').val();
+    //var o = $('select#invoice_sale_offer_id :selected').val();
+    var o = $('select#invoice_sale_offer_id').val();
     if (o != "" && o != "0") {
       jQuery.getJSON('ci_update_selects_from_offer/' + o, function(data) {
         var prods = data.product
@@ -309,7 +317,8 @@
         }
       });
     } else {
-      var order = $('select#invoice_organization_id :selected').val();
+      //var order = $('select#invoice_organization_id :selected').val();
+      var order = $('select#invoice_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('ci_update_product_select_from_organization/' + order, function(data) {
