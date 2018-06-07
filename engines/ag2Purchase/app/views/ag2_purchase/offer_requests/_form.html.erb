@@ -1,22 +1,22 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
       $('.fnt-new-supplier-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
       $('.fnt-new-supplier-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -34,7 +34,7 @@
 
     // Save default text color
     text_field_color = $("#offer_request_request_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#offer_request_request_no").closest('form')[0];
 
@@ -67,18 +67,18 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Can't change order no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#offer_request_request_no').prop('readonly', true);
     } else {
       $('#offer_request_request_no').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #offer_request_request_no field changes
     $("#offer_request_request_no").change(function() {
@@ -93,11 +93,11 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_request_project_id :selected').val();
+      var order = $('select#offer_request_project_id').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('or_generate_no/' + order, function(data) {
@@ -117,7 +117,7 @@
     // when the #offer_request_organization_id field changes
     $("#offer_request_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_request_organization_id :selected').val();
+      var order = $('select#offer_request_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('or_update_project_textfields_from_organization/' + order, function(data) {
@@ -213,7 +213,7 @@
     // when the #offer_request_project_id field changes
     $("#offer_request_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_request_project_id :selected').val();
+      var order = $('select#offer_request_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('or_update_charge_account_from_project/' + order, function(data) {
@@ -280,7 +280,7 @@
     // when the #offer_request_work_order_id field changes
     $("#offer_request_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_request_work_order_id :selected').val();
+      var order = $('select#offer_request_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('or_update_charge_account_from_order/' + order, function(data) {
@@ -338,8 +338,8 @@
       $('#items-table').trigger('totals');
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var price = '';

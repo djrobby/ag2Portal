@@ -39,7 +39,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -66,7 +66,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -93,7 +93,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -120,7 +120,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -147,7 +147,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -174,7 +174,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -203,7 +203,7 @@
 
     // Hide report button
     show_buttons(false);
-  }); 
+  });
 
   jQuery(function($) {
     // when the #Report field changes
@@ -316,7 +316,7 @@
       get_report_or_csv(true);
       return false;
     });
-    
+
     function get_report_or_csv(_csv) {
       var nam = '';
       var ext = '.pdf';
@@ -377,7 +377,7 @@
           var order = $('#Order').val();
           var account = $('#Account').val();
           var petitioner = $('#User').val();
-          var status = $('#Status :selected').val();
+          var status = $('#Status').val();
           // if ((project == "") && (supplier == "") && (store == "") && (order == "") && (account == "") && (status == "") && (petitioner == ""))
           //   return;
           if (detailed == "") {
@@ -423,15 +423,15 @@
           break;
       }
     }
-    
+
     function hide(_select, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').hide();
       $(_select).removeClass('sel2');
       $(_select).select2('destroy');
-      $(_select).hide();      
+      $(_select).hide();
     }
-    
+
     function show(_select, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').show();
@@ -464,14 +464,14 @@
           });
       }
     }
-    
+
     function hide_date(_date, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').hide();
       $(_date).removeClass('date_picker');
-      $(_date).hide();      
+      $(_date).hide();
     }
-    
+
     function show_date(_date, _label) {
       _label = replace_with_underscore(_label);
       $('label[for=' + _label + ']').show();
