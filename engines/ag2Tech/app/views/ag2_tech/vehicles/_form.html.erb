@@ -7,7 +7,7 @@
       allowClear: true
     });
     // Initialize form variable
-    _thisForm = $("#vehicle_cost").closest('form')[0];    
+    _thisForm = $("#vehicle_cost").closest('form')[0];
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
@@ -16,7 +16,7 @@
     // when the #vehicle_office_id field changes
     $("#vehicle_office_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#vehicle_office_id :selected').val();
+      var tool = $('select#vehicle_office_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('ve_update_company_textfield_from_office/' + tool, function(data) {
@@ -28,7 +28,7 @@
     // when the #vehicle_organization_id field changes
     $("#vehicle_organization_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#vehicle_organization_id :selected').val();
+      var tool = $('select#vehicle_organization_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('ve_update_company_and_office_textfields_from_organization/' + tool, function(data) {
@@ -92,7 +92,7 @@
     // when the #vehicle_product_id field changes
     $("#vehicle_product_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#vehicle_product_id :selected').val();
+      var tool = $('select#vehicle_product_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('ve_update_name_textfield_from_product/' + tool, function(data) {
@@ -115,14 +115,14 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var cost = $('#vehicle_cost').val().replace(",", ".");
       $('#vehicle_cost').val(cost);
     });
-  });  
+  });
 </script>
 
 <%= simple_form_for @vehicle, :html => {:class => 'form-vertical well' } do |f| %>

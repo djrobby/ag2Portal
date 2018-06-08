@@ -6,7 +6,7 @@
     // Charge Account
     $("#fnt-charge-account-sub").html("");
     $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-sub');
-    var _c = $('#work_order_charge_account_id :selected').val();
+    var _c = $('#work_order_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account-sub').val(_c);
 
@@ -23,7 +23,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var supplier = $('select#fnt-supplier :selected').val();
+      var supplier = $('select#fnt-supplier').val();
       if (typeof supplier === "undefined") {
         tbl = true;
         supplier = $(_this).closest('tr').find('.fnt-supplier').val();
@@ -49,7 +49,7 @@
           $(_this).closest('tr').find('.fnt-purchase-order').removeClass('ssel2')
           $(_this).closest('tr').find('.fnt-purchase-order').select2('destroy');
           $(_this).closest('tr').find('.fnt-purchase-order').hide();
-          // Fill select      
+          // Fill select
           $(_this).closest('tr').find('.fnt-purchase-order').html("");
           $(_this).closest('tr').find('.fnt-purchase-order').select2("val", "");
           $(_this).closest('tr').find('.fnt-purchase-order').append($('<option></option>').val("").html(""));
@@ -66,7 +66,7 @@
           }
           // Enable select2 and show
           $(_this).closest('tr').find('.fnt-purchase-order').addClass('ssel2')
-          $(_this).closest('tr').find('.fnt-purchase-order').show();      
+          $(_this).closest('tr').find('.fnt-purchase-order').show();
           $(_this).closest('tr').find('.fnt-purchase-order').select2({
             formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
             dropdownCssClass: 'shrinked',
@@ -105,7 +105,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var order = $('select#fnt-purchase-order :selected').val();
+      var order = $('select#fnt-purchase-order').val();
       if (typeof order === "undefined") {
         tbl = true;
         order = $(_this).closest('tr').find('.fnt-purchase-order').val();

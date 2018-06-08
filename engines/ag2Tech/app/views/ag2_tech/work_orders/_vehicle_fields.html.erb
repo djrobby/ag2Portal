@@ -6,7 +6,7 @@
     // Charge Account
     $("#fnt-charge-account-v").html("");
     $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-v');
-    var _c = $('#work_order_charge_account_id :selected').val();
+    var _c = $('#work_order_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account-v').val(_c);
     // Vehicle
@@ -25,7 +25,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var vehicle = $('select#fnt-vehicle :selected').val();
+      var vehicle = $('select#fnt-vehicle').val();
       if (typeof vehicle === "undefined") {
         tbl = true;
         vehicle = $(_this).closest('tr').find('.fnt-vehicle').val();
@@ -111,7 +111,7 @@
   // Initialize
   function initV() {
     // make a POST call and replace the content
-    var order = $('select#work_order_organization_id :selected').val();
+    var order = $('select#work_order_organization_id').val();
     if (order == "")
       order = "0";
     jQuery.getJSON('wo_update_vehicle_select_from_organization/' + order, function(data) {

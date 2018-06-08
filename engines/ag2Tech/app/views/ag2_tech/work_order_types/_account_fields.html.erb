@@ -17,7 +17,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var project = $('select#fnt-project :selected').val();
+      var project = $('select#fnt-project').val();
       if (typeof project === "undefined") {
         tbl = true;
         project = $(_this).closest('tr').find('.fnt-project').val();

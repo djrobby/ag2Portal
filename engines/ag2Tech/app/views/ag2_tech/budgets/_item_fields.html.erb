@@ -1,11 +1,11 @@
 <script>
   var _f;
   var _p = "0";
-  
+
   $(document).ready(function() {
     // Retrieves parent values
     _f = $("#fnt-account").closest('form')[0];
-    _p = $('select#budget_project_id :selected').val();
+    _p = $('select#budget_project_id').val();
     if (_p == "") _p = "0";
 
     // Set focus

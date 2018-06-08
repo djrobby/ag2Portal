@@ -1,7 +1,7 @@
 <script>
   var _f = '';
   var _s = "0";
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -9,12 +9,12 @@
     // Form
     _f = $("#fnt-product").closest('form')[0];
     // Store
-    _s = $('select#work_order_store_id :selected').val();
+    _s = $('select#work_order_store_id').val();
     if (_s == "") _s = "0";
     // Charge Account
     $("#fnt-charge-account").html("");
     $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#work_order_charge_account_id :selected').val();
+    var _c = $('#work_order_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Product
@@ -33,7 +33,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -131,7 +131,7 @@
       }
       if (tax_type == "")
         tax_type = "0";
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -167,7 +167,7 @@
   // Initialize
   function initP() {
     // make a POST call and replace the content
-    var order = $('select#work_order_organization_id :selected').val();
+    var order = $('select#work_order_organization_id').val();
     if (order == "")
       order = "0";
     jQuery.getJSON('wo_update_product_select_from_organization/' + order, function(data) {

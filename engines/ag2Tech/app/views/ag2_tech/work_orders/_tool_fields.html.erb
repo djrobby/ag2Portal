@@ -6,7 +6,7 @@
     // Charge Account
     $("#fnt-charge-account-t").html("");
     $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-t');
-    var _c = $('#work_order_charge_account_id :selected').val();
+    var _c = $('#work_order_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account-t').val(_c);
     // Tool
@@ -25,7 +25,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var tool = $('select#fnt-tool :selected').val();
+      var tool = $('select#fnt-tool').val();
       if (typeof tool === "undefined") {
         tbl = true;
         tool = $(_this).closest('tr').find('.fnt-tool').val();
@@ -111,7 +111,7 @@
   // Initialize
   function initT() {
     // make a POST call and replace the content
-    var order = $('select#work_order_organization_id :selected').val();
+    var order = $('select#work_order_organization_id').val();
     if (order == "")
       order = "0";
     jQuery.getJSON('wo_update_tool_select_from_organization/' + order, function(data) {

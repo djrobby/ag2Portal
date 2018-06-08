@@ -16,7 +16,7 @@
     // when the #tool_office_id field changes
     $("#tool_office_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#tool_office_id :selected').val();
+      var tool = $('select#tool_office_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('tl_update_company_textfield_from_office/' + tool, function(data) {
@@ -28,7 +28,7 @@
     // when the #tool_organization_id field changes
     $("#tool_organization_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#tool_organization_id :selected').val();
+      var tool = $('select#tool_organization_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('tl_update_company_and_office_textfields_from_organization/' + tool, function(data) {
@@ -92,7 +92,7 @@
     // when the #tool_product_id field changes
     $("#tool_product_id").change(function() {
       // make a POST call and replace the content
-      var tool = $('select#tool_product_id :selected').val();
+      var tool = $('select#tool_product_id').val();
       if (tool == "")
         tool = "0";
       jQuery.getJSON('tl_update_name_textfield_from_product/' + tool, function(data) {
@@ -115,14 +115,14 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var cost = $('#tool_cost').val().replace(",", ".");
       $('#tool_cost').val(cost);
     });
-  });  
+  });
 </script>
 
 <%= simple_form_for @tool, :html => {:class => 'form-vertical well' } do |f| %>

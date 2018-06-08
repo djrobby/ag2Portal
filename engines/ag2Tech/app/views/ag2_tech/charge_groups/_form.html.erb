@@ -9,7 +9,7 @@
     // when the #charge_group_organization_id field changes
     $("#charge_group_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#charge_group_organization_id :selected').val();
+      var order = $('select#charge_group_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('cg_update_heading_textfield_from_organization/' + order, function(data) {

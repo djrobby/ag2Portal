@@ -59,18 +59,18 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#project_project_code').prop('readonly', true);
     } else {
       $('#project_project_code').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #project_project_code field changes
     $("#project_project_code").change(function() {
@@ -89,10 +89,10 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var company = $('select#project_company_id :selected').val();
+      var company = $('select#project_company_id').val();
       if (company == "")
         company = "$";
-      var type = $('select#project_project_type_id :selected').val();
+      var type = $('select#project_project_type_id').val();
       if (type == "")
         type = "$";
       jQuery.getJSON('pr_generate_code/' + company + '/' + type, function(data) {
@@ -112,7 +112,7 @@
     // when the #project_company_id field changes
     $("#project_company_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#project_company_id :selected').val();
+      var order = $('select#project_company_id').val();
       if (order == "")
         order = "0";
       // Disable generate_code_btn if project_company_id blank
@@ -122,7 +122,7 @@
 
     // when the #project_project_type_id field changes
     $("#project_project_type_id").change(function() {
-      var type = $('select#project_project_type_id :selected').val();
+      var type = $('select#project_project_type_id').val();
       if (type == "")
         type = "0";
       if (type == "0") {
@@ -143,7 +143,7 @@
     // when the #project_office_id field changes
     $("#project_office_id").change(function() {
       // make a POST call and replace the content
-      var project = $('select#project_office_id :selected').val();
+      var project = $('select#project_office_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('pr_update_company_textfield_from_office/' + project, function(data) {
@@ -156,7 +156,7 @@
     // when the #project_organization_id field changes
     $("#project_organization_id").change(function() {
       // make a POST call and replace the content
-      var project = $('select#project_organization_id :selected').val();
+      var project = $('select#project_organization_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('pr_update_company_and_office_textfields_from_organization/' + project, function(data) {
@@ -215,8 +215,8 @@
       recalculate(_this);
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var total = $('#project_max_order_total').val().replace(",", ".");
@@ -224,7 +224,7 @@
       $('#project_max_order_total').val(total);
       $('#project_max_order_price').val(price);
     });
-    
+
     // Recalculate amounts & prices
     function recalculate(_this) {
       // make a POST call and replace the content
@@ -243,13 +243,13 @@
       });
     }
   });
-  
+
   function show_hide_generate_code_btn() {
     // Disable generate_code_btn if project_company_id and project_project_type_id are blank
-    var company = $('select#project_company_id :selected').val();
+    var company = $('select#project_company_id').val();
     if (company == "")
       company = "$";
-    var type = $('select#project_project_type_id :selected').val();
+    var type = $('select#project_project_type_id').val();
     if (type == "")
       type = "$";
     if (company != "$" && type != "$") {
@@ -268,7 +268,7 @@
     } else {
       // Hide
       $('#generate_code_btn').hide();
-    }    
+    }
   }
 </script>
 

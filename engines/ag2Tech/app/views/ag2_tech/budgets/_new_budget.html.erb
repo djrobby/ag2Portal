@@ -10,13 +10,13 @@
   jQuery(function($) {
     // when #ok_btn is clicked
     $("#ok_btn").click(function() {
-      var order = $('select#budget_project_id :selected').val();
+      var order = $('select#budget_project_id').val();
       if (order == "")
         order = "$";
-      var period = $('select#budget_budget_period_id :selected').val();
+      var period = $('select#budget_budget_period_id').val();
       if (period == "")
         period = "$";
-      var budget = $('select#Budgets :selected').val();
+      var budget = $('select#Budgets').val();
       if (budget == "")
         budget = "$";
       jQuery.getJSON('bu_new/' + order + '/' + period + '/' + budget, function(data) {
@@ -35,10 +35,10 @@
 
     // when #cancel_btn is clicked
     $("#cancel_btn").click(function() {
-      var order = $('select#budget_project_id :selected').val();
+      var order = $('select#budget_project_id').val();
       if (order == "")
         order = "$";
-      var period = $('select#budget_budget_period_id :selected').val();
+      var period = $('select#budget_budget_period_id').val();
       if (period == "")
         period = "$";
       if (order == '$' || period == '$') {
@@ -47,11 +47,11 @@
         $('#generate_code_btn').trigger("click");
         $('#new-budget').on('hidden', function() {
           $('#budget_budget_no').select();
-        });        
+        });
       }
       //return false;
     });
-  });  
+  });
 </script>
 
 <div id="new-budget" class="modal fade" style="display: none;">
@@ -67,5 +67,5 @@
   <div class="modal-footer">
     <a class="btn btn-primary" data-dismiss="modal" href="#" id="ok_btn"><%= t 'ag2_tech.budgets.new_budget.btn_new' %></a>
     <a class="btn btn-primary" data-dismiss="modal" href="#" id="cancel_btn"><%= t :close_button %></a>
-  </div>    
+  </div>
 </div>

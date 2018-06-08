@@ -1,20 +1,20 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -63,18 +63,18 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change budget no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#budget_budget_no').prop('readonly', true);
     } else {
       $('#budget_budget_no').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #budget_budget_no field changes
     $("#budget_budget_no").change(function() {
@@ -89,14 +89,14 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#budget_project_id :selected').val();
+      var order = $('select#budget_project_id').val();
       if (order == "")
         order = "$";
-      var period = $('select#budget_budget_period_id :selected').val();
+      var period = $('select#budget_budget_period_id').val();
       if (period == "")
         period = "$";
       jQuery.getJSON('bu_generate_no/' + order + '/' + period, function(data) {
@@ -112,14 +112,14 @@
       });
       return false;
     });
-    
+
     // when #new_btn is clicked
     $("#new_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#budget_project_id :selected').val();
+      var order = $('select#budget_project_id').val();
       if (order == "")
         order = "$";
-      var period = $('select#budget_budget_period_id :selected').val();
+      var period = $('select#budget_budget_period_id').val();
       if (period == "")
         period = "$";
       if (order == '$' || period == '$') {
@@ -137,7 +137,7 @@
     // when the #budget_organization_id field changes
     $("#budget_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#budget_organization_id :selected').val();
+      var order = $('select#budget_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('bu_update_project_textfield_from_organization/' + order, function(data) {
@@ -164,11 +164,11 @@
       }
       return false;
     });
-    
+
     // when the #budget_project_id field changes
     $("#budget_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#budget_project_id :selected').val();
+      var order = $('select#budget_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('bu_update_account_textfields_from_project/' + order, function(data) {
@@ -195,19 +195,19 @@
       show_hide_generate_code_btn();
       return false;
     });
-    
+
     // when the #budget_budget_period_id field changes
     $("#budget_budget_period_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#budget_budget_period_id :selected').val();
+      var order = $('select#budget_budget_period_id').val();
       if (order == "")
         order = "0";
       // Disable generate_code_btn if budget_budget_period_id blank
       show_hide_generate_code_btn();
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       var qty = '';
       var price = '';
@@ -244,13 +244,13 @@
       //e.preventDefault();
     });
   });
-  
+
   function show_hide_generate_code_btn() {
     // Disable generate_code_btn if budget_project_id and budget_budget_period_id are blank
-    var product = $('select#budget_project_id :selected').val();
+    var product = $('select#budget_project_id').val();
     if (product == "")
       product = "$";
-    var org = $('select#budget_budget_period_id :selected').val();
+    var org = $('select#budget_budget_period_id').val();
     if (org == "")
       org = "$";
     if (product != "$" && org != "$") {
@@ -263,7 +263,7 @@
     } else {
       // Hide
       $('#generate_code_btn').hide();
-    }    
+    }
   }
 </script>
 

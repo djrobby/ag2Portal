@@ -35,7 +35,7 @@
     });
     // Update and display totals
     $('#workers-table').trigger('totals');
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-worker field changes
@@ -52,12 +52,12 @@
       var yy = _date.getFullYear();
       // make a POST call and replace the content
       var tbl = true;
-      project = $('select#work_order_project_id :selected').val();
+      project = $('select#work_order_project_id').val();
       if (project == "")
-        project = "0";      
-      type = $('select#work_order_hours_type :selected').val();
+        project = "0";
+      type = $('select#work_order_hours_type').val();
       if (type == "")
-        type = "0";      
+        type = "0";
       var worker = $(this).closest('tr').find('.fnt-worker').val();
       if (worker == "")
         worker = "0";
@@ -90,7 +90,7 @@
       recalculate_wow_table(_this);
       return false;
     });
-    
+
     // Recalculate amounts & prices
     function recalculate_wow_table(_this) {
       // make a POST call and replace the content

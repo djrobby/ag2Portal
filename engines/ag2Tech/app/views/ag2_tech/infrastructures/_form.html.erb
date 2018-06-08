@@ -59,18 +59,18 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#infrastructure_code').prop('readonly', true);
     } else {
       $('#infrastructure_code').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #infrastructure_code field changes
     $("#infrastructure_code").change(function() {
@@ -89,10 +89,10 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var org = $('select#infrastructure_organization_id :selected').val();
+      var org = $('select#infrastructure_organization_id').val();
       if (org == "")
         org = "$";
-      var type = $('select#infrastructure_infrastructure_type_id :selected').val();
+      var type = $('select#infrastructure_infrastructure_type_id').val();
       if (type == "")
         type = "$";
       jQuery.getJSON('in_generate_code/' + org + '/' + type, function(data) {
@@ -111,7 +111,7 @@
 
     // when the #infrastructure_infrastructure_type_id field changes
     $("#infrastructure_infrastructure_type_id").change(function() {
-      var type = $('select#infrastructure_infrastructure_type_id :selected').val();
+      var type = $('select#infrastructure_infrastructure_type_id').val();
       if (type == "")
         type = "0";
       if (type == "0") {
@@ -132,7 +132,7 @@
     // when the #infrastructure_office_id field changes
     $("#infrastructure_office_id").change(function() {
       // make a POST call and replace the content
-      var project = $('select#infrastructure_office_id :selected').val();
+      var project = $('select#infrastructure_office_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('in_update_company_textfield_from_office/' + project, function(data) {
@@ -144,7 +144,7 @@
     // when the #infrastructure_organization_id field changes
     $("#infrastructure_organization_id").change(function() {
       // make a POST call and replace the content
-      var project = $('select#infrastructure_organization_id :selected').val();
+      var project = $('select#infrastructure_organization_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('in_update_company_and_office_textfields_from_organization/' + project, function(data) {
@@ -208,13 +208,13 @@
       return false;
     });
   });
-  
+
   function show_hide_generate_code_btn() {
     // Disable generate_code_btn if infrastructure_organization_id and infrastructure_infrastructure_type_id are blank
-    var org = $('select#infrastructure_organization_id :selected').val();
+    var org = $('select#infrastructure_organization_id').val();
     if (org == "")
       org = "$";
-    var type = $('select#infrastructure_infrastructure_type_id :selected').val();
+    var type = $('select#infrastructure_infrastructure_type_id').val();
     if (type == "")
       type = "$";
     if (org != "$" && type != "$") {
@@ -233,7 +233,7 @@
     } else {
       // Hide
       $('#generate_code_btn').hide();
-    }    
+    }
   }
 </script>
 

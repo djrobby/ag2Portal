@@ -1,7 +1,7 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
@@ -11,11 +11,11 @@
       $('.fnt-new-subcontractor-btn').show();
       $('.fnt-new-tool-btn').show();
       $('.fnt-new-vehicle-btn').show();
-      $('#icon-new-btn').show();      
-      $('#icon-new-worker-btn').show();      
-      $('#icon-new-subcontractor-btn').show();      
-      $('#icon-new-tool-btn').show();      
-      $('#icon-new-vehicle-btn').show();      
+      $('#icon-new-btn').show();
+      $('#icon-new-worker-btn').show();
+      $('#icon-new-subcontractor-btn').show();
+      $('#icon-new-tool-btn').show();
+      $('#icon-new-vehicle-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
@@ -23,11 +23,11 @@
       $('.fnt-new-subcontractor-btn').hide();
       $('.fnt-new-tool-btn').hide();
       $('.fnt-new-vehicle-btn').hide();
-      $('#icon-new-btn').hide();      
-      $('#icon-new-worker-btn').hide();      
-      $('#icon-new-subcontractor-btn').hide();      
-      $('#icon-new-tool-btn').hide();      
-      $('#icon-new-vehicle-btn').hide();      
+      $('#icon-new-btn').hide();
+      $('#icon-new-worker-btn').hide();
+      $('#icon-new-subcontractor-btn').hide();
+      $('#icon-new-tool-btn').hide();
+      $('#icon-new-vehicle-btn').hide();
     }
   }
 
@@ -55,7 +55,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -87,7 +87,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -118,14 +118,14 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
         cache: true
       }
     });
-  }  
+  }
 
   $(document).ready(function() {
     $('select.sel2').select2({
@@ -149,7 +149,7 @@
 
     // Setup special search (select2)
     setupAllSelect2("<%= @client %>", "<%= @subscriber %>", "<%= @meter %>");
-    
+
     // Save default text color
     text_field_color = $("#work_order_order_no").css('color')
 
@@ -185,14 +185,14 @@
       // Project OK: Show
       $('#generate_code_btn').show();
     }
-    
+
     // Show or hide subscriber_meter div
     if ('<%= @subscriber_meter %>' == "true") {
       $('#subscriber_meter').show();
     } else {
       $('#subscriber_meter').hide();
     }
-    
+
     // Can't change order no if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#work_order_order_no').prop('readonly', true);
@@ -200,11 +200,11 @@
       $('#work_order_order_no').prop('readonly', false);
       $('#work_order_work_order_status_id').select2("val", 1);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #work_order_order_no field changes
     $("#work_order_order_no").change(function() {
@@ -219,11 +219,11 @@
         show_new(true);
       }
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_project_id :selected').val();
+      var order = $('select#work_order_project_id').val();
       if (order == "")
         order = "$";
       jQuery.getJSON('wo_generate_no/' + order, function(data) {
@@ -243,7 +243,7 @@
     // when the #work_order_organization_id field changes
     $("#work_order_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_organization_id :selected').val();
+      var order = $('select#work_order_organization_id').val();
       if (order == "")
         order = "0";
       var id = $('#work_order_id').val();
@@ -440,14 +440,14 @@
       }
       return false;
     });
-    
+
     // when the #work_order_project_id field changes
     $("#work_order_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_project_id :selected').val();
+      var order = $('select#work_order_project_id').val();
       if (order == "")
         order = "0";
-      var org = $('select#work_order_organization_id :selected').val();
+      var org = $('select#work_order_organization_id').val();
       if (org == "")
         org = "0";
       var id = $('#work_order_id').val();
@@ -550,7 +550,7 @@
     // when the #work_order_area_id field changes
     $("#work_order_area_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_area_id :selected').val();
+      var order = $('select#work_order_area_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('wo_update_worker_select_from_area/' + order, function(data) {
@@ -570,7 +570,7 @@
     // when the #work_order_client_id field changes
     $("#Client").change(function() {
       // make a POST call and replace the content
-      // var order = $('select#work_order_client_id :selected').val();
+      // var order = $('select#work_order_client_id').val();
       var order = $('#Client').val();
       if (order == "")
         order = "0";
@@ -583,7 +583,7 @@
     // when the #work_order_work_order_area_id field changes
     $("#work_order_work_order_area_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_work_order_area_id :selected').val();
+      var order = $('select#work_order_work_order_area_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('wo_update_type_select_from_woarea/' + order, function(data) {
@@ -610,10 +610,10 @@
     // when the #work_order_work_order_type_id field changes
     $("#work_order_work_order_type_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#work_order_work_order_type_id :selected').val();
+      var order = $('select#work_order_work_order_type_id').val();
       if (order == "")
         order = "0";
-      var project = $('select#work_order_project_id :selected').val();
+      var project = $('select#work_order_project_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('wo_update_labor_select_from_type/' + order + '/' + project, function(data) {
@@ -670,7 +670,7 @@
       if (subscriber == "")
         subscriber = "0";
       jQuery.getJSON('wo_update_meter_textfields_from_subscriber/' + subscriber, function(data) {
-        metersSelect2ForNew(data.meter, data.subscriber);        
+        metersSelect2ForNew(data.meter, data.subscriber);
         $("#Meter").val(data.meter_id);
         $("#work_order_meter_code").val(data.code);
         $("#work_order_meter_model_id").select2("val", data.model);
@@ -681,7 +681,7 @@
       return false;
     });
 
-    // when submit    
+    // when submit
     $(_thisForm).on('submit', function() {
       var qty = '';
       var price = '';
@@ -770,7 +770,7 @@
 </div>
 <div>
   <label class="multi-field-label-two-table">
-    <%#= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>      
+    <%#= f.association :client, collection: @clients, input_html: { class: 'x-large-text-field sel2' }, label_html: { class: 'form-label' } %>
     <%= label_tag "label_client", t("activerecord.attributes.work_order.client"), :class => 'form-label' %>
     <%= text_field_tag "Client", params[:Client], :class => 'x-large-text-field', data: { allow: { clear: 'false' } } %>
   </label>

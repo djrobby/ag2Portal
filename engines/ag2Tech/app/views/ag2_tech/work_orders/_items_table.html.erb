@@ -12,7 +12,7 @@
 
     // Retrieves parent values
     _f = $(".fnt-product").closest('form')[0];
-    _s = $('select#work_order_store_id :selected').val();
+    _s = $('select#work_order_store_id').val();
 
     // Trigger to display totals at table foot
     $('#items-table').bind('totals', function(event) {
@@ -42,7 +42,7 @@
     });
     // Update and display totals
     $('#items-table').trigger('totals');
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-product field changes
@@ -96,7 +96,7 @@
       recalculate_woi_table(_this);
       return false;
     });
-    
+
     // Recalculate amounts & prices
     function recalculate_woi_table(_this) {
       // make a POST call and replace the content

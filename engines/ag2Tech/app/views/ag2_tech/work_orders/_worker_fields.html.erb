@@ -14,16 +14,16 @@
     // Form
     _f = $("#fnt-worker").closest('form')[0];
     // Project
-    _p = $('select#work_order_project_id :selected').val();
+    _p = $('select#work_order_project_id').val();
     if (_p == "") _p = "0";
     // Organization
-    _o = $('select#work_order_organization_id :selected').val();
+    _o = $('select#work_order_organization_id').val();
     if (_o == "") _o = "0";
     // Id
     _id = $('#work_order_id').val();
     if (_id == "") _id = "0";
     // Hours type
-    _t = $('select#work_order_hours_type :selected').val();
+    _t = $('select#work_order_hours_type').val();
     if (_t == "") _t = "0";
     // Started date
     _date = $('#work_order_started_at').data('datepicker').date;
@@ -36,7 +36,7 @@
     // Charge Account
     $("#fnt-charge-account-w").html("");
     $('#work_order_charge_account_id option').clone().appendTo('#fnt-charge-account-w');
-    var _c = $('#work_order_charge_account_id :selected').val();
+    var _c = $('#work_order_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account-w').val(_c);
     // Worker
@@ -55,7 +55,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var worker = $('select#fnt-worker :selected').val();
+      var worker = $('select#fnt-worker').val();
       if (typeof worker === "undefined") {
         tbl = true;
         worker = $(_this).closest('tr').find('.fnt-worker').val();

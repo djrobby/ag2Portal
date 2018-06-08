@@ -55,7 +55,7 @@
         $('#generate_code_btn').show();
       }
     }
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#charge_account_account_code').prop('readonly', true);
@@ -82,13 +82,13 @@
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var grp = $('select#charge_account_charge_group_id :selected').val();
+      var grp = $('select#charge_account_charge_group_id').val();
       if (grp == "")
         grp = "$";
-      var org = $('select#charge_account_organization_id :selected').val();
+      var org = $('select#charge_account_organization_id').val();
       if (org == "")
         org = "$";
-      var prj = $('select#charge_account_project_id :selected').val();
+      var prj = $('select#charge_account_project_id').val();
       if (prj == "")
         prj = "0";
       jQuery.getJSON('cc_generate_code/' + grp + '/' + org + '/' + prj, function(data) {
@@ -108,7 +108,7 @@
     // when the #charge_account_organization_id field changes
     $("#charge_account_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#charge_account_organization_id :selected').val();
+      var order = $('select#charge_account_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('cc_update_project_textfields_from_organization/' + order, function(data) {
@@ -169,7 +169,7 @@
 
     // when the #charge_account_charge_group_id field changes
     $("#charge_account_charge_group_id").change(function() {
-      var grp = $('select#charge_account_charge_group_id :selected').val();
+      var grp = $('select#charge_account_charge_group_id').val();
       if (grp == "")
         grp = "0";
       if (grp == "0") {
@@ -190,7 +190,7 @@
     // when the #charge_account_project_id field changes
     $("#charge_account_project_id").change(function() {
       // make a POST call and replace the content
-      var project = $('select#charge_account_project_id :selected').val();
+      var project = $('select#charge_account_project_id').val();
       if (project == "")
         project = "0";
       jQuery.getJSON('cc_update_account_textfield_from_project/' + project, function(data) {
@@ -214,13 +214,13 @@
       return false;
     });
   });
-  
+
   function show_hide_generate_code_btn() {
     // Disable generate_code_btn if charge_account_organization_id and charge_account_charge_group_id are blank
-    var grp = $('select#charge_account_charge_group_id :selected').val();
+    var grp = $('select#charge_account_charge_group_id').val();
     if (grp == "")
       grp = "$";
-    var org = $('select#charge_account_organization_id :selected').val();
+    var org = $('select#charge_account_organization_id').val();
     if (org == "")
       org = "$";
     if (grp != "$" && org != "$") {
@@ -239,7 +239,7 @@
     } else {
       // Hide
       $('#generate_code_btn').hide();
-    }    
+    }
   }
 </script>
 
