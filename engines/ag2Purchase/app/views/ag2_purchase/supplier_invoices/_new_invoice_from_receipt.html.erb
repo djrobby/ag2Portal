@@ -19,7 +19,7 @@ var text_field_color;
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -155,7 +155,7 @@ var text_field_color;
     // when the #Request_ field changes
     $("#Request_").change(function() {
       // make a POST call and replace the content
-      var order = $('#Request_ :selected').val();
+      var order = $('#Request_').val();
       if (order == "") order = 0;
       jQuery.getJSON('si_current_balance/' + order, function(data) {
         $("#current-balance").html(data.balance);

@@ -14,7 +14,7 @@
       _n = $('#supplier_name').val().toUpperCase();
       $("#fnt-name").val(_n);
     }
-    
+
     // Set focus
     $(".modal").on('shown', function() {
       $(this).find(".form-label:first").focus();
@@ -25,7 +25,7 @@
     // when the #fnt-company field changes
     $("#fnt-company").change(function() {
       // make a POST call and replace the content
-      var company = $('select#fnt-company :selected').val();
+      var company = $('select#fnt-company').val();
       if (company == "")
         company = "0";
       jQuery.getJSON('su_update_ledger_account_select_from_company/' + company, function(data) {

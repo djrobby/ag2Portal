@@ -1,21 +1,21 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
       $('.fnt-new-approval-btn').show();
-      $('#icon-new-btn').show();      
-      $('#icon-new-approval-btn').show();      
+      $('#icon-new-btn').show();
+      $('#icon-new-approval-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
       $('.fnt-new-approval-btn').hide();
-      $('#icon-new-btn').hide();      
-      $('#icon-new-approval-btn').hide();      
+      $('#icon-new-btn').hide();
+      $('#icon-new-approval-btn').hide();
     }
   }
 
@@ -47,7 +47,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -74,7 +74,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -82,7 +82,7 @@
       }
     });
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -105,7 +105,7 @@
 
     // Save default text color
     text_field_color = $("#supplier_invoice_invoice_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#supplier_invoice_invoice_no").closest('form')[0];
 
@@ -113,7 +113,7 @@
     $('input.iconify').wrap('<span class="generateicon" title="<%=t('generate') %>" />').after($('<span/>').click(function() {
       // $('#generate_code_btn').trigger("click");
       // make a POST call and replace the content
-      var company = $('select#supplier_invoice_company_id :selected').val();
+      var company = $('select#supplier_invoice_company_id').val();
       if (company == "")
         company = "$";
       var posted_at = $('#supplier_invoice_posted_at').val();
@@ -145,12 +145,12 @@
       show_new(true);
     }
   });
-  
+
   jQuery(function($) {
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       // make a POST call and replace the content
-      var company = $('select#supplier_invoice_company_id :selected').val();
+      var company = $('select#supplier_invoice_company_id').val();
       if (company == "")
         company = "$";
       var posted_at = $('#supplier_invoice_posted_at').val();
@@ -194,7 +194,7 @@
     // when the #supplier_invoice_organization_id field changes
     $("#supplier_invoice_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_organization_id :selected').val();
+      var order = $('select#supplier_invoice_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_project_textfields_from_organization/' + order, function(data) {
@@ -324,7 +324,7 @@
     // when the #supplier_invoice_company_id field changes
     $("#supplier_invoice_company_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_company_id :selected').val();
+      var order = $('select#supplier_invoice_company_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_selects_from_company/' + order, function(data) {
@@ -355,10 +355,10 @@
     // when the #supplier_invoice_project_id field changes
     $("#supplier_invoice_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_project_id :selected').val();
+      var order = $('select#supplier_invoice_project_id').val();
       if (order == "")
         order = "0";
-      var supplier = $('select#supplier_invoice_supplier_id :selected').val();
+      var supplier = $('select#supplier_invoice_supplier_id').val();
       if (supplier == "")
         supplier = "0";
       // jQuery.getJSON('si_update_charge_account_from_project/' + order, function(data) {
@@ -463,10 +463,10 @@
     // when the #supplier_invoice_supplier_id field changes
     $("#supplier_invoice_supplier_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_project_id :selected').val();
+      var order = $('select#supplier_invoice_project_id').val();
       if (order == "")
         order = "0";
-      var supplier = $('select#supplier_invoice_supplier_id :selected').val();
+      var supplier = $('select#supplier_invoice_supplier_id').val();
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('si_update_receipt_and_order_select_from_project_supplier/' + order + '/' + supplier, function(data) {
@@ -517,7 +517,7 @@
     // when the #supplier_invoice_receipt_note_id field changes
     $("#supplier_invoice_receipt_note_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#supplier_invoice_receipt_note_id :selected').val();
+      var o = $('select#supplier_invoice_receipt_note_id').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('si_update_selects_from_note/' + o, function(data) {
@@ -632,7 +632,7 @@
     // when the #supplier_invoice_purchase_order_id field changes
     $("#supplier_invoice_purchase_order_id").change(function() {
       // make a POST call and replace the content
-      var o = $('select#supplier_invoice_purchase_order_id :selected').val();
+      var o = $('select#supplier_invoice_purchase_order_id').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('si_update_selects_from_order/' + o, function(data) {
@@ -747,7 +747,7 @@
     // when the #supplier_invoice_work_order_id field changes
     $("#supplier_invoice_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_work_order_id :selected').val();
+      var order = $('select#supplier_invoice_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_charge_account_from_order/' + order, function(data) {
@@ -826,7 +826,7 @@
     // when the #supplier_invoice_payment_method_id field changes
     $("#supplier_invoice_payment_method_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_invoice_payment_method_id :selected').val();
+      var order = $('select#supplier_invoice_payment_method_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_payday_limit_from_method/' + order, function(data) {
@@ -837,8 +837,8 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       var price = '';
       var qty = '';

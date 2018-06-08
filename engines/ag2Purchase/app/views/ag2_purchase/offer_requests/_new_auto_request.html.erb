@@ -18,7 +18,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -46,7 +46,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -73,7 +73,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -99,12 +99,10 @@
       var family = $('#Family_').val();
       if (family == null) family = "";
       var offer_date = $('#Date_').val();
-      // var project = $('#Project_ :selected').val();
       var project = $('#Project_').val();
-      var store = $('#Store_ :selected').val();
-      // var account = $('#Account_ :selected').val();
+      var store = $('#Store_').val();
       var account = $('#Account_').val();
-      var payment = $('#Payment_ :selected').val();
+      var payment = $('#Payment_').val();
       if ((supplier == "") || (family == "") || (offer_date == "") || (project == "") || (store == "") || (account == "") || (payment == "")) {
         // Error
         alert('<%= I18n.t(:mandatory_subtitle) %>');

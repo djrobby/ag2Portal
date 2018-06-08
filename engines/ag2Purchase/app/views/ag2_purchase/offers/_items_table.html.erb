@@ -10,7 +10,7 @@
     });
 
     // Supplier
-    _supplier = $('#offer_supplier_id :selected').val();
+    _supplier = $('#offer_supplier_id').val();
     if (_supplier == "") _supplier = "0";
 
     // Trigger to display totals at table foot
@@ -43,7 +43,7 @@
     });
     // Update and display totals
     $('#items-table').trigger('totals');
-  }); 
+  });
 
   jQuery(function($) {
     // when the .fnt-product field changes
@@ -109,7 +109,7 @@
       recalculate_of_table(_this);
       return false;
     });
-    
+
     // Recalculate amounts & prices
     function recalculate_of_table(_this) {
       // make a POST call and replace the content

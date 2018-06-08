@@ -26,7 +26,7 @@
       // preserve the current object
       var _this = (this);
       // make a POST call and replace the content
-      var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
+      var bank = $(this).closest('tr').find('select.fnt-bank').val();
       if (bank == "") bank = "0";
       jQuery.getJSON('su_update_office_select_from_bank/' + bank, function(data) {
         var o = data.office;
@@ -58,10 +58,10 @@
 
     // when #check_iban_btn is clicked
     $(".check_iban_btn").click(function() {
-      // var country = $(this).closest('tr').find('select.fnt-country :selected').val();
+      // var country = $(this).closest('tr').find('select.fnt-country').val();
       // var dc = $(this).closest('tr').find('.fnt-iban-dc').val();
-      // var bank = $(this).closest('tr').find('select.fnt-bank :selected').val();
-      // var office = $(this).closest('tr').find('select.fnt-office :selected').val();
+      // var bank = $(this).closest('tr').find('select.fnt-bank').val();
+      // var office = $(this).closest('tr').find('select.fnt-office').val();
       // var account = $(this).closest('tr').find('.fnt-account').val();
       var iban = $(this).closest('tr').find('.fnt-iban').val();
       var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);

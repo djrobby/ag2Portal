@@ -47,7 +47,7 @@
     }
     // Save default text color
     text_field_color = $("#supplier_supplier_code").css('color')
-    
+
     // Icon inside text field: Validate Fiscal Id
     $('input.iconify').wrap('<span class="validateicon" title="<%=t('validate') %>" />').after($('<span/>').click(function() {
       su_validate_fiscal_id();
@@ -66,7 +66,7 @@
       //     if ($('#supplier_fiscal_id').val() != "$err") {
       //       $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
       //     } else {
-      //       $('#fnt_fiscal_id').val('');            
+      //       $('#fnt_fiscal_id').val('');
       //     }
       //     $("#new-entity").modal('show');
       //     $('#new-entity').on('hidden', function() {
@@ -120,7 +120,7 @@
 
     // Initialized form variable
     _thisForm = $("#supplier_fiscal_id").closest('form')[0];
-    
+
     // Can't change code if editing
     if ('<%= @breadcrumb %>' == "update") {
       $('#supplier_supplier_code').prop('readonly', true);
@@ -128,16 +128,16 @@
     } else {
       $('#supplier_supplier_code').prop('readonly', false);
     }
-    
+
     // Set initial focus
     $(this).find(".form-label:first").focus();
   });
-  
+
   jQuery(function($) {
     // when the #supplier_organization_id field changes
     $("#supplier_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#supplier_organization_id :selected').val();
+      var order = $('select#supplier_organization_id').val();
       if (order == "")
         order = "0";
       // make a POST call and replace the content
@@ -199,7 +199,7 @@
     // when the #supplier_town_id field changes
     $("#supplier_town_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#supplier_town_id :selected').val();
+      var contact = $('select#supplier_town_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_town/' + contact, function(data) {
@@ -213,7 +213,7 @@
     // when the #supplier_province_id field changes
     $("#supplier_province_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#supplier_province_id :selected').val();
+      var contact = $('select#supplier_province_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_region_textfield_from_province/' + contact, function(data) {
@@ -226,7 +226,7 @@
     // when the #supplier_zipcode_id field changes
     $("#supplier_zipcode_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#supplier_zipcode_id :selected').val();
+      var contact = $('select#supplier_zipcode_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_province_textfield_from_zipcode/' + contact, function(data) {
@@ -241,7 +241,7 @@
     // when the #supplier_region_id field changes
     $("#supplier_region_id").change(function() {
       // make a POST call and replace the content
-      var contact = $('select#supplier_region_id :selected').val();
+      var contact = $('select#supplier_region_id').val();
       if (contact == "")
         contact = "0";
       jQuery.getJSON('update_country_textfield_from_region/' + contact, function(data) {
@@ -249,7 +249,7 @@
       })
       return false;
     });
-    
+
     // when #generate_code_btn is clicked
     $("#generate_code_btn").click(function() {
       var supplier = $('#supplier_fiscal_id').val();
@@ -330,7 +330,7 @@
       return false;
     });
 
-    // when submit    
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in numeric fields
       var m = $('#supplier_max_orders_sum').val().replace(",", ".");
@@ -352,7 +352,7 @@
     $('#c_b input').click(updateTextArea);
     //updateTextArea();
   });
-  
+
   // Code to validate Fiscal Id
   function su_validate_fiscal_id() {
     // make a POST call and replace the content
@@ -369,7 +369,7 @@
         if ($('#supplier_fiscal_id').val() != "$err") {
           $('#fnt_fiscal_id').val($('#supplier_fiscal_id').val());
         } else {
-          $('#fnt_fiscal_id').val('');            
+          $('#fnt_fiscal_id').val('');
         }
         $("#new-entity").modal('show');
         $('#new-entity').on('hidden', function() {

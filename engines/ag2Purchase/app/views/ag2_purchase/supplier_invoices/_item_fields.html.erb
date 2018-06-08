@@ -1,6 +1,6 @@
 <script>
   var _supplier;
-  
+
   $(document).ready(function() {
     /*
      * Retrieves parent values
@@ -10,43 +10,43 @@
     // Receipt Note
     $("#fnt-receipt-note").html("");
     $('#supplier_invoice_receipt_note_id option').clone().appendTo('#fnt-receipt-note');
-    var _rn = $('#supplier_invoice_receipt_note_id :selected').val();
+    var _rn = $('#supplier_invoice_receipt_note_id').val();
     if (_rn == "") _rn = "0";
     $('#fnt-receipt-note').val(_rn);
     // Purchase Order
     $("#fnt-purchase-order").html("");
     $('#supplier_invoice_purchase_order_id option').clone().appendTo('#fnt-purchase-order');
-    var _po = $('#supplier_invoice_purchase_order_id :selected').val();
+    var _po = $('#supplier_invoice_purchase_order_id').val();
     if (_po == "") _po = "0";
     $('#fnt-purchase-order').val(_po);
     // Project
     $("#fnt-project").html("");
     $('#supplier_invoice_project_id option').clone().appendTo('#fnt-project');
-    var _p = $('#supplier_invoice_project_id :selected').val();
+    var _p = $('#supplier_invoice_project_id').val();
     if (_p == "") _p = "0";
     $('#fnt-project').val(_p);
     // Work Order
     $("#fnt-work-order").html("");
     $('#supplier_invoice_work_order_id option').clone().appendTo('#fnt-work-order');
-    var _o = $('#supplier_invoice_work_order_id :selected').val();
+    var _o = $('#supplier_invoice_work_order_id').val();
     if (_o == "") _o = "0";
     $('#fnt-work-order').val(_o);
     // Charge Account
     $("#fnt-charge-account").html("");
     $('#supplier_invoice_charge_account_id option').clone().appendTo('#fnt-charge-account');
-    var _c = $('#supplier_invoice_charge_account_id :selected').val();
+    var _c = $('#supplier_invoice_charge_account_id').val();
     if (_c == "") _c = "0";
     $('#fnt-charge-account').val(_c);
     // Store
     /*
     $("#fnt-store").html("");
     $('#supplier_invoice_store_id option').clone().appendTo('#fnt-store');
-    var _s = $('#supplier_invoice_store_id :selected').val();
+    var _s = $('#supplier_invoice_store_id').val();
     if (_s == "") _s = "0";
     $('#fnt-store').val(_s);
     */
     // Supplier
-    _supplier = $('#supplier_invoice_supplier_id :selected').val();
+    _supplier = $('#supplier_invoice_supplier_id').val();
     if (_supplier == "") _supplier = "0";
     // Product, Note item, Work order & Charge account
     init();
@@ -64,7 +64,7 @@
       var _this = (this);
       // make a POST call and replace the content
       var tbl = false;
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -110,10 +110,10 @@
     /*
     $("#fnt-store").change(function() {
       // make a POST call and replace the content
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (product == "")
         product = "0";
-      var store = $('select#fnt-store :selected').val();
+      var store = $('select#fnt-store').val();
       if (store == "")
         store = "0";
       jQuery.getJSON('si_current_stock/' + product + '/' + store, function(data) {
@@ -126,7 +126,7 @@
     // when the #fnt-work-order field changes
     $("#fnt-work-order").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-work-order :selected').val();
+      var order = $('select#fnt-work-order').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_charge_account_from_order/' + order, function(data) {
@@ -175,7 +175,7 @@
     // when the #fnt-project field changes
     $("#fnt-project").change(function() {
       // make a POST call and replace the content
-      var order = $('select#fnt-project :selected').val();
+      var order = $('select#fnt-project').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_charge_account_from_project/' + order, function(data) {
@@ -236,7 +236,7 @@
     // when the #fnt-receipt-note field changes
     $("#fnt-receipt-note").change(function() {
       // make a POST call and replace the content
-      var o = $('select#fnt-receipt-note :selected').val();
+      var o = $('select#fnt-receipt-note').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('si_update_selects_from_note/' + o, function(data) {
@@ -360,7 +360,7 @@
     // when the #fnt-purchase_order field changes
     $("#fnt-purchase_order").change(function() {
       // make a POST call and replace the content
-      var o = $('select#fnt-purchase_order :selected').val();
+      var o = $('select#fnt-purchase_order').val();
       if (o == "")
         o = "0";
       jQuery.getJSON('si_update_selects_from_order/' + o, function(data) {
@@ -484,7 +484,7 @@
     // when the #fnt-receipt-note-item field changes
     $("#fnt-receipt-note-item").change(function() {
       // make a POST call and replace the content
-      var i = $('select#fnt-receipt-note-item :selected').val();
+      var i = $('select#fnt-receipt-note-item').val();
       if (i == "")
         i = "0";
       jQuery.getJSON('si_update_product_select_from_note_item/' + i, function(data) {
@@ -499,7 +499,7 @@
     // when the #fnt-purchase-order-item field changes
     $("#fnt-purchase-order-item").change(function() {
       // make a POST call and replace the content
-      var i = $('select#fnt-purchase-order-item :selected').val();
+      var i = $('select#fnt-purchase-order-item').val();
       if (i == "")
         i = "0";
       jQuery.getJSON('si_update_product_select_from_order_item/' + i, function(data) {
@@ -518,12 +518,12 @@
       // right method name
       var bcm = "si_item_balance_check/";
       // balance check
-      var i = $('select#fnt-receipt-note-item :selected').val();
+      var i = $('select#fnt-receipt-note-item').val();
       if (typeof i === "undefined") {
         i = $(_this).closest('tr').find('.fnt-receipt-note-item').val();
       }
       if (i == "") i = "0";
-      var j = $('select#fnt-purchase-order-item :selected').val();
+      var j = $('select#fnt-purchase-order-item').val();
       if (typeof j === "undefined") {
         j = $(_this).closest('tr').find('.fnt-purchase-order-item').val();
       }
@@ -611,7 +611,7 @@
       }
       if (discount == "")
         discount = "0";
-      var product = $('select#fnt-product :selected').val();
+      var product = $('select#fnt-product').val();
       if (typeof product === "undefined") {
         tbl = true;
         product = $(_this).closest('tr').find('.fnt-product').val();
@@ -648,9 +648,9 @@
   // Initialize
   function init() {
     // make a POST call and replace the content
-    var o = $('#supplier_invoice_receipt_note_id :selected').val();
+    var o = $('#supplier_invoice_receipt_note_id').val();
     if (o == "") o = "0";
-    var p = $('#supplier_invoice_purchase_order_id :selected').val();
+    var p = $('#supplier_invoice_purchase_order_id').val();
     if (p == "") p = "0";
     if (o != "0" || p != "0") {
       // receipt note or purchase order
@@ -706,7 +706,7 @@
       });
     } else {
       // all products
-      var order = $('select#supplier_invoice_organization_id :selected').val();
+      var order = $('select#supplier_invoice_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('si_update_product_select_from_organization/' + order, function(data) {

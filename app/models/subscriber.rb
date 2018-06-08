@@ -988,7 +988,7 @@ class Subscriber < ActiveRecord::Base
     integer :office_id, :multiple => true
     time :starting_at
     time :ending_at
-    integer :subscriber_id, :stored => true do
+    integer :subscriber_id do
       subscriber_id
     end
     integer :tariff_type_id do

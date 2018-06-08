@@ -19,7 +19,7 @@ var text_field_color;
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -85,7 +85,7 @@ var text_field_color;
     });
 
     $('#btn_accept_o').click(function() {
-      var supplier = $('#SupplierO_ :selected').val();
+      var supplier = $('#SupplierO_').val();
       var order = $('#Order_').val();
       if (order == null) order = "";
       var offer_no = $('#NoO_').val();
@@ -153,7 +153,7 @@ var text_field_color;
     // when the #Order_ field changes
     $("#Order_").change(function() {
       // make a POST call and replace the content
-      var order = $('#Order_ :selected').val();
+      var order = $('#Order_').val();
       if (order == "") order = 0;
       jQuery.getJSON('si_current_unbilled_balance_order/' + order, function(data) {
         $("#current-balance-o").html(data.balance);

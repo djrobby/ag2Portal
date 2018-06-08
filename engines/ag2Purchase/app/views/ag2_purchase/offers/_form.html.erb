@@ -1,20 +1,20 @@
 <script>
   var text_field_color;
   var _thisForm = '';
-  
+
   // Show or hide button(s) to add new item
   function show_new(_show) {
     if (_show == true) {
       $('#submit_btn').show();
       $('.fnt-new-btn').show();
-      $('#icon-new-btn').show();      
+      $('#icon-new-btn').show();
     } else {
       $('#submit_btn').hide();
       $('.fnt-new-btn').hide();
-      $('#icon-new-btn').hide();      
+      $('#icon-new-btn').hide();
     }
   }
-  
+
   $(document).ready(function() {
     $('select.sel2').select2({
       formatNoMatches: function(m) { return '<%= I18n.t("select2.no_matches") %>'; },
@@ -34,7 +34,7 @@
 
     // Save default text color
     text_field_color = $("#offer_offer_no").css('color')
-    
+
     // Initialized form variable
     _thisForm = $("#offer_offer_no").closest('form')[0];
 
@@ -50,7 +50,7 @@
       show_new(true);
     }
   });
-  
+
   jQuery(function($) {
     // when the #offer_attachment field changes
     $("#offer_attachment").change(function() {
@@ -76,7 +76,7 @@
     // when the #offer_organization_id field changes
     $("#offer_organization_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_organization_id :selected').val();
+      var order = $('select#offer_organization_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('of_update_project_textfields_from_organization/' + order, function(data) {
@@ -204,7 +204,7 @@
     // when the #offer_supplier_id field changes
     $("#offer_supplier_id").change(function() {
       // make a POST call and replace the content
-      var supplier = $('select#offer_supplier_id :selected').val();
+      var supplier = $('select#offer_supplier_id').val();
       if (supplier == "")
         supplier = "0";
       jQuery.getJSON('of_update_request_select_from_supplier/' + supplier, function(data) {
@@ -231,7 +231,7 @@
     // when the #offer_offer_request_id field changes
     $("#offer_offer_request_id").change(function() {
       // make a POST call and replace the content
-      var request = $('select#offer_offer_request_id :selected').val();
+      var request = $('select#offer_offer_request_id').val();
       if (request == "")
         request = "0";
       jQuery.getJSON('of_update_selects_from_request/' + request, function(data) {
@@ -338,7 +338,7 @@
     // when the #offer_project_id field changes
     $("#offer_project_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_project_id :selected').val();
+      var order = $('select#offer_project_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('of_update_charge_account_from_project/' + order, function(data) {
@@ -397,7 +397,7 @@
     // when the #offer_work_order_id field changes
     $("#offer_work_order_id").change(function() {
       // make a POST call and replace the content
-      var order = $('select#offer_work_order_id :selected').val();
+      var order = $('select#offer_work_order_id').val();
       if (order == "")
         order = "0";
       jQuery.getJSON('of_update_charge_account_from_order/' + order, function(data) {
@@ -468,8 +468,8 @@
       });
       return false;
     });
-    
-    // when submit    
+
+    // when submit
     $(_thisForm).on('submit', function() {
       // Must change decimal separator, if comma, in items table numeric fields
       var price = '';

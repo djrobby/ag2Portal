@@ -18,7 +18,7 @@
           };
         },
         results: function(data, page) {
-          return { 
+          return {
             results: data
           }
         },
@@ -38,8 +38,7 @@
   jQuery(function($) {
     $('#btn_accept').click(function() {
       var supplier = $('#Supplier_').val();
-      // var supplier = $('#Supplier_ :selected').val();
-      var request = $('#Request_ :selected').val();
+      var request = $('#Request_').val();
       var offer_no = $('#No_').val();
       var offer_date = $('#Date_').val();
       if ((supplier == "") || (request == "")  || (offer_no == "")  || (offer_date == "")) {
