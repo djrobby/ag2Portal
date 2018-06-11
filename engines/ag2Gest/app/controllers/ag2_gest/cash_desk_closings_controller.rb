@@ -72,7 +72,12 @@ module Ag2Gest
           paginate :page => params[:page] || 1, :per_page => CashDeskClosing.count
         end
 
-        @close_cash_report = @search.results.sort_by{ |t| [t.company_id, t.project_id] }
+        # @close_cash_report = @search.results.sort_by{ |t| [t.company_id, t.project_id] }
+        close_cash_ids = []
+        @search.hits.each do |i|
+          close_cash_ids << i.result.id
+        end
+        @close_cash_report = CashDeskClosing.with_these_ids(close_cash_ids).sort_by{ |t| [t.company_id, t.project_id] }
 
       if !@close_cash_report.blank?
         title = t("activerecord.models.cash_desk_closing.few")

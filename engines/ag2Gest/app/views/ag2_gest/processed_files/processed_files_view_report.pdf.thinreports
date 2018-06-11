@@ -68,25 +68,27 @@ end
 
 
 # List detail
-@processed_files.each do |i|
-  report.page.item(:from_title).hide
-  report.page.item(:to_title).hide
-  report.page.item(:from).hide
-  report.page.item(:to).hide
-  report.page.item(:l13).hide
+ProcessedFile.uncached do
+  @processed_files.find_each do |i|
+    report.page.item(:from_title).hide
+    report.page.item(:to_title).hide
+    report.page.item(:from).hide
+    report.page.item(:to).hide
+    report.page.item(:l13).hide
 
-  report.page.list(:default).add_row do |row|
-    row.item(:fileid).value i.fileid unless i.fileid.blank?
-    row.item(:filename).value i.filename unless i.filename.blank?
-    row.item(:date).value formatted_date(i.filedate) unless i.filedate.blank?
-    row.item(:type).value i.processed_file_type.name unless i.processed_file_type.blank?
-    row.item(:flow).value i.flow_label unless i.flow_label.blank?
-    row.item(:created_at).value formatted_timestamp(i.created_at.utc.getlocal) unless i.created_at.blank?
-    row.item(:created_by).value User.find(i.created_by).email unless i.created_by.blank?
-  end
+    report.page.list(:default).add_row do |row|
+      row.item(:fileid).value i.fileid unless i.fileid.blank?
+      row.item(:filename).value i.filename unless i.filename.blank?
+      row.item(:date).value formatted_date(i.filedate) unless i.filedate.blank?
+      row.item(:type).value i.processed_file_type.name unless i.processed_file_type.blank?
+      row.item(:flow).value i.flow_label unless i.flow_label.blank?
+      row.item(:created_at).value formatted_timestamp(i.created_at.utc.getlocal) unless i.created_at.blank?
+      row.item(:created_by).value User.find(i.created_by).email unless i.created_by.blank?
+    end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+    end
   end
 end

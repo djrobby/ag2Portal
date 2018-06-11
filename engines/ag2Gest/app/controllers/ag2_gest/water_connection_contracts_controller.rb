@@ -52,7 +52,12 @@ module Ag2Gest
         order_by :id, :desc
         paginate :page => params[:page] || 1, :per_page => WaterConnectionContract.count
       end
-      @wcc_report = @search.results
+      # @wcc_report = @search.results
+      wcc_ids = []
+      @search.hits.each do |i|
+        wcc_ids << i.result.id
+      end
+      @wcc_report = WaterConnectionContract.with_these_ids(wcc_ids)
 
       title = t("activerecord.models.water_connection_contract.few")
       respond_to do |format|

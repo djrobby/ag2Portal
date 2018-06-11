@@ -35,6 +35,12 @@ class WaterConnectionContract < ActiveRecord::Base
 
   before_save :calculate_flow
 
+  # scope
+  scope :with_these_ids, -> ids {
+    includes(:client, :tariff_scheme)
+    .where(id: ids)
+  }
+
   # methods
   def to_sale_offer
     sale_offer = SaleOffer.create(

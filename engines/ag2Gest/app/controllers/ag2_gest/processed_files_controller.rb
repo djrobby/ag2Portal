@@ -37,7 +37,7 @@ module Ag2Gest
 
     # reading report
     def processed_files_view_report
-      @processed_files = ProcessedFile.paginate(:page => params[:page], :per_page => per_page)
+      @processed_files = ProcessedFile.includes(:processed_file_type).paginate(:page => params[:page], :per_page => per_page)
 
       if !@processed_files.blank?
         title = t("activerecord.models.processed_file.few")

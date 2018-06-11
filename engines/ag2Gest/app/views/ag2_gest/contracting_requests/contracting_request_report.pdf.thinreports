@@ -70,44 +70,46 @@ end
 project_id = @contracting_request_report.first.project_id
 
 # List detail
-@contracting_request_report.each do |i|
-	if !i.project_id.blank? && (i.project_id != project_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|	
-			list.store.page_rows = 0
-		end
-		project_id = i.project_id
-	end
+ContractingRequest.uncached do
+  @contracting_request_report.find_each do |i|
+  	if !i.project_id.blank? && (i.project_id != project_id)
+  		report.page.list(:default).page_break
+  		report.page.list(:default) do |list|
+  			list.store.page_rows = 0
+  		end
+  		project_id = i.project_id
+  	end
 
-	report.page.list(:default).add_row do |row|
-		report.page.values project_c: I18n.t("activerecord.attributes.contracting_request.project_id")+": "
-		report.page.values project: i.project.name
-		row.item(:contract).value i.full_no
-		row.item(:type).value i.contracting_request_type.description
-	#data client
-		full_client = ""
-		if !i.client.blank?
-			full_client += i.client.full_code.to_s
-		else
-			full_client += i.entity.full_code.to_s
-		end
-		if !i.client.blank?
-			full_client += full_client.blank? ? i.client.full_name_or_company : " - " + i.client.full_name_or_company.to_s
-		else
-			full_client += full_client.blank? ? i.entity.full_name : " - " + i.entity.full_name.to_s
-		end
-		if !i.client.blank?
-			full_client += full_client.blank? ? i.client.address_1 : " - " + i.client.address_1.to_s
-		else
-			full_client += full_client.blank? ? i.entity.address_1 : " - " + i.entity.address_1.to_s
-		end
-		row.item(:client).value full_client
-		row.item(:status).value i.contracting_request_status.name
-		row.item(:date).value formatted_date(i.request_date) unless i.request_date.blank?
-	end
+  	report.page.list(:default).add_row do |row|
+  		report.page.values project_c: I18n.t("activerecord.attributes.contracting_request.project_id")+": "
+  		report.page.values project: i.project.name
+  		row.item(:contract).value i.full_no
+  		row.item(:type).value i.contracting_request_type.description
+  	#data client
+  		full_client = ""
+  		if !i.client.blank?
+  			full_client += i.client.full_code.to_s
+  		else
+  			full_client += i.entity.full_code.to_s
+  		end
+  		if !i.client.blank?
+  			full_client += full_client.blank? ? i.client.full_name_or_company : " - " + i.client.full_name_or_company.to_s
+  		else
+  			full_client += full_client.blank? ? i.entity.full_name : " - " + i.entity.full_name.to_s
+  		end
+  		if !i.client.blank?
+  			full_client += full_client.blank? ? i.client.address_1 : " - " + i.client.address_1.to_s
+  		else
+  			full_client += full_client.blank? ? i.entity.address_1 : " - " + i.entity.address_1.to_s
+  		end
+  		row.item(:client).value full_client
+  		row.item(:status).value i.contracting_request_status.name
+  		row.item(:date).value formatted_date(i.request_date) unless i.request_date.blank?
+  	end
 
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-	end
+  	# Store page subtotals
+    report.page.list(:default) do |list|
+  		list.store.page_rows += 1
+  	end
+  end
 end

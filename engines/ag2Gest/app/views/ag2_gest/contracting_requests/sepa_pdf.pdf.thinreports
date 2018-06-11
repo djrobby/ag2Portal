@@ -52,7 +52,7 @@ report.page.values(printed_at: Time.now,
            full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
 
 # Page header: debtor
-var_client_bank_full = var_client_bank.try(:e_format_with_spaces)
+var_client_bank_full = var_client_bank.try(:iban_format_with_spaces)
 var_client_bank_titular = var_client_bank.try(:holder_name)
 
 contract_tariff = SubscriberTariff.where(subscriber_id: @subscriber.id).count
@@ -100,7 +100,7 @@ report.page.values(printed_at: Time.now,
            full_date: @subscriber.office.company.town.name + ", " + var_full_date.to_s)
 
 # Page header: debtor
-var_client_bank_full = var_client_bank.try(:e_format_with_spaces)
+var_client_bank_full = var_client_bank.try(:iban_format_with_spaces)
 var_client_bank_titular = var_client_bank.try(:holder_name)
 
 contract_tariff = SubscriberTariff.where(subscriber_id: @subscriber.id).count

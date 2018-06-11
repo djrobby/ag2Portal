@@ -74,29 +74,31 @@ end
 # Page Title list
 
 # List detail
-@client_debt_report.each do |i|
-  b = i.subscribers.size
-  img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
-  total = i.totals_date(@from,@to).blank? ? 0 : i.totals_date(@from,@to)
-  collected = i.collected_date(@from,@to).blank? ? 0 : i.collected_date(@from,@to)
-  debt = i.debt_date(@from,@to).blank? ? 0 : i.debt_date(@from,@to)
+Client.uncached do
+  @client_debt_report.find_each do |i|
+    b = i.subscribers.size
+    img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
+    total = i.totals_date(@from,@to).blank? ? 0 : i.totals_date(@from,@to)
+    collected = i.collected_date(@from,@to).blank? ? 0 : i.collected_date(@from,@to)
+    debt = i.debt_date(@from,@to).blank? ? 0 : i.debt_date(@from,@to)
 
-  report.page.list(:default).add_row do |row|
-    row.item(:code).value i.full_code
-    row.item(:img).value img
-    row.item(:fiscal).value i.fiscal_id
-    row.item(:name).value i.to_name
-    row.item(:street).value i.address_1
-    row.item(:total).value number_with_precision(total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:paid).value number_with_precision(collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-    row.item(:debt).value number_with_precision(debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-  end
+    report.page.list(:default).add_row do |row|
+      row.item(:code).value i.full_code
+      row.item(:img).value img
+      row.item(:fiscal).value i.fiscal_id
+      row.item(:name).value i.to_name
+      row.item(:street).value i.address_1
+      row.item(:total).value number_with_precision(total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row.item(:paid).value number_with_precision(collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+      row.item(:debt).value number_with_precision(debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+    end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
-    list.store.p_total += total.round(2)
-    list.store.p_paid += collected.round(2)
-    list.store.p_debt += debt.round(2)
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+      list.store.p_total += total.round(2)
+      list.store.p_paid += collected.round(2)
+      list.store.p_debt += debt.round(2)
+    end
   end
 end

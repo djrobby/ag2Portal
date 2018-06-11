@@ -90,6 +90,10 @@ class ServicePoint < ActiveRecord::Base
                     (CASE WHEN COUNT(subscribers.id) > 0 THEN '*' ELSE '' END)) to_label_")
      .group('service_points.id').by_code
   }
+  scope :with_these_ids, -> ids {
+    includes(:service_point_location, :reading_route, :meter, :street_directory)
+    .where(id: ids)
+  }
 
   # Callbacks
   before_destroy :check_for_dependent_records
@@ -205,15 +209,17 @@ class ServicePoint < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |sp|
-        csv << [ sp.id,
-                 sp.code,
-                 sp.address_1,
-                 sp.try(:service_point_location).try(:name),
-                 sp.try(:reading_route).try(:routing_code),
-                 sp.try(:cadastral_reference),
-                 sp.try(:meter).try(:meter_code),
-                 sp.try(:available_for_contract)]
+      ServicePoint.uncached do
+        array.find_each do |sp|
+          csv << [ sp.id,
+                   sp.code,
+                   sp.address_1,
+                   sp.try(:service_point_location).try(:name),
+                   sp.try(:reading_route).try(:routing_code),
+                   sp.try(:cadastral_reference),
+                   sp.try(:meter).try(:meter_code),
+                   sp.try(:available_for_contract)]
+        end
       end
     end
   end

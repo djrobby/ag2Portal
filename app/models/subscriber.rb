@@ -227,6 +227,10 @@ class Subscriber < ActiveRecord::Base
                     CONCAT(street_types.street_type_code, ' ', street_directories.street_name, ' ', subscribers.street_number, (CASE WHEN NOT ISNULL(subscribers.building) AND subscribers.building<>'' THEN CONCAT(', ', subscribers.building) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor) AND subscribers.floor<>'' THEN CONCAT(', ', subscribers.floor) ELSE '' END), (CASE WHEN NOT ISNULL(subscribers.floor_office) AND subscribers.floor_office<>'' THEN CONCAT(' ', subscribers.floor_office) ELSE '' END))) to_label_")
     .by_code
   }
+  scope :with_these_ids, -> ids {
+    includes([street_directory: :street_type],[tariffs: :tariff_type],[water_supply_contract: :contracting_request], :meter, :office, :use, :tariffs)
+    .where(id: ids)
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase
@@ -902,34 +906,37 @@ class Subscriber < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |subscriber|
-        if !subscriber.tariffs.blank?
-          _tariff_type = []
-          subscriber.subscriber_tariffs.each do |tt|
-            if !_tariff_type.include? tt.tariff.tariff_type.name
-              _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+      # array.each do |subscriber|
+      Subscriber.uncached do
+        array.find_each do |subscriber|
+          if !subscriber.tariffs.blank?
+            _tariff_type = []
+            subscriber.subscriber_tariffs.each do |tt|
+              if !_tariff_type.include? tt.tariff.tariff_type.name
+                _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+              end
             end
+            tariff_type = _tariff_type.join(",")
+          else
+            tariff_type = ""
           end
-          tariff_type = _tariff_type.join(",")
-        else
-          tariff_type = ""
+          starting_at = subscriber.formatted_date(subscriber.starting_at) unless subscriber.starting_at.blank?
+          ending_at = subscriber.formatted_date(subscriber.ending_at) unless subscriber.ending_at.blank?
+          csv << [ subscriber.id,
+                   subscriber.subscriber_code,
+                   subscriber.fiscal_id,
+                   subscriber.full_name,
+                   subscriber.address_1,
+                   subscriber.try(:office).try(:name),
+                   subscriber.try(:use).try(:name),
+                   starting_at,
+                   ending_at,
+                   subscriber.try(:meter).try(:meter_code),
+                   subscriber.try(:reading_route).try(:to_label),
+                   subscriber.try(:water_supply_contract).try(:contracting_request).try(:full_no),
+                   tariff_type,
+                   subscriber.current_debt]
         end
-        starting_at = subscriber.formatted_date(subscriber.starting_at) unless subscriber.starting_at.blank?
-        ending_at = subscriber.formatted_date(subscriber.ending_at) unless subscriber.ending_at.blank?
-        csv << [ subscriber.id,
-                 subscriber.subscriber_code,
-                 subscriber.fiscal_id,
-                 subscriber.full_name,
-                 subscriber.address_1,
-                 subscriber.try(:office).try(:name),
-                 subscriber.try(:use).try(:name),
-                 starting_at,
-                 ending_at,
-                 subscriber.try(:meter).try(:meter_code),
-                 subscriber.try(:reading_route).try(:to_label),
-                 subscriber.try(:water_supply_contract).try(:contracting_request).try(:full_no),
-                 tariff_type,
-                 subscriber.current_debt]
       end
     end
   end

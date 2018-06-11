@@ -62,8 +62,13 @@ module Ag2Gest
       end
       # subscriber_bills_report = Bill.by_subscriber_id(@subscriber.id, invoice_status).map(&:bill_id_).uniq
       @invoice_report = Invoice.joins(:bill)
+                        .joins("LEFT JOIN billing_periods on invoices.billing_period_id=billing_periods.id")
+                        .joins("LEFT JOIN invoice_types on invoices.invoice_type_id=invoice_types.id")
+                        .joins("LEFT JOIN invoice_statuses on invoices.invoice_status_id=invoice_statuses.id")
+                        .joins("LEFT JOIN client_payments on client_payments.invoice_id=invoices.id")
+                        .joins("LEFT JOIN invoice_operations on invoices.invoice_operation_id=invoice_operations.id")
                         .where("bills.subscriber_id = #{@subscriber.id} AND bills.invoice_status_id IN (#{invoice_status}) AND invoices.invoice_type_id IN (#{InvoiceType.billable_by_subscriber})")
-                        .order('invoices.billing_period_id DESC,bills.bill_date DESC,bills.id DESC')
+                        .order('invoices.billing_period_id DESC,bills.bill_date DESC,bills.id DESC').group('invoices.id')
 
 
       title = t("activerecord.models.offer_request.few") + ".pdf"
@@ -1497,12 +1502,22 @@ module Ag2Gest
               with :deactivated, true
           end
         end
-        data_accessor_for(Subscriber).include = [:street_directory, :meter]
+        # data_accessor_for(Subscriber).include = [:street_directory, :meter, :office, :use]
         order_by :sort_no, :desc
         paginate :page => params[:page] || 1, :per_page => Subscriber.count
       end
 
-      @subscriber_report = @search.results
+      subscriber_ids = []
+      @search.hits.each do |i|
+        subscriber_ids << i.result.id
+      end
+      @subscriber_report = Subscriber.with_these_ids(subscriber_ids)
+
+      # @subscriber_report = @search.hits
+      # @subscriber_report = @search.results
+      # subscribers = @search.results
+      # subscriber_ids = subscribers.map(&:id).uniq
+      # @subscriber_report = Subscriber.with_these_ids(subscriber_ids)
 
       if !@subscriber_report.blank?
         title = t("activerecord.models.subscriber.few")

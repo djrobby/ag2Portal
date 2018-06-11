@@ -69,18 +69,20 @@ end
 # Page Title list
 
 # List detail
-@wcc_report.each do |i|
+WaterConnectionContract.uncached do
+  @wcc_report.find_each do |i|
 
-  report.page.list(:default).add_row do |row|
-    row.item(:code).value i.full_no
-    row.item(:client).value i.client.full_code unless i.client.blank?
-    row.item(:name).value i.client.to_name unless i.client.blank?
-    row.item(:date).value formatted_date(i.contract_date) if i.contract_date
-    row.item(:ts).value i.tariff_scheme.name unless i.tariff_scheme.blank?
-  end
+    report.page.list(:default).add_row do |row|
+      row.item(:code).value i.full_no
+      row.item(:client).value i.client.full_code unless i.client.blank?
+      row.item(:name).value i.client.to_name unless i.client.blank?
+      row.item(:date).value formatted_date(i.contract_date) if i.contract_date
+      row.item(:ts).value i.tariff_scheme.name unless i.tariff_scheme.blank?
+    end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+    end
   end
 end

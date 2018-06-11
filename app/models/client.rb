@@ -90,6 +90,10 @@ class Client < ActiveRecord::Base
             CASE WHEN (ISNULL(clients.company) OR clients.company = '') THEN CONCAT(clients.last_name, ', ', clients.first_name) ELSE clients.company END full_name")
     .belongs_to_organization(o).having(h)
   }
+  scope :with_these_ids, -> ids {
+    includes(:street_type)
+    .where(id: ids)
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase
@@ -598,14 +602,16 @@ class Client < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |client|
-        csv << [ client.id,
-                 client.client_code,
-                 client.fiscal_id,
-                 client.to_name,
-                 client.address_1,
-                 client.try(:phone),
-                 client.try(:email)]
+      Client.uncached do
+        array.find_each do |client|
+          csv << [ client.id,
+                   client.client_code,
+                   client.fiscal_id,
+                   client.to_name,
+                   client.address_1,
+                   client.try(:phone),
+                   client.try(:email)]
+        end
       end
     end
   end
@@ -624,20 +630,22 @@ class Client < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |client|
-        total = client.totals_date(from,to).blank? ? 0 : client.totals_date(from,to)
-        collected = client.collected_date(from,to).blank? ? 0 : client.collected_date(from,to)
-        debt = client.debt_date(from,to).blank? ? 0 : client.debt_date(from,to)
-        csv << [ client.id,
-                 client.client_code,
-                 client.fiscal_id,
-                 client.to_name,
-                 client.address_1,
-                 client.try(:phone),
-                 client.try(:email),
-                 client.raw_number(total, 2),
-                 client.raw_number(collected, 2),
-                 client.raw_number(debt, 2)]
+      Client.uncached do
+        array.find_each do |client|
+          total = client.totals_date(from,to).blank? ? 0 : client.totals_date(from,to)
+          collected = client.collected_date(from,to).blank? ? 0 : client.collected_date(from,to)
+          debt = client.debt_date(from,to).blank? ? 0 : client.debt_date(from,to)
+          csv << [ client.id,
+                   client.client_code,
+                   client.fiscal_id,
+                   client.to_name,
+                   client.address_1,
+                   client.try(:phone),
+                   client.try(:email),
+                   client.raw_number(total, 2),
+                   client.raw_number(collected, 2),
+                   client.raw_number(debt, 2)]
+        end
       end
     end
   end

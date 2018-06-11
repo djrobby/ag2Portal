@@ -133,6 +133,10 @@ class ContractingRequest < ActiveRecord::Base
     .where(w)
     .by_no
   }
+  scope :with_these_ids, -> ids {
+    includes(:project, :contracting_request_type, :client, :entity, :contracting_request_status, [water_supply_contract: :bill])
+    .where(id: ids)
+  }
 
   # Callbacks
   after_create :to_client #create/assign client after create contracting_request

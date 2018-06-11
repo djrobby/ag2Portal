@@ -66,22 +66,24 @@ end
 # Page Title list
 
 # List detail
-@clients.each do |i|
-  b = i.subscribers.size
-  img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
+Client.uncached do
+  @clients.find_each do |i|
+    b = i.subscribers.size
+    img = b > 0 ? "app/assets/images/icon/glyph/black/empty-star.png" : ""
 
-  report.page.list(:default).add_row do |row|
-    row.item(:code).value i.full_code
-    row.item(:img).value img
-    row.item(:fiscal).value i.fiscal_id
-    row.item(:name).value i.to_name
-    row.item(:street).value i.address_1
-    row.item(:phone).value i.phone unless i.phone.blank?
-    row.item(:mail).value i.email unless i.email.blank?
-  end
+    report.page.list(:default).add_row do |row|
+      row.item(:code).value i.full_code
+      row.item(:img).value img
+      row.item(:fiscal).value i.fiscal_id
+      row.item(:name).value i.to_name
+      row.item(:street).value i.address_1
+      row.item(:phone).value i.phone unless i.phone.blank?
+      row.item(:mail).value i.email unless i.email.blank?
+    end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+    end
   end
 end

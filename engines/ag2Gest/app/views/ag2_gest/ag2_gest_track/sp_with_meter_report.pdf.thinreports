@@ -71,24 +71,26 @@ end
 # Page Title list
 
 # List detail
-@sp_with_meter_report.each do |service_point|
-  img = service_point.available_for_contract ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
-  img2 = service_point.assigned_to_subscriber? ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
+ServicePoint.uncached do
+  @sp_with_meter_report.find_each do |service_point|
+    img = service_point.available_for_contract ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
+    img2 = service_point.assigned_to_subscriber? ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
 
 
-  report.page.list(:default).add_row do |row|
-    row.item(:code).value service_point.try(:full_code)
-    row.item(:location).value service_point.try(:service_point_location).try(:name)
-    row.item(:route).value service_point.try(:reading_route).try(:routing_code)
-    row.item(:cadastral).value service_point.try(:cadastral_reference)
-    row.item(:meter).value service_point.try(:meter).try(:meter_code)
-    row.item(:address).value service_point.try(:address_1)
-    row.item(:img).value img
-    row.item(:img2).value img2
-  end
+    report.page.list(:default).add_row do |row|
+      row.item(:code).value service_point.try(:full_code)
+      row.item(:location).value service_point.try(:service_point_location).try(:name)
+      row.item(:route).value service_point.try(:reading_route).try(:routing_code)
+      row.item(:cadastral).value service_point.try(:cadastral_reference)
+      row.item(:meter).value service_point.try(:meter).try(:meter_code)
+      row.item(:address).value service_point.try(:address_1)
+      row.item(:img).value img
+      row.item(:img2).value img2
+    end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+    end
   end
 end

@@ -41,8 +41,13 @@ module Ag2Gest
         order_by :sort_no, :asc
         paginate :page => params[:page] || 1, :per_page => Client.count
       end
+      client_ids = []
+      @search.hits.each do |i|
+        client_ids << i.result.id
+      end
+      @clients = Client.with_these_ids(client_ids)
 
-      @clients = @search.results
+      # @clients = @search.results
       title = t("activerecord.models.client.few")
       respond_to do |format|
         # Render PDF

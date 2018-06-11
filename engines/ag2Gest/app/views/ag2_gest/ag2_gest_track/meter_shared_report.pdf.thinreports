@@ -68,38 +68,40 @@ end
 	route_id = @meter_report.first.details
 
 # List detail
-@meter_report.each do |i|
-	if i.details != route_id
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|
-			list.store.page_rows = 0
-		end
-		route_id = i.details
-	end
+Meter.uncached do
+  @meter_report.find_each do |i|
+  	if i.details != route_id
+  		report.page.list(:default).page_break
+  		report.page.list(:default) do |list|
+  			list.store.page_rows = 0
+  		end
+  		route_id = i.details
+  	end
 
-  img_a = i.is_installed_now? ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
-  img_c = i.is_shared? ? "app/assets/images/icon/glyph/black/glyphicons-186-screenshot.png" : ""
+    img_a = i.is_installed_now? ? "app/assets/images/icon/glyph/black/glyphicons-344-thumbs-up.png" : "app/assets/images/icon/glyph/black/glyphicons-345-thumbs-down.png"
+    img_c = i.is_shared? ? "app/assets/images/icon/glyph/black/glyphicons-186-screenshot.png" : ""
 
-	report.page.list(:default).add_row do |row|
-		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
-		if route_id != "N/A"
-			report.page.values reading_route: i.details unless i.subscribers.first.reading_route.blank?
-		else
-			report.page.values reading_route: "N/A"
-		end
-		row.item(:code).value i.meter_code
-    row.item(:img_a).value img_a
-    row.item(:img_c).value img_c
-		row.item(:brand).value i.meter_model.full_name unless i.meter_model.blank?
-		row.item(:sequence).value i.subscribers.first.reading_sequence.to_s unless i.subscribers.first.blank?
-		row.item(:cal).value i.caliber.caliber unless i.caliber.blank?
-		row.item(:manufacturing_year).value i.manufacturing_year unless i.manufacturing_year.blank?
-		row.item(:expiry_date).value formatted_date(i.expiry_date) unless i.expiry_date.blank?
-		row.item(:subscriber).value i.subscribers.first.full_code unless i.subscribers.first.blank?
-	end
+  	report.page.list(:default).add_row do |row|
+  		report.page.values reading_route_c: I18n.t("activerecord.attributes.meter.route")+": "
+  		if route_id != "N/A"
+  			report.page.values reading_route: i.details unless i.subscribers.first.reading_route.blank?
+  		else
+  			report.page.values reading_route: "N/A"
+  		end
+  		row.item(:code).value i.meter_code
+      row.item(:img_a).value img_a
+      row.item(:img_c).value img_c
+  		row.item(:brand).value i.meter_model.full_name unless i.meter_model.blank?
+  		row.item(:sequence).value i.subscribers.first.reading_sequence.to_s unless i.subscribers.first.blank?
+  		row.item(:cal).value i.caliber.caliber unless i.caliber.blank?
+  		row.item(:manufacturing_year).value i.manufacturing_year unless i.manufacturing_year.blank?
+  		row.item(:expiry_date).value formatted_date(i.expiry_date) unless i.expiry_date.blank?
+  		row.item(:subscriber).value i.subscribers.first.full_code unless i.subscribers.first.blank?
+  	end
 
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-	end
+  	# Store page subtotals
+    report.page.list(:default) do |list|
+  		list.store.page_rows += 1
+  	end
+  end
 end

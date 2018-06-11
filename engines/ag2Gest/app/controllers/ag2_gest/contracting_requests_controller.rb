@@ -2145,7 +2145,12 @@ module Ag2Gest
           paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
         end
       end
-      @contracting_request_report = @search.results
+      # @contracting_request_report = @search.results
+      contracting_request_ids = []
+      @search.hits.each do |i|
+        contracting_request_ids << i.result.id
+      end
+      @contracting_request_report = ContractingRequest.with_these_ids(contracting_request_ids)
 
       if !@contracting_request_report.blank?
         title = t("activerecord.models.contracting_request.few")
@@ -2218,7 +2223,12 @@ module Ag2Gest
           paginate :page => params[:page] || 1, :per_page => ContractingRequest.count
         end
       end
-      @contracting_request_complete_report = @search.results
+      # @contracting_request_complete_report = @search.results
+      contracting_request_ids = []
+      @search.hits.each do |i|
+        contracting_request_ids << i.result.id
+      end
+      @contracting_request_complete_report = ContractingRequest.with_these_ids(contracting_request_ids)
 
       if !@contracting_request_complete_report.blank?
         title = t("activerecord.models.contracting_request.few")

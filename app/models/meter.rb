@@ -144,6 +144,10 @@ class Meter < ActiveRecord::Base
   scope :shared_all, -> {
     active_subscribers.having('count(subscribers.id) > 1')
   }
+  scope :with_these_ids, -> ids {
+    includes(:subscribers, :caliber, :meter_model)
+    .where(id: ids)
+  }
 
   # Callbacks
   before_validation :fields_to_uppercase
@@ -360,17 +364,19 @@ class Meter < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |meter|
-        expiry = meter.formatted_date(meter.expiry_date) unless meter.expiry_date.blank?
-        route = !meter.details.blank? ? meter.details : "N/A"
-        csv << [ meter.id,
-                 meter.meter_code,
-                 meter.try(:meter_model).try(:full_name),
-                 meter.try(:subscribers).try(:first).try(:reading_sequence),
-                 meter.try(:caliber).try(:caliber),
-                 route,
-                 meter.manufacturing_year,
-                 expiry]
+      Meter.uncached do
+        array.each do |meter|
+          expiry = meter.formatted_date(meter.expiry_date) unless meter.expiry_date.blank?
+          route = !meter.details.blank? ? meter.details : "N/A"
+          csv << [ meter.id,
+                   meter.meter_code,
+                   meter.try(:meter_model).try(:full_name),
+                   meter.try(:subscribers).try(:first).try(:reading_sequence),
+                   meter.try(:caliber).try(:caliber),
+                   route,
+                   meter.manufacturing_year,
+                   expiry]
+        end
       end
     end
   end

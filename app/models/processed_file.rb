@@ -53,14 +53,16 @@ class ProcessedFile < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |processed_file|
-        csv << [  processed_file.fileid,
-                  processed_file.filename,
-                  processed_file.formatted_date(processed_file.filedate),
-                  processed_file.processed_file_type.name,
-                  processed_file.flow_label,
-                  processed_file.formatted_timestamp(processed_file.created_at.utc.getlocal),
-                  User.find(processed_file.created_by).email]
+      ProcessedFile.uncached do
+        array.find_each do |processed_file|
+          csv << [  processed_file.fileid,
+                    processed_file.filename,
+                    processed_file.formatted_date(processed_file.filedate),
+                    processed_file.processed_file_type.name,
+                    processed_file.flow_label,
+                    processed_file.formatted_timestamp(processed_file.created_at.utc.getlocal),
+                    User.find(processed_file.created_by).email]
+        end
       end
     end
   end

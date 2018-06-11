@@ -73,47 +73,49 @@ end
 office_id = @subscriber_eco_report.first.office_id
 
 # List detail
-@subscriber_eco_report.each do |i|
-  if !i.office_id.blank? && (i.office_id != office_id)
-    report.page.list(:default).page_break
-    report.page.list(:default) do |list|
-      list.store.page_rows = 0
-      list.store.page_debt = 0
-    end
-    office_id = i.office_id
-  end
-
-  if !i.tariffs.blank?
-    _tariff_type = []
-    i.subscriber_tariffs.each do |tt|
-      if !_tariff_type.include? tt.tariff.tariff_type.name
-        _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+Subscriber.uncached do
+  @subscriber_eco_report.find_each do |i|
+    if !i.office_id.blank? && (i.office_id != office_id)
+      report.page.list(:default).page_break
+      report.page.list(:default) do |list|
+        list.store.page_rows = 0
+        list.store.page_debt = 0
       end
+      office_id = i.office_id
     end
-    @tariff_type = _tariff_type.join(",")
-  else
-    @tariff_type = ""
-  end
-  debt = i.debt_current_date(@from,@to,@todebt).blank? ? 0 : i.debt_current_date(@from,@to,@todebt)
 
-  report.page.list(:default).add_row do |row|
-    report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
-    report.page.values project: i.office.name
-    row.item(:code).value i.full_code
-    row.item(:fiscal).value i.fiscal_id
-    row.item(:name).value i.full_name
-    row.item(:street).value i.address_1
-    row.item(:tariff).value i.use.name unless i.use.blank?
-    row.item(:start_at).value formatted_date(i.starting_at) unless i.starting_at.blank?
-    row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
-    row.item(:contract).value i.water_supply_contract.contracting_request.full_no unless i.water_supply_contract.blank?
-    row.item(:tariff_scheme).value @tariff_type
-    row.item(:debt).value number_with_precision(debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless debt.blank?
-  end
+    if !i.tariffs.blank?
+      _tariff_type = []
+      i.subscriber_tariffs.each do |tt|
+        if !_tariff_type.include? tt.tariff.tariff_type.name
+          _tariff_type = _tariff_type << tt.tariff.tariff_type.name
+        end
+      end
+      @tariff_type = _tariff_type.join(",")
+    else
+      @tariff_type = ""
+    end
+    debt = i.debt_current_date(@from,@to,@todebt).blank? ? 0 : i.debt_current_date(@from,@to,@todebt)
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
-    list.store.page_debt += debt
+    report.page.list(:default).add_row do |row|
+      report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
+      report.page.values project: i.office.name
+      row.item(:code).value i.full_code
+      row.item(:fiscal).value i.fiscal_id
+      row.item(:name).value i.full_name
+      row.item(:street).value i.address_1
+      row.item(:tariff).value i.use.name unless i.use.blank?
+      row.item(:start_at).value formatted_date(i.starting_at) unless i.starting_at.blank?
+      row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
+      row.item(:contract).value i.water_supply_contract.contracting_request.full_no unless i.water_supply_contract.blank?
+      row.item(:tariff_scheme).value @tariff_type
+      row.item(:debt).value number_with_precision(debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") unless debt.blank?
+    end
+
+    # Store page subtotals
+    report.page.list(:default) do |list|
+      list.store.page_rows += 1
+      list.store.page_debt += debt
+    end
   end
 end

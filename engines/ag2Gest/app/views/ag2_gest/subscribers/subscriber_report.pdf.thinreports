@@ -68,29 +68,32 @@ end
 office_id = @subscriber_report.first.office_id
 
 # List detail
-@subscriber_report.each do |i|
-	if !i.office_id.blank? && (i.office_id != office_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|	
-			list.store.page_rows = 0
-		end
-		office_id = i.office_id
-	end
+Subscriber.uncached do
+  @subscriber_report.find_each do |i|
+  # @subscriber_report.each do |i|
+  	if !i.office_id.blank? && (i.office_id != office_id)
+  		report.page.list(:default).page_break
+  		report.page.list(:default) do |list|
+  			list.store.page_rows = 0
+  		end
+  		office_id = i.office_id
+  	end
 
-	report.page.list(:default).add_row do |row|
-		report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
-		report.page.values project: i.office.name
-		row.item(:code).value i.full_code
-		row.item(:fiscal).value i.fiscal_id
-		row.item(:name).value i.full_name
-		row.item(:street).value i.address_1
-		row.item(:tariff).value i.use.name unless i.use.blank?
-		row.item(:start_at).value formatted_date(i.starting_at) unless i.starting_at.blank?
-		row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
-	end
+  	report.page.list(:default).add_row do |row|
+  		report.page.values project_c: I18n.t("activerecord.attributes.subscriber.office")+": "
+  		report.page.values project: i.office.name
+  		row.item(:code).value i.full_code
+  		row.item(:fiscal).value i.fiscal_id
+  		row.item(:name).value i.full_name
+  		row.item(:street).value i.address_1
+  		row.item(:tariff).value i.use.name unless i.use.blank?
+  		row.item(:start_at).value formatted_date(i.starting_at) unless i.starting_at.blank?
+  		row.item(:end_at).value formatted_date(i.ending_at) unless i.ending_at.blank?
+  	end
 
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-	end
+  	# Store page subtotals
+    report.page.list(:default) do |list|
+  		list.store.page_rows += 1
+  	end
+  end
 end

@@ -29,6 +29,10 @@ class CashDeskClosing < ActiveRecord::Base
   scope :by_company, -> x { where(company_id: x).by_date }
   scope :by_office, -> x { where(office_id: x).by_date }
   scope :by_project, -> x { where(project_id: x).by_date }
+  scope :with_these_ids, -> ids {
+    includes(:company, :project)
+    .where(id: ids)
+  }
 
   # Methods
   def difference_of_balance_due_to_rounding
@@ -83,20 +87,22 @@ class CashDeskClosing < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |cdc|
-        created_at = cdc == @time_record ? cdc.formatted_timestamp(cdc.created_at) : cdc.formatted_timestamp(cdc.created_at.utc.getlocal)
-        created_by = User.find(cdc.created_by).email
-        csv << [ cdc.id,
-                 cdc.company.name,
-                 cdc.project.to_label,
-                 cdc.raw_number(cdc.opening_balance,4),
-                 cdc.raw_number(cdc.closing_balance,4),
-                 cdc.raw_number(cdc.invoices_collected,4),
-                 cdc.raw_number(cdc.amount_collected,4),
-                 cdc.raw_number(cdc.invoices_paid,4),
-                 cdc.raw_number(cdc.amount_paid,4),
-                 created_at,
-                 created_by]
+      CashDeskClosing.uncached do
+        array.find_each do |cdc|
+          created_at = cdc == @time_record ? cdc.formatted_timestamp(cdc.created_at) : cdc.formatted_timestamp(cdc.created_at.utc.getlocal)
+          created_by = User.find(cdc.created_by).email
+          csv << [ cdc.id,
+                   cdc.company.name,
+                   cdc.project.to_label,
+                   cdc.raw_number(cdc.opening_balance,4),
+                   cdc.raw_number(cdc.closing_balance,4),
+                   cdc.raw_number(cdc.invoices_collected,4),
+                   cdc.raw_number(cdc.amount_collected,4),
+                   cdc.raw_number(cdc.invoices_paid,4),
+                   cdc.raw_number(cdc.amount_paid,4),
+                   created_at,
+                   created_by]
+        end
       end
     end
   end

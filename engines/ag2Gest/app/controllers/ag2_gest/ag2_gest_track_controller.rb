@@ -802,7 +802,12 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.service_point_report.report_title")
-      @service_point_report = ServicePoint.joins(:subscribers).where("service_points.available_for_contract <> ?", 0).where(w).by_code
+      @service_point_report = ServicePoint.joins(:subscribers)
+                              .joins("LEFT JOIN service_point_locations on service_points.service_point_location_id=service_point_locations.id")
+                              .joins("LEFT JOIN reading_routes on service_points.reading_route_id=reading_routes.id")
+                              .joins("LEFT JOIN meters on service_points.meter_id=meters.id")
+                              .joins("LEFT JOIN street_directories on service_points.street_directory_id=street_directories.id")
+                              .where("service_points.available_for_contract <> ?", 0).where(w).by_code
 
       respond_to do |format|
         # Render PDF
@@ -853,7 +858,11 @@ module Ag2Gest
 
       # Setup filename
       title = t("ag2_gest.ag2_gest_track.service_point_report.report_meter_title")
-      @sp_with_meter_report = ServicePoint.where("meter_id IS NOT NULL").where(w).by_code
+      @sp_with_meter_report = ServicePoint.joins("LEFT JOIN service_point_locations on service_points.service_point_location_id=service_point_locations.id")
+                              .joins("LEFT JOIN reading_routes on service_points.reading_route_id=reading_routes.id")
+                              .joins("LEFT JOIN meters on service_points.meter_id=meters.id")
+                              .joins("LEFT JOIN street_directories on service_points.street_directory_id=street_directories.id")
+                              .where("meter_id IS NOT NULL").where(w).by_code
 
       respond_to do |format|
         # Render PDF

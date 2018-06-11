@@ -76,49 +76,51 @@ company_id = @close_cash_report.first.company_id
 project_id = @close_cash_report.first.project_id
 
 # List detail
-@close_cash_report.each do |i|
-	if !i.company_id.blank? && (i.company_id != company_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|
-			list.store.page_rows = 0
-			list.store.p_collected = 0
-			list.store.p_t_collected = 0
-			list.store.p_paid = 0
-			list.store.p_t_paid = 0
-		end
-		company_id = i.company_id
-	end
-	if !i.project_id.blank? && (i.project_id != project_id)
-		report.page.list(:default).page_break
-		report.page.list(:default) do |list|
-			list.store.page_rows = 0
-			list.store.p_collected = 0
-			list.store.p_paid = 0
-		end
-		project_id = i.project_id
-	end
+CashDeskClosing.uncached do
+  @close_cash_report.find_each do |i|
+  	if !i.company_id.blank? && (i.company_id != company_id)
+  		report.page.list(:default).page_break
+  		report.page.list(:default) do |list|
+  			list.store.page_rows = 0
+  			list.store.p_collected = 0
+  			list.store.p_t_collected = 0
+  			list.store.p_paid = 0
+  			list.store.p_t_paid = 0
+  		end
+  		company_id = i.company_id
+  	end
+  	if !i.project_id.blank? && (i.project_id != project_id)
+  		report.page.list(:default).page_break
+  		report.page.list(:default) do |list|
+  			list.store.page_rows = 0
+  			list.store.p_collected = 0
+  			list.store.p_paid = 0
+  		end
+  		project_id = i.project_id
+  	end
 
-	report.page.list(:default).add_row do |row|
-		report.page.values company_c: I18n.t("activerecord.attributes.cash_desk_closing.company") + ": "
-		report.page.values project_c: I18n.t("activerecord.attributes.cash_desk_closing.project") + ": "
-		report.page.values company: i.company.name unless i.company.blank?
-		report.page.values project: i.project.to_label
-		row.item(:id).value i.id
-		row.item(:opening_balance).value number_with_precision(i.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:closing_balance).value number_with_precision(i.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:invoices_collected).value number_with_precision(i.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:amount_collected).value number_with_precision(i.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:invoices_paid).value number_with_precision(i.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:amount_paid).value number_with_precision(i.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
-		row.item(:created_at).value i == @time_record ? formatted_timestamp(i.created_at) : formatted_timestamp(i.created_at.utc.getlocal)
-		row.item(:created_by).value User.find(i.created_by).email
-	end
-	# Store page subtotals
-  report.page.list(:default) do |list|
-		list.store.page_rows += 1
-		list.store.p_collected += i.amount_collected
-		list.store.p_t_collected += i.amount_collected
-		list.store.p_paid += i.amount_paid
-		list.store.p_t_paid += i.amount_paid
-	end
+  	report.page.list(:default).add_row do |row|
+  		report.page.values company_c: I18n.t("activerecord.attributes.cash_desk_closing.company") + ": "
+  		report.page.values project_c: I18n.t("activerecord.attributes.cash_desk_closing.project") + ": "
+  		report.page.values company: i.company.name unless i.company.blank?
+  		report.page.values project: i.project.to_label
+  		row.item(:id).value i.id
+  		row.item(:opening_balance).value number_with_precision(i.opening_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:closing_balance).value number_with_precision(i.closing_balance, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:invoices_collected).value number_with_precision(i.invoices_collected, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:amount_collected).value number_with_precision(i.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:invoices_paid).value number_with_precision(i.invoices_paid, precision: 0, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:amount_paid).value number_with_precision(i.amount_paid, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
+  		row.item(:created_at).value i == @time_record ? formatted_timestamp(i.created_at) : formatted_timestamp(i.created_at.utc.getlocal)
+  		row.item(:created_by).value User.find(i.created_by).email
+  	end
+  	# Store page subtotals
+    report.page.list(:default) do |list|
+  		list.store.page_rows += 1
+  		list.store.p_collected += i.amount_collected
+  		list.store.p_t_collected += i.amount_collected
+  		list.store.p_paid += i.amount_paid
+  		list.store.p_t_paid += i.amount_paid
+  	end
+  end
 end
