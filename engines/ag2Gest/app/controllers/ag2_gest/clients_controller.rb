@@ -2,6 +2,8 @@ require_dependency "ag2_gest/application_controller"
 
 module Ag2Gest
   class ClientsController < ApplicationController
+    include IbanModule
+
     before_filter :authenticate_user!
     before_filter :set_defaults_for_new_and_edit, only: [:new, :edit]
     load_and_authorize_resource
@@ -15,6 +17,7 @@ module Ag2Gest
                                                :cl_validate_fiscal_id_textfield,
                                                :cl_update_office_select_from_bank,
                                                :cl_check_iban,
+                                               :cl_validate_iban,
                                                :cl_load_dropdowns,
                                                :cl_load_debt,
                                                :check_client_depent_subscribers,
@@ -81,6 +84,17 @@ module Ag2Gest
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
+    # Validate IBAN
+    def cl_validate_iban
+      invalidIBAN = I18n.t("activerecord.errors.models.client_bank_account.iban_invalid")
+      tryAgain = I18n.t("should_try_again")
+      valid = iban_valid?(params[:iban])
+      # Setup JSON
+      @json_data = { "valid" => valid, "iban" => params[:iban],
+                     "invalidIBAN" =>invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 
