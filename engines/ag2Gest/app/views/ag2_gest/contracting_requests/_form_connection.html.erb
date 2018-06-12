@@ -391,10 +391,19 @@
       var iban = $("#fnt-iban").val();
       if (iban.length){
       var isValid = true;
-        jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+        // jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+        //   isValid = data.valid
+        //   if (data.valid == false) {
+        //     alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+        //     $("#fnt-iban").val("");
+        //   } else {
+        //     alert(data.iban + ' OK');
+        //   }
+        // });
+        jQuery.getJSON('cr_validate_iban/' + iban, function (data) {
           isValid = data.valid
           if (data.valid == false) {
-            alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+            alert(data.iban + ' ' + data.invalidIBAN + '\n' + data.tryAgain);
             $("#fnt-iban").val("");
           } else {
             alert(data.iban + ' OK');
@@ -409,10 +418,21 @@
       if (iban.length){
         e.preventDefault();
         var isValid = true;
-        jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+        // jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+        //   isValid = data.valid
+        //   if (data.valid == false) {
+        //     alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+        //     $("#fnt-iban").val("");
+        //     return false;
+        //   } else {
+        //     alert(data.iban + ' OK');
+        //     $("#form_contracting_request_connection").submit();
+        //   }
+        // });
+        jQuery.getJSON('cr_validate_iban/' + iban, function (data) {
           isValid = data.valid
           if (data.valid == false) {
-            alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+            alert(data.iban + ' ' + data.invalidIBAN + '\n' + data.tryAgain);
             $("#fnt-iban").val("");
             return false;
           } else {

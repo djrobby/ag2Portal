@@ -217,6 +217,9 @@ Ag2Gest::Engine.routes.draw do
     match 'contracting_requests/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
     match 'cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
     match 'contracting_requests/:id/cr_check_iban/:country/:dc/:bank/:office/:account', :controller => 'contracting_requests', :action => 'cr_check_iban'
+    match 'contracting_requests/cr_validate_iban/:iban', :controller => 'contracting_requests', :action => 'cr_validate_iban'
+    match 'contracting_requests/:id/cr_validate_iban/:iban', :controller => 'contracting_requests', :action => 'cr_validate_iban'
+    match 'cr_validate_iban/:iban', :controller => 'contracting_requests', :action => 'cr_validate_iban'
     #Comment Route Update Server
     # match 'contracting_requests/dn_update_from_invoice/:arr_invoice', :controller => 'contracting_requests', :action => 'dn_update_from_invoice'
     match 'contracting_requests/cr_find_meter/:meter', :controller => 'contracting_requests', :action => 'cr_find_meter'
@@ -393,6 +396,9 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/add_bill_new/:subscriber_id', :controller => 'subscribers', :action => 'add_bill_new'
     match 'add_bill_new/:subscriber_id', :controller => 'subscribers', :action => 'add_bill_new'
     match 'subscribers/:id/add_bill_new/:subscriber_id', :controller => 'subscribers', :action => 'add_bill_new'
+    match 'subscribers/sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
+    match 'subscribers/:id/sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
+    match 'sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
     #
     # Commercial billings
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'

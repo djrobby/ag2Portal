@@ -1440,9 +1440,9 @@
     var ids = null;
     // var debt = parseFloat($('.debt-total-cashier').text().replace(",", "."));
     if (_currentLocale == 'es') {
-      var debt = parseFloat($('.debt-total-cashier').text().replace(".", "").replace(",", "."));
+      var debt = parseFloat($('.debt-total-cashier').text().replace(".", "").replace(",", ".")) || 0;
     } else {
-      var debt = parseFloat($('.debt-total-cashier').text());
+      var debt = parseFloat($('.debt-total-cashier').text()) || 0;
     }
     var amount = parseFloat($('#client_payment_amount').val());
     if (_active_tab == "pendings-tab") {
@@ -1633,7 +1633,12 @@
        if (ids != null && ids != '') {
          invoices_id = ids.split(",");
        }
-       var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+       // var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+       if (_currentLocale == 'es') {
+         var total_debt = parseFloat(right_number($(".debt-total-cashier").text().replace(".", "").replace(",", "."), 2));
+       } else {
+         var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+       }
        var debt = parseFloat($(this).attr('data-debt'));
        if (p) {
          // Add to ids
@@ -1675,7 +1680,12 @@
       if (ids != null && ids != '') {
         invoices_id = ids.split(",");
       }
-      var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      // var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      if (_currentLocale == 'es') {
+        var total_debt = parseFloat(right_number($(".debt-total-cashier").text().replace(".", "").replace(",", "."), 2));
+      } else {
+        var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      }
       var debt = 0;
       $(this).parents(".accordion").find(".pending-invoices-table").find("tr.fields").each(function() {
         chk = $(this).find('.checkbox-slave');
@@ -1693,13 +1703,12 @@
           }
           // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
           if (_currentLocale == 'es') {
-            debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
+            debt += parseFloat(right_number($(this).find('.debt-field').text().replace(".", "").replace(",", "."), 4));
           } else {
-            debt += parseFloat($('.debt-field').text());
+            debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
           }
         }
       });
-      alert(debt);
       if (p) {
         // Sum at cashier
         total_debt += debt
@@ -1740,9 +1749,9 @@
             // Sum
             // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
             if (_currentLocale == 'es') {
-              debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
+              debt += parseFloat(right_number($(this).find('.debt-field').text().replace(".", "").replace(",", "."), 4));
             } else {
-              debt += parseFloat($('.debt-field').text());
+              debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
             }
           }
         }
@@ -1796,7 +1805,12 @@
       if (ids != null && ids != '') {
        invoices_id = ids.split(",");
       }
-      var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      // var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      if (_currentLocale == 'es') {
+        var total_debt = parseFloat(right_number($(".debt-total-cashier").text().replace(".", "").replace(",", "."), 2));
+      } else {
+        var total_debt = parseFloat(right_number($(".debt-total-cashier").text(), 2));
+      }
       var debt = parseFloat($(this).attr('data-debt'));
       if (p) {
        // Add to ids
@@ -1840,12 +1854,7 @@
             // Add to ids
             invoices_id.push(val);
             // Sum
-            // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
-            if (_currentLocale == 'es') {
-              debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
-            } else {
-              debt += parseFloat($('.debt-field').text());
-            }
+            debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
           }
         }
       });

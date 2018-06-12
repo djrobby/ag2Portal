@@ -21,14 +21,22 @@ $(document).ready(function() {
   });
 
   $('#submit_client_bank_btn').click(function(e){
+    var bank_class = $("#fnt_bank_account_class").val();
     var iban = $("#fnt-iban").val();
+    var holder_name = $("#fnt_bank_holder_name").val();
+    var holder_fiscal_id = $("#fnt_bank_holder_fiscal_id").val();
+    var starting_at = $("#fnt_bank_starting_at").val();
+    if (bank_class == "" || iban == "" || holder_name == "" || holder_fiscal_id == "" || starting_at == "") {
+      alert("<%= I18n.t(:mandatory_subtitle) %>");
+      return false;
+    }
     if (iban.length){
       e.preventDefault();
       var isValid = true;
-      jQuery.getJSON('https://openiban.com/validate/' + iban, function (data) {
+      jQuery.getJSON('sub_validate_iban/' + iban, function (data) {
         isValid = data.valid
         if (data.valid == false) {
-          alert(data.iban + ' ' + invalidIBAN + '\n' + tryAgain);
+          alert(data.iban + ' ' + data.invalidIBAN + '\n' + data.tryAgain);
           $("#fnt-iban").val("");
           return false;
         } else {
@@ -40,6 +48,7 @@ $(document).ready(function() {
     }
   });
 });
+
 
 jQuery(function($) {
   // when the #client_bank_account_bank field changes
@@ -77,7 +86,14 @@ jQuery(function($) {
     // var account = $("#client_bank_account_account_no").val();
     // var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'sub_check_iban');
     var iban = $("#fnt-iban").val();
-    var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);
+    // var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);
+    jQuery.getJSON('sub_validate_iban/' + iban, function (data) {
+      if (data.valid == false) {
+        alert(data.iban + ' ' + data.invalidIBAN + '\n' + data.tryAgain);
+      } else {
+        alert(data.iban + ' OK');
+      }
+    });
     return false;
   });
 });
@@ -106,9 +122,9 @@ jQuery(function($) {
       <!-- <#%= f.input :ccc_dc, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "2" }, :label_html => { :class => 'form-label' } %> -->
       <%#= f.input :account_no, :required => true, :input_html => { :class => 'x-large-text-field', maxlength: "12" }, :label_html => { :class => 'form-label' } %>
       <%= f.input :iban, :required => true, input_html: { class: 'x-large-text-field field', minlength: 4, maxlength: 34, id: 'fnt-iban', data: { validation: "required", "validation-error-msg" => "#{e}" }, onkeydown: "only_digit_or_letter(event)", onkeyup: "caps(this)" }, label_html: { class: 'form-label' } %>
-      <%= f.input :holder_name, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name_or_company }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :holder_fiscal_id, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id }, :label_html => { :class => 'form-label' } %>
-      <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :holder_name, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.full_name_or_company, :id => 'fnt_bank_holder_name' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :holder_fiscal_id, :required => true, :input_html => { :class => 'x-large-text-field', :value => @subscriber.client.fiscal_id, :id => 'fnt_bank_holder_fiscal_id' }, :label_html => { :class => 'form-label' } %>
+      <%= f.input :starting_at, :required => true, :start_year => Time.now.year - 100, :end_year => Time.now.year + 100, :as => :string, :input_html => { :value => Date.today, :class => 'x-large-text-field date_picker' , :id => 'fnt_bank_starting_at'}, :label_html => { :class => 'form-label' } %>
     </div>
     <div class="modal-footer">
       <a class="btn btn-primary check_iban_btn" href="#"><%=t('validate') %></a>

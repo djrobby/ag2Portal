@@ -3,6 +3,7 @@ require_dependency "ag2_gest/application_controller"
 module Ag2Gest
   class SubscribersController < ApplicationController
     #include ActionView::Helpers::NumberHelper
+    include IbanModule
     @@subscribers = nil
 
     before_filter :authenticate_user!
@@ -26,6 +27,7 @@ module Ag2Gest
                                                 :rebilling,
                                                 :add_bank_account,
                                                 :sub_check_iban,
+                                                :sub_validate_iban,
                                                 :update_country_textfield_from_region,
                                                 :update_region_textfield_from_province,
                                                 :update_province_textfield_from_town,
@@ -338,6 +340,17 @@ module Ag2Gest
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
+    # Validate IBAN
+    def sub_validate_iban
+      invalidIBAN = I18n.t("activerecord.errors.models.client_bank_account.iban_invalid")
+      tryAgain = I18n.t("should_try_again")
+      valid = iban_valid?(params[:iban])
+      # Setup JSON
+      @json_data = { "valid" => valid, "iban" => params[:iban],
+                     "invalidIBAN" =>invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 

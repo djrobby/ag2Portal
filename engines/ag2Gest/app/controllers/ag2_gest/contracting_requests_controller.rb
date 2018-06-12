@@ -3,6 +3,7 @@ require 'will_paginate/array'
 
 module Ag2Gest
   class ContractingRequestsController < ApplicationController
+    include IbanModule
     before_filter :authenticate_user!
     before_filter :set_defaults_for_new_and_edit, only: [:new, :edit, :new_connection, :edit_connection]
     before_filter :set_defaults_for_show, only: :show
@@ -73,6 +74,7 @@ module Ag2Gest
                                                 :new_connection,
                                                 :edit_connection,
                                                 :cr_check_iban,
+                                                :cr_validate_iban,
                                                 :cr_load_form_dropdowns,
                                                 :cr_load_show_dropdowns]
     # Helper methods for
@@ -86,6 +88,17 @@ module Ag2Gest
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
+    # Validate IBAN
+    def cr_validate_iban
+      invalidIBAN = I18n.t("activerecord.errors.models.client_bank_account.iban_invalid")
+      tryAgain = I18n.t("should_try_again")
+      valid = iban_valid?(params[:iban])
+      # Setup JSON
+      @json_data = { "valid" => valid, "iban" => params[:iban],
+                     "invalidIBAN" =>invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 
