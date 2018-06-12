@@ -149,7 +149,12 @@ $("#cash-to-pending").click(function(){
       id = $(this).find('td.cp-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cp-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cp-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cp-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cp-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -172,7 +177,12 @@ $("#bank-confirm").click(function(){
       id = $(this).find('td.cpb-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cpb-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cpb-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -195,7 +205,12 @@ $("#bank-to-pending").click(function(){
       id = $(this).find('td.cpb-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cpb-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cpb-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -220,7 +235,12 @@ $("#bank-to-order").click(function(){
       cp_order = $(this).find('td.cpb-order').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cpb-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cpb-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cpb-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -244,7 +264,12 @@ $("#others-confirm").click(function(){
       id = $(this).find('td.cpo-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cpo-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cpo-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -267,7 +292,12 @@ $("#others-to-pending").click(function(){
       id = $(this).find('td.cpo-id').text();
       if (id != null && id != '') {
         cp_ids.push(id);
-        amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+        // amount = $(this).find('td.cpo-amount').text().replace(",", ".");
+        if (_currentLocale == 'es') {
+          amount = $(this).find('td.cpo-amount').text().replace(".", "").replace(",", ".") || 0;
+        } else {
+          amount = $(this).find('td.cpo-amount').text() || 0;
+        }
         cp_amount += parseFloat(amount);
       }
     }
@@ -542,7 +572,12 @@ $(".checkbox-master").click(function () {
             invoices_id.splice(i, 1);
           }
         }
-        debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+        // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+        if (_currentLocale == 'es') {
+          debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
+        } else {
+          debt += parseFloat($('.debt-field').text());
+        }
       }
     });
     if (p) {
@@ -583,7 +618,12 @@ $(".checkbox-main").click(function () {
           // Add to ids
           invoices_id.push(val);
           // Sum
-          debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+          // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+          if (_currentLocale == 'es') {
+            debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
+          } else {
+            debt += parseFloat($('.debt-field').text());
+          }
         }
       }
     });
@@ -688,7 +728,12 @@ $("#instalments-checkbox-master").click(function () {
           // Add to ids
           invoices_id.push(val);
           // Sum
-          debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+          // debt += parseFloat(right_number($(this).find('.debt-field').text(), 4));
+          if (_currentLocale == 'es') {
+            debt += parseFloat($('.debt-field').text().replace(".", "").replace(",", "."));
+          } else {
+            debt += parseFloat($('.debt-field').text());
+          }
         }
       }
     });
@@ -705,8 +750,14 @@ $("#instalments-checkbox-master").click(function () {
 
 $("#client_payment_cash_amount").change(function() {
   amount = parseFloat(this.value) || 0;
-  debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
-  cash_return = debt - amount;
+  // debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(",", ".")) || 0;
+  if (_currentLocale == 'es') {
+    debt = parseFloat($(this).parents(".modal").find(".debt-total").text().replace(".", "").replace(",", ".")) || 0;
+  } else {
+    debt = parseFloat($(this).parents(".modal").find(".debt-total").text()) || 0;
+  }
+  // cash_return = debt - amount;
+  cash_return = (debt - amount).toFixed(2);
   $(".cash-return").text(cash_return.format(2, 3, _delimiter, _separator));
 });
 
@@ -720,8 +771,13 @@ $("#client_payment_amount").change(function() {
   }
   if (ids != null && ids != '') {
     amount = parseFloat(this.value) || 0;
-    debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text().replace(",", ".")) || 0;
-    cash_return = debt - amount;
+    if (_currentLocale == 'es') {
+      debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text().replace(".", "").replace(",", ".")) || 0;
+    } else {
+      debt = parseFloat($(this).parents("#cashier-table").find(".debt-total-cashier").text()) || 0;
+    }
+    // cash_return = debt - amount;
+    cash_return = (debt - amount).toFixed(2);
     if (cash_return < 0 && debt > 0) {
       cash_return = cash_return * (-1);
     } else {
@@ -733,10 +789,25 @@ $("#client_payment_amount").change(function() {
 
 $("#initial-cash").change(function() {
   initial = parseFloat(this.value)
-  cashed = parseFloat($("#total-cash").text().replace(",", ".")) || 0.0;
+  // cashed = parseFloat($("#total-cash").text().replace(",", ".")) || 0.0;
+  if (_currentLocale == 'es') {
+    cashed = parseFloat($("#total-cash").text().replace(".", "").replace(",", ".")) || 0.0;
+  } else {
+    cashed = parseFloat($("#total-cash").text()) || 0.0;
+  }
   ending = initial + cashed
-  payments = parseFloat($("#total-paid").text().replace(",", ".")) || 0.0;
-  others = parseFloat($("#total-others").text().replace(",", ".")) || 0.0;
+  // payments = parseFloat($("#total-paid").text().replace(",", ".")) || 0.0;
+  if (_currentLocale == 'es') {
+    payments = parseFloat($("#total-paid").text().replace(".", "").replace(",", ".")) || 0.0;
+  } else {
+    payments = parseFloat($("#total-paid").text()) || 0.0;
+  }
+  // others = parseFloat($("#total-others").text().replace(",", ".")) || 0.0;
+  if (_currentLocale == 'es') {
+    others = parseFloat($("#total-others").text().replace(".", "").replace(",", ".")) || 0.0;
+  } else {
+    others = parseFloat($("#total-others").text()) || 0.0;
+  }
   ending = initial + cashed + payments + others;
   $("#ending-cash").text(ending.format(2, 3, _delimiter, _separator));
 });
