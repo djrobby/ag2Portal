@@ -1,4 +1,6 @@
 class ClientBankAccount < ActiveRecord::Base
+  include IbanModule
+
   # CONSTANTS (origin)
   MANUAL = 1        # ALTA MANUAL
   FILE = 2          # PROVIENE DE UN FICHERO BANCARIO
@@ -23,6 +25,7 @@ class ClientBankAccount < ActiveRecord::Base
 
   has_paper_trail
 
+  validate :iban_must_be_valid
   validates :client,              :presence => true
   validates :bank_account_class,  :presence => true
   validates :country,             :presence => true, :if => "!country.blank?"
@@ -329,6 +332,19 @@ class ClientBankAccount < ActiveRecord::Base
 
   def iban_format_with_spaces
     iban.gsub(/(.{4})(?=.)/, '\1 \2')
+  end
+
+  def iban_valid?
+    IbanModule.iban_valid?(iban)
+  end
+
+  #
+  # Custom validators
+  #
+  def iban_must_be_valid
+    if !iban_valid?
+      errors.add(:iban, I18n.t('activerecord.errors.models.client_bank_account.iban_invalid'))
+    end
   end
 
   #

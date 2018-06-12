@@ -152,6 +152,7 @@ GEM
     hitimes (1.2.5)
     httpauth (0.2.0)
     i18n (0.6.4)
+    iban-tools (1.1.0)
     journey (1.0.4)
     jquery-rails (2.2.1)
       railties (>= 3.0, < 5.0)
@@ -336,6 +337,7 @@ DEPENDENCIES
   dbf
   devise
   hirb
+  iban-tools
   jquery-rails
   libv8
   mysql2
