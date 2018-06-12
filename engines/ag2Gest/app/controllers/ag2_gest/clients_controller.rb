@@ -94,7 +94,7 @@ module Ag2Gest
       valid = iban_valid?(params[:iban])
       # Setup JSON
       @json_data = { "valid" => valid, "iban" => params[:iban],
-                     "invalidIBAN" =>invalidIBAN, "tryAgain" => tryAgain }
+                     "invalidIBAN" => invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 

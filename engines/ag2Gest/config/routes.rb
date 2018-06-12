@@ -117,11 +117,9 @@ Ag2Gest::Engine.routes.draw do
     match 'clients/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
     match 'cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
     match 'clients/:id/cl_check_iban/:country/:dc/:bank/:office/:account', :controller => 'clients', :action => 'cl_check_iban'
-
     match 'clients/cl_validate_iban/:iban', :controller => 'clients', :action => 'cl_validate_iban'
     match 'cl_validate_iban/:iban', :controller => 'clients', :action => 'cl_validate_iban'
     match 'clients/:id/cl_validate_iban/:iban', :controller => 'clients', :action => 'cl_validate_iban'
-
     match 'clients/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
     match 'cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'
     match 'clients/:id/cl_load_dropdowns/:client_id', :controller => 'clients', :action => 'cl_load_dropdowns'

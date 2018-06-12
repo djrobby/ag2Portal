@@ -2,7 +2,9 @@ require_dependency "ag2_purchase/application_controller"
 
 module Ag2Purchase
   class SuppliersController < ApplicationController
+    include IbanModule
     include ActionView::Helpers::NumberHelper
+
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:su_update_textfields_from_organization,
@@ -17,7 +19,8 @@ module Ag2Purchase
                                                :su_format_percentage,
                                                :su_update_office_select_from_bank,
                                                :su_update_ledger_account_select_from_company,
-                                               :su_check_iban]
+                                               :su_check_iban,
+                                               :su_validate_iban]
     # Update payment method and ledger account text fields at view from organization select
     def su_update_textfields_from_organization
       organization = params[:org]
@@ -264,10 +267,10 @@ module Ag2Purchase
 
     # Check Fiscal Id
     def su_check_fiscal_id
-      fiscal_id = params[:contact]
-      # Setup JSON
-      @json_data = { "iban" => iban }
-      render json: @json_data
+      # fiscal_id = params[:contact]
+      # # Setup JSON
+      # @json_data = { "iban" => iban }
+      # render json: @json_data
     end
 
     # Check IBAN
@@ -275,6 +278,17 @@ module Ag2Purchase
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
+    # Validate IBAN
+    def su_validate_iban
+      invalidIBAN = I18n.t("activerecord.errors.models.supplier_bank_account.iban_invalid")
+      tryAgain = I18n.t("should_try_again")
+      valid = iban_valid?(params[:iban])
+      # Setup JSON
+      @json_data = { "valid" => valid, "iban" => params[:iban],
+                     "invalidIBAN" => invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 

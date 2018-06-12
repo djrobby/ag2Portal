@@ -334,15 +334,16 @@ class ClientBankAccount < ActiveRecord::Base
     iban.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
-  def iban_valid?
-    IbanModule.iban_valid?(iban)
+  def iban_valid_?
+    # iban_valid is a method of IbanModule
+    iban_valid?(iban)
   end
 
   #
   # Custom validators
   #
   def iban_must_be_valid
-    if !iban_valid?
+    if !iban_valid_?
       errors.add(:iban, I18n.t('activerecord.errors.models.client_bank_account.iban_invalid'))
     end
   end

@@ -2,7 +2,9 @@ require_dependency "ag2_admin/application_controller"
 
 module Ag2Admin
   class CompaniesController < ApplicationController
+    include IbanModule
     include ActionView::Helpers::NumberHelper
+
     before_filter :authenticate_user!
     load_and_authorize_resource
     skip_load_and_authorize_resource :only => [:update_province_textfield_from_town,
@@ -11,7 +13,8 @@ module Ag2Admin
                                                :co_update_total_and_price,
                                                :co_update_from_organization,
                                                :co_update_office_select_from_bank,
-                                               :co_check_iban]
+                                               :co_check_iban,
+                                               :co_validate_iban]
     # Helper methods for
     # => sorting
     # => allow edit (hide buttons)
@@ -108,6 +111,17 @@ module Ag2Admin
       iban = check_iban(params[:country], params[:dc], params[:bank], params[:office], params[:account])
       # Setup JSON
       @json_data = { "iban" => iban }
+      render json: @json_data
+    end
+
+    # Validate IBAN
+    def co_validate_iban
+      invalidIBAN = I18n.t("activerecord.errors.models.company_bank_account.iban_invalid")
+      tryAgain = I18n.t("should_try_again")
+      valid = iban_valid?(params[:iban])
+      # Setup JSON
+      @json_data = { "valid" => valid, "iban" => params[:iban],
+                     "invalidIBAN" => invalidIBAN, "tryAgain" => tryAgain }
       render json: @json_data
     end
 

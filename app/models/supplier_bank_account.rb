@@ -1,4 +1,6 @@
 class SupplierBankAccount < ActiveRecord::Base
+  include IbanModule
+
   belongs_to :supplier
   belongs_to :bank_account_class
   belongs_to :country
@@ -9,6 +11,7 @@ class SupplierBankAccount < ActiveRecord::Base
 
   has_paper_trail
 
+  validate :iban_must_be_valid
   validates :supplier,            :presence => true
   validates :bank_account_class,  :presence => true
   validates :country,             :presence => true, :if => "!country.blank?"
@@ -189,6 +192,20 @@ class SupplierBankAccount < ActiveRecord::Base
 
   def iban_format_with_spaces
     iban.gsub(/(.{4})(?=.)/, '\1 \2')
+  end
+
+  def iban_valid_?
+    # iban_valid is a method of IbanModule
+    iban_valid?(iban)
+  end
+
+  #
+  # Custom validators
+  #
+  def iban_must_be_valid
+    if !iban_valid_?
+      errors.add(:iban, I18n.t('activerecord.errors.models.supplier_bank_account.iban_invalid'))
+    end
   end
 
   private

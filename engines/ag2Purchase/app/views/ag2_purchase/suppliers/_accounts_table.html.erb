@@ -64,8 +64,14 @@
       // var office = $(this).closest('tr').find('select.fnt-office').val();
       // var account = $(this).closest('tr').find('.fnt-account').val();
       var iban = $(this).closest('tr').find('.fnt-iban').val();
-      var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);
-      // var isValidIBAN = validate_iban(invalidIBAN, tryAgain, country, dc, bank, office, account, 'su_check_iban');
+      // var isValidIBAN = validate_iban_new(invalidIBAN, tryAgain, iban);
+      jQuery.getJSON('su_validate_iban/' + iban, function(data) {
+        if (data.valid == false) {
+          alert(data.iban + ' ' + data.invalidIBAN + '\n' + data.tryAgain);
+        } else {
+          alert(data.iban + ' OK');
+        }
+      });
       return false;
     });
 
