@@ -802,10 +802,10 @@ module Ag2Gest
 
     def sub_load_bank
       # subscriber = Subscriber.find(params[:subscriber_id])
-      bank_id = 0
-      bank_office_id = 0
+      # bank_id = 0
+      # bank_office_id = 0
       bank_account_class_id = 0
-      country_id = 0
+      # country_id = 0
       @json_data = { "bank_account_classes" => bank_account_classes_array,"bank_account_class_id" => bank_account_class_id,
                      # "banks" => banks_array, "bank_offices" => bank_offices_array,
                      # "countries" => country_array,
@@ -869,6 +869,7 @@ module Ag2Gest
     # GET /subscribers.json
     def index
       manage_filter_state
+
       filter = params[:ifilter]
       subscriber_code = params[:SubscriberCode]
       street_name = params[:StreetName]
@@ -892,71 +893,83 @@ module Ag2Gest
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
       street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
-      @search = Subscriber.search do
-        fulltext params[:search]
-        if session[:office] != '0'
-          with :office_id, session[:office]
-        end
-        if !letter.blank? && letter != "%"
-          with(:full_name).starting_with(letter)
-        end
-        if !subscriber_code.blank?
-          if subscriber_code.class == Array
-            with :subscriber_code, subscriber_code
-          else
-            with(:subscriber_code).starting_with(subscriber_code)
-          end
-        end
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        # if !street_name.blank?
-        #   with :subscriber_id, street_name
-        # end
-        if !meter.blank?
-          if meter.class == Array
-            with :meter_code, meter
-          else
-            with(:meter_code).starting_with(meter)
-          end
-        end
-        if !caliber.blank?
-          with :caliber_id, caliber
-        end
-        if !use.blank?
-          with :use_id, use
-        end
-        if !tariff_type.blank?
-          with :tariff_type_id, tariff_type
-        end
-        if !filter.blank?
-          case filter
-            when 'all'
-              any_of do
-                with :subscribed, true
-                with :unsubscribed, true
-              end
-            when 'subscribed'
-              with :subscribed, true
-            when 'unsubscribed'
-              with :unsubscribed, true
-            when 'active'
-              with :activated, true
-            when 'inactive'
-              with :deactivated, true
-          end
-        end
-        data_accessor_for(Subscriber).include = [:street_directory, :meter]
-        order_by :sort_no, :desc
-        paginate :page => params[:page] || 1, :per_page => per_page || 10
-      end
-      @subscribers = @search.results
-      @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
+      # Set searches to use in @subscribers & @@subscribers
+      search = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, per_page, true)
+      search_atat = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, Subscriber.count, false)
+
+      # @search = Subscriber.search do
+      #   fulltext params[:search]
+      #   if session[:office] != '0'
+      #     with :office_id, session[:office]
+      #   end
+      #   if !letter.blank? && letter != "%"
+      #     with(:full_name).starting_with(letter)
+      #   end
+      #   if !subscriber_code.blank?
+      #     if subscriber_code.class == Array
+      #       with :subscriber_code, subscriber_code
+      #     else
+      #       with(:subscriber_code).starting_with(subscriber_code)
+      #     end
+      #   end
+      #   if !street_name.blank?
+      #     if street_name.class == Array
+      #       with :supply_address, street_name
+      #     else
+      #       with(:supply_address).starting_with(street_name)
+      #     end
+      #   end
+      #   # if !street_name.blank?
+      #   #   with :subscriber_id, street_name
+      #   # end
+      #   if !meter.blank?
+      #     if meter.class == Array
+      #       with :meter_code, meter
+      #     else
+      #       with(:meter_code).starting_with(meter)
+      #     end
+      #   end
+      #   if !caliber.blank?
+      #     with :caliber_id, caliber
+      #   end
+      #   if !use.blank?
+      #     with :use_id, use
+      #   end
+      #   if !tariff_type.blank?
+      #     with :tariff_type_id, tariff_type
+      #   end
+      #   if !filter.blank?
+      #     case filter
+      #       when 'all'
+      #         any_of do
+      #           with :subscribed, true
+      #           with :unsubscribed, true
+      #         end
+      #       when 'subscribed'
+      #         with :subscribed, true
+      #       when 'unsubscribed'
+      #         with :unsubscribed, true
+      #       when 'active'
+      #         with :activated, true
+      #       when 'inactive'
+      #         with :deactivated, true
+      #     end
+      #   end
+      #   data_accessor_for(Subscriber).include = [:street_directory, :meter]
+      #   order_by :sort_no, :desc
+      #   paginate :page => params[:page] || 1, :per_page => per_page || 10
+      # end
+      # @subscribers = @search.results
+      # @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
       @reports = reports_array
+      @subscribers = search.results
+
+      subscriber_ids = []
+      search_atat.hits.each do |i|
+        subscriber_ids << i.result.id
+      end
+      # @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
+      @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
 
       respond_to do |format|
         format.html # index.html.erb
@@ -1746,6 +1759,79 @@ module Ag2Gest
         end
       end
     end
+
+    ##################################
+    # Begin Region: Sunspot searches #
+    ##################################
+    def subscribers_search(search, office, letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, per_page=10, data_accessor)
+      Subscriber.search do
+        fulltext search
+        if office != '0'
+          with :office_id, office
+        end
+        if !letter.blank? && letter != "%"
+          with(:full_name).starting_with(letter)
+        end
+        if !subscriber_code.blank?
+          if subscriber_code.class == Array
+            with :subscriber_code, subscriber_code
+          else
+            with(:subscriber_code).starting_with(subscriber_code)
+          end
+        end
+        if !street_name.blank?
+          if street_name.class == Array
+            with :supply_address, street_name
+          else
+            with(:supply_address).starting_with(street_name)
+          end
+        end
+        # if !street_name.blank?
+        #   with :subscriber_id, street_name
+        # end
+        if !meter.blank?
+          if meter.class == Array
+            with :meter_code, meter
+          else
+            with(:meter_code).starting_with(meter)
+          end
+        end
+        if !caliber.blank?
+          with :caliber_id, caliber
+        end
+        if !use.blank?
+          with :use_id, use
+        end
+        if !tariff_type.blank?
+          with :tariff_type_id, tariff_type
+        end
+        if !filter.blank?
+          case filter
+            when 'all'
+              any_of do
+                with :subscribed, true
+                with :unsubscribed, true
+              end
+            when 'subscribed'
+              with :subscribed, true
+            when 'unsubscribed'
+              with :unsubscribed, true
+            when 'active'
+              with :activated, true
+            when 'inactive'
+              with :deactivated, true
+          end
+        end
+        if data_accessor
+          data_accessor_for(Subscriber).include = [:street_directory, :meter]
+        end
+        order_by :sort_no, :desc
+        paginate :page => params[:page] || 1, :per_page => per_page
+      end
+    end
+    ################################
+    # End Region: Sunspot searches #
+    ################################
 
     private
 
