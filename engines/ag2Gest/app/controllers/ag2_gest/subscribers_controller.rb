@@ -968,8 +968,8 @@ module Ag2Gest
       search_atat.hits.each do |i|
         subscriber_ids << i.result.id
       end
-      # @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
-      @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
+      @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
+      # @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
 
       respond_to do |format|
         format.html # index.html.erb

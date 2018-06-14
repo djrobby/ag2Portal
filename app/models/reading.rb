@@ -257,7 +257,7 @@ class Reading < ActiveRecord::Base
   #
   def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
     pre_bill = nil
-    if !subscriber.blank?
+    if subscriber_billable?
       # cr = consumption_total_period             # consumption real
       cr = consumption_total_period_to_invoice  # consumption real to invoice
       ce = estimated_consumption(cr)            # consumption estimated
@@ -290,7 +290,7 @@ class Reading < ActiveRecord::Base
   #
   def generate_bill(next_bill_no=nil,user_id=nil,operation_id=1,payday_limit=nil,invoice_date=nil)
     @bill = nil
-    if !subscriber.blank? && bill_id.blank?     # This reading can be billed only if it's released (nil)
+    if subscriber_billable? && bill_id.blank?     # This reading can be billed only if it's released (nil)
       # cr = consumption_total_period             # consumption real
       cr = consumption_total_period_to_invoice  # consumption real to invoice
       ce = estimated_consumption(cr)            # consumption estimated
@@ -381,6 +381,25 @@ class Reading < ActiveRecord::Base
 
   rescue ActiveRecord::RecordInvalid
     puts I18n.t(:transaction_error, var: "generate_bill")
+  end
+
+  #
+  # Subscriber billable?
+  #
+  def subscriber_billable?
+    r = false
+    begin
+      if !subscriber.blank? # Subscriber present
+        if subscriber.activated?  # Subscriber active
+          if subscriber.starting_at < billing_period.billing_ending_date
+            r = true
+          end
+        end
+      end
+    rescue
+      r = false
+    end
+    return r
   end
 
   #
