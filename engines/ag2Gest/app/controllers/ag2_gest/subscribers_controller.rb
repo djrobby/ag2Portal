@@ -895,7 +895,7 @@ module Ag2Gest
 
       # Set searches to use in @subscribers & @@subscribers
       search = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, per_page, true)
-      search_atat = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, Subscriber.count, false)
+      # search_atat = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, Subscriber.count, false)
 
       # @search = Subscriber.search do
       #   fulltext params[:search]
@@ -961,14 +961,20 @@ module Ag2Gest
       # end
       # @subscribers = @search.results
       # @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
+      page_entries_info_page = (params[:page] || 1).to_s
+      page_entries_info_per_page = (per_page || 10).to_s
+      page_entries_info_total = search.total.to_s
       @reports = reports_array
       @subscribers = search.results
 
-      subscriber_ids = []
-      search_atat.hits.each do |i|
-        subscriber_ids << i.result.id
-      end
-      @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
+      # subscriber_ids = []
+      # search_atat.hits.each do |i|
+      #   subscriber_ids << i.result.id
+      # end
+      @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
+      session[:page_entries_show] = page_entries_info_page + '-' + page_entries_info_per_page + I18n.t(:of) + page_entries_info_total
+
+      # @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
       # @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
 
       respond_to do |format|
