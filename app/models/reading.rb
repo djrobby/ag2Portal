@@ -563,6 +563,7 @@ class Reading < ActiveRecord::Base
   # Create Preinvoice Items, for current tariff
   def save_pre_invoice_items(tariff, pre_invoice, pre_bill, cf, user_id)
     # Fixed
+    fixed_fee_qty = fixed_fee_quantity
     if !tariff.fixed_fee.zero?
       tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
       # tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
@@ -577,7 +578,7 @@ class Reading < ActiveRecord::Base
                               pre_invoice.id,
                               "CF",
                               tariff_price,
-                              billing_frequency.total_months,
+                              fixed_fee_qty,
                               tariff.billing_frequency.fix_measure_id,
                               tariff.try(:tax_type_f_id),
                               tariff.try(:discount_pct_f),
@@ -587,7 +588,7 @@ class Reading < ActiveRecord::Base
                               pre_invoice.id,
                               "CF",
                               ((tariff.percentage_fixed_fee / 100) * PreInvoice.find(pre_invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula)) / billing_frequency.total_months,
-                              billing_frequency.total_months,
+                              fixed_fee_qty,
                               tariff.billing_frequency.fix_measure_id,
                               tariff.try(:tax_type_f_id),
                               tariff.try(:discount_pct_f),
@@ -674,6 +675,7 @@ class Reading < ActiveRecord::Base
   # Create Invoice Items, for current tariff
   def save_invoice_items(tariff, invoice, bill, cf, user_id)
     # Fixed
+    fixed_fee_qty = fixed_fee_quantity
     if !tariff.fixed_fee.zero?
       tariff_code = tariff.try(:billable_item).try(:billable_concept).try(:code) rescue ''
       # tariff_price = tariff.fixed_fee / tariff.billing_frequency.total_months
@@ -688,7 +690,7 @@ class Reading < ActiveRecord::Base
                           invoice.id,
                           "CF",
                           tariff_price,
-                          billing_frequency.total_months,
+                          fixed_fee_qty,
                           tariff.billing_frequency.fix_measure_id,
                           tariff.try(:tax_type_f_id),
                           tariff.try(:discount_pct_f),
@@ -698,7 +700,7 @@ class Reading < ActiveRecord::Base
                           invoice.id,
                           "CF",
                           ((tariff.percentage_fixed_fee/100) * Invoice.find(invoice.id).total_by_concept_ff(tariff.percentage_applicable_formula))  / billing_frequency.total_months,
-                          billing_frequency.total_months,
+                          fixed_fee_qty,
                           tariff.billing_frequency.fix_measure_id,
                           tariff.try(:tax_type_f_id),
                           tariff.try(:discount_pct_f),
@@ -868,6 +870,20 @@ class Reading < ActiveRecord::Base
     tariff.billable_item.bill_by_users && ((tariff.users_increment_apply_to == Tariff::BOTH) ||
     ((fee_type = 'F' && tariff.users_increment_apply_to == Tariff::FIXED) ||
      (fee_type = 'V' && tariff.users_increment_apply_to == Tariff::VARIABLE)))
+  end
+
+  #
+  # Quantiy to applied in invoice items
+  #
+  def fixed_fee_quantity
+    qty = billing_frequency.total_months
+    sub_starting_at = subscriber.starting_at
+    bp_billing_starting_date = billing_period.billing_starting_date
+    bp_billing_ending_date = billing_period.billing_ending_date
+    if sub_starting_at > bp_billing_starting_date
+      qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
+    end
+    return qty
   end
 
   #
