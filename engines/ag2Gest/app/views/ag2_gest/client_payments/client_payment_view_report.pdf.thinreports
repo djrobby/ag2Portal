@@ -76,62 +76,79 @@ end
 
 
 # List detail
-@client_payment_report.each do |i|
-  report.page.item(:from_title).hide
-  report.page.item(:to_title).hide
-  report.page.item(:from).hide
-  report.page.item(:to).hide
-  report.page.item(:l13).hide
+ClientPayment.uncached do
+  @client_payment_report.find_each do |i|
+    report.page.item(:from_title).hide
+    report.page.item(:to_title).hide
+    report.page.item(:from).hide
+    report.page.item(:to).hide
+    report.page.item(:l13).hide
 
-  report.page.list(:default).add_row do |row|
-    row.item(:date).value formatted_date(i.payment_date) unless i.payment_date.blank?
-    row.item(:date_confirm).value formatted_date(i.confirmation_date) unless i.confirmation_date.blank?
-    row.item(:receipt).value i.full_no
-    row.item(:invoice).value i.invoice.old_no_based_real_no unless i.invoice.blank?
-  #data client
-    full_subscriber = ""
-    if !i.subscriber.blank?
-      full_subscriber += i.subscriber.full_name_or_company_and_code.to_s
-    else
-      full_subscriber += i.client.full_name_or_company_and_code.to_s
-    end
-    row.item(:subscriber).value full_subscriber
-    row.item(:amount).value number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.amount.blank?
-    if i.instalment_id.blank?
-      row.item(:total).value number_with_precision(i.invoice.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice.blank?
-      row.item(:debt).value number_with_precision(i.invoice.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice.blank?
-      row.item(:type).value PaymentType.code_with_param(i.payment_type)
-    else
-      row.item(:total).value number_with_precision(i.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.instalment.blank?
-      row.item(:debt).value number_with_precision(i.instalment.amount_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.instalment.blank?
-      row.item(:type).value PaymentType.code_with_param(i.payment_type) + ", " + I18n.t("activerecord.attributes.instalment_plan.instalment_no") + ": " + i.instalment.partial_instalment_no.to_s
-    end
-  #cobrado por
-     # pay_type = ""
-     # if i.payment_type == 1
-     #  pay_type = "Caja"
-     # end
-     # if i.payment_type == 2
-     #  pay_type = "Banco"
-     # end
-     # if i.payment_type == 3
-     #  pay_type = "Aplazamiento"
-     # end
-     # if i.payment_type == 4
-     #  pay_type = "Otros"
-     # end
-  end
+    if @tab
+      report.page.list(:default).add_row do |row|
+        row.item(:date).value formatted_date(i.instalment.client_payment.payment_date) unless i.instalment.client_payment.blank?
+        row.item(:date_confirm).value formatted_date(i.instalment.client_payment.confirmation_date) unless i.instalment.client_payment.blank?
+        row.item(:receipt).value i.instalment.client_payment.full_no unless i.instalment.client_payment.blank?
+        row.item(:invoice).value i.invoice.old_no_based_real_no unless i.invoice.blank?
+      #data client
+        full_subscriber = ""
+        if !i.bill.subscriber.blank?
+          full_subscriber += i.bill.subscriber.full_name_or_company_and_code.to_s
+        else
+          full_subscriber += i.bill.client.full_name_or_company_and_code.to_s
+        end
+        row.item(:subscriber).value full_subscriber
+        row.item(:amount).value number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.amount.blank?
+        if i.instalment.client_payment.blank?
+          row.item(:type).value I18n.t("activerecord.attributes.instalment_plan.instalment_no") + ": " + i.instalment.partial_instalment_no.to_s
+        else
+          row.item(:type).value PaymentType.code_with_param(i.instalment.client_payment.payment_type)  + ", " +  I18n.t("activerecord.attributes.instalment_plan.instalment_no") + ": " + i.instalment.partial_instalment_no.to_s
+        end
+      end
 
-  # Store page subtotals
-  report.page.list(:default) do |list|
-    list.store.page_rows += 1
-    list.store.p_amount += i.amount.round(2) unless i.amount.blank?
-    if i.instalment_id.blank?
-      list.store.p_total += i.invoice.collected.round(2) unless i.invoice.blank?
-      list.store.p_debt += i.invoice.debt.round(2) unless i.invoice.blank?
+      # Store page subtotals
+      report.page.list(:default) do |list|
+        list.store.page_rows += 1
+        list.store.p_amount += i.amount.round(2)  unless i.amount.blank?
+      end
     else
-      list.store.p_total += i.instalment.amount_collected.round(2) unless i.instalment.blank?
-      list.store.p_debt += i.instalment.amount_debt.round(2) unless i.instalment.blank?
+      report.page.list(:default).add_row do |row|
+        row.item(:date).value formatted_date(i.payment_date) unless i.payment_date.blank?
+        row.item(:date_confirm).value formatted_date(i.confirmation_date) unless i.confirmation_date.blank?
+        row.item(:receipt).value i.full_no
+        row.item(:invoice).value i.invoice.old_no_based_real_no unless i.invoice.blank?
+      #data client
+        full_subscriber = ""
+        if !i.subscriber.blank?
+          full_subscriber += i.subscriber.full_name_or_company_and_code.to_s
+        else
+          full_subscriber += i.client.full_name_or_company_and_code.to_s
+        end
+        row.item(:subscriber).value full_subscriber
+        row.item(:amount).value number_with_precision(i.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.amount.blank?
+        if i.instalment_id.blank?
+          row.item(:total).value number_with_precision(i.invoice.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice.blank?
+          row.item(:debt).value number_with_precision(i.invoice.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.invoice.blank?
+          row.item(:type).value PaymentType.code_with_param(i.payment_type)
+        else
+          row.item(:total).value number_with_precision(i.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.instalment.blank?
+          row.item(:debt).value number_with_precision(i.instalment.amount_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless i.instalment.blank?
+          row.item(:type).value PaymentType.code_with_param(i.payment_type) + ", " + I18n.t("activerecord.attributes.instalment_plan.instalment_no") + ": " + i.instalment.partial_instalment_no.to_s
+        end
+      end
+
+      # Store page subtotals
+      report.page.list(:default) do |list|
+        list.store.page_rows += 1
+        list.store.p_amount += i.amount.round(2) unless i.amount.blank?
+        if i.instalment_id.blank?
+          list.store.p_total += i.invoice.collected.round(2) unless i.invoice.blank?
+          list.store.p_debt += i.invoice.debt.round(2) unless i.invoice.blank?
+        else
+          list.store.p_total += i.instalment.amount_collected.round(2) unless i.instalment.blank?
+          list.store.p_debt += i.instalment.amount_debt.round(2) unless i.instalment.blank?
+        end
+      end
     end
   end
 end

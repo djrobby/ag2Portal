@@ -59,9 +59,18 @@
     if (_tab_active == "banks-tab") {
       $("#bank-order").show();
       $("#have-bank-account").hide();
+      $("#print_report_btn").show();
+      $("#print_csv_btn").show();
+    } else if (_tab_active == "pendings-tab") {
+      $("#bank-order").hide();
+      $("#have-bank-account").show();
+      $("#print_report_btn").hide();
+      $("#print_csv_btn").hide();
     } else {
       $("#bank-order").hide();
       $("#have-bank-account").show();
+      $("#print_report_btn").show();
+      $("#print_csv_btn").show();
     }
   }
 

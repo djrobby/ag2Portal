@@ -9,6 +9,11 @@ class InstalmentInvoice < ActiveRecord::Base
 
   has_one :instalment_plan, through: :instalment
 
+  # scope
+  scope :with_these_ids, -> ids {
+    includes([instalment: :client_payment], :invoice, [bill: :subscriber],[bill: :client])
+    .where(id: ids)
+  }
   #
   # Methods
   #

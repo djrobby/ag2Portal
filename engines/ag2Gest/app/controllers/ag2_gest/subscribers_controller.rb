@@ -972,7 +972,7 @@ module Ag2Gest
       #   subscriber_ids << i.result.id
       # end
       @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
-      session[:page_entries_show] = page_entries_info_page + '-' + page_entries_info_per_page + I18n.t(:of) + page_entries_info_total
+      session[:page_entries_show] = ' ' + page_entries_info_page + '-' + page_entries_info_per_page + I18n.t(:of) + page_entries_info_total
 
       # @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
       # @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
@@ -1476,71 +1476,73 @@ module Ag2Gest
       meter = !meter.blank? ? inverse_meter_search(meter) : meter
       street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
-      @search = Subscriber.search do
-        fulltext params[:search]
-        if session[:office] != '0'
-          with :office_id, session[:office]
-        end
-        if !letter.blank? && letter != "%"
-          with(:full_name).starting_with(letter)
-        end
-        if !subscriber_code.blank?
-          if subscriber_code.class == Array
-            with :subscriber_code, subscriber_code
-          else
-            with(:subscriber_code).starting_with(subscriber_code)
-          end
-        end
-        if !street_name.blank?
-          if street_name.class == Array
-            with :supply_address, street_name
-          else
-            with(:supply_address).starting_with(street_name)
-          end
-        end
-        # if !street_name.blank?
-        #   with :subscriber_id, street_name
-        # end
-        if !meter.blank?
-          if meter.class == Array
-            with :meter_code, meter
-          else
-            with(:meter_code).starting_with(meter)
-          end
-        end
-        if !caliber.blank?
-          with :caliber_id, caliber
-        end
-        if !use.blank?
-          with :use_id, use
-        end
-        if !tariff_type.blank?
-          with :tariff_type_id, tariff_type
-        end
-        if !filter.blank?
-          case filter
-            when 'all'
-              any_of do
-                with :subscribed, true
-                with :unsubscribed, true
-              end
-            when 'subscribed'
-              with :subscribed, true
-            when 'unsubscribed'
-              with :unsubscribed, true
-            when 'active'
-              with :activated, true
-            when 'inactive'
-              with :deactivated, true
-          end
-        end
-        # data_accessor_for(Subscriber).include = [:street_directory, :meter, :office, :use]
-        order_by :sort_no, :desc
-        paginate :page => params[:page] || 1, :per_page => Subscriber.count
-      end
+      search = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, Subscriber.count, false)
+
+      # @search = Subscriber.search do
+      #   fulltext params[:search]
+      #   if session[:office] != '0'
+      #     with :office_id, session[:office]
+      #   end
+      #   if !letter.blank? && letter != "%"
+      #     with(:full_name).starting_with(letter)
+      #   end
+      #   if !subscriber_code.blank?
+      #     if subscriber_code.class == Array
+      #       with :subscriber_code, subscriber_code
+      #     else
+      #       with(:subscriber_code).starting_with(subscriber_code)
+      #     end
+      #   end
+      #   if !street_name.blank?
+      #     if street_name.class == Array
+      #       with :supply_address, street_name
+      #     else
+      #       with(:supply_address).starting_with(street_name)
+      #     end
+      #   end
+      #   # if !street_name.blank?
+      #   #   with :subscriber_id, street_name
+      #   # end
+      #   if !meter.blank?
+      #     if meter.class == Array
+      #       with :meter_code, meter
+      #     else
+      #       with(:meter_code).starting_with(meter)
+      #     end
+      #   end
+      #   if !caliber.blank?
+      #     with :caliber_id, caliber
+      #   end
+      #   if !use.blank?
+      #     with :use_id, use
+      #   end
+      #   if !tariff_type.blank?
+      #     with :tariff_type_id, tariff_type
+      #   end
+      #   if !filter.blank?
+      #     case filter
+      #       when 'all'
+      #         any_of do
+      #           with :subscribed, true
+      #           with :unsubscribed, true
+      #         end
+      #       when 'subscribed'
+      #         with :subscribed, true
+      #       when 'unsubscribed'
+      #         with :unsubscribed, true
+      #       when 'active'
+      #         with :activated, true
+      #       when 'inactive'
+      #         with :deactivated, true
+      #     end
+      #   end
+      #   # data_accessor_for(Subscriber).include = [:street_directory, :meter, :office, :use]
+      #   order_by :sort_no, :desc
+      #   paginate :page => params[:page] || 1, :per_page => Subscriber.count
+      # end
 
       subscriber_ids = []
-      @search.hits.each do |i|
+      search.hits.each do |i|
         subscriber_ids << i.result.id
       end
       @subscriber_report = Subscriber.with_these_ids(subscriber_ids)

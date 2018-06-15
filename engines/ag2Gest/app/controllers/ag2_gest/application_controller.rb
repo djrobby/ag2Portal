@@ -22,6 +22,7 @@ module Ag2Gest
       session[:ifilter_show_tariff] = nil
       session[:ifilter_index_tariff] = nil
       session[:ifilter_show_account] = nil
+      session[:page_entries_show] = nil
       session[:Period] = nil
       session[:PeriodB] = nil
       session[:Group] = nil

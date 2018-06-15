@@ -216,7 +216,7 @@
 
       if (data.invoice_from_offer[0]) {
         $("#link-bill-commercial").removeClass("hide");
-        $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+        $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?BillNo=" + data.bill.bill_no);
         $("#link-bill-commercial").text(data.bill_no);
       };
 
@@ -273,7 +273,7 @@
       $("#void-bill-connection").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/void_bill_connection");
       $("#debt").text(data.client_debt);
       $("#link-bill").removeClass("hide");
-      $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+      $("#link-bill").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?BillNo=" + data.bill.bill_no);
       $("#link-bill").text(data.bill_no);
       $("#bill-doc").removeClass("hide");
       $("#bill-doc").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/bills/" + data.bill.id + "/biller_connection_contract_pdf.pdf");
@@ -296,7 +296,7 @@
     $("#form_new_invoice_from_offer").bind("ajax:success", function(xhr, data, status) {
       $("#new-invoice-from-offer").modal('hide');
       $("#link-bill-commercial").removeClass("hide");
-      $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?No=" + data.bill.bill_no);
+      $("#link-bill-commercial").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/client_payments?BillNo=" + data.bill.bill_no);
       $("#link-bill-commercial").text(data.bill_no);
       $("#contract_pdf").removeClass("hide");
       $("#contract_pdf").attr("href","/<%= params[:locale] %>/ag2_gest/<%= params[:locale] %>/contracting_requests/" + data.contracting_request.id + "/contract_pdf.pdf");

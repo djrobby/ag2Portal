@@ -53,6 +53,10 @@ class ClientPayment < ActiveRecord::Base
             min(created_by) created_by, min(updated_by) updated_by, min(sepa_return_code_id) sepa_return_code_id")
     .where(id: cp).in_bank.group(:bill_id)
   }
+  scope :with_these_ids, -> ids {
+    includes([instalment: :instalment_plan], :invoice, :subscriber, :client)
+    .where(id: ids)
+  }
 
   # Callbacks
   # before_save :check_debt
@@ -257,37 +261,39 @@ class ClientPayment < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |cp|
-        date = cp.formatted_date(cp.payment_date) unless cp.payment_date.blank?
-        date_confirm = cp.formatted_date(cp.confirmation_date) unless cp.confirmation_date.blank?
-        full_subscriber = ""
-        if !cp.subscriber.blank?
-          full_subscriber += cp.subscriber.full_name_or_company_and_code.to_s
-        else
-          full_subscriber += cp.client.full_name_or_company_and_code.to_s
+      ClientPayment.uncached do
+        array.find_each do |cp|
+          date = cp.formatted_date(cp.payment_date) unless cp.payment_date.blank?
+          date_confirm = cp.formatted_date(cp.confirmation_date) unless cp.confirmation_date.blank?
+          full_subscriber = ""
+          if !cp.subscriber.blank?
+            full_subscriber += cp.subscriber.full_name_or_company_and_code.to_s
+          else
+            full_subscriber += cp.client.full_name_or_company_and_code.to_s
+          end
+          amount = cp.number_with_precision(cp.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.amount.blank?
+          payment_type = PaymentType.code_with_param(cp.payment_type)
+          if cp.instalment_id.blank?
+            total = cp.number_with_precision(cp.invoice.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
+            debt = cp.number_with_precision(cp.invoice.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
+            instalment = ""
+          else
+            total = cp.number_with_precision(cp.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
+            debt = cp.number_with_precision(cp.instalment.amount_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
+            instalment = cp.instalment.partial_instalment_no.to_s
+          end
+          csv << [  cp.id,
+                    cp.full_no,
+                    cp.try(:invoice).try(:old_no_based_real_no),
+                    date,
+                    date_confirm,
+                    full_subscriber,
+                    payment_type,
+                    instalment,
+                    amount,
+                    total,
+                    debt]
         end
-        amount = cp.number_with_precision(cp.amount, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.amount.blank?
-        payment_type = PaymentType.code_with_param(cp.payment_type)
-        if cp.instalment_id.blank?
-          total = cp.number_with_precision(cp.invoice.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
-          debt = cp.number_with_precision(cp.invoice.debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.invoice.blank?
-          instalment = ""
-        else
-          total = cp.number_with_precision(cp.instalment.amount_collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
-          debt = cp.number_with_precision(cp.instalment.amount_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") unless cp.instalment.blank?
-          instalment = cp.instalment.partial_instalment_no.to_s
-        end
-        csv << [  cp.id,
-                  cp.full_no,
-                  cp.try(:invoice).try(:old_no_based_real_no),
-                  date,
-                  date_confirm,
-                  full_subscriber,
-                  payment_type,
-                  instalment,
-                  amount,
-                  total,
-                  debt]
       end
     end
   end

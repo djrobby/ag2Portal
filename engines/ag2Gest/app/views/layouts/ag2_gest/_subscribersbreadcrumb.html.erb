@@ -52,9 +52,14 @@
           <i class="icon-fast-forward"></i>
         <% end %>
       </li>
+      <li>
+        <span class="divider"></span>
+      </li>
+      <li>
+        <%= session[:page_entries_show] %>
+      </li>
     <% end %>
   <% end %>
-  <%= session[:page_entries_show] %>
   <!-- Close -->
   <a class="close" href="<%= ag2_gest.root_path %>">&#215;</a>
 </ul>
