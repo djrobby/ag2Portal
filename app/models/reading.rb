@@ -946,8 +946,11 @@ class Reading < ActiveRecord::Base
     prev_reading_subscriber_tariff_tariff = prev_reading_tariff.tariff
 
     #+++ Fixed +++
-    previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
-    current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
+    fixed_fee_qty = fixed_fee_quantity
+    # previous_fixed_fee_qty = (billing_frequency.total_months * fixed_previous_coefficient).round
+    # current_fixed_fee_qty = billing_frequency.total_months - previous_fixed_fee_qty
+    previous_fixed_fee_qty = (fixed_fee_qty * fixed_previous_coefficient).round
+    current_fixed_fee_qty = fixed_fee_qty - previous_fixed_fee_qty
     tariff_code = ''
     tariff_price = 0
     # Previous
