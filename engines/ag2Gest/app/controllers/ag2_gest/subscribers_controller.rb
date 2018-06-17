@@ -961,9 +961,6 @@ module Ag2Gest
       # end
       # @subscribers = @search.results
       # @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
-      page_entries_info_page = (params[:page] || 1).to_s
-      page_entries_info_per_page = (per_page || 10).to_s
-      page_entries_info_total = search.total.to_s
       @reports = reports_array
       @subscribers = search.results
 
@@ -971,8 +968,19 @@ module Ag2Gest
       # search_atat.hits.each do |i|
       #   subscriber_ids << i.result.id
       # end
-      @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
-      session[:page_entries_show] = ' ' + page_entries_info_page + '-' + page_entries_info_per_page + I18n.t(:of) + page_entries_info_total
+      # @@subscribers = Subscriber.where(id: @subscribers.map(&:id)).by_code_desc
+      session[:page_entries] = @subscribers.map(&:id)
+      page_entries_info_page = (params[:page] || 1)
+      page_entries_info_per_page = (per_page || 10)
+      page_entries_info_total = search.total
+      page_entries = ' ' + I18n.t('activerecord.models.subscriber', count: search.total)
+      if page_entries_info_total <= page_entries_info_per_page
+        page_entries = page_entries_info_total.to_s + page_entries
+      else
+        page_entries = page_entries_info_page.to_s + '-' + page_entries_info_per_page.to_s + I18n.t(:of) + page_entries_info_total.to_s + page_entries
+      end
+      page_entries = ' ' + page_entries
+      session[:page_entries_show] = page_entries
 
       # @@subscribers = Subscriber.where(id: subscriber_ids).by_code_desc
       # @@subscribers = Subscriber.with_these_ids(subscriber_ids).by_code_desc
@@ -996,20 +1004,39 @@ module Ag2Gest
       @active_ifilter_account = filter_account
 
       @breadcrumb = 'read'
-      if !@@subscribers.nil?
-        begin
-          @subscriber = @@subscribers.find(params[:id])
-          @nav = @@subscribers
-        rescue
-          @subscriber = Subscriber.find(params[:id])
-          @nav = Subscriber
-        end
-      else
-        @subscriber = Subscriber.find(params[:id])
-        @nav = Subscriber
-      end
+      # if !@@subscribers.nil?
+      #   begin
+      #     @subscriber = @@subscribers.find(params[:id])
+      #     @nav = @@subscribers
+      #   rescue
+      #     @subscriber = Subscriber.find(params[:id])
+      #     @nav = Subscriber
+      #   end
+      # else
+      #   @subscriber = Subscriber.find(params[:id])
+      #   @nav = Subscriber
+      # end
       # @subscriber = Subscriber.find(params[:id])
       # @subscriber = Subscriber.find_with_joins(params[:id]).first
+
+      # page_entries = session[:page_entries]
+      @nav = session[:page_entries]
+      @subscriber = Subscriber.find(params[:id])
+
+      # if !page_entries.empty?
+      #   begin
+      #     @subscriber = page_entries.find(params[:id])
+      #     @nav = page_entries
+      #   rescue
+      #     @subscriber = Subscriber.find(params[:id])
+      #     @nav = Subscriber.by_code_desc.pluck(:id)
+      #     # @nav = Subscriber
+      #   end
+      # else
+      #   @subscriber = Subscriber.find(params[:id])
+      #   @nav = Subscriber.by_code_desc.pluck(:id)
+      #   # @nav = Subscriber
+      # end
 
       @service_point = @subscriber.service_point rescue nil
       @meter = @subscriber.meter rescue nil

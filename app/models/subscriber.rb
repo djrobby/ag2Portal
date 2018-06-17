@@ -972,6 +972,37 @@ class Subscriber < ActiveRecord::Base
     dataset.by_code_desc.last
   end
 
+  # Using received sorted by code (descendant) array of Ids
+  def goto_first_a(ids=[])
+    Subscriber.find(ids.first) rescue Subscriber.find(self.id)
+  end
+  def goto_prev_a(ids=[])
+    i = ids.index(self.id)
+    if i == 0 || i.nil?
+      # Index is the first one or doesn't exist, mustn't go backward
+      Subscriber.find(self.id)
+    else
+      # GoTo previous element
+      Subscriber.find(ids[i-1])
+    end
+  end
+  def goto_next_a(ids=[])
+    i = ids.index(self.id)
+    if i == ids.length-1 || i.nil?
+      # Index is the last one or doesn't exist, mustn't go backward
+      Subscriber.find(self.id)
+    else
+      # GoTo next element
+      Subscriber.find(ids[i+1])
+    end
+  end
+  def goto_last_a(ids=[])
+    Subscriber.find(ids.last) rescue Subscriber.find(self.id)
+  end
+
+  #
+  # Sunspot searchable block
+  #
   searchable do
     text :subscriber_code, :to_label, :fiscal_id, :phone, :full_name
     # text :street_name do
