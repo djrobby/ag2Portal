@@ -881,7 +881,8 @@ class Reading < ActiveRecord::Base
     bp_billing_starting_date = billing_period.billing_starting_date
     bp_billing_ending_date = billing_period.billing_ending_date
     if sub_starting_at > bp_billing_starting_date
-      qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
+      # qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
+      qty = ((bp_billing_ending_date - sub_starting_at).days.seconds / 1.month.seconds).round
     end
     return qty
   end
