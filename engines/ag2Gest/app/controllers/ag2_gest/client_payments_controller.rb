@@ -567,7 +567,7 @@ module Ag2Gest
       # Loop thru invoices and create payments
       invoices.each do |i|
         client_bank_account = i.client.active_bank_account
-        if !client_bank_account.blank? && i.totals > 0
+        if !client_bank_account.blank? && i.debt > 0
           client_payment = ClientPayment.new(receipt_no: receipt_no, payment_type: ClientPayment::BANK, bill_id: i.bill_id, invoice_id: i.id,
                                payment_method_id: payment_method_id, client_id: i.client.id, subscriber_id: i.subscriber.id,
                                payment_date: Time.now, confirmation_date: nil, amount: i.debt, instalment_id: nil,
