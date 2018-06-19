@@ -10,6 +10,15 @@
   var _active_tab = 'pendings-tab';
   var _cashier_shown = false;
 
+  function emtpy_filters() {
+    if ($("#No").val() == "" &&
+        $("#BillNo").val() == "") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   function show_cashier() {
     if (_active_tab == "pendings-tab") {
       <% if !@bills_pending.blank? %>
@@ -421,7 +430,10 @@
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
     // $("#Period").select2("val", "<%#= params[:billing_period] %>");
-    $("#initial-cash").val("<%= @opening_balance %>");
+    //$("#initial-cash").val("<%= @opening_balance %>");
+    if (!emtpy_filters()) {
+      $(".icon-refresh-link").trigger("click");
+    }
   });
 
   jQuery(function($) {
