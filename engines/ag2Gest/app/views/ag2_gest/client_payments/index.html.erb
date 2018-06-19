@@ -493,7 +493,7 @@
       // AJAX
       $("#submit_btn").trigger("click");
     });
-    
+
     // when #print_report_btn is clicked
     $("#print_report_btn").click(function() {
       // make a POST call and get report
@@ -1119,6 +1119,8 @@
   $(".btn-payment").click(function(){
     var elements = $( "input:checked" );
     if (elements.length <= 0) return false;
+
+    // Instalments & Others
     var invoices_id = [];
     var debts_array = [];
     for(var i=0;typeof(elements[i])!='undefined';invoices_id.push(elements[i++].getAttribute('value')));
@@ -1131,11 +1133,30 @@
     }
     $(".debt-total").text(total_debt.format(2, 3, _delimiter, _separator));
 
+    // Banks
+    var invoices_id_bank = [];
+    //var debts_array_bank = [];
+    var data_debt_bank = 0.0;
+    var total_debt_bank = 0.0;
+    for (var i = 0; i < elements.length; i++) {
+      if (typeof(elements[i]) != 'undefined') {
+        data_debt_bank = elements[i].getAttribute('data-debt');
+        if (data_debt_bank != null) {
+          data_debt_bank = parseFloat(data_debt_bank);
+          if (data_debt_bank > 0) {
+            total_debt_bank += data_debt_bank;
+            invoices_id_bank.push(elements[i].getAttribute('value'));
+          }
+        }
+      }
+    }
+    $(".debt-total-bank").text(total_debt_bank.format(2, 3, _delimiter, _separator));
+
     // Update Ids in the
-    $("#client_payment_cash_invoices_ids").val(invoices_id.filter(i=>i!=null))    // cash
-    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))   // others
-    $("#client_payment_bank_invoices_ids").val(invoices_id.filter(i=>i!=null))    // bank
-    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))             // instalments
+    $("#client_payment_cash_invoices_ids").val(invoices_id.filter(i=>i!=null))        // cash
+    $("#client_payment_other_invoices_ids").val(invoices_id.filter(i=>i!=null))       // others
+    $("#client_payment_bank_invoices_ids").val(invoices_id_bank.filter(i=>i!=null))   // bank
+    $("#instalment_invoices_ids").val(invoices_id.filter(i=>i!=null))                 // instalments
   });
 
   $(".btn-cash").click(function (e) {

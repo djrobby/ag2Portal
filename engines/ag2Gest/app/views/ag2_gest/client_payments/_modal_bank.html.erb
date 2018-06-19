@@ -22,7 +22,7 @@
       <div class="control-group string required">
         <label class="form-label"><%= t('activerecord.attributes.client_payment.to_collect') %></label>
         <div class="controls highlighted bolded">
-          <span class="debt-total">0,0000</span>
+          <span class="debt-total-bank">0,0000</span>
         </div>
       </div>
       <%= f.input :receipt_no, required: true, label: I18n.t("activerecord.attributes.client_payment.bank_order_no"), as: :string, inline_label: "Yes", input_html: { class: 'mid-text-field', maxlength: 6, data: { validation: "required", "validation-error-msg" => "#{e}" } }, label_html: { class: 'form-label' } %>
