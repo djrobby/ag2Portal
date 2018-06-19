@@ -85,6 +85,8 @@ es:
         quantity_c: "C_"
         company_bank: "Esta factura puede hacerse efectiva en:"
         inhabitants: "Numero de personas en la vivienda:"
+        group: "Grupo"
+        confirmed: "Confirmadas"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

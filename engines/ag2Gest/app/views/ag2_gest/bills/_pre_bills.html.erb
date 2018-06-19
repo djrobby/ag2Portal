@@ -10,12 +10,12 @@
 <table class="table table-condensed table-striped shrinked">
   <thead>
     <tr>
-      <th align="right">Grupo</th>
-      <th align="center">Fecha</th>
-      <th align="right">Recibos</th>
-      <th align="center">Periodo</th>
-      <th align="center">Confirmadas</th>
-      <th align="right">Total</th>
+      <th align="right"><%= I18n.t("activerecord.attributes.bill.group") %></th>
+      <th align="center"><%= I18n.t("activerecord.attributes.bill.bill_date") %></th>
+      <th align="right"><%= I18n.t("ag2_gest.invoices.index.title") %></th>
+      <th align="center"><%= I18n.t("activerecord.attributes.invoice.billing_period") %></th>
+      <th align="center"><%= I18n.t("activerecord.attributes.bill.confirmed") %></th>
+      <th align="right"><%= I18n.t("activerecord.attributes.bill.total") %></th>
       <th></th>
     </tr>
   </thead>

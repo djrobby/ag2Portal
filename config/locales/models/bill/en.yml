@@ -79,6 +79,8 @@ en:
         quantity_c: "Q_"
         company_bank: "This invoice can be made effective in:"
         inhabitants: "Number of people in the house:"
+        group: "Group"
+        confirmed: "Confirmed"
       report:
         billable_concept: "Conceptos Facturados"
         billing_period: "Periodo facturado"

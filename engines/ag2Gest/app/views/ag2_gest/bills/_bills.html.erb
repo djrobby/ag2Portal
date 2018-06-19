@@ -109,7 +109,7 @@
 <div class="row-fluid grey-frame">
   <b>
   <div class="span3"><h5><%= I18n.t("ag2_gest.bills.index.totals") %></h5></div>
-  <div class="span3"><h5><%= I18n.t("ag2_gest.bills.index.total_bills") %>: <%= @totals.bills %></h5></div>
+  <div class="span3"><h5><%= I18n.t("ag2_gest.invoices.index.title") %>: <%= @totals.bills %></h5></div>
   <div class="span3" align="center"><h5><%= I18n.t("ag2_gest.bills.index.total_consumptions") %>: <%= @totals.consumptions.to_i %></h5></div>
   <div class="span3" align="right"><h5><%= I18n.t("ag2_gest.bills.index.total_total") %>: <%= number_with_precision(@totals.totals, precision: 2, delimiter: I18n.locale == :es ? "." : ",") %></h5></div>
   </b>
