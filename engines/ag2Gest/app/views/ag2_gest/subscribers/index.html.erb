@@ -73,6 +73,7 @@
     $("#Caliber").select2("val", "<%= params[:Caliber] %>");
     $("#Use").select2("val", "<%= params[:Use] %>");
     $("#TariffType").select2("val", "<%= params[:TariffType] %>");
+    $("#ReadingRoute").select2("val", "<%= params[:ReadingRoute] %>");
     $("#search").val("<%= params[:search] %>");
   });
 
@@ -86,6 +87,7 @@
       $("#Caliber").select2("val", "");
       $("#Use").select2("val", "");
       $("#TariffType").select2("val", "");
+      $("#ReadingRoute").select2("val", "");
       $("#search").val("");
       a = "<%= su_remove_filters %>";
       // setupSubscribersSelect2(a);
@@ -174,6 +176,9 @@
           <!-- TariffType -->
           <%= label_tag I18n.t("ag2_gest.subscribers.index.tariff_type"), nil, :class => 'form-label-under-sel2' %>
           <%= select_tag "TariffType", options_from_collection_for_select(@tariff_types, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
+          <!-- Reading route -->
+          <%= label_tag I18n.t("ag2_gest.subscribers.index.route"), nil, :class => 'form-label-under-sel2' %>
+          <%= select_tag "ReadingRoute", options_from_collection_for_select(@reading_routes, "id", "to_label"), :prompt => "", :class => 'x-large-text-field shrinked sel2' %>
           <!-- Others -->
           <%= label_tag I18n.t("ag2_gest.subscribers.index.label_others"), nil, :class => 'form-label-under-sel2' %>
           <%= text_field_tag :search, params[:search], :class => 'x-large-text-field shrinked' %>

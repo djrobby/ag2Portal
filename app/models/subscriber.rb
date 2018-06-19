@@ -1021,6 +1021,7 @@ class Subscriber < ActiveRecord::Base
     string :full_name
     integer :service_point_id
     integer :meter_id
+    integer :reading_route_id
     integer :billing_frequency_id
     integer :use_id
     integer :office_id, :multiple => true

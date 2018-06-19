@@ -877,6 +877,7 @@ module Ag2Gest
       caliber = params[:Caliber]
       use = params[:Use]
       tariff_type = params[:TariffType]
+      reading_route = params[:ReadingRoute]
       letter = params[:letter]
       # OCO
       init_oco if !session[:organization]
@@ -885,6 +886,7 @@ module Ag2Gest
       @calibers = Caliber.by_caliber if @calibers.nil?
       @uses = Use.by_code if @uses.nil?
       @tariff_types = TariffType.by_code if @tariff_types.nil?
+      @reading_routes = reading_routes_dropdown
       #@service_points = service_points_dropdown if @service_points.nil?
       #@meters = meters_dropdown if @meters.nil?
 
@@ -894,7 +896,7 @@ module Ag2Gest
       street_name = !street_name.blank? ? inverse_street_name_search(street_name) : street_name
 
       # Set searches to use in @subscribers & @@subscribers
-      search = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, per_page, true)
+      search = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, reading_route, filter, per_page, true)
       # search_atat = subscribers_search(params[:search], session[:office], letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, Subscriber.count, false)
 
       # @search = Subscriber.search do
@@ -1798,7 +1800,7 @@ module Ag2Gest
     ##################################
     # Begin Region: Sunspot searches #
     ##################################
-    def subscribers_search(search, office, letter, subscriber_code, street_name, meter, caliber, use, tariff_type, filter, per_page=10, data_accessor)
+    def subscribers_search(search, office, letter, subscriber_code, street_name, meter, caliber, use, tariff_type, reading_route, filter, per_page=10, data_accessor)
       Subscriber.search do
         fulltext search
         if office != '0'
@@ -1840,6 +1842,9 @@ module Ag2Gest
         if !tariff_type.blank?
           with :tariff_type_id, tariff_type
         end
+        if !reading_route.blank?
+          with :reading_route_id, reading_route
+        end
         if !filter.blank?
           case filter
             when 'all'
@@ -1870,6 +1875,9 @@ module Ag2Gest
 
     private
 
+    ################################
+    # Begin Region: Fill dropdowns #
+    ################################
     def towns_dropdown
       Town.order('towns.name').joins(:province) \
           .select("towns.id, CONCAT(towns.name, ' (', provinces.name, ')') to_label_")
@@ -1959,6 +1967,42 @@ module Ag2Gest
       return _projects, _oco
     end
 
+    def service_points_dropdown
+      if session[:office] != '0'
+        ServicePoint.where(office_id: session[:office]).order(:street_directory_id)
+      elsif session[:company] != '0'
+        ServicePoint.where(company_id: session[:company]).order(:street_directory_id)
+      elsif session[:organization] != '0'
+        ServicePoint.where(organization_id: session[:organization]).order(:street_directory_id)
+      else
+        ServicePoint.order(:street_directory_id)
+      end
+    end
+
+    def meters_dropdown
+      if session[:office] != '0'
+        Meter.where(office_id: session[:office]).order(:meter_code)
+      elsif session[:company] != '0'
+        Meter.where(company_id: session[:company]).order(:meter_code)
+      else
+        Meter.order(:meter_code)
+      end
+    end
+
+    def reading_routes_dropdown
+      if session[:office] != '0'
+        ReadingRoute.by_office(session[:office].to_i)
+      else
+        ReadingRoute.by_code
+      end
+    end
+    ################################
+    # End Region: Fill dropdowns #
+    ################################
+
+    #############################
+    # Begin Region: Fill arrays #
+    #############################
     def banks_array
       _banks = banks_dropdown
       _array = []
@@ -2048,91 +2092,6 @@ module Ag2Gest
       _array
     end
 
-    def void_bill(bill)
-      bill_cancel = bill.dup
-      bill_cancel.bill_date = Date.today
-      bill_cancel.bill_no = bill_next_no(bill.project_id)
-      if bill_cancel.save
-        bill.invoices.each do |invoice|
-          new_invoice = invoice.dup
-          new_invoice.invoice_date = Date.today
-          new_invoice.payday_limit = nil
-          new_invoice.invoice_no = void_invoice_next_no(invoice.biller_id, bill.project.office_id)
-          new_invoice.bill_id = bill_cancel.id
-          new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
-          new_invoice.invoice_status_id = InvoiceStatus::PENDING
-          new_invoice.original_invoice_id = invoice.id
-          new_invoice.save
-          invoice.invoice_items.each do |item|
-            new_item = item.dup
-            new_item.invoice_id = new_invoice.id
-            new_item.price = new_item.price * -1
-            new_item.save
-          end
-          _i = Invoice.find(new_invoice.id)
-          _i.totals = _i.total
-          _i.save
-        end
-        bill.reading.update_attributes(bill_id: nil)
-        return bill_cancel
-      else
-        return false
-      end
-    end
-
-    def setup_no(no)
-      no = no[0] != '%' ? '%' + no : no
-      no = no[no.length-1] != '%' ? no + '%' : no
-    end
-
-    def inverse_no_search(no)
-      _numbers = []
-      Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
-        _numbers = _numbers << i.subscriber_code
-      end
-      _numbers = _numbers.blank? ? no : _numbers
-    end
-
-    def inverse_meter_search(meter)
-      _numbers = []
-      no = setup_no(meter)
-      Meter.where('meter_code LIKE ?', "#{no}").first(1000).each do |i|
-        _numbers = _numbers << i.meter_code
-      end
-      _numbers = _numbers.blank? ? meter : _numbers
-    end
-
-    def inverse_street_name_search(supply_address)
-      _numbers = []
-      no = setup_no(supply_address)
-      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
-        _numbers = _numbers << i.supply_address
-      end
-      _numbers = _numbers.blank? ? supply_address : _numbers
-    end
-
-    def service_points_dropdown
-      if session[:office] != '0'
-        ServicePoint.where(office_id: session[:office]).order(:street_directory_id)
-      elsif session[:company] != '0'
-        ServicePoint.where(company_id: session[:company]).order(:street_directory_id)
-      elsif session[:organization] != '0'
-        ServicePoint.where(organization_id: session[:organization]).order(:street_directory_id)
-      else
-        ServicePoint.order(:street_directory_id)
-      end
-    end
-
-    def meters_dropdown
-      if session[:office] != '0'
-        Meter.where(office_id: session[:office]).order(:meter_code)
-      elsif session[:company] != '0'
-        Meter.where(company_id: session[:company]).order(:meter_code)
-      else
-        Meter.order(:meter_code)
-      end
-    end
-
     def meter_locations_array
       _d = MeterLocation.all
       _array = []
@@ -2201,7 +2160,76 @@ module Ag2Gest
       end
       _array
     end
+    #############################
+    # End Region: Fill arrays #
+    #############################
 
+    def void_bill(bill)
+      bill_cancel = bill.dup
+      bill_cancel.bill_date = Date.today
+      bill_cancel.bill_no = bill_next_no(bill.project_id)
+      if bill_cancel.save
+        bill.invoices.each do |invoice|
+          new_invoice = invoice.dup
+          new_invoice.invoice_date = Date.today
+          new_invoice.payday_limit = nil
+          new_invoice.invoice_no = void_invoice_next_no(invoice.biller_id, bill.project.office_id)
+          new_invoice.bill_id = bill_cancel.id
+          new_invoice.invoice_operation_id = InvoiceOperation::CANCELATION
+          new_invoice.invoice_status_id = InvoiceStatus::PENDING
+          new_invoice.original_invoice_id = invoice.id
+          new_invoice.save
+          invoice.invoice_items.each do |item|
+            new_item = item.dup
+            new_item.invoice_id = new_invoice.id
+            new_item.price = new_item.price * -1
+            new_item.save
+          end
+          _i = Invoice.find(new_invoice.id)
+          _i.totals = _i.total
+          _i.save
+        end
+        bill.reading.update_attributes(bill_id: nil)
+        return bill_cancel
+      else
+        return false
+      end
+    end
+
+    def setup_no(no)
+      no = no[0] != '%' ? '%' + no : no
+      no = no[no.length-1] != '%' ? no + '%' : no
+    end
+
+    def inverse_no_search(no)
+      _numbers = []
+      Subscriber.where('subscriber_code LIKE ?', "#{no}").each do |i|
+        _numbers = _numbers << i.subscriber_code
+      end
+      _numbers = _numbers.blank? ? no : _numbers
+    end
+
+    def inverse_meter_search(meter)
+      _numbers = []
+      no = setup_no(meter)
+      Meter.where('meter_code LIKE ?', "#{no}").first(1000).each do |i|
+        _numbers = _numbers << i.meter_code
+      end
+      _numbers = _numbers.blank? ? meter : _numbers
+    end
+
+    def inverse_street_name_search(supply_address)
+      _numbers = []
+      no = setup_no(supply_address)
+      SubscriberSupplyAddress.where('supply_address LIKE ?', "#{no}").first(1000).each do |i|
+        _numbers = _numbers << i.supply_address
+      end
+      _numbers = _numbers.blank? ? supply_address : _numbers
+    end
+
+    ###############################
+    # Begin Region: Filter states #
+    ###############################
     def manage_filter_state_show
       if params[:ifilter_show]
         session[:ifilter_show] = params[:ifilter_show]
@@ -2215,7 +2243,6 @@ module Ag2Gest
       end
     end
 
-    # Keeps filter state
     def manage_filter_state
       # ifilter
       if params[:ifilter]
@@ -2265,6 +2292,12 @@ module Ag2Gest
       elsif session[:TariffType]
         params[:TariffType] = session[:TariffType]
       end
+      # reading_route
+      if params[:ReadingRoute]
+        session[:ReadingRoute] = params[:ReadingRoute]
+      elsif session[:ReadingRoute]
+        params[:ReadingRoute] = session[:ReadingRoute]
+      end
       # letter
       if params[:letter]
         if params[:letter] == '%'
@@ -2286,6 +2319,7 @@ module Ag2Gest
       params[:Caliber] = ""
       params[:Use] = ""
       params[:TariffType] = ""
+      params[:ReadingRoute] = ""
       return " "
     end
 
@@ -2297,6 +2331,10 @@ module Ag2Gest
       params[:Caliber] = session[:Caliber]
       params[:Use] = session[:Use]
       params[:TariffType] = session[:TariffType]
+      params[:ReadingRoute] = session[:ReadingRoute]
     end
+    ###############################
+    # End Region: Filter states #
+    ###############################
   end
 end

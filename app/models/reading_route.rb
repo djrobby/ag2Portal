@@ -22,12 +22,12 @@ class ReadingRoute < ActiveRecord::Base
   #
   scope :by_office, -> o { where(office_id: o).by_code }
   scope :for_dropdown_by_office, -> office {
-    select("id, CONCAT(CONCAT(SUBSTR(routing_code,1,4), '-', SUBSTR(routing_code,5,6)), ' (', name, ')') to_label_")
+    select("id, CONCAT(CONCAT(SUBSTR(routing_code,1,4), '-', SUBSTR(routing_code,5,6)), ' ', name) to_label_")
     .where(office_id: office)
     .by_code
   }
   scope :for_dropdown, -> {
-    select("id, CONCAT(CONCAT(SUBSTR(routing_code,1,4), '-', SUBSTR(routing_code,5,6)), ' (', name, ')') to_label_")
+    select("id, CONCAT(CONCAT(SUBSTR(routing_code,1,4), '-', SUBSTR(routing_code,5,6)), ' ', name) to_label_")
     .by_code
   }
 
@@ -40,7 +40,7 @@ class ReadingRoute < ActiveRecord::Base
   end
 
   def to_label
-    "#{full_code} (#{name})"
+    "#{full_code} #{name}"
   end
 
   def full_code

@@ -14,6 +14,7 @@ es:
         use: "Uso"
         billing_frequency: "Frequencia de facturación"
         tariff_type: "Tipo de tarifa"
+        route: "Ruta de lectura"
         label_others: "Otros"
         add_tariff: "Añadir tarifas"
         active_only: "Activos"

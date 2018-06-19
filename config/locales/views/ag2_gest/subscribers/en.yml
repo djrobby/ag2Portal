@@ -14,6 +14,7 @@ en:
         use: "Use"
         billing_frequency: "Billing frequency"
         tariff_type: "Tariff type"
+        route: "Reading route"
         label_others: "Otros"
         add_tariff: "Add Tariff"
         active_only: "Active"
