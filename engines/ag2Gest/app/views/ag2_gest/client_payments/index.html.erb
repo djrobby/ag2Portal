@@ -13,17 +13,17 @@
   function emtpy_filters() {
     if ($("#No").val() == "" &&
         $("#BillNo").val() == "" &&
-        $("#Project").select2("val") == "" &&
-        $("#Period").select2("val") == "" &&
-        $("#Client").select2("val") == "" &&
-        $("#Subscriber").select2("val") == "" &&
+        $("#Project").val() == "" &&
+        $("#Period").val() == "" &&
+        $("#Client").val() == "" &&
+        $("#Subscriber").val() == "" &&
         $("#StreetName").val() == "" &&
-        $("#Biller").select2("val") == "" &&
+        $("#Biller").val() == "" &&
         $("#From").val() == "" &&
         $("#To").val() == "" &&
         $("#BankAccount").val() == "" &&
         $("#BankOrder").val() == "" &&
-        $("#User").select2("val") == "" ) {
+        $("#User").val() == "" ) {
       return true;
     } else {
       return false;
@@ -428,21 +428,21 @@
     $("#active_tab").val("<%= params[:active_tab] %>");
     $("#No").val("<%= params[:No] %>");
     $("#BillNo").val("<%= params[:BillNo] %>");
-    $("#Project").select2("val", "<%= params[:Project] %>");
-    $("#Period").select2("val", "<%= params[:Period] %>");
-    $("#Client").select2("val", "<%= params[:Client] %>");
+    $("#Project").val("<%= params[:Project] %>");
+    $("#Period").val("<%= params[:Period] %>");
+    $("#Client").val("<%= params[:Client] %>");
     // $("#ClientCode").val("<%#= params[:ClientCode] %>");
     // $("#ClientFiscal").val("<%#= params[:ClientFiscal] %>");
-    $("#Subscriber").select2("val", "<%= params[:Subscriber] %>");
+    $("#Subscriber").val("<%= params[:Subscriber] %>");
     // $("#SubscriberCode").val("<%#= params[:SubscriberCode] %>");
     // $("#SubscriberFiscal").val("<%#= params[:SubscriberFiscal] %>");
     $("#StreetName").val("<%= params[:StreetName] %>");
-    $("#Biller").select2("val", "<%= params[:Biller] %>");
+    $("#Biller").val("<%= params[:Biller] %>");
     $("#From").val("<%= params[:From] %>");
     $("#To").val("<%= params[:To] %>");
     $("#BankAccount").val("<%= params[:BankAccount] %>");
     $("#BankOrder").val("<%= params[:BankOrder] %>");
-    $("#User").select2("val", "<%= params[:User] %>");
+    $("#User").val("<%= params[:User] %>");
     //$("#initial-cash").val("<%#= @opening_balance %>");
 
     if (!emtpy_filters()) {
