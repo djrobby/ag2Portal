@@ -413,6 +413,10 @@ module ModelsModule
     text.tr(ENCODING, ALPHABET)
   end
 
+  def self.encode_(text)
+    text.tr(ALPHABET, ENCODING)
+  end
+
   def self.decode_(text)
     text.tr(ENCODING, ALPHABET)
   end
