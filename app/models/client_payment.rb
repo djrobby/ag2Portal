@@ -239,6 +239,10 @@ class ClientPayment < ActiveRecord::Base
   #
   # Search by old_no for SEPA return
   # Parameter must be string & 10 digits length
+  def self.burst_decode_(burst)
+    ModelsModule.decode_('2dZM')
+  end
+
   def self.search_by_old_no_from_return(o)
     r = nil
     b = Bill.search_by_old_no_from_return(o)
