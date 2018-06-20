@@ -140,22 +140,6 @@ class ClientPayment < ActiveRecord::Base
     !self.client_bank_account.blank? ? self.client_bank_account.refere.to_s.strip : ''
   end
 
-  #encrypted security code
-  def burst_security
-    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
-    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
-    userid = self.created_by.to_s.rjust(6,'0') #6characters
-    collected = self.bill.collected.round(2) #10characters
-    ci = collected.to_i
-    cr = (collected - ci).to_s
-    crl = cr.length
-    crr = (cr[2..crl]).ljust(2,"0")
-    collected = ci.to_s + crr
-    security_no = fact + date + userid + collected.rjust(10,'0') #48characters
-    # hashed_password = BCrypt::Password.create("AES332017005242830/05/201700:00:00003300246623891")
-    Digest::MD5.hexdigest(security_no)
-  end
-
   # Payment method used in collection
   def real_payment_method_name
     payment_method.to_label rescue ''
@@ -177,6 +161,65 @@ class ClientPayment < ActiveRecord::Base
   # Invoice biller
   def biller_id
     invoice.biller_id rescue nil
+  end
+
+  #
+  # Burst
+  #
+  # encrypted security code
+  def burst_security
+    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
+    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
+    userid = self.created_by.to_s.rjust(6,'0') #6characters
+    collected = self.bill.collected.round(2) #10characters
+    ci = collected.to_i
+    cr = (collected - ci).to_s
+    crl = cr.length
+    crr = (cr[2..crl]).ljust(2,"0")
+    collected = ci.to_s + crr
+    security_no = fact + date + userid + collected.rjust(10,'0') #48characters
+    # hashed_password = BCrypt::Password.create("AES332017005242830/05/201700:00:00003300246623891")
+    Digest::MD5.hexdigest(security_no)
+  end
+
+  # Generates text to encode
+  def text_to_encode
+    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
+    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
+    userid = self.created_by.to_s.rjust(6,'0') #6characters
+    collected = self.bill.collected.round(2) #10characters
+    ci = collected.to_i
+    cr = (collected - ci).to_s
+    crl = cr.length
+    crr = (cr[2..crl]).ljust(2,"0")
+    collected = ci.to_s + crr
+    fact + date + userid + collected.rjust(10,'0') #48characters
+  end
+
+  # Generates text from decode
+  def text_from_decode(burst)
+    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
+    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
+    userid = self.created_by.to_s.rjust(6,'0') #6characters
+    collected = self.bill.collected.round(2) #10characters
+    ci = collected.to_i
+    cr = (collected - ci).to_s
+    crl = cr.length
+    crr = (cr[2..crl]).ljust(2,"0")
+    collected = ci.to_s + crr
+    fact + date + userid + collected.rjust(10,'0') #48characters
+  end
+
+  # Encode text and generate burst
+  def burst_encode
+    # encode('Hola')
+    encode(text_to_encode)
+  end
+
+  # Decode burst and obtain original text
+  def burst_decode(burst)
+    # decode('2dZM')
+    t = text_from_decode(decode(burst))
   end
 
   #

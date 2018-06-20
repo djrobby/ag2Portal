@@ -1,6 +1,10 @@
 module ModelsModule
   include ActionView::Helpers::NumberHelper
 
+  # CONSTANTS for cipher methods
+  ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  ENCODING = "MOhqm0PnycUZeLdK8YvDCgNfb7FJtiHT52BrxoAkas9RWlXpEujSGI64VzQ31w"
+
   #
   # Tax Breakdown
   #
@@ -396,5 +400,16 @@ module ModelsModule
       m = (w.to_i) % 97
     end
     m
+  end
+
+  #
+  # Simple Cipher
+  #
+  def encode(text)
+    text.tr(ALPHABET, ENCODING)
+  end
+
+  def decode(text)
+    text.tr(ENCODING, ALPHABET)
   end
 end
