@@ -1,0 +1,74 @@
+<script type="text/javascript">
+  jQuery(function($) {
+  $(".check_cv_btn").click(function() {
+    var cv = $("#fnt-cv").val();
+    jQuery.getJSON('cp_check_cv/' + cv, function (data) {
+      if (data.code == "$err") {
+        $(".cv_receipt").text('<%= I18n.t("errors.messages.not_found") %>');
+        $(".cv_bill").text('<%= I18n.t("errors.messages.not_found") %>');
+        $(".cv_bill_date").text('<%= I18n.t("errors.messages.not_found") %>');
+        $(".cv_amount").text('<%= I18n.t("errors.messages.not_found") %>');
+        $(".cv_user").text('<%= I18n.t("errors.messages.not_found") %>');
+        $(".cv_payment_date").text('<%= I18n.t("errors.messages.not_found") %>');
+      } else {
+        $(".cv_receipt").text(data.receipt);
+        $(".cv_bill").text(data.bill);
+        $(".cv_bill_date").text(data.date);
+        $(".cv_amount").text(data.amount);
+        $(".cv_user").text(data.user);
+        $(".cv_payment_date").text(data.payment_date);
+      }
+    });
+    return false;
+  });
+  });
+</script>
+
+<div id="BurstSecurityModal" class="modal hide fade">
+  <%= simple_form_for ClientPayment.new, :html => { class: 'modal-footer-right form-inline', :id => 'form_burst_security' } do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+  <% e = t(:item_error) %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+      <h3><%= t('activerecord.attributes.client_payment.check_burst') %></h3>
+    </div>
+    <div class="modal-body">
+      <%= f.input :cv, :input_html => { class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
+      <!-- Receipt No -->
+      <div>
+        <label><%= I18n.t("ag2_gest.client_payments.report.payment_receipt") + ": " %></label>
+        <span class="cv_receipt bolded"></span>
+      </div>
+      <!-- Bill No -->
+      <div>
+        <label><%= "Recibo/Factura: " %></label>
+        <span class="cv_bill bolded"></span>
+      </div>
+      <!-- Bill Date -->
+      <div>
+        <label><%= I18n.t("activerecord.attributes.bill.bill_date") + ": " %></label>
+        <span class="cv_bill_date bolded"></span>
+      </div>
+      <!-- Amount -->
+      <div>
+        <label><%= I18n.t("ag2_gest.client_payments.report.amount_receipt") + ": " %></label>
+        <span class="cv_amount bolded"></span>
+      </div>
+      <!-- User -->
+      <div>
+        <label><%= I18n.t("activerecord.attributes.client_payment.charged") %></label>
+        <span class="cv_user bolded"></span>
+      </div>
+      <!-- Payment Date -->
+      <div>
+        <label><%= I18n.t("activerecord.attributes.client_payment.payment_date_c") + ": "  %></label>
+        <span class="cv_payment_date bolded"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="btn btn-primary check_cv_btn" href="#"><%=t('check') %></a>
+      <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+    </div>
+  <% end %>
+</div>

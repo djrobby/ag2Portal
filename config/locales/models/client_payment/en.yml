@@ -18,6 +18,7 @@ en:
         invoice_id: "Invoice"
         payment_method_id: "Payment method"
         payment_date: "Date"
+        payment_date_c: "Payment Date"
         created_at: "Created at"
         amount: "Amount"
         iban: "IBAN"
@@ -54,3 +55,5 @@ en:
         payment_type_code_3: "Fractionated"
         payment_type_code_4: "Counter"
         payment_type_code_5: "Others"
+        check_burst: "Check Burst"
+        burst: "Burst"

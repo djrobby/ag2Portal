@@ -18,6 +18,7 @@ es:
         invoice_id: "Factura"
         payment_method_id: "Forma de pago"
         payment_date: "Fecha"
+        payment_date_c: "Fecha del cobro"
         created_at: "Fecha de registro"
         amount: "Importe"
         iban: "IBAN"
@@ -54,3 +55,5 @@ es:
         payment_type_code_3: "Aplazamiento"
         payment_type_code_4: "Ventanilla Bancaria"
         payment_type_code_5: "Otros"
+        check_burst: "Comprobar Ráfaga"
+        burst: "Ráfaga"

@@ -48,10 +48,36 @@ module Ag2Gest
                                                :bank_from_return,
                                                :bank_from_counter,
                                                :payment_receipt,
-                                               :client_payment_view_report]
+                                               :client_payment_view_report,
+                                               :cp_check_cv]
     # Helper methods for
     # => index filters
     helper_method :cp_remove_filters, :cp_restore_filters
+
+    # Check Burst Security
+    def cp_check_cv
+      cv = ClientPayment.burst_decode_(params[:cv])
+      cp = ClientPayment.find(cv[0]) rescue nil
+      code = ''
+      receipt = ''
+      bill = ''
+      date = ''
+      amount = ''
+      user = ''
+      if cp.nil? || cp.bill_id.to_s.rjust(6,'0') != cv[1]
+        code = "$err"
+      else
+        receipt = cp.full_no
+        bill = cp.bill.invoice_based_old_no_real_no
+        date = formatted_date(cp.bill.bill_date)
+        amount = formatted_number(cp.amount, 2)
+        user = User.find(cp.created_by).email
+        payment_date = I18n.l(cp.created_at, format: :long_whit_day_and_hour) unless cp.created_at.blank?
+      end
+      # Setup JSON
+      @json_data = { "code" => code, "receipt" => receipt, "bill" => bill, "date" => date, "amount" => amount, "user" => user, "payment_date" => payment_date }
+      render json: @json_data
+    end
 
     # Format numbers properly
     def cp_format_number

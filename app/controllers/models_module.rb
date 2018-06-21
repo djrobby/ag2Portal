@@ -3,7 +3,8 @@ module ModelsModule
 
   # CONSTANTS for cipher methods
   ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-  ENCODING = "MOhqm0PnycUZeLdK8YvDCgNfb7FJtiHT52BrxoAkas9RWlXpEujSGI64VzQ31w"
+  # ENCODING = "MOhqm0PnycUZeLdK8YvDCgNfb7FJtiHT52BrxoAkas9RWlXpEujSGI64VzQ31w"
+  ENCODING = "MOhqmGPnycUZeLdK8YvDCgNfb7FJtiHT52BrxoAkas9RWlXpEujS0I64VzQ31w"
 
   #
   # Tax Breakdown

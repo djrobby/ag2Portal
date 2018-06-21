@@ -46,7 +46,7 @@ report.page.values(client2:  @payment.client.full_name.upcase,
 # payment_date = I18n.l(@payment.payment_date, format: :long_whit_day) unless @payment.payment_date.blank?
 payment_date = I18n.l(@payment.created_at, format: :long_whit_day_and_hour) unless @payment.created_at.blank?
 
-payment_date_format = @payment.payment_date.strftime(_format) unless @payment.payment_date.blank?
+payment_date_format = formatted_date(@payment.payment_date) unless @payment.payment_date.blank?
 report.page.values(title: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
 				   payment_date: payment_date,
 				   form_title: I18n.t("ag2_gest.client_payments.report.payment_receipt"),
@@ -112,7 +112,7 @@ end
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
-        row2.item(:cv).value "CV:" + receipt.burst_security.upcase
+        row2.item(:cv).value "CV:" + receipt.burst_encode
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
@@ -122,7 +122,7 @@ end
 			report.page.list(:default).add_row do |row2|
 				row2.item(:sup).hide
 				row2.item(:receipt_no).value receipt.bill.try(:invoice_based_old_no_real_no)
-        row2.item(:cv).value "CV:" + receipt.burst_security.upcase
+        row2.item(:cv).value "CV:" + receipt.burst_encode
 				row2.item(:receipt_date).value var_bill_date
 				row2.item(:total).value number_with_precision(receipt.bill.total, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
 				row2.item(:amount).value number_with_precision(receipt.bill.collected, precision: 2, delimiter: I18n.locale == :es ? "." : ",")

@@ -732,6 +732,8 @@
           <%= submit_tag I18n.t(:apply_filter_button), :class => 'btn btn-primary', :id => 'submit_btn' %>
           <!-- Remove filter -->
           <button id="removeFilter" type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><%= t :clear_filter_button %></button>
+          <br /><br />
+          <a href="#BurstSecurityModal" id="burst_security" role="button" class="btn btn-primary" data-toggle="modal"><%= t('activerecord.attributes.client_payment.check_burst') %></a>
         <% end %>
 
       <!-- Report -->
@@ -882,6 +884,9 @@
 
     <!-- Close Cash -->
     <%= render 'modal_cash_close' %>
+
+    <!-- Check Burst Security -->
+    <%= render 'modal_burst_security' %>
 
     <!-- Cash To Pending (modal) -->
     <div id="modal-cash-to-pending" class="modal hide fade" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="Devolver" aria-hidden="true">

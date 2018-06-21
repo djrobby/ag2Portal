@@ -22,6 +22,8 @@ class ClientPayment < ActiveRecord::Base
                   :instalment_id, :charge_account_id, :payment_method_id, :created_by, :updated_by,
                   :sepa_return_code_id
 
+  attr_accessor :cv
+
   has_many :cash_desk_closing_items
 
   has_paper_trail
@@ -184,30 +186,27 @@ class ClientPayment < ActiveRecord::Base
 
   # Generates text to encode
   def text_to_encode
-    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
-    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
-    userid = self.created_by.to_s.rjust(6,'0') #6characters
-    collected = self.bill.collected.round(2) #10characters
-    ci = collected.to_i
-    cr = (collected - ci).to_s
+    client_payment_id = self.id.to_s.rjust(6,'0') #6characters
+    bill_id = self.bill_id.to_s.rjust(6,'0') #6characters
+    date = self.bill.bill_date.strftime("%Y%m%d") #8characters
+    amount = self.amount.round(2) #9characters
+    user_id = self.created_by.to_s.rjust(3,'0') #3characters
+    ci = amount.to_i
+    cr = (amount - ci).to_s
     crl = cr.length
     crr = (cr[2..crl]).ljust(2,"0")
-    collected = ci.to_s + crr
-    fact + date + userid + collected.rjust(10,'0') #48characters
+    amount = ci.to_s + crr
+    client_payment_id + bill_id + date + amount.rjust(9,'0') + user_id #32characters
   end
 
   # Generates text from decode
   def text_from_decode(burst)
-    fact = self.bill.raw_invoice_based_no.rjust(18,'0') #18characters
-    date = self.bill.bill_date.strftime("%Y%m%d%H%M%S") #14characters
-    userid = self.created_by.to_s.rjust(6,'0') #6characters
-    collected = self.bill.collected.round(2) #10characters
-    ci = collected.to_i
-    cr = (collected - ci).to_s
-    crl = cr.length
-    crr = (cr[2..crl]).ljust(2,"0")
-    collected = ci.to_s + crr
-    fact + date + userid + collected.rjust(10,'0') #48characters
+    client_payment_id = burst[0..5] #6characters
+    bill_id = burst[6..11] #6characters
+    date = burst[12..19] #8characters
+    amount = burst[20..28] #9characters
+    user_id = burst[29..31] #3characters
+    return client_payment_id, bill_id, date, amount, user_id
   end
 
   # Encode text and generate burst
@@ -239,8 +238,20 @@ class ClientPayment < ActiveRecord::Base
   #
   # Search by old_no for SEPA return
   # Parameter must be string & 10 digits length
-  def self.burst_decode_(burst)
-    ModelsModule.decode_('2dZM')
+  def self.burst_decode_(burst="")
+    if burst.nil?
+      burst = ""
+    end
+    text_from_decode_(ModelsModule.decode_(burst))
+  end
+
+  def self.text_from_decode_(burst)
+    client_payment_id = burst[0..5] #6characters
+    bill_id = burst[6..11] #6characters
+    date = burst[12..19] #8characters
+    amount = burst[20..28] #9characters
+    user_id = burst[29..31] #3characters
+    return client_payment_id, bill_id, date, amount, user_id
   end
 
   def self.search_by_old_no_from_return(o)
