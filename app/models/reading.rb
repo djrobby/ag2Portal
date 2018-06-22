@@ -883,9 +883,9 @@ class Reading < ActiveRecord::Base
   def fixed_fee_quantity
     qty = billing_frequency.total_months
     sub_starting_at = subscriber.starting_at
-    sub_ending_at = subscriber.ending_at || nil
+    sub_ending_at = subscriber.ending_at
     if self.reading_type_id == ReadingType::RETIRADA && !self.reading_date.blank?
-      sub_ending_at = self.reading_1_date
+      sub_ending_at = self.reading_date.to_date
     end
     bp_billing_starting_date = billing_period.billing_starting_date
     bp_billing_ending_date = billing_period.billing_ending_date
