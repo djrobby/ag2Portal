@@ -259,7 +259,7 @@ class Reading < ActiveRecord::Base
   #
   # Generates only one Prebill & associated invoices & items, based on current reading data
   #
-  def generate_pre_bill(group_no=nil,user_id=nil,operation_id=1)
+  def generate_pre_bill(group_no=nil, user_id=nil, operation_id=1)
     pre_bill = nil
     if subscriber_billable?
       # cr = consumption_total_period             # consumption real
@@ -883,12 +883,21 @@ class Reading < ActiveRecord::Base
   def fixed_fee_quantity
     qty = billing_frequency.total_months
     sub_starting_at = subscriber.starting_at
+    sub_ending_at = subscriber.ending_at || nil
+    if self.reading_type_id == ReadingType::RETIRADA && !self.reading_date.blank?
+      sub_ending_at = self.reading_1_date
+    end
     bp_billing_starting_date = billing_period.billing_starting_date
     bp_billing_ending_date = billing_period.billing_ending_date
     begin
-      if sub_starting_at > bp_billing_starting_date
+      if sub_starting_at > bp_billing_starting_date && sub_starting_at < bp_billing_ending_date
+        # Subscriber registerd during the period
         # qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
         qty = ((bp_billing_ending_date - sub_starting_at).days.seconds / 1.month.seconds).round
+      end
+      if (!sub_ending_at.nil?) && (sub_ending_at > bp_billing_starting_date && sub_ending_at < bp_billing_ending_date)
+        # Subscriber withdrawn during the period
+        qty = ((sub_ending_at - bp_billing_starting_date).days.seconds / 1.month.seconds).round
       end
     rescue
       qty = billing_frequency.total_months
