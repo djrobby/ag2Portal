@@ -553,7 +553,7 @@ module Ag2Gest
       # OCO
       init_oco if !session[:organization]
 
-      @search = Reading.search do
+      search = Reading.search do
         with :project_id, current_projects_ids unless current_projects_ids.blank?
         if !subscriber.blank?
           fulltext subscriber
@@ -585,7 +585,12 @@ module Ag2Gest
         order_by :by_period_date, :desc
         paginate :page => params[:page] || 1, :per_page => Reading.count
       end
-      @reading_report = @search.results
+      # @reading_report = @search.results
+      reading_ids = []
+      search.hits.each do |i|
+        reading_ids << i.result.id
+      end
+      @reading_report = Reading.with_these_ids(reading_ids)
 
       if !@reading_report.blank?
         title = t("activerecord.models.reading.few")

@@ -42,6 +42,10 @@ class PreReading < ActiveRecord::Base
   # Scopes
   scope :by_date_asc, -> { order(:reading_date) }
   scope :by_date_desc, -> { order('reading_date desc') }
+  scope :with_these_ids, -> ids {
+    includes(:subscriber, :service_point,[subscriber: :street_directory], [service_point: :street_directory], :billing_period, :reading_route, :reading_type, :meter)
+    .where(id: ids)
+  }
 
   # Aux methods for CSV
   def raw_number(_number, _d)
@@ -87,35 +91,37 @@ class PreReading < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |pre_reading|
-        csv << [  pre_reading.try(:meter).try(:meter_code),
-                  pre_reading.try(:service_point).try(:full_code),
-                  pre_reading.try(:subscriber).try(:full_code),
-                  pre_reading.try(:subscriber).try(:full_name_full),
-                  pre_reading.try(:subscriber).try(:address_1),
-                  pre_reading.try(:reading_route).try(:route_code),
-                  pre_reading.reading_sequence,
-                  pre_reading.reading_2.try(:billing_period).try(:period),
-                  pre_reading.reading_2.try(:to_reading_date),
-                  pre_reading.reading_2.try(:reading_index),
-                  pre_reading.reading_2.try(:reading_days),
-                  pre_reading.reading_2.try(:consumption_total_period),
-                  pre_reading.reading_1.try(:billing_period).try(:period),
-                  pre_reading.reading_1.try(:to_reading_date),
-                  pre_reading.reading_1.try(:reading_index),
-                  pre_reading.reading_1.try(:reading_days),
-                  pre_reading.reading_1.try(:consumption_total_period),
-                  pre_reading.pre_previous_reading.try(:billing_period).try(:period),
-                  pre_reading.pre_previous_reading.try(:to_reading_date),
-                  pre_reading.pre_previous_reading.try(:reading_index),
-                  pre_reading.pre_previous_reading.try(:reading_days),
-                  pre_reading.pre_previous_reading.try(:consumption_total_period),
-                  pre_reading.try(:billing_period).try(:period),
-                  pre_reading.to_reading_date,
-                  pre_reading.reading_index,
-                  pre_reading.try(:reading_days),
-                  pre_reading.try(:pre_registered_consumption),
-                  pre_reading.reading_incidence_types.pluck(:name).join(", ")]
+      PreReading.uncached do
+        array.find_each do |pre_reading|
+          csv << [  pre_reading.try(:meter).try(:meter_code),
+                    pre_reading.try(:service_point).try(:full_code),
+                    pre_reading.try(:subscriber).try(:full_code),
+                    pre_reading.try(:subscriber).try(:full_name_full),
+                    pre_reading.try(:subscriber).try(:address_1),
+                    pre_reading.try(:reading_route).try(:route_code),
+                    pre_reading.reading_sequence,
+                    pre_reading.reading_2.try(:billing_period).try(:period),
+                    pre_reading.reading_2.try(:to_reading_date),
+                    pre_reading.reading_2.try(:reading_index),
+                    pre_reading.reading_2.try(:reading_days),
+                    pre_reading.reading_2.try(:consumption_total_period),
+                    pre_reading.reading_1.try(:billing_period).try(:period),
+                    pre_reading.reading_1.try(:to_reading_date),
+                    pre_reading.reading_1.try(:reading_index),
+                    pre_reading.reading_1.try(:reading_days),
+                    pre_reading.reading_1.try(:consumption_total_period),
+                    pre_reading.pre_previous_reading.try(:billing_period).try(:period),
+                    pre_reading.pre_previous_reading.try(:to_reading_date),
+                    pre_reading.pre_previous_reading.try(:reading_index),
+                    pre_reading.pre_previous_reading.try(:reading_days),
+                    pre_reading.pre_previous_reading.try(:consumption_total_period),
+                    pre_reading.try(:billing_period).try(:period),
+                    pre_reading.to_reading_date,
+                    pre_reading.reading_index,
+                    pre_reading.try(:reading_days),
+                    pre_reading.try(:pre_registered_consumption),
+                    pre_reading.reading_incidence_types.pluck(:name).join(", ")]
+        end
       end
     end
   end

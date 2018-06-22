@@ -34,7 +34,7 @@
       <h3><%= t('activerecord.attributes.client_payment.check_burst') %></h3>
     </div>
     <div class="modal-body">
-      <%= f.input :cv, :input_html => { class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
+      <%= f.input :cv, as: :text, :input_html => {rows: 1, class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
       <!-- Receipt No -->
       <div>
         <label><%= I18n.t("ag2_gest.client_payments.report.payment_receipt") + ": " %></label>

@@ -97,6 +97,10 @@ class Reading < ActiveRecord::Base
              CASE ISNULL(subscribers.subscriber_code) WHEN TRUE THEN '' ELSE CONCAT(SUBSTR(subscribers.subscriber_code,1,4),'-',SUBSTR(subscribers.subscriber_code,5,7)) END subscriber_full_code")
     .group('readings.id').order('billing_periods.period DESC,readings.reading_date DESC,readings.id DESC')
   }
+  scope :with_these_ids, -> ids {
+    includes(:subscriber, :service_point,[subscriber: :street_directory], [service_point: :street_directory], :billing_period, :reading_route, :reading_type, :meter)
+    .where(id: ids)
+  }
 
   def to_label
     "#{reading_index} - #{reading_date.strftime("%d/%m/%Y %H:%M")}" if reading_date
@@ -1279,30 +1283,32 @@ class Reading < ActiveRecord::Base
     col_sep = I18n.locale == :es ? ";" : ","
     CSV.generate(headers: true, col_sep: col_sep, row_sep: "\r\n") do |csv|
       csv << attributes
-      array.each do |reading|
-        csv << [  reading.try(:meter).try(:meter_code),
-                  reading.try(:service_point).try(:full_code),
-                  reading.try(:subscriber).try(:full_code),
-                  reading.try(:subscriber).try(:full_name_full),
-                  reading.try(:subscriber).try(:address_1),
-                  reading.try(:reading_route).try(:route_code),
-                  reading.reading_sequence,
-                  reading.reading_2.try(:billing_period).try(:period),
-                  reading.reading_2.try(:to_reading_date),
-                  reading.reading_2.try(:reading_index),
-                  reading.reading_2.try(:reading_days),
-                  reading.reading_2.try(:consumption_total_period),
-                  reading.reading_1.try(:billing_period).try(:period),
-                  reading.reading_1.try(:to_reading_date),
-                  reading.reading_1.try(:reading_index),
-                  reading.reading_1.try(:reading_days),
-                  reading.reading_1.try(:consumption_total_period),
-                  reading.try(:billing_period).try(:period),
-                  reading.to_reading_date,
-                  reading.reading_index,
-                  reading.try(:reading_days),
-                  reading.try(:consumption_total_period),
-                  reading.reading_incidence_types.pluck(:name).join(", ")]
+      Reading.uncached do
+        array.find_each do |reading|
+          csv << [  reading.try(:meter).try(:meter_code),
+                    reading.try(:service_point).try(:full_code),
+                    reading.try(:subscriber).try(:full_code),
+                    reading.try(:subscriber).try(:full_name_full),
+                    reading.try(:subscriber).try(:address_1),
+                    reading.try(:reading_route).try(:route_code),
+                    reading.reading_sequence,
+                    reading.reading_2.try(:billing_period).try(:period),
+                    reading.reading_2.try(:to_reading_date),
+                    reading.reading_2.try(:reading_index),
+                    reading.reading_2.try(:reading_days),
+                    reading.reading_2.try(:consumption_total_period),
+                    reading.reading_1.try(:billing_period).try(:period),
+                    reading.reading_1.try(:to_reading_date),
+                    reading.reading_1.try(:reading_index),
+                    reading.reading_1.try(:reading_days),
+                    reading.reading_1.try(:consumption_total_period),
+                    reading.try(:billing_period).try(:period),
+                    reading.to_reading_date,
+                    reading.reading_index,
+                    reading.try(:reading_days),
+                    reading.try(:consumption_total_period),
+                    reading.reading_incidence_types.pluck(:name).join(", ")]
+        end
       end
     end
   end
