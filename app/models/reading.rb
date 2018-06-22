@@ -885,9 +885,13 @@ class Reading < ActiveRecord::Base
     sub_starting_at = subscriber.starting_at
     bp_billing_starting_date = billing_period.billing_starting_date
     bp_billing_ending_date = billing_period.billing_ending_date
-    if sub_starting_at > bp_billing_starting_date
-      # qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
-      qty = ((bp_billing_ending_date - sub_starting_at).days.seconds / 1.month.seconds).round
+    begin
+      if sub_starting_at > bp_billing_starting_date
+        # qty = (bp_billing_ending_date - sub_starting_at).to_i.days.seconds / 1.month.seconds
+        qty = ((bp_billing_ending_date - sub_starting_at).days.seconds / 1.month.seconds).round
+      end
+    rescue
+      qty = billing_frequency.total_months
     end
     return qty
   end
