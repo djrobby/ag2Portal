@@ -392,10 +392,11 @@ class Reading < ActiveRecord::Base
   #
   def subscriber_billable?
     r = false
+    billing_ending_date = billing_period.billing_ending_date || Date.today
     begin
       if !subscriber.blank? # Subscriber present
         if subscriber.activated?  # Subscriber active
-          if subscriber.starting_at < billing_period.billing_ending_date
+          if subscriber.starting_at < billing_ending_date
             r = true
           end
         end
