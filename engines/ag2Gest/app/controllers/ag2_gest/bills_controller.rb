@@ -214,7 +214,7 @@ module Ag2Gest
       # _period3 = _b2.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
       # _period4 = _b3.try(:invoices).first.try(:billing_period).try(:period).to_s rescue nil
 
-      i = Bill.joins("LEFT JOIN invoices ON bills.id=invoices.bill_id").joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id").where('bills.subscriber_id = ? AND bills.bill_date <= ? AND invoices.invoice_operation_id in (?)',@biller_printer.subscriber_id, @biller_printer.bill_date,[1,3]).group('invoices.billing_period_id').order('bills.bill_no DESC').limit(6)
+      i = Bill.joins("LEFT JOIN invoices ON bills.id=invoices.bill_id").joins("LEFT JOIN billing_periods ON invoices.billing_period_id=billing_periods.id").where('bills.subscriber_id = ? AND bills.bill_date <= ? AND invoices.invoice_operation_id in (?) AND billing_periods.period <= ?',@biller_printer.subscriber_id, @biller_printer.bill_date,[1,3], @biller_printer.invoices.first.billing_period.period).group('invoices.billing_period_id').order('bills.bill_no DESC').limit(6)
 
       _con1 = !i[0].blank? ? i[0].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0
       _con2 = !i[1].blank? ? i[1].try(:reading).try(:consumption_total_period_to_invoice).to_i : 0

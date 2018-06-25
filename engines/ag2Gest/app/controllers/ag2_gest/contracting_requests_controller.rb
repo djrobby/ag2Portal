@@ -105,7 +105,7 @@ module Ag2Gest
     def refresh_status
       @contracting_request = ContractingRequest.find(params[:id])
       response_hash = { contracting_request: @contracting_request }
-      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       # response_hash[:client_debt] = number_with_precision(@contracting_request.client.total_debt_unpaid, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
       response_hash[:work_order_status] = @contracting_request.work_order.work_order_status if @contracting_request.work_order
@@ -134,7 +134,7 @@ module Ag2Gest
     def refresh_connection_status
       @contracting_request = ContractingRequest.find(params[:id])
       response_hash = { contracting_request: @contracting_request }
-      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
+      response_hash[:client_debt] = number_with_precision(@contracting_request.client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.client
       response_hash[:total_sale_offer] = number_with_precision(@contracting_request.water_connection_contract.sale_offer.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.sale_offer
       response_hash[:total_work_order] = number_with_precision(@contracting_request.water_connection_contract.work_order.total, precision: 4, delimiter: I18n.locale == :es ? "." : ",") if @contracting_request.water_connection_contract and @contracting_request.water_connection_contract.work_order
       response_hash[:work_order] = @contracting_request.work_order if @contracting_request.work_order
@@ -1082,9 +1082,9 @@ module Ag2Gest
         if @contracting_request.save
           # @reading.last.update_attributes(bill_id: @water_supply_contract.unsubscribe_bill_id)
           @contracting_request.water_supply_contract.bailback_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
-          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bailback_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
+          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bailback_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill and ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.bailback_bill)
           @contracting_request.water_supply_contract.unsubscribe_bill.update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
-          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.unsubscribe_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
+          ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.unsubscribe_bill).update_attributes(subscriber_id: @contracting_request.old_subscriber.id) if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill and ClientPayment.find_by_bill_id(@contracting_request.water_supply_contract.unsubscribe_bill)
           response_hash = { contracting_request: @contracting_request }
           response_hash[:bailback_bill] = @water_supply_contract.bailback_bill  if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.bailback_bill
           response_hash[:unsubscribe_bill] = @water_supply_contract.unsubscribe_bill if @contracting_request.water_supply_contract and @contracting_request.water_supply_contract.unsubscribe_bill
@@ -1471,7 +1471,8 @@ module Ag2Gest
           project_debt = '0'
           # project_d = ""
           project_d = []
-          if !client.blank? and !client.invoice_current_debts.unpaid.blank?
+          # if !client.blank? and !client.invoice_current_debts.unpaid.blank?
+          if !client.blank? and !client.current_debt.blank? and client.current_debt > 0
             # client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             # client_debt = number_with_precision(client.total_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")
             client_debt = number_with_precision(client.current_debt, precision: 2, delimiter: I18n.locale == :es ? "." : ",")

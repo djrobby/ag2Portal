@@ -25,7 +25,7 @@
 </script>
 
 <div id="BurstSecurityModal" class="modal hide fade">
-  <%= simple_form_for ClientPayment.new, :html => { class: 'modal-footer-right form-inline', :id => 'form_burst_security' } do |f| %>
+  <%= simple_form_for :client_payment, url: cp_check_cv_client_payments_path, :html => { class: 'modal-footer-right form-inline', :id => 'form_burst_security' } do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
   <% e = t(:item_error) %>
@@ -34,7 +34,8 @@
       <h3><%= t('activerecord.attributes.client_payment.check_burst') %></h3>
     </div>
     <div class="modal-body">
-      <%= f.input :cv, as: :text, :input_html => {rows: 1, class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
+      <%#= f.input :cv, as: :text, :input_html => {rows: 1, class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
+      <%= f.input :cv, :input_html => {class: 'x-large-text-field shrinked', id:'fnt-cv'}, label: I18n.t("activerecord.attributes.client_payment.burst") + ": " %>
       <!-- Receipt No -->
       <div>
         <label><%= I18n.t("ag2_gest.client_payments.report.payment_receipt") + ": " %></label>
@@ -67,7 +68,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <a class="btn btn-primary check_cv_btn" href="#"><%=t('check') %></a>
+      <!-- <a class="btn btn-primary check_cv_btn" href="#"><%#=t('check') %></a> -->
+      <%= f.button :submit, t('check'), :class => 'btn-primary check_cv_btn' %>
       <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
     </div>
   <% end %>

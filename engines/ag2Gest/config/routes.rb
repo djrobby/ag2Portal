@@ -697,6 +697,7 @@ Ag2Gest::Engine.routes.draw do
       post 'confirm_others', on: :collection
       post 'others_to_pending', on: :collection
       get 'payment_receipt', on: :member
+      get 'cp_check_cv', on: :collection
     end
     resources :payment_methods
     resources :processed_files

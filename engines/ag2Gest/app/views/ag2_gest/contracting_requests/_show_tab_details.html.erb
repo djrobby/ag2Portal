@@ -30,7 +30,7 @@
     <tbody>
       <tr>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:bank_account_class).try(:name) %></td>
-        <td><%= @contracting_request.iban_format_with_spaces unless @contracting_request.iban_format_with_spaces.blank? %></td>
+        <td><%= @contracting_request.iban_format_with_spaces unless @contracting_request.iban.blank? %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:holder_fiscal_id) %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:holder_name) %></td>
         <td><%= @contracting_request.client.try(:active_bank_account).try(:starting_at) %></td>
