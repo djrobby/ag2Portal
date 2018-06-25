@@ -806,7 +806,8 @@ class Reading < ActiveRecord::Base
   # Calculate coefficient for variable fee by blocks
   # Should be applied to block_limits
   def coefficient_for_billing_blocks(tariff, fixed_fee_qty)
-    tm = tariff.billing_frequency.total_months
+    tm = tariff.billing_frequency.total_months || 1
+    tm = tm <= 0 ? 1 : tm rescue 1
     # Months to apply if it's a seasonal rate reading (open blocks)
     mm = months_between_last_normal_reading_and_current_reading
     # mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
