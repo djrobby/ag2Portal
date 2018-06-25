@@ -14,7 +14,8 @@ class Office < ActiveRecord::Base
                   :zipcode_id, :town_id, :province_id, :phone, :fax, :cellular, :email,
                   :created_by, :updated_by, :nomina_id, :max_order_total, :max_order_price, :overtime_pct,
                   :r_last_name, :r_first_name, :r_fiscal_id, :r_position, :days_for_invoice_due_date,
-                  :water_supply_contract_template_id, :water_connection_contract_template_id
+                  :water_supply_contract_template_id, :water_connection_contract_template_id,
+                  :closed_blocks
   attr_accessible :office_notifications_attributes
 
   has_many :workers

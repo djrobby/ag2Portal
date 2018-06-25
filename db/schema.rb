@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180529080935) do
+ActiveRecord::Schema.define(:version => 20180625081158) do
 
   create_table "accounting_groups", :force => true do |t|
     t.string   "code"
@@ -2418,8 +2418,8 @@ ActiveRecord::Schema.define(:version => 20180529080935) do
   create_table "offices", :force => true do |t|
     t.string   "name"
     t.integer  "company_id"
-    t.datetime "created_at",                                                                                         :null => false
-    t.datetime "updated_at",                                                                                         :null => false
+    t.datetime "created_at",                                                                                          :null => false
+    t.datetime "updated_at",                                                                                          :null => false
     t.string   "office_code"
     t.integer  "street_type_id"
     t.string   "street_name"
@@ -2437,9 +2437,9 @@ ActiveRecord::Schema.define(:version => 20180529080935) do
     t.integer  "created_by"
     t.integer  "updated_by"
     t.string   "nomina_id"
-    t.decimal  "max_order_total",                                    :precision => 13, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "max_order_price",                                    :precision => 12, :scale => 4, :default => 0.0, :null => false
-    t.decimal  "overtime_pct",                                       :precision => 6,  :scale => 2, :default => 0.0, :null => false
+    t.decimal  "max_order_total",                                    :precision => 13, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "max_order_price",                                    :precision => 12, :scale => 4, :default => 0.0,  :null => false
+    t.decimal  "overtime_pct",                                       :precision => 6,  :scale => 2, :default => 0.0,  :null => false
     t.integer  "zone_id"
     t.string   "r_last_name"
     t.string   "r_first_name"
@@ -2447,8 +2447,9 @@ ActiveRecord::Schema.define(:version => 20180529080935) do
     t.string   "r_position"
     t.integer  "water_supply_contract_template_id"
     t.integer  "water_connection_contract_template_id"
-    t.integer  "days_for_invoice_due_date",             :limit => 2,                                :default => 0,   :null => false
+    t.integer  "days_for_invoice_due_date",             :limit => 2,                                :default => 0,    :null => false
     t.string   "invoice_note"
+    t.boolean  "closed_blocks",                                                                     :default => true, :null => false
   end
 
   add_index "offices", ["company_id"], :name => "index_offices_on_company_id"
