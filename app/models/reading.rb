@@ -848,8 +848,8 @@ class Reading < ActiveRecord::Base
   # Calculate months between readings
   def months_between_previous_reading_and_current_reading
     mm = 0
-    if !reading_2.nil?
-      mm = ((reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
+    if !reading_1.nil?
+      mm = ((reading_date.to_date - reading_1.reading_date.to_date).to_i / 30.436875).round
     end
     mm
   end
