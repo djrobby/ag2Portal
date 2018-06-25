@@ -1099,4 +1099,20 @@ end
 
   # turn it off for welcome page: Controller
   end
+
+  def background_job_status
+    remote_url = ''
+    if !current_user.blank?
+      if current_user.creating_prebills?
+        remote_url = '/ag2_gest/es/bills/status_prebills'
+      end
+      if current_user.confirming_prebills?
+        remote_url = '/ag2_gest/es/bills/status_confirm'
+      end
+      if current_user.confirming_prereadings?
+        remote_url = '/ag2_gest/es/pre_readings/status_confirm'
+      end
+    end
+    return remote_url
+  end
 end
