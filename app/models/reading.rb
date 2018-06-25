@@ -602,7 +602,7 @@ class Reading < ActiveRecord::Base
 
     # Variables
     # block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
-    block_frequency = coefficient_for_billing_blocks(tariff)
+    block_frequency = coefficient_for_billing_blocks(tariff, fixed_fee_qty)
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       #+++ Blocks +++
       limit_before = 0
@@ -714,7 +714,7 @@ class Reading < ActiveRecord::Base
 
     # Variables
     # block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
-    block_frequency = coefficient_for_billing_blocks(tariff)
+    block_frequency = coefficient_for_billing_blocks(tariff, fixed_fee_qty)
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0
@@ -803,13 +803,30 @@ class Reading < ActiveRecord::Base
   # Seasonal Rates:
   # Open Billing Blocks
   #
-  # Calculate coefficient for variable fee by blocks.
-  def coefficient_for_billing_blocks(tariff)
-    # Should be applied to block_limits
+  # Calculate coefficient for variable fee by blocks
+  # Should be applied to block_limits
+  def coefficient_for_billing_blocks(tariff, fixed_fee_qty)
+    # Months to apply if it's a seasonal rate reading (open blocks)
     mm = months_between_last_normal_reading_and_current_reading
-    mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    # mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+    if mm > 0
+      # Open blocks based on seasonal rate reading
+      (mm / tariff.billing_frequency.total_months).round
+    else
+      # Not seasonal rate reading
+      if closed_blocks?
+        # Must use fixed_fee_qty as coefficient (closed blocks)
+        fixed_fee_qty.to_d / tariff.billing_frequency.total_months.to_d
+      else
+        # Must use months between readings as coefficient (open blocks)
+        # or billing_frequency.total_months if months == 0
+        mm = months_between_previous_reading_and_current_reading
+        mm > 0 ? (mm / tariff.billing_frequency.total_months).round : billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
+      end
+    end
   end
 
+  # Seasonal Rates:
   # Calculate months between readings
   def months_between_last_normal_reading_and_current_reading
     # If current reading type is NORMAL
@@ -824,6 +841,28 @@ class Reading < ActiveRecord::Base
       end
     end
     mm
+  end
+
+  # Calculate months between readings
+  def months_between_previous_reading_and_current_reading
+    mm = 0
+    if !reading_2.nil?
+      mm = ((reading_date.to_date - reading_2.reading_date.to_date).to_i / 30.436875).round
+    end
+    mm
+  end
+
+  #
+  # Block coefficient must be based on Office closed_blocks attribute
+  # true: Closed blocks, based on fixed_fee_qty
+  # false: Open blocks, based on difference between reading dates or billing_frequency.total_months
+  #
+  def closed_blocks?
+    r = true
+    if !subscriber.blank? && !subscriber.office_id.blank?
+      r = Office.find(subscriber.office_id).closed_blocks rescue true
+    end
+    return r
   end
 
   #
@@ -1065,7 +1104,7 @@ class Reading < ActiveRecord::Base
     # Previous
     block_fee_qty = 0
     # block_frequency = billing_frequency.total_months.to_d / prev_reading_subscriber_tariff_tariff.billing_frequency.total_months.to_d
-    block_frequency = coefficient_for_billing_blocks(prev_reading_subscriber_tariff_tariff)
+    block_frequency = coefficient_for_billing_blocks(prev_reading_subscriber_tariff_tariff, previous_fixed_fee_qty)
     previous_block_fee_quantities = []
     if !prev_reading_subscriber_tariff_tariff.block1_limit.nil? && prev_reading_subscriber_tariff_tariff.block1_limit > 0
       limit_before = 0
@@ -1105,7 +1144,7 @@ class Reading < ActiveRecord::Base
     # Current
     block_fee_qty = 0
     # block_frequency = billing_frequency.total_months.to_d / tariff.billing_frequency.total_months.to_d
-    block_frequency = coefficient_for_billing_blocks(tariff)
+    block_frequency = coefficient_for_billing_blocks(tariff, current_fixed_fee_qty)
     if !tariff.block1_limit.nil? && tariff.block1_limit > 0
       limit_before = 0
       block_limit = 0

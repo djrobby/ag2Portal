@@ -86,12 +86,16 @@ function setupPolling(options){
 <% unless current_user and current_user.works_pending.blank? #session[:prebills_job_no].blank? %>
   $(document).ready(function(){
     setupPolling({
-      <% if !current_user.blank? and current_user.creating_prebills? %>
-        remote_url: '/ag2_gest/es/bills/status_prebills'
-      <% elsif !current_user.blank? and current_user.confirming_prebills? %>
-        remote_url: '/ag2_gest/es/bills/status_confirm'
-      <% elsif !current_user.blank? and current_user.confirming_prereadings? %>
-        remote_url: '/ag2_gest/es/pre_readings/status_confirm'
+      <% if !current_user.blank? %>
+        <% if current_user.creating_prebills? %>
+          remote_url: '/ag2_gest/es/bills/status_prebills'
+        <% end %>
+        <% if current_user.confirming_prebills? %>
+          remote_url: '/ag2_gest/es/bills/status_confirm'
+        <% end %>
+        <% if current_user.confirming_prereadings? %>
+          remote_url: '/ag2_gest/es/pre_readings/status_confirm'
+        <% end %>
       <% end %>
     }).start();
   })
