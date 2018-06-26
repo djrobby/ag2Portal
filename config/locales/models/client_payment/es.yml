@@ -17,6 +17,7 @@ es:
         bill_id: "Recibo"
         invoice_id: "Factura"
         payment_method_id: "Forma de pago"
+        payment_type_id: "Motivo de cobro"
         payment_date: "Fecha"
         payment_date_c: "Fecha del cobro"
         created_at: "Fecha de registro"

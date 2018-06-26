@@ -17,6 +17,7 @@ en:
         bill_id: "Bill"
         invoice_id: "Invoice"
         payment_method_id: "Payment method"
+        payment_type_id: "Payment type"
         payment_date: "Date"
         payment_date_c: "Payment Date"
         created_at: "Created at"

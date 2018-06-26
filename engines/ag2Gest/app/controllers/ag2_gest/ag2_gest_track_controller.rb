@@ -568,6 +568,7 @@ module Ag2Gest
       status = params[:status]
       type = params[:type]
       payment_method = params[:payment_method]
+      payment_type = params[:payment_type]
       operation = params[:operation]
       concept = params[:concept]
       # use = params[:use]
@@ -628,6 +629,10 @@ module Ag2Gest
       if !payment_method.blank?
         w += " AND " if w != ''
         w += "payment_methods.id = '#{payment_method}'"
+      end
+      if !payment_type.blank?
+        w += " AND " if w != ''
+        w += "client_payments.payment_type = '#{payment_type}'"
       end
       if !operation.blank?
         w += " AND " if w != ''
@@ -2186,6 +2191,7 @@ module Ag2Gest
       operation = params[:Operation]
       use = params[:Use]
       payment_method = params[:PaymentMethod]
+      payment_type = params[:PaymentType]
       concept = params[:Concept]
       tariff_type = params[:TariffType]
 
@@ -2211,6 +2217,7 @@ module Ag2Gest
       @calibers = Caliber.by_caliber if @calibers.nil?
       @uses = Use.by_code if @uses.nil?
       @payment_methods = invoice_payment_methods_dropdown if @payment_methods.nil?
+      @payment_types = payment_types_dropdown if @payment_types.nil?
       @concepts = billable_concept_dropdown
       @tariff_types = TariffType.by_code if @tariff_types.nil?
     end
@@ -2318,6 +2325,10 @@ module Ag2Gest
 
     def invoice_payment_methods_dropdown
       PaymentMethod.all
+    end
+
+    def payment_types_dropdown
+      PaymentType.all
     end
 
     def invoice_operations_dropdown
