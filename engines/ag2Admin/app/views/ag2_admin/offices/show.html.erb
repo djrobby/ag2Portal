@@ -106,8 +106,8 @@
     <tr>
       <td><%= t 'activerecord.attributes.office.days_for_invoice_due_date' %>:</td>
       <td><%= @office.days_for_invoice_due_date unless @office.days_for_invoice_due_date.blank? %></td>
-      <td></td>
-      <td></td>      
+      <td><%= t 'activerecord.attributes.office.closed_blocks' %>:</td>
+      <td><% if @office.closed_blocks %> <i class="icon-thumbs-up"></i> <% else %> <i class="icon-thumbs-down"></i> <% end %> </td>    
     </tr>
   </tbody>
 </table>

@@ -144,7 +144,7 @@
 </div>
 <div>
   <label class="multi-field-label-two"> <%= f.input :email, :input_html => { :class => 'x-large-text-field' }, :label_html => { :class => 'form-label' } %></label>
-  <label class="multi-field-label-two"> <%= f.input :days_for_invoice_due_date, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %></label>
+  <label class="multi-field-label-two"> </label>
 </div>
 <% if (current_user.has_role? :Administrator) || (current_user.has_role? :ag2Human_User) || (current_user.has_role? :ag2Human_Guest) %>
 <%= f.input :nomina_id, :input_html => { :class => 'small-text-field' }, :label_html => { :class => 'form-label' } %>
@@ -165,6 +165,11 @@
   <label class="multi-field-label-two"> <%= f.input :max_order_total, as: :string, input_html: { value: (number_with_precision(f.object.max_order_total, precision: 2) if f.object.max_order_total), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
   <label class="multi-field-label-two"> <%= f.input :max_order_price, as: :string, input_html: { value: (number_with_precision(f.object.max_order_price, precision: 4) if f.object.max_order_price), class: 'large-text-field number-text-field' }, label_html: { class: 'form-label' } %> </label>
 </div>
+<div>
+  <label class="multi-field-label-two"> <%= f.input :days_for_invoice_due_date, :input_html => { :class => 'mid-text-field' }, :label_html => { :class => 'form-label' } %> </label>
+</div>
+<%= f.input :closed_blocks, as: :boolean, checked_value: true, unchecked_value: false, :label_html => { :class => 'form-label' } %>
+
 <!-- Employment info -->
 <h4><%=t 'ag2_admin.offices.employment_info' %></h4>
 <div>

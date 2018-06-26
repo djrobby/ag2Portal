@@ -55,3 +55,4 @@ es:
         water_connection_contract_template: "Plantilla Contrato de Acometida"
         water_connection_contract_template_id: "Plantilla Contrato de Acometida"
         days_for_invoice_due_date: "Días para el vencimiento de factura"
+        closed_blocks: "¿Cerrar Bloques?"
