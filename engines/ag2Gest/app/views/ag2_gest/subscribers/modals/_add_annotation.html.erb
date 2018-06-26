@@ -1,0 +1,36 @@
+<div id="AddAnnotation" class="modal hide fade" data-backdrop="static">
+  <%= simple_form_for SubscriberAnnotation.new, url: add_annotation_path(@subscriber), method: :post, :remote => true, :html => { class: 'modal-footer-right form-inline' , :id => 'form_add_annotation'} do |f| %>
+  <%= f.error_notification %>
+  <%= display_base_errors resource %>
+  <% e = t(:item_error) %>
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&#215;</a>
+    <h3><%= I18n.t('activerecord.attributes.subscriber.new_annotation') %></h3>
+    <span class="shrinked"><%= I18n.t(:mandatory_subtitle) %></span>
+  </div>
+  <div class="modal-body">
+    <%= f.association :subscriber_annotation_class, collection: @subscriber_annotation_class, label_method: :name, value_method: :id, :required => true, input_html: { class: 'x-large-text-field', :id => "add_subscriber_annotation_class" }, label_html: { class: 'form-label' } %>
+    <%= f.input :annotation, :required => true, :as => :text, :input_html => {:class => 'x-large-text-field', :rows => 5, :maxlength => 999, :id => "add_annotation" }, :label_html => { :class => 'form-label' } %>
+  </div>
+  <div class="modal-footer">
+    <%= f.submit t('activerecord.attributes.subscriber.accept'), disable_with: t("activerecord.attributes.pre_reading.loading"), :class => "btn btn-primary", :id => "submit_add_annotation" %>
+    <a class="btn btn-primary" data-dismiss="modal" href="#"><%= t :close_button %></a>
+  </div>
+  <% end %>
+</div>
+
+<script>
+  jQuery(function($) {
+    $("#submit_add_annotation").click(function () {
+      var subscriber_annotation_class = $("#add_subscriber_annotation_class").val();
+      var annotation = $("#add_annotation").val();
+
+      if (subscriber_annotation_class == "" || annotation == "") {
+        alert("<%= I18n.t(:mandatory_subtitle) %>");
+        return false;
+      } else {
+        $("#AddAnnotation").modal('hide');
+      }
+    });
+  });
+</script>

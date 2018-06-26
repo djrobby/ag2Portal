@@ -399,6 +399,7 @@ Ag2Gest::Engine.routes.draw do
     match 'subscribers/sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
     match 'subscribers/:id/sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
     match 'sub_validate_iban/:iban', :controller => 'subscribers', :action => 'sub_validate_iban'
+    match 'subscribers/:id/add_annotation', :controller => 'subscribers', :action => 'add_annotation', :via => [:post], as: "add_annotation"
     #
     # Commercial billings
     match 'commercial_billings/ci_generate_no/:project', :controller => 'commercial_billings', :action => 'ci_generate_no'

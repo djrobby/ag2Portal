@@ -11,6 +11,7 @@ class SubscriberAnnotation < ActiveRecord::Base
 
   # Scopes
   scope :by_subscriber_class, -> { order(:subscriber_id, :subscriber_annotation_class_id) }
+  scope :by_subscriber_created_at_and_class, -> { order('subscriber_annotations.subscriber_id, subscriber_annotations.created_at DESC, subscriber_annotations.subscriber_annotation_class_id') }
   #
   scope :belongs_subscriber, -> s { where("subscriber_id = ?", s).by_subscriber_class }
   scope :belongs_to_class, -> c { where("subscriber_annotation_class_id = ?", c).by_subscriber_class }
@@ -26,6 +27,10 @@ class SubscriberAnnotation < ActiveRecord::Base
 
   def annotation_created_at
     formatted_date(created_at) rescue ''
+  end
+
+  def annotation_timestamp_created_at
+    formatted_timestamp(created_at) rescue ''
   end
 
   def annotation_created_by

@@ -239,6 +239,8 @@ en:
         alert_refact: "A rectification invoice will be generated"
         alert_without_void: "Impossible to continue: You will have to pay the current invoice"
         alert_without_original: "Impossible to continue: Rectifying invoices without original invoice"
+        add_annotation: "Add Annotation"
+        new_annotation: "New Annotation"
 
     report:
       subscriber:

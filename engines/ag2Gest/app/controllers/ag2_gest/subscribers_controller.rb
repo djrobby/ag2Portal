@@ -47,11 +47,23 @@ module Ag2Gest
                                                 :su_check_invoice_date,
                                                 :sub_invoices_report,
                                                 :change_data_supply,
-                                                :change_data_detail]
+                                                :change_data_detail,
+                                                :add_annotation]
     # Helper methods for
     helper_method :sort_column
     # => index filters
     helper_method :su_remove_filters, :su_restore_filters
+
+    def add_annotation
+      @subscriber = Subscriber.find(params[:id])
+      SubscriberAnnotation.create(
+        subscriber_id: @subscriber.id,
+        subscriber_annotation_class_id: params[:subscriber_annotation][:subscriber_annotation_class_id],
+        annotation: params[:subscriber_annotation][:annotation],
+        created_by: (current_user.id if !current_user.nil?)
+      )
+      redirect_to subscriber_path(@subscriber) + "#notes"
+    end
 
     def sub_invoices_report
       @subscriber = Subscriber.find(params[:id])
@@ -1052,6 +1064,7 @@ module Ag2Gest
       # _add_meter, _change_meter, _quit_meter, _new_reading
       @meter_location = []
       @billing_period = []
+      @subscriber_annotation_class = SubscriberAnnotationClass.all
       @reading_incidence = ReadingIncidenceType.all
       # _new_reading
       @project_dropdown = []
@@ -1143,7 +1156,7 @@ module Ag2Gest
       # @subscriber_bills = search_bills.results
 
       ### Annotations ###
-      @annotations = @subscriber.subscriber_annotations.by_subscriber_class.paginate(:page => params[:annotation_page], :per_page => per_page)
+      @annotations = @subscriber.subscriber_annotations.by_subscriber_created_at_and_class.paginate(:page => params[:annotation_page], :per_page => per_page)
 
       respond_to do |format|
        format.html # show.html.erb
