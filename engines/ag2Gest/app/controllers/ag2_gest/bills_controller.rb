@@ -833,6 +833,8 @@ module Ag2Gest
           invoice_date = params[:pre_bill][:invoice_date]
           confirmation_date = params[:pre_bill][:confirmation_date]
           user_id = current_user.nil? ? nil : current_user.id
+          user_have_works_pending = user_id.nil? || current_user.have_works_pending?
+          redirect_to pre_index_bills_path, notice: t(:job_pending) and return if user_have_works_pending
           job_id = BillsWorker.perform_async(pre_bills_ids, payday_limit, invoice_date, confirmation_date, user_id)
           BackgroundWork.create(user_id: user_id,
                                 work_no: job_id,
@@ -1002,6 +1004,8 @@ module Ag2Gest
       readings_ids = @@readings.map(&:id) #params[:bill][:readings][0...-1][1..-1].split(", ")
       group_no = PreBill.next_no
       user_id = current_user.nil? ? nil : current_user.id
+      user_have_works_pending = user_id.nil? || current_user.have_works_pending?
+      redirect_to pre_index_bills_path, notice: t(:job_pending) and return if user_have_works_pending
       job_id = PreBillsWorker.perform_async(readings_ids, group_no, user_id)
       BackgroundWork.create(user_id: current_user.id,
                             work_no: job_id,

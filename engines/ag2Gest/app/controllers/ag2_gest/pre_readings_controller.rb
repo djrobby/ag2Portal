@@ -118,6 +118,8 @@ module Ag2Gest
     def confirm_readings
       pre_readings_ids = @pre_readings.map(&:id)
       user_id = current_user.nil? ? nil : current_user.id
+      user_have_works_pending = user_id.nil? || current_user.have_works_pending?
+      redirect_to pre_readings_path, notice: t(:job_pending) and return if user_have_works_pending
       job_id = PreReadingsWorker.perform_async(pre_readings_ids, user_id)
       BackgroundWork.create(user_id: user_id,
                             work_no: job_id,

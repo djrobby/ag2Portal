@@ -3,6 +3,7 @@ es:
   no_off: "No"
   try_again: "Reintenta"
   should_try_again: "Deberías intentarlo otra vez..."
+  job_pending: "Ya has lanzado otro proceso anteriormente. Inténtalo nuevamente cuando haya finalizado."
   activerecord:
     errors:
       models:

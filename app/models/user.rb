@@ -54,6 +54,18 @@ class User < ActiveRecord::Base
     background_works.where(complete: false)
   end
 
+  def works_completed
+    background_works.where(complete: true)
+  end
+
+  def have_works_pending?
+    works_pending.size > 0
+  end
+
+  def have_works_completed?
+    works_completed.size > 0
+  end
+
   def creating_prebills?
     works_pending.any?{|w| w.type_work == "create_prebills"}
   end

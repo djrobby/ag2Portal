@@ -3,6 +3,7 @@ en:
   no_off: "No"
   try_again: "Retry"
   should_try_again: "You should try again..."
+  job_pending: "You have already launched another process before. Try again when it has finished."
   activerecord:
     errors:
       models:
