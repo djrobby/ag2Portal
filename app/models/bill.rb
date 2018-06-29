@@ -699,15 +699,15 @@ class Bill < ActiveRecord::Base
                   b.consumption_estimated_,
                   b.consumption_other_,
                   b.consumption_,
-                  b.raw_number(Invoice.find(b.p_id_).subtotal, 4),
-                  b.raw_number(Invoice.find(b.p_id_).net_tax, 4),
-                  b.raw_number(b.totals_, 4)]
+                  b.raw_number(Invoice.find(b.p_id_).subtotal, 2),
+                  b.raw_number(Invoice.find(b.p_id_).net_tax, 2),
+                  b.raw_number(b.totals_, 2)]
         code.each do |c|
         data2 = [nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil]
           InvoiceItem.where('invoice_id = ?',b.p_id_).each do |i|
             if c.code == i.code
               quantity_ = i.quantity.blank? ? nil : b.raw_number(i.quantity, 2)
-              amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 4)
+              amount_ = i.amount.blank? ? nil : b.raw_number(i.amount, 2)
               if i.code == "CON"
                 data2[0] = i.measure.description
                 data2[1] = quantity_
