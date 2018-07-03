@@ -17,7 +17,7 @@ report.start_new_page
 report.page.values company_logo: "public/" + @biller_printer.project.company.logo.url(:original).split("?").first unless @biller_printer.project.company.logo.blank?
 
 # Page footer: Image block for Logo
-report.page.values logo_small: "public/" + @biller_printer.project.company.logo.url(:small).split("?").first unless @biller_printer.project.company.logo.blank?
+report.page.values logo_small: "public/" + @biller_printer.project.company.logo.url(:original).split("?").first unless @biller_printer.project.company.logo.blank?
 
 # Page header: Company
 report.page.values(company_name: @biller_printer.project.company.name,

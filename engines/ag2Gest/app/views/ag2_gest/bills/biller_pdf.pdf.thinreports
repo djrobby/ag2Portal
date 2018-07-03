@@ -17,7 +17,7 @@ report.start_new_page
 report.page.values company_logo: "public/" + @biller_printer.project.company.logo.url(:original).split("?").first unless @biller_printer.project.company.logo.blank?
 
 # Page footer: Image block for Logo
-report.page.values logo_small: "public/" + @biller_printer.project.company.logo.url(:small).split("?").first unless @biller_printer.project.company.logo.blank?
+report.page.values logo_small: "public/" + @biller_printer.project.company.logo.url(:original).split("?").first unless @biller_printer.project.company.logo.blank?
 
 # Page header: Company
 report.page.values(company_name: @biller_printer.project.company.name,
@@ -26,7 +26,8 @@ report.page.values(company_name: @biller_printer.project.company.name,
            company_phones: @biller_printer.project.company.phone_and_fax,
            company_email: @biller_printer.project.company.email_and_website
            )
-report.page.values(company_data: (@biller_printer.project.company.invoice_footer_complete + "/r90"))
+report.page.values(company_data: (@biller_printer.project.company.invoice_footer_complete + "/r90"),
+                   note2: (@biller_printer.project.company.website + "/r10"))
 
 #bank
 bank_string = I18n.t("activerecord.attributes.bill.company_bank") + "\n"

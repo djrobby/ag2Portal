@@ -91,6 +91,7 @@ es:
   model: "Modelo"
   models: "Modelos"
   click_here_to_show: "Haz clic aquí para ver"
+  do_note_navigate: "No navegues o cierres esta ventana hasta que el proceso haya finalizado."
   hours_type:
     regular: "Normal"
     overtime: "Extra"

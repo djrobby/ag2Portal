@@ -89,7 +89,7 @@ module Ag2Gest
       end
 
       message = I18n.t("ag2_gest.bills_to_files.index.result_ok_message_html") + ' (' + bills.size.to_s + ')'
-      link_message = I18n.t('ag2_gest.bills_to_files.index.go_to_target', var: file_name)
+      link_message = I18n.t('ag2_gest.bills_to_files.index.go_to_target_bill', var: file_name)
 
       xml = service_bills_to_xml(bills)
       upload_xml_file(file_name, xml)

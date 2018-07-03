@@ -14,6 +14,7 @@ es:
         btn_no: "No, gracias"
         message: "Espera, exportando..."
         go_to_target: "Descarga archivo %{var} generado para remesa %{var1}"
+        go_to_target_bill: "Descarga archivo %{var} de facturas generado"
         result_ok_message_html: "Generador de Archivos de Facturas ha subido el fichero correctamente."
         result_ok_with_error_message_html: "<b>Generador de Archivos de Facturas finalizó con incidencias:</b><br/>"
         result_error_message_html: "<b>Error: ¡Generador de Archivos de Facturas finalizó inesperadamente!</b>"

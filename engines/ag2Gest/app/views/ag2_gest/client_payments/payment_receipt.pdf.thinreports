@@ -17,7 +17,7 @@ report.start_new_page
 report.page.values company_logo: "public/" + @payment.bill.project.company.logo.url(:original).split("?").first unless @payment.bill.project.company.logo.blank?
 
 # Page footer: Image block for Logo
-report.page.values logo_small: "public/" + @payment.bill.project.company.logo.url(:small).split("?").first unless @payment.bill.project.company.logo.blank?
+report.page.values logo_small: "public/" + @payment.bill.project.company.logo.url(:original).split("?").first unless @payment.bill.project.company.logo.blank?
 
 # Page header: Company
 report.page.values(company_name: @payment.bill.project.company.name,
