@@ -7,6 +7,8 @@
   jQuery(function($) {
     // when #data_import_btn is clicked
     $("#data_import_btn").click(function() {
+      $('#message').html('<%=t '.message' %>');
+      $('#message_2').html('<%=t(:do_note_navigate) %>');
       $('#message_area').children().show();
       $('#buttons').children().hide();
       // make a POST call and executes action
@@ -15,6 +17,7 @@
         $("#importinfo").modal("show");
         if (data.Result == 'OK') {
           $("#message").html('<%= link_to I18n.t("go_to_target", :scope => :"ag2_directory.import.index"), corp_contacts_path %>');
+          $("#message_2").hide();
           $("#progressbar").hide();
         }
         else {
@@ -66,6 +69,7 @@
       <br />
       <div id="message_area">
         <span id="message"><%=t '.message' %></span>
+        <div id="message_2" class="import-caution"><%=t(:do_note_navigate) %></div>
         <div id="progressbar" class="bert2-green-progress"></div>
       </div>
     </div>

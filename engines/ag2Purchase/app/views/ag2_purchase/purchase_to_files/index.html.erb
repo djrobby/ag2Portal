@@ -42,6 +42,7 @@
         return;
       // make a POST call and executes action
       $('#message').html('<%=t '.message' %>');
+      $('#message_2').html('<%=t(:do_note_navigate) %>');
       $('#message_area').children().show();
       $('#buttons').children().hide();
       jQuery.getJSON(method + "?company=" + biller + "&from=" + from + "&to=" + to, function(data) {
@@ -53,6 +54,7 @@
           } else {
             $("#message").html('<a href="' + data.File1 + '" download>' + data.LinkMessage1 + '</a><br /><a href="' + data.File2 + '" download>' + data.LinkMessage2 + '</a>');
           }
+          $("#message_2").hide();
           $("#progressbar").hide();
         }
         else {
@@ -122,6 +124,7 @@
       <br />
       <div id="message_area">
         <span id="message"><%=t '.message' %></span>
+        <div id="message_2" class="import-caution"><%=t(:do_note_navigate) %></div>
         <div id="progressbar" class="bert2-green-progress"></div>
       </div>
     </div>
